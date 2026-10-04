@@ -1,0 +1,93 @@
+STUDYFLOW - THREE-PART BACKEND COMPLETION REPORT
+Date: October 4, 2026
+Scope: Requested Django/PostgreSQL simulated MVP, not a production financial service.
+
+1. IMPLEMENTED AREAS
+
+A. Budget scenarios, FX and combined funding
+- Three named scenario types with immutable revisions and state version binding.
+- Dated calendar, cash shortfall, reserve gap, missing/estimated input handling.
+- Explicit mock FX rates, direction, fees, expiry and calendar-day settlement delay.
+- USD/EUR/CNY/GBP/JPY into THB; JPY whole-unit validation.
+- Combined source capacity, duplicate identity/allocation, timing and uncertainty.
+- Net loan proceeds and full associated repayment obligations in funding plans.
+- Controlled, once-only simulated family/scholarship/external-savings receipts.
+
+B. Loan calculations and simulated applications
+- Fixed-rate monthly amortization, zero-interest support, capitalizing grace periods.
+- Full schedules, final rounding, total interest/repayment/cost and withheld fees.
+- Comparisons report whether net receipt/currency bases match; no automatic ranking.
+- Missing or unconfirmed income never produces an affordability conclusion.
+- Draft/submitted/review/approved/rejected/cancelled lifecycle.
+- Operator-only decisions, without any balance change at approval.
+
+C. Authorization, disbursement, ledger, payments, reconciliation
+- Confirmed expense-to-beneficiary binding; controlled mock verification/revocation.
+- Student authorization bound to state, plan, amount, recipient and expiration.
+- Pre-submit policy checks and global settled-fund holds.
+- Unknown outcomes retain holds and require controlled adapter resolution.
+- Unique-origin ledger rows, atomic wallet/state/audit updates, idempotency keys.
+- Disbursement net proceeds recorded once, only at settlement.
+- Payment settlement and invoice-reference reconciliation remain separate.
+- PostgreSQL triggers protect ledger, audit and financial-state history from edits.
+- Actual same-day observed cash flow follows ledger sequence.
+
+2. POSTGRESQL AND LOCAL RUNTIME
+
+The server on port 5432 rejected the supplied credentials for the attempted roles.
+Its credentials, databases, services and authentication configuration were not changed.
+An isolated password-protected PostgreSQL 16 cluster was created in Backend/.postgres.
+Django now connects to 127.0.0.1:55432, database studyflow, using a dedicated app role.
+A separate test_studyflow database is used by manage.py test --keepdb.
+App role is not a superuser and does not need CREATEDB.
+
+Local .env and .demo-credentials.json are gitignored. No credentials are included here.
+Seed data includes separate student and controlled operator accounts, three budgets,
+two mock loans, and a mock beneficiary explicitly bound to the demo expenses.
+The seed does not approve a loan or execute a transfer.
+
+3. VERIFICATION
+
+73 automated tests pass on PostgreSQL.
+Coverage includes reference gaps, currency precision, explicit fees, date limits,
+loan schedules, income abstention, incorrect recipient rejection, stale versions,
+cross-user access, unauthorized decisions, duplicate settlement, timeouts,
+concurrent receipts, competing payment holds, rollback after audit failure,
+database immutability and the complete input-to-reconciliation flow.
+
+OpenAPI generation/validation with fail-on-warn passes.
+Django system checks pass; migrations have no uncommitted model changes.
+
+4. LIMITS AND TEAM HANDOFF
+
+This completes the requested three groups for a bounded local simulation.
+It does not implement production bank/lender connections or real approvals.
+Settlement is THB-only. Mock FX supports specified foreign currencies into THB.
+Loan terms are fixed nominal annual rates, monthly repayment, and the documented
+grace model; variable rates, tax rules, real credit scoring and arbitrary contracts
+are outside this implementation.
+Same-currency mock transfers/payments have zero provider fees by simulator contract.
+FX/loan fees must be explicit, including zero when known.
+
+Expense data still uses validated, versioned snapshots. The TXT ERD is a broader
+target blueprint; this implementation adds separate workflow models around snapshots.
+Source metadata does not itself parse documents or verify website content.
+A's frontend and C's extraction/model integrations are separate work.
+AI services must use student-scoped access, never operator credentials.
+Production HTTPS, deployment policy, provider polling/outbox integration,
+refund/reversal workflows and independent source verification remain future work.
+
+5. FILES
+
+README.md - local setup, restart, testing, limits.
+API_GUIDE.md - endpoints, roles, payloads, flow and error meanings.
+openapi.yaml - generated contract.
+examples/workflow.http - end-to-end request sequence.
+examples/demo-ids.json - local seeded resource IDs.
+finance/test_workflows.py - three-part integration tests.
+finance/test_concurrency.py - PostgreSQL concurrency/rollback/immutability tests.
+scripts/ - local start/stop helpers.
+
+07_API_Readiness_Audit.txt is historical; its missing-feature assessment predates
+this implementation. Use this report and the current API guide for present status.
+

@@ -1,0 +1,27 @@
+{
+  "expected_version": 0,
+  "snapshot": {
+    "currency": "THB",
+    "as_of": "2026-10-02",
+    "opening_balance": "80000.00",
+    "reserve": "15000.00",
+    "events": [
+      {
+        "id": "rent",
+        "label": "Rent",
+        "kind": "expense",
+        "amount": "9000.00",
+        "date": "2026-10-05",
+        "certainty": "confirmed"
+      },
+      {
+        "id": "tuition",
+        "label": "Tuition",
+        "kind": "expense",
+        "amount": "65000.00",
+        "date": "2026-10-15",
+        "certainty": "confirmed"
+      }
+    ]
+  }
+}

@@ -1,0 +1,388 @@
+﻿STUDYFLOW - ERD DESIGN
+Version: Proposed v2 logical schema | October 4, 2026
+Database-neutral design; table and field names are proposals.
+PK = primary key; FK = foreign key; UQ = unique constraint.
+IDs may use UUIDs. Monetary values use exact decimals or currency minor units.
+This describes the intended model, not an existing database migration.
+
+1. RELATIONSHIP MAP
+
+STUDENT 1 ---- N FINANCIAL_STATE_VERSION
+STUDENT 1 ---- N SOURCE_DOCUMENT 1 ---- N EVIDENCE
+SOURCE_DOCUMENT 1 ---- N EXTRACTION_CANDIDATE
+EXTRACTION_CANDIDATE 1 ---- N CANDIDATE_EVIDENCE N ---- 1 EVIDENCE
+
+STUDENT 1 ---- N ACCOUNT 1 ---- N ACCOUNT_SNAPSHOT
+STUDENT 1 ---- N OBLIGATION 1 ---- N OBLIGATION_REVISION
+OBLIGATION_REVISION 1 ---- N OBLIGATION_EVIDENCE N ---- 1 EVIDENCE
+STUDENT 1 ---- N FUNDING_SOURCE 1 ---- N FUNDING_SOURCE_REVISION
+
+STUDENT 1 ---- N BUDGET_SCENARIO 1 ---- N SCENARIO_REVISION
+SCENARIO_REVISION 1 ---- N SCENARIO_EXPENSE N ---- 1 OBLIGATION_REVISION
+SCENARIO_REVISION 1 ---- N SCENARIO_FUNDING N ---- 1 FUNDING_SOURCE_REVISION
+SCENARIO_REVISION 1 ---- N CALCULATION_RUN 1 ---- N CASHFLOW_EVENT
+CALCULATION_RUN 1 ---- N CALCULATION_FX N ---- 1 FX_QUOTE
+
+STUDENT 1 ---- N FUNDING_PLAN 1 ---- N FUNDING_PLAN_REVISION
+FUNDING_PLAN_REVISION 1 ---- N FUNDING_ALLOCATION N ---- 1 FUNDING_SOURCE_REVISION
+LOAN_PRODUCT_SNAPSHOT 1 ---- N LOAN_SIMULATION 1 ---- N REPAYMENT_INSTALLMENT
+LOAN_SIMULATION 1 ---- N SIMULATED_APPLICATION 1 ---- N DISBURSEMENT
+DISBURSEMENT 1 ---- 0..1 LEDGER_TRANSACTION
+
+FUNDING_PLAN_REVISION 1 ---- N PAYMENT_TASK
+PAYMENT_TASK 1 ---- N AUTHORIZATION
+PAYMENT_TASK 1 ---- N FUNDS_HOLD
+PAYMENT_TASK 1 ---- N EXECUTION_RECEIPT
+PAYMENT_TASK 1 ---- 0..1 LEDGER_TRANSACTION
+PAYMENT_TASK 1 ---- N RECONCILIATION N ---- 1 OBLIGATION_REVISION
+LEDGER_TRANSACTION 1 ---- N LEDGER_POSTING N ---- 1 ACCOUNT
+
+All student-owned relationships must preserve student/tenant ownership.
+Optional relationships are described below. N means many.
+
+2. IDENTITY AND VERSION TABLES
+
+STUDENT
+- student_id PK
+- auth_subject UQ
+- base_currency
+- timezone
+- created_at
+Purpose: ownership boundary. Avoid unnecessary passport/personal information.
+
+FINANCIAL_STATE_VERSION
+- state_version_id PK
+- student_id FK -> STUDENT
+- version_number
+- previous_version_id nullable FK -> FINANCIAL_STATE_VERSION
+- created_at, reason, actor_id
+- snapshot_payload, snapshot_hash, schema_version
+- UQ(student_id, version_number)
+Purpose: immutable manifest of exact account/obligation/funding revisions and
+ledger cutoffs used to reconstruct state. Snapshot references must be validated.
+Current state is the latest committed version, not an AI-generated balance.
+
+3. SOURCES AND CONFIRMATION
+
+SOURCE_DOCUMENT
+- source_id PK; student_id FK
+- type (upload, email_text, official_url, import)
+- original_name, storage_reference, source_url
+- content_hash, retrieved_at, created_at
+- extraction_status
+Purpose: retain source identity. File hashes alone do not deduplicate invoices.
+
+EVIDENCE
+- evidence_id PK; source_id FK
+- page_number nullable; locator; excerpt nullable; field_name
+- observed_at; verification_status; verification_method
+Purpose: field-level provenance; avoid storing unnecessary sensitive excerpts.
+
+EXTRACTION_CANDIDATE
+- candidate_id PK; source_id FK
+- candidate_type; proposed_payload; schema_version
+- completeness; inference_confidence nullable
+- confirmation_status; confirmed_by nullable; confirmed_at nullable
+- validation_errors; extractor_version; created_at
+Purpose: staging only. Payload cannot directly mutate execution tables.
+
+CANDIDATE_EVIDENCE
+- candidate_id FK; evidence_id FK
+- PK(candidate_id, evidence_id)
+
+4. ACCOUNTS AND OBLIGATIONS
+
+ACCOUNT
+- account_id PK; student_id FK
+- currency; account_type; display_name; is_simulated
+- created_at
+Types include student asset and demo clearing/expense accounts.
+Operational demo postings must not affect real imported accounts.
+
+ACCOUNT_SNAPSHOT
+- snapshot_id PK; account_id FK; source_id nullable FK
+- available_amount; held_amount; as_of; ingested_at
+- ledger_cutoff_sequence; external_snapshot_reference nullable
+Purpose: trusted baseline. Define which ledger events are already reflected.
+Do not add the entire ledger on top of a snapshot that already includes it.
+
+OBLIGATION
+- obligation_id PK; student_id FK
+- external_invoice_reference nullable
+- deduplication_fingerprint; created_at
+Purpose: stable identity across corrections and rescans.
+Suspected duplicates may require review; fingerprints are not universal truth.
+
+OBLIGATION_REVISION
+- obligation_revision_id PK; obligation_id FK
+- revision_number; previous_revision_id nullable FK to this table
+- introduced_in_state_version_id FK
+- amount nullable; currency nullable; due_at nullable
+- category; beneficiary_revision_id nullable FK -> BENEFICIARY_REVISION
+- completeness; confirmation_status
+- status (candidate, confirmed, cancelled)
+- estimate_basis nullable
+- UQ(obligation_id, revision_number)
+Missing required fields block execution; estimates may support labeled planning.
+Paid/partially paid is derived from reconciliation, not manually toggled here.
+
+OBLIGATION_EVIDENCE
+- obligation_revision_id FK; evidence_id FK
+- field_name
+- PK(obligation_revision_id, evidence_id, field_name)
+
+BENEFICIARY
+- beneficiary_id PK; student_id FK; created_at
+
+BENEFICIARY_REVISION
+- beneficiary_revision_id PK; beneficiary_id FK; revision_number
+- entity_name; masked_destination; secure_destination_reference
+- verification_status; verification_evidence_id nullable FK -> EVIDENCE
+- UQ(beneficiary_id, revision_number)
+Authorization binds to this immutable revision, not an editable destination.
+
+5. FUNDING AND BUDGET SCENARIOS
+
+FUNDING_SOURCE
+- funding_source_id PK; student_id FK
+- economic_source_key; created_at
+- UQ(student_id, economic_source_key)
+Purpose: stable identity preventing the same savings/commitment being duplicated.
+
+FUNDING_SOURCE_REVISION
+- funding_source_revision_id PK; funding_source_id FK; revision_number
+- introduced_in_state_version_id FK
+- source_type (savings, family, scholarship, loan, other)
+- amount nullable; currency nullable; available_at nullable
+- certainty; confirmation_status
+- account_id nullable FK; loan_simulation_id nullable FK
+- evidence_id nullable FK
+- UQ(funding_source_id, revision_number)
+Account-backed savings already present in opening funds are not new inflows.
+Use a funding-evidence join table when multiple evidence records are needed.
+
+BUDGET_SCENARIO
+- scenario_id PK; student_id FK; name; created_at
+
+SCENARIO_REVISION
+- scenario_revision_id PK; scenario_id FK; revision_number
+- state_version_id FK; start_date; end_date; base_currency
+- reserve_amount; assumptions_payload
+- UQ(scenario_id, revision_number)
+
+SCENARIO_EXPENSE
+- scenario_revision_id FK; obligation_revision_id FK
+- inclusion_reason
+- PK(scenario_revision_id, obligation_revision_id)
+
+SCENARIO_FUNDING
+- scenario_revision_id FK; funding_source_revision_id FK
+- included_amount; assumed_available_at; assumption_reason
+- PK(scenario_revision_id, funding_source_revision_id)
+Explicit scenario assumptions are not confirmed state changes.
+
+FX_QUOTE
+- fx_quote_id PK; source_currency; target_currency
+- rate; quoted_at; expires_at; source_name; is_mock
+- fee_rules_payload; settlement_assumptions
+Rate direction: units of target currency per one unit of source currency.
+
+CALCULATION_RUN
+- calculation_run_id PK; student_id FK; scenario_revision_id FK
+- state_version_id FK; engine_version; evaluated_at
+- immutable_input_payload; input_hash
+- status (complete, incomplete, invalid)
+- first_gap_at nullable; minimum_balance nullable; maximum_reserve_gap nullable
+- missing_inputs_payload; result_payload
+Calculated totals are immutable output, never manually editable.
+
+CALCULATION_FX
+- calculation_run_id FK; fx_quote_id FK
+- PK(calculation_run_id, fx_quote_id)
+
+CASHFLOW_EVENT
+- cashflow_event_id PK; calculation_run_id FK
+- effective_at; event_order; event_type
+- obligation_revision_id nullable FK
+- funding_source_revision_id nullable FK
+- original_amount; original_currency; base_amount
+- balance_after; reserve_gap; assumption_label
+Purpose: derived timeline shared by dashboard/calendar and explanation.
+
+6. FUNDING PLANS AND LOANS
+
+FUNDING_PLAN
+- funding_plan_id PK; student_id FK; created_at
+
+FUNDING_PLAN_REVISION
+- plan_revision_id PK; funding_plan_id FK; revision_number
+- state_version_id FK; calculation_run_id FK
+- feasibility_status; reasons_payload; created_at
+- UQ(funding_plan_id, revision_number)
+Any change creates a new revision and reruns validation.
+
+FUNDING_ALLOCATION
+- allocation_id PK; plan_revision_id FK; funding_source_revision_id FK
+- allocated_amount; source_currency; net_base_amount
+- expected_arrival_at; fx_quote_id nullable FK
+- UQ(plan_revision_id, funding_source_revision_id)
+Commitments need a separate reservation lifecycle if multiple executable plans
+compete for the same source. Draft alternatives do not reserve funds.
+
+LOAN_PRODUCT_SNAPSHOT
+- loan_product_snapshot_id PK
+- product_name; provider_name; currency; captured_at; is_mock
+- annual_rate; rate_convention; compounding_rule
+- term_limits; fee_rules_payload; grace_rules_payload
+- repayment_frequency; rounding_rule
+Immutable supported product terms, not a live mutable quote.
+
+LOAN_SIMULATION
+- loan_simulation_id PK; student_id FK
+- loan_product_snapshot_id FK; state_version_id FK
+- principal; withheld_fees; separately_paid_fees; financed_fees
+- net_proceeds; planned_disbursement_at; term_count
+- total_interest; total_repayment
+- affordability_status; affordability_inputs_payload
+- engine_version; input_snapshot; created_at
+Affordability may be insufficient_information.
+
+REPAYMENT_INSTALLMENT
+- repayment_installment_id PK; loan_simulation_id FK
+- installment_number; due_at
+- opening_principal; principal_due; interest_due; fees_due
+- total_due; closing_principal
+- UQ(loan_simulation_id, installment_number)
+
+SIMULATED_APPLICATION
+- application_id PK; student_id FK; loan_simulation_id FK
+- state; submitted_at nullable; decided_at nullable
+- decision_actor nullable; decision_reason nullable; version
+Approval writes no ledger records.
+
+DISBURSEMENT
+- disbursement_id PK; application_id FK; destination_account_id FK
+- tranche_number; currency; gross_amount; withheld_fees; net_amount
+- scheduled_at; settled_at nullable; state
+- adapter_operation_id UQ; version
+- UQ(application_id, tranche_number)
+Validate total tranches against approved terms under a database lock.
+
+7. PAYMENT AUTHORITY AND EXECUTION
+
+PAYMENT_TASK
+- payment_task_id PK; student_id FK; plan_revision_id FK
+- beneficiary_revision_id FK
+- amount; currency; maximum_fee; execution_deadline
+- state; adapter_operation_id UQ; version; created_at
+State is a workflow status, not proof of settlement by itself.
+
+AUTHORIZATION
+- authorization_id PK; payment_task_id FK
+- actor_id; state_version_id FK; plan_revision_id FK
+- authorized_summary_hash; scope_payload
+- granted_at; expires_at; revoked_at nullable
+A new authorization record replaces prior permission; retain history.
+The summary includes beneficiary revision, amount, fees, and relevant quotes.
+
+FUNDS_HOLD
+- hold_id PK; payment_task_id FK; account_id FK
+- amount; currency; state (active, released, consumed)
+- created_at; resolved_at nullable
+Prevent concurrent tasks spending the same available amount.
+Enforce at most one active hold per task/account, and atomic capacity checks.
+
+EXECUTION_RECEIPT
+- receipt_id PK; payment_task_id FK
+- provider; provider_receipt_id
+- status; received_at; evidence_payload; is_simulated
+- UQ(provider, provider_receipt_id)
+
+RECONCILIATION
+- reconciliation_id PK; payment_task_id FK; obligation_revision_id FK
+- receipt_id FK; matched_amount; currency; matched_at
+- UQ(payment_task_id, obligation_revision_id, receipt_id)
+Validate that cumulative matches do not exceed settled payment or obligation.
+Supports partial payments and multiple obligations per payment.
+
+8. DEMO LEDGER
+
+LEDGER_TRANSACTION
+- ledger_transaction_id PK; student_id FK
+- disbursement_id nullable FK UQ
+- payment_task_id nullable FK UQ
+- event_type; effective_at; created_at; is_simulated
+- reversal_of_id nullable FK -> LEDGER_TRANSACTION
+For settlement event types, require exactly one originating disbursement/payment.
+Non-settlement adjustments/reversals use their own explicit rules and reference.
+Use partial uniqueness where necessary so reversals can coexist with originals.
+
+LEDGER_POSTING
+- posting_id PK; ledger_transaction_id FK; account_id FK
+- currency; signed_amount
+Ledger transactions have at least two postings and balance to zero per currency.
+Demo clearing accounts provide counterpart entries for external inflows/outflows.
+For FX use balanced currency-specific clearing postings; never sum currencies.
+Validate balances atomically in a controlled posting procedure or equivalent.
+Append corrections/reversals; do not update/delete settled historical postings.
+
+9. AUDIT AND RELIABLE JOBS
+
+AUDIT_EVENT
+- audit_event_id PK; student_id FK
+- actor_type; actor_id; action; entity_type; entity_id
+- previous_state nullable; next_state nullable
+- state_version_id nullable FK; correlation_id; created_at; details
+entity_type/entity_id is a logical audit reference, not a universal database FK.
+Retain transitions for applications, disbursements, payments, and authorization.
+Do not store secrets or unnecessary raw personal data.
+
+IDEMPOTENCY_REQUEST
+- idempotency_request_id PK; student_id FK
+- operation_scope; idempotency_key; request_hash
+- status; response_reference; created_at
+- UQ(student_id, operation_scope, idempotency_key)
+Reusing a key with a different request body returns a conflict.
+
+ADAPTER_EVENT
+- adapter_event_id PK; adapter_name; external_event_id
+- operation_reference; received_at; payload_hash; processed_at nullable
+- UQ(adapter_name, external_event_id)
+Different event IDs for the same settlement are additionally deduplicated by
+the origin-to-ledger uniqueness constraints.
+
+OUTBOX_JOB
+- outbox_job_id PK; student_id FK
+- job_type; aggregate_id; payload; status
+- attempt_count; available_at; created_at; last_error nullable
+Created atomically with the domain change; delivery can be retried.
+Adapter operations still require stable keys and status-query recovery.
+
+10. INTEGRITY RULES
+
+- Enforce student ownership on every API and cross-table relationship;
+  composite keys/FKs or equivalent policies prevent cross-student links.
+- Positive amounts for allocations, principal, and holds; signed ledger postings.
+- Unknown values are nullable with explicit completeness/reason metadata.
+- Enforce currency compatibility, rate positivity, and date validity.
+- Immutable financial and product revisions; current state is a projection.
+- Use optimistic version checks for edits and locking for financial capacity.
+- Settlement, ledger creation, hold resolution, and state version commit atomically.
+- External calls occur outside database transactions using reliable jobs.
+- Authorization cannot be granted by model output.
+- Never count snapshot-included events again.
+- Index student/date, current versions, due dates, task states, and adapter IDs.
+- Protect evidence storage; deletion/retention must preserve authorized audit needs.
+
+11. BUILD ORDER
+
+First: STUDENT, SOURCE_DOCUMENT, EVIDENCE, candidates, ACCOUNT/snapshots,
+OBLIGATION/revisions, state versions, scenarios, calculation runs/events.
+Next: funding sources, funding plans, FX, beneficiaries, authorization/payment,
+holds, ledger, receipts, reconciliation, outbox, idempotency, audit.
+Then: loan products, simulations, schedules, applications, disbursements.
+Audit/version integrity should be introduced with the first mutations, not postponed.
+
+This logical ERD intentionally favors explicit history and execution integrity.
+Finalize exact types, indexes, migrations, and constraints after stack selection.
+

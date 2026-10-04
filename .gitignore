@@ -1,0 +1,14 @@
+.venv/
+.env
+__pycache__/
+*.py[cod]
+*.sqlite3
+.coverage
+*.log
+
+.postgres/
+.pg-password
+postgres-local.log
+
+.demo-credentials.json
+examples/demo-ids.json

@@ -1,0 +1,1828 @@
+openapi: 3.0.3
+info:
+  title: StudyFlow Backend
+  version: 2.0.0
+  description: 'StudyFlow demo: budgets, FX, funding, loans and policy-controlled
+    simulated execution. All settlements are simulated.'
+paths:
+  /api/v2/applications/:
+    get:
+      operationId: get_api_v2_applications
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+    post:
+      operationId: post_api_v2_applications
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApplicationInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ApplicationInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ApplicationInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/applications/{id}/:
+    get:
+      operationId: get_api_v2_applications_id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+  /api/v2/applications/{id}/action/:
+    post:
+      operationId: post_api_v2_applications_id_action
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApplicationAction'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ApplicationAction'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ApplicationAction'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/applications/{id}/decision/:
+    post:
+      operationId: post_api_v2_applications_id_decision
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DecisionInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/DecisionInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DecisionInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/audit/:
+    get:
+      operationId: get_api_v2_audit
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+  /api/v2/beneficiaries/:
+    get:
+      operationId: get_api_v2_beneficiaries
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+    post:
+      operationId: post_api_v2_beneficiaries
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BeneficiaryInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/BeneficiaryInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/BeneficiaryInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/beneficiaries/{id}/:
+    get:
+      operationId: get_api_v2_beneficiaries_id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+  /api/v2/beneficiaries/{id}/verify/:
+    post:
+      operationId: post_api_v2_beneficiaries_id_verify
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/VerifyInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/VerifyInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/demo/clock/:
+    post:
+      operationId: post_api_v2_demo_clock
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClockInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ClockInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ClockInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/demo/initialize/:
+    post:
+      operationId: post_api_v2_demo_initialize
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InitializeInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/InitializeInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/InitializeInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/demo/wallets/:
+    get:
+      operationId: get_api_v2_demo_wallets
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+  /api/v2/disbursements/:
+    get:
+      operationId: get_api_v2_disbursements
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+  /api/v2/disbursements/{id}/:
+    get:
+      operationId: get_api_v2_disbursements_id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+  /api/v2/disbursements/{id}/action/:
+    post:
+      operationId: post_api_v2_disbursements_id_action
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SettlementInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SettlementInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SettlementInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/forecasts/:
+    post:
+      operationId: post_api_v2_forecasts
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ForecastRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ForecastRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ForecastRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForecastResponse'
+          description: ''
+  /api/v2/forecasts/history/:
+    get:
+      operationId: get_api_v2_forecasts_history
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+  /api/v2/funding-plans/:
+    get:
+      operationId: get_api_v2_funding_plans
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+    post:
+      operationId: post_api_v2_funding_plans
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlanInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PlanInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PlanInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/funding-plans/{id}/:
+    get:
+      operationId: get_api_v2_funding_plans_id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+  /api/v2/funding-sources/:
+    get:
+      operationId: get_api_v2_funding_sources
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+    post:
+      operationId: post_api_v2_funding_sources
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SourceInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SourceInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SourceInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/funding-sources/{id}/:
+    get:
+      operationId: get_api_v2_funding_sources_id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+  /api/v2/funding-sources/{id}/receive/:
+    post:
+      operationId: post_api_v2_funding_sources_id_receive
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReceiveInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ReceiveInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ReceiveInput'
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/fx-quotes/:
+    get:
+      operationId: get_api_v2_fx_quotes
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+    post:
+      operationId: post_api_v2_fx_quotes
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FXInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FXInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FXInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/fx-quotes/{id}/:
+    get:
+      operationId: get_api_v2_fx_quotes_id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+  /api/v2/ledger/:
+    get:
+      operationId: get_api_v2_ledger
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+  /api/v2/loans/:
+    get:
+      operationId: get_api_v2_loans
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+    post:
+      operationId: post_api_v2_loans
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoanInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LoanInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LoanInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/loans/{id}/:
+    get:
+      operationId: get_api_v2_loans_id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+  /api/v2/loans/compare/:
+    post:
+      operationId: post_api_v2_loans_compare
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompareInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CompareInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CompareInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/payments/:
+    get:
+      operationId: get_api_v2_payments
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+    post:
+      operationId: post_api_v2_payments
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PaymentInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PaymentInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/payments/{id}/:
+    get:
+      operationId: get_api_v2_payments_id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+  /api/v2/payments/{id}/adapter-event/:
+    post:
+      operationId: post_api_v2_payments_id_adapter_event
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentEventInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PaymentEventInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PaymentEventInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/payments/{id}/authorize/:
+    post:
+      operationId: post_api_v2_payments_id_authorize
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthorizationInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AuthorizationInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AuthorizationInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/payments/{id}/cancel/:
+    post:
+      operationId: post_api_v2_payments_id_cancel
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/payments/{id}/reconcile/:
+    post:
+      operationId: post_api_v2_payments_id_reconcile
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/payments/{id}/submit/:
+    post:
+      operationId: post_api_v2_payments_id_submit
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/scenarios/:
+    get:
+      operationId: get_api_v2_scenarios
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+    post:
+      operationId: post_api_v2_scenarios
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScenarioInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ScenarioInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ScenarioInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/scenarios/{id}/:
+    get:
+      operationId: get_api_v2_scenarios_id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+  /api/v2/scenarios/{id}/calendar/:
+    get:
+      operationId: get_api_v2_scenarios_id_calendar
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+  /api/v2/sources/:
+    get:
+      operationId: get_api_v2_sources
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedSourceList'
+          description: ''
+    post:
+      operationId: post_api_v2_sources
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Source'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Source'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Source'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Source'
+          description: ''
+  /api/v2/state/:
+    get:
+      operationId: get_api_v2_state
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StateResponse'
+          description: ''
+    post:
+      operationId: post_api_v2_state
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StateWrite'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/StateWrite'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/StateWrite'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StateResponse'
+          description: ''
+  /api/v2/state/history/:
+    get:
+      operationId: get_api_v2_state_history
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+  /health/:
+    get:
+      operationId: get_health
+      tags:
+      - health
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Health'
+          description: ''
+components:
+  schemas:
+    Allocation:
+      type: object
+      properties:
+        source_id:
+          type: string
+          format: uuid
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+        fx_quote_id:
+          type: string
+          format: uuid
+          nullable: true
+      required:
+      - amount
+      - source_id
+    ApplicationAction:
+      type: object
+      properties:
+        action:
+          $ref: '#/components/schemas/ApplicationActionActionEnum'
+      required:
+      - action
+    ApplicationActionActionEnum:
+      enum:
+      - submit
+      - cancel
+      type: string
+      description: |-
+        * `submit` - submit
+        * `cancel` - cancel
+    ApplicationInput:
+      type: object
+      properties:
+        loan_id:
+          type: string
+          format: uuid
+      required:
+      - loan_id
+    AuthorizationInput:
+      type: object
+      properties:
+        state_version:
+          type: integer
+          minimum: 1
+        expires_in_seconds:
+          type: integer
+          maximum: 3600
+          minimum: 60
+          default: 900
+      required:
+      - state_version
+    BeneficiaryInput:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 150
+        destination_label:
+          type: string
+          maxLength: 150
+      required:
+      - destination_label
+      - name
+    ClockInput:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+      required:
+      - date
+    CommandResponse:
+      type: object
+      properties:
+        data: {}
+      required:
+      - data
+    CompareInput:
+      type: object
+      properties:
+        loan_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+          maxItems: 10
+          minItems: 2
+      required:
+      - loan_ids
+    DecisionInput:
+      type: object
+      properties:
+        action:
+          $ref: '#/components/schemas/DecisionInputActionEnum'
+        reason:
+          type: string
+          maxLength: 500
+      required:
+      - action
+      - reason
+    DecisionInputActionEnum:
+      enum:
+      - review
+      - approve
+      - reject
+      type: string
+      description: |-
+        * `review` - review
+        * `approve` - approve
+        * `reject` - reject
+    Event:
+      type: object
+      properties:
+        id:
+          type: string
+          maxLength: 100
+        label:
+          type: string
+          maxLength: 200
+        kind:
+          $ref: '#/components/schemas/EventKindEnum'
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+          nullable: true
+        date:
+          type: string
+          format: date
+          nullable: true
+        certainty:
+          $ref: '#/components/schemas/EventCertaintyEnum'
+        source_id:
+          type: string
+          format: uuid
+          nullable: true
+        beneficiary_id:
+          type: string
+          format: uuid
+          nullable: true
+        settled_sequence:
+          type: integer
+          minimum: 1
+        evidence_note:
+          type: string
+          maxLength: 2000
+      required:
+      - amount
+      - certainty
+      - date
+      - id
+      - kind
+      - label
+    EventCertaintyEnum:
+      enum:
+      - confirmed
+      - estimated
+      - missing
+      type: string
+      description: |-
+        * `confirmed` - confirmed
+        * `estimated` - estimated
+        * `missing` - missing
+    EventKindEnum:
+      enum:
+      - expense
+      - income
+      type: string
+      description: |-
+        * `expense` - expense
+        * `income` - income
+    ExpenseOverride:
+      type: object
+      properties:
+        event_id:
+          type: string
+          maxLength: 100
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+          nullable: true
+        currency:
+          allOf:
+          - $ref: '#/components/schemas/SupportedCurrencyEnum'
+          default: THB
+        fx_quote_id:
+          type: string
+          format: uuid
+          nullable: true
+        certainty:
+          $ref: '#/components/schemas/EventCertaintyEnum'
+      required:
+      - amount
+      - certainty
+      - event_id
+    FXInput:
+      type: object
+      properties:
+        source_currency:
+          $ref: '#/components/schemas/SupportedCurrencyEnum'
+        target_currency:
+          allOf:
+          - $ref: '#/components/schemas/SettlementCurrencyEnum'
+          default: THB
+        rate:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,10})?$
+        sender_fee:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+        receiver_fee:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+        settlement_days:
+          type: integer
+          maximum: 60
+          minimum: 0
+        expires_at:
+          type: string
+          format: date-time
+      required:
+      - expires_at
+      - rate
+      - receiver_fee
+      - sender_fee
+      - settlement_days
+      - source_currency
+    ForecastRequest:
+      type: object
+      properties:
+        state_version:
+          type: integer
+          minimum: 1
+        end_date:
+          type: string
+          format: date
+        include_estimates:
+          type: boolean
+          default: false
+      required:
+      - end_date
+      - state_version
+    ForecastResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        state_version:
+          type: integer
+        engine_version:
+          type: string
+        result: {}
+      required:
+      - engine_version
+      - id
+      - result
+      - state_version
+    FundingCertaintyEnum:
+      enum:
+      - confirmed
+      - estimated
+      type: string
+      description: |-
+        * `confirmed` - confirmed
+        * `estimated` - estimated
+    Health:
+      type: object
+      properties:
+        status:
+          type: string
+        database:
+          type: string
+      required:
+      - database
+      - status
+    HistoryResponse:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type: string
+          format: uri
+          nullable: true
+        previous:
+          type: string
+          format: uri
+          nullable: true
+        results:
+          type: array
+          items: {}
+      required:
+      - count
+      - next
+      - previous
+      - results
+    InitializeInput:
+      type: object
+      properties:
+        state_version:
+          type: integer
+          minimum: 1
+      required:
+      - state_version
+    LoanInput:
+      type: object
+      properties:
+        product_name:
+          type: string
+          maxLength: 150
+        currency:
+          allOf:
+          - $ref: '#/components/schemas/SupportedCurrencyEnum'
+          default: THB
+        principal:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+        annual_rate_percent:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,4})?$
+        repayment_months:
+          type: integer
+          maximum: 360
+          minimum: 1
+        grace_months:
+          type: integer
+          maximum: 24
+          minimum: 0
+          default: 0
+        withheld_fee:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+        disbursement_date:
+          type: string
+          format: date
+        monthly_income:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+          nullable: true
+        monthly_essential_expenses:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+          nullable: true
+        income_confirmed:
+          type: boolean
+          default: false
+      required:
+      - annual_rate_percent
+      - disbursement_date
+      - principal
+      - product_name
+      - repayment_months
+      - withheld_fee
+    OutcomeEnum:
+      enum:
+      - settled
+      - failed
+      - unknown
+      type: string
+      description: |-
+        * `settled` - settled
+        * `failed` - failed
+        * `unknown` - unknown
+    PaginatedSourceList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Source'
+    PaymentEventInput:
+      type: object
+      properties:
+        outcome:
+          $ref: '#/components/schemas/OutcomeEnum'
+      required:
+      - outcome
+    PaymentInput:
+      type: object
+      properties:
+        plan_id:
+          type: string
+          format: uuid
+        beneficiary_id:
+          type: string
+          format: uuid
+        event_id:
+          type: string
+          maxLength: 100
+      required:
+      - beneficiary_id
+      - event_id
+      - plan_id
+    PlanInput:
+      type: object
+      properties:
+        scenario_id:
+          type: string
+          format: uuid
+        allocations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Allocation'
+      required:
+      - allocations
+      - scenario_id
+    ReceiveInput:
+      type: object
+      properties:
+        fx_quote_id:
+          type: string
+          format: uuid
+          nullable: true
+    ScenarioInput:
+      type: object
+      properties:
+        state_version:
+          type: integer
+          minimum: 1
+        kind:
+          $ref: '#/components/schemas/ScenarioInputKindEnum'
+        end_date:
+          type: string
+          format: date
+        include_estimates:
+          type: boolean
+          default: false
+        overrides:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExpenseOverride'
+      required:
+      - end_date
+      - kind
+      - state_version
+    ScenarioInputKindEnum:
+      enum:
+      - essential
+      - expected
+      - higher_cost
+      type: string
+      description: |-
+        * `essential` - essential
+        * `expected` - expected
+        * `higher_cost` - higher_cost
+    SettlementCurrencyEnum:
+      enum:
+      - THB
+      type: string
+      description: '* `THB` - THB'
+    SettlementInput:
+      type: object
+      properties:
+        action:
+          $ref: '#/components/schemas/SettlementInputActionEnum'
+      required:
+      - action
+    SettlementInputActionEnum:
+      enum:
+      - process
+      - unknown
+      - settle
+      - fail
+      type: string
+      description: |-
+        * `process` - process
+        * `unknown` - unknown
+        * `settle` - settle
+        * `fail` - fail
+    Snapshot:
+      type: object
+      properties:
+        currency:
+          $ref: '#/components/schemas/SettlementCurrencyEnum'
+        as_of:
+          type: string
+          format: date
+        opening_balance:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+        reserve:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
+      required:
+      - as_of
+      - currency
+      - events
+      - opening_balance
+      - reserve
+    Source:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        title:
+          type: string
+          maxLength: 200
+        kind:
+          $ref: '#/components/schemas/SourceKindEnum'
+        url:
+          oneOf:
+          - type: string
+            format: uri
+            maxLength: 200
+          - type: string
+            maxLength: 0
+        note:
+          type: string
+          maxLength: 4000
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - id
+      - kind
+      - title
+    SourceInput:
+      type: object
+      properties:
+        economic_key:
+          type: string
+          maxLength: 100
+        kind:
+          $ref: '#/components/schemas/SourceInputKindEnum'
+        currency:
+          $ref: '#/components/schemas/SupportedCurrencyEnum'
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+        available_on:
+          type: string
+          format: date
+        certainty:
+          $ref: '#/components/schemas/FundingCertaintyEnum'
+        already_in_opening:
+          type: boolean
+          default: false
+        loan_id:
+          type: string
+          format: uuid
+          nullable: true
+      required:
+      - amount
+      - available_on
+      - certainty
+      - currency
+      - economic_key
+      - kind
+    SourceInputKindEnum:
+      enum:
+      - family
+      - scholarship
+      - external_savings
+      - loan
+      type: string
+      description: |-
+        * `family` - family
+        * `scholarship` - scholarship
+        * `external_savings` - external_savings
+        * `loan` - loan
+    SourceKindEnum:
+      enum:
+      - upload
+      - official_url
+      - import
+      type: string
+      description: |-
+        * `upload` - Upload
+        * `official_url` - Official URL
+        * `import` - Import
+    StateResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        version:
+          type: integer
+        snapshot:
+          $ref: '#/components/schemas/Snapshot'
+      required:
+      - id
+      - snapshot
+      - version
+    StateWrite:
+      type: object
+      properties:
+        expected_version:
+          type: integer
+          minimum: 0
+        snapshot:
+          $ref: '#/components/schemas/Snapshot'
+      required:
+      - expected_version
+      - snapshot
+    SupportedCurrencyEnum:
+      enum:
+      - THB
+      - USD
+      - EUR
+      - CNY
+      - GBP
+      - JPY
+      type: string
+      description: |-
+        * `THB` - THB
+        * `USD` - USD
+        * `EUR` - EUR
+        * `CNY` - CNY
+        * `GBP` - GBP
+        * `JPY` - JPY
+    VerifyInput:
+      type: object
+      properties:
+        verified:
+          type: boolean
+      required:
+      - verified
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"
