@@ -65,6 +65,11 @@ def create_payment(actor,data,obj=None):
     event = next((e for e in state.snapshot["events"] if e["id"] == data["event_id"]),None)
     require(event is not None and event["kind"] == "expense" and event["certainty"] == "confirmed",
         "Payment requires a confirmed expense.")
+    scenario_event = next((e for e in plan.scenario.result["snapshot"]["events"]
+        if e["id"] == data["event_id"]),None)
+    require(scenario_event is not None and all(scenario_event.get(field) == event.get(field)
+        for field in ["kind","amount","date","certainty","beneficiary_id"]),
+        "Payment expense must exactly match the validated scenario.")
     require(event.get("beneficiary_id") == str(beneficiary.id),
         "Confirm this beneficiary on the expense before creating a payment.")
     require(event["amount"] is not None and Decimal(event["amount"]) > 0 and event["date"],

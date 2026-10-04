@@ -118,7 +118,7 @@ def create_source(actor,data,obj=None):
 def evaluate_plan(owner,scenario,allocations):
     current(owner,scenario.state.version)
     _,snapshot,evidence = scenario_snapshot(owner,scenario.inputs)
-    seen, assumptions, converted = set(),[],[]
+    seen, assumptions, converted, unaffordable_loans = set(),[],[],[]
     existing_ids = {e["id"] for e in snapshot["events"]}
     for allocation in allocations:
         source = owned(FundingSource,owner,allocation["source_id"])
@@ -133,6 +133,8 @@ def evaluate_plan(owner,scenario,allocations):
                     "Cancelled or rejected borrowing cannot fund a plan.")
             require(not Disbursement.objects.filter(application__loan=source.loan,status="settled").exists(),
                 "Loan is already received; use the updated state, not another funding allocation.")
+            if source.loan.result["affordability_status"] == "unaffordable":
+                unaffordable_loans.append(str(source.loan_id))
         amount = Decimal(allocation["amount"])
         require(Decimal("0") < amount <= source.amount,"Allocation exceeds source capacity or is not positive.")
         net,days,quote = convert(owner,amount,source.currency,allocation.get("fx_quote_id"))
@@ -155,10 +157,12 @@ def evaluate_plan(owner,scenario,allocations):
     result = forecast(snapshot,scenario.inputs["end_date"],scenario.inputs["include_estimates"])
     if result["status"] == "incomplete": feasibility = "incomplete"
     elif Decimal(result["maximum_reserve_gap"]) > 0: feasibility = "funding_gap"
+    elif unaffordable_loans: feasibility = "unaffordable"
     elif assumptions: feasibility = "feasible_under_assumptions"
     else: feasibility = "feasible"
     return {**result,"feasibility":feasibility,"allocations":converted,
-        "uncertain_source_ids":assumptions,"is_simulated":True,"fx_evidence":evidence}
+        "uncertain_source_ids":assumptions,"unaffordable_loan_ids":unaffordable_loans,
+        "is_simulated":True,"fx_evidence":evidence}
 
 def create_plan(actor,data,obj=None):
     scenario = owned(BudgetScenario,actor,data["scenario_id"])

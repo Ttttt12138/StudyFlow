@@ -294,6 +294,7 @@ Feasibility values:
 - feasible_under_assumptions
 - incomplete
 - funding_gap
+- unaffordable (an allocated loan failed its affordability measurement)
 
 ## B loans inside Django (replacement contract)
 

@@ -82,7 +82,8 @@ Funding plan request:
     }
 
 Each source occurs once, with a positive allocation no larger than its capacity.
-Results distinguish feasible, feasible_under_assumptions, incomplete, and funding_gap.
+Results distinguish feasible, feasible_under_assumptions, incomplete, funding_gap,
+and unaffordable when an allocated loan failed its affordability measurement.
 A sufficient final balance does not erase an earlier gap.
 Loan-backed plans include the FULL associated repayment schedule, not a prorated debt.
 Old scenarios/plans are rejected after state changes or quote expiry.
@@ -186,4 +187,3 @@ GET/POST sources/ handles metadata only.
 Attach an owned source_id and evidence_note to state events.
 Evidence parsing, official-site retrieval, and model extraction remain C's integration.
 Confirmed in this API means student-confirmed, not independently bank-verified.
-
