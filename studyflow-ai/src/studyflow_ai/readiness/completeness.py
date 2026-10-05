@@ -25,10 +25,12 @@ def _conflicts(items, profile):
         signatures = {
             (i.currency, i.amount, i.lower, i.upper, i.period, i.year, i.campus) for i in comparable
         }
-        if len(comparable) > 1:
+        components = [i.component for i in items]
+        distinct_components = all(components) and len(components) == len(set(components))
+        if len(comparable) > 1 and not distinct_components:
             code = "POSSIBLE_DUPLICATE" if len(signatures) == 1 else "CONFLICTING_COST"
             issues.append(issue(code, items[0].category))
-        if len(comparable) != len(items):
+        if comparable and len(comparable) != len(items) and not distinct_components:
             issues.append(issue("APPLICABILITY_CONFLICT", items[0].category))
     for item in items:
         if item.applicability == "APPLICABLE" and item.year is None:

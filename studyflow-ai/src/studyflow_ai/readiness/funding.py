@@ -28,7 +28,15 @@ def loan_explanation(quote):
 def check_allocations(candidate, context):
     issues, seen = [], set()
     sources = {s.funding_id: s for s in context.sources}
-    allowed = set(sources) | {q.quote_id for q in context.loan_quotes}
+    actions = {a.action_id: a for a in context.actions}
+    allowed = set(sources) | {q.quote_id for q in context.loan_quotes} | set(actions)
+    if not candidate.allocations and not candidate.action_ids:
+        issues.append(issue("EMPTY_CANDIDATE"))
+    if len(candidate.action_ids) != len(set(candidate.action_ids)) or not set(candidate.action_ids).issubset(actions):
+        issues.append(issue("UNKNOWN_OR_DUPLICATE_ACTION"))
+    for action_id in candidate.action_ids:
+        if action_id in actions:
+            candidate.conditions.extend(actions[action_id].conditions)
     if not set(candidate.source_refs).issubset(allowed):
         issues.append(issue("UNKNOWN_REFERENCE"))
     for allocation in candidate.allocations:
@@ -86,11 +94,18 @@ class FundingPlanner:
             result.issues.append(issue(exc.code))
         if result.issues or any(p.validation != "VALID" for p in result.candidates):
             result.status = Status.NEEDS_REVIEW
+        order = {"VALID": 0, "CONDITIONAL": 1, "PENDING": 2, "STALE": 3, "INVALID": 4}
+        result.candidates.sort(key=lambda candidate: (
+            order[candidate.validation],
+            candidate.borrowing_net.amount if candidate.borrowing_net else Decimal("Infinity"),
+            candidate.financing_cost.amount if candidate.financing_cost else Decimal("Infinity"),
+        ))
         return result
 
     def _candidate(self, raw, context, result):
         try:
             candidate = FundingCandidate(
+                action_ids=raw.action_ids,
                 allocations=[
                     Allocation(
                         funding_id=a.funding_id,
