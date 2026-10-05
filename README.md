@@ -26,4 +26,8 @@ python manage.py makemigrations --check --dry-run
 python manage.py demo_bc --runs 3
 ```
 
-The demo adds new simulated identities to the configured database. The C adapter exports authoritative loan values and mock explanations from an owned scenario; it does not constitute a complete multi-scenario readiness budget. Full readiness orchestration is a separate change. All monetary operations are simulated.
+The demo adds new simulated identities to the configured database. The C adapter exports authoritative loan values and mock explanations from an owned scenario; it does not constitute a complete multi-scenario readiness budget. All monetary operations are simulated.
+
+## Readiness integration
+
+Enable `STUDYFLOW_READINESS_ENABLED=true` for material confirmation, versioned budgets and funding plans. Run `python manage.py readiness_worker --mode mock` for durable processing and `python manage.py demo_readiness --mode mock --runs 3` for a loopback HTTP simulation. Read the [readiness guide](docs/readiness.md) for contracts, explicit live configuration and recovery behavior. Migration 0007 adds persistent jobs, leases, risk cards and a notification outbox.

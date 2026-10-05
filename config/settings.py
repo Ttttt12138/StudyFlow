@@ -85,3 +85,6 @@ USE_I18N = True
 USE_TZ = True
 STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+STUDYFLOW_READINESS_ENABLED = os.getenv("STUDYFLOW_READINESS_ENABLED", "false").lower() == "true"
+STUDYFLOW_AI_MODE = os.getenv("STUDYFLOW_MODE", "mock")
