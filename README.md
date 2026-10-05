@@ -1,33 +1,68 @@
-# StudyFlow: Django backend and C module
+# StudyFlow 工作区
 
-Django is the unified B backend under `/api/v2/`. Lending uses the migrated B calculation and state rules; budgets, FX, payments and reconciliation remain Django services. C is an independent package in [studyflow-ai](studyflow-ai/README.md).
+已新增入学预算与主动资金规划后端：PSU 模板、材料上传确认、学期预算、30–90 天预测、筹资组合和持久 worker。启用方式、API 顺序及真实模型演示见 [Readiness 接入说明](docs/readiness.md)。
 
-## Install and run
+Django 是统一 B 后端，所有接口使用 `/api/v2/`。原 Django 借款引擎已由独立 B 项目的计算与状态规则替换；预算、换汇、支付和对账继续使用现有 Django 服务。C 以本地 Python 包接入，共用 Django 用户、钱包、账本和事务。
 
-Use Python 3.11+ in an activated virtual environment. Install `requirements-dev.txt`. Copy `.env.example` to `.env` only if it does not exist, and configure a random Django secret and a dedicated PostgreSQL database before running:
+| 目录 | 用途 |
+|---|---|
+| `finance/`、`config/` | 统一 Django 后端；`finance/lending_core` 为迁入的 B 纯计算与契约 |
+| `studyflow-ai/` | C 模块，独立开发和测试 |
+| `auto_test/` | 替换后的借款、C 适配、迁移、并发和缺陷回归测试 |
+| `output/` | 本地验证结果，gitignored |
 
-```text
-python manage.py migrate
-python manage.py runserver 127.0.0.1:8000 --noreload
+## 启动 Django
+
+Python 3.11+、Docker Desktop。在工作区根目录运行：
+
+```powershell
+python -m venv --prompt studyFlow studyFlow
+studyFlow/Scripts/python.exe -m pip install -r requirements-dev.txt
+Copy-Item .env.example .env  # 仅首次创建；已有 .env 时保留原配置
+# 编辑 .env，设置随机 DJANGO_SECRET_KEY；示例 DB_PORT=55433 对应下方 Compose。
+docker compose up -d --wait db
+studyFlow/Scripts/python.exe manage.py migrate
+studyFlow/Scripts/python.exe manage.py runserver 127.0.0.1:8000 --noreload
 ```
 
-## Lending and migration
+推荐使用 `studyFlow/Scripts/python.exe`；启动脚本也兼容已安装依赖的 `.venv` 环境。根 Compose 使用独立 `studyflow-django` 服务、55433 端口和命名卷，不依赖旧 B 的 55432 端口。原 FastAPI 后端与团队设计文件可保留为本地参考，不属于本次集成提交。
 
-Read [API_GUIDE.md](API_GUIDE.md) and [lending migration notes](docs/django-b-lending.md). Migration 0005 adds lending accounts and installments; 0006 preserves historical ledger credits and adopts existing settled loans. Resolve legacy processing/unknown disbursements with the previous version before migrating. Migration 0006 is not automatically reversible.
+`/health/` 为公开就绪检查；`/api/docs/` 和 `/api/schema/` 需要登录。认证使用 `Authorization: Token ...` 或 Django session；session 写请求需要 CSRF。工作流写接口需要 `Idempotency-Key`。
 
-## Verification
+`manage.py seed_demo` 可创建初始示例及本地 `.demo-credentials.json`，不会覆盖已有用户；该文件不得提交。`scripts/start-postgres.ps1` 和 `scripts/start-backend.ps1` 可复用已配置环境。
 
-With a dedicated PostgreSQL development database and permission to create its isolated test database:
+## 测试与 B/C 联调
 
-```text
-python manage.py test finance auto_test --noinput
-python -m pytest auto_test/test_lending_core.py
-python manage.py makemigrations --check --dry-run
-python manage.py demo_bc --runs 3
+配置专用开发 PostgreSQL 后执行（测试数据库为 `test_studyflow`）：
+
+```powershell
+studyFlow/Scripts/python.exe manage.py test finance auto_test --noinput --keepdb
+studyFlow/Scripts/python.exe -m pytest auto_test/test_lending_core.py -q -p no:cacheprovider
+studyFlow/Scripts/python.exe manage.py makemigrations --check --dry-run
+New-Item -ItemType Directory -Path output -Force | Out-Null
+studyFlow/Scripts/python.exe manage.py spectacular --validate --fail-on-warn --file output/openapi.yaml
+studyFlow/Scripts/python.exe manage.py demo_bc --runs 3 --output output/django-bc-demo.json
 ```
 
-The demo adds new simulated identities to the configured database. The C adapter exports authoritative loan values and mock explanations from an owned scenario; it does not constitute a complete multi-scenario readiness budget. All monetary operations are simulated.
+测试角色需有建测试库权限，或由管理员预建测试库后使用 `--keepdb`。SQLite 仅用于局部轻量检查，不能证明 PostgreSQL 精度、锁和触发器行为。
 
-## Readiness integration
+`demo_bc` 每轮创建新模拟身份，使用真实 Token 认证、Django HTTP 路由和 PostgreSQL，执行缺资料复核、补齐批准、幂等放款、模拟补充资金、12 期还款与结清。C 使用明确的 mock 模式；报告不输出令牌。调用通过 Django APIClient 在进程内完成，不是浏览器或外部网络端到端验收。
 
-Enable `STUDYFLOW_READINESS_ENABLED=true` for material confirmation, versioned budgets and funding plans. Run `python manage.py readiness_worker --mode mock` for durable processing and `python manage.py demo_readiness --mode mock --runs 3` for a loopback HTTP simulation. Read the [readiness guide](docs/readiness.md) for contracts, explicit live configuration and recovery behavior. Migration 0007 adds persistent jobs, leases, risk cards and a notification outbox.
+本轮结果见 [Django 与 B/C 验证记录](docs/verification-django-b-20261005.md)。
+
+## 借款替换及迁移
+
+新借款只接受 B 的 THB、1–60 期、比例年利率和首期日期，不再接受旧 `annual_rate_percent`、宽限期或外币借款创建字段。新流程详见 [API 指南](API_GUIDE.md) 和 [替换说明](docs/django-b-lending.md)。
+
+`0005/0006` 迁移保留旧报价和账本，给已结算贷款建立还款账户，不重复入账。未放款的旧引擎报价保留只读，需重新创建 B 报价。若旧放款仍处于 processing/unknown，迁移会停止并要求先用旧版解决结果，避免未知资金状态被当成失败或成功；迁移不支持自动倒退。
+
+## C 独立运行
+
+在 `studyflow-ai` 内运行：
+
+```powershell
+../studyFlow/Scripts/python.exe -m pytest -p no:cacheprovider
+../studyFlow/Scripts/python.exe -m studyflow_ai --mode mock readiness-demo --output output/readiness-demo.json
+```
+
+C 的 live 模型配置仍在 `studyflow-ai/.env`，只在显式使用 `--env-file` 时加载。Django 借款解释目前使用 mock，预算来自所选 Django 场景，并明确标记尚不是完整 readiness 预算。全部资金操作为模拟。

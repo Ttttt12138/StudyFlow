@@ -1,5 +1,5 @@
 {
-  "python.defaultInterpreterPath": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
+  "python.defaultInterpreterPath": "${workspaceFolder}\\studyFlow\\Scripts\\python.exe",
   "python.testing.unittestEnabled": false,
   "files.exclude": {
     "**/__pycache__": true

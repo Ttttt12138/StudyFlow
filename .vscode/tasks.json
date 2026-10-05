@@ -4,7 +4,7 @@
     {
       "label": "Django check",
       "type": "process",
-      "command": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
+      "command": "${workspaceFolder}\\studyFlow\\Scripts\\python.exe",
       "args": [
         "manage.py",
         "check"
@@ -14,7 +14,7 @@
     {
       "label": "Tests (isolated SQLite)",
       "type": "process",
-      "command": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
+      "command": "${workspaceFolder}\\studyFlow\\Scripts\\python.exe",
       "args": [
         "manage.py",
         "test",

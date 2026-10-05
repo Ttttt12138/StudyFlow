@@ -1,0 +1,38 @@
+name: Django B and C integration
+on: [push, pull_request]
+jobs:
+  django:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: studyflow
+          POSTGRES_USER: studyflow
+          POSTGRES_PASSWORD: local-simulation-only
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U studyflow -d studyflow"
+          --health-interval 2s --health-timeout 3s --health-retries 30
+    env:
+      DJANGO_SECRET_KEY: ci-only-not-a-deployment-secret
+      DB_NAME: studyflow
+      DB_USER: studyflow
+      DB_PASSWORD: local-simulation-only
+      DB_HOST: 127.0.0.1
+      DB_PORT: "5432"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: python -m pip install -r requirements-dev.txt
+      - run: python manage.py check
+      - run: python manage.py makemigrations --check --dry-run
+      - run: python manage.py test finance auto_test --noinput
+      - run: python -m pytest auto_test/test_lending_core.py -q
+      - run: mkdir -p output
+      - run: python manage.py spectacular --validate --fail-on-warn --file output/openapi.yaml
+      - run: python manage.py migrate --noinput
+      - run: python manage.py demo_bc --runs 3
+      - run: python manage.py demo_readiness --mode mock --runs 3 --output output/readiness-http-mock.json
