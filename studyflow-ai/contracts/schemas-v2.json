@@ -1,0 +1,4009 @@
+{
+  "MaterialSource": {
+    "additionalProperties": false,
+    "properties": {
+      "source_id": {
+        "title": "Source Id",
+        "type": "string"
+      },
+      "kind": {
+        "enum": [
+          "text",
+          "pdf",
+          "url"
+        ],
+        "title": "Kind",
+        "type": "string"
+      },
+      "text": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Text"
+      },
+      "path": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Path"
+      },
+      "url": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Url"
+      }
+    },
+    "required": [
+      "source_id",
+      "kind"
+    ],
+    "title": "MaterialSource",
+    "type": "object"
+  },
+  "ExtractionContext": {
+    "additionalProperties": false,
+    "properties": {
+      "reference_date": {
+        "format": "date",
+        "title": "Reference Date",
+        "type": "string"
+      },
+      "language": {
+        "default": "en",
+        "title": "Language",
+        "type": "string"
+      },
+      "student_id": {
+        "default": "student_001",
+        "title": "Student Id",
+        "type": "string"
+      }
+    },
+    "required": [
+      "reference_date"
+    ],
+    "title": "ExtractionContext",
+    "type": "object"
+  },
+  "ExtractionResult": {
+    "$defs": {
+      "CallRecord": {
+        "additionalProperties": false,
+        "properties": {
+          "provider": {
+            "title": "Provider",
+            "type": "string"
+          },
+          "purpose": {
+            "enum": [
+              "classify",
+              "extract",
+              "plan"
+            ],
+            "title": "Purpose",
+            "type": "string"
+          },
+          "model": {
+            "title": "Model",
+            "type": "string"
+          },
+          "mode": {
+            "enum": [
+              "mock",
+              "live",
+              "rules"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "prompt_version": {
+            "default": "1.0",
+            "title": "Prompt Version",
+            "type": "string"
+          },
+          "duration_ms": {
+            "default": 0,
+            "title": "Duration Ms",
+            "type": "number"
+          },
+          "input_tokens": {
+            "default": 0,
+            "title": "Input Tokens",
+            "type": "integer"
+          },
+          "output_tokens": {
+            "default": 0,
+            "title": "Output Tokens",
+            "type": "integer"
+          },
+          "attempts": {
+            "default": 1,
+            "title": "Attempts",
+            "type": "integer"
+          },
+          "error_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Error Code"
+          },
+          "request_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Request Id"
+          }
+        },
+        "required": [
+          "provider",
+          "purpose",
+          "model",
+          "mode"
+        ],
+        "title": "CallRecord",
+        "type": "object"
+      },
+      "CostItem": {
+        "additionalProperties": false,
+        "properties": {
+          "cost_id": {
+            "title": "Cost Id",
+            "type": "string"
+          },
+          "category": {
+            "enum": [
+              "tuition",
+              "housing",
+              "deposit",
+              "food",
+              "transport",
+              "communications",
+              "utilities",
+              "insurance",
+              "visa",
+              "travel",
+              "settlement",
+              "reserve"
+            ],
+            "title": "Category",
+            "type": "string"
+          },
+          "currency": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Currency"
+          },
+          "amount": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Amount"
+          },
+          "lower": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Lower"
+          },
+          "upper": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Upper"
+          },
+          "period": {
+            "anyOf": [
+              {
+                "enum": [
+                  "once",
+                  "monthly",
+                  "semester",
+                  "yearly"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Period"
+          },
+          "due_date": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Due Date"
+          },
+          "year": {
+            "anyOf": [
+              {
+                "maximum": 2200,
+                "minimum": 1900,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Year"
+          },
+          "campus": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Campus"
+          },
+          "paid": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Paid"
+          },
+          "refundable": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Refundable"
+          },
+          "invoice_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Invoice Id"
+          },
+          "applicability": {
+            "default": "APPLICABLE",
+            "enum": [
+              "APPLICABLE",
+              "NOT_APPLICABLE"
+            ],
+            "title": "Applicability",
+            "type": "string"
+          },
+          "applicability_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Applicability Reason"
+          },
+          "confidence_type": {
+            "default": "UNCONFIRMED",
+            "enum": [
+              "VERIFIED",
+              "INFERRED",
+              "UNCONFIRMED"
+            ],
+            "title": "Confidence Type",
+            "type": "string"
+          },
+          "verification_reference": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Verification Reference"
+          },
+          "evidence": {
+            "items": {
+              "$ref": "#/$defs/Evidence"
+            },
+            "title": "Evidence",
+            "type": "array"
+          },
+          "source_refs": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Source Refs",
+            "type": "array"
+          }
+        },
+        "required": [
+          "category"
+        ],
+        "title": "CostItem",
+        "type": "object"
+      },
+      "Evidence": {
+        "additionalProperties": false,
+        "properties": {
+          "source_id": {
+            "title": "Source Id",
+            "type": "string"
+          },
+          "field": {
+            "title": "Field",
+            "type": "string"
+          },
+          "quote": {
+            "title": "Quote",
+            "type": "string"
+          },
+          "locator": {
+            "title": "Locator",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source_id",
+          "field",
+          "quote",
+          "locator"
+        ],
+        "title": "Evidence",
+        "type": "object"
+      },
+      "Issue": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "field": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Field"
+          },
+          "locator": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Locator"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "Issue",
+        "type": "object"
+      },
+      "Provenance": {
+        "additionalProperties": false,
+        "properties": {
+          "source_id": {
+            "title": "Source Id",
+            "type": "string"
+          },
+          "final_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Final Url"
+          },
+          "fetched_at": {
+            "format": "date-time",
+            "title": "Fetched At",
+            "type": "string"
+          },
+          "content_sha256": {
+            "title": "Content Sha256",
+            "type": "string"
+          },
+          "media_type": {
+            "title": "Media Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source_id",
+          "fetched_at",
+          "content_sha256",
+          "media_type"
+        ],
+        "title": "Provenance",
+        "type": "object"
+      },
+      "SemesterDraft": {
+        "additionalProperties": false,
+        "properties": {
+          "profile": {
+            "$ref": "#/$defs/SemesterProfile"
+          },
+          "costs": {
+            "items": {
+              "$ref": "#/$defs/CostItem"
+            },
+            "title": "Costs",
+            "type": "array"
+          },
+          "provenance": {
+            "items": {
+              "$ref": "#/$defs/Provenance"
+            },
+            "title": "Provenance",
+            "type": "array"
+          }
+        },
+        "title": "SemesterDraft",
+        "type": "object"
+      },
+      "SemesterProfile": {
+        "additionalProperties": false,
+        "properties": {
+          "school": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "School"
+          },
+          "campus": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Campus"
+          },
+          "country": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Country"
+          },
+          "program": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Program"
+          },
+          "student_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Student Type"
+          },
+          "start_date": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Start Date"
+          },
+          "end_date": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "End Date"
+          },
+          "evidence": {
+            "items": {
+              "$ref": "#/$defs/Evidence"
+            },
+            "title": "Evidence",
+            "type": "array"
+          }
+        },
+        "title": "SemesterProfile",
+        "type": "object"
+      },
+      "Status": {
+        "enum": [
+          "READY",
+          "NEEDS_REVIEW",
+          "REJECTED"
+        ],
+        "title": "Status",
+        "type": "string"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "schema_version": {
+        "const": "2.0",
+        "default": "2.0",
+        "title": "Schema Version",
+        "type": "string"
+      },
+      "trace_id": {
+        "title": "Trace Id",
+        "type": "string"
+      },
+      "source_refs": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Source Refs",
+        "type": "array"
+      },
+      "status": {
+        "$ref": "#/$defs/Status",
+        "default": "READY"
+      },
+      "issues": {
+        "items": {
+          "$ref": "#/$defs/Issue"
+        },
+        "title": "Issues",
+        "type": "array"
+      },
+      "draft": {
+        "$ref": "#/$defs/SemesterDraft"
+      },
+      "route": {
+        "default": "EXTRACT",
+        "enum": [
+          "EXTRACT",
+          "REVIEW"
+        ],
+        "title": "Route",
+        "type": "string"
+      },
+      "calls": {
+        "items": {
+          "$ref": "#/$defs/CallRecord"
+        },
+        "title": "Calls",
+        "type": "array"
+      }
+    },
+    "title": "ExtractionResult",
+    "type": "object"
+  },
+  "SemesterDraft": {
+    "$defs": {
+      "CostItem": {
+        "additionalProperties": false,
+        "properties": {
+          "cost_id": {
+            "title": "Cost Id",
+            "type": "string"
+          },
+          "category": {
+            "enum": [
+              "tuition",
+              "housing",
+              "deposit",
+              "food",
+              "transport",
+              "communications",
+              "utilities",
+              "insurance",
+              "visa",
+              "travel",
+              "settlement",
+              "reserve"
+            ],
+            "title": "Category",
+            "type": "string"
+          },
+          "currency": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Currency"
+          },
+          "amount": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Amount"
+          },
+          "lower": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Lower"
+          },
+          "upper": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Upper"
+          },
+          "period": {
+            "anyOf": [
+              {
+                "enum": [
+                  "once",
+                  "monthly",
+                  "semester",
+                  "yearly"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Period"
+          },
+          "due_date": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Due Date"
+          },
+          "year": {
+            "anyOf": [
+              {
+                "maximum": 2200,
+                "minimum": 1900,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Year"
+          },
+          "campus": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Campus"
+          },
+          "paid": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Paid"
+          },
+          "refundable": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Refundable"
+          },
+          "invoice_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Invoice Id"
+          },
+          "applicability": {
+            "default": "APPLICABLE",
+            "enum": [
+              "APPLICABLE",
+              "NOT_APPLICABLE"
+            ],
+            "title": "Applicability",
+            "type": "string"
+          },
+          "applicability_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Applicability Reason"
+          },
+          "confidence_type": {
+            "default": "UNCONFIRMED",
+            "enum": [
+              "VERIFIED",
+              "INFERRED",
+              "UNCONFIRMED"
+            ],
+            "title": "Confidence Type",
+            "type": "string"
+          },
+          "verification_reference": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Verification Reference"
+          },
+          "evidence": {
+            "items": {
+              "$ref": "#/$defs/Evidence"
+            },
+            "title": "Evidence",
+            "type": "array"
+          },
+          "source_refs": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Source Refs",
+            "type": "array"
+          }
+        },
+        "required": [
+          "category"
+        ],
+        "title": "CostItem",
+        "type": "object"
+      },
+      "Evidence": {
+        "additionalProperties": false,
+        "properties": {
+          "source_id": {
+            "title": "Source Id",
+            "type": "string"
+          },
+          "field": {
+            "title": "Field",
+            "type": "string"
+          },
+          "quote": {
+            "title": "Quote",
+            "type": "string"
+          },
+          "locator": {
+            "title": "Locator",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source_id",
+          "field",
+          "quote",
+          "locator"
+        ],
+        "title": "Evidence",
+        "type": "object"
+      },
+      "Provenance": {
+        "additionalProperties": false,
+        "properties": {
+          "source_id": {
+            "title": "Source Id",
+            "type": "string"
+          },
+          "final_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Final Url"
+          },
+          "fetched_at": {
+            "format": "date-time",
+            "title": "Fetched At",
+            "type": "string"
+          },
+          "content_sha256": {
+            "title": "Content Sha256",
+            "type": "string"
+          },
+          "media_type": {
+            "title": "Media Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source_id",
+          "fetched_at",
+          "content_sha256",
+          "media_type"
+        ],
+        "title": "Provenance",
+        "type": "object"
+      },
+      "SemesterProfile": {
+        "additionalProperties": false,
+        "properties": {
+          "school": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "School"
+          },
+          "campus": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Campus"
+          },
+          "country": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Country"
+          },
+          "program": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Program"
+          },
+          "student_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Student Type"
+          },
+          "start_date": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Start Date"
+          },
+          "end_date": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "End Date"
+          },
+          "evidence": {
+            "items": {
+              "$ref": "#/$defs/Evidence"
+            },
+            "title": "Evidence",
+            "type": "array"
+          }
+        },
+        "title": "SemesterProfile",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "profile": {
+        "$ref": "#/$defs/SemesterProfile"
+      },
+      "costs": {
+        "items": {
+          "$ref": "#/$defs/CostItem"
+        },
+        "title": "Costs",
+        "type": "array"
+      },
+      "provenance": {
+        "items": {
+          "$ref": "#/$defs/Provenance"
+        },
+        "title": "Provenance",
+        "type": "array"
+      }
+    },
+    "title": "SemesterDraft",
+    "type": "object"
+  },
+  "CompletenessResult": {
+    "$defs": {
+      "CategoryCoverage": {
+        "additionalProperties": false,
+        "properties": {
+          "category": {
+            "enum": [
+              "tuition",
+              "housing",
+              "deposit",
+              "food",
+              "transport",
+              "communications",
+              "utilities",
+              "insurance",
+              "visa",
+              "travel",
+              "settlement",
+              "reserve"
+            ],
+            "title": "Category",
+            "type": "string"
+          },
+          "state": {
+            "enum": [
+              "Known",
+              "Estimated",
+              "Missing"
+            ],
+            "title": "State",
+            "type": "string"
+          },
+          "cost_ids": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Cost Ids",
+            "type": "array"
+          },
+          "applicable": {
+            "title": "Applicable",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "category",
+          "state",
+          "cost_ids",
+          "applicable"
+        ],
+        "title": "CategoryCoverage",
+        "type": "object"
+      },
+      "Issue": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "field": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Field"
+          },
+          "locator": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Locator"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "Issue",
+        "type": "object"
+      },
+      "Status": {
+        "enum": [
+          "READY",
+          "NEEDS_REVIEW",
+          "REJECTED"
+        ],
+        "title": "Status",
+        "type": "string"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "schema_version": {
+        "const": "2.0",
+        "default": "2.0",
+        "title": "Schema Version",
+        "type": "string"
+      },
+      "trace_id": {
+        "title": "Trace Id",
+        "type": "string"
+      },
+      "source_refs": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Source Refs",
+        "type": "array"
+      },
+      "status": {
+        "$ref": "#/$defs/Status",
+        "default": "READY"
+      },
+      "issues": {
+        "items": {
+          "$ref": "#/$defs/Issue"
+        },
+        "title": "Issues",
+        "type": "array"
+      },
+      "complete": {
+        "default": false,
+        "title": "Complete",
+        "type": "boolean"
+      },
+      "categories": {
+        "items": {
+          "$ref": "#/$defs/CategoryCoverage"
+        },
+        "title": "Categories",
+        "type": "array"
+      },
+      "questions": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Questions",
+        "type": "array"
+      }
+    },
+    "title": "CompletenessResult",
+    "type": "object"
+  },
+  "FxRequest": {
+    "$defs": {
+      "CurrencyPair": {
+        "additionalProperties": false,
+        "properties": {
+          "base": {
+            "title": "Base",
+            "type": "string"
+          },
+          "quote": {
+            "title": "Quote",
+            "type": "string"
+          }
+        },
+        "required": [
+          "base",
+          "quote"
+        ],
+        "title": "CurrencyPair",
+        "type": "object"
+      },
+      "FxQuote": {
+        "additionalProperties": false,
+        "properties": {
+          "pair": {
+            "$ref": "#/$defs/CurrencyPair"
+          },
+          "rate": {
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Rate",
+            "type": "string"
+          },
+          "rate_date": {
+            "format": "date",
+            "title": "Rate Date",
+            "type": "string"
+          },
+          "fetched_at": {
+            "format": "date-time",
+            "title": "Fetched At",
+            "type": "string"
+          },
+          "source": {
+            "title": "Source",
+            "type": "string"
+          },
+          "manual": {
+            "default": false,
+            "title": "Manual",
+            "type": "boolean"
+          },
+          "basis": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Basis"
+          },
+          "stale": {
+            "default": false,
+            "title": "Stale",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "pair",
+          "rate",
+          "rate_date",
+          "fetched_at",
+          "source"
+        ],
+        "title": "FxQuote",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "pairs": {
+        "items": {
+          "$ref": "#/$defs/CurrencyPair"
+        },
+        "maxItems": 30,
+        "minItems": 1,
+        "title": "Pairs",
+        "type": "array"
+      },
+      "as_of": {
+        "format": "date",
+        "title": "As Of",
+        "type": "string"
+      },
+      "manual_quotes": {
+        "items": {
+          "$ref": "#/$defs/FxQuote"
+        },
+        "title": "Manual Quotes",
+        "type": "array"
+      }
+    },
+    "required": [
+      "pairs",
+      "as_of"
+    ],
+    "title": "FxRequest",
+    "type": "object"
+  },
+  "FxResult": {
+    "$defs": {
+      "CurrencyPair": {
+        "additionalProperties": false,
+        "properties": {
+          "base": {
+            "title": "Base",
+            "type": "string"
+          },
+          "quote": {
+            "title": "Quote",
+            "type": "string"
+          }
+        },
+        "required": [
+          "base",
+          "quote"
+        ],
+        "title": "CurrencyPair",
+        "type": "object"
+      },
+      "FxQuote": {
+        "additionalProperties": false,
+        "properties": {
+          "pair": {
+            "$ref": "#/$defs/CurrencyPair"
+          },
+          "rate": {
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Rate",
+            "type": "string"
+          },
+          "rate_date": {
+            "format": "date",
+            "title": "Rate Date",
+            "type": "string"
+          },
+          "fetched_at": {
+            "format": "date-time",
+            "title": "Fetched At",
+            "type": "string"
+          },
+          "source": {
+            "title": "Source",
+            "type": "string"
+          },
+          "manual": {
+            "default": false,
+            "title": "Manual",
+            "type": "boolean"
+          },
+          "basis": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Basis"
+          },
+          "stale": {
+            "default": false,
+            "title": "Stale",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "pair",
+          "rate",
+          "rate_date",
+          "fetched_at",
+          "source"
+        ],
+        "title": "FxQuote",
+        "type": "object"
+      },
+      "Issue": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "field": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Field"
+          },
+          "locator": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Locator"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "Issue",
+        "type": "object"
+      },
+      "Status": {
+        "enum": [
+          "READY",
+          "NEEDS_REVIEW",
+          "REJECTED"
+        ],
+        "title": "Status",
+        "type": "string"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "schema_version": {
+        "const": "2.0",
+        "default": "2.0",
+        "title": "Schema Version",
+        "type": "string"
+      },
+      "trace_id": {
+        "title": "Trace Id",
+        "type": "string"
+      },
+      "source_refs": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Source Refs",
+        "type": "array"
+      },
+      "status": {
+        "$ref": "#/$defs/Status",
+        "default": "READY"
+      },
+      "issues": {
+        "items": {
+          "$ref": "#/$defs/Issue"
+        },
+        "title": "Issues",
+        "type": "array"
+      },
+      "quotes": {
+        "items": {
+          "$ref": "#/$defs/FxQuote"
+        },
+        "title": "Quotes",
+        "type": "array"
+      }
+    },
+    "title": "FxResult",
+    "type": "object"
+  },
+  "ReadinessState": {
+    "$defs": {
+      "CostItem": {
+        "additionalProperties": false,
+        "properties": {
+          "cost_id": {
+            "title": "Cost Id",
+            "type": "string"
+          },
+          "category": {
+            "enum": [
+              "tuition",
+              "housing",
+              "deposit",
+              "food",
+              "transport",
+              "communications",
+              "utilities",
+              "insurance",
+              "visa",
+              "travel",
+              "settlement",
+              "reserve"
+            ],
+            "title": "Category",
+            "type": "string"
+          },
+          "currency": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Currency"
+          },
+          "amount": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Amount"
+          },
+          "lower": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Lower"
+          },
+          "upper": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Upper"
+          },
+          "period": {
+            "anyOf": [
+              {
+                "enum": [
+                  "once",
+                  "monthly",
+                  "semester",
+                  "yearly"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Period"
+          },
+          "due_date": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Due Date"
+          },
+          "year": {
+            "anyOf": [
+              {
+                "maximum": 2200,
+                "minimum": 1900,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Year"
+          },
+          "campus": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Campus"
+          },
+          "paid": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Paid"
+          },
+          "refundable": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Refundable"
+          },
+          "invoice_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Invoice Id"
+          },
+          "applicability": {
+            "default": "APPLICABLE",
+            "enum": [
+              "APPLICABLE",
+              "NOT_APPLICABLE"
+            ],
+            "title": "Applicability",
+            "type": "string"
+          },
+          "applicability_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Applicability Reason"
+          },
+          "confidence_type": {
+            "default": "UNCONFIRMED",
+            "enum": [
+              "VERIFIED",
+              "INFERRED",
+              "UNCONFIRMED"
+            ],
+            "title": "Confidence Type",
+            "type": "string"
+          },
+          "verification_reference": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Verification Reference"
+          },
+          "evidence": {
+            "items": {
+              "$ref": "#/$defs/Evidence"
+            },
+            "title": "Evidence",
+            "type": "array"
+          },
+          "source_refs": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Source Refs",
+            "type": "array"
+          }
+        },
+        "required": [
+          "category"
+        ],
+        "title": "CostItem",
+        "type": "object"
+      },
+      "Evidence": {
+        "additionalProperties": false,
+        "properties": {
+          "source_id": {
+            "title": "Source Id",
+            "type": "string"
+          },
+          "field": {
+            "title": "Field",
+            "type": "string"
+          },
+          "quote": {
+            "title": "Quote",
+            "type": "string"
+          },
+          "locator": {
+            "title": "Locator",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source_id",
+          "field",
+          "quote",
+          "locator"
+        ],
+        "title": "Evidence",
+        "type": "object"
+      },
+      "Provenance": {
+        "additionalProperties": false,
+        "properties": {
+          "source_id": {
+            "title": "Source Id",
+            "type": "string"
+          },
+          "final_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Final Url"
+          },
+          "fetched_at": {
+            "format": "date-time",
+            "title": "Fetched At",
+            "type": "string"
+          },
+          "content_sha256": {
+            "title": "Content Sha256",
+            "type": "string"
+          },
+          "media_type": {
+            "title": "Media Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source_id",
+          "fetched_at",
+          "content_sha256",
+          "media_type"
+        ],
+        "title": "Provenance",
+        "type": "object"
+      },
+      "SemesterDraft": {
+        "additionalProperties": false,
+        "properties": {
+          "profile": {
+            "$ref": "#/$defs/SemesterProfile"
+          },
+          "costs": {
+            "items": {
+              "$ref": "#/$defs/CostItem"
+            },
+            "title": "Costs",
+            "type": "array"
+          },
+          "provenance": {
+            "items": {
+              "$ref": "#/$defs/Provenance"
+            },
+            "title": "Provenance",
+            "type": "array"
+          }
+        },
+        "title": "SemesterDraft",
+        "type": "object"
+      },
+      "SemesterProfile": {
+        "additionalProperties": false,
+        "properties": {
+          "school": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "School"
+          },
+          "campus": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Campus"
+          },
+          "country": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Country"
+          },
+          "program": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Program"
+          },
+          "student_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Student Type"
+          },
+          "start_date": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Start Date"
+          },
+          "end_date": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "End Date"
+          },
+          "evidence": {
+            "items": {
+              "$ref": "#/$defs/Evidence"
+            },
+            "title": "Evidence",
+            "type": "array"
+          }
+        },
+        "title": "SemesterProfile",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "student_id": {
+        "title": "Student Id",
+        "type": "string"
+      },
+      "state_version": {
+        "title": "State Version",
+        "type": "integer"
+      },
+      "budget_version": {
+        "title": "Budget Version",
+        "type": "integer"
+      },
+      "draft": {
+        "$ref": "#/$defs/SemesterDraft"
+      }
+    },
+    "required": [
+      "student_id",
+      "state_version",
+      "budget_version",
+      "draft"
+    ],
+    "title": "ReadinessState",
+    "type": "object"
+  },
+  "BudgetSnapshot": {
+    "$defs": {
+      "CurrencyPair": {
+        "additionalProperties": false,
+        "properties": {
+          "base": {
+            "title": "Base",
+            "type": "string"
+          },
+          "quote": {
+            "title": "Quote",
+            "type": "string"
+          }
+        },
+        "required": [
+          "base",
+          "quote"
+        ],
+        "title": "CurrencyPair",
+        "type": "object"
+      },
+      "FxQuote": {
+        "additionalProperties": false,
+        "properties": {
+          "pair": {
+            "$ref": "#/$defs/CurrencyPair"
+          },
+          "rate": {
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Rate",
+            "type": "string"
+          },
+          "rate_date": {
+            "format": "date",
+            "title": "Rate Date",
+            "type": "string"
+          },
+          "fetched_at": {
+            "format": "date-time",
+            "title": "Fetched At",
+            "type": "string"
+          },
+          "source": {
+            "title": "Source",
+            "type": "string"
+          },
+          "manual": {
+            "default": false,
+            "title": "Manual",
+            "type": "boolean"
+          },
+          "basis": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Basis"
+          },
+          "stale": {
+            "default": false,
+            "title": "Stale",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "pair",
+          "rate",
+          "rate_date",
+          "fetched_at",
+          "source"
+        ],
+        "title": "FxQuote",
+        "type": "object"
+      },
+      "MoneyValue": {
+        "additionalProperties": false,
+        "properties": {
+          "currency": {
+            "title": "Currency",
+            "type": "string"
+          },
+          "amount": {
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Amount",
+            "type": "string"
+          }
+        },
+        "required": [
+          "currency",
+          "amount"
+        ],
+        "title": "MoneyValue",
+        "type": "object"
+      },
+      "PaymentPoint": {
+        "additionalProperties": false,
+        "properties": {
+          "date": {
+            "format": "date",
+            "title": "Date",
+            "type": "string"
+          },
+          "required": {
+            "$ref": "#/$defs/MoneyValue"
+          },
+          "gap": {
+            "$ref": "#/$defs/MoneyValue"
+          }
+        },
+        "required": [
+          "date",
+          "required",
+          "gap"
+        ],
+        "title": "PaymentPoint",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "state_version": {
+        "minimum": 1,
+        "title": "State Version",
+        "type": "integer"
+      },
+      "budget_version": {
+        "minimum": 1,
+        "title": "Budget Version",
+        "type": "integer"
+      },
+      "report_currency": {
+        "title": "Report Currency",
+        "type": "string"
+      },
+      "complete": {
+        "title": "Complete",
+        "type": "boolean"
+      },
+      "low": {
+        "$ref": "#/$defs/MoneyValue"
+      },
+      "base": {
+        "$ref": "#/$defs/MoneyValue"
+      },
+      "high": {
+        "$ref": "#/$defs/MoneyValue"
+      },
+      "gap": {
+        "$ref": "#/$defs/MoneyValue"
+      },
+      "payment_points": {
+        "items": {
+          "$ref": "#/$defs/PaymentPoint"
+        },
+        "title": "Payment Points",
+        "type": "array"
+      },
+      "risks": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Risks",
+        "type": "array"
+      },
+      "assumptions": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Assumptions",
+        "type": "array"
+      },
+      "fx_quotes": {
+        "items": {
+          "$ref": "#/$defs/FxQuote"
+        },
+        "title": "Fx Quotes",
+        "type": "array"
+      }
+    },
+    "required": [
+      "state_version",
+      "budget_version",
+      "report_currency",
+      "complete",
+      "low",
+      "base",
+      "high",
+      "gap",
+      "payment_points",
+      "risks",
+      "assumptions"
+    ],
+    "title": "BudgetSnapshot",
+    "type": "object"
+  },
+  "FundingContext": {
+    "$defs": {
+      "ApplicationSnapshot": {
+        "additionalProperties": false,
+        "properties": {
+          "application_id": {
+            "title": "Application Id",
+            "type": "string"
+          },
+          "quote_id": {
+            "title": "Quote Id",
+            "type": "string"
+          },
+          "state": {
+            "enum": [
+              "DRAFT",
+              "SUBMITTED",
+              "UNDER_REVIEW",
+              "APPROVED",
+              "REJECTED",
+              "CANCELLED",
+              "DISBURSED"
+            ],
+            "title": "State",
+            "type": "string"
+          },
+          "simulated": {
+            "const": true,
+            "default": true,
+            "title": "Simulated",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "application_id",
+          "quote_id",
+          "state"
+        ],
+        "title": "ApplicationSnapshot",
+        "type": "object"
+      },
+      "BudgetSnapshot": {
+        "additionalProperties": false,
+        "properties": {
+          "state_version": {
+            "minimum": 1,
+            "title": "State Version",
+            "type": "integer"
+          },
+          "budget_version": {
+            "minimum": 1,
+            "title": "Budget Version",
+            "type": "integer"
+          },
+          "report_currency": {
+            "title": "Report Currency",
+            "type": "string"
+          },
+          "complete": {
+            "title": "Complete",
+            "type": "boolean"
+          },
+          "low": {
+            "$ref": "#/$defs/MoneyValue"
+          },
+          "base": {
+            "$ref": "#/$defs/MoneyValue"
+          },
+          "high": {
+            "$ref": "#/$defs/MoneyValue"
+          },
+          "gap": {
+            "$ref": "#/$defs/MoneyValue"
+          },
+          "payment_points": {
+            "items": {
+              "$ref": "#/$defs/PaymentPoint"
+            },
+            "title": "Payment Points",
+            "type": "array"
+          },
+          "risks": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Risks",
+            "type": "array"
+          },
+          "assumptions": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Assumptions",
+            "type": "array"
+          },
+          "fx_quotes": {
+            "items": {
+              "$ref": "#/$defs/FxQuote"
+            },
+            "title": "Fx Quotes",
+            "type": "array"
+          }
+        },
+        "required": [
+          "state_version",
+          "budget_version",
+          "report_currency",
+          "complete",
+          "low",
+          "base",
+          "high",
+          "gap",
+          "payment_points",
+          "risks",
+          "assumptions"
+        ],
+        "title": "BudgetSnapshot",
+        "type": "object"
+      },
+      "CurrencyPair": {
+        "additionalProperties": false,
+        "properties": {
+          "base": {
+            "title": "Base",
+            "type": "string"
+          },
+          "quote": {
+            "title": "Quote",
+            "type": "string"
+          }
+        },
+        "required": [
+          "base",
+          "quote"
+        ],
+        "title": "CurrencyPair",
+        "type": "object"
+      },
+      "FundingSource": {
+        "additionalProperties": false,
+        "properties": {
+          "funding_id": {
+            "title": "Funding Id",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "family_support",
+              "scholarship",
+              "installment",
+              "reduce_spending",
+              "borrowing"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "allocatable": {
+            "$ref": "#/$defs/MoneyValue"
+          },
+          "available_date": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Available Date"
+          },
+          "conditions": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Conditions",
+            "type": "array"
+          },
+          "received": {
+            "default": false,
+            "title": "Received",
+            "type": "boolean"
+          },
+          "loan_quote_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Loan Quote Id"
+          }
+        },
+        "required": [
+          "funding_id",
+          "kind",
+          "allocatable",
+          "available_date",
+          "conditions"
+        ],
+        "title": "FundingSource",
+        "type": "object"
+      },
+      "FxQuote": {
+        "additionalProperties": false,
+        "properties": {
+          "pair": {
+            "$ref": "#/$defs/CurrencyPair"
+          },
+          "rate": {
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Rate",
+            "type": "string"
+          },
+          "rate_date": {
+            "format": "date",
+            "title": "Rate Date",
+            "type": "string"
+          },
+          "fetched_at": {
+            "format": "date-time",
+            "title": "Fetched At",
+            "type": "string"
+          },
+          "source": {
+            "title": "Source",
+            "type": "string"
+          },
+          "manual": {
+            "default": false,
+            "title": "Manual",
+            "type": "boolean"
+          },
+          "basis": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Basis"
+          },
+          "stale": {
+            "default": false,
+            "title": "Stale",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "pair",
+          "rate",
+          "rate_date",
+          "fetched_at",
+          "source"
+        ],
+        "title": "FxQuote",
+        "type": "object"
+      },
+      "LoanQuote": {
+        "additionalProperties": false,
+        "properties": {
+          "quote_id": {
+            "title": "Quote Id",
+            "type": "string"
+          },
+          "principal": {
+            "$ref": "#/$defs/MoneyValue"
+          },
+          "net_proceeds": {
+            "$ref": "#/$defs/MoneyValue"
+          },
+          "fees": {
+            "$ref": "#/$defs/MoneyValue"
+          },
+          "total_interest": {
+            "$ref": "#/$defs/MoneyValue"
+          },
+          "repayments": {
+            "items": {
+              "$ref": "#/$defs/Repayment"
+            },
+            "title": "Repayments",
+            "type": "array"
+          },
+          "affordability": {
+            "enum": [
+              "AFFORDABLE",
+              "UNAFFORDABLE",
+              "INSUFFICIENT_DATA"
+            ],
+            "title": "Affordability",
+            "type": "string"
+          },
+          "missing_inputs": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Missing Inputs",
+            "type": "array"
+          },
+          "conditions": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Conditions",
+            "type": "array"
+          }
+        },
+        "required": [
+          "quote_id",
+          "principal",
+          "net_proceeds",
+          "fees",
+          "total_interest",
+          "repayments",
+          "affordability",
+          "missing_inputs",
+          "conditions"
+        ],
+        "title": "LoanQuote",
+        "type": "object"
+      },
+      "MoneyValue": {
+        "additionalProperties": false,
+        "properties": {
+          "currency": {
+            "title": "Currency",
+            "type": "string"
+          },
+          "amount": {
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Amount",
+            "type": "string"
+          }
+        },
+        "required": [
+          "currency",
+          "amount"
+        ],
+        "title": "MoneyValue",
+        "type": "object"
+      },
+      "PaymentPoint": {
+        "additionalProperties": false,
+        "properties": {
+          "date": {
+            "format": "date",
+            "title": "Date",
+            "type": "string"
+          },
+          "required": {
+            "$ref": "#/$defs/MoneyValue"
+          },
+          "gap": {
+            "$ref": "#/$defs/MoneyValue"
+          }
+        },
+        "required": [
+          "date",
+          "required",
+          "gap"
+        ],
+        "title": "PaymentPoint",
+        "type": "object"
+      },
+      "Repayment": {
+        "additionalProperties": false,
+        "properties": {
+          "due_date": {
+            "format": "date",
+            "title": "Due Date",
+            "type": "string"
+          },
+          "amount": {
+            "$ref": "#/$defs/MoneyValue"
+          }
+        },
+        "required": [
+          "due_date",
+          "amount"
+        ],
+        "title": "Repayment",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "student_id": {
+        "title": "Student Id",
+        "type": "string"
+      },
+      "now": {
+        "format": "date-time",
+        "title": "Now",
+        "type": "string"
+      },
+      "budget": {
+        "$ref": "#/$defs/BudgetSnapshot"
+      },
+      "sources": {
+        "items": {
+          "$ref": "#/$defs/FundingSource"
+        },
+        "title": "Sources",
+        "type": "array"
+      },
+      "loan_quotes": {
+        "items": {
+          "$ref": "#/$defs/LoanQuote"
+        },
+        "title": "Loan Quotes",
+        "type": "array"
+      },
+      "applications": {
+        "items": {
+          "$ref": "#/$defs/ApplicationSnapshot"
+        },
+        "title": "Applications",
+        "type": "array"
+      }
+    },
+    "required": [
+      "student_id",
+      "now",
+      "budget",
+      "sources",
+      "loan_quotes"
+    ],
+    "title": "FundingContext",
+    "type": "object"
+  },
+  "FundingResult": {
+    "$defs": {
+      "Allocation": {
+        "additionalProperties": false,
+        "properties": {
+          "funding_id": {
+            "title": "Funding Id",
+            "type": "string"
+          },
+          "amount": {
+            "$ref": "#/$defs/MoneyValue"
+          }
+        },
+        "required": [
+          "funding_id",
+          "amount"
+        ],
+        "title": "Allocation",
+        "type": "object"
+      },
+      "ApplicationSnapshot": {
+        "additionalProperties": false,
+        "properties": {
+          "application_id": {
+            "title": "Application Id",
+            "type": "string"
+          },
+          "quote_id": {
+            "title": "Quote Id",
+            "type": "string"
+          },
+          "state": {
+            "enum": [
+              "DRAFT",
+              "SUBMITTED",
+              "UNDER_REVIEW",
+              "APPROVED",
+              "REJECTED",
+              "CANCELLED",
+              "DISBURSED"
+            ],
+            "title": "State",
+            "type": "string"
+          },
+          "simulated": {
+            "const": true,
+            "default": true,
+            "title": "Simulated",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "application_id",
+          "quote_id",
+          "state"
+        ],
+        "title": "ApplicationSnapshot",
+        "type": "object"
+      },
+      "CallRecord": {
+        "additionalProperties": false,
+        "properties": {
+          "provider": {
+            "title": "Provider",
+            "type": "string"
+          },
+          "purpose": {
+            "enum": [
+              "classify",
+              "extract",
+              "plan"
+            ],
+            "title": "Purpose",
+            "type": "string"
+          },
+          "model": {
+            "title": "Model",
+            "type": "string"
+          },
+          "mode": {
+            "enum": [
+              "mock",
+              "live",
+              "rules"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "prompt_version": {
+            "default": "1.0",
+            "title": "Prompt Version",
+            "type": "string"
+          },
+          "duration_ms": {
+            "default": 0,
+            "title": "Duration Ms",
+            "type": "number"
+          },
+          "input_tokens": {
+            "default": 0,
+            "title": "Input Tokens",
+            "type": "integer"
+          },
+          "output_tokens": {
+            "default": 0,
+            "title": "Output Tokens",
+            "type": "integer"
+          },
+          "attempts": {
+            "default": 1,
+            "title": "Attempts",
+            "type": "integer"
+          },
+          "error_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Error Code"
+          },
+          "request_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Request Id"
+          }
+        },
+        "required": [
+          "provider",
+          "purpose",
+          "model",
+          "mode"
+        ],
+        "title": "CallRecord",
+        "type": "object"
+      },
+      "FundingCandidate": {
+        "additionalProperties": false,
+        "properties": {
+          "candidate_id": {
+            "title": "Candidate Id",
+            "type": "string"
+          },
+          "allocations": {
+            "items": {
+              "$ref": "#/$defs/Allocation"
+            },
+            "minItems": 1,
+            "title": "Allocations",
+            "type": "array"
+          },
+          "source_refs": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Source Refs",
+            "type": "array"
+          },
+          "conditions": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Conditions",
+            "type": "array"
+          },
+          "explanation": {
+            "title": "Explanation",
+            "type": "string"
+          },
+          "validation": {
+            "default": "PENDING",
+            "enum": [
+              "PENDING",
+              "CONDITIONAL",
+              "VALID",
+              "INVALID",
+              "STALE"
+            ],
+            "title": "Validation",
+            "type": "string"
+          },
+          "issues": {
+            "items": {
+              "$ref": "#/$defs/Issue"
+            },
+            "title": "Issues",
+            "type": "array"
+          }
+        },
+        "required": [
+          "allocations",
+          "source_refs",
+          "conditions",
+          "explanation"
+        ],
+        "title": "FundingCandidate",
+        "type": "object"
+      },
+      "Issue": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "field": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Field"
+          },
+          "locator": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Locator"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "Issue",
+        "type": "object"
+      },
+      "LoanExplanation": {
+        "additionalProperties": false,
+        "properties": {
+          "quote": {
+            "$ref": "#/$defs/LoanQuote"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "quote",
+          "message"
+        ],
+        "title": "LoanExplanation",
+        "type": "object"
+      },
+      "LoanQuote": {
+        "additionalProperties": false,
+        "properties": {
+          "quote_id": {
+            "title": "Quote Id",
+            "type": "string"
+          },
+          "principal": {
+            "$ref": "#/$defs/MoneyValue"
+          },
+          "net_proceeds": {
+            "$ref": "#/$defs/MoneyValue"
+          },
+          "fees": {
+            "$ref": "#/$defs/MoneyValue"
+          },
+          "total_interest": {
+            "$ref": "#/$defs/MoneyValue"
+          },
+          "repayments": {
+            "items": {
+              "$ref": "#/$defs/Repayment"
+            },
+            "title": "Repayments",
+            "type": "array"
+          },
+          "affordability": {
+            "enum": [
+              "AFFORDABLE",
+              "UNAFFORDABLE",
+              "INSUFFICIENT_DATA"
+            ],
+            "title": "Affordability",
+            "type": "string"
+          },
+          "missing_inputs": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Missing Inputs",
+            "type": "array"
+          },
+          "conditions": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Conditions",
+            "type": "array"
+          }
+        },
+        "required": [
+          "quote_id",
+          "principal",
+          "net_proceeds",
+          "fees",
+          "total_interest",
+          "repayments",
+          "affordability",
+          "missing_inputs",
+          "conditions"
+        ],
+        "title": "LoanQuote",
+        "type": "object"
+      },
+      "MoneyValue": {
+        "additionalProperties": false,
+        "properties": {
+          "currency": {
+            "title": "Currency",
+            "type": "string"
+          },
+          "amount": {
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Amount",
+            "type": "string"
+          }
+        },
+        "required": [
+          "currency",
+          "amount"
+        ],
+        "title": "MoneyValue",
+        "type": "object"
+      },
+      "Repayment": {
+        "additionalProperties": false,
+        "properties": {
+          "due_date": {
+            "format": "date",
+            "title": "Due Date",
+            "type": "string"
+          },
+          "amount": {
+            "$ref": "#/$defs/MoneyValue"
+          }
+        },
+        "required": [
+          "due_date",
+          "amount"
+        ],
+        "title": "Repayment",
+        "type": "object"
+      },
+      "Status": {
+        "enum": [
+          "READY",
+          "NEEDS_REVIEW",
+          "REJECTED"
+        ],
+        "title": "Status",
+        "type": "string"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "schema_version": {
+        "const": "2.0",
+        "default": "2.0",
+        "title": "Schema Version",
+        "type": "string"
+      },
+      "trace_id": {
+        "title": "Trace Id",
+        "type": "string"
+      },
+      "source_refs": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Source Refs",
+        "type": "array"
+      },
+      "status": {
+        "$ref": "#/$defs/Status",
+        "default": "READY"
+      },
+      "issues": {
+        "items": {
+          "$ref": "#/$defs/Issue"
+        },
+        "title": "Issues",
+        "type": "array"
+      },
+      "state_version": {
+        "anyOf": [
+          {
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "State Version"
+      },
+      "budget_version": {
+        "anyOf": [
+          {
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Budget Version"
+      },
+      "candidates": {
+        "items": {
+          "$ref": "#/$defs/FundingCandidate"
+        },
+        "maxItems": 3,
+        "title": "Candidates",
+        "type": "array"
+      },
+      "loan_explanations": {
+        "items": {
+          "$ref": "#/$defs/LoanExplanation"
+        },
+        "title": "Loan Explanations",
+        "type": "array"
+      },
+      "applications": {
+        "items": {
+          "$ref": "#/$defs/ApplicationSnapshot"
+        },
+        "title": "Applications",
+        "type": "array"
+      },
+      "application_notes": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Application Notes",
+        "type": "array"
+      },
+      "calls": {
+        "items": {
+          "$ref": "#/$defs/CallRecord"
+        },
+        "title": "Calls",
+        "type": "array"
+      }
+    },
+    "title": "FundingResult",
+    "type": "object"
+  },
+  "ReadinessResult": {
+    "$defs": {
+      "Allocation": {
+        "additionalProperties": false,
+        "properties": {
+          "funding_id": {
+            "title": "Funding Id",
+            "type": "string"
+          },
+          "amount": {
+            "$ref": "#/$defs/MoneyValue"
+          }
+        },
+        "required": [
+          "funding_id",
+          "amount"
+        ],
+        "title": "Allocation",
+        "type": "object"
+      },
+      "ApplicationSnapshot": {
+        "additionalProperties": false,
+        "properties": {
+          "application_id": {
+            "title": "Application Id",
+            "type": "string"
+          },
+          "quote_id": {
+            "title": "Quote Id",
+            "type": "string"
+          },
+          "state": {
+            "enum": [
+              "DRAFT",
+              "SUBMITTED",
+              "UNDER_REVIEW",
+              "APPROVED",
+              "REJECTED",
+              "CANCELLED",
+              "DISBURSED"
+            ],
+            "title": "State",
+            "type": "string"
+          },
+          "simulated": {
+            "const": true,
+            "default": true,
+            "title": "Simulated",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "application_id",
+          "quote_id",
+          "state"
+        ],
+        "title": "ApplicationSnapshot",
+        "type": "object"
+      },
+      "BudgetSnapshot": {
+        "additionalProperties": false,
+        "properties": {
+          "state_version": {
+            "minimum": 1,
+            "title": "State Version",
+            "type": "integer"
+          },
+          "budget_version": {
+            "minimum": 1,
+            "title": "Budget Version",
+            "type": "integer"
+          },
+          "report_currency": {
+            "title": "Report Currency",
+            "type": "string"
+          },
+          "complete": {
+            "title": "Complete",
+            "type": "boolean"
+          },
+          "low": {
+            "$ref": "#/$defs/MoneyValue"
+          },
+          "base": {
+            "$ref": "#/$defs/MoneyValue"
+          },
+          "high": {
+            "$ref": "#/$defs/MoneyValue"
+          },
+          "gap": {
+            "$ref": "#/$defs/MoneyValue"
+          },
+          "payment_points": {
+            "items": {
+              "$ref": "#/$defs/PaymentPoint"
+            },
+            "title": "Payment Points",
+            "type": "array"
+          },
+          "risks": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Risks",
+            "type": "array"
+          },
+          "assumptions": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Assumptions",
+            "type": "array"
+          },
+          "fx_quotes": {
+            "items": {
+              "$ref": "#/$defs/FxQuote"
+            },
+            "title": "Fx Quotes",
+            "type": "array"
+          }
+        },
+        "required": [
+          "state_version",
+          "budget_version",
+          "report_currency",
+          "complete",
+          "low",
+          "base",
+          "high",
+          "gap",
+          "payment_points",
+          "risks",
+          "assumptions"
+        ],
+        "title": "BudgetSnapshot",
+        "type": "object"
+      },
+      "CallRecord": {
+        "additionalProperties": false,
+        "properties": {
+          "provider": {
+            "title": "Provider",
+            "type": "string"
+          },
+          "purpose": {
+            "enum": [
+              "classify",
+              "extract",
+              "plan"
+            ],
+            "title": "Purpose",
+            "type": "string"
+          },
+          "model": {
+            "title": "Model",
+            "type": "string"
+          },
+          "mode": {
+            "enum": [
+              "mock",
+              "live",
+              "rules"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "prompt_version": {
+            "default": "1.0",
+            "title": "Prompt Version",
+            "type": "string"
+          },
+          "duration_ms": {
+            "default": 0,
+            "title": "Duration Ms",
+            "type": "number"
+          },
+          "input_tokens": {
+            "default": 0,
+            "title": "Input Tokens",
+            "type": "integer"
+          },
+          "output_tokens": {
+            "default": 0,
+            "title": "Output Tokens",
+            "type": "integer"
+          },
+          "attempts": {
+            "default": 1,
+            "title": "Attempts",
+            "type": "integer"
+          },
+          "error_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Error Code"
+          },
+          "request_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Request Id"
+          }
+        },
+        "required": [
+          "provider",
+          "purpose",
+          "model",
+          "mode"
+        ],
+        "title": "CallRecord",
+        "type": "object"
+      },
+      "CategoryCoverage": {
+        "additionalProperties": false,
+        "properties": {
+          "category": {
+            "enum": [
+              "tuition",
+              "housing",
+              "deposit",
+              "food",
+              "transport",
+              "communications",
+              "utilities",
+              "insurance",
+              "visa",
+              "travel",
+              "settlement",
+              "reserve"
+            ],
+            "title": "Category",
+            "type": "string"
+          },
+          "state": {
+            "enum": [
+              "Known",
+              "Estimated",
+              "Missing"
+            ],
+            "title": "State",
+            "type": "string"
+          },
+          "cost_ids": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Cost Ids",
+            "type": "array"
+          },
+          "applicable": {
+            "title": "Applicable",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "category",
+          "state",
+          "cost_ids",
+          "applicable"
+        ],
+        "title": "CategoryCoverage",
+        "type": "object"
+      },
+      "CompletenessResult": {
+        "additionalProperties": false,
+        "properties": {
+          "schema_version": {
+            "const": "2.0",
+            "default": "2.0",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "trace_id": {
+            "title": "Trace Id",
+            "type": "string"
+          },
+          "source_refs": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Source Refs",
+            "type": "array"
+          },
+          "status": {
+            "$ref": "#/$defs/Status",
+            "default": "READY"
+          },
+          "issues": {
+            "items": {
+              "$ref": "#/$defs/Issue"
+            },
+            "title": "Issues",
+            "type": "array"
+          },
+          "complete": {
+            "default": false,
+            "title": "Complete",
+            "type": "boolean"
+          },
+          "categories": {
+            "items": {
+              "$ref": "#/$defs/CategoryCoverage"
+            },
+            "title": "Categories",
+            "type": "array"
+          },
+          "questions": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Questions",
+            "type": "array"
+          }
+        },
+        "title": "CompletenessResult",
+        "type": "object"
+      },
+      "CurrencyPair": {
+        "additionalProperties": false,
+        "properties": {
+          "base": {
+            "title": "Base",
+            "type": "string"
+          },
+          "quote": {
+            "title": "Quote",
+            "type": "string"
+          }
+        },
+        "required": [
+          "base",
+          "quote"
+        ],
+        "title": "CurrencyPair",
+        "type": "object"
+      },
+      "FundingCandidate": {
+        "additionalProperties": false,
+        "properties": {
+          "candidate_id": {
+            "title": "Candidate Id",
+            "type": "string"
+          },
+          "allocations": {
+            "items": {
+              "$ref": "#/$defs/Allocation"
+            },
+            "minItems": 1,
+            "title": "Allocations",
+            "type": "array"
+          },
+          "source_refs": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Source Refs",
+            "type": "array"
+          },
+          "conditions": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Conditions",
+            "type": "array"
+          },
+          "explanation": {
+            "title": "Explanation",
+            "type": "string"
+          },
+          "validation": {
+            "default": "PENDING",
+            "enum": [
+              "PENDING",
+              "CONDITIONAL",
+              "VALID",
+              "INVALID",
+              "STALE"
+            ],
+            "title": "Validation",
+            "type": "string"
+          },
+          "issues": {
+            "items": {
+              "$ref": "#/$defs/Issue"
+            },
+            "title": "Issues",
+            "type": "array"
+          }
+        },
+        "required": [
+          "allocations",
+          "source_refs",
+          "conditions",
+          "explanation"
+        ],
+        "title": "FundingCandidate",
+        "type": "object"
+      },
+      "FundingResult": {
+        "additionalProperties": false,
+        "properties": {
+          "schema_version": {
+            "const": "2.0",
+            "default": "2.0",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "trace_id": {
+            "title": "Trace Id",
+            "type": "string"
+          },
+          "source_refs": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Source Refs",
+            "type": "array"
+          },
+          "status": {
+            "$ref": "#/$defs/Status",
+            "default": "READY"
+          },
+          "issues": {
+            "items": {
+              "$ref": "#/$defs/Issue"
+            },
+            "title": "Issues",
+            "type": "array"
+          },
+          "state_version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "State Version"
+          },
+          "budget_version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Budget Version"
+          },
+          "candidates": {
+            "items": {
+              "$ref": "#/$defs/FundingCandidate"
+            },
+            "maxItems": 3,
+            "title": "Candidates",
+            "type": "array"
+          },
+          "loan_explanations": {
+            "items": {
+              "$ref": "#/$defs/LoanExplanation"
+            },
+            "title": "Loan Explanations",
+            "type": "array"
+          },
+          "applications": {
+            "items": {
+              "$ref": "#/$defs/ApplicationSnapshot"
+            },
+            "title": "Applications",
+            "type": "array"
+          },
+          "application_notes": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Application Notes",
+            "type": "array"
+          },
+          "calls": {
+            "items": {
+              "$ref": "#/$defs/CallRecord"
+            },
+            "title": "Calls",
+            "type": "array"
+          }
+        },
+        "title": "FundingResult",
+        "type": "object"
+      },
+      "FxQuote": {
+        "additionalProperties": false,
+        "properties": {
+          "pair": {
+            "$ref": "#/$defs/CurrencyPair"
+          },
+          "rate": {
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Rate",
+            "type": "string"
+          },
+          "rate_date": {
+            "format": "date",
+            "title": "Rate Date",
+            "type": "string"
+          },
+          "fetched_at": {
+            "format": "date-time",
+            "title": "Fetched At",
+            "type": "string"
+          },
+          "source": {
+            "title": "Source",
+            "type": "string"
+          },
+          "manual": {
+            "default": false,
+            "title": "Manual",
+            "type": "boolean"
+          },
+          "basis": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Basis"
+          },
+          "stale": {
+            "default": false,
+            "title": "Stale",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "pair",
+          "rate",
+          "rate_date",
+          "fetched_at",
+          "source"
+        ],
+        "title": "FxQuote",
+        "type": "object"
+      },
+      "Issue": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "field": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Field"
+          },
+          "locator": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Locator"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "Issue",
+        "type": "object"
+      },
+      "LoanExplanation": {
+        "additionalProperties": false,
+        "properties": {
+          "quote": {
+            "$ref": "#/$defs/LoanQuote"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "quote",
+          "message"
+        ],
+        "title": "LoanExplanation",
+        "type": "object"
+      },
+      "LoanQuote": {
+        "additionalProperties": false,
+        "properties": {
+          "quote_id": {
+            "title": "Quote Id",
+            "type": "string"
+          },
+          "principal": {
+            "$ref": "#/$defs/MoneyValue"
+          },
+          "net_proceeds": {
+            "$ref": "#/$defs/MoneyValue"
+          },
+          "fees": {
+            "$ref": "#/$defs/MoneyValue"
+          },
+          "total_interest": {
+            "$ref": "#/$defs/MoneyValue"
+          },
+          "repayments": {
+            "items": {
+              "$ref": "#/$defs/Repayment"
+            },
+            "title": "Repayments",
+            "type": "array"
+          },
+          "affordability": {
+            "enum": [
+              "AFFORDABLE",
+              "UNAFFORDABLE",
+              "INSUFFICIENT_DATA"
+            ],
+            "title": "Affordability",
+            "type": "string"
+          },
+          "missing_inputs": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Missing Inputs",
+            "type": "array"
+          },
+          "conditions": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Conditions",
+            "type": "array"
+          }
+        },
+        "required": [
+          "quote_id",
+          "principal",
+          "net_proceeds",
+          "fees",
+          "total_interest",
+          "repayments",
+          "affordability",
+          "missing_inputs",
+          "conditions"
+        ],
+        "title": "LoanQuote",
+        "type": "object"
+      },
+      "MoneyValue": {
+        "additionalProperties": false,
+        "properties": {
+          "currency": {
+            "title": "Currency",
+            "type": "string"
+          },
+          "amount": {
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Amount",
+            "type": "string"
+          }
+        },
+        "required": [
+          "currency",
+          "amount"
+        ],
+        "title": "MoneyValue",
+        "type": "object"
+      },
+      "PaymentPoint": {
+        "additionalProperties": false,
+        "properties": {
+          "date": {
+            "format": "date",
+            "title": "Date",
+            "type": "string"
+          },
+          "required": {
+            "$ref": "#/$defs/MoneyValue"
+          },
+          "gap": {
+            "$ref": "#/$defs/MoneyValue"
+          }
+        },
+        "required": [
+          "date",
+          "required",
+          "gap"
+        ],
+        "title": "PaymentPoint",
+        "type": "object"
+      },
+      "Repayment": {
+        "additionalProperties": false,
+        "properties": {
+          "due_date": {
+            "format": "date",
+            "title": "Due Date",
+            "type": "string"
+          },
+          "amount": {
+            "$ref": "#/$defs/MoneyValue"
+          }
+        },
+        "required": [
+          "due_date",
+          "amount"
+        ],
+        "title": "Repayment",
+        "type": "object"
+      },
+      "Status": {
+        "enum": [
+          "READY",
+          "NEEDS_REVIEW",
+          "REJECTED"
+        ],
+        "title": "Status",
+        "type": "string"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "schema_version": {
+        "const": "2.0",
+        "default": "2.0",
+        "title": "Schema Version",
+        "type": "string"
+      },
+      "trace_id": {
+        "title": "Trace Id",
+        "type": "string"
+      },
+      "source_refs": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Source Refs",
+        "type": "array"
+      },
+      "status": {
+        "$ref": "#/$defs/Status",
+        "default": "READY"
+      },
+      "issues": {
+        "items": {
+          "$ref": "#/$defs/Issue"
+        },
+        "title": "Issues",
+        "type": "array"
+      },
+      "state_version": {
+        "anyOf": [
+          {
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "State Version"
+      },
+      "budget_version": {
+        "anyOf": [
+          {
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Budget Version"
+      },
+      "completeness": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/CompletenessResult"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "budget": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/BudgetSnapshot"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "funding": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/FundingResult"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "reused": {
+        "default": false,
+        "title": "Reused",
+        "type": "boolean"
+      },
+      "stale": {
+        "default": false,
+        "title": "Stale",
+        "type": "boolean"
+      }
+    },
+    "title": "ReadinessResult",
+    "type": "object"
+  }
+}

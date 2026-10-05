@@ -1,0 +1,3204 @@
+{
+  "Source": {
+    "additionalProperties": false,
+    "properties": {
+      "source_id": {
+        "title": "Source Id",
+        "type": "string"
+      },
+      "kind": {
+        "enum": [
+          "csv",
+          "email",
+          "pdf"
+        ],
+        "title": "Kind",
+        "type": "string"
+      },
+      "text": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Text"
+      },
+      "path": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Path"
+      }
+    },
+    "required": [
+      "source_id",
+      "kind"
+    ],
+    "title": "Source",
+    "type": "object"
+  },
+  "IngestContext": {
+    "additionalProperties": false,
+    "properties": {
+      "student_id": {
+        "default": "student_001",
+        "title": "Student Id",
+        "type": "string"
+      },
+      "reference_date": {
+        "format": "date",
+        "title": "Reference Date",
+        "type": "string"
+      },
+      "verified_source_ids": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Verified Source Ids",
+        "type": "array"
+      },
+      "verification_reference": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Verification Reference"
+      },
+      "known_beneficiaries": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Known Beneficiaries",
+        "type": "array"
+      }
+    },
+    "required": [
+      "reference_date"
+    ],
+    "title": "IngestContext",
+    "type": "object"
+  },
+  "IngestResult": {
+    "$defs": {
+      "CallRecord": {
+        "additionalProperties": false,
+        "properties": {
+          "provider": {
+            "title": "Provider",
+            "type": "string"
+          },
+          "purpose": {
+            "enum": [
+              "classify",
+              "extract",
+              "plan"
+            ],
+            "title": "Purpose",
+            "type": "string"
+          },
+          "model": {
+            "title": "Model",
+            "type": "string"
+          },
+          "mode": {
+            "enum": [
+              "mock",
+              "live",
+              "rules"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "prompt_version": {
+            "default": "1.0",
+            "title": "Prompt Version",
+            "type": "string"
+          },
+          "duration_ms": {
+            "default": 0,
+            "title": "Duration Ms",
+            "type": "number"
+          },
+          "input_tokens": {
+            "default": 0,
+            "title": "Input Tokens",
+            "type": "integer"
+          },
+          "output_tokens": {
+            "default": 0,
+            "title": "Output Tokens",
+            "type": "integer"
+          },
+          "attempts": {
+            "default": 1,
+            "title": "Attempts",
+            "type": "integer"
+          },
+          "error_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Error Code"
+          },
+          "request_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Request Id"
+          }
+        },
+        "required": [
+          "provider",
+          "purpose",
+          "model",
+          "mode"
+        ],
+        "title": "CallRecord",
+        "type": "object"
+      },
+      "CandidateEvent": {
+        "additionalProperties": false,
+        "properties": {
+          "candidate_id": {
+            "title": "Candidate Id",
+            "type": "string"
+          },
+          "category": {
+            "enum": [
+              "tuition",
+              "rent",
+              "utility",
+              "family_support",
+              "living",
+              "other",
+              "irrelevant"
+            ],
+            "title": "Category",
+            "type": "string"
+          },
+          "amount": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Amount"
+          },
+          "currency": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Currency"
+          },
+          "date": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Date"
+          },
+          "due_date": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Due Date"
+          },
+          "counterparty": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Counterparty"
+          },
+          "invoice_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Invoice Id"
+          },
+          "confidence_type": {
+            "default": "UNCONFIRMED",
+            "enum": [
+              "VERIFIED",
+              "INFERRED",
+              "UNCONFIRMED"
+            ],
+            "title": "Confidence Type",
+            "type": "string"
+          },
+          "verification_reference": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Verification Reference"
+          },
+          "status": {
+            "$ref": "#/$defs/Status",
+            "default": "NEEDS_REVIEW"
+          },
+          "evidence": {
+            "items": {
+              "$ref": "#/$defs/Evidence"
+            },
+            "title": "Evidence",
+            "type": "array"
+          },
+          "issues": {
+            "items": {
+              "$ref": "#/$defs/Issue"
+            },
+            "title": "Issues",
+            "type": "array"
+          }
+        },
+        "required": [
+          "category"
+        ],
+        "title": "CandidateEvent",
+        "type": "object"
+      },
+      "Classification": {
+        "additionalProperties": false,
+        "properties": {
+          "category": {
+            "enum": [
+              "tuition",
+              "rent",
+              "utility",
+              "family_support",
+              "living",
+              "other",
+              "irrelevant"
+            ],
+            "title": "Category",
+            "type": "string"
+          },
+          "probabilities": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "title": "Probabilities",
+            "type": "object"
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Confidence"
+          },
+          "financial_relevance": {
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Financial Relevance",
+            "type": "number"
+          },
+          "anomaly": {
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Anomaly",
+            "type": "number"
+          },
+          "needs_planning": {
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Needs Planning",
+            "type": "number"
+          }
+        },
+        "required": [
+          "category",
+          "probabilities",
+          "financial_relevance",
+          "anomaly",
+          "needs_planning"
+        ],
+        "title": "Classification",
+        "type": "object"
+      },
+      "Evidence": {
+        "additionalProperties": false,
+        "properties": {
+          "source_id": {
+            "title": "Source Id",
+            "type": "string"
+          },
+          "field": {
+            "title": "Field",
+            "type": "string"
+          },
+          "quote": {
+            "title": "Quote",
+            "type": "string"
+          },
+          "locator": {
+            "title": "Locator",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source_id",
+          "field",
+          "quote",
+          "locator"
+        ],
+        "title": "Evidence",
+        "type": "object"
+      },
+      "Issue": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "field": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Field"
+          },
+          "locator": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Locator"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "Issue",
+        "type": "object"
+      },
+      "RouteResult": {
+        "additionalProperties": false,
+        "properties": {
+          "schema_version": {
+            "const": "1.0",
+            "default": "1.0",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "trace_id": {
+            "title": "Trace Id",
+            "type": "string"
+          },
+          "source_refs": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Source Refs",
+            "type": "array"
+          },
+          "status": {
+            "$ref": "#/$defs/Status",
+            "default": "READY"
+          },
+          "state_version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "State Version"
+          },
+          "action": {
+            "enum": [
+              "REVIEW",
+              "PLAN",
+              "EXTRACT",
+              "PROCESS",
+              "SKIP"
+            ],
+            "title": "Action",
+            "type": "string"
+          },
+          "reasons": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Reasons",
+            "type": "array"
+          },
+          "classification": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/Classification"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "calls": {
+            "items": {
+              "$ref": "#/$defs/CallRecord"
+            },
+            "title": "Calls",
+            "type": "array"
+          }
+        },
+        "required": [
+          "action",
+          "reasons"
+        ],
+        "title": "RouteResult",
+        "type": "object"
+      },
+      "Status": {
+        "enum": [
+          "READY",
+          "NEEDS_REVIEW",
+          "REJECTED"
+        ],
+        "title": "Status",
+        "type": "string"
+      },
+      "Transaction": {
+        "additionalProperties": false,
+        "properties": {
+          "transaction_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Transaction Id"
+          },
+          "source_id": {
+            "default": "",
+            "title": "Source Id",
+            "type": "string"
+          },
+          "locator": {
+            "default": "",
+            "title": "Locator",
+            "type": "string"
+          },
+          "account_id": {
+            "title": "Account Id",
+            "type": "string"
+          },
+          "date": {
+            "format": "date",
+            "title": "Date",
+            "type": "string"
+          },
+          "amount": {
+            "title": "Amount",
+            "type": "string"
+          },
+          "currency": {
+            "const": "THB",
+            "default": "THB",
+            "title": "Currency",
+            "type": "string"
+          },
+          "counterparty": {
+            "title": "Counterparty",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/$defs/Status",
+            "default": "READY"
+          },
+          "issues": {
+            "items": {
+              "$ref": "#/$defs/Issue"
+            },
+            "title": "Issues",
+            "type": "array"
+          }
+        },
+        "required": [
+          "account_id",
+          "date",
+          "amount",
+          "counterparty",
+          "description"
+        ],
+        "title": "Transaction",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "schema_version": {
+        "const": "1.0",
+        "default": "1.0",
+        "title": "Schema Version",
+        "type": "string"
+      },
+      "trace_id": {
+        "title": "Trace Id",
+        "type": "string"
+      },
+      "source_refs": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Source Refs",
+        "type": "array"
+      },
+      "status": {
+        "$ref": "#/$defs/Status",
+        "default": "READY"
+      },
+      "candidates": {
+        "items": {
+          "$ref": "#/$defs/CandidateEvent"
+        },
+        "title": "Candidates",
+        "type": "array"
+      },
+      "transactions": {
+        "items": {
+          "$ref": "#/$defs/Transaction"
+        },
+        "title": "Transactions",
+        "type": "array"
+      },
+      "issues": {
+        "items": {
+          "$ref": "#/$defs/Issue"
+        },
+        "title": "Issues",
+        "type": "array"
+      },
+      "calls": {
+        "items": {
+          "$ref": "#/$defs/CallRecord"
+        },
+        "title": "Calls",
+        "type": "array"
+      },
+      "routing": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/RouteResult"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      }
+    },
+    "title": "IngestResult",
+    "type": "object"
+  },
+  "RouteContext": {
+    "$defs": {
+      "Issue": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "field": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Field"
+          },
+          "locator": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Locator"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "Issue",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "text": {
+        "default": "",
+        "title": "Text",
+        "type": "string"
+      },
+      "source_refs": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Source Refs",
+        "type": "array"
+      },
+      "state_version": {
+        "anyOf": [
+          {
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "State Version"
+      },
+      "needs_extraction": {
+        "default": false,
+        "title": "Needs Extraction",
+        "type": "boolean"
+      },
+      "issues": {
+        "items": {
+          "$ref": "#/$defs/Issue"
+        },
+        "title": "Issues",
+        "type": "array"
+      },
+      "deterministic_risk": {
+        "default": false,
+        "title": "Deterministic Risk",
+        "type": "boolean"
+      },
+      "financial_clues": {
+        "default": false,
+        "title": "Financial Clues",
+        "type": "boolean"
+      }
+    },
+    "title": "RouteContext",
+    "type": "object"
+  },
+  "RouteResult": {
+    "$defs": {
+      "CallRecord": {
+        "additionalProperties": false,
+        "properties": {
+          "provider": {
+            "title": "Provider",
+            "type": "string"
+          },
+          "purpose": {
+            "enum": [
+              "classify",
+              "extract",
+              "plan"
+            ],
+            "title": "Purpose",
+            "type": "string"
+          },
+          "model": {
+            "title": "Model",
+            "type": "string"
+          },
+          "mode": {
+            "enum": [
+              "mock",
+              "live",
+              "rules"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "prompt_version": {
+            "default": "1.0",
+            "title": "Prompt Version",
+            "type": "string"
+          },
+          "duration_ms": {
+            "default": 0,
+            "title": "Duration Ms",
+            "type": "number"
+          },
+          "input_tokens": {
+            "default": 0,
+            "title": "Input Tokens",
+            "type": "integer"
+          },
+          "output_tokens": {
+            "default": 0,
+            "title": "Output Tokens",
+            "type": "integer"
+          },
+          "attempts": {
+            "default": 1,
+            "title": "Attempts",
+            "type": "integer"
+          },
+          "error_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Error Code"
+          },
+          "request_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Request Id"
+          }
+        },
+        "required": [
+          "provider",
+          "purpose",
+          "model",
+          "mode"
+        ],
+        "title": "CallRecord",
+        "type": "object"
+      },
+      "Classification": {
+        "additionalProperties": false,
+        "properties": {
+          "category": {
+            "enum": [
+              "tuition",
+              "rent",
+              "utility",
+              "family_support",
+              "living",
+              "other",
+              "irrelevant"
+            ],
+            "title": "Category",
+            "type": "string"
+          },
+          "probabilities": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "title": "Probabilities",
+            "type": "object"
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Confidence"
+          },
+          "financial_relevance": {
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Financial Relevance",
+            "type": "number"
+          },
+          "anomaly": {
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Anomaly",
+            "type": "number"
+          },
+          "needs_planning": {
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Needs Planning",
+            "type": "number"
+          }
+        },
+        "required": [
+          "category",
+          "probabilities",
+          "financial_relevance",
+          "anomaly",
+          "needs_planning"
+        ],
+        "title": "Classification",
+        "type": "object"
+      },
+      "Status": {
+        "enum": [
+          "READY",
+          "NEEDS_REVIEW",
+          "REJECTED"
+        ],
+        "title": "Status",
+        "type": "string"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "schema_version": {
+        "const": "1.0",
+        "default": "1.0",
+        "title": "Schema Version",
+        "type": "string"
+      },
+      "trace_id": {
+        "title": "Trace Id",
+        "type": "string"
+      },
+      "source_refs": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Source Refs",
+        "type": "array"
+      },
+      "status": {
+        "$ref": "#/$defs/Status",
+        "default": "READY"
+      },
+      "state_version": {
+        "anyOf": [
+          {
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "State Version"
+      },
+      "action": {
+        "enum": [
+          "REVIEW",
+          "PLAN",
+          "EXTRACT",
+          "PROCESS",
+          "SKIP"
+        ],
+        "title": "Action",
+        "type": "string"
+      },
+      "reasons": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Reasons",
+        "type": "array"
+      },
+      "classification": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/Classification"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "calls": {
+        "items": {
+          "$ref": "#/$defs/CallRecord"
+        },
+        "title": "Calls",
+        "type": "array"
+      }
+    },
+    "required": [
+      "action",
+      "reasons"
+    ],
+    "title": "RouteResult",
+    "type": "object"
+  },
+  "RecurringObligation": {
+    "$defs": {
+      "Status": {
+        "enum": [
+          "READY",
+          "NEEDS_REVIEW",
+          "REJECTED"
+        ],
+        "title": "Status",
+        "type": "string"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "schema_version": {
+        "const": "1.0",
+        "default": "1.0",
+        "title": "Schema Version",
+        "type": "string"
+      },
+      "trace_id": {
+        "title": "Trace Id",
+        "type": "string"
+      },
+      "source_refs": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Source Refs",
+        "type": "array"
+      },
+      "status": {
+        "$ref": "#/$defs/Status",
+        "default": "READY"
+      },
+      "account_id": {
+        "title": "Account Id",
+        "type": "string"
+      },
+      "category": {
+        "enum": [
+          "rent",
+          "other"
+        ],
+        "title": "Category",
+        "type": "string"
+      },
+      "counterparty": {
+        "title": "Counterparty",
+        "type": "string"
+      },
+      "amount": {
+        "title": "Amount",
+        "type": "string"
+      },
+      "currency": {
+        "const": "THB",
+        "default": "THB",
+        "title": "Currency",
+        "type": "string"
+      },
+      "frequency": {
+        "const": "monthly",
+        "default": "monthly",
+        "title": "Frequency",
+        "type": "string"
+      },
+      "expected_next_date": {
+        "format": "date",
+        "title": "Expected Next Date",
+        "type": "string"
+      },
+      "confidence_type": {
+        "const": "INFERRED",
+        "default": "INFERRED",
+        "title": "Confidence Type",
+        "type": "string"
+      },
+      "supporting_transaction_ids": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Supporting Transaction Ids",
+        "type": "array"
+      },
+      "rule_version": {
+        "default": "monthly-1.0",
+        "title": "Rule Version",
+        "type": "string"
+      },
+      "basis": {
+        "title": "Basis",
+        "type": "string"
+      }
+    },
+    "required": [
+      "account_id",
+      "category",
+      "counterparty",
+      "amount",
+      "expected_next_date",
+      "supporting_transaction_ids",
+      "basis"
+    ],
+    "title": "RecurringObligation",
+    "type": "object"
+  },
+  "FinancialSnapshot": {
+    "$defs": {
+      "Obligation": {
+        "additionalProperties": false,
+        "properties": {
+          "obligation_id": {
+            "title": "Obligation Id",
+            "type": "string"
+          },
+          "amount": {
+            "title": "Amount",
+            "type": "string"
+          },
+          "due_date": {
+            "format": "date",
+            "title": "Due Date",
+            "type": "string"
+          },
+          "category": {
+            "enum": [
+              "tuition",
+              "rent",
+              "utility",
+              "family_support",
+              "living",
+              "other",
+              "irrelevant"
+            ],
+            "title": "Category",
+            "type": "string"
+          }
+        },
+        "required": [
+          "obligation_id",
+          "amount",
+          "due_date",
+          "category"
+        ],
+        "title": "Obligation",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "student_id": {
+        "title": "Student Id",
+        "type": "string"
+      },
+      "state_version": {
+        "minimum": 0,
+        "title": "State Version",
+        "type": "integer"
+      },
+      "as_of": {
+        "format": "date-time",
+        "title": "As Of",
+        "type": "string"
+      },
+      "balance": {
+        "title": "Balance",
+        "type": "string"
+      },
+      "minimum_reserve": {
+        "title": "Minimum Reserve",
+        "type": "string"
+      },
+      "obligations": {
+        "items": {
+          "$ref": "#/$defs/Obligation"
+        },
+        "title": "Obligations",
+        "type": "array"
+      }
+    },
+    "required": [
+      "student_id",
+      "state_version",
+      "as_of",
+      "balance",
+      "minimum_reserve"
+    ],
+    "title": "FinancialSnapshot",
+    "type": "object"
+  },
+  "Forecast": {
+    "$defs": {
+      "Risk": {
+        "additionalProperties": false,
+        "properties": {
+          "risk_id": {
+            "title": "Risk Id",
+            "type": "string"
+          },
+          "kind": {
+            "default": "liquidity_shortfall",
+            "title": "Kind",
+            "type": "string"
+          },
+          "gap": {
+            "title": "Gap",
+            "type": "string"
+          },
+          "due_date": {
+            "format": "date",
+            "title": "Due Date",
+            "type": "string"
+          },
+          "source_refs": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Source Refs",
+            "type": "array"
+          }
+        },
+        "required": [
+          "risk_id",
+          "gap",
+          "due_date",
+          "source_refs"
+        ],
+        "title": "Risk",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "state_version": {
+        "title": "State Version",
+        "type": "integer"
+      },
+      "projected_balance": {
+        "title": "Projected Balance",
+        "type": "string"
+      },
+      "risks": {
+        "items": {
+          "$ref": "#/$defs/Risk"
+        },
+        "title": "Risks",
+        "type": "array"
+      },
+      "buffer": {
+        "default": "0.00",
+        "title": "Buffer",
+        "type": "string"
+      },
+      "funding_target": {
+        "title": "Funding Target",
+        "type": "string"
+      }
+    },
+    "required": [
+      "state_version",
+      "projected_balance",
+      "risks",
+      "funding_target"
+    ],
+    "title": "Forecast",
+    "type": "object"
+  },
+  "PlanningContext": {
+    "$defs": {
+      "FinancialSnapshot": {
+        "additionalProperties": false,
+        "properties": {
+          "student_id": {
+            "title": "Student Id",
+            "type": "string"
+          },
+          "state_version": {
+            "minimum": 0,
+            "title": "State Version",
+            "type": "integer"
+          },
+          "as_of": {
+            "format": "date-time",
+            "title": "As Of",
+            "type": "string"
+          },
+          "balance": {
+            "title": "Balance",
+            "type": "string"
+          },
+          "minimum_reserve": {
+            "title": "Minimum Reserve",
+            "type": "string"
+          },
+          "obligations": {
+            "items": {
+              "$ref": "#/$defs/Obligation"
+            },
+            "title": "Obligations",
+            "type": "array"
+          }
+        },
+        "required": [
+          "student_id",
+          "state_version",
+          "as_of",
+          "balance",
+          "minimum_reserve"
+        ],
+        "title": "FinancialSnapshot",
+        "type": "object"
+      },
+      "Forecast": {
+        "additionalProperties": false,
+        "properties": {
+          "state_version": {
+            "title": "State Version",
+            "type": "integer"
+          },
+          "projected_balance": {
+            "title": "Projected Balance",
+            "type": "string"
+          },
+          "risks": {
+            "items": {
+              "$ref": "#/$defs/Risk"
+            },
+            "title": "Risks",
+            "type": "array"
+          },
+          "buffer": {
+            "default": "0.00",
+            "title": "Buffer",
+            "type": "string"
+          },
+          "funding_target": {
+            "title": "Funding Target",
+            "type": "string"
+          }
+        },
+        "required": [
+          "state_version",
+          "projected_balance",
+          "risks",
+          "funding_target"
+        ],
+        "title": "Forecast",
+        "type": "object"
+      },
+      "Obligation": {
+        "additionalProperties": false,
+        "properties": {
+          "obligation_id": {
+            "title": "Obligation Id",
+            "type": "string"
+          },
+          "amount": {
+            "title": "Amount",
+            "type": "string"
+          },
+          "due_date": {
+            "format": "date",
+            "title": "Due Date",
+            "type": "string"
+          },
+          "category": {
+            "enum": [
+              "tuition",
+              "rent",
+              "utility",
+              "family_support",
+              "living",
+              "other",
+              "irrelevant"
+            ],
+            "title": "Category",
+            "type": "string"
+          }
+        },
+        "required": [
+          "obligation_id",
+          "amount",
+          "due_date",
+          "category"
+        ],
+        "title": "Obligation",
+        "type": "object"
+      },
+      "Risk": {
+        "additionalProperties": false,
+        "properties": {
+          "risk_id": {
+            "title": "Risk Id",
+            "type": "string"
+          },
+          "kind": {
+            "default": "liquidity_shortfall",
+            "title": "Kind",
+            "type": "string"
+          },
+          "gap": {
+            "title": "Gap",
+            "type": "string"
+          },
+          "due_date": {
+            "format": "date",
+            "title": "Due Date",
+            "type": "string"
+          },
+          "source_refs": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Source Refs",
+            "type": "array"
+          }
+        },
+        "required": [
+          "risk_id",
+          "gap",
+          "due_date",
+          "source_refs"
+        ],
+        "title": "Risk",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "snapshot": {
+        "$ref": "#/$defs/FinancialSnapshot"
+      },
+      "forecast": {
+        "$ref": "#/$defs/Forecast"
+      },
+      "risk": {
+        "$ref": "#/$defs/Risk"
+      },
+      "now": {
+        "format": "date-time",
+        "title": "Now",
+        "type": "string"
+      },
+      "installment_confirmed": {
+        "default": false,
+        "title": "Installment Confirmed",
+        "type": "boolean"
+      },
+      "reducible_spending": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Reducible Spending"
+      }
+    },
+    "required": [
+      "snapshot",
+      "forecast",
+      "risk",
+      "now"
+    ],
+    "title": "PlanningContext",
+    "type": "object"
+  },
+  "PlanResult": {
+    "$defs": {
+      "CallRecord": {
+        "additionalProperties": false,
+        "properties": {
+          "provider": {
+            "title": "Provider",
+            "type": "string"
+          },
+          "purpose": {
+            "enum": [
+              "classify",
+              "extract",
+              "plan"
+            ],
+            "title": "Purpose",
+            "type": "string"
+          },
+          "model": {
+            "title": "Model",
+            "type": "string"
+          },
+          "mode": {
+            "enum": [
+              "mock",
+              "live",
+              "rules"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "prompt_version": {
+            "default": "1.0",
+            "title": "Prompt Version",
+            "type": "string"
+          },
+          "duration_ms": {
+            "default": 0,
+            "title": "Duration Ms",
+            "type": "number"
+          },
+          "input_tokens": {
+            "default": 0,
+            "title": "Input Tokens",
+            "type": "integer"
+          },
+          "output_tokens": {
+            "default": 0,
+            "title": "Output Tokens",
+            "type": "integer"
+          },
+          "attempts": {
+            "default": 1,
+            "title": "Attempts",
+            "type": "integer"
+          },
+          "error_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Error Code"
+          },
+          "request_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Request Id"
+          }
+        },
+        "required": [
+          "provider",
+          "purpose",
+          "model",
+          "mode"
+        ],
+        "title": "CallRecord",
+        "type": "object"
+      },
+      "CandidatePlan": {
+        "additionalProperties": false,
+        "properties": {
+          "plan_id": {
+            "title": "Plan Id",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "family_support",
+              "installment",
+              "reduce_spending"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "required_funding": {
+            "title": "Required Funding",
+            "type": "string"
+          },
+          "steps": {
+            "items": {
+              "$ref": "#/$defs/PlanStep"
+            },
+            "minItems": 1,
+            "title": "Steps",
+            "type": "array"
+          },
+          "prerequisites": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Prerequisites",
+            "type": "array"
+          },
+          "source_refs": {
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "title": "Source Refs",
+            "type": "array"
+          },
+          "explanation": {
+            "title": "Explanation",
+            "type": "string"
+          },
+          "validation": {
+            "default": "PENDING",
+            "enum": [
+              "PENDING",
+              "CONDITIONAL",
+              "VALID",
+              "INVALID",
+              "STALE"
+            ],
+            "title": "Validation",
+            "type": "string"
+          },
+          "issues": {
+            "items": {
+              "$ref": "#/$defs/Issue"
+            },
+            "title": "Issues",
+            "type": "array"
+          }
+        },
+        "required": [
+          "kind",
+          "required_funding",
+          "steps",
+          "prerequisites",
+          "source_refs",
+          "explanation"
+        ],
+        "title": "CandidatePlan",
+        "type": "object"
+      },
+      "Issue": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "field": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Field"
+          },
+          "locator": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Locator"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "Issue",
+        "type": "object"
+      },
+      "PlanStep": {
+        "additionalProperties": false,
+        "properties": {
+          "action": {
+            "title": "Action",
+            "type": "string"
+          },
+          "by_date": {
+            "format": "date",
+            "title": "By Date",
+            "type": "string"
+          }
+        },
+        "required": [
+          "action",
+          "by_date"
+        ],
+        "title": "PlanStep",
+        "type": "object"
+      },
+      "Status": {
+        "enum": [
+          "READY",
+          "NEEDS_REVIEW",
+          "REJECTED"
+        ],
+        "title": "Status",
+        "type": "string"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "schema_version": {
+        "const": "1.0",
+        "default": "1.0",
+        "title": "Schema Version",
+        "type": "string"
+      },
+      "trace_id": {
+        "title": "Trace Id",
+        "type": "string"
+      },
+      "source_refs": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Source Refs",
+        "type": "array"
+      },
+      "status": {
+        "$ref": "#/$defs/Status",
+        "default": "READY"
+      },
+      "state_version": {
+        "title": "State Version",
+        "type": "integer"
+      },
+      "plans": {
+        "items": {
+          "$ref": "#/$defs/CandidatePlan"
+        },
+        "maxItems": 3,
+        "title": "Plans",
+        "type": "array"
+      },
+      "calls": {
+        "items": {
+          "$ref": "#/$defs/CallRecord"
+        },
+        "title": "Calls",
+        "type": "array"
+      },
+      "issues": {
+        "items": {
+          "$ref": "#/$defs/Issue"
+        },
+        "title": "Issues",
+        "type": "array"
+      }
+    },
+    "required": [
+      "state_version"
+    ],
+    "title": "PlanResult",
+    "type": "object"
+  },
+  "CheckResult": {
+    "$defs": {
+      "CallRecord": {
+        "additionalProperties": false,
+        "properties": {
+          "provider": {
+            "title": "Provider",
+            "type": "string"
+          },
+          "purpose": {
+            "enum": [
+              "classify",
+              "extract",
+              "plan"
+            ],
+            "title": "Purpose",
+            "type": "string"
+          },
+          "model": {
+            "title": "Model",
+            "type": "string"
+          },
+          "mode": {
+            "enum": [
+              "mock",
+              "live",
+              "rules"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "prompt_version": {
+            "default": "1.0",
+            "title": "Prompt Version",
+            "type": "string"
+          },
+          "duration_ms": {
+            "default": 0,
+            "title": "Duration Ms",
+            "type": "number"
+          },
+          "input_tokens": {
+            "default": 0,
+            "title": "Input Tokens",
+            "type": "integer"
+          },
+          "output_tokens": {
+            "default": 0,
+            "title": "Output Tokens",
+            "type": "integer"
+          },
+          "attempts": {
+            "default": 1,
+            "title": "Attempts",
+            "type": "integer"
+          },
+          "error_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Error Code"
+          },
+          "request_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Request Id"
+          }
+        },
+        "required": [
+          "provider",
+          "purpose",
+          "model",
+          "mode"
+        ],
+        "title": "CallRecord",
+        "type": "object"
+      },
+      "CandidatePlan": {
+        "additionalProperties": false,
+        "properties": {
+          "plan_id": {
+            "title": "Plan Id",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "family_support",
+              "installment",
+              "reduce_spending"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "required_funding": {
+            "title": "Required Funding",
+            "type": "string"
+          },
+          "steps": {
+            "items": {
+              "$ref": "#/$defs/PlanStep"
+            },
+            "minItems": 1,
+            "title": "Steps",
+            "type": "array"
+          },
+          "prerequisites": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Prerequisites",
+            "type": "array"
+          },
+          "source_refs": {
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "title": "Source Refs",
+            "type": "array"
+          },
+          "explanation": {
+            "title": "Explanation",
+            "type": "string"
+          },
+          "validation": {
+            "default": "PENDING",
+            "enum": [
+              "PENDING",
+              "CONDITIONAL",
+              "VALID",
+              "INVALID",
+              "STALE"
+            ],
+            "title": "Validation",
+            "type": "string"
+          },
+          "issues": {
+            "items": {
+              "$ref": "#/$defs/Issue"
+            },
+            "title": "Issues",
+            "type": "array"
+          }
+        },
+        "required": [
+          "kind",
+          "required_funding",
+          "steps",
+          "prerequisites",
+          "source_refs",
+          "explanation"
+        ],
+        "title": "CandidatePlan",
+        "type": "object"
+      },
+      "Classification": {
+        "additionalProperties": false,
+        "properties": {
+          "category": {
+            "enum": [
+              "tuition",
+              "rent",
+              "utility",
+              "family_support",
+              "living",
+              "other",
+              "irrelevant"
+            ],
+            "title": "Category",
+            "type": "string"
+          },
+          "probabilities": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "title": "Probabilities",
+            "type": "object"
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Confidence"
+          },
+          "financial_relevance": {
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Financial Relevance",
+            "type": "number"
+          },
+          "anomaly": {
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Anomaly",
+            "type": "number"
+          },
+          "needs_planning": {
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Needs Planning",
+            "type": "number"
+          }
+        },
+        "required": [
+          "category",
+          "probabilities",
+          "financial_relevance",
+          "anomaly",
+          "needs_planning"
+        ],
+        "title": "Classification",
+        "type": "object"
+      },
+      "Issue": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "field": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Field"
+          },
+          "locator": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Locator"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "Issue",
+        "type": "object"
+      },
+      "PlanResult": {
+        "additionalProperties": false,
+        "properties": {
+          "schema_version": {
+            "const": "1.0",
+            "default": "1.0",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "trace_id": {
+            "title": "Trace Id",
+            "type": "string"
+          },
+          "source_refs": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Source Refs",
+            "type": "array"
+          },
+          "status": {
+            "$ref": "#/$defs/Status",
+            "default": "READY"
+          },
+          "state_version": {
+            "title": "State Version",
+            "type": "integer"
+          },
+          "plans": {
+            "items": {
+              "$ref": "#/$defs/CandidatePlan"
+            },
+            "maxItems": 3,
+            "title": "Plans",
+            "type": "array"
+          },
+          "calls": {
+            "items": {
+              "$ref": "#/$defs/CallRecord"
+            },
+            "title": "Calls",
+            "type": "array"
+          },
+          "issues": {
+            "items": {
+              "$ref": "#/$defs/Issue"
+            },
+            "title": "Issues",
+            "type": "array"
+          }
+        },
+        "required": [
+          "state_version"
+        ],
+        "title": "PlanResult",
+        "type": "object"
+      },
+      "PlanStep": {
+        "additionalProperties": false,
+        "properties": {
+          "action": {
+            "title": "Action",
+            "type": "string"
+          },
+          "by_date": {
+            "format": "date",
+            "title": "By Date",
+            "type": "string"
+          }
+        },
+        "required": [
+          "action",
+          "by_date"
+        ],
+        "title": "PlanStep",
+        "type": "object"
+      },
+      "Risk": {
+        "additionalProperties": false,
+        "properties": {
+          "risk_id": {
+            "title": "Risk Id",
+            "type": "string"
+          },
+          "kind": {
+            "default": "liquidity_shortfall",
+            "title": "Kind",
+            "type": "string"
+          },
+          "gap": {
+            "title": "Gap",
+            "type": "string"
+          },
+          "due_date": {
+            "format": "date",
+            "title": "Due Date",
+            "type": "string"
+          },
+          "source_refs": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Source Refs",
+            "type": "array"
+          }
+        },
+        "required": [
+          "risk_id",
+          "gap",
+          "due_date",
+          "source_refs"
+        ],
+        "title": "Risk",
+        "type": "object"
+      },
+      "RouteResult": {
+        "additionalProperties": false,
+        "properties": {
+          "schema_version": {
+            "const": "1.0",
+            "default": "1.0",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "trace_id": {
+            "title": "Trace Id",
+            "type": "string"
+          },
+          "source_refs": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Source Refs",
+            "type": "array"
+          },
+          "status": {
+            "$ref": "#/$defs/Status",
+            "default": "READY"
+          },
+          "state_version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "State Version"
+          },
+          "action": {
+            "enum": [
+              "REVIEW",
+              "PLAN",
+              "EXTRACT",
+              "PROCESS",
+              "SKIP"
+            ],
+            "title": "Action",
+            "type": "string"
+          },
+          "reasons": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Reasons",
+            "type": "array"
+          },
+          "classification": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/Classification"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "calls": {
+            "items": {
+              "$ref": "#/$defs/CallRecord"
+            },
+            "title": "Calls",
+            "type": "array"
+          }
+        },
+        "required": [
+          "action",
+          "reasons"
+        ],
+        "title": "RouteResult",
+        "type": "object"
+      },
+      "Status": {
+        "enum": [
+          "READY",
+          "NEEDS_REVIEW",
+          "REJECTED"
+        ],
+        "title": "Status",
+        "type": "string"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "schema_version": {
+        "const": "1.0",
+        "default": "1.0",
+        "title": "Schema Version",
+        "type": "string"
+      },
+      "trace_id": {
+        "title": "Trace Id",
+        "type": "string"
+      },
+      "source_refs": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Source Refs",
+        "type": "array"
+      },
+      "status": {
+        "$ref": "#/$defs/Status",
+        "default": "READY"
+      },
+      "state_version": {
+        "title": "State Version",
+        "type": "integer"
+      },
+      "checked_at": {
+        "format": "date-time",
+        "title": "Checked At",
+        "type": "string"
+      },
+      "risks": {
+        "items": {
+          "$ref": "#/$defs/Risk"
+        },
+        "title": "Risks",
+        "type": "array"
+      },
+      "routes": {
+        "items": {
+          "$ref": "#/$defs/RouteResult"
+        },
+        "title": "Routes",
+        "type": "array"
+      },
+      "planning": {
+        "items": {
+          "$ref": "#/$defs/PlanResult"
+        },
+        "title": "Planning",
+        "type": "array"
+      },
+      "reused": {
+        "default": false,
+        "title": "Reused",
+        "type": "boolean"
+      },
+      "stale": {
+        "default": false,
+        "title": "Stale",
+        "type": "boolean"
+      }
+    },
+    "required": [
+      "state_version",
+      "checked_at",
+      "risks"
+    ],
+    "title": "CheckResult",
+    "type": "object"
+  },
+  "AuditEvent": {
+    "additionalProperties": false,
+    "properties": {
+      "trace_id": {
+        "title": "Trace Id",
+        "type": "string"
+      },
+      "event": {
+        "title": "Event",
+        "type": "string"
+      },
+      "timestamp": {
+        "format": "date-time",
+        "title": "Timestamp",
+        "type": "string"
+      },
+      "state_version": {
+        "anyOf": [
+          {
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "State Version"
+      },
+      "source_refs": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Source Refs",
+        "type": "array"
+      },
+      "details": {
+        "additionalProperties": true,
+        "title": "Details",
+        "type": "object"
+      }
+    },
+    "required": [
+      "trace_id",
+      "event",
+      "timestamp"
+    ],
+    "title": "AuditEvent",
+    "type": "object"
+  },
+  "Confirmation": {
+    "$defs": {
+      "Correction": {
+        "additionalProperties": false,
+        "properties": {
+          "candidate_id": {
+            "title": "Candidate Id",
+            "type": "string"
+          },
+          "amount": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Amount"
+          },
+          "currency": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Currency"
+          },
+          "date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Date"
+          },
+          "due_date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Due Date"
+          },
+          "counterparty": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Counterparty"
+          },
+          "invoice_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Invoice Id"
+          }
+        },
+        "required": [
+          "candidate_id"
+        ],
+        "title": "Correction",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "selected_candidate_ids": {
+        "anyOf": [
+          {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Selected Candidate Ids"
+      },
+      "selected_transaction_locators": {
+        "anyOf": [
+          {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Selected Transaction Locators"
+      },
+      "corrections": {
+        "items": {
+          "$ref": "#/$defs/Correction"
+        },
+        "title": "Corrections",
+        "type": "array"
+      }
+    },
+    "title": "Confirmation",
+    "type": "object"
+  },
+  "ImportJob": {
+    "$defs": {
+      "CallRecord": {
+        "additionalProperties": false,
+        "properties": {
+          "provider": {
+            "title": "Provider",
+            "type": "string"
+          },
+          "purpose": {
+            "enum": [
+              "classify",
+              "extract",
+              "plan"
+            ],
+            "title": "Purpose",
+            "type": "string"
+          },
+          "model": {
+            "title": "Model",
+            "type": "string"
+          },
+          "mode": {
+            "enum": [
+              "mock",
+              "live",
+              "rules"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "prompt_version": {
+            "default": "1.0",
+            "title": "Prompt Version",
+            "type": "string"
+          },
+          "duration_ms": {
+            "default": 0,
+            "title": "Duration Ms",
+            "type": "number"
+          },
+          "input_tokens": {
+            "default": 0,
+            "title": "Input Tokens",
+            "type": "integer"
+          },
+          "output_tokens": {
+            "default": 0,
+            "title": "Output Tokens",
+            "type": "integer"
+          },
+          "attempts": {
+            "default": 1,
+            "title": "Attempts",
+            "type": "integer"
+          },
+          "error_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Error Code"
+          },
+          "request_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Request Id"
+          }
+        },
+        "required": [
+          "provider",
+          "purpose",
+          "model",
+          "mode"
+        ],
+        "title": "CallRecord",
+        "type": "object"
+      },
+      "CandidateEvent": {
+        "additionalProperties": false,
+        "properties": {
+          "candidate_id": {
+            "title": "Candidate Id",
+            "type": "string"
+          },
+          "category": {
+            "enum": [
+              "tuition",
+              "rent",
+              "utility",
+              "family_support",
+              "living",
+              "other",
+              "irrelevant"
+            ],
+            "title": "Category",
+            "type": "string"
+          },
+          "amount": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Amount"
+          },
+          "currency": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Currency"
+          },
+          "date": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Date"
+          },
+          "due_date": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Due Date"
+          },
+          "counterparty": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Counterparty"
+          },
+          "invoice_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Invoice Id"
+          },
+          "confidence_type": {
+            "default": "UNCONFIRMED",
+            "enum": [
+              "VERIFIED",
+              "INFERRED",
+              "UNCONFIRMED"
+            ],
+            "title": "Confidence Type",
+            "type": "string"
+          },
+          "verification_reference": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Verification Reference"
+          },
+          "status": {
+            "$ref": "#/$defs/Status",
+            "default": "NEEDS_REVIEW"
+          },
+          "evidence": {
+            "items": {
+              "$ref": "#/$defs/Evidence"
+            },
+            "title": "Evidence",
+            "type": "array"
+          },
+          "issues": {
+            "items": {
+              "$ref": "#/$defs/Issue"
+            },
+            "title": "Issues",
+            "type": "array"
+          }
+        },
+        "required": [
+          "category"
+        ],
+        "title": "CandidateEvent",
+        "type": "object"
+      },
+      "Classification": {
+        "additionalProperties": false,
+        "properties": {
+          "category": {
+            "enum": [
+              "tuition",
+              "rent",
+              "utility",
+              "family_support",
+              "living",
+              "other",
+              "irrelevant"
+            ],
+            "title": "Category",
+            "type": "string"
+          },
+          "probabilities": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "title": "Probabilities",
+            "type": "object"
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Confidence"
+          },
+          "financial_relevance": {
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Financial Relevance",
+            "type": "number"
+          },
+          "anomaly": {
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Anomaly",
+            "type": "number"
+          },
+          "needs_planning": {
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Needs Planning",
+            "type": "number"
+          }
+        },
+        "required": [
+          "category",
+          "probabilities",
+          "financial_relevance",
+          "anomaly",
+          "needs_planning"
+        ],
+        "title": "Classification",
+        "type": "object"
+      },
+      "Evidence": {
+        "additionalProperties": false,
+        "properties": {
+          "source_id": {
+            "title": "Source Id",
+            "type": "string"
+          },
+          "field": {
+            "title": "Field",
+            "type": "string"
+          },
+          "quote": {
+            "title": "Quote",
+            "type": "string"
+          },
+          "locator": {
+            "title": "Locator",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source_id",
+          "field",
+          "quote",
+          "locator"
+        ],
+        "title": "Evidence",
+        "type": "object"
+      },
+      "IngestResult": {
+        "additionalProperties": false,
+        "properties": {
+          "schema_version": {
+            "const": "1.0",
+            "default": "1.0",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "trace_id": {
+            "title": "Trace Id",
+            "type": "string"
+          },
+          "source_refs": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Source Refs",
+            "type": "array"
+          },
+          "status": {
+            "$ref": "#/$defs/Status",
+            "default": "READY"
+          },
+          "candidates": {
+            "items": {
+              "$ref": "#/$defs/CandidateEvent"
+            },
+            "title": "Candidates",
+            "type": "array"
+          },
+          "transactions": {
+            "items": {
+              "$ref": "#/$defs/Transaction"
+            },
+            "title": "Transactions",
+            "type": "array"
+          },
+          "issues": {
+            "items": {
+              "$ref": "#/$defs/Issue"
+            },
+            "title": "Issues",
+            "type": "array"
+          },
+          "calls": {
+            "items": {
+              "$ref": "#/$defs/CallRecord"
+            },
+            "title": "Calls",
+            "type": "array"
+          },
+          "routing": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/RouteResult"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          }
+        },
+        "title": "IngestResult",
+        "type": "object"
+      },
+      "Issue": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "field": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Field"
+          },
+          "locator": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Locator"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "Issue",
+        "type": "object"
+      },
+      "RouteResult": {
+        "additionalProperties": false,
+        "properties": {
+          "schema_version": {
+            "const": "1.0",
+            "default": "1.0",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "trace_id": {
+            "title": "Trace Id",
+            "type": "string"
+          },
+          "source_refs": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Source Refs",
+            "type": "array"
+          },
+          "status": {
+            "$ref": "#/$defs/Status",
+            "default": "READY"
+          },
+          "state_version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "State Version"
+          },
+          "action": {
+            "enum": [
+              "REVIEW",
+              "PLAN",
+              "EXTRACT",
+              "PROCESS",
+              "SKIP"
+            ],
+            "title": "Action",
+            "type": "string"
+          },
+          "reasons": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Reasons",
+            "type": "array"
+          },
+          "classification": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/Classification"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "calls": {
+            "items": {
+              "$ref": "#/$defs/CallRecord"
+            },
+            "title": "Calls",
+            "type": "array"
+          }
+        },
+        "required": [
+          "action",
+          "reasons"
+        ],
+        "title": "RouteResult",
+        "type": "object"
+      },
+      "Status": {
+        "enum": [
+          "READY",
+          "NEEDS_REVIEW",
+          "REJECTED"
+        ],
+        "title": "Status",
+        "type": "string"
+      },
+      "Transaction": {
+        "additionalProperties": false,
+        "properties": {
+          "transaction_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Transaction Id"
+          },
+          "source_id": {
+            "default": "",
+            "title": "Source Id",
+            "type": "string"
+          },
+          "locator": {
+            "default": "",
+            "title": "Locator",
+            "type": "string"
+          },
+          "account_id": {
+            "title": "Account Id",
+            "type": "string"
+          },
+          "date": {
+            "format": "date",
+            "title": "Date",
+            "type": "string"
+          },
+          "amount": {
+            "title": "Amount",
+            "type": "string"
+          },
+          "currency": {
+            "const": "THB",
+            "default": "THB",
+            "title": "Currency",
+            "type": "string"
+          },
+          "counterparty": {
+            "title": "Counterparty",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/$defs/Status",
+            "default": "READY"
+          },
+          "issues": {
+            "items": {
+              "$ref": "#/$defs/Issue"
+            },
+            "title": "Issues",
+            "type": "array"
+          }
+        },
+        "required": [
+          "account_id",
+          "date",
+          "amount",
+          "counterparty",
+          "description"
+        ],
+        "title": "Transaction",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "job_id": {
+        "title": "Job Id",
+        "type": "string"
+      },
+      "student_id": {
+        "title": "Student Id",
+        "type": "string"
+      },
+      "reference_date": {
+        "format": "date",
+        "title": "Reference Date",
+        "type": "string"
+      },
+      "stage": {
+        "default": "QUEUED",
+        "enum": [
+          "QUEUED",
+          "PROCESSING",
+          "NEEDS_REVIEW",
+          "COMMITTED",
+          "REJECTED",
+          "FAILED"
+        ],
+        "title": "Stage",
+        "type": "string"
+      },
+      "result": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/IngestResult"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "state_version": {
+        "anyOf": [
+          {
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "State Version"
+      },
+      "error_code": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Error Code"
+      }
+    },
+    "required": [
+      "student_id",
+      "reference_date"
+    ],
+    "title": "ImportJob",
+    "type": "object"
+  }
+}

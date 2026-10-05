@@ -1,0 +1,7 @@
+include README.md requirements.lock .env.example
+recursive-include docs *.md
+recursive-include contracts *.json
+recursive-include evals *.json *.jsonl
+recursive-include scripts *.py
+recursive-include auto_test *.py
+recursive-include examples *.txt *.pdf

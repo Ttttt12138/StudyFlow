@@ -147,3 +147,11 @@ Do not copy a live PostgreSQL data directory between machines.
 
 Current completion evidence: 08_Backend_Completion_Report.txt.
 07_API_Readiness_Audit.txt is the historical audit from before this implementation.
+
+## C module: AI and data
+
+The independent C package is in [studyflow-ai](studyflow-ai/README.md).
+Its source, tests, dependency lock, examples, and API contracts are maintained there.
+See the [B/C integration contract](studyflow-ai/docs/integration.md) and
+[readiness v2 contract](studyflow-ai/docs/readiness-v2.md) for the adapters B must implement.
+C CI runs offline tests and mock demos; full A/B/C integration acceptance remains separate.

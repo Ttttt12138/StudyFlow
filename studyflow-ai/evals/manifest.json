@@ -1,0 +1,15 @@
+{
+  "version": "1.0",
+  "sha256": "324c8c4c2a562ee0276ebc9e5533c7ffca6cc15cb4bb8a8b4905d9841ab674c4",
+  "counts": {
+    "dev": 40,
+    "test": 80
+  },
+  "human_reviewed": false,
+  "thresholds": {
+    "irrelevant": 0.95,
+    "classification": 0.8,
+    "anomaly": 0.5
+  },
+  "limitations": "Synthetic English text fixtures. Not representative of real bank documents; human review pending."
+}

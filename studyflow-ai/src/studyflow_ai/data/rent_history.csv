@@ -1,0 +1,4 @@
+account_id,date,amount,currency,counterparty,description,transaction_id
+demo_account,2026-07-05,-9000,THB,Condo,Monthly rent,rent_jul
+demo_account,2026-08-05,-9000,THB,Condo,Monthly rent,rent_aug
+demo_account,2026-09-05,-9000,THB,Condo,Monthly rent,rent_sep

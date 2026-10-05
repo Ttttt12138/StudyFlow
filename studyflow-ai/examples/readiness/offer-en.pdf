@@ -1,0 +1,79 @@
+%PDF-1.3
+%‚„œ”
+1 0 obj
+<<
+/Producer (pypdf)
+/Title (Synthetic StudyFlow admission fixture)
+>>
+endobj
+2 0 obj
+<<
+/Type /Pages
+/Count 1
+/Kids [ 4 0 R ]
+>>
+endobj
+3 0 obj
+<<
+/Type /Catalog
+/Pages 2 0 R
+>>
+endobj
+4 0 obj
+<<
+/Type /Page
+/Resources <<
+/Font <<
+/F1 5 0 R
+>>
+>>
+/MediaBox [ 0.0 0.0 612 792 ]
+/Parent 2 0 R
+/Contents 6 0 R
+>>
+endobj
+5 0 obj
+<<
+/Type /Font
+/Subtype /Type1
+/BaseFont /Helvetica
+>>
+endobj
+6 0 obj
+<<
+/Length 508
+>>
+stream
+BT /F1 8 Tf 24 748 Td 16 TL
+(School: Example University) Tj T*
+(Campus: Bangkok) Tj T*
+(Country: Thailand) Tj T*
+(Program: Computing) Tj T*
+(Student type: International) Tj T*
+(Start date: 2026-10-01) Tj T*
+(End date: 2027-01-31) Tj T*
+(Tuition: THB 65000; period=semester; year=2026; due_date=2026-10-15; paid=false) Tj T*
+(Housing: THB 8000-10000; period=monthly; year=2026) Tj T*
+(Food: THB 6000-10000; period=monthly; year=2026) Tj T*
+(Deposit: THB 9000; period=once; year=2026; refundable=true) Tj T*
+ET
+endstream
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000015 00000 n 
+0000000101 00000 n 
+0000000160 00000 n 
+0000000209 00000 n 
+0000000341 00000 n 
+0000000411 00000 n 
+trailer
+<<
+/Size 7
+/Root 3 0 R
+/Info 1 0 R
+>>
+startxref
+970
+%%EOF

@@ -1,0 +1,11 @@
+School: Example University
+Campus: Bangkok
+Country: Thailand
+Program: Computing
+Student type: International
+Start date: 2026-10-01
+End date: 2027-01-31
+Tuition: THB 65000; period=semester; year=2026; due_date=2026-10-15; paid=false
+Housing: THB 8000-10000; period=monthly; year=2026
+Food: THB 6000-10000; period=monthly; year=2026
+Deposit: THB 9000; period=once; year=2026; refundable=true

@@ -1,0 +1,172 @@
+"""Shared evaluation harness. Offline smoke results never count as live acceptance."""
+
+import hashlib
+import json
+import time
+from datetime import datetime, timezone
+from pathlib import Path
+from statistics import mean
+
+from studyflow_ai.api import StudyFlowAI
+from studyflow_ai.config import Settings, providers
+from studyflow_ai.demo_backend import DEMO_NOW, DemoBackend
+from studyflow_ai.models import IngestContext, Source, Status
+from studyflow_ai.providers import prompts
+from studyflow_ai.providers.rules import RuleProvider
+
+
+def load_cases(path, split):
+    path = Path(path)
+    data = path.read_bytes()
+    manifest = json.loads(path.with_name("manifest.json").read_text(encoding="utf-8"))
+    if hashlib.sha256(data).hexdigest() != manifest["sha256"]:
+        raise ValueError("Evaluation dataset does not match the frozen manifest")
+    cases = [json.loads(line) for line in data.decode("utf-8").splitlines()]
+    groups = {
+        name: {case["family"] for case in cases if case["split"] == name}
+        for name in ("dev", "test")
+    }
+    if groups["dev"] & groups["test"]:
+        raise ValueError("Evaluation template leakage")
+    return [case for case in cases if case["split"] == split], manifest
+
+
+def _event_matches(predicted, expected):
+    return any(
+        all(
+            item.get(field) == expected[field]
+            for field in ("category", "amount", "currency", "due_date")
+        )
+        for item in predicted
+    )
+
+
+def evaluate_case(ai, case):
+    started = time.perf_counter()
+    context = IngestContext(
+        reference_date=DEMO_NOW.date(),
+        verified_source_ids=[case["case_id"]],
+        verification_reference="synthetic-eval-fixture",
+    )
+    result = ai.ingest(Source(source_id=case["case_id"], kind="email", text=case["text"]), context)
+    calls = list(result.calls)
+    plans = []
+    if case["backend_risk"]:
+        check = ai.run_check("student_001", "evaluation", DEMO_NOW)
+        calls.extend(c for route in check.routes for c in route.calls)
+        calls.extend(c for batch in check.planning for c in batch.calls)
+        plans = [p.model_dump(mode="json") for batch in check.planning for p in batch.plans]
+    judgment = result.routing.classification if result.routing else None
+    events = [e.model_dump(mode="json") for e in result.candidates]
+    complete = [
+        e
+        for e in case["expected_events"]
+        if all(e[k] is not None for k in ("amount", "currency", "due_date"))
+    ]
+    return {
+        "case_id": case["case_id"],
+        "category": judgment.category if judgment else None,
+        "correct_classification": bool(judgment and judgment.category == case["category"]),
+        "review": result.status != Status.READY,
+        "expected_irrelevant": case["category"] == "irrelevant",
+        "false_positive": case["category"] == "irrelevant" and bool(events),
+        "critical_silent_miss": case["important"]
+        and not events
+        and not case["backend_risk"]
+        and result.status == Status.READY,
+        "missing_event": bool(case["expected_events"]) and not events,
+        "complete_field_cases": len(complete),
+        "correct_field_cases": sum(_event_matches(events, e) for e in complete),
+        "latency_ms": (time.perf_counter() - started) * 1000,
+        "calls": [c.model_dump(mode="json") for c in calls],
+        "plans": plans,
+        "issues": [i.code for i in result.issues]
+        + [i.code for e in result.candidates for i in e.issues],
+    }
+
+
+def summarize(rows):
+    count = len(rows)
+    if not count:
+        raise ValueError("Empty evaluation split")
+    calls = [c for row in rows for c in row["calls"]]
+    llm = [c for c in calls if c["provider"] == "openai"]
+    denominator = sum(r["complete_field_cases"] for r in rows)
+    latencies = sorted(r["latency_ms"] for r in rows)
+    irrelevant = sum(r["expected_irrelevant"] for r in rows)
+    return {
+        "samples": count,
+        "classification_accuracy": mean(r["correct_classification"] for r in rows),
+        "joint_field_accuracy": sum(r["correct_field_cases"] for r in rows) / denominator
+        if denominator
+        else None,
+        "joint_field_denominator": denominator,
+        "critical_silent_misses": sum(r["critical_silent_miss"] for r in rows),
+        "missing_event_rate": mean(r["missing_event"] for r in rows),
+        "review_rate": mean(r["review"] for r in rows),
+        "false_positive_rate": sum(r["false_positive"] for r in rows) / irrelevant
+        if irrelevant
+        else None,
+        "latency_mean_ms": mean(latencies),
+        "latency_p95_ms": latencies[min(count - 1, int(count * 0.95))],
+        "llm_calls_per_event": len(llm) / count,
+        "llm_event_invocation_rate": mean(
+            any(c["provider"] == "openai" for c in r["calls"]) for r in rows
+        ),
+        "llm_calls_by_purpose": {
+            p: sum(c["purpose"] == p for c in llm) for p in ("classify", "extract", "plan")
+        },
+        "input_tokens": sum(c["input_tokens"] for c in calls),
+        "output_tokens": sum(c["output_tokens"] for c in calls),
+        "provider_errors": sum(c["error_code"] is not None for c in calls),
+        "models": sorted({c["model"] for c in calls}),
+        "acceptance_targets_met": (
+            mean(r["correct_classification"] for r in rows) >= 0.9
+            and denominator > 0
+            and sum(r["correct_field_cases"] for r in rows) / denominator >= 0.95
+            and not any(r["critical_silent_miss"] for r in rows)
+        ),
+    }
+
+
+def evaluate(dataset, settings: Settings, split="test"):
+    cases, manifest = load_cases(dataset, split)
+    classifier, llm = providers(settings)
+    rules = RuleProvider()
+    arms = {"rules": (rules, rules), "llm_only": (llm, llm), "jev_llm": (classifier, llm)}
+    report = {
+        "mode": settings.mode,
+        "live_run": settings.mode == "live",
+        "live_acceptance": False,
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "split": split,
+        "dataset": manifest,
+        "prompt_version": prompts.VERSION,
+        "prompt_sha256": hashlib.sha256(
+            (prompts.EXTRACT + prompts.PLAN + prompts.CLASSIFY).encode()
+        ).hexdigest(),
+        "limitations": [
+            "Synthetic unreviewed text fixtures",
+            "B is the same demo adapter in all arms",
+            "Offline mock arms use rules and are not model comparisons",
+        ],
+        "arms": {},
+    }
+    try:
+        for name, pair in arms.items():
+            rows = [evaluate_case(StudyFlowAI(*pair, DemoBackend()), case) for case in cases]
+            report["arms"][name] = {"metrics": summarize(rows), "cases": rows}
+            if settings.mode != "live":
+                report["arms"][name]["metrics"]["acceptance_targets_met"] = None
+        proposed = report["arms"]["jev_llm"]["metrics"]
+        report["live_acceptance"] = bool(
+            settings.mode == "live"
+            and split == "test"
+            and manifest["human_reviewed"]
+            and proposed["acceptance_targets_met"]
+            and proposed["provider_errors"] == 0
+        )
+    finally:
+        for provider in {id(p): p for p in (classifier, llm)}.values():
+            provider.close()
+    return report

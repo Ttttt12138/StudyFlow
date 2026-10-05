@@ -1,0 +1,730 @@
+{
+  "draft": {
+    "profile": {
+      "school": "Example University",
+      "campus": "Bangkok",
+      "country": "Thailand",
+      "program": "Computing",
+      "student_type": "International",
+      "start_date": "2026-10-01",
+      "end_date": "2027-01-31",
+      "evidence": []
+    },
+    "costs": [
+      {
+        "cost_id": "tuition",
+        "category": "tuition",
+        "currency": "THB",
+        "amount": "65000",
+        "lower": null,
+        "upper": null,
+        "period": "semester",
+        "due_date": null,
+        "year": 2026,
+        "campus": null,
+        "paid": null,
+        "refundable": null,
+        "invoice_id": null,
+        "applicability": "APPLICABLE",
+        "applicability_reason": null,
+        "confidence_type": "VERIFIED",
+        "verification_reference": "demo-user-confirmation",
+        "evidence": [],
+        "source_refs": []
+      },
+      {
+        "cost_id": "deposit",
+        "category": "deposit",
+        "currency": "THB",
+        "amount": "9000",
+        "lower": null,
+        "upper": null,
+        "period": "once",
+        "due_date": null,
+        "year": 2026,
+        "campus": null,
+        "paid": null,
+        "refundable": null,
+        "invoice_id": null,
+        "applicability": "APPLICABLE",
+        "applicability_reason": null,
+        "confidence_type": "VERIFIED",
+        "verification_reference": "demo-user-confirmation",
+        "evidence": [],
+        "source_refs": []
+      },
+      {
+        "cost_id": "transport",
+        "category": "transport",
+        "currency": "THB",
+        "amount": "2000",
+        "lower": null,
+        "upper": null,
+        "period": "monthly",
+        "due_date": null,
+        "year": 2026,
+        "campus": null,
+        "paid": null,
+        "refundable": null,
+        "invoice_id": null,
+        "applicability": "APPLICABLE",
+        "applicability_reason": null,
+        "confidence_type": "VERIFIED",
+        "verification_reference": "demo-user-confirmation",
+        "evidence": [],
+        "source_refs": []
+      },
+      {
+        "cost_id": "communications",
+        "category": "communications",
+        "currency": "THB",
+        "amount": "300",
+        "lower": null,
+        "upper": null,
+        "period": "monthly",
+        "due_date": null,
+        "year": 2026,
+        "campus": null,
+        "paid": null,
+        "refundable": null,
+        "invoice_id": null,
+        "applicability": "APPLICABLE",
+        "applicability_reason": null,
+        "confidence_type": "VERIFIED",
+        "verification_reference": "demo-user-confirmation",
+        "evidence": [],
+        "source_refs": []
+      },
+      {
+        "cost_id": "utilities",
+        "category": "utilities",
+        "currency": "THB",
+        "amount": "1000",
+        "lower": null,
+        "upper": null,
+        "period": "monthly",
+        "due_date": null,
+        "year": 2026,
+        "campus": null,
+        "paid": null,
+        "refundable": null,
+        "invoice_id": null,
+        "applicability": "APPLICABLE",
+        "applicability_reason": null,
+        "confidence_type": "VERIFIED",
+        "verification_reference": "demo-user-confirmation",
+        "evidence": [],
+        "source_refs": []
+      },
+      {
+        "cost_id": "insurance",
+        "category": "insurance",
+        "currency": "THB",
+        "amount": "2000",
+        "lower": null,
+        "upper": null,
+        "period": "semester",
+        "due_date": null,
+        "year": 2026,
+        "campus": null,
+        "paid": null,
+        "refundable": null,
+        "invoice_id": null,
+        "applicability": "APPLICABLE",
+        "applicability_reason": null,
+        "confidence_type": "VERIFIED",
+        "verification_reference": "demo-user-confirmation",
+        "evidence": [],
+        "source_refs": []
+      },
+      {
+        "cost_id": "visa",
+        "category": "visa",
+        "currency": "THB",
+        "amount": "2000",
+        "lower": null,
+        "upper": null,
+        "period": "once",
+        "due_date": null,
+        "year": 2026,
+        "campus": null,
+        "paid": null,
+        "refundable": null,
+        "invoice_id": null,
+        "applicability": "APPLICABLE",
+        "applicability_reason": null,
+        "confidence_type": "VERIFIED",
+        "verification_reference": "demo-user-confirmation",
+        "evidence": [],
+        "source_refs": []
+      },
+      {
+        "cost_id": "travel",
+        "category": "travel",
+        "currency": "THB",
+        "amount": "12000",
+        "lower": null,
+        "upper": null,
+        "period": "once",
+        "due_date": null,
+        "year": 2026,
+        "campus": null,
+        "paid": null,
+        "refundable": null,
+        "invoice_id": null,
+        "applicability": "APPLICABLE",
+        "applicability_reason": null,
+        "confidence_type": "VERIFIED",
+        "verification_reference": "demo-user-confirmation",
+        "evidence": [],
+        "source_refs": []
+      },
+      {
+        "cost_id": "settlement",
+        "category": "settlement",
+        "currency": "THB",
+        "amount": "4000",
+        "lower": null,
+        "upper": null,
+        "period": "once",
+        "due_date": null,
+        "year": 2026,
+        "campus": null,
+        "paid": null,
+        "refundable": null,
+        "invoice_id": null,
+        "applicability": "APPLICABLE",
+        "applicability_reason": null,
+        "confidence_type": "VERIFIED",
+        "verification_reference": "demo-user-confirmation",
+        "evidence": [],
+        "source_refs": []
+      },
+      {
+        "cost_id": "reserve",
+        "category": "reserve",
+        "currency": "THB",
+        "amount": "15000",
+        "lower": null,
+        "upper": null,
+        "period": "once",
+        "due_date": null,
+        "year": 2026,
+        "campus": null,
+        "paid": null,
+        "refundable": null,
+        "invoice_id": null,
+        "applicability": "APPLICABLE",
+        "applicability_reason": null,
+        "confidence_type": "VERIFIED",
+        "verification_reference": "demo-user-confirmation",
+        "evidence": [],
+        "source_refs": []
+      },
+      {
+        "cost_id": "housing",
+        "category": "housing",
+        "currency": "THB",
+        "amount": null,
+        "lower": "8000",
+        "upper": "10000",
+        "period": "monthly",
+        "due_date": null,
+        "year": 2026,
+        "campus": null,
+        "paid": null,
+        "refundable": null,
+        "invoice_id": null,
+        "applicability": "APPLICABLE",
+        "applicability_reason": null,
+        "confidence_type": "INFERRED",
+        "verification_reference": null,
+        "evidence": [],
+        "source_refs": []
+      },
+      {
+        "cost_id": "food",
+        "category": "food",
+        "currency": "THB",
+        "amount": null,
+        "lower": "6000",
+        "upper": "10000",
+        "period": "monthly",
+        "due_date": null,
+        "year": 2026,
+        "campus": null,
+        "paid": null,
+        "refundable": null,
+        "invoice_id": null,
+        "applicability": "APPLICABLE",
+        "applicability_reason": null,
+        "confidence_type": "INFERRED",
+        "verification_reference": null,
+        "evidence": [],
+        "source_refs": []
+      }
+    ],
+    "provenance": []
+  },
+  "budget": {
+    "state_version": 1,
+    "budget_version": 1,
+    "report_currency": "THB",
+    "complete": true,
+    "low": {
+      "currency": "THB",
+      "amount": "178200.00"
+    },
+    "base": {
+      "currency": "THB",
+      "amount": "190200.00"
+    },
+    "high": {
+      "currency": "THB",
+      "amount": "202200.00"
+    },
+    "gap": {
+      "currency": "THB",
+      "amount": "50000.00"
+    },
+    "payment_points": [
+      {
+        "date": "2026-10-15",
+        "required": {
+          "currency": "THB",
+          "amount": "170200.00"
+        },
+        "gap": {
+          "currency": "THB",
+          "amount": "30000.00"
+        }
+      },
+      {
+        "date": "2027-01-31",
+        "required": {
+          "currency": "THB",
+          "amount": "190200.00"
+        },
+        "gap": {
+          "currency": "THB",
+          "amount": "50000.00"
+        }
+      }
+    ],
+    "risks": [
+      "FIXTURE_FUNDING_GAP"
+    ],
+    "assumptions": [
+      "DEMO_ONLY: fixed B responses",
+      "Four months; reserve included once",
+      "No actual approval or payment"
+    ],
+    "fx_quotes": []
+  },
+  "funding_context": {
+    "student_id": "student_001",
+    "now": "2026-10-02T20:00:00+07:00",
+    "budget": {
+      "state_version": 1,
+      "budget_version": 1,
+      "report_currency": "THB",
+      "complete": true,
+      "low": {
+        "currency": "THB",
+        "amount": "178200.00"
+      },
+      "base": {
+        "currency": "THB",
+        "amount": "190200.00"
+      },
+      "high": {
+        "currency": "THB",
+        "amount": "202200.00"
+      },
+      "gap": {
+        "currency": "THB",
+        "amount": "50000.00"
+      },
+      "payment_points": [
+        {
+          "date": "2026-10-15",
+          "required": {
+            "currency": "THB",
+            "amount": "170200.00"
+          },
+          "gap": {
+            "currency": "THB",
+            "amount": "30000.00"
+          }
+        },
+        {
+          "date": "2027-01-31",
+          "required": {
+            "currency": "THB",
+            "amount": "190200.00"
+          },
+          "gap": {
+            "currency": "THB",
+            "amount": "50000.00"
+          }
+        }
+      ],
+      "risks": [
+        "FIXTURE_FUNDING_GAP"
+      ],
+      "assumptions": [
+        "DEMO_ONLY: fixed B responses",
+        "Four months; reserve included once",
+        "No actual approval or payment"
+      ],
+      "fx_quotes": []
+    },
+    "sources": [
+      {
+        "funding_id": "family",
+        "kind": "family_support",
+        "allocatable": {
+          "currency": "THB",
+          "amount": "20000.00"
+        },
+        "available_date": "2026-10-03",
+        "conditions": [
+          "Sponsor agreement and actual receipt required"
+        ],
+        "received": false,
+        "loan_quote_id": null
+      },
+      {
+        "funding_id": "loan",
+        "kind": "borrowing",
+        "allocatable": {
+          "currency": "THB",
+          "amount": "30000.00"
+        },
+        "available_date": "2026-10-04",
+        "conditions": [
+          "SIMULATED quote only",
+          "Actual receipt and B validation required"
+        ],
+        "received": false,
+        "loan_quote_id": "loan_demo"
+      }
+    ],
+    "loan_quotes": [
+      {
+        "quote_id": "loan_demo",
+        "principal": {
+          "currency": "THB",
+          "amount": "30600.00"
+        },
+        "net_proceeds": {
+          "currency": "THB",
+          "amount": "30000.00"
+        },
+        "fees": {
+          "currency": "THB",
+          "amount": "600.00"
+        },
+        "total_interest": {
+          "currency": "THB",
+          "amount": "0.00"
+        },
+        "repayments": [
+          {
+            "due_date": "2026-11-01",
+            "amount": {
+              "currency": "THB",
+              "amount": "2550.00"
+            }
+          },
+          {
+            "due_date": "2026-12-01",
+            "amount": {
+              "currency": "THB",
+              "amount": "2550.00"
+            }
+          },
+          {
+            "due_date": "2027-01-01",
+            "amount": {
+              "currency": "THB",
+              "amount": "2550.00"
+            }
+          },
+          {
+            "due_date": "2027-02-01",
+            "amount": {
+              "currency": "THB",
+              "amount": "2550.00"
+            }
+          },
+          {
+            "due_date": "2027-03-01",
+            "amount": {
+              "currency": "THB",
+              "amount": "2550.00"
+            }
+          },
+          {
+            "due_date": "2027-04-01",
+            "amount": {
+              "currency": "THB",
+              "amount": "2550.00"
+            }
+          },
+          {
+            "due_date": "2027-05-01",
+            "amount": {
+              "currency": "THB",
+              "amount": "2550.00"
+            }
+          },
+          {
+            "due_date": "2027-06-01",
+            "amount": {
+              "currency": "THB",
+              "amount": "2550.00"
+            }
+          },
+          {
+            "due_date": "2027-07-01",
+            "amount": {
+              "currency": "THB",
+              "amount": "2550.00"
+            }
+          },
+          {
+            "due_date": "2027-08-01",
+            "amount": {
+              "currency": "THB",
+              "amount": "2550.00"
+            }
+          },
+          {
+            "due_date": "2027-09-01",
+            "amount": {
+              "currency": "THB",
+              "amount": "2550.00"
+            }
+          },
+          {
+            "due_date": "2027-10-01",
+            "amount": {
+              "currency": "THB",
+              "amount": "2550.00"
+            }
+          }
+        ],
+        "affordability": "INSUFFICIENT_DATA",
+        "missing_inputs": [
+          "post-semester income",
+          "living costs during repayment"
+        ],
+        "conditions": [
+          "SIMULATED fixed quote, not a lender offer",
+          "Eligibility not confirmed"
+        ]
+      }
+    ],
+    "applications": [
+      {
+        "application_id": "demo_application",
+        "quote_id": "loan_demo",
+        "state": "DRAFT",
+        "simulated": true
+      }
+    ]
+  },
+  "funding_result": {
+    "schema_version": "2.0",
+    "trace_id": "6ce7e4e74d37491f86c80915d49516db",
+    "source_refs": [
+      "family",
+      "loan"
+    ],
+    "status": "NEEDS_REVIEW",
+    "issues": [],
+    "state_version": 1,
+    "budget_version": 1,
+    "candidates": [
+      {
+        "candidate_id": "ee5836c59ef7498c86bbeebcb04d753e",
+        "allocations": [
+          {
+            "funding_id": "family",
+            "amount": {
+              "currency": "THB",
+              "amount": "20000.00"
+            }
+          },
+          {
+            "funding_id": "loan",
+            "amount": {
+              "currency": "THB",
+              "amount": "30000.00"
+            }
+          }
+        ],
+        "source_refs": [
+          "family",
+          "loan",
+          "loan_demo"
+        ],
+        "conditions": [
+          "Sponsor agreement and actual receipt required",
+          "SIMULATED quote only",
+          "Actual receipt and B validation required",
+          "Only receipt recorded by B changes available funds; approval is not receipt."
+        ],
+        "explanation": "Confirm support and compare the supplied loan quote; only actual receipt changes available funds.",
+        "validation": "CONDITIONAL",
+        "issues": []
+      }
+    ],
+    "loan_explanations": [
+      {
+        "quote": {
+          "quote_id": "loan_demo",
+          "principal": {
+            "currency": "THB",
+            "amount": "30600.00"
+          },
+          "net_proceeds": {
+            "currency": "THB",
+            "amount": "30000.00"
+          },
+          "fees": {
+            "currency": "THB",
+            "amount": "600.00"
+          },
+          "total_interest": {
+            "currency": "THB",
+            "amount": "0.00"
+          },
+          "repayments": [
+            {
+              "due_date": "2026-11-01",
+              "amount": {
+                "currency": "THB",
+                "amount": "2550.00"
+              }
+            },
+            {
+              "due_date": "2026-12-01",
+              "amount": {
+                "currency": "THB",
+                "amount": "2550.00"
+              }
+            },
+            {
+              "due_date": "2027-01-01",
+              "amount": {
+                "currency": "THB",
+                "amount": "2550.00"
+              }
+            },
+            {
+              "due_date": "2027-02-01",
+              "amount": {
+                "currency": "THB",
+                "amount": "2550.00"
+              }
+            },
+            {
+              "due_date": "2027-03-01",
+              "amount": {
+                "currency": "THB",
+                "amount": "2550.00"
+              }
+            },
+            {
+              "due_date": "2027-04-01",
+              "amount": {
+                "currency": "THB",
+                "amount": "2550.00"
+              }
+            },
+            {
+              "due_date": "2027-05-01",
+              "amount": {
+                "currency": "THB",
+                "amount": "2550.00"
+              }
+            },
+            {
+              "due_date": "2027-06-01",
+              "amount": {
+                "currency": "THB",
+                "amount": "2550.00"
+              }
+            },
+            {
+              "due_date": "2027-07-01",
+              "amount": {
+                "currency": "THB",
+                "amount": "2550.00"
+              }
+            },
+            {
+              "due_date": "2027-08-01",
+              "amount": {
+                "currency": "THB",
+                "amount": "2550.00"
+              }
+            },
+            {
+              "due_date": "2027-09-01",
+              "amount": {
+                "currency": "THB",
+                "amount": "2550.00"
+              }
+            },
+            {
+              "due_date": "2027-10-01",
+              "amount": {
+                "currency": "THB",
+                "amount": "2550.00"
+              }
+            }
+          ],
+          "affordability": "INSUFFICIENT_DATA",
+          "missing_inputs": [
+            "post-semester income",
+            "living costs during repayment"
+          ],
+          "conditions": [
+            "SIMULATED fixed quote, not a lender offer",
+            "Eligibility not confirmed"
+          ]
+        },
+        "message": "无法判断还款能力：post-semester income, living costs during repayment"
+      }
+    ],
+    "applications": [
+      {
+        "application_id": "demo_application",
+        "quote_id": "loan_demo",
+        "state": "DRAFT",
+        "simulated": true
+      }
+    ],
+    "application_notes": [
+      "demo_application: DRAFT (SIMULATED). Approval does not change funds; B owns all transitions."
+    ],
+    "calls": [
+      {
+        "provider": "rules",
+        "purpose": "plan",
+        "model": "readiness-fixture",
+        "mode": "mock",
+        "prompt_version": "readiness-2.2",
+        "duration_ms": 0.0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "attempts": 1,
+        "error_code": null,
+        "request_id": null
+      }
+    ]
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "schema_version": "2.0",
+  "verified_at": "2026-10-03T23:23:50.385222+07:00",
+  "package_version": "0.2.0",
+  "offline_tests": 130,
+  "coverage_percent": 87,
+  "live_demo_runs": 3,
+  "live_demo_verified": true,
+  "development": {
+    "samples": 16,
+    "case_pass_rate": 1,
+    "failed_cases": [],
+    "input_tokens": 20148,
+    "output_tokens": 6524,
+    "model_versions": [
+      "jev-1.13.0",
+      "openai/gpt-6-luna"
+    ],
+    "prompt_versions": [
+      "1.0",
+      "readiness-2.2"
+    ],
+    "mean_latency_ms": 4679.733993747504,
+    "llm_calls": 16
+  },
+  "frozen_test": {
+    "samples": 32,
+    "case_pass_rate": 1,
+    "failed_cases": [],
+    "input_tokens": 34996,
+    "output_tokens": 11561,
+    "model_versions": [
+      "jev-1.13.0",
+      "openai/gpt-6-luna"
+    ],
+    "prompt_versions": [
+      "1.0",
+      "readiness-2.2"
+    ],
+    "mean_latency_ms": 6123.289371880674,
+    "llm_calls": 28
+  },
+  "fx": {
+    "schema_version": "2.0",
+    "trace_id": "75cc5b78b56b4574b25eb595cdfd7c4e",
+    "source_refs": [],
+    "status": "READY",
+    "issues": [],
+    "quotes": [
+      {
+        "pair": {
+          "base": "CNY",
+          "quote": "THB"
+        },
+        "rate": "5.016",
+        "rate_date": "2026-10-02",
+        "fetched_at": "2026-10-03T16:22:46.351829Z",
+        "source": "https://api.frankfurter.dev/v2/rate/CNY/THB?date=2026-10-02&expand=providers",
+        "manual": false,
+        "basis": "Providers: BCEAO, BDI, BI, BNA, BNM, BNR, BOC, BOE, BOM, BOT, CBC, CBG, CBKKW, CBM, CBO, CBR, CBSL, CBU, CFETS, CNB, DNB, ECB, FRED, IMF, LB, MAS, MNB, NB, NBC, NBK, NBKR, NBP, NBRM, NBT, NBU, NRB, RB, RBA, RBM, SARB, SBI",
+        "stale": false
+      }
+    ]
+  },
+  "human_reviewed": false,
+  "integration_acceptance": false,
+  "historical_failures": [
+    "Initial live schema used inconsistent field names/IDs; rejected before use.",
+    "Second live attempt exposed line-marker formatting incompatibility; corrected with deterministic normalization."
+  ],
+  "pending": [
+    "A/B integration",
+    "Production B budget/FX/loan calculations",
+    "Human review of synthetic labels",
+    "Representative real-world accuracy"
+  ],
+  "wheel_install_demo_verified": true
+}
