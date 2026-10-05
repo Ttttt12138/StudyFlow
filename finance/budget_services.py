@@ -5,7 +5,7 @@ from django.utils import timezone
 from django.db.models import Max
 from .calculations import forecast
 from .services import json_value
-from .workflow_models import FXQuote,BudgetScenario,FundingSource,FundingPlan,LoanSimulation,Disbursement
+from .workflow_models import FXQuote,BudgetScenario,FundingSource,FundingPlan,LoanSimulation,Disbursement,SimulatedApplication
 from .workflow_common import require,owned,current,audit,record,shift_date
 from .loan_engine import loan_schedule
 
@@ -52,6 +52,8 @@ def scenario_snapshot(owner,data):
         seen.add(key)
         require(key in mapping and mapping[key]["kind"] == "expense","Override must reference an existing expense.")
         event = mapping[key]
+        require("settled_sequence" not in event and not key.startswith("repayment:"),
+                "Settled expenses and contractual loan repayments cannot be overridden.")
         amount = override["amount"]
         require(override["certainty"] != "confirmed" or amount is not None,"Confirmed expense amount cannot be missing.")
         if amount is not None:
@@ -79,8 +81,12 @@ def create_scenario(actor,data,obj=None):
     return record(scenario)
 
 def create_loan(actor,data,obj=None):
+    from .lending_applications import business_date
+    require(data["first_due_date"] > business_date(actor), "FIRST_DUE_DATE_NOT_FUTURE")
     try: result = loan_schedule(data)
     except ValueError as error: require(False,str(error))
+    require(all(Decimal(row["amount"]) <= Decimal("99999999999999.99") for row in result["repayments"]),
+            "Computed installment exceeds the shared Django monetary precision.")
     loan = LoanSimulation.objects.create(owner=actor,inputs=json_value(data),result=result)
     audit(actor,actor,"loan.simulated",loan)
     return record(loan)
@@ -99,7 +105,8 @@ def create_source(actor,data,obj=None):
         require(not FundingSource.objects.filter(loan=loan).exists(),"Loan already has a funding source.")
         require(data["currency"] == loan.result["currency"] and data["amount"] == Decimal(loan.result["net_proceeds"]),
             "Loan source must use its calculated net proceeds and currency.")
-        require(data["available_on"].isoformat() == loan.inputs["disbursement_date"],"Loan availability must match simulation.")
+        require(data["available_on"] >= date.fromisoformat(current(actor).snapshot["as_of"]),
+                "Loan availability cannot predate the financial snapshot.")
         require(data["certainty"] == "estimated","Undisbursed loans must remain estimated.")
         require(not data["already_in_opening"],"Undisbursed loan cannot be opening funds.")
     else:
@@ -121,6 +128,9 @@ def evaluate_plan(owner,scenario,allocations):
         require(not source.already_in_opening,"Opening funds cannot be counted as new funding.")
         require(source.economic_key not in existing_ids,"Source already appears in the financial state.")
         if source.loan_id:
+            require(not SimulatedApplication.objects.filter(loan=source.loan,
+                    status__in=["CANCELLED", "REJECTED"]).exists(),
+                    "Cancelled or rejected borrowing cannot fund a plan.")
             require(not Disbursement.objects.filter(application__loan=source.loan,status="settled").exists(),
                 "Loan is already received; use the updated state, not another funding allocation.")
         amount = Decimal(allocation["amount"])
@@ -163,7 +173,7 @@ def compare_loans(actor,data,obj=None):
     basis = {(loan.result["currency"],loan.result["net_proceeds"]) for loan in loans}
     return {"is_simulated":True,"same_net_receipt_basis":len(basis)==1,
         "ranking":None,"note":"Compare repayment timing and affordability as well as total cost; no automatic recommendation.",
-        "loans":[{"id":str(loan.id),"product_name":loan.inputs["product_name"],
+        "loans":[{"id":str(loan.id),"product_name":loan.inputs.get("product_name", "Simulated B loan"),
             **{key:loan.result[key] for key in [
                 "currency","net_proceeds","total_repayment","total_cost_over_net_proceeds",
                 "maximum_installment","affordability_status"]}} for loan in loans]}

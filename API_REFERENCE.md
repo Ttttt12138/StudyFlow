@@ -245,9 +245,9 @@ Request:
 
 Kinds: family, scholarship, external_savings, loan.
 
-For kind=loan, also send loan_id. Amount, currency, and available date must exactly
-match the simulation's net proceeds and disbursement date. An undisbursed loan must
-be estimated and cannot be opening funds.
+For kind=loan, also send loan_id. Amount and currency must match the quote's net proceeds.
+Availability is an explicit estimate, not a guaranteed receipt date. An undisbursed
+loan must be estimated and cannot be opening funds.
 
 ### POST /api/v2/funding-sources/{id}/receive/
 
@@ -295,111 +295,52 @@ Feasibility values:
 - incomplete
 - funding_gap
 
-## Loan simulations
+## B loans inside Django (replacement contract)
 
-### GET /api/v2/loans/
-### GET /api/v2/loans/{id}/
+B now owns lending calculations and transitions. This is a breaking replacement of the former Django lending payloads. There is no /api/v1 compatibility service.
 
-List or inspect simulations and their full repayment schedules.
+| Method | Route | Function |
+|---|---|---|
+| GET/POST | loans/ | Immutable B quotes (THB, 1–60 months) |
+| GET | loans/{id}/ | Quote inputs and exact full schedule |
+| POST | loans/compare/ | Compare 2–10 owned quotes without ranking |
+| GET/POST | affordability-profile/ | Read/fully replace versioned monthly budgets |
+| GET/POST | applications/ | List/create DRAFT using quote_id |
+| GET | applications/{id}/ | Status, version and assessment |
+| POST | applications/{id}/action/ | submit/cancel with expected_version |
+| POST | applications/{id}/decision/ | Operator re-evaluation with expected_version and reason |
+| POST | applications/{id}/disburse/ | Operator-only simulated receipt with expected_version |
+| GET | loan-accounts/ or loan-accounts/{id}/ | Outstanding principal, version and installments |
+| POST | loan-accounts/{id}/repay/ | Pay the earliest due installment in full |
+| GET | applications/{id}/c-context/ | Owner-scoped C quote/application/source contracts |
+| POST | applications/{id}/explain/ | C mock explanation for owned, current scenario_id |
+| GET | disbursements/ or disbursements/{id}/ | Historical receipt records |
 
-### POST /api/v2/loans/
+Quote request:
 
-Request:
+```json
+{"currency":"THB","principal":"30600.00","annual_rate":"0.12","fees":"600.00","months":12,"first_due_date":"2026-11-01"}
+```
 
-    {
-      "product_name": "Mock student loan",
-      "currency": "THB",
-      "principal": "20000.00",
-      "annual_rate_percent": "8.0000",
-      "repayment_months": 12,
-      "grace_months": 0,
-      "withheld_fee": "1600.00",
-      "disbursement_date": "2026-10-02",
-      "monthly_income": null,
-      "monthly_essential_expenses": null,
-      "income_confirmed": false
-    }
+`annual_rate` is a fraction: 0.12 = 12%. B uses monthly annuity calculations, withheld fees, half-up cents and a final installment that clears principal. Due dates follow the first due day, clamp at month end and restore the original day later. JSON floats/bools for amounts/rates are rejected. The Django shared money contract limits amounts to 16 total digits including 2 decimals; computed installments outside that storage limit are rejected before a quote is saved. The B pure calculation core retains its original 18-digit input model.
 
-Repayment months: 1-360. Grace months: 0-24.
-Withheld fee must be explicit. Currency precision rules apply.
+Profile request:
 
-Affordability values:
+```json
+{"expected_version":0,"months":[{"month":"2026-11","income":"10000.00","living_expenses":"4000.00","existing_repayments":"1000.00"}]}
+```
 
-- insufficient_information
-- affordable_under_assumptions
-- unaffordable
+Supply every repayment month; null/missing means unknown, explicit zero means none. `existing_repayments` means external debt only. Other approved/disbursed unpaid B installments are counted automatically. Quote-time income fields were removed. `affordability_status` on a saved quote is historical/insufficient_information; authoritative current decisions are the application's `assessment` or C context.
 
-### POST /api/v2/loans/compare/
+Create with `{"quote_id":"UUID"}`. Submit `{"action":"submit","expected_version":1}`. B automatically selects APPROVED / REJECTED / UNDER_REVIEW. After missing inputs are supplied, the operator calls decision with `{"expected_version":2,"reason":"Inputs supplied"}`; it cannot force approve/reject. A quote can create only one application. Cancellation is allowed until DISBURSED, including rejected/approved applications. First due date must still be in the future when quoting, applying, submitting, reviewing and disbursing.
 
-Request:
+Disbursement rechecks affordability; if no longer affordable it returns the application to UNDER_REVIEW and creates no money or account. Success records net proceeds, a DISBURSED application, ACTIVE account, installments, state revision, ledger and audit atomically. Approval itself creates no funds. Old disbursements/{id}/action process/unknown/settle commands were removed; payment adapter status resolution remains unchanged.
 
-    {"loan_ids": ["UUID-1", "UUID-2"]}
+Repay with `{"expected_version":1,"installment_number":1}`. Only the earliest unpaid, due installment can be paid; pending/unknown payment holds cannot be spent. No partial, early, automatic repayments or penalties. The last payment closes the account; the application remains DISBURSED. General payments cannot execute loan repayment events. Supplemental demo cash uses the existing operator-controlled funding-sources/{id}/receive route and the same wallet/ledger.
 
-Accepts two to ten unique owned simulations. It returns comparable totals and basis
-information but no automatic recommendation.
+For loans, profiles, applications and repayments, idempotency keys share a namespace per authenticated actor. Same request/key returns the original result; reuse for another body or lending operation is rejected. Replays are snapshots; GET again for current state. All commands use the Django owner lock and a database transaction. Version conflicts return 409; other input/transition conflicts return 400 under the Django convention.
 
-## Simulated applications
-
-### GET /api/v2/applications/
-### GET /api/v2/applications/{id}/
-### POST /api/v2/applications/
-
-Create request:
-
-    {"loan_id": "UUID"}
-
-### POST /api/v2/applications/{id}/action/
-
-Student request:
-
-    {"action": "submit"}
-
-or:
-
-    {"action": "cancel"}
-
-### POST /api/v2/applications/{id}/decision/
-
-Operator-only:
-
-    {"action": "review", "reason": "Explicit mock review"}
-
-Then:
-
-    {"action": "approve", "reason": "Demo approval only"}
-
-or reject. Approval schedules a THB disbursement but does not change balances.
-
-Application states:
-
-    draft -> submitted -> under_review -> approved
-                                      \-> rejected
-    draft/submitted/under_review -> cancelled
-
-## Disbursements
-
-### GET /api/v2/disbursements/
-### GET /api/v2/disbursements/{id}/
-
-Read owned simulated disbursements.
-
-### POST /api/v2/disbursements/{id}/action/
-
-Operator-only requests:
-
-    {"action": "process"}
-    {"action": "unknown"}
-    {"action": "settle"}
-    {"action": "fail"}
-
-States:
-
-    scheduled -> processing -> settled
-                           \-> failed
-                           \-> unknown -> settled/failed
-
-Settlement creates one credit using net proceeds. Retrying cannot add a second
-ledger entry.
+C exports exact B numbers, marks unreceived funding date unknown, and reports received money with allocatable=0. C explanations use a persisted Django scenario, not a fixed synthetic budget. A single scenario is not a complete low/base/high readiness analysis, so complete=false and candidates remain PENDING unless invalid. No model call approves or transfers funds.
 
 ## Demo wallet and clock
 
@@ -511,7 +452,7 @@ Payment states:
 ### GET /api/v2/ledger/
 
 Returns signed simulated ledger entries newest first. Positive entries are
-funding/disbursements; negative entries are payments. Each owner also has a
+funding/disbursements; negative entries are payments or loan repayments. Each owner also has a
 monotonic settlement sequence for reconstructing actual event order.
 
 ### GET /api/v2/audit/

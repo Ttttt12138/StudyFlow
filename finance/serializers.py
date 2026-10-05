@@ -19,6 +19,11 @@ class MoneyField(serializers.DecimalField):
     def __init__(self, **kwargs):
         super().__init__(max_digits=16, decimal_places=2, min_value=Decimal("0"), **kwargs)
 
+    def to_internal_value(self, data):
+        if isinstance(data, (float, bool)):
+            raise serializers.ValidationError("Use an exact decimal string for money.")
+        return super().to_internal_value(data)
+
 class EventSerializer(StrictInputMixin, serializers.Serializer):
     id = serializers.CharField(max_length=100)
     label = serializers.CharField(max_length=200)

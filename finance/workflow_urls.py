@@ -3,18 +3,21 @@ from . import workflow_serializers as s
 from . import budget_services as b
 from . import execution_services as e
 from . import workflow_models as m
+from . import lending_applications as lending
 from .models import FinancialState,CalculationRun,AuditEvent
 from .workflow_api import CommandView,ResourceView,ReadView
 
 def resource(route,model,serializer,handler):
     view = type(model.__name__+"Resource",(ResourceView,),{
-        "model":model,"serializer_class":serializer,"handler":staticmethod(handler)})
+        "model":model,"serializer_class":serializer,"handler":staticmethod(handler),
+        "idempotency_namespace": "b-lending" if route in {"loans", "applications"} else None})
     return [path(route+"/",view.as_view(),name=route),
         path(route+"/<uuid:pk>/",ReadView.as_view(model=model),name=route+"-detail")]
 
-def command(route,name,serializer,handler,target=None,operator=False):
+def command(route,name,serializer,handler,target=None,operator=False,namespace=None):
     view = type(name,(CommandView,),{"serializer_class":serializer,
-        "handler":staticmethod(handler),"target_model":target,"operator_only":operator})
+        "handler":staticmethod(handler),"target_model":target,"operator_only":operator,
+        "idempotency_namespace":namespace or ("b-lending" if route.startswith("applications/") else None)})
     return path(route,view.as_view(),name=name)
 
 urlpatterns = []
@@ -24,7 +27,7 @@ for args in [
     ("funding-sources",m.FundingSource,s.SourceInput,b.create_source),
     ("funding-plans",m.FundingPlan,s.PlanInput,b.create_plan),
     ("loans",m.LoanSimulation,s.LoanInput,b.create_loan),
-    ("applications",m.SimulatedApplication,s.ApplicationInput,e.create_application),
+    ("applications",m.SimulatedApplication,s.ApplicationInput,lending.create_application),
     ("beneficiaries",m.Beneficiary,s.BeneficiaryInput,e.create_beneficiary),
     ("payments",m.Payment,s.PaymentInput,e.create_payment),
 ]: urlpatterns.extend(resource(*args))
@@ -41,9 +44,8 @@ urlpatterns += [
     path("forecasts/history/",ReadView.as_view(model=CalculationRun)),
     command("demo/initialize/","DemoInitialize",s.InitializeInput,e.initialize),
     command("demo/clock/","DemoClock",s.ClockInput,e.advance_clock),
-    command("applications/<uuid:pk>/action/","ApplicationAction",s.ApplicationAction,e.application_action,m.SimulatedApplication),
-    command("applications/<uuid:pk>/decision/","ApplicationDecision",s.DecisionInput,e.application_decision,m.SimulatedApplication,True),
-    command("disbursements/<uuid:pk>/action/","DisbursementAction",s.SettlementInput,e.disbursement_action,m.Disbursement,True),
+    command("applications/<uuid:pk>/action/","ApplicationAction",s.ApplicationAction,lending.application_action,m.SimulatedApplication),
+    command("applications/<uuid:pk>/decision/","ApplicationDecision",s.DecisionInput,lending.application_decision,m.SimulatedApplication,True),
     command("beneficiaries/<uuid:pk>/verify/","BeneficiaryVerify",s.VerifyInput,e.verify_beneficiary,m.Beneficiary,True),
     command("payments/<uuid:pk>/authorize/","PaymentAuthorize",s.AuthorizationInput,e.authorize,m.Payment),
     command("payments/<uuid:pk>/cancel/","PaymentCancel",s.EmptyInput,e.cancel,m.Payment),

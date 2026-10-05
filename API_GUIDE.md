@@ -70,8 +70,8 @@ Funding source request:
     }
 
 Kinds: family, scholarship, external_savings, loan.
-Loan sources require loan_id, exact net proceeds/currency/date from the simulation,
-and certainty=estimated. Approval never makes a loan current available money.
+Loan sources require loan_id, exact net proceeds/currency from the quote,
+and certainty=estimated. Availability is an explicit estimate, not a guaranteed B receipt date. Approval never makes a loan current available money.
 Same-currency mock source receipt fees are zero; foreign receipts require a quote.
 Money already in opening funds or already received cannot be added again.
 
@@ -87,42 +87,52 @@ A sufficient final balance does not erase an earlier gap.
 Loan-backed plans include the FULL associated repayment schedule, not a prorated debt.
 Old scenarios/plans are rejected after state changes or quote expiry.
 
-## Loans and simulated applications
+## B loans inside Django (replacement contract)
+
+B now owns lending calculations and transitions. This is a breaking replacement of the former Django lending payloads. There is no /api/v1 compatibility service.
 
 | Method | Route | Function |
 |---|---|---|
-| GET/POST | loans/ | List/create immutable loan simulations |
-| GET | loans/{id}/ | Inputs and entire repayment schedule |
-| POST | loans/compare/ | Compare 2-10 owned simulations without automatic ranking |
-| GET/POST | applications/ | List/create a draft for one simulation |
-| GET | applications/{id}/ | Application state |
-| POST | applications/{id}/action/ | Student: submit or cancel |
-| POST | applications/{id}/decision/ | Operator: review, approve, reject |
-| GET | disbursements/ | List scheduled/processing/settled outcomes |
-| GET | disbursements/{id}/ | Disbursement status |
-| POST | disbursements/{id}/action/ | Operator: process, unknown, settle, fail |
+| GET/POST | loans/ | Immutable B quotes (THB, 1–60 months) |
+| GET | loans/{id}/ | Quote inputs and exact full schedule |
+| POST | loans/compare/ | Compare 2–10 owned quotes without ranking |
+| GET/POST | affordability-profile/ | Read/fully replace versioned monthly budgets |
+| GET/POST | applications/ | List/create DRAFT using quote_id |
+| GET | applications/{id}/ | Status, version and assessment |
+| POST | applications/{id}/action/ | submit/cancel with expected_version |
+| POST | applications/{id}/decision/ | Operator re-evaluation with expected_version and reason |
+| POST | applications/{id}/disburse/ | Operator-only simulated receipt with expected_version |
+| GET | loan-accounts/ or loan-accounts/{id}/ | Outstanding principal, version and installments |
+| POST | loan-accounts/{id}/repay/ | Pay the earliest due installment in full |
+| GET | applications/{id}/c-context/ | Owner-scoped C quote/application/source contracts |
+| POST | applications/{id}/explain/ | C mock explanation for owned, current scenario_id |
+| GET | disbursements/ or disbursements/{id}/ | Historical receipt records |
 
-Loan request:
-    {
-      "product_name":"Mock loan", "currency":"THB", "principal":"20000.00",
-      "annual_rate_percent":"8.0000", "repayment_months":12, "grace_months":0,
-      "withheld_fee":"1600.00", "disbursement_date":"2026-10-02",
-      "monthly_income":null, "monthly_essential_expenses":null,
-      "income_confirmed":false
-    }
+Quote request:
 
-Fixed nominal annual percentage / 12; monthly grace interest capitalizes.
-Monthly dates clamp to month end using the original disbursement day.
-Last installment clears the balance exactly at the currency's precision.
-Incomplete/unconfirmed income returns insufficient_information.
-Otherwise the result is affordable_under_assumptions or unaffordable, not approval.
+```json
+{"currency":"THB","principal":"30600.00","annual_rate":"0.12","fees":"600.00","months":12,"first_due_date":"2026-11-01"}
+```
 
-Application: draft -> submitted -> under_review -> approved/rejected.
-Cancellation is allowed before decision. Approval creates a scheduled disbursement
-but no ledger entry. For a new loan/date/term, create a new simulation.
-Disbursement: scheduled -> processing -> settled/failed; processing -> unknown
-requires status resolution. It cannot settle before its scheduled demo date.
-Only THB loan simulations can be approved into this settlement demo.
+`annual_rate` is a fraction: 0.12 = 12%. B uses monthly annuity calculations, withheld fees, half-up cents and a final installment that clears principal. Due dates follow the first due day, clamp at month end and restore the original day later. JSON floats/bools for amounts/rates are rejected. The Django shared money contract limits amounts to 16 total digits including 2 decimals; computed installments outside that storage limit are rejected before a quote is saved. The B pure calculation core retains its original 18-digit input model.
+
+Profile request:
+
+```json
+{"expected_version":0,"months":[{"month":"2026-11","income":"10000.00","living_expenses":"4000.00","existing_repayments":"1000.00"}]}
+```
+
+Supply every repayment month; null/missing means unknown, explicit zero means none. `existing_repayments` means external debt only. Other approved/disbursed unpaid B installments are counted automatically. Quote-time income fields were removed. `affordability_status` on a saved quote is historical/insufficient_information; authoritative current decisions are the application's `assessment` or C context.
+
+Create with `{"quote_id":"UUID"}`. Submit `{"action":"submit","expected_version":1}`. B automatically selects APPROVED / REJECTED / UNDER_REVIEW. After missing inputs are supplied, the operator calls decision with `{"expected_version":2,"reason":"Inputs supplied"}`; it cannot force approve/reject. A quote can create only one application. Cancellation is allowed until DISBURSED, including rejected/approved applications. First due date must still be in the future when quoting, applying, submitting, reviewing and disbursing.
+
+Disbursement rechecks affordability; if no longer affordable it returns the application to UNDER_REVIEW and creates no money or account. Success records net proceeds, a DISBURSED application, ACTIVE account, installments, state revision, ledger and audit atomically. Approval itself creates no funds. Old disbursements/{id}/action process/unknown/settle commands were removed; payment adapter status resolution remains unchanged.
+
+Repay with `{"expected_version":1,"installment_number":1}`. Only the earliest unpaid, due installment can be paid; pending/unknown payment holds cannot be spent. No partial, early, automatic repayments or penalties. The last payment closes the account; the application remains DISBURSED. General payments cannot execute loan repayment events. Supplemental demo cash uses the existing operator-controlled funding-sources/{id}/receive route and the same wallet/ledger.
+
+For loans, profiles, applications and repayments, idempotency keys share a namespace per authenticated actor. Same request/key returns the original result; reuse for another body or lending operation is rejected. Replays are snapshots; GET again for current state. All commands use the Django owner lock and a database transaction. Version conflicts return 409; other input/transition conflicts return 400 under the Django convention.
+
+C exports exact B numbers, marks unreceived funding date unknown, and reports received money with allocatable=0. C explanations use a persisted Django scenario, not a fixed synthetic budget. A single scenario is not a complete low/base/high readiness analysis, so complete=false and candidates remain PENDING unless invalid. No model call approves or transfers funds.
 
 ## Payment and reconciliation
 

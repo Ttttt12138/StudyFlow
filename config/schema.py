@@ -7,7 +7,8 @@ class StudyFlowSchema(AutoSchema):
 
     def get_response_serializers(self):
         from finance.workflow_api import ReadView, ResourceView
+        from finance.lending_api import AccountView
         from finance.workflow_serializers import CommandResponse, HistoryResponse
-        if self.method == "GET" and isinstance(self.view, (ReadView, ResourceView)):
+        if self.method == "GET" and isinstance(self.view, (ReadView, ResourceView, AccountView)):
             return CommandResponse if "{" in self.path else HistoryResponse
         return super().get_response_serializers()

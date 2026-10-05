@@ -11,7 +11,7 @@ they enforce a system rule.
 | finance/calculations.py | Exact dated cash-flow and reserve-gap calculations |
 | finance/loan_engine.py | Full-term fixed-rate repayment simulation |
 | finance/budget_services.py | FX, scenarios, funding sources, plans, and loan comparisons |
-| finance/execution_services.py | Demo wallet, applications, disbursements, payments, and reconciliation |
+| finance/execution_services.py | Demo wallet, payments, funding receipts and reconciliation |
 | finance/services.py | Financial-state version creation and serialization |
 | finance/workflow_common.py | Ownership, validation, audit, state, and response helpers |
 | finance/workflow_api.py | Generic authenticated command and read API behavior |
@@ -61,26 +61,7 @@ This function has no database side effects.
 
 ### loan_schedule(data)
 
-Location: finance/loan_engine.py
-
-Creates the complete repayment schedule for one supported simulated loan.
-
-Supported model:
-
-- Nominal annual percentage divided by 12.
-- Monthly repayments.
-- Optional grace months with capitalized monthly interest and zero payments.
-- Zero-interest loans.
-- Withheld fee deducted from principal to calculate net proceeds.
-- Half-up rounding at currency precision; JPY uses whole units.
-- Final installment adjusts to clear the remaining balance.
-
-Outputs include net proceeds, every installment, total interest, total repayment,
-total cost over net proceeds, maximum installment, and affordability status.
-
-Affordability is insufficient_information unless income is explicitly confirmed and
-both monthly income and essential expenses are provided. A favorable result is
-affordable_under_assumptions, never a real credit decision.
+Location: finance/loan_engine.py. Calls `finance.lending_core.calculations.calculate` with B's `QuoteInput` (THB, principal, annual_rate as a fraction, fees, months 1–60, first_due_date). The result includes the original B repayments and an identical schedule projection for Django budgets. No grace/foreign-currency loan arithmetic remains in the runtime. Current affordability is calculated by finance/affordability.py from versioned monthly profiles and other unpaid commitments.
 
 ## Budget and funding service functions
 
@@ -133,9 +114,9 @@ Creates a funding source with a stable economic_key to prevent duplicate real-wo
 funding identities. Supported types are family, scholarship, external_savings, and
 loan.
 
-Loan funding must reference an owned LoanSimulation and exactly match its currency,
-net proceeds, and disbursement date. An undisbursed loan must remain estimated and
-cannot be marked as opening funds.
+Loan funding must reference an owned LoanSimulation and exactly match its currency
+and net proceeds. Availability is an explicit estimate. An undisbursed loan must
+remain estimated and cannot be marked as opening funds.
 
 ### evaluate_plan(owner, scenario, allocations)
 
@@ -191,44 +172,18 @@ as-of date. The opening snapshot becomes fixed for the demo.
 
 Moves the demo date forward by at most 730 days. The date cannot move backward.
 
-### create_application(actor, data, obj=None)
+### B application and repayment services
 
-Creates one draft simulated application for an owned loan simulation. A simulation
-may have only one application.
+Application functions now live in `finance/lending_applications.py`:
 
-### application_action(actor, data, obj)
+- create_application: owned immutable B quote, one application, first due date in the future.
+- application_action: versioned submit/cancel; submit automatically evaluates monthly affordability.
+- application_decision: operator re-evaluation of UNDER_REVIEW, without an approval override.
+- disburse: rechecks current affordability; records cash/account/ledger atomically or returns to review.
 
-Student-controlled transitions:
+`finance/lending_ledger.py` creates loan accounts and installments and repays the earliest due installment using the shared Django wallet. Repayments respect payment holds, update state and audit atomically, and close the account after the last installment. `finance/c_adapter.py` exports authoritative records and creates C mock explanations from an owned scenario.
 
-- draft -> submitted
-- draft/submitted/under_review -> cancelled
-
-Invalid transitions are rejected.
-
-### application_decision(actor, data, obj)
-
-Controlled operator transitions:
-
-- submitted -> under_review
-- under_review -> approved or rejected
-
-Approval creates one scheduled THB disbursement using net loan proceeds. Approval
-does not create a ledger entry or change the wallet balance. Foreign-currency loans
-remain comparison-only in this demo.
-
-### disbursement_action(actor, data, obj)
-
-Controlled operator transitions:
-
-- scheduled -> processing
-- processing -> unknown
-- processing/unknown -> failed
-- processing/unknown -> settled
-
-Settlement is allowed only on or after the scheduled demo date. In one database
-transaction it creates one positive ledger entry, credits the wallet, appends the
-loan and repayment events to a new state version, and writes audit history.
-Repeated settlement returns the existing settled result.
+The former execution_services application/decision/disbursement_action implementation has been removed. See [the replacement API](API_GUIDE.md) for payloads and states.
 
 ### create_beneficiary(actor, data, obj=None)
 

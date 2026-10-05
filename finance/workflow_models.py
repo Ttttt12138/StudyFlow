@@ -24,7 +24,7 @@ class BudgetScenario(OwnedRecord):
 class LoanSimulation(OwnedRecord):
     inputs = models.JSONField()
     result = models.JSONField()
-    engine_version = models.CharField(max_length=40, default="monthly-amortization-v1")
+    engine_version = models.CharField(max_length=40, default="b-monthly-amortization-v1")
 
 class FundingSource(OwnedRecord):
     economic_key = models.CharField(max_length=100)
@@ -45,8 +45,10 @@ class FundingPlan(OwnedRecord):
     result = models.JSONField()
 
 class SimulatedApplication(OwnedRecord):
+    version = models.PositiveIntegerField(default=1)
     loan = models.OneToOneField(LoanSimulation, on_delete=models.PROTECT)
-    status = models.CharField(max_length=20, default="draft")
+    status = models.CharField(max_length=20, default="DRAFT")
+    assessment = models.JSONField(default=dict)
     decision_reason = models.CharField(max_length=500, blank=True)
 
 class Disbursement(OwnedRecord):
@@ -85,6 +87,7 @@ class Payment(OwnedRecord):
         )]
 
 class DemoLedgerEntry(OwnedRecord):
+    installment = models.OneToOneField("finance.LoanInstallment", null=True, on_delete=models.PROTECT)
     sequence = models.PositiveIntegerField(default=1)
     funding_source = models.OneToOneField(FundingSource, null=True, on_delete=models.PROTECT)
     disbursement = models.OneToOneField(Disbursement, null=True, on_delete=models.PROTECT)
@@ -93,9 +96,10 @@ class DemoLedgerEntry(OwnedRecord):
     effective_on = models.DateField()
     class Meta:
         constraints = [models.CheckConstraint(
-            condition=(Q(disbursement__isnull=False,payment__isnull=True,funding_source__isnull=True,amount__gt=0) |
+            condition=((Q(disbursement__isnull=False,payment__isnull=True,funding_source__isnull=True,amount__gt=0) |
                        Q(disbursement__isnull=True,payment__isnull=False,funding_source__isnull=True,amount__lt=0) |
-                       Q(disbursement__isnull=True,payment__isnull=True,funding_source__isnull=False,amount__gt=0)),
+                       Q(disbursement__isnull=True,payment__isnull=True,funding_source__isnull=False,amount__gt=0)) & Q(installment__isnull=True)) |
+                       Q(disbursement__isnull=True,payment__isnull=True,funding_source__isnull=True,installment__isnull=False,amount__lt=0),
             name="ledger_origin_and_sign",
         ), models.UniqueConstraint(fields=["owner","sequence"], name="ledger_owner_sequence_unique")]
 

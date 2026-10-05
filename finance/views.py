@@ -75,7 +75,7 @@ class ForecastView(APIView):
         try:
             result = forecast(state.snapshot, data["end_date"], data["include_estimates"])
         except ValueError as error:
-            raise ValidationError({"end_date": str(error)})
+            raise ValidationError({"end_date": str(error)}) from error
         run = CalculationRun.objects.create(
             owner=request.user, state=state, inputs=json_value(data), result=result,
         )

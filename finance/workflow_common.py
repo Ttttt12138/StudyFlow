@@ -30,7 +30,7 @@ def record(obj):
     for field in obj._meta.fields:
         if field.name in {"owner","id"}: continue
         data[field.name] = getattr(obj,field.attname)
-    if obj.__class__.__module__ == "finance.workflow_models":
+    if obj.__class__.__module__ in {"finance.workflow_models", "finance.lending_models"}:
         data["is_simulated"] = True
     return {"id":str(obj.id),"type":obj._meta.model_name,**json_value(data)}
 

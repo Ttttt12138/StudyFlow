@@ -1,6 +1,5 @@
 import json
 import secrets
-from copy import deepcopy
 from pathlib import Path
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -52,11 +51,9 @@ class Command(BaseCommand):
             budgets[kind]=post("scenarios",{"state_version":1,"kind":kind,"end_date":"2026-10-31",
                 "include_estimates":True,"overrides":overrides})
         loans = []
-        for label,rate in [("Mock loan A","8"),("Mock loan B","12")]:
-            loans.append(post("loans",{"product_name":label,"currency":"THB","principal":"20000.00",
-                "annual_rate_percent":rate,"repayment_months":12,"grace_months":0,
-                "withheld_fee":"1600.00","disbursement_date":"2026-10-02",
-                "monthly_income":None,"monthly_essential_expenses":None,"income_confirmed":False}))
+        for rate in ["0.08", "0.12"]:
+            loans.append(post("loans", {"currency":"THB", "principal":"20000.00",
+                "annual_rate":rate, "months":12, "fees":"1600.00", "first_due_date":"2026-11-02"}))
         public = {"is_simulated":True,"wallet_id":wallet["id"],
             "beneficiary_id":beneficiary["id"],
             "scenario_ids":{name:value["id"] for name,value in budgets.items()},

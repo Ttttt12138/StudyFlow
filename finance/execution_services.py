@@ -4,8 +4,7 @@ from decimal import Decimal
 from django.db.models import Sum
 from django.utils import timezone
 from .workflow_models import (
-    DemoWallet,LoanSimulation,SimulatedApplication,Disbursement,DemoLedgerEntry,
-    Beneficiary,Payment,FundingPlan,FundingSource,
+    DemoWallet,DemoLedgerEntry,Beneficiary,Payment,FundingPlan,
 )
 from .workflow_common import require,owned,current,audit,append_state,record,shift_date
 from .budget_services import evaluate_plan,convert
@@ -38,81 +37,6 @@ def advance_clock(actor,data,obj=None):
     audit(actor,actor,"demo.clock_advanced",item)
     return record(item)
 
-def create_application(actor,data,obj=None):
-    loan = owned(LoanSimulation,actor,data["loan_id"])
-    require(not SimulatedApplication.objects.filter(loan=loan).exists(),"Simulation already has an application.")
-    application = SimulatedApplication.objects.create(owner=actor,loan=loan)
-    audit(actor,actor,"application.created",application)
-    return record(application)
-
-def application_action(actor,data,obj):
-    if data["action"] == "submit":
-        require(obj.status == "draft","Only draft applications can be submitted.")
-        obj.status = "submitted"
-    else:
-        require(obj.status in ["draft","submitted","under_review"],"Application cannot be cancelled in this state.")
-        obj.status = "cancelled"
-    obj.save(update_fields=["status"])
-    audit(obj.owner,actor,"application."+obj.status,obj)
-    return record(obj)
-
-def application_decision(actor,data,obj):
-    if data["action"] == "review":
-        require(obj.status == "submitted","Only submitted applications can enter review.")
-        obj.status = "under_review"
-    else:
-        require(obj.status == "under_review","Decision requires an application under review.")
-        obj.status = "approved" if data["action"] == "approve" else "rejected"
-    obj.decision_reason = data["reason"]
-    obj.save(update_fields=["status","decision_reason"])
-    if obj.status == "approved":
-        require(obj.loan.result["currency"] == "THB","Demo execution supports THB; foreign loans are comparison-only.")
-        Disbursement.objects.create(owner=obj.owner,application=obj,
-            amount=obj.loan.result["net_proceeds"],scheduled_on=obj.loan.inputs["disbursement_date"])
-    audit(obj.owner,actor,"application.mock_"+obj.status,obj)
-    return record(obj)
-
-def disbursement_action(actor,data,obj):
-    action = data["action"]
-    if action == "settle" and obj.status == "settled": return record(obj)
-    require(obj.application.status == "approved","Application is not approved.")
-    if action == "process":
-        require(obj.status == "scheduled","Only scheduled disbursements can process.")
-        obj.status = "processing"
-    elif action == "unknown":
-        require(obj.status == "processing","Timeout requires a processing disbursement.")
-        obj.status = "unknown"
-    elif action == "fail":
-        require(obj.status in ["processing","unknown"],"Cannot fail this disbursement.")
-        obj.status = "failed"
-    else:
-        require(obj.status in ["processing","unknown"],"Settlement requires processing or status resolution.")
-        item = wallet(obj.owner)
-        require(item.clock >= obj.scheduled_on,"Disbursement cannot settle before its scheduled date.")
-        state = current(obj.owner)
-        snapshot = deepcopy(state.snapshot)
-        event_id = "loan:"+str(obj.application.loan_id)
-        require(not any(e["id"] == event_id for e in snapshot["events"]),"Loan already represented in state.")
-        sequence = DemoLedgerEntry.objects.filter(owner=obj.owner).count()+1
-        DemoLedgerEntry.objects.create(owner=obj.owner,disbursement=obj,amount=obj.amount,
-            effective_on=item.clock,sequence=sequence)
-        require(item.balance+obj.amount <= Decimal("9999999999999999.99"),"Wallet precision limit exceeded.")
-        item.balance += obj.amount
-        item.save(update_fields=["balance"])
-        snapshot["events"].append({"id":event_id,"label":"Simulated loan disbursement","kind":"income",
-            "amount":format(obj.amount,".2f"),"date":item.clock.isoformat(),"certainty":"confirmed",
-            "settled_sequence":sequence})
-        for row in obj.application.loan.result["schedule"]:
-            if Decimal(row["payment"]) > 0:
-                snapshot["events"].append({"id":"repayment:"+str(obj.application.loan_id)+":"+str(row["number"]),
-                    "label":"Simulated loan repayment","kind":"expense","amount":row["payment"],
-                    "date":row["due_date"],"certainty":"confirmed"})
-        append_state(obj.owner,snapshot,actor,"state.disbursement_received")
-        obj.status = "settled"
-    obj.save(update_fields=["status"])
-    audit(obj.owner,actor,"disbursement."+obj.status,obj,{"is_simulated":True})
-    return record(obj)
-
 def create_beneficiary(actor,data,obj=None):
     beneficiary = Beneficiary.objects.create(owner=actor,**data)
     audit(actor,actor,"beneficiary.created",beneficiary)
@@ -132,6 +56,7 @@ def check_plan(plan):
     return result
 
 def create_payment(actor,data,obj=None):
+    require(not data["event_id"].startswith("repayment:"), "Use the loan account repayment endpoint.")
     plan = owned(FundingPlan,actor,data["plan_id"])
     check_plan(plan)
     state = current(actor,plan.scenario.state.version)

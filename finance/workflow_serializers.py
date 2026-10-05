@@ -50,26 +50,39 @@ class PlanInput(Input):
     allocations = Allocation(many=True,max_length=100,allow_empty=True)
 
 class LoanInput(Input):
-    product_name = s.CharField(max_length=150)
-    currency = s.ChoiceField(choices=CURRENCIES,default="THB")
+    currency = s.ChoiceField(choices=["THB"], default="THB")
     principal = MoneyField()
-    annual_rate_percent = s.DecimalField(max_digits=7,decimal_places=4,min_value=0,max_value=100)
-    repayment_months = s.IntegerField(min_value=1,max_value=360)
-    grace_months = s.IntegerField(min_value=0,max_value=24,default=0)
-    withheld_fee = MoneyField()
-    disbursement_date = s.DateField()
-    monthly_income = MoneyField(required=False,allow_null=True,default=None)
-    monthly_essential_expenses = MoneyField(required=False,allow_null=True,default=None)
-    income_confirmed = s.BooleanField(default=False)
+    annual_rate = s.DecimalField(max_digits=9, decimal_places=8, min_value=0, max_value=1)
+    fees = MoneyField()
+    months = s.IntegerField(min_value=1, max_value=60)
+    first_due_date = s.DateField()
+
+    def validate(self, data):
+        from .lending_core.schemas import QuoteInput
+        from pydantic import ValidationError
+        try:
+            QuoteInput.model_validate(data)
+        except ValidationError as error:
+            raise s.ValidationError(str(error)) from None
+        return data
+
+    def to_internal_value(self, data):
+        if isinstance(data, dict):
+            if isinstance(data.get("annual_rate"), (float, bool)):
+                raise s.ValidationError({"annual_rate": "Use an exact decimal string."})
+            if type(data.get("months")) is not int:
+                raise s.ValidationError({"months": "Use an integer."})
+        return super().to_internal_value(data)
 
 class ApplicationInput(Input):
-    loan_id = s.UUIDField()
+    quote_id = s.UUIDField()
 
 class ApplicationAction(Input):
-    action = s.ChoiceField(choices=["submit","cancel"])
+    expected_version = s.IntegerField(min_value=1)
+    action = s.ChoiceField(choices=["submit", "cancel"])
 
 class DecisionInput(Input):
-    action = s.ChoiceField(choices=["review","approve","reject"])
+    expected_version = s.IntegerField(min_value=1)
     reason = s.CharField(max_length=500)
 
 class SettlementInput(Input):

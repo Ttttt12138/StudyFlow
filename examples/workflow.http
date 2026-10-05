@@ -6,7 +6,7 @@
 @operatorToken = REPLACE_LOCALLY
 @loanId = SEE_examples_demo-ids.json
 @appId = REPLACE_FROM_APPLICATION_RESPONSE
-@disbursementId = REPLACE_FROM_DISBURSEMENTS_LIST
+@accountId = REPLACE_FROM_DISBURSEMENT_RESPONSE
 @planId = REPLACE_FROM_PLAN_RESPONSE
 @beneficiaryId = SEE_examples_demo-ids.json
 @paymentId = REPLACE_FROM_PAYMENT_RESPONSE
@@ -23,7 +23,7 @@ Authorization: Token {{studentToken}}
 Idempotency-Key: demo-application-1
 Content-Type: application/json
 
-{"loan_id":"{{loanId}}"}
+{"quote_id":"{{loanId}}"}
 
 ### Submit application (student)
 POST {{base}}/applications/{{appId}}/action/
@@ -31,43 +31,107 @@ Authorization: Token {{studentToken}}
 Idempotency-Key: demo-submit-application-1
 Content-Type: application/json
 
-{"action":"submit"}
+{"action":"submit","expected_version":1}
 
-### Begin controlled mock review (operator)
+### Supply all repayment months (student; expected_version=0 for the first profile)
+POST {{base}}/affordability-profile/
+Authorization: Token {{studentToken}}
+Idempotency-Key: demo-profile-1
+Content-Type: application/json
+
+{
+  "expected_version": 0,
+  "months": [
+    {
+      "month": "2026-11",
+      "income": "10000.00",
+      "living_expenses": "4000.00",
+      "existing_repayments": "1000.00"
+    },
+    {
+      "month": "2026-12",
+      "income": "10000.00",
+      "living_expenses": "4000.00",
+      "existing_repayments": "1000.00"
+    },
+    {
+      "month": "2027-01",
+      "income": "10000.00",
+      "living_expenses": "4000.00",
+      "existing_repayments": "1000.00"
+    },
+    {
+      "month": "2027-02",
+      "income": "10000.00",
+      "living_expenses": "4000.00",
+      "existing_repayments": "1000.00"
+    },
+    {
+      "month": "2027-03",
+      "income": "10000.00",
+      "living_expenses": "4000.00",
+      "existing_repayments": "1000.00"
+    },
+    {
+      "month": "2027-04",
+      "income": "10000.00",
+      "living_expenses": "4000.00",
+      "existing_repayments": "1000.00"
+    },
+    {
+      "month": "2027-05",
+      "income": "10000.00",
+      "living_expenses": "4000.00",
+      "existing_repayments": "1000.00"
+    },
+    {
+      "month": "2027-06",
+      "income": "10000.00",
+      "living_expenses": "4000.00",
+      "existing_repayments": "1000.00"
+    },
+    {
+      "month": "2027-07",
+      "income": "10000.00",
+      "living_expenses": "4000.00",
+      "existing_repayments": "1000.00"
+    },
+    {
+      "month": "2027-08",
+      "income": "10000.00",
+      "living_expenses": "4000.00",
+      "existing_repayments": "1000.00"
+    },
+    {
+      "month": "2027-09",
+      "income": "10000.00",
+      "living_expenses": "4000.00",
+      "existing_repayments": "1000.00"
+    },
+    {
+      "month": "2027-10",
+      "income": "10000.00",
+      "living_expenses": "4000.00",
+      "existing_repayments": "1000.00"
+    }
+  ]
+}
+
+### Re-evaluate missing-input application (operator); B chooses the outcome
 POST {{base}}/applications/{{appId}}/decision/
 Authorization: Token {{operatorToken}}
 Idempotency-Key: demo-review-1
 Content-Type: application/json
 
-{"action":"review","reason":"Explicit mock review"}
+{"expected_version":2,"reason":"Monthly inputs supplied"}
 
-### Mock approval (operator) -- does NOT credit the wallet
-POST {{base}}/applications/{{appId}}/decision/
+### Disburse once (operator); only proceed after APPROVED, using the returned version
+POST {{base}}/applications/{{appId}}/disburse/
 Authorization: Token {{operatorToken}}
-Idempotency-Key: demo-approve-1
+Idempotency-Key: demo-disburse-1
 Content-Type: application/json
 
-{"action":"approve","reason":"Demo approval only"}
-
-### Inspect scheduled disbursement (student)
-GET {{base}}/disbursements/
-Authorization: Token {{studentToken}}
-
-### Process (operator)
-POST {{base}}/disbursements/{{disbursementId}}/action/
-Authorization: Token {{operatorToken}}
-Idempotency-Key: demo-process-disbursement-1
-Content-Type: application/json
-
-{"action":"process"}
-
-### Settle once (operator)
-POST {{base}}/disbursements/{{disbursementId}}/action/
-Authorization: Token {{operatorToken}}
-Idempotency-Key: demo-settle-disbursement-1
-Content-Type: application/json
-
-{"action":"settle"}
+{"expected_version":3}
 
 ### Read NEW state version after settlement
 GET {{base}}/state/
@@ -136,3 +200,16 @@ Content-Type: application/json
 ### Inspect immutable demo ledger
 GET {{base}}/ledger/
 Authorization: Token {{studentToken}}
+
+### Read loan account; repayments use its own version and the earliest due installment
+GET {{base}}/loan-accounts/{{accountId}}/
+Authorization: Token {{studentToken}}
+
+# Advance the demo clock only when ready for repayment; see manage.py demo_bc for a complete run.
+### Repay the first installment (only on or after its due date)
+POST {{base}}/loan-accounts/{{accountId}}/repay/
+Authorization: Token {{studentToken}}
+Idempotency-Key: demo-repay-1
+Content-Type: application/json
+
+{"expected_version":1,"installment_number":1}

@@ -10,12 +10,8 @@ from .models import FinancialState,AuditEvent
 from .workflow_models import *
 from .loan_engine import loan_schedule
 
-LOAN = {
-    "product_name":"Mock student loan","currency":"THB","principal":"10000.00",
-    "annual_rate_percent":"12.0000","repayment_months":12,"grace_months":0,
-    "withheld_fee":"1000.00","disbursement_date":"2026-10-02",
-    "monthly_income":None,"monthly_essential_expenses":None,"income_confirmed":False,
-}
+LOAN = {"currency":"THB","principal":"10000.00","annual_rate":"0.12",
+        "months":12,"fees":"1000.00","first_due_date":"2026-11-02"}
 
 class WorkflowTests(APITestCase):
     def setUp(self):
@@ -53,18 +49,23 @@ class WorkflowTests(APITestCase):
         return self.post("funding-sources",data)
 
     def approved(self):
-        loan = self.post("loans",LOAN)
-        app = self.post("applications",{"loan_id":loan["id"]})
-        self.post("applications/"+app["id"]+"/action",{"action":"submit"})
-        self.post("applications/"+app["id"]+"/decision",{"action":"review","reason":"Mock review"},operator=True)
-        self.post("applications/"+app["id"]+"/decision",{"action":"approve","reason":"Mock decision"},operator=True)
-        return loan,app,Disbursement.objects.get(application_id=app["id"])
+        loan = self.post("loans", LOAN)
+        app = self.post("applications", {"quote_id": loan["id"]})
+        profile = self.client.get("/api/v2/affordability-profile/").data["data"]
+        months = [{"month": row["due_date"][:7], "income": "10000",
+                   "living_expenses": "4000", "existing_repayments": "0"}
+                  for row in loan["result"]["schedule"]]
+        self.post("affordability-profile", {"expected_version": profile["version"], "months": months})
+        app = self.post("applications/" + app["id"] + "/action",
+                        {"action": "submit", "expected_version": 1})
+        self.assertEqual(app["status"], "APPROVED")
+        return loan, app, None
 
     def receive_loan(self):
-        loan,app,disb = self.approved()
-        self.post("disbursements/"+str(disb.id)+"/action",{"action":"process"},operator=True)
-        self.post("disbursements/"+str(disb.id)+"/action",{"action":"settle"},operator=True)
-        return loan,app,disb
+        loan, app, _ = self.approved()
+        self.post("applications/" + app["id"] + "/disburse",
+                  {"expected_version": app["version"]}, operator=True, key="disburse-once")
+        return loan, app, Disbursement.objects.get(application_id=app["id"])
 
     def beneficiary(self):
         result = self.post("beneficiaries",{"name":"Demo university","destination_label":"MOCK-UNIVERSITY"})
@@ -157,67 +158,59 @@ class WorkflowTests(APITestCase):
         self.assertEqual(result["affordability_status"],"insufficient_information")
         self.assertEqual(sum(Decimal(x["principal"]) for x in result["schedule"]),Decimal("10000"))
 
-    def test_zero_interest_grace_and_month_end(self):
-        data = {**LOAN,"annual_rate_percent":"0","disbursement_date":"2026-01-31","grace_months":2}
-        result = loan_schedule(data)
-        self.assertEqual(result["schedule"][0]["due_date"],"2026-02-28")
-        self.assertEqual(result["schedule"][1]["due_date"],"2026-03-31")
-        self.assertEqual(result["total_repayment"],"10000.00")
-        self.assertEqual(len(result["schedule"]),14)
+    def test_zero_interest_and_month_end(self):
+        result = loan_schedule({**LOAN, "annual_rate": "0", "first_due_date": "2027-01-31"})
+        self.assertEqual(result["schedule"][1]["due_date"], "2027-02-28")
+        self.assertEqual(result["schedule"][2]["due_date"], "2027-03-31")
+        self.assertEqual(result["total_interest"], "0.00")
+        self.assertEqual(sum(Decimal(row["principal"]) for row in result["schedule"]), Decimal("10000"))
 
-    def test_capitalized_grace_total(self):
-        result = loan_schedule({**LOAN,"grace_months":2})
-        self.assertEqual(result["schedule"][0]["payment"],"0.00")
-        self.assertEqual(result["schedule"][0]["closing_balance"],"10100.00")
-        self.assertEqual(Decimal(result["total_repayment"]),
-            Decimal(result["principal"])+Decimal(result["total_interest"]))
+    def test_legacy_grace_and_foreign_currency_are_rejected(self):
+        self.post("loans", {**LOAN, "grace_months": 2}, code=400)
+        self.post("loans", {**LOAN, "currency": "USD"}, code=400)
 
     def test_affordability_and_comparison(self):
-        low = self.post("loans",{**LOAN,"monthly_income":"100","monthly_essential_expenses":"99","income_confirmed":True})
-        self.assertEqual(low["result"]["affordability_status"],"unaffordable")
-        enough = self.post("loans",{**LOAN,"monthly_income":"5000","monthly_essential_expenses":"1000","income_confirmed":True})
-        self.assertEqual(enough["result"]["affordability_status"],"affordable_under_assumptions")
-        result = self.post("loans/compare",{"loan_ids":[low["id"],enough["id"]]})
+        first = self.post("loans", LOAN)
+        second = self.post("loans", {**LOAN, "annual_rate": "0"})
+        result = self.post("loans/compare", {"loan_ids": [first["id"], second["id"]]})
         self.assertTrue(result["same_net_receipt_basis"])
         self.assertIsNone(result["ranking"])
+        self.assertEqual(first["result"]["affordability_status"], "insufficient_information")
 
     def test_bad_loan_terms_and_no_automatic_affordability(self):
-        for patch in [{"principal":"0"},{"withheld_fee":"10000"},{"repayment_months":0},
-                      {"annual_rate_percent":"-1"},{"currency":"JPY","principal":"10000.50"}]:
-            self.post("loans",{**LOAN,**patch},code=400)
-        result = self.post("loans",{**LOAN,"monthly_income":"100000","monthly_essential_expenses":"1000"})
-        self.assertEqual(result["result"]["affordability_status"],"insufficient_information")
+        for changes in [{"fees": "10000"}, {"principal": "0"}, {"annual_rate": "1.01"},
+                        {"months": 61}, {"monthly_income": "100000"}]:
+            self.post("loans", {**LOAN, **changes}, code=400)
+        self.assertEqual(self.post("loans", LOAN)["result"]["affordability_status"], "insufficient_information")
 
     def test_approval_does_not_credit_balance(self):
         loan,app,disb = self.approved()
         self.assertEqual(DemoWallet.objects.get(owner=self.user).balance,Decimal("80000"))
         self.assertEqual(DemoLedgerEntry.objects.count(),0)
-        self.assertEqual(disb.amount,Decimal("9000"))
+        self.assertIsNone(disb)
+        self.assertEqual(Disbursement.objects.count(), 0)
 
     def test_operator_only_and_transitions(self):
         loan = self.post("loans",LOAN)
-        app = self.post("applications",{"loan_id":loan["id"]})
+        app = self.post("applications",{"quote_id":loan["id"]})
         self.post("applications/"+app["id"]+"/decision",{"action":"approve","reason":"LLM says yes"},code=403)
         self.post("applications/"+app["id"]+"/decision",{"action":"approve","reason":"Too early"},operator=True,code=400)
-        self.assertEqual(SimulatedApplication.objects.get(pk=app["id"]).status,"draft")
+        self.assertEqual(SimulatedApplication.objects.get(pk=app["id"]).status,"DRAFT")
 
     def test_disbursement_once_and_schedule_in_state(self):
         loan,app,disb = self.receive_loan()
-        self.post("disbursements/"+str(disb.id)+"/action",{"action":"settle"},operator=True)
+        self.post("applications/"+app["id"]+"/disburse",{"expected_version":app["version"]},operator=True,key="disburse-once",code=200)
         self.assertEqual(DemoLedgerEntry.objects.filter(disbursement=disb).count(),1)
         self.assertEqual(DemoWallet.objects.get(owner=self.user).balance,Decimal("89000"))
         state = FinancialState.objects.filter(owner=self.user).first()
         self.assertEqual(sum(e["id"].startswith("repayment:") for e in state.snapshot["events"]),12)
 
-    def test_disbursement_unknown_and_early_date(self):
-        loan,app,disb = self.approved()
-        Disbursement.objects.filter(pk=disb.pk).update(scheduled_on="2026-10-03")
-        self.post("disbursements/"+str(disb.id)+"/action",{"action":"process"},operator=True)
-        self.post("disbursements/"+str(disb.id)+"/action",{"action":"settle"},operator=True,code=400)
-        self.post("disbursements/"+str(disb.id)+"/action",{"action":"unknown"},operator=True)
-        self.post("demo/clock",{"date":"2026-10-03"})
-        self.post("disbursements/"+str(disb.id)+"/action",{"action":"settle"},operator=True)
-        self.assertEqual(DemoLedgerEntry.objects.count(),1)
+    def test_expired_quote_cannot_disburse(self):
+        _, app, _ = self.approved()
+        self.post("demo/clock", {"date": "2026-11-02"})
+        self.post("applications/" + app["id"] + "/disburse",
+                  {"expected_version": app["version"]}, operator=True, code=400)
+        self.assertEqual(DemoLedgerEntry.objects.count(), 0)
 
     def test_full_chain_and_duplicate_payment(self):
         self.receive_loan()
@@ -366,5 +359,5 @@ class WorkflowTests(APITestCase):
             HTTP_IDEMPOTENCY_KEY=str(uuid4()))
         self.assertEqual(response.status_code,400)
         payload = dict(LOAN)
-        payload.pop("withheld_fee")
+        payload.pop("fees")
         self.post("loans",payload,code=400)

@@ -3,7 +3,7 @@ import json
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from django.shortcuts import get_object_or_404
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework import generics
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.pagination import PageNumberPagination
@@ -19,8 +19,12 @@ class CommandView(generics.GenericAPIView):
     handler = None
     target_model = None
     operator_only = False
+    idempotency_namespace = None
 
-    @extend_schema(responses=CommandResponse)
+    @extend_schema(responses=CommandResponse, parameters=[OpenApiParameter(
+        name="Idempotency-Key", location=OpenApiParameter.HEADER, required=True,
+        type=str, description="Unique action key; reuse the same key and body when retrying.",
+    )])
     @transaction.atomic
     def post(self,request,pk=None):
         if self.operator_only and not request.user.is_staff:
@@ -33,15 +37,17 @@ class CommandView(generics.GenericAPIView):
             obj = get_object_or_404(self.target_model,**filters)
             owner = obj.owner
         # Serialize all financial commands for a student, including operator callbacks.
-        get_user_model().objects.select_for_update().get(pk=owner.pk)
+        list(get_user_model().objects.select_for_update().filter(
+            pk__in={owner.pk, request.user.pk}).order_by("pk"))
         if obj: obj.refresh_from_db()
         key = request.headers.get("Idempotency-Key","")
         require(1 <= len(key) <= 100,"Idempotency-Key header (1-100 characters) is required.")
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
-        scope = request.path
-        request_hash = hashlib.sha256(json.dumps(json_value(data),sort_keys=True).encode()).hexdigest()
+        scope = self.idempotency_namespace or request.path
+        fingerprint = {"path": request.path, "body": data} if self.idempotency_namespace else data
+        request_hash = hashlib.sha256(json.dumps(json_value(fingerprint),sort_keys=True).encode()).hexdigest()
         previous = IdempotencyRecord.objects.filter(owner=request.user,scope=scope,key=key).first()
         if previous:
             require(previous.request_hash == request_hash,"Idempotency key was used with a different request.")
