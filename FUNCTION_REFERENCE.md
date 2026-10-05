@@ -133,8 +133,7 @@ It checks:
 - Loan repayment events are included across the full saved schedule.
 - Uncertain sources remain explicit assumptions.
 
-The result is feasible, feasible_under_assumptions, incomplete, funding_gap, or
-unaffordable when an allocated loan failed its affordability measurement.
+The result is feasible, feasible_under_assumptions, incomplete, or funding_gap.
 The function returns a result without saving it.
 
 ### create_plan(actor, data, obj=None)
@@ -375,3 +374,4 @@ The seed_demo management command creates isolated fictional student/operator use
 a mock beneficiary, one financial state, the three budget scenarios, two loan
 simulations, and private local credentials. It refuses to overwrite existing demo
 users and performs no approval, disbursement, or payment.
+

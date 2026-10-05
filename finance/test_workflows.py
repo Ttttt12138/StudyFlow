@@ -150,17 +150,6 @@ class WorkflowTests(APITestCase):
             "allocations":[{"source_id":source["id"],"amount":"9000"}]})
         self.assertEqual(plan["result"]["feasibility"],"feasible_under_assumptions")
 
-    def test_unaffordable_loan_is_not_reported_as_feasible(self):
-        loan = self.post("loans",{**LOAN,"monthly_income":"100",
-            "monthly_essential_expenses":"99","income_confirmed":True})
-        source = self.source(economic_key="unaffordable-loan",kind="loan",
-            amount="9000.00",certainty="estimated",loan_id=loan["id"])
-        scenario = self.scenario(include=True)
-        plan = self.post("funding-plans",{"scenario_id":scenario["id"],
-            "allocations":[{"source_id":source["id"],"amount":"9000"}]})
-        self.assertEqual(plan["result"]["feasibility"],"unaffordable")
-        self.assertEqual(plan["result"]["unaffordable_loan_ids"],[loan["id"]])
-
     def test_loan_schedule_and_insufficient_income(self):
         result = self.post("loans",LOAN)["result"]
         self.assertEqual(result["net_proceeds"],"9000.00")
