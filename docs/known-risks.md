@@ -18,6 +18,7 @@
 | F8 | 本币换出的换汇以"已确认支出"事件写入状态，readiness 会把它列为已付义务；报价消耗会触发 readiness 重算 | 低 | 事件 id 带 `conversion:` 前缀，可区分 | 开放 | `finance/wallets.py` |
 | F9 | 汇款通道为模拟：送达、失败、状态不明均由运营人员回调触发，没有真实的回执或对账文件 | 中 | 每次转换追加不可修改的状态历史；失败自动全额退回；状态不明进入复核队列；重复回调不重复入账 | 部分缓解（设计范围） | `docs/remittance.md` |
 | F10 | 汇入方向（家人从国内汇款到学生钱包）仍走资助确认加运营到账，没有汇入订单 | 低 | 资助人确认链接；到账时报价只能使用一次 | 开放 | `docs/consumption.md` |
+| F11 | 在 live 汇率部署上运行演示时，固定汇率快照可能被当作可执行价使用，两个方向汇率不一致时存在套利（W6 安全审查发现，已复现） | 低 | 快照按当前来源过滤；live 模式下固定汇率报价不可执行 | 已缓解 | `finance/fx_rates.py`、`finance/wallets.py` |
 
 ## 认证与权限
 
@@ -28,6 +29,9 @@
 | A3 | 赞助人身份不核验，链接持有者即视为赞助人 | 中 | 令牌只存摘要、72h 过期、常量时间比较、条款版本绑定 | 部分缓解 | `finance/sponsorship.py`、`docs/consumption.md` |
 | A4 | API 接口可被暴力尝试（登录、step-up、赞助确认） | 中 | DRF 全局限流（用户/匿名）及作用域限流：`auth` 10/min、`step_up` 10/hour、`money` 60/hour、`sponsor` 20/hour（按 IP），计数存于共享数据库缓存；step-up 失败有审计；赞助令牌 256 位熵。剩余：`/api/auth/login/`（DRF 可浏览 API 的 session 登录页）未纳入 DRF 限流；按 IP 的限流不信任客户端的 `X-Forwarded-For`，部署在反向代理后必须设置 `DJANGO_NUM_PROXIES`，否则所有客户端共用代理的计数；没有账户锁定 | 部分缓解 | `config/settings.py`、`finance/throttles.py` |
 | A5 | 获取 Token 只能通过管理命令 | 低 | `POST /api/v2/auth/token/`（用户名密码，`auth` 限流）。剩余：Token 不过期、无轮换接口 | 部分缓解 | `finance/policy_api.py` |
+| A6 | 信用等级可被低成本刷高（自汇小额订单、任意远的截止日期），或通过拨快演示时钟让逾期记录失效，从而提高 T2 限额（W6 安全审查发现，已复现） | 中 | 只统计汇给已核验收款人的订单；截止日期限定在一年内；信用窗口按真实日期计算，演示时钟只会让义务更早逾期 | 已缓解 | `finance/credit.py`、`docs/credit.md` |
+| A7 | 超限汇款的审批人可以是该收款人的核验人，一人即可完成“担保收款人 + 批准大额汇出”（W6 安全审查发现，已复现） | 中 | 分权规则扩展到收款人为外部账户的 `remittance.submit` | 已缓解 | `finance/policy.py` |
+| A8 | `X-StudyFlow-Agent` 请求头由客户端自行声明，外部 Agent 客户端可以不带；内置 Agent 不能执行 T2 是因为执行循环根本没有执行路径，而不是靠这个请求头 | 低 | T2 动作必须由学生本人完成二次验证 | 开放（设计说明） | `finance/policy.py`、`docs/agent.md` |
 
 ## 部署与配置
 
@@ -49,6 +53,8 @@
 | M5 | Agent 由 LLM 规划工具调用；模型可能选错工具、编造参数或受工具结果中的注入文本影响 | 中 | 规划器每步只返回一个工具调用，并按工具清单和参数校验；T2 动作只生成待确认动作，须学生本人二次验证后确认；每会话最多 10 次调用、4 次写操作；评估集含注入样本，越权动作必须为 0（CI 门禁） | 部分缓解 | `docs/agent.md`、`finance/agent_runner.py` |
 | M6 | Agent 评估只在 mock 规则规划器上运行，评估集与规则出自同一作者；真实模型（live）的任务完成率和注入抵抗率尚未测量 | 中 | 评估命令支持 `--mode live`；运行时的安全约束与模式无关 | 开放（live 评估需批准外部调用） | `finance/agent_evaluation.py`、`studyflow-ai/evals/agent-v1/` |
 | M7 | API 错误信息的中英文翻译由 AI 完成，未经母语人工审校；briefing、通知等拼接文本仍为英文 | 低 | 错误码不变，客户端可按码处理；目录完整性有 CI 检查 | 部分缓解 | `docs/i18n.md` |
+| M8 | 确认 Agent 提议时看不到收款人；规则规划器在多个已核验收款人中取最早的一个 | 低 | 待确认动作的 `details` 显示收款方式与收款人；学生须二次验证后才执行 | 部分缓解 | `finance/agent_tools.py` |
+| M9 | live 模式下单个用户可触发大量模型调用（每会话最多 11 次） | 低 | 会话创建受 `agent` 作用域限流（默认 30 次/小时） | 已缓解 | `finance/agent_api.py` |
 
 ## OCR 与数据
 

@@ -7,7 +7,7 @@ from . import credit, fx_rates, money, remittance_orders
 from .execution_services import available
 from .remittance_api import OrderInput
 from .remittance_models import RemittanceOrder
-from .wallets import EXECUTABLE_SOURCES, balances, quote_result, wallet
+from .wallets import balances, executable_sources, quote_result, wallet
 from .workflow_common import owned, record, require, shift_date
 from .workflow_models import Beneficiary, Corridor, FXQuote
 from .workflow_serializers import CurrencyAmountField, Input, LiveQuoteInput
@@ -80,7 +80,7 @@ def _rank(user, data):
     rows = []
     for quote_id in data["quote_ids"]:
         quote = owned(FXQuote, user, quote_id)
-        require(quote.rate_source in EXECUTABLE_SOURCES and quote.quoted_amount is not None, "QUOTE_NOT_EXECUTABLE")
+        require(quote.rate_source in executable_sources() and quote.quoted_amount is not None, "QUOTE_NOT_EXECUTABLE")
         net = quote_result(quote, quote.quoted_amount, quote.source_currency, quote.target_currency)
         arrival = shift_date(item.clock, quote.settlement_days)
         rows.append({"quote_id": str(quote.id), "route_name": quote.route_name,
@@ -112,13 +112,18 @@ class Proposal:
 def _submit_order(user, data):
     order = owned(RemittanceOrder, user, data["order_id"])
     require(order.status == "CREATED", "INVALID_TRANSITION")
+    recipient = {"recipient": order.recipient, "receive_currency": order.receive_currency,
+                 "receive_amount": money.fmt(order.receive_amount, order.receive_currency)}
+    if order.beneficiary_id:
+        recipient["beneficiary"] = {"id": str(order.beneficiary_id), "name": order.beneficiary.name,
+                                    "destination_label": order.beneficiary.destination_label}
     return Proposal("remittance.submit", order.id, order.send_amount, order.send_currency,
-                    {"order_id": str(order.id)})
+                    {"order_id": str(order.id), **recipient})
 
 
 def _convert(user, data):
     quote = owned(FXQuote, user, data["quote_id"])
-    require(quote.rate_source in EXECUTABLE_SOURCES and quote.consumed_at is None, "QUOTE_NOT_EXECUTABLE")
+    require(quote.rate_source in executable_sources() and quote.consumed_at is None, "QUOTE_NOT_EXECUTABLE")
     amount = money.require_precision(data["source_amount"], quote.source_currency)
     return Proposal("wallet.convert", quote.id, amount, quote.source_currency,
                     {"quote_id": str(quote.id), "source_amount": money.fmt(amount, quote.source_currency)})

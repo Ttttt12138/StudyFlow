@@ -9,6 +9,7 @@ from rest_framework.views import APIView
 
 from . import agent_runner
 from .agent_models import AgentPendingAction, AgentSession
+from .throttles import ScopedThrottle, UserThrottle
 from .workflow_common import require
 from .workflow_serializers import CommandResponse, EmptyInput, HistoryResponse, Input
 from .workflow_urls import command
@@ -20,6 +21,14 @@ class SessionInput(Input):
 
 
 class SessionCollectionView(APIView):
+    throttle_scope = "agent"
+
+    def get_throttles(self):
+        # Each session may make up to 11 planner calls; listing stays on the default user rate.
+        if self.request.method == "POST":
+            return [UserThrottle(), ScopedThrottle()]
+        return super().get_throttles()
+
     @extend_schema(responses=HistoryResponse)
     def get(self, request):
         rows = AgentSession.objects.filter(owner=request.user).order_by("-created_at")

@@ -12,6 +12,8 @@ so later contract changes to those flows only touch one helper each.
 from copy import deepcopy
 from datetime import date, timedelta
 from decimal import ROUND_HALF_UP, Decimal, localcontext
+from unittest.mock import patch
+from urllib.parse import parse_qs, urlsplit
 from uuid import uuid4
 
 from django.conf import settings
@@ -25,7 +27,7 @@ from auto_test.test_multicurrency import (
 )
 from finance.models import AuditEvent
 from finance.policy_flow import client_flow, step_up_header
-from finance.workflow_models import DemoLedgerEntry, FXQuote
+from finance.workflow_models import DemoLedgerEntry, DemoWallet, FXQuote
 
 TERMINAL = {"CANCELLED", "EXPIRED", "REFUNDED", "RECONCILED"}
 ADAPTER_OUTCOMES = ["dispatched", "delivered", "failed", "unknown"]
@@ -896,35 +898,206 @@ class RemittanceApiTests(RemittanceHarness, APITestCase):
         self.assertEqual(response.status_code, 200, str(response.data))
         return response.data["data"]
 
-    def test_credit_profile_counts_delivered_orders_by_deadline(self):
-        on_time, _ = self.new_order(amount="1000.00", deadline="2026-10-05")
-        late, _ = self.new_order(amount="1000.00", deadline="2026-10-05")
-        boundary, _ = self.new_order(amount="1000.00", deadline="2026-10-04")
-        no_deadline, _ = self.new_order(amount="1000.00")
-        undelivered, _ = self.new_order(amount="1000.00", deadline="2026-10-03")
-        refunded, _ = self.new_order(amount="1000.00", deadline="2026-10-03")
-        for order in (on_time, late, boundary, no_deadline, undelivered, refunded):
+    def wallet_clock(self):
+        return DemoWallet.objects.get(owner=self.user).clock
+
+    def test_credit_profile_counts_delivered_beneficiary_orders_by_deadline(self):
+        # docs/credit.md: as_of is the real today; completed records dated after it (demo clock
+        # ahead of real time) still count. Start the demo clock no earlier than today so the
+        # test does not depend on when it runs.
+        today = timezone.localdate()
+        base = max(today, self.wallet_clock())
+        if base > self.wallet_clock():
+            self.set_clock(base.isoformat())
+        day = lambda n: (base + timedelta(days=n)).isoformat()
+        payee = self.beneficiary()
+        out = {"recipient": "BENEFICIARY", "beneficiary": payee, "purpose": "tuition"}
+        on_time, _ = self.new_order(amount="1000.00", deadline=day(3), **out)
+        late, _ = self.new_order(amount="1000.00", deadline=day(3), **out)
+        boundary, _ = self.new_order(amount="1000.00", deadline=day(2), **out)
+        no_deadline, _ = self.new_order(amount="1000.00", **out)
+        undelivered, _ = self.new_order(amount="1000.00", deadline=day(1), **out)
+        refunded, _ = self.new_order(amount="1000.00", deadline=day(1), **out)
+        # SELF orders never count, even when delivered on time (docs/remittance.md 联动).
+        self_on_time, _ = self.new_order(amount="1000.00", deadline=day(3))
+        self_late, _ = self.new_order(amount="1000.00", deadline=day(1))
+        orders = (on_time, late, boundary, no_deadline, undelivered, refunded, self_on_time, self_late)
+        for order in orders:
             self.submit(order)
         self.adapter(refunded, "failed")
-        self.set_clock("2026-10-04")
-        self.adapter(boundary, "delivered")          # delivered_on == deadline -> on time
-        self.adapter(on_time, "delivered")
-        self.adapter(no_deadline, "delivered")
-        self.set_clock("2026-10-06")
+        self.set_clock(day(2))
+        for order in (boundary, on_time, no_deadline, self_on_time, self_late):
+            self.adapter(order, "delivered")         # boundary: delivered_on == deadline -> on time
+        self.set_clock(day(4))
         self.adapter(late, "delivered")
         self.command(on_time, "reconcile")           # reconciled still counts as delivered
-        self.assertEqual(self.db(on_time).delivered_on, date(2026, 10, 4))
-        self.assertEqual(self.db(late).delivered_on, date(2026, 10, 6))
+        self.assertEqual(self.db(on_time).delivered_on.isoformat(), day(2))
+        self.assertEqual(self.db(late).delivered_on.isoformat(), day(4))
         self.assertIs(self.detail(on_time)["on_time"], True)
         self.assertIs(self.detail(boundary)["on_time"], True)
         self.assertIs(self.detail(late)["on_time"], False)
+        self.assertIs(self.detail(self_on_time)["on_time"], True)
         self.assertIsNone(self.detail(no_deadline)["on_time"])
         data = self.credit_profile()
+        self.assertEqual(data["as_of"], today.isoformat())
         evidence = {e["id"]: e for e in data["evidence"] if e["source"] == "remittance_order"}
         self.assertEqual(set(evidence), {on_time["id"], late["id"], boundary["id"]})
+        self.assertNotIn(self_on_time["id"], evidence)
+        self.assertNotIn(self_late["id"], evidence)
         self.assertEqual(evidence[on_time["id"]]["status"], "ON_TIME")
         self.assertEqual(evidence[boundary["id"]]["status"], "ON_TIME")
         self.assertEqual(evidence[late["id"]]["status"], "LATE")
-        self.assertEqual(evidence[late["id"]]["due_on"], "2026-10-05")
-        self.assertEqual(evidence[late["id"]]["completed_on"], "2026-10-06")
+        self.assertEqual(evidence[late["id"]]["due_on"], day(3))
+        self.assertEqual(evidence[late["id"]]["completed_on"], day(4))
         self.assertEqual((data["on_time"], data["late"], data["overdue"]), (2, 1, 0))
+        # The window follows real time: pushing the demo clock a year ahead ages nothing out.
+        self.set_clock(day(400))
+        again = self.credit_profile()
+        self.assertEqual(again["as_of"], today.isoformat())
+        self.assertEqual((again["on_time"], again["late"], again["overdue"]), (2, 1, 0))
+
+    def test_self_orders_alone_never_build_credit(self):
+        # Regression: six cheap on-time self-transfers used to lift the level to GOOD.
+        base = self.wallet_clock()
+        orders = [self.new_order(amount="100.00", deadline=(base + timedelta(days=1)).isoformat())[0]
+                  for _ in range(6)]
+        for order in orders:
+            self.submit(order)
+            self.adapter(order, "delivered")
+        self.assertTrue(all(self.detail(o)["on_time"] for o in orders))
+        data = self.credit_profile()
+        self.assertEqual([e for e in data["evidence"] if e["source"] == "remittance_order"], [])
+        self.assertEqual((data["level"], data["on_time"]), ("BUILDING", 0))
+
+    # ================================================================ deadline range
+    def test_deadline_must_be_between_clock_and_366_days_later(self):
+        clock = self.wallet_clock()
+        day = lambda n: (clock + timedelta(days=n)).isoformat()
+        for offset, ok in ((-1, False), (0, True), (366, True), (367, False), (-400, False)):
+            with self.subTest(offset=offset):
+                quote = self.live_quote("CNY", HOME, "1000.00")
+                if ok:
+                    order = self.create(quote, deadline=day(offset))
+                    self.assertEqual(order["deadline"], day(offset))
+                else:
+                    self.create(quote, deadline=day(offset), code=400, error="DEADLINE_OUT_OF_RANGE")
+                    # A rejected create holds nothing: the same quote still works without a deadline.
+                    self.assertFalse(model("RemittanceOrder").objects.filter(quote_id=quote["id"]).exists())
+                    self.assertIsNone(self.create(quote)["deadline"])
+        # The range follows the demo clock.
+        self.set_clock(day(30))
+        moved = self.wallet_clock()
+        self.create(self.live_quote("CNY", HOME, "1000.00"), deadline=day(29), code=400,
+                    error="DEADLINE_OUT_OF_RANGE")
+        self.create(self.live_quote("CNY", HOME, "1000.00"), deadline=moved.isoformat())
+        self.create(self.live_quote("CNY", HOME, "1000.00"),
+                    deadline=(moved + timedelta(days=366)).isoformat())
+        self.create(self.live_quote("CNY", HOME, "1000.00"),
+                    deadline=(moved + timedelta(days=367)).isoformat(), code=400,
+                    error="DEADLINE_OUT_OF_RANGE")
+
+    # ================================================================ separation of duties (T3)
+    T3_CNY = "12000.00"  # above the CNY per-transaction limit of 10,000 (credit multiplier 1.0)
+
+    def request_approval(self, order):
+        return self.post("approvals", {"action": "remittance.submit", "target_id": order["id"],
+                                       "amount": self.T3_CNY, "currency": "CNY",
+                                       "reason": "Semester tuition"})
+
+    def decide(self, approval, staff, decision="approve", code=200, error=None):
+        version = model("ApprovalRequest").objects.get(pk=approval["id"]).version
+        response = self.call("approvals/" + approval["id"] + "/decide",
+                             {"decision": decision, "note": "Reviewed", "expected_version": version},
+                             user=staff)
+        self.assertEqual(response.status_code, code, str(response.data))
+        if error:
+            self.assertIn(error, str(response.data))
+        return response
+
+    def test_beneficiary_verifier_cannot_decide_remittance_approval(self):
+        payee = self.beneficiary()  # verified by self.operator
+        order, _ = self.new_order(amount=self.T3_CNY, recipient="BENEFICIARY", beneficiary=payee,
+                                  purpose="tuition")
+        approval = self.request_approval(order)
+        for decision in ("approve", "reject"):
+            with self.subTest(decision=decision):
+                self.decide(approval, self.operator, decision, code=403, error="SEPARATION_OF_DUTIES")
+        row = model("ApprovalRequest").objects.get(pk=approval["id"])
+        self.assertEqual((row.status, row.version, row.decided_by_id), ("PENDING", 1, None))
+        # Only the most recent verifier is excluded: after a second operator re-verifies,
+        # the roles swap.
+        self.post("beneficiaries/" + payee["id"] + "/verify", {"verified": True}, user=self.approver)
+        self.decide(approval, self.approver, "approve", code=403, error="SEPARATION_OF_DUTIES")
+        self.decide(approval, self.operator, "approve")
+        self.assertEqual(model("ApprovalRequest").objects.get(pk=approval["id"]).status, "APPROVED")
+        self.submit(order)
+        self.assertEqual(self.db(order).status, "SUBMITTED")
+        self.assertEqual(model("ApprovalRequest").objects.get(pk=approval["id"]).status, "USED")
+        self.assert_invariant()
+
+    def test_self_order_approval_is_not_bound_to_beneficiary_verifier(self):
+        self.beneficiary()  # self.operator has verified a beneficiary of this student
+        order, _ = self.new_order(amount=self.T3_CNY)
+        approval = self.request_approval(order)
+        self.decide(approval, self.operator, "approve")
+        self.submit(order)
+        self.assertEqual(self.db(order).status, "SUBMITTED")
+        self.assertEqual(model("ApprovalRequest").objects.get(pk=approval["id"]).status, "USED")
+        rejected_order, _ = self.new_order(amount=self.T3_CNY)
+        rejected = self.request_approval(rejected_order)
+        self.decide(rejected, self.operator, "reject")
+        self.assertEqual(model("ApprovalRequest").objects.get(pk=rejected["id"]).status, "REJECTED")
+
+    # ================================================================ live FX mode
+    def frankfurter(self, rates, calls):
+        """FxAdapter factory whose fetch never touches the network (records every URL)."""
+        from finance import fx_rates
+        real = fx_rates.FxAdapter
+
+        def fetch(url):
+            calls.append(url)
+            parts = urlsplit(url)
+            base, quote = parts.path.rstrip("/").split("/")[-2:]
+            if (base, quote) not in rates:
+                raise OSError("network disabled in tests")
+            return {"base": base, "quote": quote, "rate": rates[(base, quote)],
+                    "date": parse_qs(parts.query)["date"][0], "providers": ["ECB"]}
+        return patch("finance.fx_rates.FxAdapter", lambda *args, **kwargs: real(fetch_json=fetch))
+
+    def test_live_mode_rejects_fixture_priced_quotes(self):
+        self.fund_foreign("CNY", "2000.00")
+        fixture_quote = self.live_quote("CNY", HOME, "1000.00")
+        self.assertEqual(FXQuote.objects.get(pk=fixture_quote["id"]).rate_source, "fixture")
+        calls = []
+        with override_settings(STUDYFLOW_FX_LIVE=True), \
+                self.frankfurter({("CNY", HOME): Decimal("4.70")}, calls):
+            self.create(fixture_quote, code=400, error="QUOTE_NOT_EXECUTABLE")
+            self.reject("conversions", self.convert_body(fixture_quote["id"], "1000.00"), "QUOTE_NOT_EXECUTABLE")
+            self.assertEqual(model("RemittanceOrder").objects.count(), 0)
+            live = self.live_quote("CNY", HOME, "1000.00")
+            row = FXQuote.objects.get(pk=live["id"])
+            self.assertEqual(row.rate_source, "frankfurter")
+            self.assertEqual(row.mid_rate, Decimal("4.70"))  # not the 4.60 fixture snapshot
+            order = self.create(live)
+            self.assertEqual(D(order["mid_rate"]), Decimal("4.70"))
+            self.assertEqual(D(order["receive_amount"]), D(live["net_received"]))
+            self.submit(order)
+            self.assertEqual(self.db(order).status, "SUBMITTED")
+        self.assertTrue(calls)
+        self.assertTrue(all(url.startswith("https://api.frankfurter.dev/") for url in calls))
+        self.assertIsNone(FXQuote.objects.get(pk=fixture_quote["id"]).consumed_at)
+        self.assert_invariant()
+
+    def test_live_mode_ignores_fixture_snapshots(self):
+        self.fund_foreign("CNY", "1000.00")
+        self.live_quote("CNY", HOME, "1000.00")  # leaves a fresh fixture snapshot behind
+        self.assertTrue(model("FxRateSnapshot").objects.filter(base="CNY", quote=HOME, source="fixture").exists())
+        calls = []
+        with override_settings(STUDYFLOW_FX_LIVE=True), self.frankfurter({}, calls):
+            response = self.call("fx-quotes/live", {"corridor_id": str(self.corridor("CNY", HOME)["id"]),
+                                                    "send_amount": "1000.00"})
+            self.assertEqual(response.status_code, 503, str(response.data))
+            self.assertIn("FX_RATE_UNAVAILABLE", str(response.data))
+            self.assertIsNone(self.balance_row("CNY")["valuation"])
+        self.assertTrue(calls, "live mode must fetch instead of reusing the fixture snapshot")
+        self.assertEqual(FXQuote.objects.filter(owner=self.user, rate_source="frankfurter").count(), 0)

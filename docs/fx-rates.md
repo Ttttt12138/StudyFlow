@@ -15,6 +15,8 @@ Django 通过 C 模块已有的 Frankfurter 适配器（`studyflow_ai.readiness.
 
 `FxRateSnapshot(base, quote, rate, rate_date, fetched_at, source, basis)`：每次成功获取保存一行（全局数据，非用户数据）。汇率日期距今超过 7 天视为过期（`STALE_FX_RATE`，与 C 模块规则一致）。
 
+快照只在同一来源内复用：`STUDYFLOW_FX_LIVE=true` 时只读取 `frankfurter` 快照，否则只读取 `fixture` 快照；live 模式下，固定汇率报价也不能用于换汇或汇款（安全审查发现，在 live 部署上运行演示可能让固定汇率混入真实报价）。
+
 获取顺序：缓存期内的最新快照 → 外部获取（成功则保存）→ 获取失败时退回最近一次快照并标记 `FX_FETCH_FAILED` → 没有任何快照时返回 503 `FX_RATE_UNAVAILABLE`。
 
 ## 接口（`/api/v2/`）

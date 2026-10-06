@@ -38,7 +38,7 @@ msgstr "This action needs your own verification and cannot be performed by the A
 msgid "ALLOCATION_EXCEEDS_CAPACITY"
 msgstr "The allocation is larger than the amount available from this funding source."
 
-#: finance/agent_runner.py:50
+#: finance/agent_runner.py:80
 msgid "ALREADY_PROPOSED"
 msgstr "The same action is already waiting for your confirmation."
 
@@ -50,7 +50,7 @@ msgstr "The amount has more decimal places than this currency allows."
 msgid "APPROVAL_ALREADY_OPEN"
 msgstr "An approval request for this action is already pending or approved."
 
-#: finance/policy.py:404
+#: finance/policy.py:408
 msgid "APPROVAL_NOT_PENDING"
 msgstr "This approval request has already been decided or has expired."
 
@@ -102,11 +102,11 @@ msgstr ""
 "Contractual costs cannot be reduced; only food, transport, communications and settlement costs "
 "can."
 
-#: finance/fx_rates.py:119
+#: finance/fx_rates.py:121
 msgid "CONVERSION_NOT_POSITIVE"
 msgstr "The amount does not cover the fees, so nothing would be received."
 
-#: finance/fx_rates.py:109
+#: finance/fx_rates.py:111
 msgid "CORRIDOR_AMOUNT_OUT_OF_RANGE"
 msgstr "The amount is outside the limits for this corridor."
 
@@ -163,6 +163,10 @@ msgstr "Each account in the coverage list needs at least one selected row."
 #: finance/money.py:21
 msgid "CURRENCY_NOT_SUPPORTED"
 msgstr "This currency is not supported."
+
+#: finance/remittance_orders.py:107
+msgid "DEADLINE_OUT_OF_RANGE"
+msgstr "The deadline must be between the current demo date and one year after it."
 
 #: finance/consumption/imports.py:85
 msgid "DECLARE_ACCOUNT_COVERAGE"
@@ -288,7 +292,7 @@ msgstr "The installments must add up to the full cost amount."
 msgid "INSUFFICIENT_BALANCE"
 msgstr "Your wallet balance is not enough for this transaction."
 
-#: finance/wallets.py:46
+#: finance/wallets.py:50
 msgid "INSUFFICIENT_BALANCE_OR_PRECISION"
 msgstr "This transaction would make the wallet balance negative or exceed the supported limit."
 
@@ -352,11 +356,11 @@ msgstr "JPY amounts must be whole numbers."
 msgid "KEEP_REQUIRED_COSTS_OR_MARK_NOT_APPLICABLE"
 msgstr "Existing costs cannot be removed. Mark them as not applicable instead."
 
-#: finance/remittance_orders.py:206
+#: finance/remittance_orders.py:208
 msgid "LEDGER_CREDIT_MISSING"
 msgstr "The ledger has no matching credit for this order, so it cannot be reconciled."
 
-#: finance/remittance_orders.py:204
+#: finance/remittance_orders.py:206
 msgid "LEDGER_DEBIT_MISSING"
 msgstr "The ledger has no matching debit for this order, so it cannot be reconciled."
 
@@ -436,7 +440,7 @@ msgstr "The plan cannot extend more than 730 days from today."
 msgid "PAYMENT_STATE_CHANGED"
 msgstr "Your financial state changed after this payment was created. Create a new payment."
 
-#: finance/agent_runner.py:153
+#: finance/agent_runner.py:195
 msgid "PENDING_ACTION_CLOSED"
 msgstr "This proposed action is no longer pending."
 
@@ -460,7 +464,7 @@ msgstr "This cost is locked, verified, in conflict or paid, so planned changes n
 msgid "QUOTE_ALREADY_USED"
 msgstr "This loan quote already has an application. Create a new quote."
 
-#: finance/wallets.py:107
+#: finance/wallets.py:111
 msgid "QUOTE_AMOUNT_MISMATCH"
 msgstr "The amount must match the quoted amount."
 
@@ -480,7 +484,7 @@ msgstr "This quote has expired. Request a new quote."
 msgid "QUOTE_IN_USE"
 msgstr "This quote is already linked to a remittance order."
 
-#: finance/agent_tools.py:121
+#: finance/agent_tools.py:126
 msgid "QUOTE_NOT_EXECUTABLE"
 msgstr "This quote cannot be executed. Request a live quote for a specific amount."
 
@@ -516,7 +520,7 @@ msgstr "Import verified documents for the proposed amounts before resolving this
 msgid "REQUEST_NOT_PENDING"
 msgstr "This sponsor request is not pending, so a link cannot be issued."
 
-#: finance/remittance_orders.py:152
+#: finance/remittance_orders.py:154
 msgid "RESERVE_REQUIRED"
 msgstr "This transaction would bring your balance below the reserve."
 
@@ -556,7 +560,7 @@ msgstr "Do not provide beneficiary_id when sending to yourself."
 msgid "SEMESTER_NOT_ACTIVE"
 msgstr "The semester has ended or ends too far in the future to plan."
 
-#: finance/policy.py:400
+#: finance/policy.py:404
 msgid "SEPARATION_OF_DUTIES"
 msgstr "You cannot decide this approval because you requested it, own it or verified its beneficiary."
 

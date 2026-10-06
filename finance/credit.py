@@ -46,8 +46,11 @@ def _payments(owner, as_of, start):
 
 
 def _remittances(owner, as_of, start):
+    # Transfers to oneself cost little and prove nothing, so only verified recipients count.
     rows = RemittanceOrder.objects.filter(owner=owner, status__in=("DELIVERED", "RECONCILED"),
-                                          deadline__isnull=False, delivered_on__isnull=False)
+                                          recipient="BENEFICIARY", beneficiary__verified=True,
+                                          deadline__isnull=False,
+                                          delivered_on__isnull=False)
     for row in rows.order_by("deadline", "id"):
         yield {"source": "remittance_order", "id": str(row.id), "due_on": row.deadline,
                "completed_on": row.delivered_on,
@@ -58,16 +61,17 @@ def _remittances(owner, as_of, start):
 EVIDENCE_SOURCES = [_installments, _payments, _remittances]
 
 
-def _in_window(item, start, as_of):
+def _in_window(item, start):
     # Unresolved overdue items never age out; completed ones count by completion date.
     if item["status"] == "OVERDUE":
         return True
-    return start <= (item["completed_on"] or item["due_on"]) <= as_of
+    return start <= (item["completed_on"] or item["due_on"])
 
 
-def _as_of(owner):
+def _overdue_on(owner, today):
+    # The student-controlled demo clock may only make obligations overdue sooner.
     wallet = DemoWallet.objects.filter(owner=owner).first()
-    return wallet.clock if wallet else timezone.localdate()
+    return max(wallet.clock, today) if wallet else today
 
 
 def _level(on_time, late, overdue):
@@ -93,10 +97,12 @@ def _next_level(level, on_time, late, overdue):
 
 
 def profile(owner):
-    as_of = _as_of(owner)
+    # The window follows real time so moving the demo clock cannot age records out.
+    as_of = timezone.localdate()
     start = as_of - timedelta(days=WINDOW_DAYS)
-    evidence = [item for source in EVIDENCE_SOURCES for item in source(owner, as_of, start)
-                if _in_window(item, start, as_of)]
+    overdue_on = _overdue_on(owner, as_of)
+    evidence = [item for source in EVIDENCE_SOURCES for item in source(owner, overdue_on, start)
+                if _in_window(item, start)]
     counts = {status: sum(1 for item in evidence if item["status"] == status)
               for status in ("ON_TIME", "LATE", "OVERDUE")}
     on_time, late, overdue = counts["ON_TIME"], counts["LATE"], counts["OVERDUE"]

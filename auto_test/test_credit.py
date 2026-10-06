@@ -1,8 +1,11 @@
 """Independent spec tests for docs/credit.md (simulated on-time record / credit building).
 
-Evidence rows (LoanInstallment, Payment) are created directly with the ORM on purpose:
-money-moving endpoints are about to require step-up authentication, so these tests only
-use HTTP for state/, demo/initialize/, demo/clock/ and the credit endpoints.
+Evidence rows (LoanInstallment, Payment, RemittanceOrder) are created directly with the ORM on
+purpose: money-moving endpoints require step-up authentication, so these tests only use HTTP for
+state/, demo/initialize/, demo/clock/ and the credit endpoints.
+
+"Real today" is simulated by patching django.utils.timezone.localdate (finance.credit uses it for
+as_of); the demo wallet clock starts on that same date and is moved with demo/clock/.
 """
 import json
 import time
@@ -22,19 +25,23 @@ from rest_framework.test import APITestCase
 from finance.credit_models import CreditSnapshot
 from finance.lending_models import LoanAccount, LoanInstallment
 from finance.models import AuditEvent, FinancialState
+from finance.remittance_models import RemittanceOrder
 from finance.workflow_models import (
     Beneficiary,
     BudgetScenario,
+    Corridor,
     Disbursement,
     FundingPlan,
+    FXQuote,
     LoanSimulation,
     Payment,
     SimulatedApplication,
 )
 
 SALT = "studyflow-credit-statement-v1"
-# Demo clock deliberately differs from the real date so "today" must come from the wallet.
+# Patched "real today"; the demo wallet clock is initialized to the same date.
 CLOCK = date(2026, 3, 31)
+_REAL_LOCALDATE = timezone.localdate
 SNAPSHOT = {
     "currency": "THB",
     "as_of": CLOCK.isoformat(),
@@ -84,6 +91,13 @@ class CreditHarness:
         self._accounts = {}
         self._numbers = {}
         self._plans = {}
+        self.today = CLOCK
+        localdate = patch(
+            "django.utils.timezone.localdate",
+            lambda value=None, timezone=None: self.today if value is None else _REAL_LOCALDATE(value, timezone),
+        )
+        localdate.start()
+        self.addCleanup(localdate.stop)
         for user in (self.student, self.other):
             self.bootstrap(user)
         self.client.force_authenticate(self.student)
@@ -100,6 +114,10 @@ class CreditHarness:
             HTTP_IDEMPOTENCY_KEY=str(uuid4()),
         )
         self.assertEqual(response.status_code, 201, response.data)
+
+    def set_today(self, value):
+        """Move the (patched) real date; the demo clock is left alone."""
+        self.today = value
 
     def set_clock(self, value, user=None):
         self.client.force_authenticate(user or self.student)
@@ -191,6 +209,32 @@ class CreditHarness:
         return Payment.objects.create(
             owner=owner, plan=plan, state=state, beneficiary=beneficiary, event_id=event_id,
             amount=Decimal("100.00"), due_on=due_on, status=status, receipt=receipt,
+        )
+
+    def remittance(self, deadline, delivered_on, recipient="BENEFICIARY", status="DELIVERED",
+                   verified=True, owner=None):
+        owner = owner or self.student
+        if not hasattr(self, "_corridor"):
+            self._corridor = Corridor.objects.create(
+                code="credit-test-" + uuid4().hex[:8], provider="Mock", tier="standard",
+                source_currency="THB", target_currency="USD", min_amount=Decimal("1.00"),
+                max_amount=Decimal("100000.00"),
+            )
+        quote = FXQuote.objects.create(
+            owner=owner, source_currency="THB", target_currency="USD", rate=Decimal("0.03"),
+            expires_at=timezone.now() + timedelta(hours=1), corridor=self._corridor,
+            quoted_amount=Decimal("100.00"),
+        )
+        beneficiary = None
+        if recipient == "BENEFICIARY":
+            beneficiary = Beneficiary.objects.create(
+                owner=owner, name="Landlord", destination_label="MOCK-LANDLORD", verified=verified
+            )
+        return RemittanceOrder.objects.create(
+            owner=owner, quote=quote, corridor=self._corridor, recipient=recipient, beneficiary=beneficiary,
+            purpose="living", send_currency="THB", send_amount=Decimal("100.00"), sender_fee=Decimal("0"),
+            rate=Decimal("0.03"), mid_rate=Decimal("0.03"), receive_currency="USD",
+            receive_amount=Decimal("3.00"), deadline=deadline, status=status, delivered_on=delivered_on,
         )
 
     def on_time(self, n, owner=None, start=5):
@@ -297,7 +341,7 @@ class CreditLevelTests(CreditHarness, APITestCase):
 
     def test_one_overdue_installment_is_at_risk_despite_history(self):
         self.on_time(10)
-        self.installment(days_ago(1))  # unpaid, due yesterday on the demo clock
+        self.installment(days_ago(1))  # unpaid, due yesterday
         self.assert_profile("AT_RISK", 10, 0, 1)
 
     def test_two_late_is_at_risk(self):
@@ -326,13 +370,29 @@ class CreditLevelTests(CreditHarness, APITestCase):
         self.installment(CLOCK + timedelta(days=30))
         self.assert_profile("FAIR", 3, 0, 0)
 
-    def test_overdue_is_judged_on_the_demo_clock(self):
+    def test_advancing_clock_past_unpaid_due_date_makes_it_overdue(self):
+        # Regression (b): the demo clock can make an obligation overdue sooner than real time.
         self.on_time(3)
-        # Real today (2026-10) is after this date; the demo clock (2026-03-31) is not.
-        self.installment(CLOCK + timedelta(days=10))
+        row = self.installment(CLOCK + timedelta(days=10))
+        self.assert_profile("FAIR", 3, 0, 0)
+        self.set_clock(CLOCK + timedelta(days=10))  # due_on == clock: not yet overdue
         self.assert_profile("FAIR", 3, 0, 0)
         self.set_clock(CLOCK + timedelta(days=11))
-        self.assert_profile("AT_RISK", 3, 0, 1)
+        data = self.assert_profile("AT_RISK", 3, 0, 1)
+        self.assertEqual(data["as_of"], CLOCK.isoformat())  # still the real date
+        self.assertIn(str(row.id), {item["id"] for item in data["evidence"]})
+
+    def test_overdue_uses_real_today_when_demo_clock_is_behind(self):
+        behind = get_user_model().objects.create_user(username="credit-behind")
+        self.client.force_authenticate(behind)
+        snapshot = {**deepcopy(SNAPSHOT), "as_of": days_ago(30).isoformat()}
+        response = self.client.post("/api/v2/state/", {"expected_version": 0, "snapshot": snapshot}, format="json")
+        self.assertEqual(response.status_code, 201, response.data)
+        response = self.client.post("/api/v2/demo/initialize/", {"state_version": 1}, format="json",
+                                    HTTP_IDEMPOTENCY_KEY=str(uuid4()))
+        self.assertEqual(response.status_code, 201, response.data)
+        self.installment(days_ago(10), owner=behind)  # not overdue on the clock, overdue in real time
+        self.assert_profile("AT_RISK", 0, 0, 1, user=behind)
 
     def test_paying_late_after_overdue_moves_record_to_late(self):
         self.on_time(3)
@@ -359,14 +419,75 @@ class CreditSourceTests(CreditHarness, APITestCase):
         self.installment(days_ago(310), days_ago(310))
         self.assert_profile("FAIR", 3, 0, 0)
 
-    def test_window_moves_with_the_demo_clock(self):
+    def test_window_moves_with_the_real_date(self):
         self.installment(days_ago(330), days_ago(330))
         self.on_time(2)
         self.assert_profile("FAIR", 3, 0, 0)
         later = CLOCK + timedelta(days=60)
-        self.set_clock(later)
+        self.set_today(later)
         data = self.assert_profile("BUILDING", 2, 0, 0)
         self.assertEqual(data["as_of"], later.isoformat())
+
+    def test_advancing_demo_clock_400_days_drops_nothing(self):
+        # Regression (a): a student-controlled clock must not age late records out.
+        self.on_time(3)
+        self.installment(days_ago(330), days_ago(320))
+        self.installment(days_ago(330), days_ago(310))
+        before = self.assert_profile("AT_RISK", 3, 2, 0)
+        self.set_clock(CLOCK + timedelta(days=400))
+        after = self.assert_profile("AT_RISK", 3, 2, 0)
+        self.assertEqual(after["as_of"], CLOCK.isoformat())
+        self.assertEqual({i["id"] for i in after["evidence"]}, {i["id"] for i in before["evidence"]})
+
+    def test_advancing_demo_clock_keeps_fair_with_late_record(self):
+        self.on_time(6)
+        self.installment(days_ago(320), days_ago(300))
+        self.assert_profile("FAIR", 6, 1, 0)
+        self.set_clock(CLOCK + timedelta(days=400))
+        self.assert_profile("FAIR", 6, 1, 0)
+
+    def test_as_of_is_real_date_in_profile_snapshot_and_statement(self):
+        # Regression (c).
+        self.on_time(3)
+        self.set_clock(CLOCK + timedelta(days=100))
+        self.assertEqual(self.profile()["as_of"], CLOCK.isoformat())
+        snap = unwrap(self.create_snapshot().data)
+        self.assertEqual(snap["as_of"], CLOCK.isoformat())
+        self.assertEqual(CreditSnapshot.objects.get(pk=snap["id"]).as_of, CLOCK)
+        response = self.issue(snap["id"])
+        self.assertIn(response.status_code, (200, 201), response.data)
+        payload = signing.loads(response.data["data"]["statement"], salt=SALT)
+        self.assertIn(CLOCK.isoformat(), [str(v) for v in leaves(payload)])
+        self.assertNotIn((CLOCK + timedelta(days=100)).isoformat(), json.dumps(payload))
+
+    def test_as_of_is_unpatched_real_today(self):
+        patch.stopall()  # use the genuine timezone.localdate()
+        self.set_clock(CLOCK + timedelta(days=700))
+        self.assertEqual(self.profile()["as_of"], _REAL_LOCALDATE().isoformat())
+
+    def test_remittances_to_verified_beneficiaries_count(self):
+        on_time = [self.remittance(days_ago(10 + i), days_ago(12 + i)) for i in range(3)]
+        late = self.remittance(days_ago(40), days_ago(38), status="RECONCILED")
+        data = self.assert_profile("FAIR", 3, 1, 0)
+        self.assertEqual({item["id"] for item in data["evidence"]}, {str(r.id) for r in on_time + [late]})
+
+    def test_self_remittances_never_count(self):
+        for i in range(6):
+            self.remittance(days_ago(10 + i), days_ago(12 + i), recipient="SELF")
+        self.remittance(days_ago(40), days_ago(30), recipient="SELF")  # late self-transfer
+        self.assert_profile("BUILDING", 0, 0, 0)
+
+    def test_remittance_to_unverified_beneficiary_does_not_count(self):
+        for i in range(3):
+            self.remittance(days_ago(10 + i), days_ago(12 + i), verified=False)
+        self.assert_profile("BUILDING", 0, 0, 0)
+
+    def test_undelivered_or_deadline_free_remittances_do_not_count(self):
+        self.remittance(None, days_ago(10))  # no deadline
+        self.remittance(days_ago(10), None, status="IN_TRANSIT")
+        self.remittance(days_ago(20), None, status="CANCELLED")
+        self.remittance(days_ago(30), None, status="UNKNOWN")
+        self.assert_profile("BUILDING", 0, 0, 0)
 
     def test_window_includes_exactly_365_days_back_and_excludes_366(self):
         inside = [self.installment(days_ago(365), days_ago(365)), self.payment(days_ago(365), days_ago(365))]
@@ -388,28 +509,24 @@ class CreditSourceTests(CreditHarness, APITestCase):
         self.assertEqual({item["id"] for item in data["evidence"]},
                          {str(late_installment.id), str(late_payment.id)})
 
-    def test_records_completed_after_as_of_are_excluded(self):
+    def test_records_completed_after_real_today_still_count(self):
+        # No upper bound: completions on "future" demo dates count immediately.
         self.on_time(3)
-        early_installment = self.installment(CLOCK + timedelta(days=10), CLOCK + timedelta(days=3))
-        early_payment = self.payment(CLOCK + timedelta(days=20), CLOCK + timedelta(days=5))
-        late_payment = self.payment(CLOCK + timedelta(days=1), CLOCK + timedelta(days=6))
-        self.assert_profile("FAIR", 3, 0, 0)
-        self.set_clock(CLOCK + timedelta(days=4))
-        data = self.assert_profile("FAIR", 4, 0, 0)
-        self.assertIn(str(early_installment.id), {item["id"] for item in data["evidence"]})
-        self.set_clock(CLOCK + timedelta(days=5))  # completed exactly on as_of -> included
-        data = self.assert_profile("FAIR", 5, 0, 0)
-        self.assertIn(str(early_payment.id), {item["id"] for item in data["evidence"]})
-        self.set_clock(CLOCK + timedelta(days=6))
-        data = self.assert_profile("FAIR", 5, 1, 0)
-        self.assertIn(str(late_payment.id), {item["id"] for item in data["evidence"]})
+        rows = [
+            self.installment(CLOCK + timedelta(days=10), CLOCK + timedelta(days=3)),
+            self.payment(CLOCK + timedelta(days=20), CLOCK + timedelta(days=5)),
+            self.remittance(CLOCK + timedelta(days=9), CLOCK + timedelta(days=8)),
+            self.payment(CLOCK + timedelta(days=1), CLOCK + timedelta(days=6)),  # late
+        ]
+        data = self.assert_profile("FAIR", 6, 1, 0)
+        self.assertLessEqual({str(r.id) for r in rows}, {item["id"] for item in data["evidence"]})
 
     def test_unresolved_overdue_never_ages_out(self):
         self.on_time(6)
         old = self.installment(days_ago(500))
         data = self.assert_profile("AT_RISK", 6, 0, 1)
         self.assertIn(str(old.id), {item["id"] for item in data["evidence"]})
-        self.set_clock(CLOCK + timedelta(days=700))
+        self.set_today(CLOCK + timedelta(days=700))
         self.assert_profile("AT_RISK", 0, 0, 1)
 
     def test_fair_late_record_must_age_out_before_good(self):
@@ -418,7 +535,9 @@ class CreditSourceTests(CreditHarness, APITestCase):
         data = self.assert_profile("FAIR", 6, 1, 0)
         self.assertEqual(data["next_level"]["on_time_needed"], 0)
         self.assertIs(data["next_level"]["late_records_must_age_out"], True)
-        self.set_clock(CLOCK + timedelta(days=66))  # late completion now 366 days back
+        self.set_today(CLOCK + timedelta(days=65))  # late completion exactly 365 days back
+        self.assert_profile("FAIR", 6, 1, 0)
+        self.set_today(CLOCK + timedelta(days=66))  # now 366 days back
         self.assert_profile("GOOD", 6, 0, 0)
 
     def test_at_risk_from_late_records_recovers_when_they_age_out(self):
@@ -427,9 +546,9 @@ class CreditSourceTests(CreditHarness, APITestCase):
         self.installment(days_ago(330), days_ago(310))
         data = self.assert_profile("AT_RISK", 3, 2, 0)
         self.assertEqual(data["next_level"]["action"], "WAIT_FOR_LATE_RECORDS_TO_AGE_OUT")
-        self.set_clock(CLOCK + timedelta(days=46))  # first late now 366 days back
+        self.set_today(CLOCK + timedelta(days=46))  # first late now 366 days back
         self.assert_profile("FAIR", 3, 1, 0)
-        self.set_clock(CLOCK + timedelta(days=56))
+        self.set_today(CLOCK + timedelta(days=56))
         self.assert_profile("FAIR", 3, 0, 0)
 
     def test_as_of_is_today_without_wallet(self):

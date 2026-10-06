@@ -42,7 +42,7 @@ msgstr "此操作需要您本人验证，AI 助手无法直接执行。"
 msgid "ALLOCATION_EXCEEDS_CAPACITY"
 msgstr "分配金额超过了该资金来源的可用金额。"
 
-#: finance/agent_runner.py:50
+#: finance/agent_runner.py:80
 msgid "ALREADY_PROPOSED"
 msgstr "相同的操作已在等待您确认。"
 
@@ -54,7 +54,7 @@ msgstr "金额的小数位数超过了该币种允许的位数。"
 msgid "APPROVAL_ALREADY_OPEN"
 msgstr "此操作已有待处理或已通过的审批请求。"
 
-#: finance/policy.py:404
+#: finance/policy.py:408
 msgid "APPROVAL_NOT_PENDING"
 msgstr "该审批请求已处理或已过期。"
 
@@ -174,11 +174,11 @@ msgstr "请按今天确认余额；as_of 必须为当前演示日期。"
 msgid "CONTRACTUAL_COST_CANNOT_BE_REDUCED"
 msgstr "合同约定的费用不能削减；只有餐饮、交通、通讯和安顿类费用可以削减。"
 
-#: finance/fx_rates.py:119
+#: finance/fx_rates.py:121
 msgid "CONVERSION_NOT_POSITIVE"
 msgstr "金额不足以覆盖费用，换汇后到账金额不会大于零。"
 
-#: finance/fx_rates.py:109
+#: finance/fx_rates.py:111
 msgid "CORRIDOR_AMOUNT_OUT_OF_RANGE"
 msgstr "金额超出该汇路允许的范围。"
 
@@ -289,6 +289,10 @@ msgstr "换汇后的金额超出支持的精度范围。"
 #: finance/lending_applications.py:52
 msgid "Create a new B quote; legacy simulations are read-only."
 msgstr "请创建新的 B 报价；旧版模拟仅供查看。"
+
+#: finance/remittance_orders.py:107
+msgid "DEADLINE_OUT_OF_RANGE"
+msgstr "截止日期须在演示当前日期起一年之内，且不能早于当前日期。"
 
 #: finance/consumption/imports.py:85
 msgid "DECLARE_ACCOUNT_COVERAGE"
@@ -530,7 +534,7 @@ msgstr "各期分期金额之和必须等于该费用的总额。"
 msgid "INSUFFICIENT_BALANCE"
 msgstr "钱包余额不足以完成此交易。"
 
-#: finance/wallets.py:46
+#: finance/wallets.py:50
 msgid "INSUFFICIENT_BALANCE_OR_PRECISION"
 msgstr "此交易会使钱包余额为负或超出支持的上限。"
 
@@ -586,11 +590,11 @@ msgstr "已存在开票方和发票号相同但内容不同的发票。"
 msgid "INVOICE_IDENTITY_REQUIRED"
 msgstr "该学费需要来自已验证的 THB 发票才能支付。"
 
-#: finance/agent_api.py:47
+#: finance/agent_api.py:59
 msgid "Idempotency key was used with a different request."
 msgstr "该幂等键已用于另一个不同的请求。"
 
-#: finance/agent_api.py:34
+#: finance/agent_api.py:43
 msgid "Idempotency-Key header (1-100 characters) is required."
 msgstr "需要提供 Idempotency-Key 请求头（1-100 个字符）。"
 
@@ -598,7 +602,7 @@ msgstr "需要提供 Idempotency-Key 请求头（1-100 个字符）。"
 msgid "Initial gap mismatch"
 msgstr "初始资金缺口不符"
 
-#: finance/wallets.py:22
+#: finance/wallets.py:26
 msgid "Initialize the isolated demo wallet first."
 msgstr "请先初始化独立的演示钱包。"
 
@@ -626,11 +630,11 @@ msgstr "JPY 金额必须为整数。"
 msgid "KEEP_REQUIRED_COSTS_OR_MARK_NOT_APPLICABLE"
 msgstr "不能删除已有费用，请将其标记为不适用。"
 
-#: finance/remittance_orders.py:206
+#: finance/remittance_orders.py:208
 msgid "LEDGER_CREDIT_MISSING"
 msgstr "账本中没有该汇款订单对应的入账记录，无法对账。"
 
-#: finance/remittance_orders.py:204
+#: finance/remittance_orders.py:206
 msgid "LEDGER_DEBIT_MISSING"
 msgstr "账本中没有该汇款订单对应的扣款记录，无法对账。"
 
@@ -654,7 +658,7 @@ msgstr "该贷款的申请已被拒绝、已取消或已放款。"
 msgid "LOCKED_COST_CANNOT_BE_REDUCED"
 msgstr "该费用已锁定，不能削减。"
 
-#: finance/wallets.py:37
+#: finance/wallets.py:41
 msgid "Ledger amount must be non-zero."
 msgstr "账本金额不能为零。"
 
@@ -846,7 +850,7 @@ msgstr "计划期限不能超过自今天起的 730 天。"
 msgid "PAYMENT_STATE_CHANGED"
 msgstr "创建该付款后财务状况已变化，请重新创建付款。"
 
-#: finance/agent_runner.py:153
+#: finance/agent_runner.py:195
 msgid "PENDING_ACTION_CLOSED"
 msgstr "该提议的操作已不再处于待处理状态。"
 
@@ -902,7 +906,7 @@ msgstr "付款后出现储备金缺口"
 msgid "QUOTE_ALREADY_USED"
 msgstr "该贷款报价已用于申请，请创建新的报价。"
 
-#: finance/wallets.py:107
+#: finance/wallets.py:111
 msgid "QUOTE_AMOUNT_MISMATCH"
 msgstr "金额必须与报价金额一致。"
 
@@ -922,7 +926,7 @@ msgstr "该报价已过期，请重新获取报价。"
 msgid "QUOTE_IN_USE"
 msgstr "该报价已关联到一个汇款订单。"
 
-#: finance/agent_tools.py:121
+#: finance/agent_tools.py:126
 msgid "QUOTE_NOT_EXECUTABLE"
 msgstr "该报价无法执行，请针对具体金额获取实时报价。"
 
@@ -962,7 +966,7 @@ msgstr "解决该复核前，请先导入与拟议金额一致的已验证文件
 msgid "REQUEST_NOT_PENDING"
 msgstr "该资助请求不处于待处理状态，无法发出链接。"
 
-#: finance/remittance_orders.py:152
+#: finance/remittance_orders.py:154
 msgid "RESERVE_REQUIRED"
 msgstr "此交易会使余额低于储备金。"
 
@@ -1046,7 +1050,7 @@ msgstr "汇款给自己时，请勿提供 beneficiary_id。"
 msgid "SEMESTER_NOT_ACTIVE"
 msgstr "该学期已结束，或结束日期过远，无法规划。"
 
-#: finance/policy.py:400
+#: finance/policy.py:404
 msgid "SEPARATION_OF_DUTIES"
 msgstr "您不能处理此审批，因为该审批由您发起、属于您或其收款人由您验证。"
 

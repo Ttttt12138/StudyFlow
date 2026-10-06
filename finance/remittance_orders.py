@@ -7,7 +7,7 @@ from django.utils import timezone
 from . import money
 from .remittance_models import RemittanceOrder, RemittanceStatusEvent
 from .services import VersionConflict
-from .wallets import EXECUTABLE_SOURCES, balance_of, post, quote_result, wallet
+from .wallets import balance_of, executable_sources, post, quote_result, wallet
 from .workflow_common import append_state, audit, current, owned, record, require, shift_date
 from .workflow_models import Beneficiary, DemoLedgerEntry, FXQuote
 
@@ -90,7 +90,7 @@ def order_record(order):
 def create_order(actor, data, obj=None):
     item = wallet(actor)
     quote = owned(FXQuote, actor, data["quote_id"])
-    require(quote.corridor_id is not None and quote.rate_source in EXECUTABLE_SOURCES
+    require(quote.corridor_id is not None and quote.rate_source in executable_sources()
             and quote.quoted_amount is not None, "QUOTE_NOT_EXECUTABLE")
     require(quote.consumed_at is None, "QUOTE_CONSUMED")
     require(not RemittanceOrder.objects.filter(quote=quote).exists(), "QUOTE_IN_USE")
@@ -103,6 +103,8 @@ def create_order(actor, data, obj=None):
         require(beneficiary.verified, "BENEFICIARY_NOT_VERIFIED")
     else:
         require(not data.get("beneficiary_id"), "SELF_RECIPIENT_HAS_NO_BENEFICIARY")
+    deadline = data.get("deadline")
+    require(deadline is None or item.clock <= deadline <= shift_date(item.clock, 366), "DEADLINE_OUT_OF_RANGE")
     source, target = quote.source_currency, quote.target_currency
     received = quote_result(quote, quote.quoted_amount, source, target)
     order = RemittanceOrder.objects.create(
@@ -140,6 +142,8 @@ def submit(actor, data, order):
     item = wallet(actor)
     quote, corridor = order.quote, order.corridor
     require(quote.consumed_at is None, "QUOTE_CONSUMED")
+    # A deployment switched to live rates must not settle orders priced on fixtures.
+    require(quote.rate_source in executable_sources(), "QUOTE_NOT_EXECUTABLE")
     require(corridor.enabled, "CORRIDOR_DISABLED")
     require(corridor.min_amount <= order.send_amount <= corridor.max_amount, "CORRIDOR_AMOUNT_OUT_OF_RANGE")
     if order.beneficiary_id:

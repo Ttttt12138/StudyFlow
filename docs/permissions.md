@@ -68,7 +68,7 @@ Agent（W4）发起的调用最高 T1；T2 及以上只能生成待确认动作�
 ### 分权规则
 
 1. 审批人不能是申请人（数据库 CHECK 约束，接口层先返回 403 `SEPARATION_OF_DUTIES`）。
-2. 付款类审批：审批人不能是最近一次核验该收款人的运营人员（按审计事件 `beneficiary.mock_verification` 的 `actor_id` 判断，`SEPARATION_OF_DUTIES`）。
+2. 付款和汇款类审批（`payment.submit`，以及收款人为外部账户的 `remittance.submit`）：审批人不能是最近一次核验该收款人的运营人员（按审计事件 `beneficiary.mock_verification` 的 `actor_id` 判断，`SEPARATION_OF_DUTIES`）。
 3. 运营人员不能审批自己作为所有者的单（`SEPARATION_OF_DUTIES`）。
 
 三条规则对批准和驳回同样适用。因此演示和测试至少需要两名运营人员：一名核验收款人，另一名审批。

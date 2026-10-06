@@ -70,12 +70,12 @@ CREATED ──submit──▶ SUBMITTED ──dispatched──▶ IN_TRANSIT ─
 创建时的校验：
 - 报价属于本人、服务端定价、未使用、未过期，带 `quoted_amount`。
 - `BENEFICIARY` 必须提供本人名下、已核验的收款人；`SELF` 不能带 `beneficiary_id`。
-- `deadline` 可选。送达时记录 `delivered_on`（演示时钟日期），有 deadline 时得出 `on_time`。
+- `deadline` 可选；如果提供，必须在演示时钟当天到之后 366 天之间（`DEADLINE_OUT_OF_RANGE`）。送达时记录 `delivered_on`（演示时钟日期），有 deadline 时得出 `on_time`。
 
 推荐流程：先用 `fx-quotes/live/` 为同一币种对的各档汇路生成报价，用 `remittance-comparisons/` 比较，再用 `recommended_quote_id` 创建订单。
 
 ## 联动
 
 - 状态为 REFUNDED 或 UNKNOWN 的订单进入 Review Queue，订单恢复正常后关闭对应条目。
-- 有 deadline 且已送达的订单计入[信用建立](credit.md)的准时记录：`delivered_on ≤ deadline` 记为准时，否则记为逾期完成。
+- 汇给已核验收款人、有 deadline 且已送达的订单计入[信用建立](credit.md)的准时记录：`delivered_on ≤ deadline` 记为准时，否则记为逾期完成。汇给自己的订单不计入。
 - 演示命令 `manage.py demo_remittance --runs 3` 走完整 HTTP 流程：汇路报价 → 比价 → 下单 → step-up 提交 → 通道回调 → 对账；另含一次失败退款和一次超限审批。

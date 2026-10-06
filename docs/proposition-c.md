@@ -82,7 +82,7 @@
 
 | 项目 | 结果 |
 |---|---|
-| Django 测试（PostgreSQL） | 455 个，全部通过（基线 178） |
+| Django 测试（PostgreSQL） | 480 个，全部通过（基线 178） |
 | C 模块测试 | 279 个，全部通过（基线 179） |
 | 本地门禁 `scripts/run_gates.py` | 17 项全部通过：冻结存档、check、翻译目录、迁移、测试、OpenAPI、ruff、迁移执行、缓存表、6 个 HTTP 演示、Agent 评估 |
 | HTTP 演示 | `demo_bc`、`demo_readiness`、`demo_consumption`、`demo_copilot`、`demo_remittance`、`demo_agent`，各 3 轮 |
@@ -94,7 +94,8 @@
   - 自定汇率可以凭空造钱（高危）；
   - 过期订单未在所有命令下转为 EXPIRED；
   - 信用证明验证接口可能返回 500；
-  - Agent 执行循环信任规划器的输出。
+  - Agent 执行循环信任规划器的输出；
+  - 整体安全审查发现的 3 个中危问题：信用等级可被低价刷高、拨快演示时钟可让逾期记录失效、汇款审批缺少"核验人不能审批"的分权规则。
 - 合并前另派上下文干净的代理审查改动。
 
 ## 主要剩余风险

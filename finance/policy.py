@@ -388,6 +388,10 @@ def separation_of_duties(staff, approval):
         payment = Payment.objects.filter(pk=approval.target_id).first()
         if payment is not None and latest_verifier(payment.beneficiary_id) == staff.pk:
             return False
+    if approval.action == "remittance.submit":
+        order = RemittanceOrder.objects.filter(pk=approval.target_id).first()
+        if order is not None and order.beneficiary_id and latest_verifier(order.beneficiary_id) == staff.pk:
+            return False
     return True
 
 

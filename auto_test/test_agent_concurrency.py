@@ -11,6 +11,7 @@ from unittest import skipUnless
 from uuid import uuid4
 
 from django.contrib.auth import get_user_model
+from django.core.cache import cache
 from django.db import connection, connections
 from django.test import TransactionTestCase, override_settings
 from rest_framework.test import APIClient
@@ -29,6 +30,7 @@ class AgentConcurrencyTests(AgentHarness, TransactionTestCase):
     username = "ag-parallel"
 
     def setUp(self):
+        cache.clear()  # throttle counters live in the DB cache, which flush does not empty
         self.client = APIClient()
         self.bootstrap()
 
@@ -130,6 +132,32 @@ class AgentConcurrencyTests(AgentHarness, TransactionTestCase):
         self.assertEqual(self.foreign("CNY"), Decimal("1000.00"))
         self.assertEqual(self.db(order).status, "SUBMITTED")
         self.assert_invariant()
+
+    def test_two_sessions_proposing_same_order_open_one_pending_action(self):
+        """Racing proposals never 500: one PENDING action, the other step is an ERROR."""
+        order, _ = self.new_order(amount="1000.00")
+        lock = threading.Lock()
+
+        def factory():
+            with lock:
+                return StubPlanner([call("submit_remittance_order", order_id=self.oid(order))])
+
+        path = "/api/v2/agent/sessions/"
+        post = lambda c: c.post(path, {"goal": "提交订单", "locale": "zh"}, format="json",
+                                HTTP_IDEMPOTENCY_KEY=str(uuid4()))
+        original = agent_runner.planner
+        agent_runner.planner = factory
+        try:
+            results = self.race([post, post, post])
+        finally:
+            agent_runner.planner = original
+        self.assertEqual([s for s, _ in results], [201, 201, 201], results)
+        self.assertEqual(AgentPendingAction.objects.filter(owner=self.user, status="PENDING").count(), 1)
+        steps = AgentStep.objects.filter(owner=self.user, tool="submit_remittance_order")
+        self.assertEqual(sorted(s.status for s in steps), ["ERROR", "ERROR", "PROPOSED"])
+        for step in steps.filter(status="ERROR"):
+            self.assertRegex(str(step.result), "ALREADY_PROPOSED|CONCURRENT_UPDATE")
+        self.assertEqual(self.debits(order).count(), 0)
 
     # ------------------------------------------------------------------ session idempotency race
     def test_same_session_key_concurrently_runs_planner_once(self):

@@ -6,7 +6,7 @@ from uuid import uuid4
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError as DjangoValidationError
-from django.db import transaction
+from django.db import IntegrityError, transaction
 from django.http import Http404
 from django.utils import timezone
 from rest_framework.exceptions import APIException
@@ -85,7 +85,8 @@ def _propose(session, number, tool, arguments, step, call, outcome):
     result = {"pending_action_id": str(pending_id), "action": outcome.action,
               "target_id": str(outcome.target_id), "currency": outcome.currency,
               "amount": money.fmt(outcome.amount, outcome.currency), "expires_at": expires.isoformat(),
-              "executed": False, "requires": ["student_confirmation", "step_up"]}
+              "details": outcome.arguments, "executed": False,
+              "requires": ["student_confirmation", "step_up"]}
     saved = AgentStep.objects.create(
         owner=session.owner, session=session, number=number, tool=tool.name, tier=tool.tier,
         arguments=json_value(arguments), rationale=step.rationale, status="PROPOSED", result=result, call=call)
@@ -115,6 +116,9 @@ def _execute(session, number, step, call, arguments):
                 if tool.tier == "T1":
                     session.write_count += 1
                     session.save(update_fields=["write_count", "updated_at"])
+        except IntegrityError:
+            # A concurrent request claimed the same quote or proposal first.
+            status, result = "ERROR", {"error": "CONCURRENT_UPDATE"}
         except (APIException, Http404, DjangoValidationError, ValueError) as exc:
             status, result = "ERROR", _error(exc)
     result = _truncate(result)

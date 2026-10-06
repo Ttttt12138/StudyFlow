@@ -41,6 +41,11 @@ class RemittanceDemo(Demo):
         return self.request("remittance-orders", {"quote_id": quote_id, "recipient": "SELF",
                                                   "purpose": "living", **extra})
 
+    def tuition_payee(self):
+        payee = self.request("beneficiaries", {"name": "PSU Phuket tuition", "destination_label": "PSU-THB"})
+        self.request("beneficiaries/" + payee["id"] + "/verify", {"verified": True}, operator=True)
+        return payee
+
     def step(self, order, route, body=None, operator=False):
         return self.request(f"remittance-orders/{order['id']}/{route}",
                             {"expected_version": order["version"], **(body or {})}, operator=operator)
@@ -55,7 +60,10 @@ class RemittanceDemo(Demo):
             "required_amount": "20000.00", "send_on": SNAPSHOT["as_of"], "deadline": "2026-10-09"})
         chosen = comparison["recommended_quote_id"]
         require(chosen, "No feasible route recommended")
-        order = self.order(chosen, deadline="2026-10-09")
+        # Only transfers to a verified payee build the on-time record (docs/credit.md).
+        payee = self.tuition_payee()
+        order = self.order(chosen, deadline="2026-10-09", recipient="BENEFICIARY",
+                           beneficiary_id=payee["id"], purpose="tuition")
         order = self.step(order, "submit")
         require(order["status"] == "SUBMITTED" and self.balance("CNY") == "35000.00", "Submit did not debit CNY")
         order = self.step(order, "adapter-event", {"outcome": "dispatched"}, operator=True)

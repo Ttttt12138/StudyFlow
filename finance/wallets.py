@@ -14,7 +14,11 @@ from .workflow_models import (
 )
 
 
-EXECUTABLE_SOURCES = ("frankfurter", "fixture")
+def executable_sources():
+    """Fixture-priced quotes only execute when the deployment itself runs on fixtures."""
+    from django.conf import settings
+
+    return ("frankfurter",) if settings.STUDYFLOW_FX_LIVE else ("frankfurter", "fixture")
 
 
 def wallet(owner):
@@ -92,7 +96,7 @@ def convert_balance(actor, data, obj=None):
     require(quote.consumed_at is None, "QUOTE_CONSUMED")
     require(quote.expires_at > timezone.now(), "QUOTE_EXPIRED")
     # Self-priced manual quotes are estimates; only server-priced corridor quotes move balances.
-    require(quote.corridor_id is not None and quote.rate_source in EXECUTABLE_SOURCES,
+    require(quote.corridor_id is not None and quote.rate_source in executable_sources(),
             "QUOTE_NOT_EXECUTABLE")
     require(quote.corridor.enabled, "CORRIDOR_DISABLED")
     from .remittance_models import RemittanceOrder

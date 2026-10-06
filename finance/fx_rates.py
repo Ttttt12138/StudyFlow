@@ -60,7 +60,9 @@ def _result(snapshot, issues):
 
 
 def latest(base, quote):
-    return FxRateSnapshot.objects.filter(base=base, quote=quote).order_by("-fetched_at").first()
+    # Never mix fixture and live snapshots: demos may run fixtures against a live deployment.
+    source = "frankfurter" if settings.STUDYFLOW_FX_LIVE else "fixture"
+    return FxRateSnapshot.objects.filter(base=base, quote=quote, source=source).order_by("-fetched_at").first()
 
 
 def get_rate(base, quote):

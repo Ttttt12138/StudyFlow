@@ -75,7 +75,7 @@ REST_FRAMEWORK = {
 # docs/permissions.md §6; override with STUDYFLOW_THROTTLE_<SCOPE>, e.g. STUDYFLOW_THROTTLE_STEP_UP=5/hour.
 _THROTTLE_DEFAULTS = {
     "user": "1000/hour", "anon": "100/hour",
-    "auth": "10/min", "step_up": "10/hour", "money": "60/hour", "sponsor": "20/hour",
+    "auth": "10/min", "step_up": "10/hour", "money": "60/hour", "sponsor": "20/hour", "agent": "30/hour",
 }
 STUDYFLOW_THROTTLE_RATES = {
     scope: os.getenv("STUDYFLOW_THROTTLE_" + scope.upper(), rate).strip()

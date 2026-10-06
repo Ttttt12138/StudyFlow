@@ -11,6 +11,7 @@ Everything else goes through the real /api/v2/ routes; the ORM is only used to a
 (expiry) and to inspect persisted state.
 """
 import json
+import os
 import re
 from datetime import timedelta
 from decimal import Decimal
@@ -18,7 +19,8 @@ from unittest.mock import patch
 from uuid import uuid4
 
 from django.conf import settings
-from django.db import DatabaseError, transaction
+from django.core.cache import cache
+from django.db import DatabaseError, IntegrityError, transaction
 from django.test import override_settings
 from django.utils import timezone
 from rest_framework.test import APITestCase
@@ -204,12 +206,15 @@ class AgentHarness(RemittanceHarness):
         }
 
 
-THROTTLE = {**settings.STUDYFLOW_THROTTLE_RATES, "step_up": "1000/hour", "money": "1000/hour"}
+# Throttling has its own tests (AgentThrottleTests, auto_test/test_policy.py); the other suites raise it.
+THROTTLE = {**settings.STUDYFLOW_THROTTLE_RATES, "step_up": "1000/hour", "money": "1000/hour",
+            "agent": "1000/hour"}
 
 
 @override_settings(**FX_SETTINGS, STUDYFLOW_AI_MODE="mock", STUDYFLOW_THROTTLE_RATES=THROTTLE)
 class AgentSessionApiTests(AgentHarness, APITestCase):
     def setUp(self):
+        cache.clear()
         self.bootstrap()
 
     # ================================================================ POST agent/sessions/
@@ -411,6 +416,10 @@ class AgentSessionApiTests(AgentHarness, APITestCase):
                 self.assertEqual(data["error_code"], "INVALID_TOOL_CALL")
                 self.assertTrue(data["final_answer"].strip())
                 self.assertEqual([s for s in self.tool_steps(data) if s["status"] in {"OK", "PROPOSED"}], [])
+                refused = [s for s in data["steps"] if s["result"].get("refused_tool")]
+                self.assertEqual([s["result"]["refused_tool"] for s in refused], [tool])
+                self.assertEqual(refused[0]["status"], "ERROR")
+                self.assertEqual(len(data["steps"]), 1, "the session ends at the refused call")
                 self.assertEqual(self.money_footprint(), before)
 
     def test_unknown_tool_via_real_planner_validation_fails_session(self):
@@ -425,9 +434,12 @@ class AgentSessionApiTests(AgentHarness, APITestCase):
         for arguments_json in ("[1, 2]", "{not json", '"get"'):
             with self.subTest(arguments=arguments_json):
                 data, _ = self.run_script([raw_call("get_balances", arguments_json)])
-                self.assertIn(data["status"], {"COMPLETED", "FAILED"}, data)
+                self.assertEqual((data["status"], data["error_code"]), ("FAILED", "INVALID_TOOL_CALL"), data)
+                self.assertTrue(data["final_answer"].strip())
                 first = data["steps"][0]
                 self.assertNotIn(first["status"], {"OK", "PROPOSED"}, first)
+                self.assertEqual(first["result"].get("refused_tool"), "get_balances")
+                self.assertEqual(len(data["steps"]), 1)
 
     def test_argument_validation_error_is_step_error_and_loop_continues(self):
         script = [call("get_fx_rate", base="CNYX", quote="THB"),
@@ -519,16 +531,21 @@ class AgentSessionApiTests(AgentHarness, APITestCase):
                                                      send_amount="1000.00")] * 5
         data, stub = self.run_script(script)
         self.assertLessEqual(len(self.tool_steps(data)), 10, [s["tool"] for s in data["steps"]])
-        self.assertIn(data["status"], {"COMPLETED", "FAILED"})
+        self.assertEqual((data["status"], data["error_code"]), ("FAILED", "STEP_BUDGET_EXHAUSTED"), data)
+        self.assertTrue(data["final_answer"].strip())
+        self.assertEqual(data["steps"][-1]["result"].get("refused_tool"), "create_live_quote")
         self.assertEqual(FXQuote.objects.filter(owner=self.user).count(), 0)
         self.assertEqual(stub.contexts[-1].steps_remaining, 0)
+        self.assertEqual(len(stub.contexts), 11)
 
     def test_two_consecutive_failures_of_same_tool_stop_the_loop(self):
         """docs/agent.md 执行循环约束: stop when a tool's two most recent calls both failed."""
         script = [call("get_fx_rate", base="XXXX", quote="THB")] * 4 + [call("get_balances")]
-        data, _ = self.run_script(script)
+        data, stub = self.run_script(script)
         failing = [s for s in self.tool_steps(data) if s["tool"] == "get_fx_rate"]
         self.assertEqual(len(failing), 2, [(s["tool"], s["status"]) for s in data["steps"]])
+        # Documented mechanism: the next turn asks the planner to finish (steps_remaining = 0).
+        self.assertEqual([c.steps_remaining for c in stub.contexts], [10, 9, 0])
         self.assertNotIn("get_balances", [s["tool"] for s in self.tool_steps(data)])
         self.assertIn(data["status"], {"COMPLETED", "FAILED"})
         self.assertTrue(data["final_answer"].strip())
@@ -539,7 +556,8 @@ class AgentSessionApiTests(AgentHarness, APITestCase):
         quotes = [self.live_quote("CNY", HOME, "1000.00", tier=t) for t in ("economy", "express")]
         script = [call("rank_quotes", quote_ids=[q["id"] for q in quotes], deadline="2000-01-01"),
                   call("create_remittance_order", quote_id=quotes[0]["id"], recipient="SELF", purpose="other")]
-        data, _ = self.run_script(script)
+        data, stub = self.run_script(script)
+        self.assertEqual([c.steps_remaining for c in stub.contexts], [10, 0])
         ranked = data["steps"][0]
         self.assertEqual((ranked["tool"], ranked["status"]), ("rank_quotes", "OK"))
         self.assertIsNone(ranked["result"]["recommended_quote_id"])
@@ -835,3 +853,146 @@ class AgentSessionApiTests(AgentHarness, APITestCase):
         detail = self.get("agent/sessions/" + str(pending.session_id)).data["data"]
         self.assertEqual([(p["id"], p["status"]) for p in detail["pending_actions"]],
                          [(str(pending.pk), "CONFIRMED")])
+
+    # ================================================================ security-review regressions
+    def test_remittance_proposal_details_show_self_recipient(self):
+        order, _ = self.new_order(amount="1000.00")
+        row = self.db(order)
+        data, _ = self.run_script([call("submit_remittance_order", order_id=self.oid(order))])
+        details = data["steps"][0]["result"]["details"]
+        self.assertEqual(details["recipient"], "SELF")
+        self.assertEqual(details["receive_currency"], HOME)
+        self.assertEqual(D(details["receive_amount"]), row.receive_amount)
+        self.assertIsNone(details.get("beneficiary"))
+        pending = AgentPendingAction.objects.get(owner=self.user)
+        self.assertEqual(pending.arguments, details)
+        self.assertEqual(data["pending_actions"][0]["arguments"], details)
+
+    def test_remittance_proposal_details_show_beneficiary(self):
+        payee = self.beneficiary()
+        order, _ = self.new_order(amount="1000.00", recipient="BENEFICIARY", beneficiary=payee,
+                                  purpose="tuition")
+        row = self.db(order)
+        data, _ = self.run_script([call("submit_remittance_order", order_id=self.oid(order))])
+        details = data["steps"][0]["result"]["details"]
+        self.assertEqual((details["recipient"], details["receive_currency"]), ("BENEFICIARY", HOME))
+        self.assertEqual(D(details["receive_amount"]), row.receive_amount)
+        self.assertEqual(details["beneficiary"], {"id": payee["id"], "name": "Demo university",
+                                                  "destination_label": "MOCK-ACCT"})
+        listed = self.get("agent/sessions/" + data["id"]).data["data"]["pending_actions"][0]
+        self.assertEqual(listed["arguments"]["beneficiary"]["id"], payee["id"])
+
+    def test_confirm_failing_business_rule_keeps_pending_and_step_up(self):
+        """docs/agent.md: on failure everything rolls back and the action stays PENDING."""
+        payee = self.beneficiary()
+        order, _ = self.new_order(amount="1000.00", recipient="BENEFICIARY", beneficiary=payee,
+                                  purpose="tuition")
+        pending = self.propose_submit(order)
+        self.verify_beneficiary(payee, False)
+        headers = step_up_header(client_flow(self.user, PASSWORD, None), self.confirm_path(pending), {})
+        failed = self.confirm_bare(pending, headers=headers)
+        self.assertEqual(failed.status_code, 400, str(failed.data))
+        self.assertIn("BENEFICIARY_NOT_VERIFIED", str(failed.data))
+        self.assertEqual(self.pending_row(pending).status, "PENDING")
+        self.assertEqual(self.pending_row(pending).version, 1)
+        self.assertEqual(self.debits(order).count(), 0)
+        grant = StepUpGrant.objects.get(owner=self.user, target_id=self.oid(order))
+        self.assertIsNone(grant.used_at)
+        # The same, unconsumed token works once the rule is satisfied again.
+        self.verify_beneficiary(payee, True)
+        response = self.confirm_bare(pending, headers=headers)
+        self.assertEqual(response.status_code, 201, str(response.data))
+        self.assertEqual(self.pending_row(pending).status, "CONFIRMED")
+        self.assertEqual(self.debits(order).count(), 1)
+        grant.refresh_from_db()
+        self.assertIsNotNone(grant.used_at)
+
+    def test_integrity_error_inside_tool_is_concurrent_update_step(self):
+        real = TOOLS["create_live_quote"].handler
+
+        def racing(user, data):
+            real(user, data)  # writes a quote, then loses a race on a constraint
+            raise IntegrityError("duplicate key value violates unique constraint \"finance_secret_idx\"")
+
+        script = [call("create_live_quote", corridor_id=self.corridor_id(), send_amount="1000.00"),
+                  call("get_balances")]
+        with patch.object(TOOLS["create_live_quote"], "handler", racing):
+            data, _ = self.run_script(script)
+        self.assertEqual(data["status"], "COMPLETED", data)
+        steps = self.tool_steps(data)
+        self.assertEqual([(s["tool"], s["status"]) for s in steps],
+                         [("create_live_quote", "ERROR"), ("get_balances", "OK")])
+        self.assertEqual(steps[0]["result"].get("error"), "CONCURRENT_UPDATE")
+        text = json.dumps(steps[0]["result"])
+        self.assertNotIn("duplicate key", text)
+        self.assertNotIn("finance_secret_idx", text)
+        self.assertEqual(FXQuote.objects.filter(owner=self.user).count(), 0, "the step's writes roll back")
+        self.assertEqual(AgentSession.objects.get(pk=data["id"]).write_count, 0)
+
+
+def rates(**changes):
+    return override_settings(STUDYFLOW_THROTTLE_RATES={**THROTTLE, **changes})
+
+
+@override_settings(**FX_SETTINGS, STUDYFLOW_AI_MODE="mock")
+class AgentThrottleTests(AgentHarness, APITestCase):
+    """docs/agent.md: POST agent/sessions/ is limited by the `agent` scope; reads are not counted."""
+
+    def setUp(self):
+        cache.clear()
+        self.bootstrap()
+
+    def tearDown(self):
+        cache.clear()
+
+    def test_default_agent_rate_is_documented_value(self):
+        if os.getenv("STUDYFLOW_THROTTLE_AGENT"):
+            self.skipTest("STUDYFLOW_THROTTLE_AGENT overrides the default")
+        self.assertEqual(settings.STUDYFLOW_THROTTLE_RATES["agent"], "30/hour")
+
+    @rates(agent="2/min")
+    def test_session_creation_is_throttled(self):
+        context, stub = self.scripted([final(), final(), final()])
+        with context:
+            codes = [self.start_raw({"goal": "查余额", "locale": "zh"}).status_code for _ in range(3)]
+        self.assertEqual(codes, [201, 201, 429])
+        self.assertEqual(AgentSession.objects.filter(owner=self.user).count(), 2)
+        self.assertEqual(len(stub.contexts), 2, "a throttled request never reaches the planner")
+        self.assertEqual(self.factory_calls, 2)
+        context, _ = self.scripted([final()])
+        with context:
+            throttled = self.start_raw({"goal": "查余额", "locale": "zh"})
+        self.assertEqual(throttled.status_code, 429)
+        self.assertTrue(throttled.get("Retry-After"))
+
+    @rates(agent="1/min")
+    def test_reads_are_not_counted(self):
+        for _ in range(5):
+            self.assertEqual(self.get("agent/sessions").status_code, 200)
+        context, _ = self.scripted([final(), final()])
+        with context:
+            first = self.start_raw({"goal": "查余额", "locale": "zh"})
+            self.assertEqual(first.status_code, 201, str(first.data))
+            for _ in range(3):
+                self.assertEqual(self.get("agent/sessions").status_code, 200)
+                self.assertEqual(self.get("agent/sessions/" + first.data["data"]["id"]).status_code, 200)
+            self.assertEqual(self.start_raw({"goal": "查汇率", "locale": "zh"}).status_code, 429)
+        self.assertEqual(self.get("agent/sessions").status_code, 200)
+
+    @rates(agent="1/min")
+    def test_agent_throttle_is_per_user(self):
+        context, _ = self.scripted([final(), final(), final()])
+        with context:
+            self.assertEqual(self.start_raw({"goal": "查余额", "locale": "zh"}).status_code, 201)
+            self.assertEqual(self.start_raw({"goal": "查余额", "locale": "zh"}).status_code, 429)
+            other = self.start_raw({"goal": "查余额", "locale": "zh"}, user=self.other)
+        self.assertEqual(other.status_code, 201, str(other.data))
+
+    @rates(agent="1/min")
+    def test_agent_scope_does_not_block_pending_action_routes(self):
+        order, _ = self.new_order(amount="1000.00")
+        pending = self.propose_submit(order)  # uses the one allowed session
+        self.assertEqual(self.start_raw({"goal": "查余额", "locale": "zh"}).status_code, 429)
+        response = self.confirm(pending)
+        self.assertEqual(response.status_code, 201, str(response.data))
+        self.assertEqual(self.pending_row(pending).status, "CONFIRMED")
