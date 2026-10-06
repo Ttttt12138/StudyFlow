@@ -15,6 +15,7 @@ from finance.workflow_models import SimulatedApplication
 
 from .models import CheckLease, ReadinessRun
 from .services import active, budget_result, business_date, converted_draft
+from finance.money import home_currency
 
 
 def ai_client(backend=None):
@@ -41,7 +42,7 @@ def c_draft(draft):
             {
                 "cost_id": "reserve",
                 "category": "reserve",
-                "currency": "THB",
+                "currency": home_currency(),
                 "amount": draft["reserve"],
                 "period": "once",
                 "year": date_year(profile),
@@ -94,11 +95,11 @@ class DjangoReadinessBackend:
             converted_draft(self.owner, semester.draft),
             now.date(),
         )
-        money = lambda value: MoneyValue(currency="THB", amount=value)
+        money = lambda value: MoneyValue(currency=home_currency(), amount=value)
         return BudgetSnapshot(
             state_version=financial.version,
             budget_version=semester.version,
-            report_currency="THB",
+            report_currency=home_currency(),
             complete=result["complete"],
             low=money(result["low"]),
             base=money(result["base"]),
@@ -140,7 +141,7 @@ class DjangoReadinessBackend:
         for source in BSource.objects.filter(
             owner=self.owner, received=False, already_in_opening=False
         ):
-            if source.kind not in kinds or source.currency != "THB":
+            if source.kind not in kinds or source.currency != home_currency():
                 continue
             quote_id = None
             if source.loan_id:
@@ -239,7 +240,7 @@ class DjangoReadinessBackend:
                 )
             for field in ("borrowing_net", "financing_cost", "remaining_gap"):
                 setattr(
-                    candidate, field, MoneyValue(currency="THB", amount=result[field])
+                    candidate, field, MoneyValue(currency=home_currency(), amount=result[field])
                 )
             candidate.conditions = list(
                 dict.fromkeys(candidate.conditions + result["conditions"])

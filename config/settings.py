@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+from babel.numbers import get_currency_precision
 from django.core.exceptions import ImproperlyConfigured
 from studyflow_ai.ocr_config import OcrSettings
 
@@ -69,13 +70,31 @@ REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 50,
 }
+# Budgets, loans and tuition settle in the home currency; wallets may hold the others.
+STUDYFLOW_HOME_CURRENCY = os.getenv("STUDYFLOW_HOME_CURRENCY", "THB").upper()
+STUDYFLOW_SUPPORTED_CURRENCIES = [
+    x.strip().upper()
+    for x in os.getenv("STUDYFLOW_SUPPORTED_CURRENCIES", "THB,USD,EUR,CNY,GBP,JPY").split(",")
+    if x.strip()
+]
+# The B lending core and its C adapters are THB-only, so the home currency is pinned.
+if STUDYFLOW_HOME_CURRENCY != "THB":
+    raise ImproperlyConfigured("STUDYFLOW_HOME_CURRENCY must be THB until lending supports other currencies.")
+if STUDYFLOW_HOME_CURRENCY not in STUDYFLOW_SUPPORTED_CURRENCIES:
+    raise ImproperlyConfigured("STUDYFLOW_SUPPORTED_CURRENCIES must include the home currency.")
+for _code in STUDYFLOW_SUPPORTED_CURRENCIES:
+    # Money columns store two decimals; currencies with finer minor units would drift.
+    if get_currency_precision(_code) > 2 or len(_code) != 3:
+        raise ImproperlyConfigured(f"Unsupported currency precision: {_code}")
+STUDYFLOW_FX_LIVE = os.getenv("STUDYFLOW_FX_LIVE", "false").lower() == "true"
+STUDYFLOW_FX_CACHE_SECONDS = int(os.getenv("STUDYFLOW_FX_CACHE_SECONDS", "900"))
 SPECTACULAR_SETTINGS = {
     "TITLE": "StudyFlow Backend", "VERSION": "2.0.0",
     "DESCRIPTION": "StudyFlow demo: budgets, FX, funding, loans and policy-controlled simulated execution. All settlements are simulated.",
     "SERVE_INCLUDE_SCHEMA": False,
     "ENUM_NAME_OVERRIDES": {
-        "SupportedCurrencyEnum": ["THB","USD","EUR","CNY","GBP","JPY"],
-        "SettlementCurrencyEnum": ["THB"],
+        "SupportedCurrencyEnum": STUDYFLOW_SUPPORTED_CURRENCIES,
+        "SettlementCurrencyEnum": [STUDYFLOW_HOME_CURRENCY],
         "EventCertaintyEnum": ["confirmed","estimated","missing"],
         "FundingCertaintyEnum": ["confirmed","estimated"],
     },

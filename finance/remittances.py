@@ -21,7 +21,7 @@ def compare(owner, data, obj=None):
                 "quote_version": quote.quote_version,
                 "route_name": quote.route_name,
                 "source_currency": quote.source_currency,
-                "target_currency": "THB",
+                "target_currency": quote.target_currency,
                 "send_amount": str(data["amount"]),
                 "rate": str(quote.rate),
                 "sender_fee": str(quote.sender_fee),

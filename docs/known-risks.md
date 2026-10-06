@@ -8,11 +8,14 @@
 
 | ID | 风险 | 等级 | 现有缓解 | 状态 | 证据 |
 |---|---|---|---|---|---|
-| F1 | `DemoWallet.balance` 无不可变触发器，也无 `balance ≥ 0` 数据库约束；余额由 Python 读改写维护 | 高 | 账本 `DemoLedgerEntry` 不可变；写路径在事务内锁所有者用户行；`post_entry` 检查非负 | 部分缓解（W1 计划以分币种余额 + CHECK 约束取代） | `finance/workflow_models.py`、`finance/migrations/0004_immutable_records.py` |
+| F1 | 余额由 Python 读改写维护，钱包表本身没有不可变触发器 | 中 | 所有余额变动只经 `finance.wallets.post`（锁用户行和余额行）；数据库 CHECK 约束保证本币和外币余额 ≥ 0；分录和换汇记录不可变；测试覆盖"分录合计 = 余额"不变量及并发场景 | 已缓解 | `finance/wallets.py`、`auto_test/test_multicurrency*.py` |
 | F2 | 串行化依赖锁用户行而非钱包行，新写路径若遗漏用户锁会产生竞态 | 中 | `CommandView` 统一加锁；并发测试 | 部分缓解 | `finance/workflow_api.py`、`finance/test_concurrency.py` |
 | F3 | 全部资金操作为模拟，无真实银行、支付或汇款通道 | 中 | 响应与文档标注 simulated / is_mock | 开放（设计范围） | `08_Backend_Completion_Report.txt` |
-| F4 | 仅支持 THB 结算，外币只能通过手填报价换算 | 中 | 报价有效期 ≤30 天，过期拒绝 | 开放（W1–W3） | `finance/budget_services.py` |
-| F5 | 汇率均为手填或模拟，无市场参考 | 中 | `is_mock` 标记 | 开放（W2A） | `finance/workflow_models.py` |
+| F4 | 本币固定为 THB（借款核心只支持 THB）；外币只能作为钱包余额持有，并沿已配置的汇路换汇 | 低 | 启动时校验本币和币种精度 | 部分缓解（设计范围） | `config/settings.py`、`docs/multi-currency.md` |
+| F5 | 参考汇率为 ECB 每日价（Frankfurter），不是可成交的实时价；CI 使用固定汇率 | 中 | 响应中标注 `rate_source` 和 `rate_date`；超过 7 天的汇率拒绝生成报价；外部调用默认关闭 | 部分缓解 | `docs/fx-rates.md` |
+| F6 | 学生自填汇率的报价曾可用于换汇，从而凭空制造余额（W1 审查发现） | 高 | 换汇只接受服务端按汇路定价的报价；回归测试 `test_manual_quote_exploit_is_rejected` | 已缓解 | `finance/wallets.py` |
+| F7 | 运营人员办理资金到账时仍可引用学生的手填报价，到账金额取决于运营人员的核对 | 中 | 只有运营人员能办理；报价用过一次即失效；有审计 | 开放（W3 起汇入改走汇款订单） | `finance/execution_services.py` |
+| F8 | 本币换出的换汇以"已确认支出"事件写入状态，readiness 会把它列为已付义务；报价消耗会触发 readiness 重算 | 低 | 事件 id 带 `conversion:` 前缀，可区分 | 开放 | `finance/wallets.py` |
 
 ## 认证与权限
 

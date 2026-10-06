@@ -50,6 +50,8 @@ def main():
     if args.only:
         gates = [g for g in gates if g[0] in args.only]
     for name, cmd, cwd in gates:
+        # Some demo commands refuse to overwrite an existing report.
+        (OUT / f"{name}.json").unlink(missing_ok=True)
         started = time.monotonic()
         log = OUT / f"{name}.log"
         with log.open("w", encoding="utf-8") as handle:

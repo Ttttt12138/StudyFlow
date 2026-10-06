@@ -6,6 +6,7 @@ from datetime import date, timedelta
 from decimal import ROUND_HALF_UP, Decimal
 
 from finance.calculations import forecast
+from finance.money import home_currency
 
 ZERO = Decimal(0)
 CENT = Decimal(".01")
@@ -104,7 +105,7 @@ def item_issues(item, as_of):
         issues.append("EXPIRED_SOURCE:" + item["cost_id"])
     if item.get("paid") is None:
         issues.append("PAYMENT_STATUS_MISSING:" + item["cost_id"])
-    if item.get("currency") != "THB":
+    if item.get("currency") != home_currency():
         issues.append("FX_REQUIRED:" + item["cost_id"])
     return issues
 
@@ -148,7 +149,7 @@ def calculate(draft, opening, as_of=None):
         ):
             issues.append("CAMPUS_MISMATCH:" + item["cost_id"])
         values, periods = bounds(item), portions(item, draft["profile"])
-        if values is None or not periods or item.get("currency") != "THB":
+        if values is None or not periods or item.get("currency") != home_currency():
             issues.append("MISSING:" + item["cost_id"])
             continue
         if any(day is None for day, _ in periods) and not item.get("paid"):
@@ -176,7 +177,7 @@ def calculate(draft, opening, as_of=None):
         "gap": money(gap),
         "complete": not issues,
         "sufficient": not issues and gap == 0,
-        "currency": "THB",
+        "currency": home_currency(),
         "issues": sorted(set(issues)),
         "events": events,
         "assumptions": [

@@ -1,5 +1,6 @@
 from datetime import date
 from decimal import Decimal
+from finance.money import home_currency
 
 def forecast(snapshot, end_date, include_estimates=False):
     """THB-only exact arithmetic. Observed settlements follow ledger order; planned expenses precede planned income on the same date."""
@@ -40,7 +41,7 @@ def forecast(snapshot, end_date, include_estimates=False):
             **event, "balance_after": f"{balance:.2f}", "reserve_gap": f"{gap:.2f}",
         })
     return {
-        "currency": "THB", "end_date": end.isoformat(),
+        "currency": home_currency(), "end_date": end.isoformat(),
         "ending_balance": f"{balance:.2f}", "minimum_balance": f"{minimum:.2f}",
         "maximum_cash_shortfall": f"{max(Decimal('0'), -minimum):.2f}",
         "maximum_reserve_gap": f"{maximum_gap:.2f}", "first_gap_date": first_gap,

@@ -10,6 +10,9 @@ class VersionConflict(APIException):
     default_detail = "State version changed. Refresh and retry."
     default_code = "stale_version"
 
+# Event id prefixes written only by ledger postings.
+LEDGER_PREFIXES = ("loan:", "repayment:", "received:", "conversion:")
+
 def json_value(value):
     return json.loads(json.dumps(value, cls=DjangoJSONEncoder))
 
@@ -32,7 +35,7 @@ def save_state(owner, expected_version, snapshot):
     next_events = {event["id"]:event for event in candidate["events"]}
     protected = set(Payment.objects.filter(owner=owner,status__in=[
         "pending","unknown","settled","reconciled","reconciliation_exception"]).values_list("event_id",flat=True))
-    protected |= {key for key in previous_events if key.startswith(("loan:","repayment:","received:"))}
+    protected |= {key for key in previous_events if key.startswith(LEDGER_PREFIXES)}
     def comparable(event):
         if event is None: return None
         return {key:value for key,value in event.items()
@@ -44,7 +47,7 @@ def save_state(owner, expected_version, snapshot):
         require(event.get("settled_sequence") == previous_events.get(key, {}).get("settled_sequence"),
                 "Settlement sequence is controlled by the ledger.")
     for key in next_events:
-        if key.startswith(("loan:","repayment:","received:")):
+        if key.startswith(LEDGER_PREFIXES):
             require(key in previous_events, "Ledger event prefixes are reserved.")
     state = FinancialState.objects.create(
         owner=owner, version=expected_version + 1, snapshot=json_value(snapshot),

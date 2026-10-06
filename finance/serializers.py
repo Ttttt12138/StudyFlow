@@ -1,6 +1,7 @@
 from decimal import Decimal
 from collections.abc import Mapping
 from urllib.parse import urlsplit
+from django.conf import settings
 from rest_framework import serializers
 from .models import SourceDocument
 
@@ -24,6 +25,18 @@ class MoneyField(serializers.DecimalField):
             raise serializers.ValidationError("Use an exact decimal string for money.")
         return super().to_internal_value(data)
 
+class CurrencyAmountField(MoneyField):
+    """Any number of decimals, so services report AMOUNT_PRECISION_INVALID per currency."""
+    def __init__(self, **kwargs):
+        serializers.DecimalField.__init__(
+            self, max_digits=None, decimal_places=None, min_value=Decimal("0"), **kwargs)
+
+    def to_internal_value(self, data):
+        value = super().to_internal_value(data)
+        if abs(value) >= Decimal("1e14"):
+            raise serializers.ValidationError("Amount exceeds supported monetary precision.")
+        return value
+
 class EventSerializer(StrictInputMixin, serializers.Serializer):
     id = serializers.CharField(max_length=100)
     label = serializers.CharField(max_length=200)
@@ -42,7 +55,7 @@ class EventSerializer(StrictInputMixin, serializers.Serializer):
         return data
 
 class SnapshotSerializer(StrictInputMixin, serializers.Serializer):
-    currency = serializers.ChoiceField(choices=["THB"])
+    currency = serializers.ChoiceField(choices=[settings.STUDYFLOW_HOME_CURRENCY])
     as_of = serializers.DateField()
     opening_balance = MoneyField()
     reserve = MoneyField()

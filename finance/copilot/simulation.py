@@ -12,6 +12,7 @@ from finance.readiness.budget import bounds, money
 from finance.readiness.services import business_date, converted_draft
 from finance.workflow_common import owned, require
 from finance.workflow_models import FundingSource
+from finance.money import home_currency
 
 
 def patch_costs(draft, changes, now):
@@ -22,7 +23,7 @@ def patch_costs(draft, changes, now):
         require(item is not None and not item.get("paid"), "COST_NOT_EDITABLE")
         require(bounds(item) is not None, "COST_BASELINE_MISSING")
         require(
-            item["currency"] == "THB" and item.get("applicability") != "NOT_APPLICABLE",
+            item["currency"] == home_currency() and item.get("applicability") != "NOT_APPLICABLE",
             "COST_NOT_APPLICABLE",
         )
         require(
@@ -53,7 +54,7 @@ def support_events(owner, snapshot, changes, now):
             source = owned(FundingSource, owner, source_id)
             require(
                 source.kind in {"family", "family_support"}
-                and source.currency == "THB"
+                and source.currency == home_currency()
                 and not source.received
                 and not source.already_in_opening,
                 "SUPPORT_NOT_EDITABLE",
@@ -81,7 +82,7 @@ def include_support(owner, snapshot, now):
     for source in FundingSource.objects.filter(
         owner=owner,
         kind__in=["family", "family_support"],
-        currency="THB",
+        currency=home_currency(),
         received=False,
         already_in_opening=False,
         available_on__gte=now,
@@ -192,7 +193,7 @@ def evaluate(owner, semester, state, scenario):
             None,
         )
         require(
-            cost is None or cost["currency"] == "THB",
+            cost is None or cost["currency"] == home_currency(),
             "COST_OVERRIDE_REQUIRES_THB_BASELINE",
         )
         if cost and cost["period"] != "monthly":

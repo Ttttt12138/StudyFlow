@@ -10,6 +10,7 @@ from finance.workflow_models import FundingSource, SimulatedApplication
 
 from .budget import money
 from .services import business_date, converted_draft, save_run, versions
+from finance.money import home_currency
 
 
 def exact(value):
@@ -41,7 +42,7 @@ def apply_actions(draft, actions):
             "COST_ACTION_UNAVAILABLE",
         )
         require(
-            item["currency"] == "THB" and not item.get("conflict"),
+            item["currency"] == home_currency() and not item.get("conflict"),
             "COST_ACTION_UNAVAILABLE",
         )
         if action["kind"] == "reduce_spending":
@@ -269,7 +270,7 @@ def recommend(owner, semester, state, actions=None):
             owner=owner,
             received=False,
             already_in_opening=False,
-            currency="THB",
+            currency=home_currency(),
             loan__isnull=True,
         ),
         key=lambda source: (

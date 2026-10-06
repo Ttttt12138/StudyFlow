@@ -4,6 +4,8 @@ from . import budget_services as b
 from . import execution_services as e
 from . import workflow_models as m
 from . import lending_applications as lending
+from . import fx_rates, wallets
+from .wallet_api import BalancesView, CorridorListView, FxRateView
 from .models import FinancialState,CalculationRun,AuditEvent
 from .workflow_api import CommandView,ResourceView,ReadView
 
@@ -20,7 +22,10 @@ def command(route,name,serializer,handler,target=None,operator=False,namespace=N
         "idempotency_namespace":namespace or ("b-lending" if route.startswith("applications/") else None)})
     return path(route,view.as_view(),name=name)
 
-urlpatterns = []
+urlpatterns = [
+    command("fx-quotes/live/","LiveFxQuote",s.LiveQuoteInput,fx_rates.create_live_quote),
+    path("fx-rates/",FxRateView.as_view()),
+]
 for args in [
     ("fx-quotes",m.FXQuote,s.FXInput,b.create_fx),
     ("scenarios",m.BudgetScenario,s.ScenarioInput,b.create_scenario),
@@ -30,6 +35,7 @@ for args in [
     ("applications",m.SimulatedApplication,s.ApplicationInput,lending.create_application),
     ("beneficiaries",m.Beneficiary,s.BeneficiaryInput,e.create_beneficiary),
     ("payments",m.Payment,s.PaymentInput,e.create_payment),
+    ("conversions",m.CurrencyConversion,s.ConversionInput,wallets.convert_balance),
 ]: urlpatterns.extend(resource(*args))
 urlpatterns += [
     command("loans/compare/","LoanCompare",s.CompareInput,b.compare_loans),
@@ -38,6 +44,8 @@ urlpatterns += [
     path("disbursements/",ReadView.as_view(model=m.Disbursement)),
     path("disbursements/<uuid:pk>/",ReadView.as_view(model=m.Disbursement)),
     path("demo/wallets/",ReadView.as_view(model=m.DemoWallet)),
+    path("demo/wallets/balances/",BalancesView.as_view()),
+    path("corridors/",CorridorListView.as_view()),
     path("ledger/",ReadView.as_view(model=m.DemoLedgerEntry)),
     path("audit/",ReadView.as_view(model=AuditEvent)),
     path("state/history/",ReadView.as_view(model=FinancialState)),
