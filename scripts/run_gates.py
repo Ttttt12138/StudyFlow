@@ -36,6 +36,7 @@ DEMOS = [
     ("demo-readiness", ["demo_readiness", "--mode", "mock", "--runs", "3"]),
     ("demo-consumption", ["demo_consumption", "--runs", "3"]),
     ("demo-copilot", ["demo_copilot", "--mode", "mock", "--runs", "3"]),
+    ("eval-agent", ["evaluate_agent", "--mode", "mock", "--min-success", "1.0"]),
 ]
 
 

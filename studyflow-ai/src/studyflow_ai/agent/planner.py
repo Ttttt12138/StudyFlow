@@ -93,8 +93,8 @@ CURRENCY_WORDS = [  # longer tokens first so 美元 is not read as 元
     ("dollars", "USD"), ("dollar", "USD"), ("euros", "EUR"), ("euro", "EUR"),
     ("cny", "CNY"), ("thb", "THB"), ("usd", "USD"), ("eur", "EUR"), ("gbp", "GBP"), ("jpy", "JPY"),
 ]
-REMIT = ("汇款", "汇到", "汇给", "汇去", "转账", "交学费", "付学费", "支付", "send", "transfer",
-         "remit", "wire", "pay")
+# "汇率" is stripped before matching, so the bare verb 汇 is safe here.
+REMIT = ("汇", "转账", "交学费", "付学费", "支付", "send", "transfer", "remit", "wire", "pay")
 CONVERT = ("兑换", "换成", "换汇", "换", "convert", "exchange")
 RATE = ("汇率", "exchange rate", "rate")
 DATE = re.compile(r"(?<!\d)(20\d\d-\d\d-\d\d)(?!\d)")
