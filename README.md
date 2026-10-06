@@ -1,5 +1,7 @@
 # StudyFlow 工作区
 
+消费学习与资金执行扩展已加入：CSV 导入、消费分类、周期支出、预算校准、Financial Calendar / Briefing、家庭资助确认、模拟汇款比较和 readiness 学费对账。启动与前端契约见 [消费学习接入说明](docs/consumption.md)，完整 HTTP 演示使用 `manage.py demo_consumption --runs 3`。扫描件支持可选的 [Gemini 中英文 OCR](docs/gemini-ocr.md)，默认关闭，需服务端配置及逐文件同意，并保留人工转录；不包含真实银行、真实支付或前端应用。
+
 已新增入学预算与主动资金规划后端：PSU 模板、材料上传确认、学期预算、30–90 天预测、筹资组合和持久 worker。启用方式、API 顺序及真实模型演示见 [Readiness 接入说明](docs/readiness.md)。
 
 Django 是统一 B 后端，所有接口使用 `/api/v2/`。原 Django 借款引擎已由独立 B 项目的计算与状态规则替换；预算、换汇、支付和对账继续使用现有 Django 服务。C 以本地 Python 包接入，共用 Django 用户、钱包、账本和事务。
