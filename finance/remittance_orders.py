@@ -165,6 +165,9 @@ def adapter_event(actor, data, order):
     if order.status in SETTLED_BY[outcome]:
         return order_record(order)
     _check_version(order, data)
+    if _quote_expired(order):
+        _transition(order, "expire", actor, "Quote expired before submission")
+        return order_record(order)
     note = data.get("note", "")
     item = wallet(order.owner)
     if outcome == "delivered":
@@ -193,6 +196,9 @@ def reconcile(actor, data, order):
     if order.status == "RECONCILED":
         return order_record(order)
     _check_version(order, data)
+    if _quote_expired(order):
+        _transition(order, "expire", actor, "Quote expired before submission")
+        return order_record(order)
     require(order.status == "DELIVERED", "INVALID_TRANSITION")
     legs = {e.remittance_leg: e for e in DemoLedgerEntry.objects.filter(remittance_order=order)}
     require("debit" in legs and legs["debit"].amount == -order.send_amount, "LEDGER_DEBIT_MISSING")

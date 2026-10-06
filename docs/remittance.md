@@ -26,6 +26,13 @@ CREATED ──submit──▶ SUBMITTED ──dispatched──▶ IN_TRANSIT ─
 | `reconcile` | DELIVERED | RECONCILED | 学生 |
 | 过期 | CREATED 且报价已过期 | EXPIRED | 任何对该订单的命令触发 |
 
+补充规则：
+
+- **重放**：订单已处于某动作的目标状态或之后的状态时，该动作视为重放，直接返回当前订单，不检查 `expected_version`，也不再入账。例如对 DELIVERED 或 RECONCILED 的订单再报 `delivered`，或对已提交的订单再次 `submit`。
+- **报价占用**：报价一旦被订单占用（一对一），即使订单后来被取消或过期，也不能再用于其他订单、换汇或到账（`QUOTE_IN_USE`）。
+- **外币不写快照**：源币种和目标币种都不是本币时，资金变化不会写入本币状态快照。
+- **点差成本舍入**：`fx_margin_cost` 按源币种精度 ROUND_HALF_UP 舍入。
+
 不在表中的转换一律拒绝（`INVALID_TRANSITION`），终态为 CANCELLED、EXPIRED、REFUNDED、RECONCILED。每次转换都检查 `expected_version`（不符返回 409），版本加一，写入不可修改的 `RemittanceStatusEvent`（从、到、操作人、时间、备注），并记审计。重复发送已生效的同一结果（例如对 DELIVERED 再报 `delivered`）返回当前订单，不重复入账。
 
 ## 资金
