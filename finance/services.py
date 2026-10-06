@@ -31,7 +31,7 @@ def save_state(owner, expected_version, snapshot):
     previous_events = {event["id"]:event for event in current.snapshot["events"]} if current else {}
     next_events = {event["id"]:event for event in candidate["events"]}
     protected = set(Payment.objects.filter(owner=owner,status__in=[
-        "pending","unknown","settled","reconciled"]).values_list("event_id",flat=True))
+        "pending","unknown","settled","reconciled","reconciliation_exception"]).values_list("event_id",flat=True))
     protected |= {key for key in previous_events if key.startswith(("loan:","repayment:","received:"))}
     def comparable(event):
         if event is None: return None

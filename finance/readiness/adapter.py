@@ -13,7 +13,6 @@ from finance.workflow_common import current
 from finance.workflow_models import FundingSource as BSource
 from finance.workflow_models import SimulatedApplication
 
-from .budget import project
 from .models import CheckLease, ReadinessRun
 from .services import active, budget_result, business_date, converted_draft
 
@@ -87,8 +86,13 @@ class DjangoReadinessBackend:
         ):
             raise ValueError("State changed")
         result = budget_result(self.owner, semester, financial, now.date())
-        prediction = project(
-            financial.snapshot, converted_draft(self.owner, semester.draft), now.date()
+        from finance.consumption.projection import project_for
+
+        prediction = project_for(
+            self.owner,
+            financial.snapshot,
+            converted_draft(self.owner, semester.draft),
+            now.date(),
         )
         money = lambda value: MoneyValue(currency="THB", amount=value)
         return BudgetSnapshot(
@@ -300,6 +304,7 @@ class DjangoReadinessBackend:
             semester=semester,
             state_version=state.version,
             budget_version=semester.version,
+            analysis_version=semester.analysis_version,
             kind="check",
             result=lease.result,
         )
@@ -328,6 +333,8 @@ def run_check(job):
 
     backend = DjangoReadinessBackend(job.owner)
     semester, state = active(job.owner), current(job.owner)
+    if job.payload.get("analysis_version", 0) != semester.analysis_version:
+        return {"superseded": True}
     if (job.payload.get("state_version"), job.payload.get("budget_version")) != (
         state.version,
         semester.version,
@@ -338,9 +345,32 @@ def run_check(job):
     with transaction.atomic():
         get_user_model().objects.select_for_update().get(pk=job.owner_id)
         semester, state = active(job.owner), current(job.owner)
+        from .models import ReadinessJob
+
+        if not ReadinessJob.objects.filter(
+            pk=job.pk, lease_token=job.lease_token
+        ).exists():
+            return {"superseded": True}
+        if (
+            job.payload.get("state_version"),
+            job.payload.get("budget_version"),
+            job.payload.get("analysis_version", 0),
+        ) != (state.version, semester.version, semester.analysis_version):
+            return {"superseded": True}
+        if settings.STUDYFLOW_CONSUMPTION_ENABLED:
+            from finance.consumption.analysis import refresh
+            from finance.consumption.monitoring import update_monitoring
+
+            refresh(job.owner)
+            update_monitoring(job.owner)
         budget = budget_result(job.owner, semester, state, now.date())
-        prediction = project(
-            state.snapshot, converted_draft(job.owner, semester.draft), now.date()
+        from finance.consumption.projection import project_for
+
+        prediction = project_for(
+            job.owner,
+            state.snapshot,
+            converted_draft(job.owner, semester.draft),
+            now.date(),
         )
         update_risks(job.owner, semester, budget, prediction)
     ai = ai_client(backend)

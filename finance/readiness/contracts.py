@@ -15,6 +15,7 @@ class Profile(SemesterProfile):
 
 
 class Cost(CostItem):
+    locked: bool = False
     cost_id: str = Field(min_length=1, max_length=100, pattern=r"^[a-zA-Z0-9_-]+$")
     component: str | None = None
     observed_at: datetime | None = None

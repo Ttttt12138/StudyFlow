@@ -169,7 +169,7 @@ class Demo:
             "funding-sources",
             {
                 "economic_key": "family",
-                "kind": "family",
+                "kind": "external_savings",
                 "currency": "THB",
                 "amount": "20000.00",
                 "available_on": "2026-08-01",

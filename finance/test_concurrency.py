@@ -52,7 +52,7 @@ class PostgresConcurrencyTests(TransactionTestCase):
             return sorted(executor.map(work,range(2)))
 
     def test_concurrent_receipt_creates_one_credit(self):
-        source = self.command("funding-sources",{"economic_key":"parent","kind":"family","currency":"THB",
+        source = self.command("funding-sources",{"economic_key":"parent","kind":"external_savings","currency":"THB",
             "amount":"9000","available_on":"2026-10-02","certainty":"confirmed"})
         path = "funding-sources/"+source["id"]+"/receive"
         self.assertEqual(self.parallel([path,path],[{},{}],operator=True),[201,201])
@@ -70,7 +70,7 @@ class PostgresConcurrencyTests(TransactionTestCase):
         self.assertEqual(FinancialState.objects.filter(owner=self.user).count(),2)
 
     def test_concurrent_payments_cannot_overspend_holds(self):
-        source = self.command("funding-sources",{"economic_key":"promise","kind":"family","currency":"THB",
+        source = self.command("funding-sources",{"economic_key":"promise","kind":"external_savings","currency":"THB",
             "amount":"9000","available_on":"2026-10-03","certainty":"confirmed"})
         beneficiary = self.command("beneficiaries",{"name":"Mock school","destination_label":"MOCK"})
         self.command("beneficiaries/"+beneficiary["id"]+"/verify",{"verified":True},operator=True)
@@ -96,7 +96,7 @@ class PostgresConcurrencyTests(TransactionTestCase):
         self.assertEqual(state.snapshot["opening_balance"],"80000.00")
 
     def test_failed_audit_rolls_back_credit_and_version(self):
-        source = self.command("funding-sources",{"economic_key":"rollback","kind":"family","currency":"THB",
+        source = self.command("funding-sources",{"economic_key":"rollback","kind":"external_savings","currency":"THB",
             "amount":"9000","available_on":"2026-10-02","certainty":"confirmed"})
         self.client.force_authenticate(self.operator)
         with patch("finance.workflow_common.AuditEvent.objects.create",side_effect=RuntimeError("test fault")):

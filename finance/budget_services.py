@@ -93,6 +93,8 @@ def create_loan(actor,data,obj=None):
 
 def create_source(actor,data,obj=None):
     data = dict(data)
+    require(data['kind'] not in {'family', 'family_support'} or data['certainty'] != 'confirmed',
+            'FAMILY_SUPPORT_REQUIRES_SPONSOR_CONFIRMATION')
     loan_id = data.pop("loan_id",None)
     require(data["amount"] > 0,"Funding amount must be positive.")
     require(not FundingSource.objects.filter(owner=actor,economic_key=data["economic_key"]).exists(),

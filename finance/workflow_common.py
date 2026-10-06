@@ -28,7 +28,7 @@ def append_state(owner,snapshot,actor,reason):
 def record(obj):
     data = {}
     for field in obj._meta.fields:
-        if field.name in {"owner","id"}: continue
+        if field.name in {"owner","id", "token_digest", "token_generation"}: continue
         data[field.name] = getattr(obj,field.attname)
     if obj.__class__.__module__ in {"finance.workflow_models", "finance.lending_models"}:
         data["is_simulated"] = True

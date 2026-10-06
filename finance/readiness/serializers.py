@@ -11,12 +11,15 @@ class Input(StrictInputMixin, serializers.Serializer):
 
 
 class Versions(Input):
+    analysis_version = serializers.IntegerField(min_value=0, required=False)
     state_version = serializers.IntegerField(min_value=1)
     budget_version = serializers.IntegerField(min_value=1)
     semester_id = serializers.UUIDField()
 
 
 class SemesterInput(Input):
+    template_key = serializers.CharField(max_length=100, required=False)
+    template_version = serializers.IntegerField(min_value=1, required=False)
     room = serializers.ChoiceField(choices=["shared", "single"], default="shared")
     opening_balance = MoneyField(required=False)
     as_of = serializers.DateField(required=False)
@@ -53,6 +56,12 @@ class FundingInput(Versions):
 class UploadInput(Versions):
     kind = serializers.ChoiceField(choices=["text", "pdf"])
     file = serializers.FileField(max_length=150)
+
+
+class TemplateUpgradeInput(Versions):
+    template_key = serializers.CharField(max_length=100)
+    template_version = serializers.IntegerField(min_value=1)
+    confirm = serializers.BooleanField(default=False)
 
 
 class BeneficiaryUpdateInput(Input):

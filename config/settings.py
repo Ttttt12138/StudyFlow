@@ -88,3 +88,5 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 STUDYFLOW_READINESS_ENABLED = os.getenv("STUDYFLOW_READINESS_ENABLED", "false").lower() == "true"
 STUDYFLOW_AI_MODE = os.getenv("STUDYFLOW_MODE", "mock")
+
+STUDYFLOW_CONSUMPTION_ENABLED = os.getenv("STUDYFLOW_CONSUMPTION_ENABLED", "false").lower() == "true"

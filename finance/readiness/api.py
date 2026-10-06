@@ -5,7 +5,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from django.shortcuts import get_object_or_404
-from django.urls import path
+from django.urls import include, path
 from drf_spectacular.utils import extend_schema
 from rest_framework.exceptions import NotFound
 from rest_framework.parsers import FormParser, MultiPartParser
@@ -30,7 +30,7 @@ from .models import (
     Semester,
 )
 from .safety import update_beneficiary
-from .templates import get_template
+from .templates import list_templates, upgrade
 
 
 class Enabled:
@@ -43,7 +43,7 @@ class Enabled:
 class TemplatesView(Enabled, APIView):
     @extend_schema(responses=CommandResponse)
     def get(self, request):
-        return Response({"data": [get_template("shared"), get_template("single")]})
+        return Response({"data": list_templates()})
 
 
 class StateView(Enabled, APIView):
@@ -166,6 +166,11 @@ class ConfirmView(Enabled, CommandView):
     handler = staticmethod(imports.confirm)
 
 
+class TemplateUpgradeView(Enabled, CommandView):
+    serializer_class = s.TemplateUpgradeInput
+    handler = staticmethod(upgrade)
+
+
 class BeneficiaryUpdateView(Enabled, CommandView):
     serializer_class = s.BeneficiaryUpdateInput
     target_model = Beneficiary
@@ -173,8 +178,10 @@ class BeneficiaryUpdateView(Enabled, CommandView):
 
 
 urlpatterns = [
+    path("", include("finance.consumption.api")),
     path("beneficiaries/<uuid:pk>/update/", BeneficiaryUpdateView.as_view()),
     path("templates/", TemplatesView.as_view()),
+    path("templates/upgrade/", TemplateUpgradeView.as_view()),
     path("semesters/", SemesterView.as_view()),
     path("semesters/revise/", RevisionView.as_view()),
     path("semesters/<uuid:pk>/", OwnedReadView.as_view(model=Semester)),

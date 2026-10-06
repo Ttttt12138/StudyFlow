@@ -31,6 +31,7 @@
               "food",
               "transport",
               "communications",
+              "subscription",
               "utilities",
               "insurance",
               "visa",
@@ -238,6 +239,11 @@
             },
             "title": "Source Refs",
             "type": "array"
+          },
+          "locked": {
+            "default": false,
+            "title": "Locked",
+            "type": "boolean"
           },
           "observed_at": {
             "anyOf": [

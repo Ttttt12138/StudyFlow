@@ -43,7 +43,7 @@ class WorkflowTests(APITestCase):
         return self.post("funding-plans",{"scenario_id":scenario["id"],"allocations":allocations or []})
 
     def source(self,**kwargs):
-        data = {"economic_key":str(uuid4()),"kind":"family","currency":"THB","amount":"9000.00",
+        data = {"economic_key":str(uuid4()),"kind":"external_savings","currency":"THB","amount":"9000.00",
             "available_on":"2026-10-02","certainty":"confirmed","already_in_opening":False}
         data.update(kwargs)
         return self.post("funding-sources",data)
@@ -334,7 +334,7 @@ class WorkflowTests(APITestCase):
         quote = self.post("fx-quotes",{"source_currency":"JPY","rate":"0.24",
             "expires_at":(timezone.now()+timedelta(hours=1)).isoformat()})
         self.assertEqual(Decimal(quote["sender_fee"]),Decimal("0"))
-        self.post("funding-sources",{"economic_key":"fractional-yen","kind":"family",
+        self.post("funding-sources",{"economic_key":"fractional-yen","kind":"external_savings",
             "currency":"JPY","amount":"100.50","available_on":"2026-10-02","certainty":"confirmed"},code=400)
 
     def test_payment_rejects_wrong_verified_beneficiary(self):
