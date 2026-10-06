@@ -49,6 +49,8 @@ DATABASES = {"default": {
     "PORT": os.getenv("DB_PORT", "5432"),
     "CONN_MAX_AGE": 60,
     "OPTIONS": {"connect_timeout": 5},
+    # Parallel worktrees sharing one server need distinct test databases.
+    "TEST": {"NAME": os.getenv("DB_TEST_NAME") or None},
 }}
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
