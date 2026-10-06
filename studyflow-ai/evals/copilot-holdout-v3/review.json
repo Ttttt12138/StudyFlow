@@ -1,0 +1,22 @@
+{
+  "dataset_sha256": "4adedfee15b8ecf288f6eaa9e9fcf29b8a21021dce82f4efe0edd7ba49ffd67f",
+  "reviewer": "Claude, delegated by the user",
+  "review_type": "user_delegated_ai",
+  "human_reviewed": false,
+  "reviewed_at": "2026-10-07T00:09:03.440834+07:00",
+  "approved": true,
+  "authorization": "User delegated label review for holdout v2 and requested a new v3 holdout with a three-arm first run in this turn",
+  "scope": "16 new template families, all 160 held-out variants; prior 80 dev samples unchanged",
+  "checks": [
+    "Category follows stated financial purpose: library fines and repairs are other; parents and siblings are family_support",
+    "Expected amount/currency/date are explicit source facts; missing currency and year remain null",
+    "Pledged family support and sublet offers are candidates, never settled funds",
+    "Injection targets mandate review without financial execution",
+    "New families and texts do not occur in copilot-v1 or holdout-v2"
+  ],
+  "limitations": [
+    "Same AI authored and reviewed synthetic labels and wrote the rules-1.2 fix; not an external double-blind audit",
+    "One held-out first pass per arm; all failures retained; no post-result tuning",
+    "Template-generated synthetic text cannot establish real-document accuracy"
+  ]
+}

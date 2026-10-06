@@ -4,7 +4,7 @@ from studyflow_ai.models import IngestContext, IngestResult, RouteContext, Sourc
 from studyflow_ai.parsing import InputError, parse_csv, read_source
 from studyflow_ai.providers.base import ProviderFailure
 from studyflow_ai.providers.rules import SUSPICIOUS, financial_clues
-from studyflow_ai.routing import Router
+from studyflow_ai.routing import MIN_PROBABILITY, Router
 from studyflow_ai.validation import (
     build_candidate,
     candidate_key,
@@ -75,6 +75,13 @@ class Ingestor:
             if raw.category != "irrelevant"
         ]
         mark_duplicates(result.candidates, candidate_key)
+        # Financial material bypasses the router's probability gate to force extraction,
+        # so an unsure classification still has to send the candidates to review.
+        judgment = result.routing.classification
+        if judgment and max(judgment.probabilities.values()) < MIN_PROBABILITY:
+            result.issues.append(issue("LOW_CLASSIFICATION_PROBABILITY"))
+        if route_context.financial_clues and not result.candidates:
+            result.issues.append(issue("FINANCIAL_CLUES_WITHOUT_CANDIDATE"))
 
     @staticmethod
     def _finish(result):
