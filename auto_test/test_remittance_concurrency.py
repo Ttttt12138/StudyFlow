@@ -5,18 +5,22 @@ from threading import Barrier
 from unittest import skipUnless
 from uuid import uuid4
 
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import connection, connections
 from django.test import TransactionTestCase, override_settings
 from rest_framework.test import APIClient
 
-from auto_test.test_multicurrency import FX_SETTINGS, HOME, OPENING, model
+from auto_test.test_multicurrency import FX_SETTINGS, HOME, OPENING
 from auto_test.test_remittance import RemittanceHarness
 from finance.workflow_models import DemoLedgerEntry, FXQuote
 
 
 @skipUnless(connection.vendor == "postgresql", "Requires real PostgreSQL locking")
-@override_settings(**FX_SETTINGS)
+# The transition matrix submits dozens of orders in seconds; throttling itself is
+# covered by auto_test/test_policy.py, so these suites raise the step-up/money rates.
+@override_settings(**FX_SETTINGS, STUDYFLOW_THROTTLE_RATES={
+    **settings.STUDYFLOW_THROTTLE_RATES, "step_up": "1000/hour", "money": "1000/hour"})
 class RemittanceConcurrencyTests(RemittanceHarness, TransactionTestCase):
     username = "rm-parallel"
 

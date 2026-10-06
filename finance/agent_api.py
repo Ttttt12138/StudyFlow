@@ -8,9 +8,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from . import agent_runner
-from .agent_models import AgentSession
+from .agent_models import AgentPendingAction, AgentSession
 from .workflow_common import require
-from .workflow_serializers import CommandResponse, HistoryResponse, Input
+from .workflow_serializers import CommandResponse, EmptyInput, HistoryResponse, Input
+from .workflow_urls import command
 
 
 class SessionInput(Input):
@@ -62,4 +63,8 @@ class SessionDetailView(APIView):
 urlpatterns = [
     path("agent/sessions/", SessionCollectionView.as_view()),
     path("agent/sessions/<uuid:pk>/", SessionDetailView.as_view()),
+    command("agent/pending-actions/<uuid:pk>/confirm/", "AgentConfirm", EmptyInput,
+            agent_runner.confirm_pending, AgentPendingAction, policy="agent.confirm"),
+    command("agent/pending-actions/<uuid:pk>/reject/", "AgentReject", EmptyInput,
+            agent_runner.reject_pending, AgentPendingAction),
 ]

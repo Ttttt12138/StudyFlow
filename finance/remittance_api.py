@@ -56,7 +56,7 @@ urlpatterns = [
     command("remittance-orders/<uuid:pk>/cancel/", "RemittanceCancel", OrderVersionInput,
             orders.cancel, RemittanceOrder),
     command("remittance-orders/<uuid:pk>/submit/", "RemittanceSubmit", OrderVersionInput,
-            orders.submit, RemittanceOrder),
+            orders.submit, RemittanceOrder, policy="remittance.submit"),
     command("remittance-orders/<uuid:pk>/adapter-event/", "RemittanceAdapterEvent", OrderEventInput,
             orders.adapter_event, RemittanceOrder, True),
     command("remittance-orders/<uuid:pk>/reconcile/", "RemittanceReconcile", OrderVersionInput,

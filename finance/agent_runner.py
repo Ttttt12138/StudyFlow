@@ -133,3 +133,45 @@ def session_record(session):
     data["pending_actions"] = [record(p) for p in session.pending_actions.all()]
     data["is_simulated"] = True
     return data
+
+
+def _decide(pending, status, result=None):
+    pending.status, pending.decided_at = status, timezone.now()
+    pending.result = json_value(result or {})
+    pending.version += 1
+    pending.save()
+
+
+def confirm_pending(actor, data, pending):
+    """Run a proposed T2 action as the student, through the same services as the API."""
+    from . import remittance_orders, wallets
+    from .remittance_models import RemittanceOrder
+    from .workflow_common import audit, current
+
+    if pending.status == "CONFIRMED":
+        return record(pending)
+    require(pending.status == "PENDING", "PENDING_ACTION_CLOSED")
+    if pending.expires_at <= timezone.now():
+        _decide(pending, "EXPIRED")
+        return record(pending)
+    if pending.action == "remittance.submit":
+        order = RemittanceOrder.objects.get(owner=actor, pk=pending.target_id)
+        result = remittance_orders.submit(actor, {"expected_version": order.version}, order)
+    else:
+        result = wallets.convert_balance(actor, {
+            "quote_id": pending.target_id, "source_amount": pending.amount,
+            "state_version": current(actor).version}, None)
+    _decide(pending, "CONFIRMED", result)
+    audit(actor, actor, "agent.action_confirmed", pending, {"action": pending.action})
+    return record(pending)
+
+
+def reject_pending(actor, data, pending):
+    from .workflow_common import audit
+
+    if pending.status == "REJECTED":
+        return record(pending)
+    require(pending.status == "PENDING", "PENDING_ACTION_CLOSED")
+    _decide(pending, "REJECTED")
+    audit(actor, actor, "agent.action_rejected", pending, {"action": pending.action})
+    return record(pending)

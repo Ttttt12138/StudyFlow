@@ -25,6 +25,8 @@ from .credit import limit_multiplier
 from .lending_models import LoanAccount
 from .models import AuditEvent
 from .policy_models import ApprovalRequest, PolicyLimit, StepUpGrant
+from .remittance_models import RemittanceOrder
+from .agent_models import AgentPendingAction
 from .services import VersionConflict
 from .workflow_common import require
 from .workflow_models import DemoLedgerEntry, FXQuote, Payment
@@ -114,12 +116,36 @@ def _repayment_check(actor, target_id, amount, currency):
 
 
 # Every T2 action must be registered here and declared on its route (CommandView.policy).
+def _remittance_subject(actor, data, obj):
+    if obj.status != "CREATED" or obj.quote.expires_at <= timezone.now():
+        return None  # replay, invalid transition or expiry: nothing is debited
+    return Subject("remittance.submit", str(obj.pk), obj.send_amount, obj.send_currency)
+
+
+def _remittance_check(actor, target_id, amount, currency):
+    order = get_object_or_404(RemittanceOrder, owner=actor, pk=target_id)
+    require(currency == order.send_currency and amount == order.send_amount, "POLICY_SUBJECT_MISMATCH")
+
+
+def _pending_subject(actor, data, obj):
+    """An agent proposal is cleared exactly like the action it proposes."""
+    if obj.status != "PENDING" or obj.expires_at <= timezone.now():
+        return None  # the handler answers (expired, already decided)
+    if obj.action == "remittance.submit":
+        order = RemittanceOrder.objects.filter(owner=actor, pk=obj.target_id).first()
+        return _remittance_subject(actor, data, order) if order else None
+    if obj.action == "wallet.convert":
+        return _conversion_subject(actor, {"quote_id": obj.target_id, "source_amount": obj.amount}, None)
+    return None
+
+
 ACTIONS = {
     "payment.submit": Action(Payment, _payment_subject, _payment_check),
     "wallet.convert": Action(None, _conversion_subject, _conversion_check),
     "loan.repay": Action(LoanAccount, _repayment_subject, _repayment_check),
-    # W3 remittance orders: reserved until the route exists.
-    "remittance.submit": Action(None, None, None),
+    "remittance.submit": Action(RemittanceOrder, _remittance_subject, _remittance_check),
+    # Confirming an agent proposal; step-up is requested for the underlying action.
+    "agent.confirm": Action(AgentPendingAction, _pending_subject, None),
 }
 
 

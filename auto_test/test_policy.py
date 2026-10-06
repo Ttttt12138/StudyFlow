@@ -269,10 +269,15 @@ class StepUpTokenTests(PolicyHarness, APITestCase):
                                                  "target_id": payment["id"], "amount": "8999.99",
                                                  "currency": "THB"})
         self.assertEqual(wrong_amount.status_code, 400)
-        reserved = self.api("auth/step-up", {"password": PASSWORD, "action": "remittance.submit",
+        # agent.confirm is cleared through the underlying action, never requested directly.
+        reserved = self.api("auth/step-up", {"password": PASSWORD, "action": "agent.confirm",
                                              "target_id": str(uuid4()), "amount": "10.00", "currency": "THB"})
         self.assertEqual(reserved.status_code, 400)
         self.assertIn("ACTION_NOT_AVAILABLE", str(reserved.data))
+        missing_order = self.api("auth/step-up", {"password": PASSWORD, "action": "remittance.submit",
+                                                  "target_id": str(uuid4()), "amount": "10.00",
+                                                  "currency": "THB"})
+        self.assertEqual(missing_order.status_code, 404)
 
     def test_forged_tokens_are_invalid(self):
         good = self.step_up("wallet.convert", self.quote["id"], "1000.00", "CNY")
@@ -373,7 +378,8 @@ class ApprovalTests(PolicyHarness, APITestCase):
         self.ask("payment.submit", self.tuition["id"], "65000.00", currency="USD", code=400)
         self.ask("payment.submit", self.tuition["id"], "65000.00", user=self.other, code=404)
         self.ask("payment.submit", uuid4(), "65000.00", code=404)
-        self.ask("remittance.submit", uuid4(), "65000.00", code=400)
+        self.ask("remittance.submit", uuid4(), "65000.00", code=404)
+        self.ask("agent.confirm", uuid4(), "65000.00", code=400)
 
     def test_only_staff_decide_and_stale_version_conflicts(self):
         approval = self.ask("payment.submit", self.tuition["id"], "65000.00")

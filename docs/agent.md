@@ -68,7 +68,18 @@
 
 ## 待确认动作
 
-T2 工具调用会生成 `AgentPendingAction`：动作、目标、金额、币种、参数摘要，15 分钟内有效。学生调用 `confirm` 时须携带针对该动作的 step-up 令牌（超限时另需审批单）；确认时重新执行完整的权限检查，再调用与普通接口相同的服务函数。也可以 `reject`。
+T2 工具调用会生成 `AgentPendingAction`，记录动作、目标、金额、币种和参数摘要，15 分钟内有效。
+
+**确认（`confirm`）**
+- 路由声明的权限动作为 `agent.confirm`，按它所代理的底层动作清算：`remittance.submit` 的目标是订单 id，`wallet.convert` 的目标是报价 id。
+- 学生申请 step-up 令牌（以及超限时的审批单）时，填写底层动作和目标；`agent.confirm` 本身不能直接申请（`ACTION_NOT_AVAILABLE`）。
+- 确认时重新执行完整的权限检查和业务校验，再调用与普通接口相同的服务函数；失败时整笔回滚，待确认动作保持 PENDING。
+
+**其他状态**
+- 过期后确认：转为 EXPIRED，不扣款。
+- 拒绝（`reject`）：转为 REJECTED。
+- 已关闭的动作再确认：返回 `PENDING_ACTION_CLOSED`。
+- Agent 执行循环直接调用服务函数，不经过 HTTP，因此不存在 Agent 自己完成 step-up 的路径。
 
 ## 接口（`/api/v2/`）
 

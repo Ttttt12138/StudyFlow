@@ -14,15 +14,17 @@ from datetime import date, timedelta
 from decimal import ROUND_HALF_UP, Decimal, localcontext
 from uuid import uuid4
 
+from django.conf import settings
 from django.db import DatabaseError, IntegrityError, connection, transaction
 from django.test import override_settings
 from django.utils import timezone
 from rest_framework.test import APITestCase
 
 from auto_test.test_multicurrency import (
-    FX_SETTINGS, HOME, OPENING, RESERVE, D, MultiCurrencyHarness, items, model, price, unit,
+    FX_SETTINGS, HOME, OPENING, PASSWORD, RESERVE, D, MultiCurrencyHarness, items, model, price, unit,
 )
 from finance.models import AuditEvent
+from finance.policy_flow import client_flow, step_up_header
 from finance.workflow_models import DemoLedgerEntry, FXQuote
 
 TERMINAL = {"CANCELLED", "EXPIRED", "REFUNDED", "RECONCILED"}
@@ -85,6 +87,11 @@ class RemittanceHarness(MultiCurrencyHarness):
         path = "/api/v2/remittance-orders/" + order_id + "/submit/"
         body = {"expected_version": version}
         headers = {"HTTP_IDEMPOTENCY_KEY": key or str(uuid4())}
+        actor = user or self.user
+        if not actor.is_staff:
+            # T2 submit: the documented step-up (and approval when over the limit), via the API.
+            headers.update(step_up_header(client_flow(actor, PASSWORD, self.approver),
+                                          "remittance-orders/" + order_id + "/submit", body))
         if client is not None:
             response = client.post(path, body, format="json", **headers)
         else:
@@ -222,7 +229,10 @@ class RemittanceHarness(MultiCurrencyHarness):
                 "receive_amount": priced["target"]}
 
 
-@override_settings(**FX_SETTINGS)
+# The transition matrix submits dozens of orders in seconds; throttling itself is
+# covered by auto_test/test_policy.py, so these suites raise the step-up/money rates.
+@override_settings(**FX_SETTINGS, STUDYFLOW_THROTTLE_RATES={
+    **settings.STUDYFLOW_THROTTLE_RATES, "step_up": "1000/hour", "money": "1000/hour"})
 class RemittanceApiTests(RemittanceHarness, APITestCase):
     def setUp(self):
         self.bootstrap()
