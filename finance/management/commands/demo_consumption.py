@@ -14,6 +14,7 @@ from django.test import override_settings
 from django.utils import timezone
 
 from finance.management.commands.demo_readiness import Demo, QuietHandler, require
+from finance.policy_flow import scripted_throttling
 
 FIXTURES = Path(__file__).resolve().parents[3] / "examples" / "consumption" / "v1"
 
@@ -303,6 +304,7 @@ class ConsumptionDemo(Demo):
                 "before": before,
                 "support": support,
                 "payment": payment,
+                "policy": self.policy.log,
                 "after": after,
             }
         finally:
@@ -327,7 +329,8 @@ class Command(BaseCommand):
             STUDYFLOW_CONSUMPTION_ENABLED=True,
             STUDYFLOW_AI_MODE="mock",
             ALLOWED_HOSTS=["127.0.0.1", "localhost"],
-        ):
+        ), scripted_throttling() as throttling:
+            report["throttling"] = throttling
             server = make_server(
                 "127.0.0.1", 0, get_wsgi_application(), handler_class=QuietHandler
             )

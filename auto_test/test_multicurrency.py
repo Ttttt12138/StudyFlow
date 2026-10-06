@@ -14,6 +14,7 @@ from unittest.mock import patch
 from uuid import uuid4
 
 from django.apps import apps
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import DatabaseError, IntegrityError, connection, transaction
 from django.db.models import Sum
@@ -22,6 +23,8 @@ from django.utils import timezone
 from rest_framework.test import APITestCase
 
 from finance.models import AuditEvent, FinancialState
+from finance.policy_defaults import ensure_default_limits
+from finance.policy_flow import client_flow, step_up_header
 from finance.tests import BASE
 from finance.workflow_models import DemoLedgerEntry, DemoWallet, FundingSource, FXQuote
 
@@ -40,6 +43,7 @@ SEEDED_PAIRS = [("CNY", HOME), ("USD", HOME), ("EUR", HOME), (HOME, "CNY")]
 TIERS = ["economy", "express", "standard"]
 TEN_DP = Decimal("0.0000000001")
 FX_SETTINGS = {"STUDYFLOW_FX_LIVE": False, "STUDYFLOW_FX_CACHE_SECONDS": 900}
+PASSWORD = "mc-student-pass-1"
 
 
 def model(name):
@@ -88,11 +92,14 @@ class MultiCurrencyHarness:
     def bootstrap(self):
         from finance.corridors import ensure_default_corridors
         ensure_default_corridors()
+        ensure_default_limits()
         self._corridors = {}
         users = get_user_model().objects
-        self.user = users.create_user(username=self.username)
+        self.user = users.create_user(username=self.username, password=PASSWORD)
         self.operator = users.create_user(username=self.username + "-operator", is_staff=True)
-        self.other = users.create_user(username=self.username + "-other")
+        # Approves T3 requests; the operator verifies beneficiaries and so may not.
+        self.approver = users.create_user(username=self.username + "-approver", is_staff=True)
+        self.other = users.create_user(username=self.username + "-other", password=PASSWORD)
         self.client.force_authenticate(self.user)
         response = self.client.post(
             "/api/v2/state/", {"expected_version": 0, "snapshot": deepcopy(BASE)}, format="json"
@@ -103,11 +110,14 @@ class MultiCurrencyHarness:
     # -- HTTP helpers -------------------------------------------------------
     def call(self, path, data=None, operator=False, key=None, user=None):
         actor = user or (self.operator if operator else self.user)
+        # T2 routes need the documented step-up (and approval for T3) — performed via the API.
+        headers = {} if actor.is_staff else step_up_header(
+            client_flow(actor, PASSWORD, self.approver), path, data)
         self.client.force_authenticate(actor)
         try:
             return self.client.post(
                 "/api/v2/" + path.strip("/") + "/", data or {}, format="json",
-                HTTP_IDEMPOTENCY_KEY=key or str(uuid4()),
+                HTTP_IDEMPOTENCY_KEY=key or str(uuid4()), **headers,
             )
         finally:
             self.client.force_authenticate(self.user)
@@ -976,6 +986,9 @@ class MultiCurrencyApiTests(MultiCurrencyHarness, APITestCase):
         settled = DemoLedgerEntry.objects.get(payment_id=payment["id"])
         self.assertEqual((settled.currency, settled.amount), (HOME, Decimal("-9000.00")))
 
+    # Dozens of conversions in seconds exceed the 10/hour step-up budget meant for a real student.
+    @override_settings(STUDYFLOW_THROTTLE_RATES={**settings.STUDYFLOW_THROTTLE_RATES, "step_up": "200/hour",
+                                                 "money": "200/hour"})
     def test_randomized_sequence_keeps_invariants(self):
         rng = random.Random(20261007)
 

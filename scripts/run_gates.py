@@ -30,6 +30,8 @@ GATES = [
     ("c-tests", [PY, "-m", "pytest", "-q", "-p", "no:cacheprovider",
                  f"--basetemp={ROOT / 'output' / 'pytest-tmp'}"], C_DIR),
     ("migrate", [PY, "manage.py", "migrate", "--noinput"], ROOT),
+    # Throttle counters live in the database cache (docs/permissions.md §6).
+    ("cache-table", [PY, "manage.py", "createcachetable"], ROOT),
 ]
 DEMOS = [
     ("demo-bc", ["demo_bc", "--runs", "3"]),

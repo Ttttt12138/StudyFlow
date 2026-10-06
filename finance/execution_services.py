@@ -117,7 +117,8 @@ def submit(actor,data,obj):
     require(available(item)-obj.amount >= Decimal(state.snapshot["reserve"]),
         "Available settled demo funds cannot cover payment and reserve; promises are not balance.")
     obj.status = "pending"
-    obj.save(update_fields=["status"])
+    obj.submitted_at = timezone.now()
+    obj.save(update_fields=["status","submitted_at"])
     audit(obj.owner,actor,"payment.mock_submitted",obj,{"operation_key":str(obj.id)})
     return record(obj)
 

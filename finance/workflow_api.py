@@ -3,7 +3,7 @@ import json
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from django.shortcuts import get_object_or_404
-from drf_spectacular.utils import OpenApiParameter, extend_schema
+from drf_spectacular.utils import OpenApiParameter, extend_schema, extend_schema_view
 from rest_framework import generics
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.pagination import PageNumberPagination
@@ -14,12 +14,23 @@ from .workflow_models import IdempotencyRecord,DemoWallet
 from .workflow_common import require,record
 from .workflow_serializers import CommandResponse,HistoryResponse
 from .execution_services import available
+from .policy import enforce
+from .throttles import ScopedThrottle
 
 class CommandView(generics.GenericAPIView):
     handler = None
     target_model = None
     operator_only = False
     idempotency_namespace = None
+    # T2 action from finance.policy.ACTIONS; the route then needs step-up (and approval for T3).
+    policy = None
+    throttle_scope = "money"
+
+    def get_throttles(self):
+        throttles = super().get_throttles()
+        if self.policy and self.request.method == "POST":
+            throttles.append(ScopedThrottle())
+        return throttles
 
     def handle_exception(self, exc):
         response = super().handle_exception(exc)
@@ -60,11 +71,27 @@ class CommandView(generics.GenericAPIView):
         if previous:
             require(previous.request_hash == request_hash,"Idempotency key was used with a different request.")
             return Response(previous.response)
+        clearance = enforce(request,self.policy,request.user,data,obj) if self.policy else None
         result = self.handler(request.user,data,obj)
+        if clearance: clearance.consume()
         payload = {"data":result}
         IdempotencyRecord.objects.create(owner=request.user,scope=scope,key=key,
             request_hash=request_hash,response=json_value(payload))
         return Response(payload,status=201)
+
+STEP_UP_PARAMETERS = [
+    OpenApiParameter(name="Idempotency-Key", location=OpenApiParameter.HEADER, required=True,
+        type=str, description="Unique action key; reuse the same key and body when retrying."),
+    OpenApiParameter(name="X-Step-Up-Token", location=OpenApiParameter.HEADER, required=False,
+        type=str, description="T2 step-up token from POST auth/step-up/ (docs/permissions.md); "
+        "T3 also needs an approved approval. Denials are 403 with detail and policy."),
+]
+
+def protected(view):
+    """Document the step-up header on routes that declare a T2 policy."""
+    if view.policy:
+        view = extend_schema_view(post=extend_schema(parameters=STEP_UP_PARAMETERS))(view)
+    return view
 
 class ReadView(APIView):
     model = None

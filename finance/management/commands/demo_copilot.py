@@ -12,6 +12,7 @@ from django.core.wsgi import get_wsgi_application
 from django.test import override_settings
 
 from finance.management.commands.demo_readiness import Demo, QuietHandler, require
+from finance.policy_flow import scripted_throttling
 from finance.readiness.models import ReadinessJob
 
 
@@ -33,7 +34,7 @@ class CopilotDemo(Demo):
             {
                 "route": route,
                 "status": "DONE",
-                "actor": "operator" if operator else "student",
+                "actor": kwargs.get("role") or ("operator" if operator else "student"),
                 "record_id": result.get("id") if isinstance(result, dict) else None,
                 "versions": {
                     k: result[k]
@@ -208,6 +209,7 @@ class CopilotDemo(Demo):
             "loan": loan,
             "planning": checked,
             "payment": payment,
+            "policy": self.policy.log,
             "after_payment_check": after,
             "forecast": forecast,
         }
@@ -266,7 +268,8 @@ class Command(BaseCommand):
             STUDYFLOW_CONSUMPTION_ENABLED=False,
             STUDYFLOW_AI_MODE=options["mode"],
             ALLOWED_HOSTS=["127.0.0.1", "localhost"],
-        ):
+        ), scripted_throttling() as throttling:
+            report["throttling"] = throttling
             server = make_server(
                 "127.0.0.1", 0, get_wsgi_application(), handler_class=QuietHandler
             )

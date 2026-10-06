@@ -11,7 +11,8 @@ from django.db.migrations.executor import MigrationExecutor
 from django.test import TransactionTestCase, override_settings
 from rest_framework.test import APIClient
 
-from auto_test.test_multicurrency import FX_SETTINGS, HOME, MultiCurrencyHarness, model
+from auto_test.test_multicurrency import FX_SETTINGS, HOME, PASSWORD, MultiCurrencyHarness, model
+from finance.policy_flow import client_flow, step_up_header
 from finance.workflow_models import FXQuote, IdempotencyRecord
 
 BEFORE = ("finance", "0014_copilot_workflows")
@@ -33,6 +34,10 @@ class MultiCurrencyConcurrencyTests(MultiCurrencyHarness, TransactionTestCase):
         keys = keys or [str(uuid4()) for _ in bodies]
         barrier = Barrier(len(bodies))
         actor_id = (actor or self.user).pk
+        # Step-up (and T3 approval) is done up front so the race itself is between the commands.
+        headers = [{} if (actor or self.user).is_staff else step_up_header(
+            client_flow(actor or self.user, PASSWORD, self.approver), paths[i], bodies[i])
+            for i in range(len(bodies))]
 
         def work(index):
             try:
@@ -40,7 +45,7 @@ class MultiCurrencyConcurrencyTests(MultiCurrencyHarness, TransactionTestCase):
                 client.force_authenticate(get_user_model().objects.get(pk=actor_id))
                 barrier.wait(timeout=10)
                 response = client.post("/api/v2/" + paths[index] + "/", bodies[index], format="json",
-                                       HTTP_IDEMPOTENCY_KEY=keys[index])
+                                       HTTP_IDEMPOTENCY_KEY=keys[index], **headers[index])
                 return response.status_code, response.data
             finally:
                 connections.close_all()

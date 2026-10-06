@@ -26,14 +26,17 @@ Copy-Item .env.example .env  # 仅首次创建；已有 .env 时保留原配置
 # 编辑 .env，设置随机 DJANGO_SECRET_KEY；示例 DB_PORT=55433 对应下方 Compose。
 docker compose up -d --wait db
 studyFlow/Scripts/python.exe manage.py migrate
+studyFlow/Scripts/python.exe manage.py createcachetable  # 限流计数表 studyflow_cache
 studyFlow/Scripts/python.exe manage.py runserver 127.0.0.1:8000 --noreload
 ```
 
+动钱的接口（付款提交、换汇、还款）需要 step-up 二次验证，超出按币种限额时还需第二名运营人员审批；接口限流计数存放在数据库缓存表中，部署时同样要执行 `createcachetable`。生产环境设置 `DJANGO_SECURE=true` 启用 HTTPS、HSTS 和安全 Cookie。详见 [权限分级、限额与生产加固](docs/permissions.md)。
+
 推荐使用 `studyFlow/Scripts/python.exe`；启动脚本也兼容已安装依赖的 `.venv` 环境。根 Compose 使用独立 `studyflow-django` 服务、55433 端口和命名卷，不依赖旧 B 的 55432 端口。原 FastAPI 后端与团队设计文件可保留为本地参考，不属于本次集成提交。
 
-`/health/` 为公开就绪检查；`/api/docs/` 和 `/api/schema/` 需要登录。认证使用 `Authorization: Token ...` 或 Django session；session 写请求需要 CSRF。工作流写接口需要 `Idempotency-Key`。
+`/health/` 为公开就绪检查；`/api/docs/` 和 `/api/schema/` 需要登录。认证使用 `Authorization: Token ...` 或 Django session；session 写请求需要 CSRF。Token 可用 `POST /api/v2/auth/token/`（用户名和密码，有限流）获取。工作流写接口需要 `Idempotency-Key`。
 
-`manage.py seed_demo` 可创建初始示例及本地 `.demo-credentials.json`，不会覆盖已有用户；该文件不得提交。`scripts/start-postgres.ps1` 和 `scripts/start-backend.ps1` 可复用已配置环境。
+`manage.py seed_demo` 可创建学生、运营和审批运营三个示例用户及本地 `.demo-credentials.json`，不会覆盖已有用户；该文件不得提交。`scripts/start-postgres.ps1` 和 `scripts/start-backend.ps1` 可复用已配置环境。
 
 ## 测试与 B/C 联调
 
@@ -50,7 +53,7 @@ studyFlow/Scripts/python.exe manage.py demo_bc --runs 3 --output output/django-b
 
 测试角色需有建测试库权限，或由管理员预建测试库后使用 `--keepdb`。SQLite 仅用于局部轻量检查，不能证明 PostgreSQL 精度、锁和触发器行为。
 
-`demo_bc` 每轮创建新模拟身份，使用真实 Token 认证、Django HTTP 路由和 PostgreSQL，执行缺资料复核、补齐批准、幂等放款、模拟补充资金、12 期还款与结清。C 使用明确的 mock 模式；报告不输出令牌。调用通过 Django APIClient 在进程内完成，不是浏览器或外部网络端到端验收。
+`demo_bc` 每轮创建新模拟身份，使用真实 Token 认证、Django HTTP 路由和 PostgreSQL，执行缺资料复核、补齐批准、幂等放款、模拟补充资金、12 期还款与结清。每期还款都先经 `auth/step-up/` 重新输入密码；由于 12 个月的还款在几秒内完成，演示把 step-up 限流临时调到 30 次/小时并在报告 `throttling` 字段中注明，各演示命令的限流计数按次隔离。C 使用明确的 mock 模式；报告不输出令牌。调用通过 Django APIClient 在进程内完成，不是浏览器或外部网络端到端验收。
 
 本轮结果见 [Django 与 B/C 验证记录](docs/verification-django-b-20261005.md)。
 
