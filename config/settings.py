@@ -24,6 +24,7 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -87,6 +88,8 @@ for _scope, _rate in STUDYFLOW_THROTTLE_RATES.items():
 REST_FRAMEWORK["DEFAULT_THROTTLE_RATES"] = STUDYFLOW_THROTTLE_RATES
 # Anonymous throttles key on the client IP. DRF trusts X-Forwarded-For when NUM_PROXIES is
 # unset, which lets clients pick their own key; count only the configured trusted proxies.
+# Stable error codes stay in `detail`; `message` is localized from Accept-Language.
+REST_FRAMEWORK["EXCEPTION_HANDLER"] = "finance.i18n.exception_handler"
 REST_FRAMEWORK["NUM_PROXIES"] = int(os.getenv("DJANGO_NUM_PROXIES", "0"))
 # Throttle counters must be shared by all workers; create the table with `manage.py createcachetable`.
 CACHES = {"default": {
@@ -129,7 +132,9 @@ SPECTACULAR_SETTINGS = {
 CORS_ALLOWED_ORIGINS = [
     x for x in os.getenv("CORS_ALLOWED_ORIGINS", "").split(",") if x
 ]
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "en"
+LANGUAGES = [("en", "English"), ("zh-hans", "简体中文")]
+LOCALE_PATHS = [BASE_DIR / "locale"]
 TIME_ZONE = "Asia/Bangkok"
 USE_I18N = True
 USE_TZ = True

@@ -82,7 +82,7 @@ Agent（W4）发起的调用最高 T1；T2 及以上只能生成待确认动作�
   "limits": {"per_transaction": "50000.00", "daily": "100000.00", "monthly": "300000.00"},
   "usage": {"daily": "0.00", "monthly": "0.00"}, "requires": ["step_up"]}}
 ```
-`detail` 取值：`STEP_UP_REQUIRED`、`STEP_UP_INVALID`（令牌过期、伪造、已用或与请求不符）、`APPROVAL_REQUIRED`（T3，`requires` 含 `approval`）、`AGENT_TIER_EXCEEDED`。`limits` 是乘以信用系数后的生效限额，该币种没有启用的限额时为 `null`；`usage` 不含本次金额。
+按[多语言](i18n.md)约定，响应另含 `code`（同 `detail`）和本地化的 `message`。`detail` 取值：`STEP_UP_REQUIRED`、`STEP_UP_INVALID`（令牌过期、伪造、已用或与请求不符）、`APPROVAL_REQUIRED`（T3，`requires` 含 `approval`）、`AGENT_TIER_EXCEEDED`。`limits` 是乘以信用系数后的生效限额，该币种没有启用的限额时为 `null`；`usage` 不含本次金额。
 
 检查顺序：Agent 调用 → 携带的令牌无效 → T3 缺少审批 → 未携带令牌。T3 动作先拿到审批再申请 5 分钟的令牌，所以缺审批时先返回 `APPROVAL_REQUIRED`。
 

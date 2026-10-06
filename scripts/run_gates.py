@@ -21,6 +21,8 @@ GATES = [
     # Archives holdout-pinned files that changed; fails if a pinned version is unrecoverable.
     ("holdout-freeze", [PY, "scripts/freeze_holdout_code.py"], ROOT),
     ("check", [PY, "manage.py", "check"], ROOT),
+    # Message catalogs match the code, are fully translated and compiled (docs/i18n.md).
+    ("i18n", [PY, "scripts/i18n_messages.py", "check"], ROOT),
     ("migrations", [PY, "manage.py", "makemigrations", "--check", "--dry-run"], ROOT),
     ("django-tests", [PY, "manage.py", "test", "finance", "auto_test", "--noinput", "--keepdb"], ROOT),
     ("openapi", [PY, "manage.py", "spectacular", "--validate", "--fail-on-warn",

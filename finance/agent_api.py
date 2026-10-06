@@ -16,7 +16,7 @@ from .workflow_urls import command
 
 class SessionInput(Input):
     goal = s.CharField(max_length=2000)
-    locale = s.ChoiceField(choices=["zh", "en"], default="zh")
+    locale = s.ChoiceField(choices=["zh", "en"], required=False)
 
 
 class SessionCollectionView(APIView):
@@ -34,6 +34,9 @@ class SessionCollectionView(APIView):
         require(1 <= len(key) <= 100, "Idempotency-Key header (1-100 characters) is required.")
         data = SessionInput(data=request.data)
         data.is_valid(raise_exception=True)
+        # Without an explicit locale, answer in the request's negotiated language.
+        data.validated_data.setdefault(
+            "locale", "zh" if getattr(request, "LANGUAGE_CODE", "").startswith("zh") else "en")
         existing = AgentSession.objects.filter(owner=request.user, idempotency_key=key).first()
         if existing is None:
             try:

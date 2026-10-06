@@ -100,7 +100,11 @@ class TierMatrixTests(PolicyHarness, APITestCase):
         payment = self.payment("rent")
         response = self.raw("payments/" + payment["id"] + "/submit")
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.data, {"detail": "STEP_UP_REQUIRED", "policy": {
+        body = dict(response.data)
+        # docs/i18n.md: every error also carries `code` and a localized `message`.
+        self.assertEqual(body.pop("code"), "STEP_UP_REQUIRED")
+        self.assertTrue(body.pop("message"))
+        self.assertEqual(body, {"detail": "STEP_UP_REQUIRED", "policy": {
             "action": "payment.submit", "tier": "T2", "target_id": payment["id"], "amount": "9000.00",
             "currency": "THB", "limits": THB_LIMITS, "usage": {"daily": "0.00", "monthly": "0.00"},
             "requires": ["step_up"]}})
