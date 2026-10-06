@@ -170,6 +170,7 @@ class Payment(OwnedRecord):
     due_on = models.DateField()
     status = models.CharField(max_length=30, default="draft")
     authorized_until = models.DateTimeField(null=True)
+    submitted_at = models.DateTimeField(null=True, blank=True)
     receipt = models.JSONField(null=True)
     class Meta:
         constraints = [models.CheckConstraint(condition=(Q(plan__isnull=False, readiness_plan__isnull=True) | Q(plan__isnull=True, readiness_plan__isnull=False)), name='payment_exactly_one_plan'), models.UniqueConstraint(
