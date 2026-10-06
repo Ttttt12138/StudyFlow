@@ -13,8 +13,16 @@ from .models import ImportMaterial, InvoiceIdentity, ReadinessJob
 from .services import business_date, normalize_draft, persist_revision, versions
 
 
-def material_record(material):
-    job = ReadinessJob.objects.filter(key="import:" + str(material.id)).first()
+def material_record(material, *, include_ocr_text=False):
+    job = (
+        ReadinessJob.objects.filter(payload__material_id=str(material.id))
+        .order_by("-created_at")
+        .first()
+    )
+    processing = deepcopy(material.processing)
+    if not include_ocr_text:
+        for page in processing.get("ocr", {}).get("pages", []):
+            page.pop("text", None)
     return {
         "id": str(material.id),
         "semester_id": str(material.semester_id),
@@ -27,14 +35,17 @@ def material_record(material):
         "result": material.result,
         "state_version": material.state_version,
         "budget_version": material.budget_version,
+        "processing": processing,
     }
 
 
 def upload(owner, data, content):
     from .jobs import enqueue
+    from .ocr import consent_record
 
     semester, state = versions(owner, data)
     require(0 < len(content) <= 5 * 1024 * 1024, "FILE_SIZE_LIMIT")
+    validate_upload(data["kind"], content)
     fingerprint = hashlib.sha256(content).hexdigest()
     material, created = ImportMaterial.objects.get_or_create(
         semester=semester,
@@ -45,6 +56,7 @@ def upload(owner, data, content):
             "content": content,
             "state_version": state.version,
             "budget_version": semester.version,
+            "processing": consent_record(owner, data),
         },
     )
     if created:
@@ -54,51 +66,111 @@ def upload(owner, data, content):
             "import:" + str(material.id),
             {"material_id": str(material.id)},
         )
-        audit(owner, owner, "readiness.material_uploaded", material)
+        audit(
+            owner,
+            owner,
+            "readiness.material_uploaded",
+            material,
+            {"consent": material.processing["consent"], "sha256": fingerprint},
+        )
     return material_record(material)
 
 
-def extract(material):
-    from studyflow_ai.readiness.models import ExtractionContext, MaterialSource
+def validate_upload(kind, content):
+    from studyflow_ai.document_validation import prepare_document
+    from studyflow_ai.parsing import InputError
+
+    if kind != "text":
+        try:
+            prepare_document(kind, content)
+        except InputError as exc:
+            require(False, exc.code)
+
+
+def extract(material, job):
+    from studyflow_ai.readiness.models import ExtractionContext
 
     from .adapter import ai_client
 
-    ai = ai_client()
-    try:
+    with tempfile.TemporaryDirectory(prefix="studyflow-material-") as folder:
+        source = material_source(material, Path(folder) / "material.pdf", job)
         context = ExtractionContext(
             reference_date=business_date(material.owner),
             student_id=str(material.owner_id),
+            language="zh" if material.processing.get("language") == "zh" else "en",
         )
-        if material.kind == "text":
-            source = MaterialSource(
-                source_id=str(material.id),
-                kind="text",
-                text=bytes(material.content).decode("utf-8-sig"),
-            )
+        ai = ai_client()
+        try:
             return ai.extract_semester_material(source, context)
-        with tempfile.TemporaryDirectory(prefix="studyflow-material-") as folder:
-            path = Path(folder) / "material.pdf"
-            path.write_bytes(bytes(material.content))
-            source = MaterialSource(
-                source_id=str(material.id), kind="pdf", path=str(path)
-            )
-            return ai.extract_semester_material(source, context)
-    finally:
-        ai.close()
+        finally:
+            ai.close()
+
+
+def material_source(material, path, job):
+    from studyflow_ai.document_text import TextLayerExtractor
+    from studyflow_ai.parsing import InputError
+    from studyflow_ai.readiness.models import MaterialSource
+
+    if material.kind == "text" or material.result.get("manual_transcription"):
+        text = material.result.get("manual_transcription") or bytes(
+            material.content
+        ).decode("utf-8-sig")
+        return MaterialSource(source_id=str(material.id), kind="text", text=text)
+    path.write_bytes(bytes(material.content))
+    try:
+        TextLayerExtractor().extract(material.kind, str(path))
+    except InputError as exc:
+        if exc.code != "OCR_NOT_CONFIGURED":
+            raise
+        from .ocr import recognize
+
+        result = recognize(material, job)
+        return MaterialSource(source_id=str(material.id), kind="text", text=result.text)
+    return MaterialSource(source_id=str(material.id), kind="pdf", path=str(path))
 
 
 def process_material(job):
+    from studyflow_ai.parsing import InputError
+
     material = owned(ImportMaterial, job.owner, job.payload["material_id"])
-    if material.status == "COMMITTED":
+    if material.status != "QUEUED":
         return material_record(material)
     try:
-        result = extract(material)
+        result = extract(material, job)
+    except InputError as exc:
+        with transaction.atomic():
+            locked = ReadinessJob.objects.select_for_update().get(pk=job.pk)
+            if locked.lease_token != job.lease_token:
+                return {"stale": True}
+            ImportMaterial.objects.filter(pk=material.pk).exclude(
+                status="COMMITTED"
+            ).update(
+                status="NEEDS_MANUAL_INPUT"
+                if exc.code.startswith("OCR_")
+                else "REJECTED",
+                result={"issues": [{"code": exc.code}]},
+            )
+        return {
+            "status": "NEEDS_MANUAL_INPUT"
+            if exc.code.startswith("OCR_")
+            else "REJECTED",
+            "error_code": exc.code,
+        }
     except UnicodeDecodeError:
         ImportMaterial.objects.filter(pk=material.pk).update(
             status="REJECTED", result={"issues": [{"code": "INVALID_UTF8"}]}
         )
         return {"status": "REJECTED"}
     payload = result.model_dump(mode="json")
+    if material.result.get("manual_transcription"):
+        payload["source_type"] = "user_transcription"
+        payload["original_sha256"] = material.sha256
+    elif material.processing.get("ocr"):
+        payload["source_type"] = "gemini_ocr"
+        payload["original_sha256"] = material.sha256
+        payload["requires_review"] = True
+        if any(p["uncertain"] for p in material.processing["ocr"]["pages"]):
+            payload["issues"].append({"code": "OCR_UNCERTAIN_TEXT"})
     from .merging import propose
 
     payload["proposed_draft"], payload["merge_conflicts"] = propose(
@@ -219,3 +291,27 @@ def confirm(owner, data, material):
     material.confirmation = json_value(material.confirmation)
     material.save(update_fields=["status", "confirmation"])
     return {**material_record(material), "semester": result}
+
+
+def transcribe(owner, data, material):
+    from .jobs import enqueue
+
+    semester, _state = versions(owner, data)
+    require(material.semester_id == semester.id, "IMPORT_SEMESTER_MISMATCH")
+    require(material.status == "NEEDS_MANUAL_INPUT", "MANUAL_INPUT_NOT_REQUESTED")
+    material.result = {
+        "manual_transcription": data["text"],
+        "source_type": "user_transcription",
+        "original_sha256": material.sha256,
+    }
+    material.processing.pop("ocr", None)
+    material.status = "QUEUED"
+    material.save(update_fields=["result", "status", "processing"])
+    enqueue(
+        owner,
+        "import",
+        "transcription:" + str(material.id),
+        {"material_id": str(material.id)},
+    )
+    audit(owner, owner, "readiness.manual_transcription", material)
+    return material_record(material)

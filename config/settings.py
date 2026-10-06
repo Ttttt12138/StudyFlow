@@ -2,8 +2,11 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 from django.core.exceptions import ImproperlyConfigured
+from studyflow_ai.ocr_config import OcrSettings
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+# Capture C configuration before loading B's .env so B cannot shadow C's API settings.
+_C_OCR = OcrSettings.from_env(BASE_DIR / "studyflow-ai" / ".env")
 load_dotenv(BASE_DIR / ".env")
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "")
 if not SECRET_KEY:
@@ -88,5 +91,14 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 STUDYFLOW_READINESS_ENABLED = os.getenv("STUDYFLOW_READINESS_ENABLED", "false").lower() == "true"
 STUDYFLOW_AI_MODE = os.getenv("STUDYFLOW_MODE", "mock")
-
 STUDYFLOW_CONSUMPTION_ENABLED = os.getenv("STUDYFLOW_CONSUMPTION_ENABLED", "false").lower() == "true"
+
+# Django consumes C's configuration; OCR API settings belong to studyflow-ai/.env.
+STUDYFLOW_OCR_ENABLED = _C_OCR.enabled
+STUDYFLOW_OCR_PAID_SERVICE_CONFIRMED = _C_OCR.paid_service_confirmed
+STUDYFLOW_OCR_ADULT_ONLY_CONFIRMED = _C_OCR.adult_only_confirmed
+STUDYFLOW_OCR_MODEL = _C_OCR.model
+GEMINI_API_KEY = _C_OCR.api_key
+STUDYFLOW_OCR_TIMEOUT = _C_OCR.timeout
+STUDYFLOW_DOCUMENT_RETENTION_DAYS = _C_OCR.retention_days
+STUDYFLOW_OCR_REQUESTS_PER_HOUR = _C_OCR.requests_per_hour

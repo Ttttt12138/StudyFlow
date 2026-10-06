@@ -1,3 +1,4 @@
+import io
 from copy import deepcopy
 from datetime import timedelta
 from decimal import Decimal
@@ -7,6 +8,7 @@ from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import override_settings
 from django.utils import timezone
+from PIL import Image
 from rest_framework.test import APITestCase
 
 from finance.consumption.analysis import analyze, refresh
@@ -279,10 +281,52 @@ class ConsumptionApiTests(APITestCase):
         self.assertEqual(result["recommended_quote_id"], quotes[0])
         self.assertEqual(result["routes"][0]["net_received"], "34650.00")
 
-    def test_templates_are_versioned(self):
+    def test_templates_are_versioned_and_image_requires_manual_input(self):
         templates = self.client.get("/api/v2/readiness/templates/").data["data"]
         self.assertEqual(len(templates), 3)
         self.assertTrue(any(t["synthetic"] for t in templates))
+        image = io.BytesIO()
+        Image.new("RGB", (20, 20), "white").save(image, format="PNG")
+        response = self.client.post(
+            "/api/v2/readiness/imports/",
+            {
+                **self.context(),
+                "kind": "image",
+                "file": SimpleUploadedFile("scan.png", image.getvalue()),
+            },
+            format="multipart",
+            HTTP_IDEMPOTENCY_KEY=uuid4().hex,
+        )
+        self.assertEqual(response.status_code, 202, response.data)
+        from finance.readiness.imports import process_material
+        from finance.readiness.models import ImportMaterial, ReadinessJob
+
+        material = ImportMaterial.objects.get(pk=response.data["data"]["id"])
+        job = ReadinessJob.objects.get(kind="import", owner=self.user)
+        job.lease_token = uuid4()
+        job.save()
+        result = process_material(job)
+        self.assertEqual(result["status"], "NEEDS_MANUAL_INPUT")
+        material.refresh_from_db()
+        self.assertEqual(material.status, "NEEDS_MANUAL_INPUT")
+        self.post(
+            "readiness/imports/" + str(material.id) + "/transcribe",
+            {
+                **self.context(),
+                "text": "Synthetic tuition invoice: 10000 THB due 2026-10-10.",
+            },
+        )
+        material.refresh_from_db()
+        self.assertEqual(material.status, "QUEUED")
+        transcription = ReadinessJob.objects.get(
+            key="transcription:" + str(material.id)
+        )
+        transcription.lease_token = uuid4()
+        transcription.save()
+        process_material(transcription)
+        material.refresh_from_db()
+        self.assertEqual(material.status, "NEEDS_REVIEW")
+        self.assertEqual(material.result["source_type"], "user_transcription")
 
     def test_balance_confirmation_is_planning_only_and_refreshes_freshness(self):
         self.post("demo/clock", {"date": "2026-10-10"})

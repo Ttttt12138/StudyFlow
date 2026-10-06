@@ -53,9 +53,28 @@ class FundingInput(Versions):
         return [contract(FundingAction, row) for row in value]
 
 
-class UploadInput(Versions):
-    kind = serializers.ChoiceField(choices=["text", "pdf"])
+class OcrConsentInput(Versions):
+    ocr_consent = serializers.BooleanField(default=False)
+    ocr_notice_version = serializers.CharField(max_length=50, required=False)
+    language = serializers.ChoiceField(choices=["en", "zh", "zh-en"], default="zh-en")
+
+    def validate(self, attrs):
+        from .ocr import NOTICE_VERSION
+
+        if attrs["ocr_consent"] and attrs.get("ocr_notice_version") != NOTICE_VERSION:
+            raise serializers.ValidationError(
+                {"ocr_notice_version": "Current notice required."}
+            )
+        return attrs
+
+
+class UploadInput(OcrConsentInput):
+    kind = serializers.ChoiceField(choices=["text", "pdf", "image"])
     file = serializers.FileField(max_length=150)
+
+
+class TranscriptionInput(Versions):
+    text = serializers.CharField(max_length=100000)
 
 
 class TemplateUpgradeInput(Versions):

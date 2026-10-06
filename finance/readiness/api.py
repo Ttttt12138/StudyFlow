@@ -18,7 +18,7 @@ from finance.workflow_common import record, require
 from finance.workflow_models import Beneficiary, IdempotencyRecord
 from finance.workflow_serializers import CommandResponse, HistoryResponse
 
-from . import imports, services
+from . import imports, ocr, services
 from . import serializers as s
 from .funding import create_funding_plan, recommend_funding
 from .models import (
@@ -124,7 +124,11 @@ class ImportView(Enabled, APIView):
         rows = ImportMaterial.objects.filter(owner=request.user).order_by("-created_at")
         if pk:
             return Response(
-                {"data": imports.material_record(get_object_or_404(rows, pk=pk))}
+                {
+                    "data": imports.material_record(
+                        get_object_or_404(rows, pk=pk), include_ocr_text=True
+                    )
+                }
             )
         return Response({"data": [imports.material_record(row) for row in rows[:50]]})
 
@@ -166,6 +170,30 @@ class ConfirmView(Enabled, CommandView):
     handler = staticmethod(imports.confirm)
 
 
+class TranscriptionView(Enabled, CommandView):
+    serializer_class = s.TranscriptionInput
+    target_model = ImportMaterial
+    handler = staticmethod(imports.transcribe)
+
+
+class OcrNoticeView(Enabled, APIView):
+    @extend_schema(responses=CommandResponse)
+    def get(self, request):
+        return Response({"data": ocr.notice()})
+
+
+class OcrAuthorizeView(Enabled, CommandView):
+    serializer_class = s.OcrConsentInput
+    target_model = ImportMaterial
+    handler = staticmethod(ocr.authorize)
+
+
+class DiscardSourceView(Enabled, CommandView):
+    serializer_class = s.Versions
+    target_model = ImportMaterial
+    handler = staticmethod(ocr.discard_source)
+
+
 class TemplateUpgradeView(Enabled, CommandView):
     serializer_class = s.TemplateUpgradeInput
     handler = staticmethod(upgrade)
@@ -195,6 +223,10 @@ urlpatterns = [
     path("risks/", OwnedReadView.as_view(model=RiskCard)),
     path("notifications/", OwnedReadView.as_view(model=NotificationOutbox)),
     path("imports/", ImportView.as_view()),
+    path("imports/ocr-notice/", OcrNoticeView.as_view()),
     path("imports/<uuid:pk>/", ImportView.as_view()),
     path("imports/<uuid:pk>/confirm/", ConfirmView.as_view()),
+    path("imports/<uuid:pk>/transcribe/", TranscriptionView.as_view()),
+    path("imports/<uuid:pk>/authorize-ocr/", OcrAuthorizeView.as_view()),
+    path("imports/<uuid:pk>/discard-source/", DiscardSourceView.as_view()),
 ]

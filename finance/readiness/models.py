@@ -42,6 +42,7 @@ class ImportMaterial(OwnedRecord):
     status = models.CharField(max_length=20, default="QUEUED")
     result = models.JSONField(default=dict)
     confirmation = models.JSONField(default=dict)
+    processing = models.JSONField(default=dict)
     state_version = models.PositiveIntegerField()
     budget_version = models.PositiveIntegerField()
 

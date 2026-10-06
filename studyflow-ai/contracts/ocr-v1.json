@@ -1,0 +1,130 @@
+{
+  "OcrOutput": {
+    "$defs": {
+      "OcrPage": {
+        "additionalProperties": false,
+        "properties": {
+          "number": {
+            "maximum": 50,
+            "minimum": 1,
+            "title": "Number",
+            "type": "integer"
+          },
+          "text": {
+            "maxLength": 100000,
+            "title": "Text",
+            "type": "string"
+          },
+          "language": {
+            "enum": [
+              "zh",
+              "en",
+              "zh-en",
+              "unsupported"
+            ],
+            "title": "Language",
+            "type": "string"
+          },
+          "uncertain": {
+            "title": "Uncertain",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "number",
+          "text",
+          "language",
+          "uncertain"
+        ],
+        "title": "OcrPage",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "pages": {
+        "items": {
+          "$ref": "#/$defs/OcrPage"
+        },
+        "maxItems": 50,
+        "minItems": 1,
+        "title": "Pages",
+        "type": "array"
+      }
+    },
+    "required": [
+      "pages"
+    ],
+    "title": "OcrOutput",
+    "type": "object"
+  },
+  "OcrResult": {
+    "$defs": {
+      "OcrPage": {
+        "additionalProperties": false,
+        "properties": {
+          "number": {
+            "maximum": 50,
+            "minimum": 1,
+            "title": "Number",
+            "type": "integer"
+          },
+          "text": {
+            "maxLength": 100000,
+            "title": "Text",
+            "type": "string"
+          },
+          "language": {
+            "enum": [
+              "zh",
+              "en",
+              "zh-en",
+              "unsupported"
+            ],
+            "title": "Language",
+            "type": "string"
+          },
+          "uncertain": {
+            "title": "Uncertain",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "number",
+          "text",
+          "language",
+          "uncertain"
+        ],
+        "title": "OcrPage",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "pages": {
+        "items": {
+          "$ref": "#/$defs/OcrPage"
+        },
+        "maxItems": 50,
+        "minItems": 1,
+        "title": "Pages",
+        "type": "array"
+      },
+      "model": {
+        "title": "Model",
+        "type": "string"
+      },
+      "rule_version": {
+        "default": "gemini-ocr-v1",
+        "title": "Rule Version",
+        "type": "string"
+      }
+    },
+    "required": [
+      "pages",
+      "model"
+    ],
+    "title": "OcrResult",
+    "type": "object"
+  }
+}
