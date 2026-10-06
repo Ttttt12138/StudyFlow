@@ -53,6 +53,137 @@ paths:
               schema:
                 $ref: '#/components/schemas/CommandResponse'
           description: ''
+  /api/v2/agent/pending-actions/{id}/confirm/:
+    post:
+      operationId: post_api_v2_agent_pending_actions_id_confirm
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      - in: header
+        name: X-Step-Up-Token
+        schema:
+          type: string
+        description: T2 step-up token from POST auth/step-up/ (docs/permissions.md);
+          T3 also needs an approved approval. Denials are 403 with detail and policy.
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/agent/pending-actions/{id}/reject/:
+    post:
+      operationId: post_api_v2_agent_pending_actions_id_reject
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/agent/sessions/:
+    get:
+      operationId: get_api_v2_agent_sessions
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+    post:
+      operationId: post_api_v2_agent_sessions
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SessionInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SessionInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SessionInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/agent/sessions/{id}/:
+    get:
+      operationId: get_api_v2_agent_sessions_id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
   /api/v2/applications/:
     get:
       operationId: get_api_v2_applications
@@ -305,6 +436,114 @@ paths:
               schema:
                 $ref: '#/components/schemas/CommandResponse'
           description: ''
+  /api/v2/approvals/:
+    get:
+      operationId: get_api_v2_approvals
+      parameters:
+      - in: query
+        name: status
+        schema:
+          type: string
+          enum:
+          - APPROVED
+          - EXPIRED
+          - PENDING
+          - REJECTED
+          - USED
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+    post:
+      operationId: post_api_v2_approvals
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApprovalInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ApprovalInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ApprovalInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/approvals/{id}/:
+    get:
+      operationId: get_api_v2_approvals_id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/approvals/{id}/decide/:
+    post:
+      operationId: post_api_v2_approvals_id_decide
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApprovalDecisionInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ApprovalDecisionInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ApprovalDecisionInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
   /api/v2/audit/:
     get:
       operationId: get_api_v2_audit
@@ -319,6 +558,60 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+  /api/v2/auth/step-up/:
+    post:
+      operationId: post_api_v2_auth_step_up
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StepUpInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/StepUpInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/StepUpInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StepUpResponse'
+          description: ''
+  /api/v2/auth/token/:
+    post:
+      operationId: post_api_v2_auth_token
+      description: Exchange a username and password for an API token.
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthToken'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AuthToken'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AuthToken'
+        required: true
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
           description: ''
   /api/v2/beneficiaries/:
     get:
@@ -430,6 +723,238 @@ paths:
               schema:
                 $ref: '#/components/schemas/CommandResponse'
           description: ''
+  /api/v2/conversions/:
+    get:
+      operationId: get_api_v2_conversions
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+    post:
+      operationId: post_api_v2_conversions
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      - in: header
+        name: X-Step-Up-Token
+        schema:
+          type: string
+        description: T2 step-up token from POST auth/step-up/ (docs/permissions.md);
+          T3 also needs an approved approval. Denials are 403 with detail and policy.
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConversionInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ConversionInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ConversionInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/conversions/{id}/:
+    get:
+      operationId: get_api_v2_conversions_id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+  /api/v2/corridors/:
+    get:
+      operationId: get_api_v2_corridors
+      parameters:
+      - in: query
+        name: source_currency
+        schema:
+          type: string
+      - in: query
+        name: target_currency
+        schema:
+          type: string
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/credit/profile/:
+    get:
+      operationId: get_api_v2_credit_profile
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/credit/snapshots/:
+    get:
+      operationId: get_api_v2_credit_snapshots
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+    post:
+      operationId: post_api_v2_credit_snapshots
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/credit/snapshots/{id}/:
+    get:
+      operationId: get_api_v2_credit_snapshots_id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+  /api/v2/credit/statements/:
+    post:
+      operationId: post_api_v2_credit_statements
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreditStatementInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CreditStatementInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreditStatementInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/credit/statements/verify/:
+    post:
+      operationId: post_api_v2_credit_statements_verify
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StatementVerifyInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/StatementVerifyInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/StatementVerifyInput'
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
   /api/v2/demo/clock/:
     post:
       operationId: post_api_v2_demo_clock
@@ -512,6 +1037,21 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+  /api/v2/demo/wallets/balances/:
+    get:
+      operationId: get_api_v2_demo_wallets_balances
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
           description: ''
   /api/v2/disbursements/:
     get:
@@ -841,6 +1381,66 @@ paths:
               schema:
                 $ref: '#/components/schemas/HistoryResponse'
           description: ''
+  /api/v2/fx-quotes/live/:
+    post:
+      operationId: post_api_v2_fx_quotes_live
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LiveQuoteInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LiveQuoteInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LiveQuoteInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/fx-rates/:
+    get:
+      operationId: get_api_v2_fx_rates
+      parameters:
+      - in: query
+        name: base
+        schema:
+          type: string
+        required: true
+      - in: query
+        name: quote
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
   /api/v2/ledger/:
     get:
       operationId: get_api_v2_ledger
@@ -903,6 +1503,12 @@ paths:
           type: string
         description: Unique action key; reuse the same key and body when retrying.
         required: true
+      - in: header
+        name: X-Step-Up-Token
+        schema:
+          type: string
+        description: T2 step-up token from POST auth/step-up/ (docs/permissions.md);
+          T3 also needs an approved approval. Denials are 403 with detail and policy.
       - in: path
         name: id
         schema:
@@ -1253,6 +1859,12 @@ paths:
           type: string
         description: Unique action key; reuse the same key and body when retrying.
         required: true
+      - in: header
+        name: X-Step-Up-Token
+        schema:
+          type: string
+        description: T2 step-up token from POST auth/step-up/ (docs/permissions.md);
+          T3 also needs an approved approval. Denials are 403 with detail and policy.
       - in: path
         name: id
         schema:
@@ -2544,6 +3156,242 @@ paths:
               schema:
                 $ref: '#/components/schemas/CommandResponse'
           description: ''
+  /api/v2/remittance-orders/:
+    get:
+      operationId: get_api_v2_remittance_orders
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+    post:
+      operationId: post_api_v2_remittance_orders
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OrderInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OrderInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/remittance-orders/{id}/:
+    get:
+      operationId: get_api_v2_remittance_orders_id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/remittance-orders/{id}/adapter-event/:
+    post:
+      operationId: post_api_v2_remittance_orders_id_adapter_event
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderEventInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OrderEventInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OrderEventInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/remittance-orders/{id}/cancel/:
+    post:
+      operationId: post_api_v2_remittance_orders_id_cancel
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderVersionInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OrderVersionInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OrderVersionInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/remittance-orders/{id}/reconcile/:
+    post:
+      operationId: post_api_v2_remittance_orders_id_reconcile
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderVersionInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OrderVersionInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OrderVersionInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/remittance-orders/{id}/submit/:
+    post:
+      operationId: post_api_v2_remittance_orders_id_submit
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      - in: header
+        name: X-Step-Up-Token
+        schema:
+          type: string
+        description: T2 step-up token from POST auth/step-up/ (docs/permissions.md);
+          T3 also needs an approved approval. Denials are 403 with detail and policy.
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderVersionInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OrderVersionInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OrderVersionInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
   /api/v2/review-queue/:
     get:
       operationId: get_api_v2_review_queue
@@ -3074,6 +3922,67 @@ components:
           maxLength: 2000
       required:
       - confirmation
+    ApprovalDecisionInput:
+      type: object
+      properties:
+        decision:
+          $ref: '#/components/schemas/ApprovalDecisionInputDecisionEnum'
+        note:
+          type: string
+          default: ''
+          maxLength: 500
+        expected_version:
+          type: integer
+          minimum: 1
+      required:
+      - decision
+      - expected_version
+    ApprovalDecisionInputDecisionEnum:
+      enum:
+      - approve
+      - reject
+      type: string
+      description: |-
+        * `approve` - approve
+        * `reject` - reject
+    ApprovalInput:
+      type: object
+      properties:
+        action:
+          $ref: '#/components/schemas/PolicyActionEnum'
+        target_id:
+          type: string
+          format: uuid
+        amount:
+          type: string
+          format: decimal
+        currency:
+          $ref: '#/components/schemas/SupportedCurrencyEnum'
+        reason:
+          type: string
+          maxLength: 500
+      required:
+      - action
+      - amount
+      - currency
+      - reason
+      - target_id
+    AuthToken:
+      type: object
+      properties:
+        username:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+        token:
+          type: string
+          readOnly: true
+      required:
+      - password
+      - token
+      - username
     AuthorizationInput:
       type: object
       properties:
@@ -3287,6 +4196,22 @@ components:
       - selected_cost_ids
       - semester_id
       - state_version
+    ConversionInput:
+      type: object
+      properties:
+        quote_id:
+          type: string
+          format: uuid
+        source_amount:
+          type: string
+          format: decimal
+        state_version:
+          type: integer
+          minimum: 1
+      required:
+      - quote_id
+      - source_amount
+      - state_version
     CoverageInput:
       type: object
       properties:
@@ -3306,6 +4231,14 @@ components:
       - account_id
       - end
       - start
+    CreditStatementInput:
+      type: object
+      properties:
+        snapshot_id:
+          type: string
+          format: uuid
+      required:
+      - snapshot_id
     DecisionInput:
       type: object
       properties:
@@ -3444,8 +4377,12 @@ components:
           $ref: '#/components/schemas/SupportedCurrencyEnum'
         target_currency:
           allOf:
-          - $ref: '#/components/schemas/SettlementCurrencyEnum'
+          - $ref: '#/components/schemas/SupportedCurrencyEnum'
           default: THB
+        corridor_id:
+          type: string
+          format: uuid
+          nullable: true
         rate:
           type: string
           format: decimal
@@ -3453,11 +4390,9 @@ components:
         sender_fee:
           type: string
           format: decimal
-          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
         receiver_fee:
           type: string
           format: decimal
-          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
         settlement_days:
           type: integer
           maximum: 60
@@ -3623,6 +4558,18 @@ components:
         * `en` - en
         * `zh` - zh
         * `zh-en` - zh-en
+    LiveQuoteInput:
+      type: object
+      properties:
+        corridor_id:
+          type: string
+          format: uuid
+        send_amount:
+          type: string
+          format: decimal
+      required:
+      - corridor_id
+      - send_amount
     LoanInput:
       type: object
       properties:
@@ -3655,6 +4602,14 @@ components:
       - first_due_date
       - months
       - principal
+    LocaleEnum:
+      enum:
+      - zh
+      - en
+      type: string
+      description: |-
+        * `zh` - zh
+        * `en` - en
     MonthInput:
       type: object
       properties:
@@ -3707,16 +4662,68 @@ components:
       - budget_version
       - semester_id
       - state_version
-    OutcomeEnum:
+    OrderEventInput:
+      type: object
+      properties:
+        expected_version:
+          type: integer
+          minimum: 1
+        note:
+          type: string
+          maxLength: 500
+        outcome:
+          $ref: '#/components/schemas/OrderEventInputOutcomeEnum'
+      required:
+      - expected_version
+      - outcome
+    OrderEventInputOutcomeEnum:
       enum:
-      - settled
+      - dispatched
+      - delivered
       - failed
       - unknown
       type: string
       description: |-
-        * `settled` - settled
+        * `dispatched` - dispatched
+        * `delivered` - delivered
         * `failed` - failed
         * `unknown` - unknown
+    OrderInput:
+      type: object
+      properties:
+        quote_id:
+          type: string
+          format: uuid
+        recipient:
+          $ref: '#/components/schemas/RecipientEnum'
+        beneficiary_id:
+          type: string
+          format: uuid
+          nullable: true
+        purpose:
+          $ref: '#/components/schemas/PurposeEnum'
+        reference:
+          type: string
+          maxLength: 140
+        deadline:
+          type: string
+          format: date
+          nullable: true
+      required:
+      - purpose
+      - quote_id
+      - recipient
+    OrderVersionInput:
+      type: object
+      properties:
+        expected_version:
+          type: integer
+          minimum: 1
+        note:
+          type: string
+          maxLength: 500
+      required:
+      - expected_version
     PaginatedSourceList:
       type: object
       required:
@@ -3744,9 +4751,19 @@ components:
       type: object
       properties:
         outcome:
-          $ref: '#/components/schemas/OutcomeEnum'
+          $ref: '#/components/schemas/PaymentEventInputOutcomeEnum'
       required:
       - outcome
+    PaymentEventInputOutcomeEnum:
+      enum:
+      - settled
+      - failed
+      - unknown
+      type: string
+      description: |-
+        * `settled` - settled
+        * `failed` - failed
+        * `unknown` - unknown
     PaymentInput:
       type: object
       properties:
@@ -3778,6 +4795,20 @@ components:
       required:
       - allocations
       - scenario_id
+    PolicyActionEnum:
+      enum:
+      - payment.submit
+      - wallet.convert
+      - loan.repay
+      - remittance.submit
+      - agent.confirm
+      type: string
+      description: |-
+        * `payment.submit` - payment.submit
+        * `wallet.convert` - wallet.convert
+        * `loan.repay` - loan.repay
+        * `remittance.submit` - remittance.submit
+        * `agent.confirm` - agent.confirm
     PreviewInput:
       type: object
       properties:
@@ -3800,6 +4831,18 @@ components:
       required:
       - expected_version
       - months
+    PurposeEnum:
+      enum:
+      - tuition
+      - living
+      - family_support
+      - other
+      type: string
+      description: |-
+        * `tuition` - tuition
+        * `living` - living
+        * `family_support` - family_support
+        * `other` - other
     ReceiveInput:
       type: object
       properties:
@@ -3807,6 +4850,17 @@ components:
           type: string
           format: uuid
           nullable: true
+        hold_in_source_currency:
+          type: boolean
+          default: false
+    RecipientEnum:
+      enum:
+      - SELF
+      - BENEFICIARY
+      type: string
+      description: |-
+        * `SELF` - SELF
+        * `BENEFICIARY` - BENEFICIARY
     RecurringInput:
       type: object
       properties:
@@ -3963,6 +5017,16 @@ components:
           nullable: true
       required:
       - reserve
+    SessionInput:
+      type: object
+      properties:
+        goal:
+          type: string
+          maxLength: 2000
+        locale:
+          $ref: '#/components/schemas/LocaleEnum'
+      required:
+      - goal
     SettlementCurrencyEnum:
       enum:
       - THB
@@ -4213,6 +5277,58 @@ components:
       required:
       - expected_version
       - snapshot
+    StatementVerifyInput:
+      type: object
+      properties:
+        statement:
+          type: string
+          nullable: true
+          default: ''
+    StepUpInput:
+      type: object
+      properties:
+        password:
+          type: string
+          maxLength: 128
+        action:
+          $ref: '#/components/schemas/PolicyActionEnum'
+        target_id:
+          type: string
+          format: uuid
+        amount:
+          type: string
+          format: decimal
+        currency:
+          $ref: '#/components/schemas/SupportedCurrencyEnum'
+      required:
+      - action
+      - amount
+      - currency
+      - password
+      - target_id
+    StepUpResponse:
+      type: object
+      properties:
+        token:
+          type: string
+        expires_in_seconds:
+          type: integer
+        action:
+          type: string
+        target_id:
+          type: string
+          format: uuid
+        amount:
+          type: string
+        currency:
+          type: string
+      required:
+      - action
+      - amount
+      - currency
+      - expires_in_seconds
+      - target_id
+      - token
     SupportedCurrencyEnum:
       enum:
       - THB
@@ -4267,6 +5383,13 @@ components:
           minimum: 1
       required:
       - terms_version
+    TokenResponse:
+      type: object
+      properties:
+        token:
+          type: string
+      required:
+      - token
     TransactionRevisionInput:
       type: object
       properties:

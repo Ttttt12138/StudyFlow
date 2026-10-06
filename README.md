@@ -1,5 +1,17 @@
 # StudyFlow 工作区
 
+**命题 C 增量**：
+- 多币种钱包与服务端定价的换汇；
+- 汇款订单状态机；
+- 参考汇率接入；
+- T0–T3 权限分级、按币种限额、二次验证、分权审批与限流；
+- 生产加固；
+- 可执行工具调用的 Agent（T2 动作须学生确认）；
+- 中英文错误信息；
+- 模拟信用建立。
+
+完成情况、验证结果和剩余风险见 [命题 C 补齐情况](docs/proposition-c.md)。演示命令为 `manage.py demo_remittance --runs 3` 和 `manage.py demo_agent --runs 3`，Agent 评估为 `manage.py evaluate_agent`。本地检查统一用 `scripts/run_gates.py` 运行。
+
 Financial Copilot 增量：What-if 比较与确认应用、四层解释、统一 Review Queue、通知已读及完整支付 Demo 已接入。运行 `manage.py demo_copilot --mode live --env-file studyflow-ai/.env --runs 3`；接口、前端交互与评估方式见 [Copilot 接入说明](docs/copilot.md)。真实模型与 OCR 验收状态以本轮验证报告为准。
 
 消费学习与资金执行扩展已加入：CSV 导入、消费分类、周期支出、预算校准、Financial Calendar / Briefing、家庭资助确认、模拟汇款比较和 readiness 学费对账。启动与前端契约见 [消费学习接入说明](docs/consumption.md)，完整 HTTP 演示使用 `manage.py demo_consumption --runs 3`。扫描件支持可选的 [Gemini 中英文 OCR](docs/gemini-ocr.md)，默认关闭，需服务端配置及逐文件同意，并保留人工转录；不包含真实银行、真实支付或前端应用。
