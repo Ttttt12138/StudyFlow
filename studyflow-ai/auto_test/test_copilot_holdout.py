@@ -66,6 +66,15 @@ def test_blind_protocol_records_exact_runtime_code(version):
     # A file changed after the first blind run must keep its frozen copy under frozen/.
     for path, digest in protocol["code_sha256"].items():
         current = ROOT.parent / path
-        if hashlib.sha256(current.read_bytes()).hexdigest() != digest:
+        if not _matches_digest(current, digest):
             current = folder / "frozen" / (path + ".txt")
-        assert hashlib.sha256(current.read_bytes()).hexdigest() == digest, path
+        assert _matches_digest(current, digest), path
+
+
+def _matches_digest(path, digest):
+    # Digests were taken from a Windows checkout with mixed line endings; git checkouts
+    # normalize them per OS, so accept the raw, LF and CRLF forms of the same content.
+    raw = path.read_bytes()
+    lf = raw.replace(b"\r\n", b"\n")
+    variants = (raw, lf, lf.replace(b"\n", b"\r\n"))
+    return any(hashlib.sha256(data).hexdigest() == digest for data in variants)
