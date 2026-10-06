@@ -18,6 +18,8 @@ C_DIR = ROOT / "studyflow-ai"
 OUT = ROOT / "output" / "gates"
 
 GATES = [
+    # Archives holdout-pinned files that changed; fails if a pinned version is unrecoverable.
+    ("holdout-freeze", [PY, "scripts/freeze_holdout_code.py"], ROOT),
     ("check", [PY, "manage.py", "check"], ROOT),
     ("migrations", [PY, "manage.py", "makemigrations", "--check", "--dry-run"], ROOT),
     ("django-tests", [PY, "manage.py", "test", "finance", "auto_test", "--noinput", "--keepdb"], ROOT),

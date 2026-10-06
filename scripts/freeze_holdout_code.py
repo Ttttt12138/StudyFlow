@@ -1,7 +1,7 @@
 """Keep frozen copies of runtime files recorded by the Copilot holdout protocols.
 
 The holdout protocols pin the exact code used for their blind runs. When a pinned
-file changes, its HEAD version (the pinned one) must be stored under
+file changes, its pinned version (found in git history) must be stored under
 evals/<holdout>/frozen/<path>.txt. Run this before committing changes to finance/.
 """
 import hashlib
@@ -23,6 +23,18 @@ def _matches(raw, digest):
     return any(hashlib.sha256(data).hexdigest() == digest for data in _variants(raw))
 
 
+def _pinned_from_history(path, digest):
+    """Newest committed version of `path` whose content matches the pinned digest."""
+    commits = subprocess.run(["git", "log", "--format=%H", "--", path], cwd=ROOT,
+                             capture_output=True, text=True).stdout.split()
+    for commit in commits:
+        content = subprocess.run(["git", "show", f"{commit}:{path}"], cwd=ROOT,
+                                 capture_output=True).stdout
+        if _matches(content, digest):
+            return content
+    return None
+
+
 def main():
     missing = []
     for protocol_path in sorted(EVALS.glob("copilot-holdout-*/protocol.json")):
@@ -35,11 +47,10 @@ def main():
             frozen = folder / "frozen" / (path + ".txt")
             if frozen.exists() and _matches(frozen.read_bytes(), digest):
                 continue
-            head = subprocess.run(["git", "show", f"HEAD:{path}"], cwd=ROOT,
-                                  capture_output=True).stdout
-            if _matches(head, digest):
+            pinned = _pinned_from_history(path, digest)
+            if pinned is not None:
                 frozen.parent.mkdir(parents=True, exist_ok=True)
-                frozen.write_bytes(head)
+                frozen.write_bytes(pinned)
                 print(f"froze {folder.name}: {path}")
             else:
                 missing.append(f"{folder.name}: {path}")
