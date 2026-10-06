@@ -258,6 +258,9 @@ def create_funding_plan(owner, data, obj=None):
 
 
 def recommend(owner, semester, state, actions=None):
+    from finance.copilot.models import PlanningPreference
+    preference = PlanningPreference.objects.filter(semester=semester).first()
+    borrowing_allowed = preference is None or preference.allow_new_loan
     data = {"allocations": [], "actions": actions or []}
     result = evaluate(owner, semester, state, data)
     priority = {"external_savings": 0, "family": 1, "scholarship": 2}
@@ -290,9 +293,11 @@ def recommend(owner, semester, state, actions=None):
         if Decimal(projected["remaining_gap"]) < gap:
             data, result = proposal, projected
     return {
-        "recommended_borrowing_net": result["remaining_gap"],
+        "recommended_borrowing_net": result["remaining_gap"] if borrowing_allowed else "0.00",
+        "unmet_gap": result["remaining_gap"],
+        "allow_new_loan": borrowing_allowed,
         "nonloan_plan": result,
-        "quote_required": Decimal(result["remaining_gap"]) > 0,
+        "quote_required": borrowing_allowed and Decimal(result["remaining_gap"]) > 0,
         "assumptions": result["conditions"],
         "is_recommendation_final": result["forecast"]["complete"],
     }

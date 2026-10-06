@@ -93,6 +93,12 @@ def normalize_draft(owner, draft, previous=None):
     )
     for cost in result["costs"]:
         old = previous.get(cost["cost_id"], {})
+        if cost.get("planned_overrides") != old.get("planned_overrides") and cost.get("planned_overrides"):
+            require(not old.get("locked") and old.get("confidence_type") != "VERIFIED"
+                    and not old.get("conflict") and not old.get("paid"), "PROTECTED_COST_REVIEW")
+            for change in cost["planned_overrides"]:
+                require(change["effective_on"] >= business_date(owner).isoformat()
+                        or change in old.get("planned_overrides", []), "HISTORICAL_OVERRIDE_FORBIDDEN")
         if cost.get("confidence_type") == "VERIFIED":
             require(
                 old.get("confidence_type") == "VERIFIED"
@@ -231,7 +237,9 @@ def save_run(owner, semester, state, kind, data, result):
         budget_version=semester.version,
         analysis_version=semester.analysis_version,
         kind=kind,
-        inputs=json_value(data),
+        inputs=json_value({**data, "calculation_context": {
+            "snapshot": state.snapshot, "draft": semester.draft,
+            "as_of": business_date(owner).isoformat()}}),
         result=json_value(result),
     )
     audit(owner, owner, "readiness." + kind, run)
@@ -295,7 +303,7 @@ def financial_state(owner):
             if e["kind"] == "expense" and e["certainty"] == "confirmed"
         ],
         "estimated_expenses": semester.draft["costs"],
-        "cost_provenance": cost_provenance(semester.draft),
+        "cost_provenance": cost_provenance(semester.draft, business_date(owner)),
         "expected_income": [
             record(s) for s in FundingSource.objects.filter(owner=owner, received=False)
         ],
@@ -307,10 +315,10 @@ def financial_state(owner):
     }
 
 
-def cost_provenance(draft):
+def cost_provenance(draft, as_of=None):
     from finance.consumption.analysis import provenance
 
-    return {cost["cost_id"]: provenance(cost) for cost in draft["costs"]}
+    return {cost["cost_id"]: provenance(cost, as_of) for cost in draft["costs"]}
 
 
 def settled_balance(snapshot):

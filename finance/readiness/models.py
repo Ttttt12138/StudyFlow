@@ -109,3 +109,4 @@ class NotificationOutbox(OwnedRecord):
     risk = models.ForeignKey(RiskCard, on_delete=models.PROTECT)
     transition = models.CharField(max_length=20)
     payload = models.JSONField(default=dict)
+    read_at = models.DateTimeField(null=True)

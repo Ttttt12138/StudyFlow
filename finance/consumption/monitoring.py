@@ -54,7 +54,7 @@ def overview(owner):
         }
         if due
         else None,
-        "cost_sources": {c["cost_id"]: provenance(c) for c in semester.draft["costs"]},
+        "cost_sources": {c["cost_id"]: provenance(c, now) for c in semester.draft["costs"]},
         "prediction": prediction,
     }
 

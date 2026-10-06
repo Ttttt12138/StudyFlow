@@ -7,3 +7,4 @@ class FinanceConfig(AppConfig):
 
     def ready(self):
         from .readiness import signals  # noqa: F401
+        from .copilot import signals as copilot_signals  # noqa: F401

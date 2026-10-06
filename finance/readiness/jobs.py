@@ -90,9 +90,26 @@ def finish_job(job, result=None, error=None):
         fields["available_at"] = timezone.now() + timedelta(
             seconds=min(3600, 30 * 2 ** min(job.attempts, 7))
         )
-    return ReadinessJob.objects.filter(pk=job.pk, lease_token=job.lease_token).update(
-        **fields
-    )
+    updated = ReadinessJob.objects.filter(
+        pk=job.pk, lease_token=job.lease_token
+    ).update(**fields)
+    if updated:
+        from finance.copilot.explanations import capture
+        from finance.copilot.reviews import sync
+
+        job.refresh_from_db()
+        sync(job)
+        capture(job)
+        if job.kind == "import" and job.payload.get("material_id"):
+            from .models import ImportMaterial
+
+            material = ImportMaterial.objects.filter(
+                pk=job.payload["material_id"], owner=job.owner
+            ).first()
+            if material:
+                sync(material)
+                capture(material)
+    return updated
 
 
 def update_risks(owner, semester, budget, prediction):

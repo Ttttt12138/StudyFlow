@@ -21,6 +21,14 @@ class CommandView(generics.GenericAPIView):
     operator_only = False
     idempotency_namespace = None
 
+    def handle_exception(self, exc):
+        response = super().handle_exception(exc)
+        from django.conf import settings
+        if settings.STUDYFLOW_READINESS_ENABLED and self.request.user.is_authenticated:
+            from .copilot.explanations import capture_denial
+            capture_denial(self.request.user, self.request.path, response)
+        return response
+
     @extend_schema(responses=CommandResponse, parameters=[OpenApiParameter(
         name="Idempotency-Key", location=OpenApiParameter.HEADER, required=True,
         type=str, description="Unique action key; reuse the same key and body when retrying.",
