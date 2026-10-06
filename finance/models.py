@@ -48,4 +48,5 @@ from .readiness.models import (Semester, ReadinessRun, ImportMaterial, InvoiceId
 from .sponsorship import SponsorRequest
 from .policy_models import PolicyLimit, ApprovalRequest, StepUpGrant
 from .credit_models import CreditSnapshot
+from .remittance_models import RemittanceOrder, RemittanceStatusEvent
 from .copilot.models import WhatIfRun, PlanningPreference, ReviewItem, ReviewAction, ExplanationTrace

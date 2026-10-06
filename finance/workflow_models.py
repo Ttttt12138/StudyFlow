@@ -195,15 +195,27 @@ class DemoLedgerEntry(OwnedRecord):
     disbursement = models.OneToOneField(Disbursement, null=True, on_delete=models.PROTECT)
     payment = models.OneToOneField(Payment, null=True, on_delete=models.PROTECT)
     conversion = models.ForeignKey(CurrencyConversion, null=True, on_delete=models.PROTECT, related_name="legs")
+    remittance_order = models.ForeignKey("finance.RemittanceOrder", null=True, on_delete=models.PROTECT,
+                                         related_name="legs")
+    remittance_leg = models.CharField(max_length=10, null=True, blank=True,
+                                      choices=[("debit", "Debit"), ("refund", "Refund"), ("credit", "Credit")])
     currency = models.CharField(max_length=3, default="THB")
     amount = models.DecimalField(max_digits=18, decimal_places=2)
     effective_on = models.DateField()
     class Meta:
         constraints = [models.CheckConstraint(
             condition=_exactly_one_origin(disbursement=Q(amount__gt=0), payment=Q(amount__lt=0),
-                funding_source=Q(amount__gt=0), installment=Q(amount__lt=0), conversion=~Q(amount=0)),
+                funding_source=Q(amount__gt=0), installment=Q(amount__lt=0), conversion=~Q(amount=0),
+                remittance_order=Q(remittance_leg="debit", amount__lt=0)
+                    | Q(remittance_leg__in=["refund", "credit"], amount__gt=0)),
             name="ledger_origin_and_sign",
-        ), models.UniqueConstraint(fields=["owner","sequence"], name="ledger_owner_sequence_unique"),
+        ), models.CheckConstraint(
+            condition=Q(remittance_order__isnull=True, remittance_leg__isnull=True)
+                | Q(remittance_order__isnull=False, remittance_leg__isnull=False),
+            name="ledger_remittance_leg_pairing",
+        ), models.UniqueConstraint(fields=["remittance_order","remittance_leg"],
+            condition=Q(remittance_order__isnull=False), name="ledger_remittance_leg_unique"),
+        models.UniqueConstraint(fields=["owner","sequence"], name="ledger_owner_sequence_unique"),
         models.UniqueConstraint(fields=["conversion","currency"], condition=Q(conversion__isnull=False),
             name="ledger_conversion_leg_unique")]
 
