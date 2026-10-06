@@ -279,6 +279,7 @@ def confirm(owner, data, material):
             verification_reference=f"user:{owner.pk}:material:{material.id}",
             conflict=False,
             observed_at=timezone.now().isoformat(),
+            verified_at=timezone.now().isoformat(),
             issuer=data["issuer"],
         )
         cost["source_refs"] = list(

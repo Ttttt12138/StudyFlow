@@ -1,0 +1,26 @@
+{
+  "dataset_sha256": "b43e8506be238db8339ee3f820a77aeb246c29dfd07da6f4f25f0c11b94a79d5",
+  "reviewer": "Codex, delegated by the user in this implementation chat",
+  "review_type": "user_delegated_ai",
+  "human_reviewed": false,
+  "reviewed_at": "2026-10-06",
+  "approved": true,
+  "authorization": "User explicitly requested: 你代替我完成",
+  "scope": "All 24 template families and all 240 generated numeric/date/language variants",
+  "checks": [
+    "English, Chinese and mixed variants preserve the intended financial category",
+    "Exact amount, currency and complete ISO due date agree with each legitimate extraction label",
+    "Missing amount, missing currency and missing year remain null rather than inferred",
+    "Family commitments are explicitly not settlement receipts",
+    "Instruction-injection cases require review and have no authorized extraction target",
+    "Unrelated club, library and rehearsal messages have no financial extraction targets",
+    "Dev and test wording families, including translations, are disjoint"
+  ],
+  "limitations": [
+    "Family support expected due_date denotes scheduled receipt; the existing v1 candidate contract accepts date or due_date, evaluated as the same scheduled date",
+    "This is an AI review authorized by the user, not a human review",
+    "Synthetic labels do not establish real document accuracy",
+    "expected_review denotes a mandatory review condition; additional domain checks may also require review",
+    "Safety-blocked cases count as unclassified in the conservative aggregate classification metric"
+  ]
+}

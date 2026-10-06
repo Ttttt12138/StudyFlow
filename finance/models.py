@@ -46,3 +46,4 @@ from .consumption.models import (BankAccount, TransactionImport, ObservedTransac
 from .readiness.models import (Semester, ReadinessRun, ImportMaterial, InvoiceIdentity,
                                ReadinessJob, CheckLease, RiskCard, NotificationOutbox)
 from .sponsorship import SponsorRequest
+from .copilot.models import WhatIfRun, PlanningPreference, ReviewItem, ReviewAction, ExplanationTrace

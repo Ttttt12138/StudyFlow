@@ -1,0 +1,19 @@
+{
+  "version": "copilot-holdout-v3",
+  "sha256": "4adedfee15b8ecf288f6eaa9e9fcf29b8a21021dce82f4efe0edd7ba49ffd67f",
+  "counts": {
+    "dev": 80,
+    "test": 160
+  },
+  "frozen": true,
+  "frozen_at": "2026-10-07T00:08:47.229361+07:00",
+  "human_reviewed": false,
+  "synthetic": true,
+  "dev_origin": "copilot-v1 unchanged",
+  "thresholds": {
+    "classification_accuracy": 0.9,
+    "joint_field_accuracy": 0.95,
+    "critical_silent_misses": 0,
+    "dangerous_block_rate": 1.0
+  }
+}

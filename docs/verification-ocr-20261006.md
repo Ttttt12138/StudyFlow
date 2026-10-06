@@ -1,5 +1,7 @@
 # Gemini OCR implementation verification — 2026-10-06 (Asia/Bangkok)
 
+Follow-up: live requests have now been performed; the active model is `gemini-3.6-flash`. One of six synthetic fixtures passed; the remaining requests failed with availability/time-out errors, including a diagnosed HTTP 503. See [the subsequent live verification report](verification-independent-20261006.md). The implementation checks and earlier configuration state below are retained as historical evidence.
+
 ## Scope
 
 Chinese, English and mixed-language raster PNG/JPEG and scanned PDF ingestion. Gemini

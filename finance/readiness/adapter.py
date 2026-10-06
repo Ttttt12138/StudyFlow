@@ -306,6 +306,13 @@ class DjangoReadinessBackend:
             budget_version=semester.version,
             analysis_version=semester.analysis_version,
             kind="check",
+            inputs={
+                "calculation_context": {
+                    "snapshot": state.snapshot,
+                    "draft": semester.draft,
+                    "as_of": business_date(self.owner).isoformat(),
+                }
+            },
             result=lease.result,
         )
         AuditEvent.objects.create(

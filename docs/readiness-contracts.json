@@ -258,6 +258,27 @@
             "default": null,
             "title": "Observed At"
           },
+          "verified_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Verified At"
+          },
+          "planned_overrides": {
+            "items": {
+              "$ref": "#/$defs/PlannedOverride"
+            },
+            "maxItems": 24,
+            "title": "Planned Overrides",
+            "type": "array"
+          },
           "valid_until": {
             "anyOf": [
               {
@@ -376,6 +397,38 @@
           "locator"
         ],
         "title": "Evidence",
+        "type": "object"
+      },
+      "PlannedOverride": {
+        "additionalProperties": false,
+        "properties": {
+          "effective_on": {
+            "format": "date",
+            "title": "Effective On",
+            "type": "string"
+          },
+          "amount": {
+            "anyOf": [
+              {
+                "maximum": 99999999999999.98,
+                "type": "number"
+              },
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              }
+            ],
+            "decimal_places": 2,
+            "ge": 0,
+            "max_digits": 18,
+            "title": "Amount"
+          }
+        },
+        "required": [
+          "effective_on",
+          "amount"
+        ],
+        "title": "PlannedOverride",
         "type": "object"
       },
       "Profile": {

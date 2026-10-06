@@ -1,0 +1,229 @@
+{
+  "schema_version": "copilot-v1",
+  "scenario": {
+    "$defs": {
+      "CostChange": {
+        "additionalProperties": false,
+        "properties": {
+          "cost_id": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Cost Id",
+            "type": "string"
+          },
+          "amount": {
+            "decimal_places": 2,
+            "title": "Amount",
+            "type": "string"
+          },
+          "effective_on": {
+            "format": "date",
+            "title": "Effective On",
+            "type": "string"
+          }
+        },
+        "required": [
+          "cost_id",
+          "amount",
+          "effective_on"
+        ],
+        "title": "CostChange",
+        "type": "object"
+      },
+      "QuoteInput": {
+        "additionalProperties": false,
+        "properties": {
+          "currency": {
+            "const": "THB",
+            "default": "THB",
+            "title": "Currency",
+            "type": "string"
+          },
+          "principal": {
+            "decimal_places": 2,
+            "title": "Principal",
+            "type": "string"
+          },
+          "annual_rate": {
+            "decimal_places": 8,
+            "description": "Fraction: 0.12 means 12% nominal annual interest",
+            "ge": 0,
+            "le": 1,
+            "max_digits": 9,
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Annual Rate",
+            "type": "string"
+          },
+          "fees": {
+            "decimal_places": 2,
+            "title": "Fees",
+            "type": "string"
+          },
+          "months": {
+            "maximum": 60,
+            "minimum": 1,
+            "title": "Months",
+            "type": "integer"
+          },
+          "first_due_date": {
+            "format": "date",
+            "title": "First Due Date",
+            "type": "string"
+          }
+        },
+        "required": [
+          "principal",
+          "annual_rate",
+          "fees",
+          "months",
+          "first_due_date"
+        ],
+        "title": "QuoteInput",
+        "type": "object"
+      },
+      "SupportChange": {
+        "additionalProperties": false,
+        "properties": {
+          "source_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Source Id"
+          },
+          "amount": {
+            "decimal_places": 2,
+            "title": "Amount",
+            "type": "string"
+          },
+          "available_on": {
+            "format": "date",
+            "title": "Available On",
+            "type": "string"
+          }
+        },
+        "required": [
+          "amount",
+          "available_on"
+        ],
+        "title": "SupportChange",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "name": {
+        "maxLength": 100,
+        "minLength": 1,
+        "title": "Name",
+        "type": "string"
+      },
+      "costs": {
+        "items": {
+          "$ref": "#/$defs/CostChange"
+        },
+        "maxItems": 20,
+        "title": "Costs",
+        "type": "array"
+      },
+      "family_support": {
+        "items": {
+          "$ref": "#/$defs/SupportChange"
+        },
+        "maxItems": 10,
+        "title": "Family Support",
+        "type": "array"
+      },
+      "allow_new_loan": {
+        "default": true,
+        "title": "Allow New Loan",
+        "type": "boolean"
+      },
+      "loan": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/QuoteInput"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "loan_available_on": {
+        "anyOf": [
+          {
+            "format": "date",
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Loan Available On"
+      }
+    },
+    "required": [
+      "name"
+    ],
+    "title": "Scenario",
+    "type": "object"
+  },
+  "money": "THB decimal strings; no binary floats",
+  "versions": [
+    "semester_id",
+    "state_version",
+    "budget_version",
+    "analysis_version"
+  ],
+  "trust_states": [
+    "Verified",
+    "Estimated",
+    "Unconfirmed",
+    "Missing"
+  ],
+  "trace_layer_states": [
+    "EXECUTED",
+    "FAILED",
+    "NOT_CALLED",
+    "MOCK",
+    "CACHED",
+    "OBSERVED"
+  ],
+  "review_states": [
+    "OPEN",
+    "IN_PROGRESS",
+    "WAITING_INFORMATION",
+    "RESOLVED",
+    "REJECTED"
+  ],
+  "what_if_metrics": [
+    "maximum_reserve_gap",
+    "minimum_balance",
+    "first_below_reserve",
+    "first_negative_date",
+    "remaining_expenses",
+    "semester_funding_gap",
+    "complete",
+    "daily",
+    "monthly",
+    "issues",
+    "name",
+    "conditional",
+    "conditions",
+    "confirmed",
+    "loan",
+    "loan_needed",
+    "unmet_gap",
+    "assumptions",
+    "is_simulated"
+  ],
+  "docs": "docs/copilot.md"
+}

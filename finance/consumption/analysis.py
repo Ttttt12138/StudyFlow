@@ -263,12 +263,21 @@ def review_recurring(owner, data, item):
     return record(item)
 
 
-def provenance(cost):
+def provenance(cost, as_of=None):
+    from django.utils import timezone
+    as_of = as_of or timezone.localdate()
+    has_range = cost.get("lower") is not None and cost.get("upper") is not None
     status = (
         "Missing"
+        if cost.get("amount") is None and not has_range
+        else "Unconfirmed"
+        if cost.get("conflict")
+        else "Estimated"
         if cost.get("amount") is None
         else "Verified"
         if cost.get("confidence_type") == "VERIFIED"
+        else "Unconfirmed"
+        if cost.get("confidence_type") == "UNCONFIRMED"
         else "Estimated"
     )
     return {
@@ -281,6 +290,11 @@ def provenance(cost):
         "source_refs": cost.get("source_refs", []),
         "evidence": cost.get("evidence", []),
         "updated_at": cost.get("observed_at"),
+        "observed_at": cost.get("observed_at"),
+        "verified_at": cost.get("verified_at"),
+        "conflict": cost.get("conflict", False),
+        "expired": bool(cost.get("valid_until") and str(cost["valid_until"]) < str(as_of)),
+        "applicability": cost.get("applicability", "APPLICABLE"),
         "valid_until": cost.get("valid_until"),
         "confidence": cost.get("confidence"),
         "synthetic": cost.get("synthetic", False),

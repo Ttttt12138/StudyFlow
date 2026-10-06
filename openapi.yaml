@@ -1508,6 +1508,27 @@ paths:
               schema:
                 $ref: '#/components/schemas/HistoryResponse'
           description: ''
+  /api/v2/readiness/explanations/{trace_id}/:
+    get:
+      operationId: get_api_v2_readiness_explanations_trace_id
+      parameters:
+      - in: path
+        name: trace_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
   /api/v2/readiness/forecasts/:
     get:
       operationId: get_api_v2_readiness_forecasts
@@ -1930,7 +1951,35 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HistoryResponse'
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/readiness/notifications/{id}/read/:
+    post:
+      operationId: post_api_v2_readiness_notifications_id_read
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
           description: ''
   /api/v2/readiness/recurring-expenses/:
     get:
@@ -2325,6 +2374,142 @@ paths:
               schema:
                 $ref: '#/components/schemas/CommandResponse'
           description: ''
+  /api/v2/readiness/what-if/:
+    post:
+      operationId: post_api_v2_readiness_what_if
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SimulateInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SimulateInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SimulateInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/readiness/what-if/{id}/:
+    get:
+      operationId: get_api_v2_readiness_what_if_id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/readiness/what-if/{id}/apply/:
+    post:
+      operationId: post_api_v2_readiness_what_if_id_apply
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApplyInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ApplyInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ApplyInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/readiness/what-if/{id}/apply-preview/:
+    post:
+      operationId: post_api_v2_readiness_what_if_id_apply_preview
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PreviewInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PreviewInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PreviewInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
   /api/v2/remittance-comparisons/:
     post:
       operationId: post_api_v2_remittance_comparisons
@@ -2348,6 +2533,77 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/ComparisonInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/review-queue/:
+    get:
+      operationId: get_api_v2_review_queue
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/review-queue/{id}/:
+    get:
+      operationId: get_api_v2_review_queue_id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/review-queue/{id}/actions/:
+    post:
+      operationId: post_api_v2_review_queue_id_actions
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReviewInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ReviewInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ReviewInput'
         required: true
       security:
       - tokenAuth: []
@@ -2810,6 +3066,14 @@ components:
           format: uuid
       required:
       - quote_id
+    ApplyInput:
+      type: object
+      properties:
+        confirmation:
+          type: string
+          maxLength: 2000
+      required:
+      - confirmation
     AuthorizationInput:
       type: object
       properties:
@@ -3054,6 +3318,22 @@ components:
       required:
       - expected_version
       - reason
+    DomainActionEnum:
+      enum:
+      - confirm_material
+      - transcribe
+      - authorize_ocr
+      - decide_loan
+      - verify_beneficiary
+      - reconcile_payment
+      type: string
+      description: |-
+        * `confirm_material` - confirm_material
+        * `transcribe` - transcribe
+        * `authorize_ocr` - authorize_ocr
+        * `decide_loan` - decide_loan
+        * `verify_beneficiary` - verify_beneficiary
+        * `reconcile_payment` - reconcile_payment
     Event:
       type: object
       properties:
@@ -3498,6 +3778,15 @@ components:
       required:
       - allocations
       - scenario_id
+    PreviewInput:
+      type: object
+      properties:
+        scenario_index:
+          type: integer
+          maximum: 2
+          minimum: 0
+      required:
+      - scenario_index
     ProfileInput:
       type: object
       properties:
@@ -3550,6 +3839,42 @@ components:
       required:
       - expected_version
       - installment_number
+    ReviewInput:
+      type: object
+      properties:
+        expected_version:
+          type: integer
+          minimum: 1
+        action:
+          $ref: '#/components/schemas/ReviewInputActionEnum'
+        reason:
+          type: string
+          maxLength: 500
+        assignee_id:
+          type: integer
+        domain_action:
+          $ref: '#/components/schemas/DomainActionEnum'
+        payload: {}
+      required:
+      - action
+      - expected_version
+      - reason
+    ReviewInputActionEnum:
+      enum:
+      - assign
+      - request_information
+      - start
+      - reject
+      - recheck
+      - domain_action
+      type: string
+      description: |-
+        * `assign` - assign
+        * `request_information` - request_information
+        * `start` - start
+        * `reject` - reject
+        * `recheck` - recheck
+        * `domain_action` - domain_action
     RevisionInput:
       type: object
       properties:
@@ -3643,6 +3968,32 @@ components:
       - THB
       type: string
       description: '* `THB` - THB'
+    SimulateInput:
+      type: object
+      properties:
+        analysis_version:
+          type: integer
+          minimum: 0
+        state_version:
+          type: integer
+          minimum: 1
+        budget_version:
+          type: integer
+          minimum: 1
+        semester_id:
+          type: string
+          format: uuid
+        scenarios:
+          type: array
+          items: {}
+          maxItems: 3
+          minItems: 1
+      required:
+      - analysis_version
+      - budget_version
+      - scenarios
+      - semester_id
+      - state_version
     Snapshot:
       type: object
       properties:

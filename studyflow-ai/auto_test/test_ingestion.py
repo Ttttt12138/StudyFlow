@@ -74,3 +74,51 @@ def test_injection_forces_review():
     )
     assert result.status == "NEEDS_REVIEW"
     assert result.routing.action == "REVIEW"
+
+
+VERIFIED = {"verified_source_ids": ["test"], "verification_reference": "user:001"}
+
+
+def test_structural_money_without_keywords_or_currency_is_never_skipped():
+    from studyflow_ai.providers.rules import financial_clues
+
+    sublet = "同学的转租提议\n房间转租价格：每月5386.75，首次付款日为2026-10-16。我们还没约定用哪种货币。"
+    assert financial_clues(sublet)
+    assert financial_clues("Sublet price: 1,250 per month, first payment on 2026-10-15.")
+    for text in (
+        "App version 1.13 released on 2026-10-01.",
+        "Your exam score 87.50 is posted; the next essay is due 2026-10-15.",
+        "Photography club meets in room 4-1 on 2026-10-15.",
+    ):
+        assert not financial_clues(text)
+    result = ingest(sublet, **VERIFIED)
+    assert result.routing.action == "EXTRACT"
+    assert result.status == "NEEDS_REVIEW" and result.candidates
+
+
+def test_unsure_rule_guess_reaches_review_even_with_complete_fields():
+    # No keyword category: rules can only guess "other", which must not be auto-processed.
+    text = "Pledge from my older brother. Amount: THB 3690.35, due 2026-10-15. Beneficiary: Me"
+    classification, _ = RuleProvider().classify(text)
+    assert classification.category == "other" and classification.confidence < 0.8
+    result = ingest(text, **VERIFIED)
+    assert "LOW_CLASSIFICATION_PROBABILITY" in [i.code for i in result.issues]
+    assert result.status == "NEEDS_REVIEW"
+    # One unambiguous keyword category with complete fields stays automatic.
+    confident = ingest("Tuition THB 6500.00 due 2026-10-15. Beneficiary: PSU", **VERIFIED)
+    assert confident.status == "READY"
+
+
+def test_financial_material_without_candidates_goes_to_review():
+    from studyflow_ai.provider_models import Extraction
+
+    class Empty(RuleProvider):
+        def extract(self, text):
+            return Extraction(events=[]), self.record("extract")
+
+    result = Ingestor(RuleProvider(), Empty()).ingest(
+        Source(source_id="test", kind="email", text="Tuition THB 6500.00 due 2026-10-15"),
+        IngestContext(reference_date=date(2026, 10, 2), **VERIFIED),
+    )
+    assert "FINANCIAL_CLUES_WITHOUT_CANDIDATE" in [i.code for i in result.issues]
+    assert result.status == "NEEDS_REVIEW"
