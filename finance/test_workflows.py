@@ -9,15 +9,23 @@ from .tests import BASE
 from .models import FinancialState,AuditEvent
 from .workflow_models import *
 from .loan_engine import loan_schedule
+from .policy_defaults import ensure_default_limits
+from .policy_flow import client_flow, step_up_header
+
+PASSWORD = "student-flow-pass-1"
 
 LOAN = {"currency":"THB","principal":"10000.00","annual_rate":"0.12",
         "months":12,"fees":"1000.00","first_due_date":"2026-11-02"}
 
 class WorkflowTests(APITestCase):
     def setUp(self):
-        self.user = get_user_model().objects.create_user(username="student-flow")
+        ensure_default_limits()
+        self.user = get_user_model().objects.create_user(username="student-flow",password=PASSWORD)
         self.operator = get_user_model().objects.create_user(username="demo-operator",is_staff=True)
+        # Tuition exceeds the THB per-transaction limit; a second operator approves (the verifier may not).
+        self.approver = get_user_model().objects.create_user(username="demo-approver",is_staff=True)
         self.other = get_user_model().objects.create_user(username="outsider")
+        self.flow = client_flow(self.user,PASSWORD,self.approver)
         self.client.force_authenticate(self.user)
         response = self.client.post("/api/v2/state/",{"expected_version":0,"snapshot":deepcopy(BASE)},format="json")
         self.assertEqual(response.status_code,201)
@@ -26,9 +34,10 @@ class WorkflowTests(APITestCase):
     def post(self,path,data=None,operator=False,code=201,key=None):
         if path == "fx-quotes":
             data = {"sender_fee":"0","receiver_fee":"0","settlement_days":0,**(data or {})}
+        headers = {} if operator else step_up_header(self.flow,path,data)
         self.client.force_authenticate(self.operator if operator else self.user)
         response = self.client.post("/api/v2/"+path+"/",data or {},format="json",
-            HTTP_IDEMPOTENCY_KEY=key or str(uuid4()))
+            HTTP_IDEMPOTENCY_KEY=key or str(uuid4()),**headers)
         self.assertEqual(response.status_code,code,str(response.data))
         self.client.force_authenticate(self.user)
         return response.data.get("data",response.data)

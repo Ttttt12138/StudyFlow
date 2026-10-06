@@ -14,12 +14,19 @@ from .test_workflows import LOAN
 from .models import FinancialState
 from .workflow_models import DemoWallet,DemoLedgerEntry,LoanSimulation
 from .workflow_common import current
+from .policy_defaults import ensure_default_limits
+from .policy_flow import client_flow, step_up_header
+
+PASSWORD = "parallel-student-pass-1"
 
 @skipUnless(connection.vendor == "postgresql", "Requires real PostgreSQL locking and triggers")
 class PostgresConcurrencyTests(TransactionTestCase):
     def setUp(self):
-        self.user = get_user_model().objects.create_user(username="parallel-student")
+        ensure_default_limits()
+        self.user = get_user_model().objects.create_user(username="parallel-student",password=PASSWORD)
         self.operator = get_user_model().objects.create_user(username="parallel-operator",is_staff=True)
+        approver = get_user_model().objects.create_user(username="parallel-approver",is_staff=True)
+        self.flow = client_flow(self.user,PASSWORD,approver)
         self.client = APIClient()
         self.client.force_authenticate(self.user)
         response = self.client.post("/api/v2/state/",{"expected_version":0,"snapshot":deepcopy(BASE)},format="json")
@@ -37,6 +44,7 @@ class PostgresConcurrencyTests(TransactionTestCase):
         actor_id = self.operator.pk if operator else self.user.pk
         barrier = Barrier(2)
         key = str(uuid4())
+        headers = [{} if operator else step_up_header(self.flow,paths[i],bodies[i]) for i in range(2)]
         def work(index):
             try:
                 actor = get_user_model().objects.get(pk=actor_id)
@@ -44,7 +52,7 @@ class PostgresConcurrencyTests(TransactionTestCase):
                 client.force_authenticate(actor)
                 barrier.wait(timeout=10)
                 response = client.post("/api/v2/"+paths[index]+"/",bodies[index],format="json",
-                    HTTP_IDEMPOTENCY_KEY=key if same_key else str(uuid4()))
+                    HTTP_IDEMPOTENCY_KEY=key if same_key else str(uuid4()),**headers[index])
                 return response.status_code
             finally:
                 connections.close_all()

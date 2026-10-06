@@ -18,6 +18,8 @@ class LendingConcurrencyTests(LendingHarness, APITransactionTestCase):
     def parallel(self, path, body, *, operator=False, same_key=False):
         actor_id = (self.operator if operator else self.student).pk
         barrier, key = Barrier(4), str(uuid4())
+        # One step-up per request, obtained before the race.
+        headers = [{} if operator else self.step_up(path, body) for _ in range(4)]
 
         def work(index):
             try:
@@ -29,6 +31,7 @@ class LendingConcurrencyTests(LendingHarness, APITransactionTestCase):
                     body,
                     format="json",
                     HTTP_IDEMPOTENCY_KEY=key if same_key else str(uuid4()),
+                    **headers[index],
                 )
                 return response.status_code
             finally:

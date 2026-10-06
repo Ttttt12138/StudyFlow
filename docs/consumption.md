@@ -8,6 +8,7 @@
 
 ```powershell
 studyFlow/Scripts/python.exe manage.py migrate --noinput
+studyFlow/Scripts/python.exe manage.py createcachetable
 $env:STUDYFLOW_READINESS_ENABLED='true'
 $env:STUDYFLOW_CONSUMPTION_ENABLED='true'
 studyFlow/Scripts/python.exe manage.py runserver 127.0.0.1:8000 --noreload

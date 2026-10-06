@@ -21,19 +21,19 @@
 
 | ID | 风险 | 等级 | 现有缓解 | 状态 | 证据 |
 |---|---|---|---|---|---|
-| A1 | 无分级权限、无单笔/日限额、无 step-up；任何已登录学生可在可用余额内发起任意金额付款 | 高 | 付款需授权窗口、收款人核验、储备金检查 | 开放（W2B） | `finance/execution_services.py` |
-| A2 | 角色只有学生与 `is_staff`；运营可跨所有者操作，无分权（同一运营可核验收款人并推进付款） | 高 | 运营动作有审计 | 开放（W2B） | `finance/workflow_api.py` |
+| A1 | 资金流出（付款提交、换汇、还款）缺少分级控制，已登录学生可在可用余额内发起任意金额付款 | 高 | T0–T3 分级：T2 动作需 5 分钟一次性 step-up 令牌（重新输入密码，绑定动作/目标/金额/币种，改密码即失效）；按币种的单笔/日/月限额（曼谷自然日、月），超限或无限额配置时需运营审批；策略在命令事务和用户锁内检查，并发不能绕过限额；Agent 调用最高 T1。剩余：step-up 只是重新输入同一密码，没有第二因素（TOTP/WebAuthn）；限额按真实时间计算，演示时钟不影响；W3 汇款路由尚需接入 `remittance.submit` | 部分缓解 | `finance/policy.py`、`docs/permissions.md`、`auto_test/test_policy*.py` |
+| A2 | 角色只有学生与 `is_staff`；运营可跨所有者操作，同一运营可核验收款人并推进付款 | 高 | 超限动作需审批，审批人不能是申请人（数据库约束）、不能是最近一次核验该收款人的运营、不能审批自己所有的单；审批有版本号、24 小时过期、成功执行后标为 USED；全部有审计。剩余：仍只有 `is_staff` 一种运营角色，运营仍可直接办理到账、放款、支付回调（这些动作不改变学生余额的流出，但有审计无双人复核）；演示环境的两名运营是同一脚本创建的模拟身份 | 部分缓解 | `finance/policy.py`、`finance/policy_api.py` |
 | A3 | 赞助人身份不核验，链接持有者即视为赞助人 | 中 | 令牌只存摘要、72h 过期、常量时间比较、条款版本绑定 | 部分缓解 | `finance/sponsorship.py`、`docs/consumption.md` |
-| A4 | 无 API 限流（OCR 每小时额度除外），登录与赞助确认接口可被暴力尝试 | 中 | 赞助令牌 256 位熵 | 开放（W2B） | `config/settings.py` |
-| A5 | 获取 Token 只能通过管理命令 | 低 | — | 开放（W2B） | `finance/management/commands/seed_demo.py` |
+| A4 | API 接口可被暴力尝试（登录、step-up、赞助确认） | 中 | DRF 全局限流（用户/匿名）及作用域限流：`auth` 10/min、`step_up` 10/hour、`money` 60/hour、`sponsor` 20/hour（按 IP），计数存于共享数据库缓存；step-up 失败有审计；赞助令牌 256 位熵。剩余：`/api/auth/login/`（DRF 可浏览 API 的 session 登录页）未纳入 DRF 限流；按 IP 的限流不信任客户端的 `X-Forwarded-For`，部署在反向代理后必须设置 `DJANGO_NUM_PROXIES`，否则所有客户端共用代理的计数；没有账户锁定 | 部分缓解 | `config/settings.py`、`finance/throttles.py` |
+| A5 | 获取 Token 只能通过管理命令 | 低 | `POST /api/v2/auth/token/`（用户名密码，`auth` 限流）。剩余：Token 不过期、无轮换接口 | 部分缓解 | `finance/policy_api.py` |
 
 ## 部署与配置
 
 | ID | 风险 | 等级 | 现有缓解 | 状态 | 证据 |
 |---|---|---|---|---|---|
-| D1 | 未配置 HTTPS 重定向、HSTS、安全 Cookie、CSRF 可信来源 | 中 | `DEBUG` 默认 False | 开放（W2B） | `config/settings.py` |
-| D2 | `.env.example` 默认 `DJANGO_DEBUG=True` | 低 | 仅本地示例 | 开放（W2B） | `.env.example` |
-| D3 | 未配置共享缓存；按进程计数的限流在多进程部署下失效 | 中 | — | 开放（W2B） | `config/settings.py` |
+| D1 | 未配置 HTTPS 重定向、HSTS、安全 Cookie、CSRF 可信来源 | 中 | `DJANGO_SECURE=true` 启用 HTTPS 重定向、HSTS（默认 3600 秒、不 preload）、Secure Cookie、8 小时会话；始终启用 nosniff、Referrer-Policy、`X-Frame-Options: DENY`、`CSRF_TRUSTED_ORIGINS`；CI 运行 `check --deploy --fail-level WARNING`。剩余：未在真实 HTTPS 部署上验证；HSTS 时长需上线后人工调高；不 preload | 部分缓解 | `config/settings.py`、`.github/workflows/django.yml` |
+| D2 | `.env.example` 默认 `DJANGO_DEBUG=True` | 低 | 示例改为 `DJANGO_DEBUG=False`；已有本地 `.env` 不会被自动修改 | 已缓解 | `.env.example` |
+| D3 | 未配置共享缓存；按进程计数的限流在多进程部署下失效 | 中 | `DatabaseCache`（表 `studyflow_cache`），所有进程共享；部署和 CI 执行 `createcachetable`，门禁脚本和启动脚本也会创建。剩余：每次请求增加几次数据库读写；缓存表缺失时所有请求报错 | 已缓解 | `config/settings.py`、`scripts/run_gates.py` |
 | D4 | 无前端，未做浏览器端到端验收 | 中 | HTTP 进程内演示 | 开放（不在本轮范围） | `README.md` |
 
 ## AI 与评估

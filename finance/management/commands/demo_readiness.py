@@ -9,12 +9,12 @@ from wsgiref.simple_server import WSGIRequestHandler, make_server
 
 import httpx
 from django.conf import settings
-from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand, CommandError
 from django.core.wsgi import get_wsgi_application
 from django.test import override_settings
 from rest_framework.authtoken.models import Token
 
+from finance.policy_flow import PolicyFlow, approver, scripted_throttling, scripted_user
 from finance.readiness.jobs import run_one
 from finance.readiness.models import ReadinessJob
 
@@ -27,25 +27,45 @@ class QuietHandler(WSGIRequestHandler):
 class Demo:
     def __init__(self, base_url):
         self.run_id = uuid4().hex
-        users = get_user_model().objects
-        self.student = users.create_user(username="readiness-demo-" + self.run_id)
-        self.operator = users.create_user(
-            username="readiness-operator-" + self.run_id, is_staff=True
+        self.student, password = scripted_user("readiness-demo-" + self.run_id)
+        self.operator, _ = scripted_user(
+            "readiness-operator-" + self.run_id, staff=True
+        )
+        # A second operator decides T3 approvals; the verifying operator may not.
+        self.approver, _ = scripted_user(
+            "readiness-approver-" + self.run_id, staff=True
         )
         self.tokens = {
             role: Token.objects.create(user=user).key
-            for role, user in [("student", self.student), ("operator", self.operator)]
+            for role, user in [
+                ("student", self.student),
+                ("operator", self.operator),
+                ("approver", self.approver),
+            ]
         }
         self.http = httpx.Client(
             base_url=base_url + "/api/v2/", trust_env=False, timeout=30
         )
+        self.policy = PolicyFlow(
+            self.student,
+            password,
+            self.request,
+            approver(lambda route, body: self.request(route, body, role="approver")),
+        )
 
-    def request(self, route, body=None, operator=False, key=None, **kwargs):
+    def step_up(self, route, body):
+        """X-Step-Up-Token header for T2 routes (approval first when T3)."""
+        token = self.policy.token(route, body)
+        return {"X-Step-Up-Token": token} if token else {}
+
+    def request(self, route, body=None, operator=False, key=None, role=None, **kwargs):
+        role = role or ("operator" if operator else "student")
         headers = {
-            "Authorization": "Token "
-            + self.tokens["operator" if operator else "student"],
+            "Authorization": "Token " + self.tokens[role],
             "Idempotency-Key": key or uuid4().hex,
         }
+        if role == "student" and body is not None and not kwargs:
+            headers.update(self.step_up(route, body))
         if body is None and not kwargs:
             response = self.http.get(route + "/", headers=headers)
         else:
@@ -289,6 +309,7 @@ class Demo:
                 "check": checked,
                 "disbursement": disbursed,
                 "repayment": repayment,
+                "policy": self.policy.log,
                 "forecast": forecast,
                 "after_repayment_check": after_repayment,
             }
@@ -323,7 +344,8 @@ class Command(BaseCommand):
             STUDYFLOW_READINESS_ENABLED=True,
             STUDYFLOW_AI_MODE=options["mode"],
             ALLOWED_HOSTS=["127.0.0.1", "localhost"],
-        ):
+        ), scripted_throttling() as throttling:
+            report["throttling"] = throttling
             server = make_server(
                 "127.0.0.1", 0, get_wsgi_application(), handler_class=QuietHandler
             )

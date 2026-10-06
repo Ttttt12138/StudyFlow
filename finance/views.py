@@ -17,6 +17,8 @@ from .services import save_state, json_value, VersionConflict
 class HealthView(APIView):
     permission_classes = [permissions.AllowAny]
     authentication_classes = []
+    # Probes must not be throttled (or touch the throttle cache) when the database is down.
+    throttle_classes = []
 
     @extend_schema(responses=HealthSerializer)
     def get(self, request):

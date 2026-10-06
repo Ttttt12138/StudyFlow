@@ -15,13 +15,16 @@ class Command(BaseCommand):
     @transaction.atomic
     def handle(self,*args,**options):
         User = get_user_model()
-        if User.objects.filter(username__in=["demo-student","demo-operator"]).exists():
+        if User.objects.filter(username__in=["demo-student","demo-operator","demo-approver"]).exists():
             raise CommandError("Demo users already exist. Existing records and credentials were preserved.")
-        student_password,operator_password = secrets.token_urlsafe(18),secrets.token_urlsafe(18)
+        student_password,operator_password,approver_password = (secrets.token_urlsafe(18) for _ in range(3))
         student = User.objects.create_user(username="demo-student",password=student_password)
         operator = User.objects.create_user(username="demo-operator",password=operator_password,is_staff=True)
+        # Separation of duties: the operator verifies the payee, so T3 approvals need a second operator.
+        approver = User.objects.create_user(username="demo-approver",password=approver_password,is_staff=True)
         credentials = {}
-        for label,user,password in [("student",student,student_password),("operator",operator,operator_password)]:
+        for label,user,password in [("student",student,student_password),("operator",operator,operator_password),
+                                    ("approver",approver,approver_password)]:
             credentials[label]={"username":user.username,"password":password,"token":Token.objects.create(user=user).key}
         client = APIClient(HTTP_HOST="localhost")
         client.force_authenticate(student)
