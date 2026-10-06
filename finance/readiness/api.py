@@ -5,7 +5,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from django.shortcuts import get_object_or_404
-from django.urls import path
+from django.urls import include, path
 from drf_spectacular.utils import extend_schema
 from rest_framework.exceptions import NotFound
 from rest_framework.parsers import FormParser, MultiPartParser
@@ -18,7 +18,7 @@ from finance.workflow_common import record, require
 from finance.workflow_models import Beneficiary, IdempotencyRecord
 from finance.workflow_serializers import CommandResponse, HistoryResponse
 
-from . import imports, services
+from . import imports, ocr, services
 from . import serializers as s
 from .funding import create_funding_plan, recommend_funding
 from .models import (
@@ -30,7 +30,7 @@ from .models import (
     Semester,
 )
 from .safety import update_beneficiary
-from .templates import get_template
+from .templates import list_templates, upgrade
 
 
 class Enabled:
@@ -43,7 +43,7 @@ class Enabled:
 class TemplatesView(Enabled, APIView):
     @extend_schema(responses=CommandResponse)
     def get(self, request):
-        return Response({"data": [get_template("shared"), get_template("single")]})
+        return Response({"data": list_templates()})
 
 
 class StateView(Enabled, APIView):
@@ -124,7 +124,11 @@ class ImportView(Enabled, APIView):
         rows = ImportMaterial.objects.filter(owner=request.user).order_by("-created_at")
         if pk:
             return Response(
-                {"data": imports.material_record(get_object_or_404(rows, pk=pk))}
+                {
+                    "data": imports.material_record(
+                        get_object_or_404(rows, pk=pk), include_ocr_text=True
+                    )
+                }
             )
         return Response({"data": [imports.material_record(row) for row in rows[:50]]})
 
@@ -166,6 +170,35 @@ class ConfirmView(Enabled, CommandView):
     handler = staticmethod(imports.confirm)
 
 
+class TranscriptionView(Enabled, CommandView):
+    serializer_class = s.TranscriptionInput
+    target_model = ImportMaterial
+    handler = staticmethod(imports.transcribe)
+
+
+class OcrNoticeView(Enabled, APIView):
+    @extend_schema(responses=CommandResponse)
+    def get(self, request):
+        return Response({"data": ocr.notice()})
+
+
+class OcrAuthorizeView(Enabled, CommandView):
+    serializer_class = s.OcrConsentInput
+    target_model = ImportMaterial
+    handler = staticmethod(ocr.authorize)
+
+
+class DiscardSourceView(Enabled, CommandView):
+    serializer_class = s.Versions
+    target_model = ImportMaterial
+    handler = staticmethod(ocr.discard_source)
+
+
+class TemplateUpgradeView(Enabled, CommandView):
+    serializer_class = s.TemplateUpgradeInput
+    handler = staticmethod(upgrade)
+
+
 class BeneficiaryUpdateView(Enabled, CommandView):
     serializer_class = s.BeneficiaryUpdateInput
     target_model = Beneficiary
@@ -173,8 +206,10 @@ class BeneficiaryUpdateView(Enabled, CommandView):
 
 
 urlpatterns = [
+    path("", include("finance.consumption.api")),
     path("beneficiaries/<uuid:pk>/update/", BeneficiaryUpdateView.as_view()),
     path("templates/", TemplatesView.as_view()),
+    path("templates/upgrade/", TemplateUpgradeView.as_view()),
     path("semesters/", SemesterView.as_view()),
     path("semesters/revise/", RevisionView.as_view()),
     path("semesters/<uuid:pk>/", OwnedReadView.as_view(model=Semester)),
@@ -188,6 +223,10 @@ urlpatterns = [
     path("risks/", OwnedReadView.as_view(model=RiskCard)),
     path("notifications/", OwnedReadView.as_view(model=NotificationOutbox)),
     path("imports/", ImportView.as_view()),
+    path("imports/ocr-notice/", OcrNoticeView.as_view()),
     path("imports/<uuid:pk>/", ImportView.as_view()),
     path("imports/<uuid:pk>/confirm/", ConfirmView.as_view()),
+    path("imports/<uuid:pk>/transcribe/", TranscriptionView.as_view()),
+    path("imports/<uuid:pk>/authorize-ocr/", OcrAuthorizeView.as_view()),
+    path("imports/<uuid:pk>/discard-source/", DiscardSourceView.as_view()),
 ]

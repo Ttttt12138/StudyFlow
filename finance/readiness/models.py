@@ -9,6 +9,8 @@ from finance.models import OwnedRecord
 class Semester(OwnedRecord):
     template_key = models.CharField(max_length=100)
     version = models.PositiveIntegerField(default=1)
+    analysis_version = models.PositiveIntegerField(default=0)
+    template_version = models.PositiveIntegerField(default=1)
     draft = models.JSONField(default=dict)
     enabled = models.BooleanField(default=True)
 
@@ -26,6 +28,7 @@ class ReadinessRun(OwnedRecord):
     semester = models.ForeignKey(Semester, on_delete=models.PROTECT)
     state_version = models.PositiveIntegerField()
     budget_version = models.PositiveIntegerField()
+    analysis_version = models.PositiveIntegerField(default=0)
     kind = models.CharField(max_length=20)
     inputs = models.JSONField(default=dict)
     result = models.JSONField(default=dict)
@@ -39,6 +42,7 @@ class ImportMaterial(OwnedRecord):
     status = models.CharField(max_length=20, default="QUEUED")
     result = models.JSONField(default=dict)
     confirmation = models.JSONField(default=dict)
+    processing = models.JSONField(default=dict)
     state_version = models.PositiveIntegerField()
     budget_version = models.PositiveIntegerField()
 

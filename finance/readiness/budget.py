@@ -44,6 +44,19 @@ def portions(item, profile):
 
 
 def cost_events(item, profile, amount):
+    if "forecast_schedule" in item and not item.get("paid"):
+        return [
+            {
+                "id": "cost:" + item["cost_id"] + ":" + day,
+                "label": item["category"],
+                "kind": "expense",
+                "amount": money(amount),
+                "date": day,
+                "certainty": "estimated",
+                "source_type": "inferred_monthly_schedule",
+            }
+            for day in item["forecast_schedule"]
+        ]
     rows = portions(item, profile)
     if item.get("paid") or not rows or any(day is None for day, _ in rows):
         return []

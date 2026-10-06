@@ -1,0 +1,72 @@
+{
+  "version": "ocr-demo-v1",
+  "synthetic": true,
+  "files": [
+    {
+      "path": "invoice-en.png",
+      "kind": "image",
+      "language": "en",
+      "sha256": "557950d3adfc6f37a2ff2732a7eb24115bad0db3afc65217986085bfff071f51",
+      "expected_tokens": [
+        "10000.00",
+        "DEMO-EN-001",
+        "2026-11-10"
+      ]
+    },
+    {
+      "path": "invoice-en.pdf",
+      "kind": "pdf",
+      "language": "en",
+      "sha256": "07b26a074206407f3edd866bd4416490cfa66f293b8b82ab1cb16f2a8ae05ced",
+      "expected_tokens": [
+        "10000.00",
+        "DEMO-EN-001",
+        "2026-11-10"
+      ]
+    },
+    {
+      "path": "invoice-zh.png",
+      "kind": "image",
+      "language": "zh",
+      "sha256": "c72d745ff1b3c069efd681474fa6e18800458142c13423155a0275cba0d0e16f",
+      "expected_tokens": [
+        "10000.00",
+        "DEMO-ZH-001",
+        "2026年11月10日"
+      ]
+    },
+    {
+      "path": "invoice-zh.pdf",
+      "kind": "pdf",
+      "language": "zh",
+      "sha256": "c05663a4ccf81936679a4c75fe0c7ee9d12bdeb590507a4de37f6c0c8a88b602",
+      "expected_tokens": [
+        "10000.00",
+        "DEMO-ZH-001",
+        "2026年11月10日"
+      ]
+    },
+    {
+      "path": "invoice-zh-en.png",
+      "kind": "image",
+      "language": "zh-en",
+      "sha256": "82d60845eddf23739679ad007b3561bd86823e956e1c6bca9ca8d92fc31e57d1",
+      "expected_tokens": [
+        "10000.00",
+        "DEMO-MIX-001",
+        "2026-11-10"
+      ]
+    },
+    {
+      "path": "invoice-zh-en.pdf",
+      "kind": "pdf",
+      "language": "zh-en",
+      "sha256": "03336180e218a31bb7711a38fc469e763edf3adaf480f9d6c1188c405deb934f",
+      "expected_tokens": [
+        "10000.00",
+        "DEMO-MIX-001",
+        "2026-11-10"
+      ]
+    }
+  ]
+}

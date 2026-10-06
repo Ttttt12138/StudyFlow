@@ -195,7 +195,7 @@ class ReadinessApiTests(APITestCase):
         )
         self.revise(draft)
         allocations = []
-        for kind, amount in [("family", "20000.00"), ("scholarship", "10000.00")]:
+        for kind, amount in [("external_savings", "20000.00"), ("scholarship", "10000.00")]:
             source = self.post(
                 "funding-sources",
                 {
@@ -253,7 +253,7 @@ class ReadinessApiTests(APITestCase):
             "funding-sources",
             {
                 "economic_key": "receipt",
-                "kind": "family",
+                "kind": "external_savings",
                 "currency": "THB",
                 "amount": "20000.00",
                 "available_on": "2026-08-01",
@@ -280,7 +280,7 @@ class ReadinessApiTests(APITestCase):
             "funding-sources",
             {
                 "economic_key": "late",
-                "kind": "family",
+                "kind": "external_savings",
                 "currency": "THB",
                 "amount": "50000.00",
                 "available_on": "2026-08-30",

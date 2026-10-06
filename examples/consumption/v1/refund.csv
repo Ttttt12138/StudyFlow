@@ -1,0 +1,2 @@
+transaction_id,account_id,date,amount,currency,counterparty,description
+refund-1,demo-main,2026-09-25,50.00,THB,Demo Cafe,Food refund

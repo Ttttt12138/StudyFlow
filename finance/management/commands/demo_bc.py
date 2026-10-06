@@ -135,7 +135,7 @@ class Demo:
             "funding-sources",
             {
                 "economic_key": "demo-topup",
-                "kind": "family",
+                "kind": "external_savings",
                 "currency": "THB",
                 "amount": "600.00",
                 "available_on": "2026-10-02",

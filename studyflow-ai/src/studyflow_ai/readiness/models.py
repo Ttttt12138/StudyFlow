@@ -15,6 +15,7 @@ Category = Literal[
     "food",
     "transport",
     "communications",
+    "subscription",
     "utilities",
     "insurance",
     "visa",

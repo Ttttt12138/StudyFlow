@@ -35,7 +35,7 @@ def enqueue_check(owner, trigger):
         return None
     from .services import business_date
 
-    key = f"check:{owner.pk}:{state.version}:{semester.version}:{business_date(owner)}"
+    key = f"check:{owner.pk}:{state.version}:{semester.version}:{semester.analysis_version}:{business_date(owner)}"
     return enqueue(
         owner,
         "check",
@@ -45,6 +45,7 @@ def enqueue_check(owner, trigger):
             "semester_id": str(semester.id),
             "state_version": state.version,
             "budget_version": semester.version,
+            "analysis_version": semester.analysis_version,
         },
     )
 

@@ -1,0 +1,359 @@
+{
+  "key": "psu-phuket-fis-ib-2026-1-shared",
+  "version": 1,
+  "room": "shared",
+  "synthetic": false,
+  "profile": {
+    "school": "Prince of Songkla University",
+    "campus": "Phuket",
+    "city": "Phuket",
+    "country": "Thailand",
+    "program": "BBA International Business",
+    "student_type": "new international undergraduate",
+    "semester": "2026/1",
+    "lifestyle_profile": "campus_shared",
+    "start_date": "2026-08-10",
+    "end_date": "2026-12-15",
+    "evidence": [
+      {
+        "source_id": "https://gao.psu.ac.th/admission/academic-calendar",
+        "field": "start_date",
+        "quote": "10 August 2026",
+        "locator": "Academic Calendar 2026 (Phuket Campus) / First Semester"
+      },
+      {
+        "source_id": "https://gao.psu.ac.th/admission/academic-calendar",
+        "field": "end_date",
+        "quote": "15 December 2026",
+        "locator": "Academic Calendar 2026 (Phuket Campus) / First Semester"
+      }
+    ]
+  },
+  "costs": [
+    {
+      "cost_id": "tuition",
+      "category": "tuition",
+      "component": "tuition",
+      "currency": "THB",
+      "evidence": [
+        {
+          "source_id": "https://sites.google.com/phuket.psu.ac.th/fispsuphuket/International-Students",
+          "field": "amount",
+          "quote": "41,000",
+          "locator": "TUITION & FEES / B.B.A. International Business"
+        }
+      ],
+      "amount": "41000.00",
+      "period": "semester",
+      "due_date": null,
+      "paid": null,
+      "confidence_type": "UNCONFIRMED",
+      "year": 2026,
+      "campus": "Phuket",
+      "observed_at": "2026-10-05T14:38:06Z",
+      "valid_until": "2026-12-15",
+      "source_refs": [
+        "https://sites.google.com/phuket.psu.ac.th/fispsuphuket/International-Students"
+      ],
+      "synthetic": false
+    },
+    {
+      "cost_id": "enrollment",
+      "category": "settlement",
+      "component": "enrollment",
+      "currency": "THB",
+      "evidence": [
+        {
+          "source_id": "https://sites.google.com/phuket.psu.ac.th/fispsuphuket/International-Students",
+          "field": "amount",
+          "quote": "20,000",
+          "locator": "TUITION & FEES / B.B.A. International Business"
+        }
+      ],
+      "amount": "20000.00",
+      "period": "once",
+      "due_date": null,
+      "paid": null,
+      "confidence_type": "UNCONFIRMED",
+      "year": 2026,
+      "campus": "Phuket",
+      "observed_at": "2026-10-05T14:38:06Z",
+      "valid_until": "2026-12-15",
+      "source_refs": [
+        "https://sites.google.com/phuket.psu.ac.th/fispsuphuket/International-Students"
+      ],
+      "synthetic": false
+    },
+    {
+      "cost_id": "housing",
+      "category": "housing",
+      "component": "housing",
+      "currency": "THB",
+      "evidence": [
+        {
+          "source_id": "https://www.psu.ac.th/phuket/en/on-campus-accommodation-2/",
+          "field": "amount",
+          "quote": "11,250",
+          "locator": "Dormitory rental rates / International Students"
+        }
+      ],
+      "amount": "11250.00",
+      "period": "semester",
+      "due_date": null,
+      "paid": null,
+      "confidence_type": "UNCONFIRMED",
+      "year": 2026,
+      "campus": "Phuket",
+      "observed_at": "2026-10-05T14:38:06Z",
+      "valid_until": "2026-12-15",
+      "source_refs": [
+        "https://www.psu.ac.th/phuket/en/on-campus-accommodation-2/"
+      ],
+      "synthetic": false
+    },
+    {
+      "cost_id": "deposit",
+      "category": "deposit",
+      "component": "deposit",
+      "currency": "THB",
+      "evidence": [],
+      "amount": null,
+      "period": "once",
+      "due_date": null,
+      "paid": null,
+      "confidence_type": "UNCONFIRMED",
+      "year": 2026,
+      "campus": "Phuket",
+      "observed_at": "2026-10-05T14:38:06Z",
+      "valid_until": "2026-12-15",
+      "source_refs": [
+        "https://www.psu.ac.th/phuket/en/on-campus-accommodation-2/"
+      ],
+      "synthetic": false,
+      "conflict": true,
+      "alternatives": [
+        {
+          "amount": "3000.00",
+          "source": "https://sites.google.com/phuket.psu.ac.th/fispsuphuket/International-Students"
+        },
+        {
+          "amount": "6000.00",
+          "source": "https://www.psu.ac.th/phuket/en/on-campus-accommodation-2/"
+        }
+      ]
+    },
+    {
+      "cost_id": "dorm_card",
+      "category": "settlement",
+      "component": "dorm_card",
+      "currency": "THB",
+      "evidence": [],
+      "amount": null,
+      "period": "once",
+      "due_date": null,
+      "paid": null,
+      "confidence_type": "UNCONFIRMED",
+      "year": 2026,
+      "campus": "Phuket",
+      "observed_at": "2026-10-05T14:38:06Z",
+      "valid_until": "2026-12-15",
+      "source_refs": [
+        "https://www.psu.ac.th/phuket/en/on-campus-accommodation-2/"
+      ],
+      "synthetic": false,
+      "conflict": true,
+      "alternatives": [
+        {
+          "amount": "50.00",
+          "source": "https://sites.google.com/phuket.psu.ac.th/fispsuphuket/International-Students"
+        },
+        {
+          "amount": "100.00",
+          "source": "https://www.psu.ac.th/phuket/en/on-campus-accommodation-2/"
+        }
+      ]
+    },
+    {
+      "cost_id": "food",
+      "category": "food",
+      "component": "food",
+      "currency": "THB",
+      "evidence": [],
+      "amount": null,
+      "period": "monthly",
+      "due_date": null,
+      "paid": null,
+      "confidence_type": "UNCONFIRMED",
+      "year": 2026,
+      "campus": "Phuket",
+      "observed_at": null,
+      "valid_until": null,
+      "source_refs": [],
+      "synthetic": false
+    },
+    {
+      "cost_id": "transport",
+      "category": "transport",
+      "component": "transport",
+      "currency": "THB",
+      "evidence": [],
+      "amount": null,
+      "period": "monthly",
+      "due_date": null,
+      "paid": null,
+      "confidence_type": "UNCONFIRMED",
+      "year": 2026,
+      "campus": "Phuket",
+      "observed_at": null,
+      "valid_until": null,
+      "source_refs": [],
+      "synthetic": false
+    },
+    {
+      "cost_id": "communications",
+      "category": "communications",
+      "component": "communications",
+      "currency": "THB",
+      "evidence": [],
+      "amount": null,
+      "period": "monthly",
+      "due_date": null,
+      "paid": null,
+      "confidence_type": "UNCONFIRMED",
+      "year": 2026,
+      "campus": "Phuket",
+      "observed_at": null,
+      "valid_until": null,
+      "source_refs": [],
+      "synthetic": false
+    },
+    {
+      "cost_id": "utilities",
+      "category": "utilities",
+      "component": "utilities",
+      "currency": "THB",
+      "evidence": [],
+      "amount": null,
+      "period": "monthly",
+      "due_date": null,
+      "paid": null,
+      "confidence_type": "UNCONFIRMED",
+      "year": 2026,
+      "campus": "Phuket",
+      "observed_at": null,
+      "valid_until": null,
+      "source_refs": [],
+      "synthetic": false
+    },
+    {
+      "cost_id": "insurance",
+      "category": "insurance",
+      "component": "insurance",
+      "currency": "THB",
+      "evidence": [],
+      "amount": null,
+      "period": "once",
+      "due_date": null,
+      "paid": null,
+      "confidence_type": "UNCONFIRMED",
+      "year": 2026,
+      "campus": "Phuket",
+      "observed_at": null,
+      "valid_until": null,
+      "source_refs": [],
+      "synthetic": false
+    },
+    {
+      "cost_id": "visa",
+      "category": "visa",
+      "component": "visa",
+      "currency": "THB",
+      "evidence": [],
+      "amount": null,
+      "period": "once",
+      "due_date": null,
+      "paid": null,
+      "confidence_type": "UNCONFIRMED",
+      "year": 2026,
+      "campus": "Phuket",
+      "observed_at": null,
+      "valid_until": null,
+      "source_refs": [],
+      "synthetic": false
+    },
+    {
+      "cost_id": "travel",
+      "category": "travel",
+      "component": "travel",
+      "currency": "THB",
+      "evidence": [],
+      "amount": null,
+      "period": "once",
+      "due_date": null,
+      "paid": null,
+      "confidence_type": "UNCONFIRMED",
+      "year": 2026,
+      "campus": "Phuket",
+      "observed_at": null,
+      "valid_until": null,
+      "source_refs": [],
+      "synthetic": false
+    },
+    {
+      "cost_id": "study_materials",
+      "category": "settlement",
+      "component": "study_materials",
+      "currency": "THB",
+      "evidence": [],
+      "amount": null,
+      "period": "once",
+      "due_date": null,
+      "paid": null,
+      "confidence_type": "UNCONFIRMED",
+      "year": 2026,
+      "campus": "Phuket",
+      "observed_at": null,
+      "valid_until": null,
+      "source_refs": [],
+      "synthetic": false
+    }
+  ],
+  "reserve": null,
+  "required_categories": [
+    "tuition",
+    "housing",
+    "deposit",
+    "food",
+    "transport",
+    "communications",
+    "utilities",
+    "insurance",
+    "visa",
+    "travel",
+    "settlement"
+  ],
+  "sources": [
+    {
+      "url": "https://sites.google.com/phuket.psu.ac.th/fispsuphuket/International-Students",
+      "observed_at": "2026-10-05T14:38:06Z",
+      "applicable_academic_year": 2026,
+      "status": "REVIEWED_REFERENCE_NOT_INDIVIDUAL_VERIFICATION"
+    },
+    {
+      "url": "https://www.psu.ac.th/phuket/en/on-campus-accommodation-2/",
+      "observed_at": "2026-10-05T14:38:06Z",
+      "applicable_academic_year": 2026,
+      "status": "REVIEWED_REFERENCE_NOT_INDIVIDUAL_VERIFICATION"
+    },
+    {
+      "url": "https://gao.psu.ac.th/admission/academic-calendar",
+      "observed_at": "2026-10-05T14:38:06Z",
+      "applicable_academic_year": 2026,
+      "status": "REVIEWED_REFERENCE_NOT_INDIVIDUAL_VERIFICATION"
+    }
+  ],
+  "notes": [
+    "Source-backed reference, not an individual invoice or a verified payment obligation.",
+    "Deposit/card sources conflict. No reliable local food/transport/mobile estimate is asserted."
+  ]
+}

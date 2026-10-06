@@ -3,6 +3,9 @@ from django.db.models import Q
 from .models import OwnedRecord, FinancialState
 
 class FXQuote(OwnedRecord):
+    route_name = models.CharField(max_length=100, default='Simulated route')
+    quote_version = models.PositiveIntegerField(default=1)
+    settlement_min_days = models.PositiveSmallIntegerField(default=0)
     source_currency = models.CharField(max_length=3)
     target_currency = models.CharField(max_length=3, default="THB")
     rate = models.DecimalField(max_digits=24, decimal_places=10)
@@ -70,17 +73,20 @@ class Beneficiary(OwnedRecord):
     verified = models.BooleanField(default=False)
 
 class Payment(OwnedRecord):
-    plan = models.ForeignKey(FundingPlan, on_delete=models.PROTECT)
+    plan = models.ForeignKey(FundingPlan, null=True, on_delete=models.PROTECT)
+    readiness_plan = models.ForeignKey('finance.ReadinessRun', null=True, on_delete=models.PROTECT)
+    execution_context = models.JSONField(default=dict)
+    invoice_snapshot = models.JSONField(default=dict)
     state = models.ForeignKey(FinancialState, on_delete=models.PROTECT)
     beneficiary = models.ForeignKey(Beneficiary, on_delete=models.PROTECT)
     event_id = models.CharField(max_length=100)
     amount = models.DecimalField(max_digits=16, decimal_places=2)
     due_on = models.DateField()
-    status = models.CharField(max_length=20, default="draft")
+    status = models.CharField(max_length=30, default="draft")
     authorized_until = models.DateTimeField(null=True)
     receipt = models.JSONField(null=True)
     class Meta:
-        constraints = [models.UniqueConstraint(
+        constraints = [models.CheckConstraint(condition=(Q(plan__isnull=False, readiness_plan__isnull=True) | Q(plan__isnull=True, readiness_plan__isnull=False)), name='payment_exactly_one_plan'), models.UniqueConstraint(
             fields=["owner","event_id"],
             condition=~Q(status__in=["failed","cancelled","expired"]),
             name="one_active_or_settled_payment_per_event",

@@ -1,0 +1,4 @@
+# Keep versioned fixture bytes stable for checksum verification on every OS.
+examples/consumption/v1/*.csv -text
+examples/ocr/v1/*.pdf binary
+examples/ocr/v1/*.png binary

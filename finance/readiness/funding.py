@@ -8,7 +8,7 @@ from finance.budget_services import convert
 from finance.workflow_common import owned, require
 from finance.workflow_models import FundingSource, SimulatedApplication
 
-from .budget import money, project
+from .budget import money
 from .services import business_date, converted_draft, save_run, versions
 
 
@@ -45,6 +45,7 @@ def apply_actions(draft, actions):
             "COST_ACTION_UNAVAILABLE",
         )
         if action["kind"] == "reduce_spending":
+            require(not item.get("locked"), "LOCKED_COST_CANNOT_BE_REDUCED")
             require(
                 item["category"]
                 in {"food", "transport", "communications", "settlement"},
@@ -58,6 +59,9 @@ def apply_actions(draft, actions):
             require(reduction <= Decimal(item["amount"]), "REDUCTION_EXCEEDS_EXPENSE")
             item["amount"] = money(Decimal(item["amount"]) - reduction)
             item["lower"] = item["upper"] = None
+            item["locked"] = (
+                True  # This explicit scenario override must survive calibration.
+            )
         else:
             require(
                 item["category"] == "tuition"
@@ -181,9 +185,14 @@ def include_loan(owner, source, amount, snapshot):
 
 
 def evaluate(owner, semester, state, data):
-    draft = apply_actions(
-        converted_draft(owner, semester.draft), data.get("actions", [])
-    )
+    from django.conf import settings
+
+    draft = converted_draft(owner, semester.draft)
+    if settings.STUDYFLOW_CONSUMPTION_ENABLED:
+        from finance.consumption.analysis import effective_draft
+
+        draft, _statistics = effective_draft(owner, draft, business_date(owner))
+    draft = apply_actions(draft, data.get("actions", []))
     snapshot = deepcopy(state.snapshot)
     changed = {a["cost_id"] for a in data.get("actions", [])}
     for key in changed:
@@ -213,7 +222,9 @@ def evaluate(owner, semester, state, data):
     )
     require((end - now).days <= 730, "PAYMENT_HORIZON_EXCEEDS_730_DAYS")
     horizon = (end - now).days + 1
-    result = project(snapshot, draft, now, horizon, conditional=True)
+    from finance.consumption.projection import project_for
+
+    result = project_for(owner, snapshot, draft, now, horizon, conditional=True)
     remaining = Decimal(result["maximum_reserve_gap"])
     validation = (
         "INVALID"

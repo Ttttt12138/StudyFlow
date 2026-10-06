@@ -36,3 +36,4 @@ jobs:
       - run: python manage.py migrate --noinput
       - run: python manage.py demo_bc --runs 3
       - run: python manage.py demo_readiness --mode mock --runs 3 --output output/readiness-http-mock.json
+      - run: python manage.py demo_consumption --runs 3 --output output/consumption-http-demo.json
