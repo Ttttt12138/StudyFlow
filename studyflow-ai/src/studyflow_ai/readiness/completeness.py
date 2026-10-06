@@ -60,6 +60,8 @@ def assess(draft):
             result.issues.append(issue("MISSING_PROFILE_FIELD", field))
             result.questions.append(f"Confirm semester {field}.")
     for category in CATEGORIES:
+        if category == 'subscription' and category not in grouped:
+            continue
         items = grouped[category]
         states = [_cost_state(i) for i in items]
         state = (

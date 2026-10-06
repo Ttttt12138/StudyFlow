@@ -1,0 +1,15 @@
+transaction_id,account_id,date,amount,currency,counterparty,description
+9-food-15,demo-main,2026-09-15,-181.00,THB,Demo Cafe,Food and groceries
+9-food-16,demo-main,2026-09-16,-106.00,THB,Demo Cafe,Food and groceries
+9-food-17,demo-main,2026-09-17,-155.00,THB,Demo Cafe,Food and groceries
+9-food-18,demo-main,2026-09-18,-108.00,THB,Demo Cafe,Food and groceries
+9-food-19,demo-main,2026-09-19,-107.00,THB,Demo Cafe,Food and groceries
+9-food-20,demo-main,2026-09-20,-205.00,THB,Demo Cafe,Food and groceries
+9-food-21,demo-main,2026-09-21,-181.00,THB,Demo Cafe,Food and groceries
+9-food-22,demo-main,2026-09-22,-154.00,THB,Demo Cafe,Food and groceries
+9-food-23,demo-main,2026-09-23,-219.00,THB,Demo Cafe,Food and groceries
+9-food-24,demo-main,2026-09-24,-109.00,THB,Demo Cafe,Food and groceries
+9-food-25,demo-main,2026-09-25,-215.00,THB,Demo Cafe,Food and groceries
+9-food-26,demo-main,2026-09-26,-185.00,THB,Demo Cafe,Food and groceries
+9-food-27,demo-main,2026-09-27,-123.00,THB,Demo Cafe,Food and groceries
+9-food-28,demo-main,2026-09-28,-175.00,THB,Demo Cafe,Food and groceries
