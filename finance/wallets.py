@@ -95,6 +95,9 @@ def convert_balance(actor, data, obj=None):
     require(quote.corridor_id is not None and quote.rate_source in EXECUTABLE_SOURCES,
             "QUOTE_NOT_EXECUTABLE")
     require(quote.corridor.enabled, "CORRIDOR_DISABLED")
+    from .remittance_models import RemittanceOrder
+
+    require(not RemittanceOrder.objects.filter(quote=quote).exists(), "QUOTE_IN_USE")
     source, target = quote.source_currency, quote.target_currency
     money.require_supported(source)
     money.require_supported(target)

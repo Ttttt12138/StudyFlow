@@ -43,6 +43,8 @@ def convert(owner,amount,currency,quote_id=None,expense=False,consume=False):
     if consume:
         # Settlement uses a quote once; estimates (scenarios, comparisons) may reread it.
         require(quote.consumed_at is None,"QUOTE_CONSUMED")
+        from .remittance_models import RemittanceOrder
+        require(not RemittanceOrder.objects.filter(quote=quote).exists(),"QUOTE_IN_USE")
         quote.consumed_at = timezone.now()
         quote.save(update_fields=["consumed_at"])
     with localcontext() as context:

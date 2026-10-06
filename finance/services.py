@@ -11,7 +11,7 @@ class VersionConflict(APIException):
     default_code = "stale_version"
 
 # Event id prefixes written only by ledger postings.
-LEDGER_PREFIXES = ("loan:", "repayment:", "received:", "conversion:")
+LEDGER_PREFIXES = ("loan:", "repayment:", "received:", "conversion:", "remittance:")
 
 def json_value(value):
     return json.loads(json.dumps(value, cls=DjangoJSONEncoder))
