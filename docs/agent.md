@@ -64,7 +64,10 @@
 - 工具结果的主要字段：`get_balances` → `balances`；`list_corridors` → `corridors`；`list_beneficiaries` → `beneficiaries`；`list_remittance_orders` → `orders`；`rank_quotes` → `ranked`、`recommended_quote_id`；T2 工具 → `pending_action_id`、`expires_at`、`requires`。
 - 每次工具调用都经过权限分级，身份为 `actor_kind="agent"`，最高 T1。运营工具不对 Agent 开放。
 - 每一步单独开事务，幂等键由会话 id 和步骤号生成。
-- 工具结果以数据形式交给规划器，单条截断到 4000 字符。
+- 工具结果以数据形式交给规划器。单条结果序列化后超过 4000 字符时，替换为 `{"truncated": true, "preview": ...}`，整体仍不超过 4000 字符。
+- 以下规则由执行循环强制执行，不依赖规划器是否遵守：
+  - 工具不在目录中、参数不是 JSON 对象，或步数已用完仍请求工具调用时，会话以 FAILED 结束（`INVALID_TOOL_CALL` / `STEP_BUDGET_EXHAUSTED`），返回兜底回答。被拒绝的调用只记录在步骤结果的 `refused_tool` 中，不会执行。
+  - 同一工具最近两次失败，或 `rank_quotes` 没有推荐结果时，下一轮以 `steps_remaining = 0` 要求规划器结束。
 
 ## 待确认动作
 
@@ -85,7 +88,7 @@ T2 工具调用会生成 `AgentPendingAction`，记录动作、目标、金额�
 
 | 方法与路径 | 说明 |
 |---|---|
-| `POST agent/sessions/` | `{"goal", "locale"}`，同步运行到结束，返回会话（步骤、最终回答、待确认动作） |
+| `POST agent/sessions/` | `{"goal", "locale"?}`，需要 `Idempotency-Key`；`locale` 省略时按 `Accept-Language` 选择。同步运行到结束，返回会话（步骤、最终回答、待确认动作） |
 | `GET agent/sessions/`、`GET agent/sessions/{id}/` | 本人会话 |
 | `POST agent/pending-actions/{id}/confirm/` | 请求头 `X-Step-Up-Token`；执行该动作 |
 | `POST agent/pending-actions/{id}/reject/` | 放弃该动作 |

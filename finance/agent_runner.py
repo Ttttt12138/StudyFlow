@@ -42,8 +42,38 @@ def _error(exc):
 
 
 def _truncate(result):
+    """Keep the whole serialized result within RESULT_CHARS (escaping included)."""
     text = json.dumps(result, ensure_ascii=False)
-    return result if len(text) <= RESULT_CHARS else {"truncated": True, "preview": text[:RESULT_CHARS]}
+    if len(text) <= RESULT_CHARS:
+        return result
+    size = RESULT_CHARS
+    while True:
+        wrapped = {"truncated": True, "preview": text[:size]}
+        if len(json.dumps(wrapped, ensure_ascii=False)) <= RESULT_CHARS:
+            return wrapped
+        size -= 200
+
+
+def _arguments(step):
+    """The planner's arguments if they are a JSON object for a registered tool, else None."""
+    if step.tool not in TOOLS:
+        return None
+    try:
+        arguments = json.loads(step.arguments_json)
+    except ValueError:
+        return None
+    return arguments if isinstance(arguments, dict) else None
+
+
+def _must_stop(observations):
+    """Loop-level guards from docs/agent.md, enforced whatever the planner does."""
+    last = {}
+    for item in observations:
+        last[item.tool] = (last.get(item.tool, (False, False))[1], item.status in ("ERROR", "DENIED"))
+    if any(all(pair) for pair in last.values()):
+        return True
+    ranked = [o for o in observations if o.tool == "rank_quotes" and o.status == "OK"]
+    return bool(ranked) and ranked[-1].result.get("recommended_quote_id") is None
 
 
 def _propose(session, number, tool, arguments, step, call, outcome):
@@ -66,9 +96,8 @@ def _propose(session, number, tool, arguments, step, call, outcome):
     return result
 
 
-def _execute(session, number, step, call):
+def _execute(session, number, step, call, arguments):
     user, tool = session.owner, TOOLS[step.tool]
-    arguments = json.loads(step.arguments_json)
     if tool.tier == "T1" and session.write_count >= MAX_WRITES:
         status, result = "DENIED", {"error": "WRITE_BUDGET_EXHAUSTED"}
     else:
@@ -101,9 +130,9 @@ def run(session):
     observations = []
     try:
         for number in range(1, MAX_STEPS + 2):
+            remaining = 0 if _must_stop(observations) else max(MAX_STEPS - number + 1, 0)
             context = AgentContext(goal=session.goal, locale=session.locale, tools=specs,
-                                   observations=observations[-12:],
-                                   steps_remaining=max(MAX_STEPS - number + 1, 0))
+                                   observations=observations[-12:], steps_remaining=remaining)
             try:
                 step, call_record = brain.next_step(context)
             except ProviderFailure as exc:
@@ -118,7 +147,16 @@ def run(session):
                                          result={"answer": step.answer}, call=call)
                 session.status, session.final_answer = "COMPLETED", step.answer
                 break
-            observations.append(_execute(session, number, step, call))
+            arguments = _arguments(step)
+            if remaining == 0 or arguments is None:
+                # A tool call after the budget is spent, or one the catalog cannot run, ends the session.
+                code = "STEP_BUDGET_EXHAUSTED" if remaining == 0 else "INVALID_TOOL_CALL"
+                AgentStep.objects.create(owner=session.owner, session=session, number=number, status="ERROR",
+                                         result={"error": code, "refused_tool": step.tool[:40]}, call=call)
+                session.status, session.error_code = "FAILED", code
+                session.final_answer = FALLBACK[session.locale]
+                break
+            observations.append(_execute(session, number, step, call, arguments))
     finally:
         brain.close()
     session.save()

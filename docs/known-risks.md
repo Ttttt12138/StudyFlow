@@ -16,6 +16,8 @@
 | F6 | 学生自填汇率的报价曾可用于换汇，从而凭空制造余额（W1 审查发现） | 高 | 换汇只接受服务端按汇路定价的报价；回归测试 `test_manual_quote_exploit_is_rejected` | 已缓解 | `finance/wallets.py` |
 | F7 | 运营人员办理资金到账时仍可引用学生的手填报价，到账金额取决于运营人员的核对 | 中 | 只有运营人员能办理；报价用过一次即失效；有审计 | 开放（W3 起汇入改走汇款订单） | `finance/execution_services.py` |
 | F8 | 本币换出的换汇以"已确认支出"事件写入状态，readiness 会把它列为已付义务；报价消耗会触发 readiness 重算 | 低 | 事件 id 带 `conversion:` 前缀，可区分 | 开放 | `finance/wallets.py` |
+| F9 | 汇款通道为模拟：送达、失败、状态不明均由运营人员回调触发，没有真实的回执或对账文件 | 中 | 每次转换追加不可修改的状态历史；失败自动全额退回；状态不明进入复核队列；重复回调不重复入账 | 部分缓解（设计范围） | `docs/remittance.md` |
+| F10 | 汇入方向（家人从国内汇款到学生钱包）仍走资助确认加运营到账，没有汇入订单 | 低 | 资助人确认链接；到账时报价只能使用一次 | 开放 | `docs/consumption.md` |
 
 ## 认证与权限
 
@@ -44,7 +46,9 @@
 | M2 | Copilot 首次冻结测试未通过，后续只是回归 | 中 | 结果如实标注 | 开放 | `docs/verification-copilot-20261006.md` |
 | M3 | 规则组未达验收阈值 | 中 | live 模式优先模型路由 | 开放 | `docs/verification-independent-20261006.md` |
 | M4 | 曾出现 LLM `INVALID_MODEL_OUTPUT` | 低 | 结构化输出、重试、确定性复核 | 部分缓解 | `docs/verification-readiness-20261005.md` |
-| M5 | LLM 只生成候选方案，不执行任务 | 中 | 所有候选经确定性复核与用户确认 | 开放（W4） | `studyflow-ai/src/studyflow_ai/providers/prompts.py` |
+| M5 | Agent 由 LLM 规划工具调用；模型可能选错工具、编造参数或受工具结果中的注入文本影响 | 中 | 规划器每步只返回一个工具调用，并按工具清单和参数校验；T2 动作只生成待确认动作，须学生本人二次验证后确认；每会话最多 10 次调用、4 次写操作；评估集含注入样本，越权动作必须为 0（CI 门禁） | 部分缓解 | `docs/agent.md`、`finance/agent_runner.py` |
+| M6 | Agent 评估只在 mock 规则规划器上运行，评估集与规则出自同一作者；真实模型（live）的任务完成率和注入抵抗率尚未测量 | 中 | 评估命令支持 `--mode live`；运行时的安全约束与模式无关 | 开放（live 评估需批准外部调用） | `finance/agent_evaluation.py`、`studyflow-ai/evals/agent-v1/` |
+| M7 | API 错误信息的中英文翻译由 AI 完成，未经母语人工审校；briefing、通知等拼接文本仍为英文 | 低 | 错误码不变，客户端可按码处理；目录完整性有 CI 检查 | 部分缓解 | `docs/i18n.md` |
 
 ## OCR 与数据
 
@@ -59,5 +63,5 @@
 | ID | 风险 | 等级 | 现有缓解 | 状态 | 证据 |
 |---|---|---|---|---|---|
 | E1 | `readiness/notifications/` 同时由 copilot 和 readiness 注册，readiness 版本不可达 | 低 | copilot 版本为超集 | 开放 | `finance/urls.py`、`finance/copilot/api.py` |
-| E2 | CI 未运行 `demo_copilot` | 低 | 本地门禁覆盖 | 开放（W6） | `.github/workflows/django.yml` |
-| E3 | 无信用记录能力 | 中 | — | 开放（W4） | `08_Backend_Completion_Report.txt` |
+| E2 | CI 未运行 `demo_copilot` | 低 | CI 已加入 `demo_copilot`、`demo_remittance`、`demo_agent` 和 `evaluate_agent` | 已缓解 | `.github/workflows/django.yml` |
+| E3 | 信用记录只统计平台内模拟数据（分期、账单、按期汇款），不是征信评分，不能证明平台外的信用 | 中 | 明确标注模拟；签名证明只含汇总，可公开验证；限额系数上限 1.5 倍 | 部分缓解（设计范围） | `docs/credit.md` |
