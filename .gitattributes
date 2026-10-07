@@ -2,3 +2,6 @@
 examples/consumption/v1/*.csv -text
 examples/ocr/v1/*.pdf binary
 examples/ocr/v1/*.png binary
+
+# Shell scripts run inside Linux containers; CRLF would break them.
+*.sh text eol=lf
