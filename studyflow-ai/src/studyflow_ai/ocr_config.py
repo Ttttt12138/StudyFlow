@@ -13,6 +13,8 @@ C_ENV_FILE = Path(__file__).resolve().parents[2] / ".env"
 class OcrSettings:
     api_key: str = field(default="", repr=False)
     model: str = ""
+    fallback_models: tuple[str, ...] = ()
+    max_attempts: int = 3
     enabled: bool = False
     paid_service_confirmed: bool = False
     adult_only_confirmed: bool = False
@@ -28,6 +30,12 @@ class OcrSettings:
         return cls(
             api_key=values.get("GEMINI_API_KEY", "").strip(),
             model=values.get("STUDYFLOW_OCR_MODEL", "").strip(),
+            fallback_models=tuple(
+                m.strip()
+                for m in values.get("STUDYFLOW_OCR_FALLBACK_MODELS", "").split(",")
+                if m.strip()
+            ),
+            max_attempts=min(5, _positive(values, "STUDYFLOW_OCR_MAX_ATTEMPTS", 3)),
             enabled=_flag(values, "STUDYFLOW_OCR_ENABLED"),
             paid_service_confirmed=_flag(values, "STUDYFLOW_OCR_PAID_SERVICE_CONFIRMED"),
             adult_only_confirmed=_flag(values, "STUDYFLOW_OCR_ADULT_ONLY_CONFIRMED"),

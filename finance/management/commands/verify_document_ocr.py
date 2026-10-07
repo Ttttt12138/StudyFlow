@@ -53,6 +53,8 @@ class Command(BaseCommand):
                 api_key=settings.GEMINI_API_KEY,
                 model=settings.STUDYFLOW_OCR_MODEL,
                 timeout=settings.STUDYFLOW_OCR_TIMEOUT,
+                fallback_models=settings.STUDYFLOW_OCR_FALLBACK_MODELS,
+                max_attempts=settings.STUDYFLOW_OCR_MAX_ATTEMPTS,
             )
         except InputError as exc:
             raise CommandError(exc.code) from None

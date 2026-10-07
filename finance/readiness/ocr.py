@@ -92,6 +92,8 @@ def recognize(material, job):
         api_key=settings.GEMINI_API_KEY,
         model=settings.STUDYFLOW_OCR_MODEL,
         timeout=settings.STUDYFLOW_OCR_TIMEOUT,
+        fallback_models=settings.STUDYFLOW_OCR_FALLBACK_MODELS,
+        max_attempts=settings.STUDYFLOW_OCR_MAX_ATTEMPTS,
     )
     document = prepare_document(material.kind, bytes(material.content))
     _mark_attempt(material, job)

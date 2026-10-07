@@ -100,3 +100,17 @@ studyFlow/Scripts/python.exe manage.py verify_document_ocr --live --output outpu
 剩余 10 条分类错误均为伪造指令样本，按协议预拦截计为未分类，三组相同。因修复依据了 v2 的失败样本，v2 对规则组已不再独立；如需独立结论，必须另建并冻结新的盲测集后首次运行；该首测已完成，见 [v3 报告](verification-holdout-v3-20261007.md)。studyflow-ai 170 项测试、Django copilot 21 项测试及 Ruff 通过。
 
 新增数据／冻结一致性测试 2 项通过，新增脚本和命令 Ruff 检查通过；盲测当轮未修改生产分类／计算／OCR 实现。机器可读指标及证据哈希见 [汇总](independent-verification-summary.json)。
+
+### OCR 模型切换与重试兜底（2026-10-07）
+
+排查结论：此前失败来自服务商容量不足（503 `UNAVAILABLE`，"high demand"），超时为同一原因下的排队，不是请求格式或解析问题。同日用同一合成 PDF 探测：`gemini-3.6-flash`、`gemini-3.5-flash` 仍为 503；`gemini-3.5-flash-lite`、`gemini-3.1-flash-lite` 约 3 秒成功。
+
+| 模型 | 六份合成样本 | 证据 |
+|---|---:|---|
+| gemini-3.5-flash-lite（单次，无重试） | 5/6，中文 PNG 遇 1 次 503 | [报告](../output/ocr-probe-20261007-gemini35lite.json) |
+| gemini-3.1-flash-lite（单次，无重试） | 6/6 | [报告](../output/ocr-probe-20261007-gemini31lite.json) |
+| gemini-3.1-flash-lite + 兜底 3.5-flash-lite，最多 3 次 | 6/6 | [报告](../output/ocr-live-20261007-gemini31lite-fallback.json) |
+
+主模型切换为 `gemini-3.1-flash-lite`（正式版），新增对 503/429/超时的有界重试及模型轮换，规则见 [配置说明](gemini-ocr.md#失败并发与请求边界)。真实 HTTP → PostgreSQL worker → Gemini → C live 提取链条首次完整通过：材料进入 `NEEDS_REVIEW`、`source_type=gemini_ocr`、模型 `gemini-3.1-flash-lite`，前后财务版本 1、预算版本 2、钱包 10,000.00、账本 0 条（[记录](../output/ocr-http-20261007-gemini31lite.json)）。
+
+仍然只是六份清晰合成样本的关键文本核验；本轮 live 运行未触发重试，重试和轮换行为由 MockTransport 测试覆盖。studyflow-ai 293 项、Django OCR/readiness 32 项测试通过。被 v2/v3 协议记录哈希的 5 个文件已按约定在 `frozen/` 保存修改前副本。
