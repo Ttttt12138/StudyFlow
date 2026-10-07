@@ -1,12 +1,12 @@
 [
   {
-    "run_id": "5e849130320d4d3b86a91224e104bc97",
+    "run_id": "50c2794ed65140c19d5f9b3def7dd705",
     "simulated": true,
     "model_mode": "mock",
     "quote": {
-      "id": "84d25f6a-eefd-4059-a7dd-2c69a31a5976",
+      "id": "9b6dae1a-1fe4-4019-a0c2-76de3c71812f",
       "type": "loansimulation",
-      "created_at": "2026-10-07T14:03:02.553Z",
+      "created_at": "2026-10-07T14:19:42.438Z",
       "inputs": {
         "currency": "THB",
         "principal": "30600.00",
@@ -285,11 +285,11 @@
       "is_simulated": true
     },
     "pending": {
-      "id": "a5a0eee7-3d58-4f17-9214-b189973fd965",
+      "id": "0bf9347d-f36b-45e8-adae-f4bb10282f66",
       "type": "simulatedapplication",
-      "created_at": "2026-10-07T14:03:02.570Z",
+      "created_at": "2026-10-07T14:19:42.454Z",
       "version": 2,
-      "loan": "84d25f6a-eefd-4059-a7dd-2c69a31a5976",
+      "loan": "9b6dae1a-1fe4-4019-a0c2-76de3c71812f",
       "status": "UNDER_REVIEW",
       "assessment": {
         "status": "INSUFFICIENT_DATA",
@@ -338,11 +338,11 @@
       "is_simulated": true
     },
     "approved": {
-      "id": "a5a0eee7-3d58-4f17-9214-b189973fd965",
+      "id": "0bf9347d-f36b-45e8-adae-f4bb10282f66",
       "type": "simulatedapplication",
-      "created_at": "2026-10-07T14:03:02.570Z",
+      "created_at": "2026-10-07T14:19:42.454Z",
       "version": 3,
-      "loan": "84d25f6a-eefd-4059-a7dd-2c69a31a5976",
+      "loan": "9b6dae1a-1fe4-4019-a0c2-76de3c71812f",
       "status": "APPROVED",
       "assessment": {
         "status": "AFFORDABLE",
@@ -355,11 +355,11 @@
     },
     "funded": {
       "application": {
-        "id": "a5a0eee7-3d58-4f17-9214-b189973fd965",
+        "id": "0bf9347d-f36b-45e8-adae-f4bb10282f66",
         "type": "simulatedapplication",
-        "created_at": "2026-10-07T14:03:02.570Z",
+        "created_at": "2026-10-07T14:19:42.454Z",
         "version": 4,
-        "loan": "84d25f6a-eefd-4059-a7dd-2c69a31a5976",
+        "loan": "9b6dae1a-1fe4-4019-a0c2-76de3c71812f",
         "status": "DISBURSED",
         "assessment": {
           "status": "AFFORDABLE",
@@ -371,20 +371,20 @@
         "is_simulated": true
       },
       "account": {
-        "id": "bdbe2616-54fb-4a59-9506-ec3154414523",
+        "id": "3146c24a-2f22-4394-b641-54773fbd9019",
         "type": "loanaccount",
-        "created_at": "2026-10-07T14:03:02.836Z",
-        "disbursement": "3a9523cb-8ed2-47e2-abeb-5dc080ab9e3a",
+        "created_at": "2026-10-07T14:19:42.694Z",
+        "disbursement": "9da98e73-b1b6-4116-8293-e42420ab641e",
         "status": "ACTIVE",
         "version": 1,
         "outstanding_principal": "30600.00",
         "is_simulated": true,
         "installments": [
           {
-            "id": "ae9449a3-4542-499c-98a4-5fb01fd61833",
+            "id": "7e927487-3409-4595-b9ec-40751574096a",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:02.837Z",
-            "account": "bdbe2616-54fb-4a59-9506-ec3154414523",
+            "created_at": "2026-10-07T14:19:42.695Z",
+            "account": "3146c24a-2f22-4394-b641-54773fbd9019",
             "number": 1,
             "due_on": "2026-11-01",
             "amount": "2550.00",
@@ -394,10 +394,10 @@
             "status": "SCHEDULED"
           },
           {
-            "id": "f3677e56-aa72-43ea-8091-4dcdaa424294",
+            "id": "8bb57145-8786-454a-b4ef-a63fac165c68",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:02.837Z",
-            "account": "bdbe2616-54fb-4a59-9506-ec3154414523",
+            "created_at": "2026-10-07T14:19:42.695Z",
+            "account": "3146c24a-2f22-4394-b641-54773fbd9019",
             "number": 2,
             "due_on": "2026-12-01",
             "amount": "2550.00",
@@ -407,10 +407,10 @@
             "status": "SCHEDULED"
           },
           {
-            "id": "7480de25-4c1f-46fd-a6f4-dad1142f197d",
+            "id": "ac4406fe-981a-4e7b-bf54-11ac4325fdbc",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:02.837Z",
-            "account": "bdbe2616-54fb-4a59-9506-ec3154414523",
+            "created_at": "2026-10-07T14:19:42.695Z",
+            "account": "3146c24a-2f22-4394-b641-54773fbd9019",
             "number": 3,
             "due_on": "2027-01-01",
             "amount": "2550.00",
@@ -420,10 +420,10 @@
             "status": "SCHEDULED"
           },
           {
-            "id": "01ad16c6-4a41-4975-9992-f6e40bd701a6",
+            "id": "006c3720-8b07-45c0-97a7-0b3a792b410a",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:02.837Z",
-            "account": "bdbe2616-54fb-4a59-9506-ec3154414523",
+            "created_at": "2026-10-07T14:19:42.695Z",
+            "account": "3146c24a-2f22-4394-b641-54773fbd9019",
             "number": 4,
             "due_on": "2027-02-01",
             "amount": "2550.00",
@@ -433,10 +433,10 @@
             "status": "SCHEDULED"
           },
           {
-            "id": "97324756-945f-48bc-94b1-519f1d16525a",
+            "id": "bb014d8e-318a-49c3-8054-b7c905b22717",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:02.837Z",
-            "account": "bdbe2616-54fb-4a59-9506-ec3154414523",
+            "created_at": "2026-10-07T14:19:42.695Z",
+            "account": "3146c24a-2f22-4394-b641-54773fbd9019",
             "number": 5,
             "due_on": "2027-03-01",
             "amount": "2550.00",
@@ -446,10 +446,10 @@
             "status": "SCHEDULED"
           },
           {
-            "id": "692fbfa1-04ea-480d-8b08-dc8b2e43265f",
+            "id": "d04b8c02-82f1-4c7e-b13a-88d7987f9ac2",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:02.837Z",
-            "account": "bdbe2616-54fb-4a59-9506-ec3154414523",
+            "created_at": "2026-10-07T14:19:42.695Z",
+            "account": "3146c24a-2f22-4394-b641-54773fbd9019",
             "number": 6,
             "due_on": "2027-04-01",
             "amount": "2550.00",
@@ -459,10 +459,10 @@
             "status": "SCHEDULED"
           },
           {
-            "id": "33814c28-6e5f-48ff-8665-2b4f6b45c322",
+            "id": "4026c9f0-6dd9-4c7f-bdf1-477c8ac40fca",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:02.837Z",
-            "account": "bdbe2616-54fb-4a59-9506-ec3154414523",
+            "created_at": "2026-10-07T14:19:42.695Z",
+            "account": "3146c24a-2f22-4394-b641-54773fbd9019",
             "number": 7,
             "due_on": "2027-05-01",
             "amount": "2550.00",
@@ -472,10 +472,10 @@
             "status": "SCHEDULED"
           },
           {
-            "id": "63e8b1ac-1dcf-4fa9-893c-3262816eb02c",
+            "id": "0d4cd0f7-f9a1-4971-ab3c-da276865a5c6",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:02.837Z",
-            "account": "bdbe2616-54fb-4a59-9506-ec3154414523",
+            "created_at": "2026-10-07T14:19:42.695Z",
+            "account": "3146c24a-2f22-4394-b641-54773fbd9019",
             "number": 8,
             "due_on": "2027-06-01",
             "amount": "2550.00",
@@ -485,10 +485,10 @@
             "status": "SCHEDULED"
           },
           {
-            "id": "f7f528cc-e1bd-4b47-b8db-d8eeaac4e0ad",
+            "id": "f07ce094-9efb-4ffd-80d5-cd673a5059ab",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:02.837Z",
-            "account": "bdbe2616-54fb-4a59-9506-ec3154414523",
+            "created_at": "2026-10-07T14:19:42.695Z",
+            "account": "3146c24a-2f22-4394-b641-54773fbd9019",
             "number": 9,
             "due_on": "2027-07-01",
             "amount": "2550.00",
@@ -498,10 +498,10 @@
             "status": "SCHEDULED"
           },
           {
-            "id": "aeb400a8-1900-4404-b47d-3079730086f5",
+            "id": "5adbd5d7-eb9f-4334-b1cc-64cbcf40f320",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:02.837Z",
-            "account": "bdbe2616-54fb-4a59-9506-ec3154414523",
+            "created_at": "2026-10-07T14:19:42.695Z",
+            "account": "3146c24a-2f22-4394-b641-54773fbd9019",
             "number": 10,
             "due_on": "2027-08-01",
             "amount": "2550.00",
@@ -511,10 +511,10 @@
             "status": "SCHEDULED"
           },
           {
-            "id": "613f2b56-454c-40b6-bfb5-2063d933fb52",
+            "id": "277051ef-e890-4a37-955d-94e7ffc2b333",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:02.837Z",
-            "account": "bdbe2616-54fb-4a59-9506-ec3154414523",
+            "created_at": "2026-10-07T14:19:42.695Z",
+            "account": "3146c24a-2f22-4394-b641-54773fbd9019",
             "number": 11,
             "due_on": "2027-09-01",
             "amount": "2550.00",
@@ -524,10 +524,10 @@
             "status": "SCHEDULED"
           },
           {
-            "id": "6696d57f-4a73-41f8-aa3c-c1132d8de89b",
+            "id": "913dbe32-adba-4e32-b493-5bcbe91740c5",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:02.837Z",
-            "account": "bdbe2616-54fb-4a59-9506-ec3154414523",
+            "created_at": "2026-10-07T14:19:42.695Z",
+            "account": "3146c24a-2f22-4394-b641-54773fbd9019",
             "number": 12,
             "due_on": "2027-10-01",
             "amount": "2550.00",
@@ -539,10 +539,10 @@
         ]
       },
       "wallet": {
-        "id": "2f4abe4c-0e58-49b3-b1a5-320c780804a4",
+        "id": "07f5e5b5-c651-4d37-b8d6-99c6257152d0",
         "type": "demowallet",
-        "created_at": "2026-10-07T14:03:02.537Z",
-        "initial_state": "1ebfd603-54de-4fa7-b32a-309ed2a4d2f1",
+        "created_at": "2026-10-07T14:19:42.425Z",
+        "initial_state": "8230b86f-a000-4cd8-8249-f3de39557933",
         "balance": "30000.00",
         "clock": "2026-10-02",
         "is_simulated": true
@@ -551,20 +551,20 @@
     },
     "settled": {
       "account": {
-        "id": "bdbe2616-54fb-4a59-9506-ec3154414523",
+        "id": "3146c24a-2f22-4394-b641-54773fbd9019",
         "type": "loanaccount",
-        "created_at": "2026-10-07T14:03:02.836Z",
-        "disbursement": "3a9523cb-8ed2-47e2-abeb-5dc080ab9e3a",
+        "created_at": "2026-10-07T14:19:42.694Z",
+        "disbursement": "9da98e73-b1b6-4116-8293-e42420ab641e",
         "status": "CLOSED",
         "version": 13,
         "outstanding_principal": "0.00",
         "is_simulated": true,
         "installments": [
           {
-            "id": "ae9449a3-4542-499c-98a4-5fb01fd61833",
+            "id": "7e927487-3409-4595-b9ec-40751574096a",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:02.837Z",
-            "account": "bdbe2616-54fb-4a59-9506-ec3154414523",
+            "created_at": "2026-10-07T14:19:42.695Z",
+            "account": "3146c24a-2f22-4394-b641-54773fbd9019",
             "number": 1,
             "due_on": "2026-11-01",
             "amount": "2550.00",
@@ -574,10 +574,10 @@
             "status": "PAID"
           },
           {
-            "id": "f3677e56-aa72-43ea-8091-4dcdaa424294",
+            "id": "8bb57145-8786-454a-b4ef-a63fac165c68",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:02.837Z",
-            "account": "bdbe2616-54fb-4a59-9506-ec3154414523",
+            "created_at": "2026-10-07T14:19:42.695Z",
+            "account": "3146c24a-2f22-4394-b641-54773fbd9019",
             "number": 2,
             "due_on": "2026-12-01",
             "amount": "2550.00",
@@ -587,10 +587,10 @@
             "status": "PAID"
           },
           {
-            "id": "7480de25-4c1f-46fd-a6f4-dad1142f197d",
+            "id": "ac4406fe-981a-4e7b-bf54-11ac4325fdbc",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:02.837Z",
-            "account": "bdbe2616-54fb-4a59-9506-ec3154414523",
+            "created_at": "2026-10-07T14:19:42.695Z",
+            "account": "3146c24a-2f22-4394-b641-54773fbd9019",
             "number": 3,
             "due_on": "2027-01-01",
             "amount": "2550.00",
@@ -600,10 +600,10 @@
             "status": "PAID"
           },
           {
-            "id": "01ad16c6-4a41-4975-9992-f6e40bd701a6",
+            "id": "006c3720-8b07-45c0-97a7-0b3a792b410a",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:02.837Z",
-            "account": "bdbe2616-54fb-4a59-9506-ec3154414523",
+            "created_at": "2026-10-07T14:19:42.695Z",
+            "account": "3146c24a-2f22-4394-b641-54773fbd9019",
             "number": 4,
             "due_on": "2027-02-01",
             "amount": "2550.00",
@@ -613,10 +613,10 @@
             "status": "PAID"
           },
           {
-            "id": "97324756-945f-48bc-94b1-519f1d16525a",
+            "id": "bb014d8e-318a-49c3-8054-b7c905b22717",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:02.837Z",
-            "account": "bdbe2616-54fb-4a59-9506-ec3154414523",
+            "created_at": "2026-10-07T14:19:42.695Z",
+            "account": "3146c24a-2f22-4394-b641-54773fbd9019",
             "number": 5,
             "due_on": "2027-03-01",
             "amount": "2550.00",
@@ -626,10 +626,10 @@
             "status": "PAID"
           },
           {
-            "id": "692fbfa1-04ea-480d-8b08-dc8b2e43265f",
+            "id": "d04b8c02-82f1-4c7e-b13a-88d7987f9ac2",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:02.837Z",
-            "account": "bdbe2616-54fb-4a59-9506-ec3154414523",
+            "created_at": "2026-10-07T14:19:42.695Z",
+            "account": "3146c24a-2f22-4394-b641-54773fbd9019",
             "number": 6,
             "due_on": "2027-04-01",
             "amount": "2550.00",
@@ -639,10 +639,10 @@
             "status": "PAID"
           },
           {
-            "id": "33814c28-6e5f-48ff-8665-2b4f6b45c322",
+            "id": "4026c9f0-6dd9-4c7f-bdf1-477c8ac40fca",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:02.837Z",
-            "account": "bdbe2616-54fb-4a59-9506-ec3154414523",
+            "created_at": "2026-10-07T14:19:42.695Z",
+            "account": "3146c24a-2f22-4394-b641-54773fbd9019",
             "number": 7,
             "due_on": "2027-05-01",
             "amount": "2550.00",
@@ -652,10 +652,10 @@
             "status": "PAID"
           },
           {
-            "id": "63e8b1ac-1dcf-4fa9-893c-3262816eb02c",
+            "id": "0d4cd0f7-f9a1-4971-ab3c-da276865a5c6",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:02.837Z",
-            "account": "bdbe2616-54fb-4a59-9506-ec3154414523",
+            "created_at": "2026-10-07T14:19:42.695Z",
+            "account": "3146c24a-2f22-4394-b641-54773fbd9019",
             "number": 8,
             "due_on": "2027-06-01",
             "amount": "2550.00",
@@ -665,10 +665,10 @@
             "status": "PAID"
           },
           {
-            "id": "f7f528cc-e1bd-4b47-b8db-d8eeaac4e0ad",
+            "id": "f07ce094-9efb-4ffd-80d5-cd673a5059ab",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:02.837Z",
-            "account": "bdbe2616-54fb-4a59-9506-ec3154414523",
+            "created_at": "2026-10-07T14:19:42.695Z",
+            "account": "3146c24a-2f22-4394-b641-54773fbd9019",
             "number": 9,
             "due_on": "2027-07-01",
             "amount": "2550.00",
@@ -678,10 +678,10 @@
             "status": "PAID"
           },
           {
-            "id": "aeb400a8-1900-4404-b47d-3079730086f5",
+            "id": "5adbd5d7-eb9f-4334-b1cc-64cbcf40f320",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:02.837Z",
-            "account": "bdbe2616-54fb-4a59-9506-ec3154414523",
+            "created_at": "2026-10-07T14:19:42.695Z",
+            "account": "3146c24a-2f22-4394-b641-54773fbd9019",
             "number": 10,
             "due_on": "2027-08-01",
             "amount": "2550.00",
@@ -691,10 +691,10 @@
             "status": "PAID"
           },
           {
-            "id": "613f2b56-454c-40b6-bfb5-2063d933fb52",
+            "id": "277051ef-e890-4a37-955d-94e7ffc2b333",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:02.837Z",
-            "account": "bdbe2616-54fb-4a59-9506-ec3154414523",
+            "created_at": "2026-10-07T14:19:42.695Z",
+            "account": "3146c24a-2f22-4394-b641-54773fbd9019",
             "number": 11,
             "due_on": "2027-09-01",
             "amount": "2550.00",
@@ -704,10 +704,10 @@
             "status": "PAID"
           },
           {
-            "id": "6696d57f-4a73-41f8-aa3c-c1132d8de89b",
+            "id": "913dbe32-adba-4e32-b493-5bcbe91740c5",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:02.837Z",
-            "account": "bdbe2616-54fb-4a59-9506-ec3154414523",
+            "created_at": "2026-10-07T14:19:42.695Z",
+            "account": "3146c24a-2f22-4394-b641-54773fbd9019",
             "number": 12,
             "due_on": "2027-10-01",
             "amount": "2550.00",
@@ -719,10 +719,10 @@
         ]
       },
       "wallet": {
-        "id": "2f4abe4c-0e58-49b3-b1a5-320c780804a4",
+        "id": "07f5e5b5-c651-4d37-b8d6-99c6257152d0",
         "type": "demowallet",
-        "created_at": "2026-10-07T14:03:02.537Z",
-        "initial_state": "1ebfd603-54de-4fa7-b32a-309ed2a4d2f1",
+        "created_at": "2026-10-07T14:19:42.425Z",
+        "initial_state": "8230b86f-a000-4cd8-8249-f3de39557933",
         "balance": "0.00",
         "clock": "2027-10-01",
         "is_simulated": true
@@ -732,9 +732,9 @@
     "c_integration": {
       "missing": {
         "mode": "mock",
-        "scenario_id": "2ca60d7e-28d9-41f2-a6e1-112e2b30620d",
+        "scenario_id": "00f8e3cd-7378-4108-92ee-6256ea596862",
         "context": {
-          "student_id": "891",
+          "student_id": "962",
           "now": "2026-10-02T12:00:00+07:00",
           "budget": {
             "state_version": 3,
@@ -771,7 +771,7 @@
           },
           "sources": [
             {
-              "funding_id": "borrowing:a5a0eee7-3d58-4f17-9214-b189973fd965",
+              "funding_id": "borrowing:0bf9347d-f36b-45e8-adae-f4bb10282f66",
               "kind": "borrowing",
               "allocatable": {
                 "currency": "THB",
@@ -783,12 +783,12 @@
                 "B administrator must record disbursement"
               ],
               "received": false,
-              "loan_quote_id": "84d25f6a-eefd-4059-a7dd-2c69a31a5976"
+              "loan_quote_id": "9b6dae1a-1fe4-4019-a0c2-76de3c71812f"
             }
           ],
           "loan_quotes": [
             {
-              "quote_id": "84d25f6a-eefd-4059-a7dd-2c69a31a5976",
+              "quote_id": "9b6dae1a-1fe4-4019-a0c2-76de3c71812f",
               "principal": {
                 "currency": "THB",
                 "amount": "30600.00"
@@ -938,8 +938,8 @@
           ],
           "applications": [
             {
-              "application_id": "a5a0eee7-3d58-4f17-9214-b189973fd965",
-              "quote_id": "84d25f6a-eefd-4059-a7dd-2c69a31a5976",
+              "application_id": "0bf9347d-f36b-45e8-adae-f4bb10282f66",
+              "quote_id": "9b6dae1a-1fe4-4019-a0c2-76de3c71812f",
               "state": "UNDER_REVIEW",
               "simulated": true
             }
@@ -948,9 +948,9 @@
         },
         "result": {
           "schema_version": "2.0",
-          "trace_id": "debf892faf3649d8ae7c8ecadd6fb298",
+          "trace_id": "798fb3446a0645d69c3130723d57de5d",
           "source_refs": [
-            "borrowing:a5a0eee7-3d58-4f17-9214-b189973fd965"
+            "borrowing:0bf9347d-f36b-45e8-adae-f4bb10282f66"
           ],
           "status": "NEEDS_REVIEW",
           "issues": [],
@@ -958,10 +958,10 @@
           "budget_version": 1,
           "candidates": [
             {
-              "candidate_id": "a53fa5f91cca4b448b270299232b734f",
+              "candidate_id": "2de2dec0a69844c69ae713cb1ceac6d9",
               "allocations": [
                 {
-                  "funding_id": "borrowing:a5a0eee7-3d58-4f17-9214-b189973fd965",
+                  "funding_id": "borrowing:0bf9347d-f36b-45e8-adae-f4bb10282f66",
                   "amount": {
                     "currency": "THB",
                     "amount": "30000.00"
@@ -970,8 +970,8 @@
               ],
               "action_ids": [],
               "source_refs": [
-                "borrowing:a5a0eee7-3d58-4f17-9214-b189973fd965",
-                "84d25f6a-eefd-4059-a7dd-2c69a31a5976"
+                "borrowing:0bf9347d-f36b-45e8-adae-f4bb10282f66",
+                "9b6dae1a-1fe4-4019-a0c2-76de3c71812f"
               ],
               "conditions": [
                 "SIMULATED",
@@ -990,7 +990,7 @@
           "loan_explanations": [
             {
               "quote": {
-                "quote_id": "84d25f6a-eefd-4059-a7dd-2c69a31a5976",
+                "quote_id": "9b6dae1a-1fe4-4019-a0c2-76de3c71812f",
                 "principal": {
                   "currency": "THB",
                   "amount": "30600.00"
@@ -1142,14 +1142,14 @@
           ],
           "applications": [
             {
-              "application_id": "a5a0eee7-3d58-4f17-9214-b189973fd965",
-              "quote_id": "84d25f6a-eefd-4059-a7dd-2c69a31a5976",
+              "application_id": "0bf9347d-f36b-45e8-adae-f4bb10282f66",
+              "quote_id": "9b6dae1a-1fe4-4019-a0c2-76de3c71812f",
               "state": "UNDER_REVIEW",
               "simulated": true
             }
           ],
           "application_notes": [
-            "a5a0eee7-3d58-4f17-9214-b189973fd965: UNDER_REVIEW (SIMULATED). Approval does not change funds; B owns all transitions."
+            "0bf9347d-f36b-45e8-adae-f4bb10282f66: UNDER_REVIEW (SIMULATED). Approval does not change funds; B owns all transitions."
           ],
           "calls": [
             {
@@ -1170,9 +1170,9 @@
       },
       "approved": {
         "mode": "mock",
-        "scenario_id": "ff538ec2-2312-448f-b97c-f6e35f2c6e0d",
+        "scenario_id": "65c8fbfe-4468-4442-a670-b15a9195fabc",
         "context": {
-          "student_id": "891",
+          "student_id": "962",
           "now": "2026-10-02T12:00:00+07:00",
           "budget": {
             "state_version": 5,
@@ -1209,7 +1209,7 @@
           },
           "sources": [
             {
-              "funding_id": "borrowing:a5a0eee7-3d58-4f17-9214-b189973fd965",
+              "funding_id": "borrowing:0bf9347d-f36b-45e8-adae-f4bb10282f66",
               "kind": "borrowing",
               "allocatable": {
                 "currency": "THB",
@@ -1221,12 +1221,12 @@
                 "B administrator must record disbursement"
               ],
               "received": false,
-              "loan_quote_id": "84d25f6a-eefd-4059-a7dd-2c69a31a5976"
+              "loan_quote_id": "9b6dae1a-1fe4-4019-a0c2-76de3c71812f"
             }
           ],
           "loan_quotes": [
             {
-              "quote_id": "84d25f6a-eefd-4059-a7dd-2c69a31a5976",
+              "quote_id": "9b6dae1a-1fe4-4019-a0c2-76de3c71812f",
               "principal": {
                 "currency": "THB",
                 "amount": "30600.00"
@@ -1339,8 +1339,8 @@
           ],
           "applications": [
             {
-              "application_id": "a5a0eee7-3d58-4f17-9214-b189973fd965",
-              "quote_id": "84d25f6a-eefd-4059-a7dd-2c69a31a5976",
+              "application_id": "0bf9347d-f36b-45e8-adae-f4bb10282f66",
+              "quote_id": "9b6dae1a-1fe4-4019-a0c2-76de3c71812f",
               "state": "APPROVED",
               "simulated": true
             }
@@ -1349,9 +1349,9 @@
         },
         "result": {
           "schema_version": "2.0",
-          "trace_id": "7e4e152ac2fd4381b9239b21425e672d",
+          "trace_id": "d557289f590d4322b37e375202fcb544",
           "source_refs": [
-            "borrowing:a5a0eee7-3d58-4f17-9214-b189973fd965"
+            "borrowing:0bf9347d-f36b-45e8-adae-f4bb10282f66"
           ],
           "status": "NEEDS_REVIEW",
           "issues": [],
@@ -1359,10 +1359,10 @@
           "budget_version": 2,
           "candidates": [
             {
-              "candidate_id": "8df1646ec355457786b04470330919dd",
+              "candidate_id": "47a163f1f69e47eb83a9b27cf80f4370",
               "allocations": [
                 {
-                  "funding_id": "borrowing:a5a0eee7-3d58-4f17-9214-b189973fd965",
+                  "funding_id": "borrowing:0bf9347d-f36b-45e8-adae-f4bb10282f66",
                   "amount": {
                     "currency": "THB",
                     "amount": "30000.00"
@@ -1371,8 +1371,8 @@
               ],
               "action_ids": [],
               "source_refs": [
-                "borrowing:a5a0eee7-3d58-4f17-9214-b189973fd965",
-                "84d25f6a-eefd-4059-a7dd-2c69a31a5976"
+                "borrowing:0bf9347d-f36b-45e8-adae-f4bb10282f66",
+                "9b6dae1a-1fe4-4019-a0c2-76de3c71812f"
               ],
               "conditions": [
                 "SIMULATED",
@@ -1391,7 +1391,7 @@
           "loan_explanations": [
             {
               "quote": {
-                "quote_id": "84d25f6a-eefd-4059-a7dd-2c69a31a5976",
+                "quote_id": "9b6dae1a-1fe4-4019-a0c2-76de3c71812f",
                 "principal": {
                   "currency": "THB",
                   "amount": "30600.00"
@@ -1506,14 +1506,14 @@
           ],
           "applications": [
             {
-              "application_id": "a5a0eee7-3d58-4f17-9214-b189973fd965",
-              "quote_id": "84d25f6a-eefd-4059-a7dd-2c69a31a5976",
+              "application_id": "0bf9347d-f36b-45e8-adae-f4bb10282f66",
+              "quote_id": "9b6dae1a-1fe4-4019-a0c2-76de3c71812f",
               "state": "APPROVED",
               "simulated": true
             }
           ],
           "application_notes": [
-            "a5a0eee7-3d58-4f17-9214-b189973fd965: APPROVED (SIMULATED). Approval does not change funds; B owns all transitions."
+            "0bf9347d-f36b-45e8-adae-f4bb10282f66: APPROVED (SIMULATED). Approval does not change funds; B owns all transitions."
           ],
           "calls": [
             {
@@ -1534,9 +1534,9 @@
       },
       "received": {
         "mode": "mock",
-        "scenario_id": "8c38d2a6-aa25-4292-814e-cf0a40f8d5fb",
+        "scenario_id": "e7e1d91f-e6de-4247-99c9-385385f56d09",
         "context": {
-          "student_id": "891",
+          "student_id": "962",
           "now": "2026-10-02T12:00:00+07:00",
           "budget": {
             "state_version": 7,
@@ -1706,7 +1706,7 @@
           },
           "sources": [
             {
-              "funding_id": "borrowing:a5a0eee7-3d58-4f17-9214-b189973fd965",
+              "funding_id": "borrowing:0bf9347d-f36b-45e8-adae-f4bb10282f66",
               "kind": "borrowing",
               "allocatable": {
                 "currency": "THB",
@@ -1718,12 +1718,12 @@
                 "B administrator must record disbursement"
               ],
               "received": true,
-              "loan_quote_id": "84d25f6a-eefd-4059-a7dd-2c69a31a5976"
+              "loan_quote_id": "9b6dae1a-1fe4-4019-a0c2-76de3c71812f"
             }
           ],
           "loan_quotes": [
             {
-              "quote_id": "84d25f6a-eefd-4059-a7dd-2c69a31a5976",
+              "quote_id": "9b6dae1a-1fe4-4019-a0c2-76de3c71812f",
               "principal": {
                 "currency": "THB",
                 "amount": "30600.00"
@@ -1836,8 +1836,8 @@
           ],
           "applications": [
             {
-              "application_id": "a5a0eee7-3d58-4f17-9214-b189973fd965",
-              "quote_id": "84d25f6a-eefd-4059-a7dd-2c69a31a5976",
+              "application_id": "0bf9347d-f36b-45e8-adae-f4bb10282f66",
+              "quote_id": "9b6dae1a-1fe4-4019-a0c2-76de3c71812f",
               "state": "DISBURSED",
               "simulated": true
             }
@@ -1846,9 +1846,9 @@
         },
         "result": {
           "schema_version": "2.0",
-          "trace_id": "8b6e66f89c7546dbaae95afb0990d8da",
+          "trace_id": "e2a86fc062074cb3af682af7f5ec22cc",
           "source_refs": [
-            "borrowing:a5a0eee7-3d58-4f17-9214-b189973fd965"
+            "borrowing:0bf9347d-f36b-45e8-adae-f4bb10282f66"
           ],
           "status": "NEEDS_REVIEW",
           "issues": [],
@@ -1856,10 +1856,10 @@
           "budget_version": 3,
           "candidates": [
             {
-              "candidate_id": "11fbb7d756cb46dea4ec2954cd96bd2a",
+              "candidate_id": "352aa8101966474192ccf5804ba80074",
               "allocations": [
                 {
-                  "funding_id": "borrowing:a5a0eee7-3d58-4f17-9214-b189973fd965",
+                  "funding_id": "borrowing:0bf9347d-f36b-45e8-adae-f4bb10282f66",
                   "amount": {
                     "currency": "THB",
                     "amount": "0.00"
@@ -1868,8 +1868,8 @@
               ],
               "action_ids": [],
               "source_refs": [
-                "borrowing:a5a0eee7-3d58-4f17-9214-b189973fd965",
-                "84d25f6a-eefd-4059-a7dd-2c69a31a5976"
+                "borrowing:0bf9347d-f36b-45e8-adae-f4bb10282f66",
+                "9b6dae1a-1fe4-4019-a0c2-76de3c71812f"
               ],
               "conditions": [
                 "SIMULATED",
@@ -1900,7 +1900,7 @@
           "loan_explanations": [
             {
               "quote": {
-                "quote_id": "84d25f6a-eefd-4059-a7dd-2c69a31a5976",
+                "quote_id": "9b6dae1a-1fe4-4019-a0c2-76de3c71812f",
                 "principal": {
                   "currency": "THB",
                   "amount": "30600.00"
@@ -2015,14 +2015,14 @@
           ],
           "applications": [
             {
-              "application_id": "a5a0eee7-3d58-4f17-9214-b189973fd965",
-              "quote_id": "84d25f6a-eefd-4059-a7dd-2c69a31a5976",
+              "application_id": "0bf9347d-f36b-45e8-adae-f4bb10282f66",
+              "quote_id": "9b6dae1a-1fe4-4019-a0c2-76de3c71812f",
               "state": "DISBURSED",
               "simulated": true
             }
           ],
           "application_notes": [
-            "a5a0eee7-3d58-4f17-9214-b189973fd965: DISBURSED (SIMULATED). Approval does not change funds; B owns all transitions."
+            "0bf9347d-f36b-45e8-adae-f4bb10282f66: DISBURSED (SIMULATED). Approval does not change funds; B owns all transitions."
           ],
           "calls": [
             {
@@ -2045,7 +2045,7 @@
     "policy": [
       {
         "action": "loan.repay",
-        "target_id": "bdbe2616-54fb-4a59-9506-ec3154414523",
+        "target_id": "3146c24a-2f22-4394-b641-54773fbd9019",
         "amount": "2550.00",
         "currency": "THB",
         "tier": "T2",
@@ -2053,7 +2053,7 @@
       },
       {
         "action": "loan.repay",
-        "target_id": "bdbe2616-54fb-4a59-9506-ec3154414523",
+        "target_id": "3146c24a-2f22-4394-b641-54773fbd9019",
         "amount": "2550.00",
         "currency": "THB",
         "tier": "T2",
@@ -2061,7 +2061,7 @@
       },
       {
         "action": "loan.repay",
-        "target_id": "bdbe2616-54fb-4a59-9506-ec3154414523",
+        "target_id": "3146c24a-2f22-4394-b641-54773fbd9019",
         "amount": "2550.00",
         "currency": "THB",
         "tier": "T2",
@@ -2069,7 +2069,7 @@
       },
       {
         "action": "loan.repay",
-        "target_id": "bdbe2616-54fb-4a59-9506-ec3154414523",
+        "target_id": "3146c24a-2f22-4394-b641-54773fbd9019",
         "amount": "2550.00",
         "currency": "THB",
         "tier": "T2",
@@ -2077,7 +2077,7 @@
       },
       {
         "action": "loan.repay",
-        "target_id": "bdbe2616-54fb-4a59-9506-ec3154414523",
+        "target_id": "3146c24a-2f22-4394-b641-54773fbd9019",
         "amount": "2550.00",
         "currency": "THB",
         "tier": "T2",
@@ -2085,7 +2085,7 @@
       },
       {
         "action": "loan.repay",
-        "target_id": "bdbe2616-54fb-4a59-9506-ec3154414523",
+        "target_id": "3146c24a-2f22-4394-b641-54773fbd9019",
         "amount": "2550.00",
         "currency": "THB",
         "tier": "T2",
@@ -2093,7 +2093,7 @@
       },
       {
         "action": "loan.repay",
-        "target_id": "bdbe2616-54fb-4a59-9506-ec3154414523",
+        "target_id": "3146c24a-2f22-4394-b641-54773fbd9019",
         "amount": "2550.00",
         "currency": "THB",
         "tier": "T2",
@@ -2101,7 +2101,7 @@
       },
       {
         "action": "loan.repay",
-        "target_id": "bdbe2616-54fb-4a59-9506-ec3154414523",
+        "target_id": "3146c24a-2f22-4394-b641-54773fbd9019",
         "amount": "2550.00",
         "currency": "THB",
         "tier": "T2",
@@ -2109,7 +2109,7 @@
       },
       {
         "action": "loan.repay",
-        "target_id": "bdbe2616-54fb-4a59-9506-ec3154414523",
+        "target_id": "3146c24a-2f22-4394-b641-54773fbd9019",
         "amount": "2550.00",
         "currency": "THB",
         "tier": "T2",
@@ -2117,7 +2117,7 @@
       },
       {
         "action": "loan.repay",
-        "target_id": "bdbe2616-54fb-4a59-9506-ec3154414523",
+        "target_id": "3146c24a-2f22-4394-b641-54773fbd9019",
         "amount": "2550.00",
         "currency": "THB",
         "tier": "T2",
@@ -2125,7 +2125,7 @@
       },
       {
         "action": "loan.repay",
-        "target_id": "bdbe2616-54fb-4a59-9506-ec3154414523",
+        "target_id": "3146c24a-2f22-4394-b641-54773fbd9019",
         "amount": "2550.00",
         "currency": "THB",
         "tier": "T2",
@@ -2133,7 +2133,7 @@
       },
       {
         "action": "loan.repay",
-        "target_id": "bdbe2616-54fb-4a59-9506-ec3154414523",
+        "target_id": "3146c24a-2f22-4394-b641-54773fbd9019",
         "amount": "2550.00",
         "currency": "THB",
         "tier": "T2",
@@ -2142,13 +2142,13 @@
     ],
     "ledger": [
       {
-        "id": "14870344-a4be-4077-8b24-6478b81efb95",
+        "id": "d6ffcec0-34a7-45b1-884c-82acac24d804",
         "type": "demoledgerentry",
-        "created_at": "2026-10-07T14:03:02.833Z",
+        "created_at": "2026-10-07T14:19:42.692Z",
         "installment": null,
         "sequence": 1,
         "funding_source": null,
-        "disbursement": "3a9523cb-8ed2-47e2-abeb-5dc080ab9e3a",
+        "disbursement": "9da98e73-b1b6-4116-8293-e42420ab641e",
         "payment": null,
         "conversion": null,
         "remittance_order": null,
@@ -2159,12 +2159,12 @@
         "is_simulated": true
       },
       {
-        "id": "f209ce0b-337c-49fc-ac5c-b579aa5710ae",
+        "id": "56845c42-79a4-457e-aa2a-a7336b1efcfc",
         "type": "demoledgerentry",
-        "created_at": "2026-10-07T14:03:02.945Z",
+        "created_at": "2026-10-07T14:19:42.789Z",
         "installment": null,
         "sequence": 2,
-        "funding_source": "d2cb673f-ea19-4959-835d-a73e07681a46",
+        "funding_source": "c4ea7775-aa74-4b7c-87a3-baa32b18692a",
         "disbursement": null,
         "payment": null,
         "conversion": null,
@@ -2176,10 +2176,10 @@
         "is_simulated": true
       },
       {
-        "id": "13d7d8e8-aed0-464e-9c31-4ea8cff55bc2",
+        "id": "b0e0f341-9ec5-43c0-8350-6aa74c9f8e37",
         "type": "demoledgerentry",
-        "created_at": "2026-10-07T14:03:03.253Z",
-        "installment": "ae9449a3-4542-499c-98a4-5fb01fd61833",
+        "created_at": "2026-10-07T14:19:43.084Z",
+        "installment": "7e927487-3409-4595-b9ec-40751574096a",
         "sequence": 3,
         "funding_source": null,
         "disbursement": null,
@@ -2193,10 +2193,10 @@
         "is_simulated": true
       },
       {
-        "id": "ca953ea9-b69b-4bbc-9c7e-4769ca07a1bd",
+        "id": "f35aefb0-9f32-47de-b81b-b4610240a402",
         "type": "demoledgerentry",
-        "created_at": "2026-10-07T14:03:03.561Z",
-        "installment": "f3677e56-aa72-43ea-8091-4dcdaa424294",
+        "created_at": "2026-10-07T14:19:43.385Z",
+        "installment": "8bb57145-8786-454a-b4ef-a63fac165c68",
         "sequence": 4,
         "funding_source": null,
         "disbursement": null,
@@ -2210,10 +2210,10 @@
         "is_simulated": true
       },
       {
-        "id": "c6f8a13b-7fa1-431c-b136-8843256b1cc8",
+        "id": "b8a81d99-bfe6-43e3-8421-562fa75b88b1",
         "type": "demoledgerentry",
-        "created_at": "2026-10-07T14:03:03.867Z",
-        "installment": "7480de25-4c1f-46fd-a6f4-dad1142f197d",
+        "created_at": "2026-10-07T14:19:43.684Z",
+        "installment": "ac4406fe-981a-4e7b-bf54-11ac4325fdbc",
         "sequence": 5,
         "funding_source": null,
         "disbursement": null,
@@ -2227,10 +2227,10 @@
         "is_simulated": true
       },
       {
-        "id": "e04b0d42-c58d-4b71-afea-d77c1f9b5345",
+        "id": "6c031a9a-72e0-4e79-bf41-44c2268f49dd",
         "type": "demoledgerentry",
-        "created_at": "2026-10-07T14:03:04.170Z",
-        "installment": "01ad16c6-4a41-4975-9992-f6e40bd701a6",
+        "created_at": "2026-10-07T14:19:43.988Z",
+        "installment": "006c3720-8b07-45c0-97a7-0b3a792b410a",
         "sequence": 6,
         "funding_source": null,
         "disbursement": null,
@@ -2244,10 +2244,10 @@
         "is_simulated": true
       },
       {
-        "id": "7614cef9-c430-4b8b-b21d-51dbf1dfcf65",
+        "id": "78ae1b66-06ab-4365-bf34-0a04efa4836a",
         "type": "demoledgerentry",
-        "created_at": "2026-10-07T14:03:04.477Z",
-        "installment": "97324756-945f-48bc-94b1-519f1d16525a",
+        "created_at": "2026-10-07T14:19:44.292Z",
+        "installment": "bb014d8e-318a-49c3-8054-b7c905b22717",
         "sequence": 7,
         "funding_source": null,
         "disbursement": null,
@@ -2261,10 +2261,10 @@
         "is_simulated": true
       },
       {
-        "id": "04c65cf1-d2c5-40a6-8d82-bc5e8c9ae800",
+        "id": "44bd41b9-74c6-4936-a6ff-d89e8903fd86",
         "type": "demoledgerentry",
-        "created_at": "2026-10-07T14:03:04.791Z",
-        "installment": "692fbfa1-04ea-480d-8b08-dc8b2e43265f",
+        "created_at": "2026-10-07T14:19:44.613Z",
+        "installment": "d04b8c02-82f1-4c7e-b13a-88d7987f9ac2",
         "sequence": 8,
         "funding_source": null,
         "disbursement": null,
@@ -2278,10 +2278,10 @@
         "is_simulated": true
       },
       {
-        "id": "24602817-8249-496a-9927-1a904d350576",
+        "id": "f3c00260-852c-4f17-9a04-0040525c2d61",
         "type": "demoledgerentry",
-        "created_at": "2026-10-07T14:03:05.115Z",
-        "installment": "33814c28-6e5f-48ff-8665-2b4f6b45c322",
+        "created_at": "2026-10-07T14:19:44.913Z",
+        "installment": "4026c9f0-6dd9-4c7f-bdf1-477c8ac40fca",
         "sequence": 9,
         "funding_source": null,
         "disbursement": null,
@@ -2295,10 +2295,10 @@
         "is_simulated": true
       },
       {
-        "id": "07ba19b6-3996-44f6-bd33-5982c364d363",
+        "id": "9b961539-19e7-4018-9516-cb2f602d9c3e",
         "type": "demoledgerentry",
-        "created_at": "2026-10-07T14:03:05.440Z",
-        "installment": "63e8b1ac-1dcf-4fa9-893c-3262816eb02c",
+        "created_at": "2026-10-07T14:19:45.230Z",
+        "installment": "0d4cd0f7-f9a1-4971-ab3c-da276865a5c6",
         "sequence": 10,
         "funding_source": null,
         "disbursement": null,
@@ -2312,10 +2312,10 @@
         "is_simulated": true
       },
       {
-        "id": "96f7de3c-1abb-492c-a2cc-93bc9b413513",
+        "id": "a9ac00c7-be49-460d-8f15-3d862850b17d",
         "type": "demoledgerentry",
-        "created_at": "2026-10-07T14:03:05.759Z",
-        "installment": "f7f528cc-e1bd-4b47-b8db-d8eeaac4e0ad",
+        "created_at": "2026-10-07T14:19:45.533Z",
+        "installment": "f07ce094-9efb-4ffd-80d5-cd673a5059ab",
         "sequence": 11,
         "funding_source": null,
         "disbursement": null,
@@ -2329,10 +2329,10 @@
         "is_simulated": true
       },
       {
-        "id": "42d1e95d-5b89-4595-bbd6-aeaefe865f9b",
+        "id": "662185ab-0bdb-4b71-9c82-d6becf986401",
         "type": "demoledgerentry",
-        "created_at": "2026-10-07T14:03:06.075Z",
-        "installment": "aeb400a8-1900-4404-b47d-3079730086f5",
+        "created_at": "2026-10-07T14:19:45.832Z",
+        "installment": "5adbd5d7-eb9f-4334-b1cc-64cbcf40f320",
         "sequence": 12,
         "funding_source": null,
         "disbursement": null,
@@ -2346,10 +2346,10 @@
         "is_simulated": true
       },
       {
-        "id": "98b513bf-2f16-4688-938e-ea21f723c4d3",
+        "id": "8c371d53-3cf8-4597-9eb5-96cf74c345b1",
         "type": "demoledgerentry",
-        "created_at": "2026-10-07T14:03:06.379Z",
-        "installment": "613f2b56-454c-40b6-bfb5-2063d933fb52",
+        "created_at": "2026-10-07T14:19:46.141Z",
+        "installment": "277051ef-e890-4a37-955d-94e7ffc2b333",
         "sequence": 13,
         "funding_source": null,
         "disbursement": null,
@@ -2363,10 +2363,10 @@
         "is_simulated": true
       },
       {
-        "id": "158fe79a-f453-4ed0-b671-0ffc5dcb0d83",
+        "id": "15275e55-4fd4-4e89-b588-c3e0471c802b",
         "type": "demoledgerentry",
-        "created_at": "2026-10-07T14:03:06.691Z",
-        "installment": "6696d57f-4a73-41f8-aa3c-c1132d8de89b",
+        "created_at": "2026-10-07T14:19:46.440Z",
+        "installment": "913dbe32-adba-4e32-b493-5bcbe91740c5",
         "sequence": 14,
         "funding_source": null,
         "disbursement": null,
@@ -2397,13 +2397,13 @@
     }
   },
   {
-    "run_id": "2c274845747d49778a0103dc6d54227a",
+    "run_id": "0c337095339543318fcfe38f4815f75d",
     "simulated": true,
     "model_mode": "mock",
     "quote": {
-      "id": "efca585b-e758-4faf-90cd-1cc60377f9f3",
+      "id": "9e203b42-419f-4f62-b153-a9309ebc25bc",
       "type": "loansimulation",
-      "created_at": "2026-10-07T14:03:07.176Z",
+      "created_at": "2026-10-07T14:19:46.945Z",
       "inputs": {
         "currency": "THB",
         "principal": "30600.00",
@@ -2682,11 +2682,11 @@
       "is_simulated": true
     },
     "pending": {
-      "id": "e3e99491-5d61-40eb-891c-7e8c0a7bfce5",
+      "id": "11721270-5196-40e4-8f9d-d4bb97db7cf4",
       "type": "simulatedapplication",
-      "created_at": "2026-10-07T14:03:07.192Z",
+      "created_at": "2026-10-07T14:19:46.960Z",
       "version": 2,
-      "loan": "efca585b-e758-4faf-90cd-1cc60377f9f3",
+      "loan": "9e203b42-419f-4f62-b153-a9309ebc25bc",
       "status": "UNDER_REVIEW",
       "assessment": {
         "status": "INSUFFICIENT_DATA",
@@ -2735,11 +2735,11 @@
       "is_simulated": true
     },
     "approved": {
-      "id": "e3e99491-5d61-40eb-891c-7e8c0a7bfce5",
+      "id": "11721270-5196-40e4-8f9d-d4bb97db7cf4",
       "type": "simulatedapplication",
-      "created_at": "2026-10-07T14:03:07.192Z",
+      "created_at": "2026-10-07T14:19:46.960Z",
       "version": 3,
-      "loan": "efca585b-e758-4faf-90cd-1cc60377f9f3",
+      "loan": "9e203b42-419f-4f62-b153-a9309ebc25bc",
       "status": "APPROVED",
       "assessment": {
         "status": "AFFORDABLE",
@@ -2752,11 +2752,11 @@
     },
     "funded": {
       "application": {
-        "id": "e3e99491-5d61-40eb-891c-7e8c0a7bfce5",
+        "id": "11721270-5196-40e4-8f9d-d4bb97db7cf4",
         "type": "simulatedapplication",
-        "created_at": "2026-10-07T14:03:07.192Z",
+        "created_at": "2026-10-07T14:19:46.960Z",
         "version": 4,
-        "loan": "efca585b-e758-4faf-90cd-1cc60377f9f3",
+        "loan": "9e203b42-419f-4f62-b153-a9309ebc25bc",
         "status": "DISBURSED",
         "assessment": {
           "status": "AFFORDABLE",
@@ -2768,20 +2768,20 @@
         "is_simulated": true
       },
       "account": {
-        "id": "ca2eb1fa-bafa-464a-a4fd-e316a31a4a43",
+        "id": "fc8f9c24-013f-4aa8-9233-3c8ffbe9f177",
         "type": "loanaccount",
-        "created_at": "2026-10-07T14:03:07.369Z",
-        "disbursement": "86ad1827-ce37-416d-8948-9c863a7af99a",
+        "created_at": "2026-10-07T14:19:47.136Z",
+        "disbursement": "3201204a-e517-44e8-8570-c710fe339ee0",
         "status": "ACTIVE",
         "version": 1,
         "outstanding_principal": "30600.00",
         "is_simulated": true,
         "installments": [
           {
-            "id": "b401917e-f672-4992-ba7c-fe29e1a9ea79",
+            "id": "35a38d58-019c-4ab8-a068-619521ce1939",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:07.370Z",
-            "account": "ca2eb1fa-bafa-464a-a4fd-e316a31a4a43",
+            "created_at": "2026-10-07T14:19:47.136Z",
+            "account": "fc8f9c24-013f-4aa8-9233-3c8ffbe9f177",
             "number": 1,
             "due_on": "2026-11-01",
             "amount": "2550.00",
@@ -2791,10 +2791,10 @@
             "status": "SCHEDULED"
           },
           {
-            "id": "4ee29c46-1782-4af0-8421-30ab82d53677",
+            "id": "e021540a-7cf4-4a84-9b69-69af63328165",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:07.370Z",
-            "account": "ca2eb1fa-bafa-464a-a4fd-e316a31a4a43",
+            "created_at": "2026-10-07T14:19:47.136Z",
+            "account": "fc8f9c24-013f-4aa8-9233-3c8ffbe9f177",
             "number": 2,
             "due_on": "2026-12-01",
             "amount": "2550.00",
@@ -2804,10 +2804,10 @@
             "status": "SCHEDULED"
           },
           {
-            "id": "aef64908-45a5-4f18-b884-e5ad678c2ef2",
+            "id": "c607380d-d142-4fd6-a7e8-1c38ff17a404",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:07.370Z",
-            "account": "ca2eb1fa-bafa-464a-a4fd-e316a31a4a43",
+            "created_at": "2026-10-07T14:19:47.136Z",
+            "account": "fc8f9c24-013f-4aa8-9233-3c8ffbe9f177",
             "number": 3,
             "due_on": "2027-01-01",
             "amount": "2550.00",
@@ -2817,10 +2817,10 @@
             "status": "SCHEDULED"
           },
           {
-            "id": "97c1e257-80eb-4ba2-ab52-e9a00ac600d5",
+            "id": "47e41b04-7b95-4555-a95b-813c940edce0",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:07.370Z",
-            "account": "ca2eb1fa-bafa-464a-a4fd-e316a31a4a43",
+            "created_at": "2026-10-07T14:19:47.136Z",
+            "account": "fc8f9c24-013f-4aa8-9233-3c8ffbe9f177",
             "number": 4,
             "due_on": "2027-02-01",
             "amount": "2550.00",
@@ -2830,10 +2830,10 @@
             "status": "SCHEDULED"
           },
           {
-            "id": "55be2fc3-2a62-4f85-ae9a-4c46ba9f602a",
+            "id": "16e187cb-bf65-43fe-bf50-06076dd89e75",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:07.370Z",
-            "account": "ca2eb1fa-bafa-464a-a4fd-e316a31a4a43",
+            "created_at": "2026-10-07T14:19:47.136Z",
+            "account": "fc8f9c24-013f-4aa8-9233-3c8ffbe9f177",
             "number": 5,
             "due_on": "2027-03-01",
             "amount": "2550.00",
@@ -2843,10 +2843,10 @@
             "status": "SCHEDULED"
           },
           {
-            "id": "cfec6c65-73f2-4549-8e86-93648d786200",
+            "id": "0106b2b7-c004-43ff-8e0b-0a96268d15cf",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:07.370Z",
-            "account": "ca2eb1fa-bafa-464a-a4fd-e316a31a4a43",
+            "created_at": "2026-10-07T14:19:47.136Z",
+            "account": "fc8f9c24-013f-4aa8-9233-3c8ffbe9f177",
             "number": 6,
             "due_on": "2027-04-01",
             "amount": "2550.00",
@@ -2856,10 +2856,10 @@
             "status": "SCHEDULED"
           },
           {
-            "id": "d5b5615a-d264-490d-bdd0-35dced8ec3ce",
+            "id": "57f0ccde-b827-4ef7-8c29-0c536dce6a85",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:07.370Z",
-            "account": "ca2eb1fa-bafa-464a-a4fd-e316a31a4a43",
+            "created_at": "2026-10-07T14:19:47.136Z",
+            "account": "fc8f9c24-013f-4aa8-9233-3c8ffbe9f177",
             "number": 7,
             "due_on": "2027-05-01",
             "amount": "2550.00",
@@ -2869,10 +2869,10 @@
             "status": "SCHEDULED"
           },
           {
-            "id": "79147d83-f052-4c63-9271-01c92982ea16",
+            "id": "0da2c027-81a9-47fc-aef5-6aa404a1ed32",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:07.370Z",
-            "account": "ca2eb1fa-bafa-464a-a4fd-e316a31a4a43",
+            "created_at": "2026-10-07T14:19:47.136Z",
+            "account": "fc8f9c24-013f-4aa8-9233-3c8ffbe9f177",
             "number": 8,
             "due_on": "2027-06-01",
             "amount": "2550.00",
@@ -2882,10 +2882,10 @@
             "status": "SCHEDULED"
           },
           {
-            "id": "94da5485-6939-4efc-b0ad-50cda7771251",
+            "id": "4801b9cf-d5ad-4673-a803-b7726cb76c99",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:07.370Z",
-            "account": "ca2eb1fa-bafa-464a-a4fd-e316a31a4a43",
+            "created_at": "2026-10-07T14:19:47.136Z",
+            "account": "fc8f9c24-013f-4aa8-9233-3c8ffbe9f177",
             "number": 9,
             "due_on": "2027-07-01",
             "amount": "2550.00",
@@ -2895,10 +2895,10 @@
             "status": "SCHEDULED"
           },
           {
-            "id": "bcb322b1-8161-49e7-a68b-23b6cd2ccc3b",
+            "id": "439292a3-b2a8-4f9d-bd6c-3a6c7dc12d24",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:07.370Z",
-            "account": "ca2eb1fa-bafa-464a-a4fd-e316a31a4a43",
+            "created_at": "2026-10-07T14:19:47.136Z",
+            "account": "fc8f9c24-013f-4aa8-9233-3c8ffbe9f177",
             "number": 10,
             "due_on": "2027-08-01",
             "amount": "2550.00",
@@ -2908,10 +2908,10 @@
             "status": "SCHEDULED"
           },
           {
-            "id": "77458be8-bece-4aed-ba40-5f961b42e6b6",
+            "id": "eeb4af45-6010-45b9-b84a-fe4f742b4182",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:07.370Z",
-            "account": "ca2eb1fa-bafa-464a-a4fd-e316a31a4a43",
+            "created_at": "2026-10-07T14:19:47.136Z",
+            "account": "fc8f9c24-013f-4aa8-9233-3c8ffbe9f177",
             "number": 11,
             "due_on": "2027-09-01",
             "amount": "2550.00",
@@ -2921,10 +2921,10 @@
             "status": "SCHEDULED"
           },
           {
-            "id": "6172ee24-3193-4016-ab01-107ae25bb9fd",
+            "id": "9496bd70-3876-4c14-a702-e78a0d44e3a2",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:07.370Z",
-            "account": "ca2eb1fa-bafa-464a-a4fd-e316a31a4a43",
+            "created_at": "2026-10-07T14:19:47.136Z",
+            "account": "fc8f9c24-013f-4aa8-9233-3c8ffbe9f177",
             "number": 12,
             "due_on": "2027-10-01",
             "amount": "2550.00",
@@ -2936,10 +2936,10 @@
         ]
       },
       "wallet": {
-        "id": "aeb8d193-d2a3-49b4-a815-99ac716c5e88",
+        "id": "0f6c07ea-6251-4376-8f03-865f162c133f",
         "type": "demowallet",
-        "created_at": "2026-10-07T14:03:07.163Z",
-        "initial_state": "b1403f95-697e-4a2f-be02-3dc4d7021e77",
+        "created_at": "2026-10-07T14:19:46.932Z",
+        "initial_state": "e9208c5d-ab0a-419c-9632-790fc8010e01",
         "balance": "30000.00",
         "clock": "2026-10-02",
         "is_simulated": true
@@ -2948,20 +2948,20 @@
     },
     "settled": {
       "account": {
-        "id": "ca2eb1fa-bafa-464a-a4fd-e316a31a4a43",
+        "id": "fc8f9c24-013f-4aa8-9233-3c8ffbe9f177",
         "type": "loanaccount",
-        "created_at": "2026-10-07T14:03:07.369Z",
-        "disbursement": "86ad1827-ce37-416d-8948-9c863a7af99a",
+        "created_at": "2026-10-07T14:19:47.136Z",
+        "disbursement": "3201204a-e517-44e8-8570-c710fe339ee0",
         "status": "CLOSED",
         "version": 13,
         "outstanding_principal": "0.00",
         "is_simulated": true,
         "installments": [
           {
-            "id": "b401917e-f672-4992-ba7c-fe29e1a9ea79",
+            "id": "35a38d58-019c-4ab8-a068-619521ce1939",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:07.370Z",
-            "account": "ca2eb1fa-bafa-464a-a4fd-e316a31a4a43",
+            "created_at": "2026-10-07T14:19:47.136Z",
+            "account": "fc8f9c24-013f-4aa8-9233-3c8ffbe9f177",
             "number": 1,
             "due_on": "2026-11-01",
             "amount": "2550.00",
@@ -2971,10 +2971,10 @@
             "status": "PAID"
           },
           {
-            "id": "4ee29c46-1782-4af0-8421-30ab82d53677",
+            "id": "e021540a-7cf4-4a84-9b69-69af63328165",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:07.370Z",
-            "account": "ca2eb1fa-bafa-464a-a4fd-e316a31a4a43",
+            "created_at": "2026-10-07T14:19:47.136Z",
+            "account": "fc8f9c24-013f-4aa8-9233-3c8ffbe9f177",
             "number": 2,
             "due_on": "2026-12-01",
             "amount": "2550.00",
@@ -2984,10 +2984,10 @@
             "status": "PAID"
           },
           {
-            "id": "aef64908-45a5-4f18-b884-e5ad678c2ef2",
+            "id": "c607380d-d142-4fd6-a7e8-1c38ff17a404",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:07.370Z",
-            "account": "ca2eb1fa-bafa-464a-a4fd-e316a31a4a43",
+            "created_at": "2026-10-07T14:19:47.136Z",
+            "account": "fc8f9c24-013f-4aa8-9233-3c8ffbe9f177",
             "number": 3,
             "due_on": "2027-01-01",
             "amount": "2550.00",
@@ -2997,10 +2997,10 @@
             "status": "PAID"
           },
           {
-            "id": "97c1e257-80eb-4ba2-ab52-e9a00ac600d5",
+            "id": "47e41b04-7b95-4555-a95b-813c940edce0",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:07.370Z",
-            "account": "ca2eb1fa-bafa-464a-a4fd-e316a31a4a43",
+            "created_at": "2026-10-07T14:19:47.136Z",
+            "account": "fc8f9c24-013f-4aa8-9233-3c8ffbe9f177",
             "number": 4,
             "due_on": "2027-02-01",
             "amount": "2550.00",
@@ -3010,10 +3010,10 @@
             "status": "PAID"
           },
           {
-            "id": "55be2fc3-2a62-4f85-ae9a-4c46ba9f602a",
+            "id": "16e187cb-bf65-43fe-bf50-06076dd89e75",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:07.370Z",
-            "account": "ca2eb1fa-bafa-464a-a4fd-e316a31a4a43",
+            "created_at": "2026-10-07T14:19:47.136Z",
+            "account": "fc8f9c24-013f-4aa8-9233-3c8ffbe9f177",
             "number": 5,
             "due_on": "2027-03-01",
             "amount": "2550.00",
@@ -3023,10 +3023,10 @@
             "status": "PAID"
           },
           {
-            "id": "cfec6c65-73f2-4549-8e86-93648d786200",
+            "id": "0106b2b7-c004-43ff-8e0b-0a96268d15cf",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:07.370Z",
-            "account": "ca2eb1fa-bafa-464a-a4fd-e316a31a4a43",
+            "created_at": "2026-10-07T14:19:47.136Z",
+            "account": "fc8f9c24-013f-4aa8-9233-3c8ffbe9f177",
             "number": 6,
             "due_on": "2027-04-01",
             "amount": "2550.00",
@@ -3036,10 +3036,10 @@
             "status": "PAID"
           },
           {
-            "id": "d5b5615a-d264-490d-bdd0-35dced8ec3ce",
+            "id": "57f0ccde-b827-4ef7-8c29-0c536dce6a85",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:07.370Z",
-            "account": "ca2eb1fa-bafa-464a-a4fd-e316a31a4a43",
+            "created_at": "2026-10-07T14:19:47.136Z",
+            "account": "fc8f9c24-013f-4aa8-9233-3c8ffbe9f177",
             "number": 7,
             "due_on": "2027-05-01",
             "amount": "2550.00",
@@ -3049,10 +3049,10 @@
             "status": "PAID"
           },
           {
-            "id": "79147d83-f052-4c63-9271-01c92982ea16",
+            "id": "0da2c027-81a9-47fc-aef5-6aa404a1ed32",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:07.370Z",
-            "account": "ca2eb1fa-bafa-464a-a4fd-e316a31a4a43",
+            "created_at": "2026-10-07T14:19:47.136Z",
+            "account": "fc8f9c24-013f-4aa8-9233-3c8ffbe9f177",
             "number": 8,
             "due_on": "2027-06-01",
             "amount": "2550.00",
@@ -3062,10 +3062,10 @@
             "status": "PAID"
           },
           {
-            "id": "94da5485-6939-4efc-b0ad-50cda7771251",
+            "id": "4801b9cf-d5ad-4673-a803-b7726cb76c99",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:07.370Z",
-            "account": "ca2eb1fa-bafa-464a-a4fd-e316a31a4a43",
+            "created_at": "2026-10-07T14:19:47.136Z",
+            "account": "fc8f9c24-013f-4aa8-9233-3c8ffbe9f177",
             "number": 9,
             "due_on": "2027-07-01",
             "amount": "2550.00",
@@ -3075,10 +3075,10 @@
             "status": "PAID"
           },
           {
-            "id": "bcb322b1-8161-49e7-a68b-23b6cd2ccc3b",
+            "id": "439292a3-b2a8-4f9d-bd6c-3a6c7dc12d24",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:07.370Z",
-            "account": "ca2eb1fa-bafa-464a-a4fd-e316a31a4a43",
+            "created_at": "2026-10-07T14:19:47.136Z",
+            "account": "fc8f9c24-013f-4aa8-9233-3c8ffbe9f177",
             "number": 10,
             "due_on": "2027-08-01",
             "amount": "2550.00",
@@ -3088,10 +3088,10 @@
             "status": "PAID"
           },
           {
-            "id": "77458be8-bece-4aed-ba40-5f961b42e6b6",
+            "id": "eeb4af45-6010-45b9-b84a-fe4f742b4182",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:07.370Z",
-            "account": "ca2eb1fa-bafa-464a-a4fd-e316a31a4a43",
+            "created_at": "2026-10-07T14:19:47.136Z",
+            "account": "fc8f9c24-013f-4aa8-9233-3c8ffbe9f177",
             "number": 11,
             "due_on": "2027-09-01",
             "amount": "2550.00",
@@ -3101,10 +3101,10 @@
             "status": "PAID"
           },
           {
-            "id": "6172ee24-3193-4016-ab01-107ae25bb9fd",
+            "id": "9496bd70-3876-4c14-a702-e78a0d44e3a2",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:07.370Z",
-            "account": "ca2eb1fa-bafa-464a-a4fd-e316a31a4a43",
+            "created_at": "2026-10-07T14:19:47.136Z",
+            "account": "fc8f9c24-013f-4aa8-9233-3c8ffbe9f177",
             "number": 12,
             "due_on": "2027-10-01",
             "amount": "2550.00",
@@ -3116,10 +3116,10 @@
         ]
       },
       "wallet": {
-        "id": "aeb8d193-d2a3-49b4-a815-99ac716c5e88",
+        "id": "0f6c07ea-6251-4376-8f03-865f162c133f",
         "type": "demowallet",
-        "created_at": "2026-10-07T14:03:07.163Z",
-        "initial_state": "b1403f95-697e-4a2f-be02-3dc4d7021e77",
+        "created_at": "2026-10-07T14:19:46.932Z",
+        "initial_state": "e9208c5d-ab0a-419c-9632-790fc8010e01",
         "balance": "0.00",
         "clock": "2027-10-01",
         "is_simulated": true
@@ -3129,9 +3129,9 @@
     "c_integration": {
       "missing": {
         "mode": "mock",
-        "scenario_id": "613b23a2-016c-47cf-8a6a-7be74353e1d4",
+        "scenario_id": "6ec1cc7a-ff54-4144-94ca-f0847e6aa0ac",
         "context": {
-          "student_id": "893",
+          "student_id": "964",
           "now": "2026-10-02T12:00:00+07:00",
           "budget": {
             "state_version": 3,
@@ -3168,7 +3168,7 @@
           },
           "sources": [
             {
-              "funding_id": "borrowing:e3e99491-5d61-40eb-891c-7e8c0a7bfce5",
+              "funding_id": "borrowing:11721270-5196-40e4-8f9d-d4bb97db7cf4",
               "kind": "borrowing",
               "allocatable": {
                 "currency": "THB",
@@ -3180,12 +3180,12 @@
                 "B administrator must record disbursement"
               ],
               "received": false,
-              "loan_quote_id": "efca585b-e758-4faf-90cd-1cc60377f9f3"
+              "loan_quote_id": "9e203b42-419f-4f62-b153-a9309ebc25bc"
             }
           ],
           "loan_quotes": [
             {
-              "quote_id": "efca585b-e758-4faf-90cd-1cc60377f9f3",
+              "quote_id": "9e203b42-419f-4f62-b153-a9309ebc25bc",
               "principal": {
                 "currency": "THB",
                 "amount": "30600.00"
@@ -3335,8 +3335,8 @@
           ],
           "applications": [
             {
-              "application_id": "e3e99491-5d61-40eb-891c-7e8c0a7bfce5",
-              "quote_id": "efca585b-e758-4faf-90cd-1cc60377f9f3",
+              "application_id": "11721270-5196-40e4-8f9d-d4bb97db7cf4",
+              "quote_id": "9e203b42-419f-4f62-b153-a9309ebc25bc",
               "state": "UNDER_REVIEW",
               "simulated": true
             }
@@ -3345,9 +3345,9 @@
         },
         "result": {
           "schema_version": "2.0",
-          "trace_id": "db1aac2473db4d0fb623eba52f9f0d8f",
+          "trace_id": "5fb78f2ef0a348b1afe50bad8d11a5f5",
           "source_refs": [
-            "borrowing:e3e99491-5d61-40eb-891c-7e8c0a7bfce5"
+            "borrowing:11721270-5196-40e4-8f9d-d4bb97db7cf4"
           ],
           "status": "NEEDS_REVIEW",
           "issues": [],
@@ -3355,10 +3355,10 @@
           "budget_version": 1,
           "candidates": [
             {
-              "candidate_id": "7a27866470c64c789cac3ccadfdf464e",
+              "candidate_id": "4d9ec2daf9654f55ae355bb09e9e3411",
               "allocations": [
                 {
-                  "funding_id": "borrowing:e3e99491-5d61-40eb-891c-7e8c0a7bfce5",
+                  "funding_id": "borrowing:11721270-5196-40e4-8f9d-d4bb97db7cf4",
                   "amount": {
                     "currency": "THB",
                     "amount": "30000.00"
@@ -3367,8 +3367,8 @@
               ],
               "action_ids": [],
               "source_refs": [
-                "borrowing:e3e99491-5d61-40eb-891c-7e8c0a7bfce5",
-                "efca585b-e758-4faf-90cd-1cc60377f9f3"
+                "borrowing:11721270-5196-40e4-8f9d-d4bb97db7cf4",
+                "9e203b42-419f-4f62-b153-a9309ebc25bc"
               ],
               "conditions": [
                 "SIMULATED",
@@ -3387,7 +3387,7 @@
           "loan_explanations": [
             {
               "quote": {
-                "quote_id": "efca585b-e758-4faf-90cd-1cc60377f9f3",
+                "quote_id": "9e203b42-419f-4f62-b153-a9309ebc25bc",
                 "principal": {
                   "currency": "THB",
                   "amount": "30600.00"
@@ -3539,14 +3539,14 @@
           ],
           "applications": [
             {
-              "application_id": "e3e99491-5d61-40eb-891c-7e8c0a7bfce5",
-              "quote_id": "efca585b-e758-4faf-90cd-1cc60377f9f3",
+              "application_id": "11721270-5196-40e4-8f9d-d4bb97db7cf4",
+              "quote_id": "9e203b42-419f-4f62-b153-a9309ebc25bc",
               "state": "UNDER_REVIEW",
               "simulated": true
             }
           ],
           "application_notes": [
-            "e3e99491-5d61-40eb-891c-7e8c0a7bfce5: UNDER_REVIEW (SIMULATED). Approval does not change funds; B owns all transitions."
+            "11721270-5196-40e4-8f9d-d4bb97db7cf4: UNDER_REVIEW (SIMULATED). Approval does not change funds; B owns all transitions."
           ],
           "calls": [
             {
@@ -3567,9 +3567,9 @@
       },
       "approved": {
         "mode": "mock",
-        "scenario_id": "e2caf73f-e1af-45f5-9a85-5e9e9a5f30e6",
+        "scenario_id": "de807e9d-178c-4b57-8b61-5cb3d3780dd0",
         "context": {
-          "student_id": "893",
+          "student_id": "964",
           "now": "2026-10-02T12:00:00+07:00",
           "budget": {
             "state_version": 5,
@@ -3606,7 +3606,7 @@
           },
           "sources": [
             {
-              "funding_id": "borrowing:e3e99491-5d61-40eb-891c-7e8c0a7bfce5",
+              "funding_id": "borrowing:11721270-5196-40e4-8f9d-d4bb97db7cf4",
               "kind": "borrowing",
               "allocatable": {
                 "currency": "THB",
@@ -3618,12 +3618,12 @@
                 "B administrator must record disbursement"
               ],
               "received": false,
-              "loan_quote_id": "efca585b-e758-4faf-90cd-1cc60377f9f3"
+              "loan_quote_id": "9e203b42-419f-4f62-b153-a9309ebc25bc"
             }
           ],
           "loan_quotes": [
             {
-              "quote_id": "efca585b-e758-4faf-90cd-1cc60377f9f3",
+              "quote_id": "9e203b42-419f-4f62-b153-a9309ebc25bc",
               "principal": {
                 "currency": "THB",
                 "amount": "30600.00"
@@ -3736,8 +3736,8 @@
           ],
           "applications": [
             {
-              "application_id": "e3e99491-5d61-40eb-891c-7e8c0a7bfce5",
-              "quote_id": "efca585b-e758-4faf-90cd-1cc60377f9f3",
+              "application_id": "11721270-5196-40e4-8f9d-d4bb97db7cf4",
+              "quote_id": "9e203b42-419f-4f62-b153-a9309ebc25bc",
               "state": "APPROVED",
               "simulated": true
             }
@@ -3746,9 +3746,9 @@
         },
         "result": {
           "schema_version": "2.0",
-          "trace_id": "b311a8649455486b983e4b7b62d49984",
+          "trace_id": "b9d3694851b44d379285db1ec6ebcfe6",
           "source_refs": [
-            "borrowing:e3e99491-5d61-40eb-891c-7e8c0a7bfce5"
+            "borrowing:11721270-5196-40e4-8f9d-d4bb97db7cf4"
           ],
           "status": "NEEDS_REVIEW",
           "issues": [],
@@ -3756,10 +3756,10 @@
           "budget_version": 2,
           "candidates": [
             {
-              "candidate_id": "f74e5d5aa3934792af65be8c1aa80407",
+              "candidate_id": "ab7bff38bf0d4d3ca65c510ea2cb4fe5",
               "allocations": [
                 {
-                  "funding_id": "borrowing:e3e99491-5d61-40eb-891c-7e8c0a7bfce5",
+                  "funding_id": "borrowing:11721270-5196-40e4-8f9d-d4bb97db7cf4",
                   "amount": {
                     "currency": "THB",
                     "amount": "30000.00"
@@ -3768,8 +3768,8 @@
               ],
               "action_ids": [],
               "source_refs": [
-                "borrowing:e3e99491-5d61-40eb-891c-7e8c0a7bfce5",
-                "efca585b-e758-4faf-90cd-1cc60377f9f3"
+                "borrowing:11721270-5196-40e4-8f9d-d4bb97db7cf4",
+                "9e203b42-419f-4f62-b153-a9309ebc25bc"
               ],
               "conditions": [
                 "SIMULATED",
@@ -3788,7 +3788,7 @@
           "loan_explanations": [
             {
               "quote": {
-                "quote_id": "efca585b-e758-4faf-90cd-1cc60377f9f3",
+                "quote_id": "9e203b42-419f-4f62-b153-a9309ebc25bc",
                 "principal": {
                   "currency": "THB",
                   "amount": "30600.00"
@@ -3903,14 +3903,14 @@
           ],
           "applications": [
             {
-              "application_id": "e3e99491-5d61-40eb-891c-7e8c0a7bfce5",
-              "quote_id": "efca585b-e758-4faf-90cd-1cc60377f9f3",
+              "application_id": "11721270-5196-40e4-8f9d-d4bb97db7cf4",
+              "quote_id": "9e203b42-419f-4f62-b153-a9309ebc25bc",
               "state": "APPROVED",
               "simulated": true
             }
           ],
           "application_notes": [
-            "e3e99491-5d61-40eb-891c-7e8c0a7bfce5: APPROVED (SIMULATED). Approval does not change funds; B owns all transitions."
+            "11721270-5196-40e4-8f9d-d4bb97db7cf4: APPROVED (SIMULATED). Approval does not change funds; B owns all transitions."
           ],
           "calls": [
             {
@@ -3931,9 +3931,9 @@
       },
       "received": {
         "mode": "mock",
-        "scenario_id": "132d77c3-c139-442b-8f68-324034efbb75",
+        "scenario_id": "eef1dd85-1270-410f-b50d-0634ad6d69b3",
         "context": {
-          "student_id": "893",
+          "student_id": "964",
           "now": "2026-10-02T12:00:00+07:00",
           "budget": {
             "state_version": 7,
@@ -4103,7 +4103,7 @@
           },
           "sources": [
             {
-              "funding_id": "borrowing:e3e99491-5d61-40eb-891c-7e8c0a7bfce5",
+              "funding_id": "borrowing:11721270-5196-40e4-8f9d-d4bb97db7cf4",
               "kind": "borrowing",
               "allocatable": {
                 "currency": "THB",
@@ -4115,12 +4115,12 @@
                 "B administrator must record disbursement"
               ],
               "received": true,
-              "loan_quote_id": "efca585b-e758-4faf-90cd-1cc60377f9f3"
+              "loan_quote_id": "9e203b42-419f-4f62-b153-a9309ebc25bc"
             }
           ],
           "loan_quotes": [
             {
-              "quote_id": "efca585b-e758-4faf-90cd-1cc60377f9f3",
+              "quote_id": "9e203b42-419f-4f62-b153-a9309ebc25bc",
               "principal": {
                 "currency": "THB",
                 "amount": "30600.00"
@@ -4233,8 +4233,8 @@
           ],
           "applications": [
             {
-              "application_id": "e3e99491-5d61-40eb-891c-7e8c0a7bfce5",
-              "quote_id": "efca585b-e758-4faf-90cd-1cc60377f9f3",
+              "application_id": "11721270-5196-40e4-8f9d-d4bb97db7cf4",
+              "quote_id": "9e203b42-419f-4f62-b153-a9309ebc25bc",
               "state": "DISBURSED",
               "simulated": true
             }
@@ -4243,9 +4243,9 @@
         },
         "result": {
           "schema_version": "2.0",
-          "trace_id": "931670c828a64724aa044c808270b474",
+          "trace_id": "a5c37c0b03bb4209a0cd6eb2e315a869",
           "source_refs": [
-            "borrowing:e3e99491-5d61-40eb-891c-7e8c0a7bfce5"
+            "borrowing:11721270-5196-40e4-8f9d-d4bb97db7cf4"
           ],
           "status": "NEEDS_REVIEW",
           "issues": [],
@@ -4253,10 +4253,10 @@
           "budget_version": 3,
           "candidates": [
             {
-              "candidate_id": "f26792ede8ae4b008aab07fcccc3c61a",
+              "candidate_id": "cc9a78ee19a945e183472775699be4ad",
               "allocations": [
                 {
-                  "funding_id": "borrowing:e3e99491-5d61-40eb-891c-7e8c0a7bfce5",
+                  "funding_id": "borrowing:11721270-5196-40e4-8f9d-d4bb97db7cf4",
                   "amount": {
                     "currency": "THB",
                     "amount": "0.00"
@@ -4265,8 +4265,8 @@
               ],
               "action_ids": [],
               "source_refs": [
-                "borrowing:e3e99491-5d61-40eb-891c-7e8c0a7bfce5",
-                "efca585b-e758-4faf-90cd-1cc60377f9f3"
+                "borrowing:11721270-5196-40e4-8f9d-d4bb97db7cf4",
+                "9e203b42-419f-4f62-b153-a9309ebc25bc"
               ],
               "conditions": [
                 "SIMULATED",
@@ -4297,7 +4297,7 @@
           "loan_explanations": [
             {
               "quote": {
-                "quote_id": "efca585b-e758-4faf-90cd-1cc60377f9f3",
+                "quote_id": "9e203b42-419f-4f62-b153-a9309ebc25bc",
                 "principal": {
                   "currency": "THB",
                   "amount": "30600.00"
@@ -4412,14 +4412,14 @@
           ],
           "applications": [
             {
-              "application_id": "e3e99491-5d61-40eb-891c-7e8c0a7bfce5",
-              "quote_id": "efca585b-e758-4faf-90cd-1cc60377f9f3",
+              "application_id": "11721270-5196-40e4-8f9d-d4bb97db7cf4",
+              "quote_id": "9e203b42-419f-4f62-b153-a9309ebc25bc",
               "state": "DISBURSED",
               "simulated": true
             }
           ],
           "application_notes": [
-            "e3e99491-5d61-40eb-891c-7e8c0a7bfce5: DISBURSED (SIMULATED). Approval does not change funds; B owns all transitions."
+            "11721270-5196-40e4-8f9d-d4bb97db7cf4: DISBURSED (SIMULATED). Approval does not change funds; B owns all transitions."
           ],
           "calls": [
             {
@@ -4442,7 +4442,7 @@
     "policy": [
       {
         "action": "loan.repay",
-        "target_id": "ca2eb1fa-bafa-464a-a4fd-e316a31a4a43",
+        "target_id": "fc8f9c24-013f-4aa8-9233-3c8ffbe9f177",
         "amount": "2550.00",
         "currency": "THB",
         "tier": "T2",
@@ -4450,7 +4450,7 @@
       },
       {
         "action": "loan.repay",
-        "target_id": "ca2eb1fa-bafa-464a-a4fd-e316a31a4a43",
+        "target_id": "fc8f9c24-013f-4aa8-9233-3c8ffbe9f177",
         "amount": "2550.00",
         "currency": "THB",
         "tier": "T2",
@@ -4458,7 +4458,7 @@
       },
       {
         "action": "loan.repay",
-        "target_id": "ca2eb1fa-bafa-464a-a4fd-e316a31a4a43",
+        "target_id": "fc8f9c24-013f-4aa8-9233-3c8ffbe9f177",
         "amount": "2550.00",
         "currency": "THB",
         "tier": "T2",
@@ -4466,7 +4466,7 @@
       },
       {
         "action": "loan.repay",
-        "target_id": "ca2eb1fa-bafa-464a-a4fd-e316a31a4a43",
+        "target_id": "fc8f9c24-013f-4aa8-9233-3c8ffbe9f177",
         "amount": "2550.00",
         "currency": "THB",
         "tier": "T2",
@@ -4474,7 +4474,7 @@
       },
       {
         "action": "loan.repay",
-        "target_id": "ca2eb1fa-bafa-464a-a4fd-e316a31a4a43",
+        "target_id": "fc8f9c24-013f-4aa8-9233-3c8ffbe9f177",
         "amount": "2550.00",
         "currency": "THB",
         "tier": "T2",
@@ -4482,7 +4482,7 @@
       },
       {
         "action": "loan.repay",
-        "target_id": "ca2eb1fa-bafa-464a-a4fd-e316a31a4a43",
+        "target_id": "fc8f9c24-013f-4aa8-9233-3c8ffbe9f177",
         "amount": "2550.00",
         "currency": "THB",
         "tier": "T2",
@@ -4490,7 +4490,7 @@
       },
       {
         "action": "loan.repay",
-        "target_id": "ca2eb1fa-bafa-464a-a4fd-e316a31a4a43",
+        "target_id": "fc8f9c24-013f-4aa8-9233-3c8ffbe9f177",
         "amount": "2550.00",
         "currency": "THB",
         "tier": "T2",
@@ -4498,7 +4498,7 @@
       },
       {
         "action": "loan.repay",
-        "target_id": "ca2eb1fa-bafa-464a-a4fd-e316a31a4a43",
+        "target_id": "fc8f9c24-013f-4aa8-9233-3c8ffbe9f177",
         "amount": "2550.00",
         "currency": "THB",
         "tier": "T2",
@@ -4506,7 +4506,7 @@
       },
       {
         "action": "loan.repay",
-        "target_id": "ca2eb1fa-bafa-464a-a4fd-e316a31a4a43",
+        "target_id": "fc8f9c24-013f-4aa8-9233-3c8ffbe9f177",
         "amount": "2550.00",
         "currency": "THB",
         "tier": "T2",
@@ -4514,7 +4514,7 @@
       },
       {
         "action": "loan.repay",
-        "target_id": "ca2eb1fa-bafa-464a-a4fd-e316a31a4a43",
+        "target_id": "fc8f9c24-013f-4aa8-9233-3c8ffbe9f177",
         "amount": "2550.00",
         "currency": "THB",
         "tier": "T2",
@@ -4522,7 +4522,7 @@
       },
       {
         "action": "loan.repay",
-        "target_id": "ca2eb1fa-bafa-464a-a4fd-e316a31a4a43",
+        "target_id": "fc8f9c24-013f-4aa8-9233-3c8ffbe9f177",
         "amount": "2550.00",
         "currency": "THB",
         "tier": "T2",
@@ -4530,7 +4530,7 @@
       },
       {
         "action": "loan.repay",
-        "target_id": "ca2eb1fa-bafa-464a-a4fd-e316a31a4a43",
+        "target_id": "fc8f9c24-013f-4aa8-9233-3c8ffbe9f177",
         "amount": "2550.00",
         "currency": "THB",
         "tier": "T2",
@@ -4539,13 +4539,13 @@
     ],
     "ledger": [
       {
-        "id": "21eac6a7-0f94-4bfd-88b2-0c120e6652b1",
+        "id": "7ecc7347-af57-46b3-b76f-60c2e2adc8d1",
         "type": "demoledgerentry",
-        "created_at": "2026-10-07T14:03:07.367Z",
+        "created_at": "2026-10-07T14:19:47.134Z",
         "installment": null,
         "sequence": 1,
         "funding_source": null,
-        "disbursement": "86ad1827-ce37-416d-8948-9c863a7af99a",
+        "disbursement": "3201204a-e517-44e8-8570-c710fe339ee0",
         "payment": null,
         "conversion": null,
         "remittance_order": null,
@@ -4556,12 +4556,12 @@
         "is_simulated": true
       },
       {
-        "id": "0f0600d2-339c-49bf-8cdd-b3d4642ab1b5",
+        "id": "fac217ea-787d-46f4-8e1c-3d0bc9e7b9df",
         "type": "demoledgerentry",
-        "created_at": "2026-10-07T14:03:07.470Z",
+        "created_at": "2026-10-07T14:19:47.232Z",
         "installment": null,
         "sequence": 2,
-        "funding_source": "a0095779-d44a-4c1b-b6e5-62e1c0aba9b1",
+        "funding_source": "33110ba8-0ca9-4c19-a65e-fc2d4adfdf88",
         "disbursement": null,
         "payment": null,
         "conversion": null,
@@ -4573,10 +4573,10 @@
         "is_simulated": true
       },
       {
-        "id": "c3181f36-64dd-4863-9131-2ee2ce09c1b1",
+        "id": "b5d25acb-0831-41e0-9e99-6f8ede2002c7",
         "type": "demoledgerentry",
-        "created_at": "2026-10-07T14:03:07.768Z",
-        "installment": "b401917e-f672-4992-ba7c-fe29e1a9ea79",
+        "created_at": "2026-10-07T14:19:47.528Z",
+        "installment": "35a38d58-019c-4ab8-a068-619521ce1939",
         "sequence": 3,
         "funding_source": null,
         "disbursement": null,
@@ -4590,10 +4590,10 @@
         "is_simulated": true
       },
       {
-        "id": "0ba3eb70-367e-49a1-869a-c114e362c5b0",
+        "id": "dda2c0c3-e943-4d01-ab9d-12c56aa5fc72",
         "type": "demoledgerentry",
-        "created_at": "2026-10-07T14:03:08.075Z",
-        "installment": "4ee29c46-1782-4af0-8421-30ab82d53677",
+        "created_at": "2026-10-07T14:19:47.837Z",
+        "installment": "e021540a-7cf4-4a84-9b69-69af63328165",
         "sequence": 4,
         "funding_source": null,
         "disbursement": null,
@@ -4607,10 +4607,10 @@
         "is_simulated": true
       },
       {
-        "id": "3e1875b0-106f-45a7-8b7f-14df52f0aaab",
+        "id": "6377a443-a355-4527-ac0c-bff9a3b5a4f6",
         "type": "demoledgerentry",
-        "created_at": "2026-10-07T14:03:08.383Z",
-        "installment": "aef64908-45a5-4f18-b884-e5ad678c2ef2",
+        "created_at": "2026-10-07T14:19:48.143Z",
+        "installment": "c607380d-d142-4fd6-a7e8-1c38ff17a404",
         "sequence": 5,
         "funding_source": null,
         "disbursement": null,
@@ -4624,10 +4624,10 @@
         "is_simulated": true
       },
       {
-        "id": "ea7b0409-d69e-41a4-8025-f32369ca952e",
+        "id": "2ea9be19-15a3-4334-bf47-f8d5b6c030ad",
         "type": "demoledgerentry",
-        "created_at": "2026-10-07T14:03:08.695Z",
-        "installment": "97c1e257-80eb-4ba2-ab52-e9a00ac600d5",
+        "created_at": "2026-10-07T14:19:48.454Z",
+        "installment": "47e41b04-7b95-4555-a95b-813c940edce0",
         "sequence": 6,
         "funding_source": null,
         "disbursement": null,
@@ -4641,10 +4641,10 @@
         "is_simulated": true
       },
       {
-        "id": "90beefb1-58b1-43b9-9348-c6db35bc745f",
+        "id": "3ea24ffa-8be9-4589-90bd-e616646dbad2",
         "type": "demoledgerentry",
-        "created_at": "2026-10-07T14:03:09.012Z",
-        "installment": "55be2fc3-2a62-4f85-ae9a-4c46ba9f602a",
+        "created_at": "2026-10-07T14:19:48.761Z",
+        "installment": "16e187cb-bf65-43fe-bf50-06076dd89e75",
         "sequence": 7,
         "funding_source": null,
         "disbursement": null,
@@ -4658,10 +4658,10 @@
         "is_simulated": true
       },
       {
-        "id": "efac89b9-d707-46f1-9fef-12b13688bab8",
+        "id": "5cc474a2-8bac-4464-8d29-541efd56b68f",
         "type": "demoledgerentry",
-        "created_at": "2026-10-07T14:03:09.326Z",
-        "installment": "cfec6c65-73f2-4549-8e86-93648d786200",
+        "created_at": "2026-10-07T14:19:49.076Z",
+        "installment": "0106b2b7-c004-43ff-8e0b-0a96268d15cf",
         "sequence": 8,
         "funding_source": null,
         "disbursement": null,
@@ -4675,10 +4675,10 @@
         "is_simulated": true
       },
       {
-        "id": "d5fa109c-1e59-44bf-8994-686312b270c0",
+        "id": "29db10a2-2e31-40ff-9a34-349909211bbb",
         "type": "demoledgerentry",
-        "created_at": "2026-10-07T14:03:09.631Z",
-        "installment": "d5b5615a-d264-490d-bdd0-35dced8ec3ce",
+        "created_at": "2026-10-07T14:19:49.384Z",
+        "installment": "57f0ccde-b827-4ef7-8c29-0c536dce6a85",
         "sequence": 9,
         "funding_source": null,
         "disbursement": null,
@@ -4692,10 +4692,10 @@
         "is_simulated": true
       },
       {
-        "id": "7fd585eb-d375-4adf-ab67-42a6d30fdb55",
+        "id": "9553c4c0-3d15-4f20-a30b-61790ef2af00",
         "type": "demoledgerentry",
-        "created_at": "2026-10-07T14:03:09.937Z",
-        "installment": "79147d83-f052-4c63-9271-01c92982ea16",
+        "created_at": "2026-10-07T14:19:49.697Z",
+        "installment": "0da2c027-81a9-47fc-aef5-6aa404a1ed32",
         "sequence": 10,
         "funding_source": null,
         "disbursement": null,
@@ -4709,10 +4709,10 @@
         "is_simulated": true
       },
       {
-        "id": "f4d1d274-2bd5-4ec9-8195-04eab7e6e1d7",
+        "id": "3d410fd4-2395-4ea5-8904-2f9a37af9465",
         "type": "demoledgerentry",
-        "created_at": "2026-10-07T14:03:10.243Z",
-        "installment": "94da5485-6939-4efc-b0ad-50cda7771251",
+        "created_at": "2026-10-07T14:19:50.012Z",
+        "installment": "4801b9cf-d5ad-4673-a803-b7726cb76c99",
         "sequence": 11,
         "funding_source": null,
         "disbursement": null,
@@ -4726,10 +4726,10 @@
         "is_simulated": true
       },
       {
-        "id": "e09f1a6c-ae9c-443c-8cdd-6e8121cf1262",
+        "id": "1f534725-21a4-43f6-a66f-4d7a767cbcc7",
         "type": "demoledgerentry",
-        "created_at": "2026-10-07T14:03:10.544Z",
-        "installment": "bcb322b1-8161-49e7-a68b-23b6cd2ccc3b",
+        "created_at": "2026-10-07T14:19:50.324Z",
+        "installment": "439292a3-b2a8-4f9d-bd6c-3a6c7dc12d24",
         "sequence": 12,
         "funding_source": null,
         "disbursement": null,
@@ -4743,10 +4743,10 @@
         "is_simulated": true
       },
       {
-        "id": "c33d18ea-11de-4eeb-ab01-bdd84e4a787e",
+        "id": "398382d1-6a5e-4f50-95a6-0de1704f534a",
         "type": "demoledgerentry",
-        "created_at": "2026-10-07T14:03:10.850Z",
-        "installment": "77458be8-bece-4aed-ba40-5f961b42e6b6",
+        "created_at": "2026-10-07T14:19:50.638Z",
+        "installment": "eeb4af45-6010-45b9-b84a-fe4f742b4182",
         "sequence": 13,
         "funding_source": null,
         "disbursement": null,
@@ -4760,10 +4760,10 @@
         "is_simulated": true
       },
       {
-        "id": "4383c67b-cbe6-491b-84d3-a02d89f13ca8",
+        "id": "5c068c5d-2c61-4700-8be6-92faaf63f7b0",
         "type": "demoledgerentry",
-        "created_at": "2026-10-07T14:03:11.157Z",
-        "installment": "6172ee24-3193-4016-ab01-107ae25bb9fd",
+        "created_at": "2026-10-07T14:19:50.960Z",
+        "installment": "9496bd70-3876-4c14-a702-e78a0d44e3a2",
         "sequence": 14,
         "funding_source": null,
         "disbursement": null,
@@ -4794,13 +4794,13 @@
     }
   },
   {
-    "run_id": "6d431330026d40529f7d3753efad2b9b",
+    "run_id": "18a9b4ce222345cc85ceee67672dfcbe",
     "simulated": true,
     "model_mode": "mock",
     "quote": {
-      "id": "4d0645b7-fb97-447c-858f-b1a1cf05d05a",
+      "id": "4ec08525-aa29-43d0-981f-47b4224a033c",
       "type": "loansimulation",
-      "created_at": "2026-10-07T14:03:11.641Z",
+      "created_at": "2026-10-07T14:19:51.475Z",
       "inputs": {
         "currency": "THB",
         "principal": "30600.00",
@@ -5079,11 +5079,11 @@
       "is_simulated": true
     },
     "pending": {
-      "id": "3be3ef6a-0321-401c-a19a-f687e829c8d2",
+      "id": "e5b832fb-4d67-4ccd-abfe-0a4b8922913d",
       "type": "simulatedapplication",
-      "created_at": "2026-10-07T14:03:11.655Z",
+      "created_at": "2026-10-07T14:19:51.492Z",
       "version": 2,
-      "loan": "4d0645b7-fb97-447c-858f-b1a1cf05d05a",
+      "loan": "4ec08525-aa29-43d0-981f-47b4224a033c",
       "status": "UNDER_REVIEW",
       "assessment": {
         "status": "INSUFFICIENT_DATA",
@@ -5132,11 +5132,11 @@
       "is_simulated": true
     },
     "approved": {
-      "id": "3be3ef6a-0321-401c-a19a-f687e829c8d2",
+      "id": "e5b832fb-4d67-4ccd-abfe-0a4b8922913d",
       "type": "simulatedapplication",
-      "created_at": "2026-10-07T14:03:11.655Z",
+      "created_at": "2026-10-07T14:19:51.492Z",
       "version": 3,
-      "loan": "4d0645b7-fb97-447c-858f-b1a1cf05d05a",
+      "loan": "4ec08525-aa29-43d0-981f-47b4224a033c",
       "status": "APPROVED",
       "assessment": {
         "status": "AFFORDABLE",
@@ -5149,11 +5149,11 @@
     },
     "funded": {
       "application": {
-        "id": "3be3ef6a-0321-401c-a19a-f687e829c8d2",
+        "id": "e5b832fb-4d67-4ccd-abfe-0a4b8922913d",
         "type": "simulatedapplication",
-        "created_at": "2026-10-07T14:03:11.655Z",
+        "created_at": "2026-10-07T14:19:51.492Z",
         "version": 4,
-        "loan": "4d0645b7-fb97-447c-858f-b1a1cf05d05a",
+        "loan": "4ec08525-aa29-43d0-981f-47b4224a033c",
         "status": "DISBURSED",
         "assessment": {
           "status": "AFFORDABLE",
@@ -5165,20 +5165,20 @@
         "is_simulated": true
       },
       "account": {
-        "id": "06214523-9c45-4b88-8c58-4a99feb435f8",
+        "id": "b04ffbde-bb83-448c-9ae5-e04377635923",
         "type": "loanaccount",
-        "created_at": "2026-10-07T14:03:11.822Z",
-        "disbursement": "075cd866-8685-4f4b-9141-38ed42d94cac",
+        "created_at": "2026-10-07T14:19:51.682Z",
+        "disbursement": "d9584772-a5ee-483f-990a-8badb004ed9f",
         "status": "ACTIVE",
         "version": 1,
         "outstanding_principal": "30600.00",
         "is_simulated": true,
         "installments": [
           {
-            "id": "ea33f7f1-ddc9-4ba9-89f7-f584e267f87b",
+            "id": "13d11517-6ede-48ae-8cf9-53f219a99c59",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:11.823Z",
-            "account": "06214523-9c45-4b88-8c58-4a99feb435f8",
+            "created_at": "2026-10-07T14:19:51.683Z",
+            "account": "b04ffbde-bb83-448c-9ae5-e04377635923",
             "number": 1,
             "due_on": "2026-11-01",
             "amount": "2550.00",
@@ -5188,10 +5188,10 @@
             "status": "SCHEDULED"
           },
           {
-            "id": "6aa37472-8cc3-4a03-a8de-1af80e38ef20",
+            "id": "6fc3e2cd-0940-4679-b8f4-16700d1e7c17",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:11.823Z",
-            "account": "06214523-9c45-4b88-8c58-4a99feb435f8",
+            "created_at": "2026-10-07T14:19:51.683Z",
+            "account": "b04ffbde-bb83-448c-9ae5-e04377635923",
             "number": 2,
             "due_on": "2026-12-01",
             "amount": "2550.00",
@@ -5201,10 +5201,10 @@
             "status": "SCHEDULED"
           },
           {
-            "id": "5f44498e-f441-4ffc-a22f-ac69f0e90ce0",
+            "id": "3a393ce5-3b8a-4393-8a0a-e1c316801546",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:11.823Z",
-            "account": "06214523-9c45-4b88-8c58-4a99feb435f8",
+            "created_at": "2026-10-07T14:19:51.683Z",
+            "account": "b04ffbde-bb83-448c-9ae5-e04377635923",
             "number": 3,
             "due_on": "2027-01-01",
             "amount": "2550.00",
@@ -5214,10 +5214,10 @@
             "status": "SCHEDULED"
           },
           {
-            "id": "61420a51-8f3f-4f5d-940e-969ef6813f7d",
+            "id": "0dbe8bed-a06a-421a-804e-1b9eee1d5c35",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:11.823Z",
-            "account": "06214523-9c45-4b88-8c58-4a99feb435f8",
+            "created_at": "2026-10-07T14:19:51.683Z",
+            "account": "b04ffbde-bb83-448c-9ae5-e04377635923",
             "number": 4,
             "due_on": "2027-02-01",
             "amount": "2550.00",
@@ -5227,10 +5227,10 @@
             "status": "SCHEDULED"
           },
           {
-            "id": "c9253c4f-cf71-4f64-baff-68e1ebae5ba6",
+            "id": "67a2f511-4f08-4290-b32b-c7641957aa80",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:11.823Z",
-            "account": "06214523-9c45-4b88-8c58-4a99feb435f8",
+            "created_at": "2026-10-07T14:19:51.683Z",
+            "account": "b04ffbde-bb83-448c-9ae5-e04377635923",
             "number": 5,
             "due_on": "2027-03-01",
             "amount": "2550.00",
@@ -5240,10 +5240,10 @@
             "status": "SCHEDULED"
           },
           {
-            "id": "875460d5-0c4c-4450-aa7e-3e58aadc8821",
+            "id": "8195ffc9-f0d4-4e5b-a65b-7989ba071e48",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:11.823Z",
-            "account": "06214523-9c45-4b88-8c58-4a99feb435f8",
+            "created_at": "2026-10-07T14:19:51.683Z",
+            "account": "b04ffbde-bb83-448c-9ae5-e04377635923",
             "number": 6,
             "due_on": "2027-04-01",
             "amount": "2550.00",
@@ -5253,10 +5253,10 @@
             "status": "SCHEDULED"
           },
           {
-            "id": "8d5a4696-0bd2-4858-aa37-c4d8d75a3138",
+            "id": "dfb31e1a-4bd3-435a-a480-6645c497ab56",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:11.823Z",
-            "account": "06214523-9c45-4b88-8c58-4a99feb435f8",
+            "created_at": "2026-10-07T14:19:51.683Z",
+            "account": "b04ffbde-bb83-448c-9ae5-e04377635923",
             "number": 7,
             "due_on": "2027-05-01",
             "amount": "2550.00",
@@ -5266,10 +5266,10 @@
             "status": "SCHEDULED"
           },
           {
-            "id": "e5d2c961-17d0-429f-8398-38496a9e418e",
+            "id": "69557d62-bb31-4d24-9213-c0b82d50cd1a",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:11.823Z",
-            "account": "06214523-9c45-4b88-8c58-4a99feb435f8",
+            "created_at": "2026-10-07T14:19:51.683Z",
+            "account": "b04ffbde-bb83-448c-9ae5-e04377635923",
             "number": 8,
             "due_on": "2027-06-01",
             "amount": "2550.00",
@@ -5279,10 +5279,10 @@
             "status": "SCHEDULED"
           },
           {
-            "id": "e7fe1e04-734b-4a38-896d-31f77f9368e2",
+            "id": "bcc46b44-c7f2-4feb-86fc-20e8c914d95f",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:11.823Z",
-            "account": "06214523-9c45-4b88-8c58-4a99feb435f8",
+            "created_at": "2026-10-07T14:19:51.683Z",
+            "account": "b04ffbde-bb83-448c-9ae5-e04377635923",
             "number": 9,
             "due_on": "2027-07-01",
             "amount": "2550.00",
@@ -5292,10 +5292,10 @@
             "status": "SCHEDULED"
           },
           {
-            "id": "8d73d4d3-d725-4786-87ac-13b7161cfb1a",
+            "id": "237f8f87-4170-40eb-9565-dfa65f54b686",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:11.823Z",
-            "account": "06214523-9c45-4b88-8c58-4a99feb435f8",
+            "created_at": "2026-10-07T14:19:51.683Z",
+            "account": "b04ffbde-bb83-448c-9ae5-e04377635923",
             "number": 10,
             "due_on": "2027-08-01",
             "amount": "2550.00",
@@ -5305,10 +5305,10 @@
             "status": "SCHEDULED"
           },
           {
-            "id": "de6f09f8-3829-41b9-b138-59fed4c5615e",
+            "id": "50effd39-96b3-4dda-a981-dd46816ce56d",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:11.823Z",
-            "account": "06214523-9c45-4b88-8c58-4a99feb435f8",
+            "created_at": "2026-10-07T14:19:51.683Z",
+            "account": "b04ffbde-bb83-448c-9ae5-e04377635923",
             "number": 11,
             "due_on": "2027-09-01",
             "amount": "2550.00",
@@ -5318,10 +5318,10 @@
             "status": "SCHEDULED"
           },
           {
-            "id": "53212566-9401-4c95-9468-27a48e6478fb",
+            "id": "1fa59dcb-b3fc-44b4-af95-b5b682d04728",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:11.823Z",
-            "account": "06214523-9c45-4b88-8c58-4a99feb435f8",
+            "created_at": "2026-10-07T14:19:51.683Z",
+            "account": "b04ffbde-bb83-448c-9ae5-e04377635923",
             "number": 12,
             "due_on": "2027-10-01",
             "amount": "2550.00",
@@ -5333,10 +5333,10 @@
         ]
       },
       "wallet": {
-        "id": "a54cc0f1-0cf8-443b-8356-c1831a74cab0",
+        "id": "4b103067-6648-4b5c-be16-a93bac811f09",
         "type": "demowallet",
-        "created_at": "2026-10-07T14:03:11.628Z",
-        "initial_state": "7817d5ef-c4bd-4aab-b33d-2d004ff8e30d",
+        "created_at": "2026-10-07T14:19:51.460Z",
+        "initial_state": "8e137fb3-6e09-463e-9f52-9cf580ca6335",
         "balance": "30000.00",
         "clock": "2026-10-02",
         "is_simulated": true
@@ -5345,20 +5345,20 @@
     },
     "settled": {
       "account": {
-        "id": "06214523-9c45-4b88-8c58-4a99feb435f8",
+        "id": "b04ffbde-bb83-448c-9ae5-e04377635923",
         "type": "loanaccount",
-        "created_at": "2026-10-07T14:03:11.822Z",
-        "disbursement": "075cd866-8685-4f4b-9141-38ed42d94cac",
+        "created_at": "2026-10-07T14:19:51.682Z",
+        "disbursement": "d9584772-a5ee-483f-990a-8badb004ed9f",
         "status": "CLOSED",
         "version": 13,
         "outstanding_principal": "0.00",
         "is_simulated": true,
         "installments": [
           {
-            "id": "ea33f7f1-ddc9-4ba9-89f7-f584e267f87b",
+            "id": "13d11517-6ede-48ae-8cf9-53f219a99c59",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:11.823Z",
-            "account": "06214523-9c45-4b88-8c58-4a99feb435f8",
+            "created_at": "2026-10-07T14:19:51.683Z",
+            "account": "b04ffbde-bb83-448c-9ae5-e04377635923",
             "number": 1,
             "due_on": "2026-11-01",
             "amount": "2550.00",
@@ -5368,10 +5368,10 @@
             "status": "PAID"
           },
           {
-            "id": "6aa37472-8cc3-4a03-a8de-1af80e38ef20",
+            "id": "6fc3e2cd-0940-4679-b8f4-16700d1e7c17",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:11.823Z",
-            "account": "06214523-9c45-4b88-8c58-4a99feb435f8",
+            "created_at": "2026-10-07T14:19:51.683Z",
+            "account": "b04ffbde-bb83-448c-9ae5-e04377635923",
             "number": 2,
             "due_on": "2026-12-01",
             "amount": "2550.00",
@@ -5381,10 +5381,10 @@
             "status": "PAID"
           },
           {
-            "id": "5f44498e-f441-4ffc-a22f-ac69f0e90ce0",
+            "id": "3a393ce5-3b8a-4393-8a0a-e1c316801546",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:11.823Z",
-            "account": "06214523-9c45-4b88-8c58-4a99feb435f8",
+            "created_at": "2026-10-07T14:19:51.683Z",
+            "account": "b04ffbde-bb83-448c-9ae5-e04377635923",
             "number": 3,
             "due_on": "2027-01-01",
             "amount": "2550.00",
@@ -5394,10 +5394,10 @@
             "status": "PAID"
           },
           {
-            "id": "61420a51-8f3f-4f5d-940e-969ef6813f7d",
+            "id": "0dbe8bed-a06a-421a-804e-1b9eee1d5c35",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:11.823Z",
-            "account": "06214523-9c45-4b88-8c58-4a99feb435f8",
+            "created_at": "2026-10-07T14:19:51.683Z",
+            "account": "b04ffbde-bb83-448c-9ae5-e04377635923",
             "number": 4,
             "due_on": "2027-02-01",
             "amount": "2550.00",
@@ -5407,10 +5407,10 @@
             "status": "PAID"
           },
           {
-            "id": "c9253c4f-cf71-4f64-baff-68e1ebae5ba6",
+            "id": "67a2f511-4f08-4290-b32b-c7641957aa80",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:11.823Z",
-            "account": "06214523-9c45-4b88-8c58-4a99feb435f8",
+            "created_at": "2026-10-07T14:19:51.683Z",
+            "account": "b04ffbde-bb83-448c-9ae5-e04377635923",
             "number": 5,
             "due_on": "2027-03-01",
             "amount": "2550.00",
@@ -5420,10 +5420,10 @@
             "status": "PAID"
           },
           {
-            "id": "875460d5-0c4c-4450-aa7e-3e58aadc8821",
+            "id": "8195ffc9-f0d4-4e5b-a65b-7989ba071e48",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:11.823Z",
-            "account": "06214523-9c45-4b88-8c58-4a99feb435f8",
+            "created_at": "2026-10-07T14:19:51.683Z",
+            "account": "b04ffbde-bb83-448c-9ae5-e04377635923",
             "number": 6,
             "due_on": "2027-04-01",
             "amount": "2550.00",
@@ -5433,10 +5433,10 @@
             "status": "PAID"
           },
           {
-            "id": "8d5a4696-0bd2-4858-aa37-c4d8d75a3138",
+            "id": "dfb31e1a-4bd3-435a-a480-6645c497ab56",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:11.823Z",
-            "account": "06214523-9c45-4b88-8c58-4a99feb435f8",
+            "created_at": "2026-10-07T14:19:51.683Z",
+            "account": "b04ffbde-bb83-448c-9ae5-e04377635923",
             "number": 7,
             "due_on": "2027-05-01",
             "amount": "2550.00",
@@ -5446,10 +5446,10 @@
             "status": "PAID"
           },
           {
-            "id": "e5d2c961-17d0-429f-8398-38496a9e418e",
+            "id": "69557d62-bb31-4d24-9213-c0b82d50cd1a",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:11.823Z",
-            "account": "06214523-9c45-4b88-8c58-4a99feb435f8",
+            "created_at": "2026-10-07T14:19:51.683Z",
+            "account": "b04ffbde-bb83-448c-9ae5-e04377635923",
             "number": 8,
             "due_on": "2027-06-01",
             "amount": "2550.00",
@@ -5459,10 +5459,10 @@
             "status": "PAID"
           },
           {
-            "id": "e7fe1e04-734b-4a38-896d-31f77f9368e2",
+            "id": "bcc46b44-c7f2-4feb-86fc-20e8c914d95f",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:11.823Z",
-            "account": "06214523-9c45-4b88-8c58-4a99feb435f8",
+            "created_at": "2026-10-07T14:19:51.683Z",
+            "account": "b04ffbde-bb83-448c-9ae5-e04377635923",
             "number": 9,
             "due_on": "2027-07-01",
             "amount": "2550.00",
@@ -5472,10 +5472,10 @@
             "status": "PAID"
           },
           {
-            "id": "8d73d4d3-d725-4786-87ac-13b7161cfb1a",
+            "id": "237f8f87-4170-40eb-9565-dfa65f54b686",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:11.823Z",
-            "account": "06214523-9c45-4b88-8c58-4a99feb435f8",
+            "created_at": "2026-10-07T14:19:51.683Z",
+            "account": "b04ffbde-bb83-448c-9ae5-e04377635923",
             "number": 10,
             "due_on": "2027-08-01",
             "amount": "2550.00",
@@ -5485,10 +5485,10 @@
             "status": "PAID"
           },
           {
-            "id": "de6f09f8-3829-41b9-b138-59fed4c5615e",
+            "id": "50effd39-96b3-4dda-a981-dd46816ce56d",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:11.823Z",
-            "account": "06214523-9c45-4b88-8c58-4a99feb435f8",
+            "created_at": "2026-10-07T14:19:51.683Z",
+            "account": "b04ffbde-bb83-448c-9ae5-e04377635923",
             "number": 11,
             "due_on": "2027-09-01",
             "amount": "2550.00",
@@ -5498,10 +5498,10 @@
             "status": "PAID"
           },
           {
-            "id": "53212566-9401-4c95-9468-27a48e6478fb",
+            "id": "1fa59dcb-b3fc-44b4-af95-b5b682d04728",
             "type": "loaninstallment",
-            "created_at": "2026-10-07T14:03:11.823Z",
-            "account": "06214523-9c45-4b88-8c58-4a99feb435f8",
+            "created_at": "2026-10-07T14:19:51.683Z",
+            "account": "b04ffbde-bb83-448c-9ae5-e04377635923",
             "number": 12,
             "due_on": "2027-10-01",
             "amount": "2550.00",
@@ -5513,10 +5513,10 @@
         ]
       },
       "wallet": {
-        "id": "a54cc0f1-0cf8-443b-8356-c1831a74cab0",
+        "id": "4b103067-6648-4b5c-be16-a93bac811f09",
         "type": "demowallet",
-        "created_at": "2026-10-07T14:03:11.628Z",
-        "initial_state": "7817d5ef-c4bd-4aab-b33d-2d004ff8e30d",
+        "created_at": "2026-10-07T14:19:51.460Z",
+        "initial_state": "8e137fb3-6e09-463e-9f52-9cf580ca6335",
         "balance": "0.00",
         "clock": "2027-10-01",
         "is_simulated": true
@@ -5526,9 +5526,9 @@
     "c_integration": {
       "missing": {
         "mode": "mock",
-        "scenario_id": "4f600fb8-5409-49ab-8fab-7e142f4c584e",
+        "scenario_id": "0ef1eca0-03c3-4ae0-a0f5-20f0a734fa67",
         "context": {
-          "student_id": "895",
+          "student_id": "966",
           "now": "2026-10-02T12:00:00+07:00",
           "budget": {
             "state_version": 3,
@@ -5565,7 +5565,7 @@
           },
           "sources": [
             {
-              "funding_id": "borrowing:3be3ef6a-0321-401c-a19a-f687e829c8d2",
+              "funding_id": "borrowing:e5b832fb-4d67-4ccd-abfe-0a4b8922913d",
               "kind": "borrowing",
               "allocatable": {
                 "currency": "THB",
@@ -5577,12 +5577,12 @@
                 "B administrator must record disbursement"
               ],
               "received": false,
-              "loan_quote_id": "4d0645b7-fb97-447c-858f-b1a1cf05d05a"
+              "loan_quote_id": "4ec08525-aa29-43d0-981f-47b4224a033c"
             }
           ],
           "loan_quotes": [
             {
-              "quote_id": "4d0645b7-fb97-447c-858f-b1a1cf05d05a",
+              "quote_id": "4ec08525-aa29-43d0-981f-47b4224a033c",
               "principal": {
                 "currency": "THB",
                 "amount": "30600.00"
@@ -5732,8 +5732,8 @@
           ],
           "applications": [
             {
-              "application_id": "3be3ef6a-0321-401c-a19a-f687e829c8d2",
-              "quote_id": "4d0645b7-fb97-447c-858f-b1a1cf05d05a",
+              "application_id": "e5b832fb-4d67-4ccd-abfe-0a4b8922913d",
+              "quote_id": "4ec08525-aa29-43d0-981f-47b4224a033c",
               "state": "UNDER_REVIEW",
               "simulated": true
             }
@@ -5742,9 +5742,9 @@
         },
         "result": {
           "schema_version": "2.0",
-          "trace_id": "fd649b368d774168be4f3bd4b4431973",
+          "trace_id": "a53e8240b4374c6fb8f9cf25402ba37f",
           "source_refs": [
-            "borrowing:3be3ef6a-0321-401c-a19a-f687e829c8d2"
+            "borrowing:e5b832fb-4d67-4ccd-abfe-0a4b8922913d"
           ],
           "status": "NEEDS_REVIEW",
           "issues": [],
@@ -5752,10 +5752,10 @@
           "budget_version": 1,
           "candidates": [
             {
-              "candidate_id": "0ec3504512124cc28fe277bbb9e2e092",
+              "candidate_id": "8fcba4d696384d56b5285db1617af352",
               "allocations": [
                 {
-                  "funding_id": "borrowing:3be3ef6a-0321-401c-a19a-f687e829c8d2",
+                  "funding_id": "borrowing:e5b832fb-4d67-4ccd-abfe-0a4b8922913d",
                   "amount": {
                     "currency": "THB",
                     "amount": "30000.00"
@@ -5764,8 +5764,8 @@
               ],
               "action_ids": [],
               "source_refs": [
-                "borrowing:3be3ef6a-0321-401c-a19a-f687e829c8d2",
-                "4d0645b7-fb97-447c-858f-b1a1cf05d05a"
+                "borrowing:e5b832fb-4d67-4ccd-abfe-0a4b8922913d",
+                "4ec08525-aa29-43d0-981f-47b4224a033c"
               ],
               "conditions": [
                 "SIMULATED",
@@ -5784,7 +5784,7 @@
           "loan_explanations": [
             {
               "quote": {
-                "quote_id": "4d0645b7-fb97-447c-858f-b1a1cf05d05a",
+                "quote_id": "4ec08525-aa29-43d0-981f-47b4224a033c",
                 "principal": {
                   "currency": "THB",
                   "amount": "30600.00"
@@ -5936,14 +5936,14 @@
           ],
           "applications": [
             {
-              "application_id": "3be3ef6a-0321-401c-a19a-f687e829c8d2",
-              "quote_id": "4d0645b7-fb97-447c-858f-b1a1cf05d05a",
+              "application_id": "e5b832fb-4d67-4ccd-abfe-0a4b8922913d",
+              "quote_id": "4ec08525-aa29-43d0-981f-47b4224a033c",
               "state": "UNDER_REVIEW",
               "simulated": true
             }
           ],
           "application_notes": [
-            "3be3ef6a-0321-401c-a19a-f687e829c8d2: UNDER_REVIEW (SIMULATED). Approval does not change funds; B owns all transitions."
+            "e5b832fb-4d67-4ccd-abfe-0a4b8922913d: UNDER_REVIEW (SIMULATED). Approval does not change funds; B owns all transitions."
           ],
           "calls": [
             {
@@ -5964,9 +5964,9 @@
       },
       "approved": {
         "mode": "mock",
-        "scenario_id": "cd02e4d1-d489-4e83-9ceb-28d3f078943f",
+        "scenario_id": "a8e7a91d-3853-4f1a-bae7-666155acc15b",
         "context": {
-          "student_id": "895",
+          "student_id": "966",
           "now": "2026-10-02T12:00:00+07:00",
           "budget": {
             "state_version": 5,
@@ -6003,7 +6003,7 @@
           },
           "sources": [
             {
-              "funding_id": "borrowing:3be3ef6a-0321-401c-a19a-f687e829c8d2",
+              "funding_id": "borrowing:e5b832fb-4d67-4ccd-abfe-0a4b8922913d",
               "kind": "borrowing",
               "allocatable": {
                 "currency": "THB",
@@ -6015,12 +6015,12 @@
                 "B administrator must record disbursement"
               ],
               "received": false,
-              "loan_quote_id": "4d0645b7-fb97-447c-858f-b1a1cf05d05a"
+              "loan_quote_id": "4ec08525-aa29-43d0-981f-47b4224a033c"
             }
           ],
           "loan_quotes": [
             {
-              "quote_id": "4d0645b7-fb97-447c-858f-b1a1cf05d05a",
+              "quote_id": "4ec08525-aa29-43d0-981f-47b4224a033c",
               "principal": {
                 "currency": "THB",
                 "amount": "30600.00"
@@ -6133,8 +6133,8 @@
           ],
           "applications": [
             {
-              "application_id": "3be3ef6a-0321-401c-a19a-f687e829c8d2",
-              "quote_id": "4d0645b7-fb97-447c-858f-b1a1cf05d05a",
+              "application_id": "e5b832fb-4d67-4ccd-abfe-0a4b8922913d",
+              "quote_id": "4ec08525-aa29-43d0-981f-47b4224a033c",
               "state": "APPROVED",
               "simulated": true
             }
@@ -6143,9 +6143,9 @@
         },
         "result": {
           "schema_version": "2.0",
-          "trace_id": "4f8c13c6844446c8828a3d8b2164dc61",
+          "trace_id": "77b7c64f2855408ea5cc55fa9ecd41cb",
           "source_refs": [
-            "borrowing:3be3ef6a-0321-401c-a19a-f687e829c8d2"
+            "borrowing:e5b832fb-4d67-4ccd-abfe-0a4b8922913d"
           ],
           "status": "NEEDS_REVIEW",
           "issues": [],
@@ -6153,10 +6153,10 @@
           "budget_version": 2,
           "candidates": [
             {
-              "candidate_id": "e777002736704619a121eef84ecde349",
+              "candidate_id": "db311e50da75488d8cca1afe6fccb8f6",
               "allocations": [
                 {
-                  "funding_id": "borrowing:3be3ef6a-0321-401c-a19a-f687e829c8d2",
+                  "funding_id": "borrowing:e5b832fb-4d67-4ccd-abfe-0a4b8922913d",
                   "amount": {
                     "currency": "THB",
                     "amount": "30000.00"
@@ -6165,8 +6165,8 @@
               ],
               "action_ids": [],
               "source_refs": [
-                "borrowing:3be3ef6a-0321-401c-a19a-f687e829c8d2",
-                "4d0645b7-fb97-447c-858f-b1a1cf05d05a"
+                "borrowing:e5b832fb-4d67-4ccd-abfe-0a4b8922913d",
+                "4ec08525-aa29-43d0-981f-47b4224a033c"
               ],
               "conditions": [
                 "SIMULATED",
@@ -6185,7 +6185,7 @@
           "loan_explanations": [
             {
               "quote": {
-                "quote_id": "4d0645b7-fb97-447c-858f-b1a1cf05d05a",
+                "quote_id": "4ec08525-aa29-43d0-981f-47b4224a033c",
                 "principal": {
                   "currency": "THB",
                   "amount": "30600.00"
@@ -6300,14 +6300,14 @@
           ],
           "applications": [
             {
-              "application_id": "3be3ef6a-0321-401c-a19a-f687e829c8d2",
-              "quote_id": "4d0645b7-fb97-447c-858f-b1a1cf05d05a",
+              "application_id": "e5b832fb-4d67-4ccd-abfe-0a4b8922913d",
+              "quote_id": "4ec08525-aa29-43d0-981f-47b4224a033c",
               "state": "APPROVED",
               "simulated": true
             }
           ],
           "application_notes": [
-            "3be3ef6a-0321-401c-a19a-f687e829c8d2: APPROVED (SIMULATED). Approval does not change funds; B owns all transitions."
+            "e5b832fb-4d67-4ccd-abfe-0a4b8922913d: APPROVED (SIMULATED). Approval does not change funds; B owns all transitions."
           ],
           "calls": [
             {
@@ -6328,9 +6328,9 @@
       },
       "received": {
         "mode": "mock",
-        "scenario_id": "c1367027-ac83-4011-8fa2-8770ac6e5621",
+        "scenario_id": "ecb995ba-6fa0-423f-92de-bc671d127e1e",
         "context": {
-          "student_id": "895",
+          "student_id": "966",
           "now": "2026-10-02T12:00:00+07:00",
           "budget": {
             "state_version": 7,
@@ -6500,7 +6500,7 @@
           },
           "sources": [
             {
-              "funding_id": "borrowing:3be3ef6a-0321-401c-a19a-f687e829c8d2",
+              "funding_id": "borrowing:e5b832fb-4d67-4ccd-abfe-0a4b8922913d",
               "kind": "borrowing",
               "allocatable": {
                 "currency": "THB",
@@ -6512,12 +6512,12 @@
                 "B administrator must record disbursement"
               ],
               "received": true,
-              "loan_quote_id": "4d0645b7-fb97-447c-858f-b1a1cf05d05a"
+              "loan_quote_id": "4ec08525-aa29-43d0-981f-47b4224a033c"
             }
           ],
           "loan_quotes": [
             {
-              "quote_id": "4d0645b7-fb97-447c-858f-b1a1cf05d05a",
+              "quote_id": "4ec08525-aa29-43d0-981f-47b4224a033c",
               "principal": {
                 "currency": "THB",
                 "amount": "30600.00"
@@ -6630,8 +6630,8 @@
           ],
           "applications": [
             {
-              "application_id": "3be3ef6a-0321-401c-a19a-f687e829c8d2",
-              "quote_id": "4d0645b7-fb97-447c-858f-b1a1cf05d05a",
+              "application_id": "e5b832fb-4d67-4ccd-abfe-0a4b8922913d",
+              "quote_id": "4ec08525-aa29-43d0-981f-47b4224a033c",
               "state": "DISBURSED",
               "simulated": true
             }
@@ -6640,9 +6640,9 @@
         },
         "result": {
           "schema_version": "2.0",
-          "trace_id": "47a2ceb884104d00b0618bcdd98b285b",
+          "trace_id": "2031b7b0b3364dbea764d11ec7c32e21",
           "source_refs": [
-            "borrowing:3be3ef6a-0321-401c-a19a-f687e829c8d2"
+            "borrowing:e5b832fb-4d67-4ccd-abfe-0a4b8922913d"
           ],
           "status": "NEEDS_REVIEW",
           "issues": [],
@@ -6650,10 +6650,10 @@
           "budget_version": 3,
           "candidates": [
             {
-              "candidate_id": "12fa8eda56a54ea593f44e550f34d313",
+              "candidate_id": "4de3629931c1417b9069c1baa6eb6eb0",
               "allocations": [
                 {
-                  "funding_id": "borrowing:3be3ef6a-0321-401c-a19a-f687e829c8d2",
+                  "funding_id": "borrowing:e5b832fb-4d67-4ccd-abfe-0a4b8922913d",
                   "amount": {
                     "currency": "THB",
                     "amount": "0.00"
@@ -6662,8 +6662,8 @@
               ],
               "action_ids": [],
               "source_refs": [
-                "borrowing:3be3ef6a-0321-401c-a19a-f687e829c8d2",
-                "4d0645b7-fb97-447c-858f-b1a1cf05d05a"
+                "borrowing:e5b832fb-4d67-4ccd-abfe-0a4b8922913d",
+                "4ec08525-aa29-43d0-981f-47b4224a033c"
               ],
               "conditions": [
                 "SIMULATED",
@@ -6694,7 +6694,7 @@
           "loan_explanations": [
             {
               "quote": {
-                "quote_id": "4d0645b7-fb97-447c-858f-b1a1cf05d05a",
+                "quote_id": "4ec08525-aa29-43d0-981f-47b4224a033c",
                 "principal": {
                   "currency": "THB",
                   "amount": "30600.00"
@@ -6809,14 +6809,14 @@
           ],
           "applications": [
             {
-              "application_id": "3be3ef6a-0321-401c-a19a-f687e829c8d2",
-              "quote_id": "4d0645b7-fb97-447c-858f-b1a1cf05d05a",
+              "application_id": "e5b832fb-4d67-4ccd-abfe-0a4b8922913d",
+              "quote_id": "4ec08525-aa29-43d0-981f-47b4224a033c",
               "state": "DISBURSED",
               "simulated": true
             }
           ],
           "application_notes": [
-            "3be3ef6a-0321-401c-a19a-f687e829c8d2: DISBURSED (SIMULATED). Approval does not change funds; B owns all transitions."
+            "e5b832fb-4d67-4ccd-abfe-0a4b8922913d: DISBURSED (SIMULATED). Approval does not change funds; B owns all transitions."
           ],
           "calls": [
             {
@@ -6839,7 +6839,7 @@
     "policy": [
       {
         "action": "loan.repay",
-        "target_id": "06214523-9c45-4b88-8c58-4a99feb435f8",
+        "target_id": "b04ffbde-bb83-448c-9ae5-e04377635923",
         "amount": "2550.00",
         "currency": "THB",
         "tier": "T2",
@@ -6847,7 +6847,7 @@
       },
       {
         "action": "loan.repay",
-        "target_id": "06214523-9c45-4b88-8c58-4a99feb435f8",
+        "target_id": "b04ffbde-bb83-448c-9ae5-e04377635923",
         "amount": "2550.00",
         "currency": "THB",
         "tier": "T2",
@@ -6855,7 +6855,7 @@
       },
       {
         "action": "loan.repay",
-        "target_id": "06214523-9c45-4b88-8c58-4a99feb435f8",
+        "target_id": "b04ffbde-bb83-448c-9ae5-e04377635923",
         "amount": "2550.00",
         "currency": "THB",
         "tier": "T2",
@@ -6863,7 +6863,7 @@
       },
       {
         "action": "loan.repay",
-        "target_id": "06214523-9c45-4b88-8c58-4a99feb435f8",
+        "target_id": "b04ffbde-bb83-448c-9ae5-e04377635923",
         "amount": "2550.00",
         "currency": "THB",
         "tier": "T2",
@@ -6871,7 +6871,7 @@
       },
       {
         "action": "loan.repay",
-        "target_id": "06214523-9c45-4b88-8c58-4a99feb435f8",
+        "target_id": "b04ffbde-bb83-448c-9ae5-e04377635923",
         "amount": "2550.00",
         "currency": "THB",
         "tier": "T2",
@@ -6879,7 +6879,7 @@
       },
       {
         "action": "loan.repay",
-        "target_id": "06214523-9c45-4b88-8c58-4a99feb435f8",
+        "target_id": "b04ffbde-bb83-448c-9ae5-e04377635923",
         "amount": "2550.00",
         "currency": "THB",
         "tier": "T2",
@@ -6887,7 +6887,7 @@
       },
       {
         "action": "loan.repay",
-        "target_id": "06214523-9c45-4b88-8c58-4a99feb435f8",
+        "target_id": "b04ffbde-bb83-448c-9ae5-e04377635923",
         "amount": "2550.00",
         "currency": "THB",
         "tier": "T2",
@@ -6895,7 +6895,7 @@
       },
       {
         "action": "loan.repay",
-        "target_id": "06214523-9c45-4b88-8c58-4a99feb435f8",
+        "target_id": "b04ffbde-bb83-448c-9ae5-e04377635923",
         "amount": "2550.00",
         "currency": "THB",
         "tier": "T2",
@@ -6903,7 +6903,7 @@
       },
       {
         "action": "loan.repay",
-        "target_id": "06214523-9c45-4b88-8c58-4a99feb435f8",
+        "target_id": "b04ffbde-bb83-448c-9ae5-e04377635923",
         "amount": "2550.00",
         "currency": "THB",
         "tier": "T2",
@@ -6911,7 +6911,7 @@
       },
       {
         "action": "loan.repay",
-        "target_id": "06214523-9c45-4b88-8c58-4a99feb435f8",
+        "target_id": "b04ffbde-bb83-448c-9ae5-e04377635923",
         "amount": "2550.00",
         "currency": "THB",
         "tier": "T2",
@@ -6919,7 +6919,7 @@
       },
       {
         "action": "loan.repay",
-        "target_id": "06214523-9c45-4b88-8c58-4a99feb435f8",
+        "target_id": "b04ffbde-bb83-448c-9ae5-e04377635923",
         "amount": "2550.00",
         "currency": "THB",
         "tier": "T2",
@@ -6927,7 +6927,7 @@
       },
       {
         "action": "loan.repay",
-        "target_id": "06214523-9c45-4b88-8c58-4a99feb435f8",
+        "target_id": "b04ffbde-bb83-448c-9ae5-e04377635923",
         "amount": "2550.00",
         "currency": "THB",
         "tier": "T2",
@@ -6936,13 +6936,13 @@
     ],
     "ledger": [
       {
-        "id": "b1d90ab0-c3ac-4d2d-8b0a-012176bfb0e3",
+        "id": "0addca24-1207-40ad-9c3d-b972e119356d",
         "type": "demoledgerentry",
-        "created_at": "2026-10-07T14:03:11.821Z",
+        "created_at": "2026-10-07T14:19:51.681Z",
         "installment": null,
         "sequence": 1,
         "funding_source": null,
-        "disbursement": "075cd866-8685-4f4b-9141-38ed42d94cac",
+        "disbursement": "d9584772-a5ee-483f-990a-8badb004ed9f",
         "payment": null,
         "conversion": null,
         "remittance_order": null,
@@ -6953,12 +6953,12 @@
         "is_simulated": true
       },
       {
-        "id": "473cf2b9-e413-431d-851c-c18d3fb89ae6",
+        "id": "64b76299-96a8-4399-9d38-a527078428c6",
         "type": "demoledgerentry",
-        "created_at": "2026-10-07T14:03:11.920Z",
+        "created_at": "2026-10-07T14:19:51.784Z",
         "installment": null,
         "sequence": 2,
-        "funding_source": "412ff31c-da73-408f-98c8-64d37ceb1b7a",
+        "funding_source": "122ade4b-595c-44ab-b436-2457bd78b793",
         "disbursement": null,
         "payment": null,
         "conversion": null,
@@ -6970,10 +6970,10 @@
         "is_simulated": true
       },
       {
-        "id": "4d313ac8-455d-49b9-884f-549ae3637f67",
+        "id": "72f8810f-774a-42fe-bde5-48f5fd927548",
         "type": "demoledgerentry",
-        "created_at": "2026-10-07T14:03:12.220Z",
-        "installment": "ea33f7f1-ddc9-4ba9-89f7-f584e267f87b",
+        "created_at": "2026-10-07T14:19:52.087Z",
+        "installment": "13d11517-6ede-48ae-8cf9-53f219a99c59",
         "sequence": 3,
         "funding_source": null,
         "disbursement": null,
@@ -6987,10 +6987,10 @@
         "is_simulated": true
       },
       {
-        "id": "5eca8110-2872-445f-a96c-51bd89388d08",
+        "id": "ecc322e5-6f62-4a0d-9f9b-9d4ca4d30325",
         "type": "demoledgerentry",
-        "created_at": "2026-10-07T14:03:12.525Z",
-        "installment": "6aa37472-8cc3-4a03-a8de-1af80e38ef20",
+        "created_at": "2026-10-07T14:19:52.414Z",
+        "installment": "6fc3e2cd-0940-4679-b8f4-16700d1e7c17",
         "sequence": 4,
         "funding_source": null,
         "disbursement": null,
@@ -7004,10 +7004,10 @@
         "is_simulated": true
       },
       {
-        "id": "175d0436-369f-4093-ba3c-fc8762a38507",
+        "id": "4aea399a-e88e-4b1f-a1dc-ea18f55f40b9",
         "type": "demoledgerentry",
-        "created_at": "2026-10-07T14:03:12.833Z",
-        "installment": "5f44498e-f441-4ffc-a22f-ac69f0e90ce0",
+        "created_at": "2026-10-07T14:19:52.727Z",
+        "installment": "3a393ce5-3b8a-4393-8a0a-e1c316801546",
         "sequence": 5,
         "funding_source": null,
         "disbursement": null,
@@ -7021,10 +7021,10 @@
         "is_simulated": true
       },
       {
-        "id": "e95183e9-52f9-4cbc-a485-5f347125cfb2",
+        "id": "12a64b24-f042-4a37-9999-f16d78f93f5d",
         "type": "demoledgerentry",
-        "created_at": "2026-10-07T14:03:13.145Z",
-        "installment": "61420a51-8f3f-4f5d-940e-969ef6813f7d",
+        "created_at": "2026-10-07T14:19:53.042Z",
+        "installment": "0dbe8bed-a06a-421a-804e-1b9eee1d5c35",
         "sequence": 6,
         "funding_source": null,
         "disbursement": null,
@@ -7038,10 +7038,10 @@
         "is_simulated": true
       },
       {
-        "id": "7e27d99d-9cb9-4aa8-997d-3f5ad98274b7",
+        "id": "877141ad-adc4-4ede-9c2d-98aeaa70d834",
         "type": "demoledgerentry",
-        "created_at": "2026-10-07T14:03:13.448Z",
-        "installment": "c9253c4f-cf71-4f64-baff-68e1ebae5ba6",
+        "created_at": "2026-10-07T14:19:53.349Z",
+        "installment": "67a2f511-4f08-4290-b32b-c7641957aa80",
         "sequence": 7,
         "funding_source": null,
         "disbursement": null,
@@ -7055,10 +7055,10 @@
         "is_simulated": true
       },
       {
-        "id": "3882e803-7f0d-461b-8ab8-fa0ee2840393",
+        "id": "5ba2c11b-84c6-4610-9089-6df71e549407",
         "type": "demoledgerentry",
-        "created_at": "2026-10-07T14:03:13.768Z",
-        "installment": "875460d5-0c4c-4450-aa7e-3e58aadc8821",
+        "created_at": "2026-10-07T14:19:53.660Z",
+        "installment": "8195ffc9-f0d4-4e5b-a65b-7989ba071e48",
         "sequence": 8,
         "funding_source": null,
         "disbursement": null,
@@ -7072,10 +7072,10 @@
         "is_simulated": true
       },
       {
-        "id": "298d34ab-6fa9-4cab-bfd7-d2d058d56b1e",
+        "id": "c94fb616-fe9f-438a-85f8-fc24c7b0117f",
         "type": "demoledgerentry",
-        "created_at": "2026-10-07T14:03:14.081Z",
-        "installment": "8d5a4696-0bd2-4858-aa37-c4d8d75a3138",
+        "created_at": "2026-10-07T14:19:53.970Z",
+        "installment": "dfb31e1a-4bd3-435a-a480-6645c497ab56",
         "sequence": 9,
         "funding_source": null,
         "disbursement": null,
@@ -7089,10 +7089,10 @@
         "is_simulated": true
       },
       {
-        "id": "fcd9b435-430d-463e-a545-44c8b9c9fa41",
+        "id": "6d4ece57-91a7-4194-aa40-debef39e0f7e",
         "type": "demoledgerentry",
-        "created_at": "2026-10-07T14:03:14.392Z",
-        "installment": "e5d2c961-17d0-429f-8398-38496a9e418e",
+        "created_at": "2026-10-07T14:19:54.281Z",
+        "installment": "69557d62-bb31-4d24-9213-c0b82d50cd1a",
         "sequence": 10,
         "funding_source": null,
         "disbursement": null,
@@ -7106,10 +7106,10 @@
         "is_simulated": true
       },
       {
-        "id": "10a3d06d-9bb0-4453-84d7-0f664041acac",
+        "id": "7f8ca0c2-840c-4367-b369-13a481af230c",
         "type": "demoledgerentry",
-        "created_at": "2026-10-07T14:03:14.699Z",
-        "installment": "e7fe1e04-734b-4a38-896d-31f77f9368e2",
+        "created_at": "2026-10-07T14:19:54.595Z",
+        "installment": "bcc46b44-c7f2-4feb-86fc-20e8c914d95f",
         "sequence": 11,
         "funding_source": null,
         "disbursement": null,
@@ -7123,10 +7123,10 @@
         "is_simulated": true
       },
       {
-        "id": "767507f9-4eae-4f36-866a-82bdc7c860f5",
+        "id": "7d2ae14a-3a83-464a-acad-6dee043ca81a",
         "type": "demoledgerentry",
-        "created_at": "2026-10-07T14:03:15.006Z",
-        "installment": "8d73d4d3-d725-4786-87ac-13b7161cfb1a",
+        "created_at": "2026-10-07T14:19:54.904Z",
+        "installment": "237f8f87-4170-40eb-9565-dfa65f54b686",
         "sequence": 12,
         "funding_source": null,
         "disbursement": null,
@@ -7140,10 +7140,10 @@
         "is_simulated": true
       },
       {
-        "id": "72e2fde8-3a69-498f-885e-4522dde4a68b",
+        "id": "544198fa-70c1-4fae-a7de-0e0672681aaa",
         "type": "demoledgerentry",
-        "created_at": "2026-10-07T14:03:15.315Z",
-        "installment": "de6f09f8-3829-41b9-b138-59fed4c5615e",
+        "created_at": "2026-10-07T14:19:55.208Z",
+        "installment": "50effd39-96b3-4dda-a981-dd46816ce56d",
         "sequence": 13,
         "funding_source": null,
         "disbursement": null,
@@ -7157,10 +7157,10 @@
         "is_simulated": true
       },
       {
-        "id": "941b32f3-23e7-479f-863b-694418755804",
+        "id": "8b22b27f-0be7-4bce-83c7-511a27a9442e",
         "type": "demoledgerentry",
-        "created_at": "2026-10-07T14:03:15.622Z",
-        "installment": "53212566-9401-4c95-9468-27a48e6478fb",
+        "created_at": "2026-10-07T14:19:55.514Z",
+        "installment": "1fa59dcb-b3fc-44b4-af95-b5b682d04728",
         "sequence": 14,
         "funding_source": null,
         "disbursement": null,

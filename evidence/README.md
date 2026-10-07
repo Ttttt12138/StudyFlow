@@ -16,10 +16,11 @@ Run every command from the repository root. On Windows the interpreter is `study
 | [`ocr/`](ocr/) | Gemini OCR: provider failures first, then a passing model and the full HTTP chain | live OCR | 2026-10-06/07 |
 | [`copilot/`](copilot/) | Finance copilot HTTP demos and model benchmark runs | live LLM + mock | 2026-10-06/07 |
 | [`django-bc-20261005/`](django-bc-20261005/) | B + C integration on Django and PostgreSQL | mock | 2026-10-05 |
+| [`c-module-20261004/`](c-module-20261004/) | Early standalone C-module (`studyflow-ai`) verification | mock + live | 2026-10-04 |
 
 ## 1. Gate suite: `gates/`
 
-Run on commit `4f9486a`, whose tree is identical to the merge commit `de87c37` on `feature/bc-integration`.
+The suite ran on 2026-10-07. The application code under test is identical to the merge commit `de87c37` on `feature/bc-integration`. Only documentation, this folder and `scripts/` have changed since.
 
 ```bash
 studyFlow/Scripts/python.exe scripts/run_gates.py
@@ -33,7 +34,7 @@ The script writes each check to `output/gates/<name>.log`, and each demo also wr
 | `check.log`, `migrations.log`, `migrate.log`, `cache-table.log` | Django system checks, no missing migrations, migrations apply, shared rate-limit cache table exists |
 | `i18n.log` | Chinese/English message catalogs are complete and compiled (empty log means OK) |
 | `django-tests.log` | Django test suite on PostgreSQL: **480 tests, OK** |
-| `c-ruff.log`, `c-tests.log` | C module lint and tests: **293 passed** |
+| `c-ruff.log`, `c-tests.log` | C module lint and tests: **293 passed** (`studyflow-ai/auto_test`) |
 | `demo-remittance.json` / `.log` | **Proposition C remittance**, 3 runs over real HTTP. Each run: compare route quotes against a deadline, pay tuition to an operator-verified payee (`CREATED → SUBMITTED → IN_TRANSIT → DELIVERED → RECONCILED`), refund a failed transfer in full, approve an order above the 10,000 CNY limit as T3 through a second operator, and record the on-time payment in the credit profile |
 | `demo-agent.json` / `.log` | **Proposition C agent**, 3 runs over real HTTP in Chinese and English sessions. The agent only *proposes* the remittance submission, and the wallet is unchanged until the user confirms with step-up. A second proposal is rejected and changes nothing. |
 | `eval-agent.json` / `.log` | Agent evaluation in mock mode: 20/20 cases, 0 unsafe actions, 0 injections followed |
@@ -127,14 +128,15 @@ Write-ups: [docs/verification-copilot-20261006.md](../docs/verification-copilot-
 
 Django tests, B core JUnit, C regression JUnit, the 3-run integration report and an HTTP smoke check. Write-up and commands: [docs/verification-django-b-20261005.md](../docs/verification-django-b-20261005.md).
 
-## Not retained
+## 7. Early C-module run: `c-module-20261004/`
 
-These earlier run folders were no longer in `output/` when this folder was created, so the files they cite cannot be included:
+A verbatim copy of `studyflow-ai/output/verification-2026-10-04-1791120299950/`, without its pytest temp folder. It records the first standalone verification of the C package: 130 tests, 87.19% statement coverage, 15/15 offline contract checks, 3 consecutive live-model demo runs, live PDF extraction, live FX, and 32/32 cases on the frozen evaluation set. `environment.json` pins the package versions and the SHA-256 of every source file at the time of the run. Later work has superseded the test counts; the current numbers are in `gates/`.
 
-- `output/verification-2026-10-04-1791120299950/`, cited by `studyflow-ai/docs/verification-2026-10-04.md` (an early standalone C-module run)
-- `output/verification-rerun-1791124268386/`, cited by `studyflow-backend/docs/verification-rerun-1791124268386.md` (the legacy backend, which is not part of this submission)
+Write-up: [studyflow-ai/docs/verification-2026-10-04.md](../studyflow-ai/docs/verification-2026-10-04.md).
 
-Both are superseded by the runs above. Re-running `scripts/run_gates.py` reproduces the current equivalent.
+## Not included
+
+`legacy/studyflow-backend/` is an earlier standalone lending prototype that is not part of this submission. Its own run outputs stay in its git-ignored `output/` folder, so the links in its old docs do not resolve.
 
 ## Pre-publication check
 

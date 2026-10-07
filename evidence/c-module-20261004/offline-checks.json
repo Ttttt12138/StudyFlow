@@ -1,0 +1,25 @@
+{
+  "exit_codes": {
+    "demo-v1": 0,
+    "demo-v2": 0,
+    "evaluation-mock": 0,
+    "pdf-mock": 0
+  },
+  "checks": {
+    "cli_success": true,
+    "v1_projected_6000": true,
+    "v1_gap_9000": true,
+    "v2_material_linked": true,
+    "missing_data_visible": true,
+    "supplement_complete": true,
+    "budget_190200": true,
+    "gap_50000": true,
+    "duplicate_check_reused": true,
+    "approval_no_balance_change": true,
+    "disbursement_changes_fixture_balance": true,
+    "unknown_affordability_explicit": true,
+    "pdf_school_extracted": true,
+    "schema_v1_matches_source": true,
+    "schema_v2_matches_source": true
+  }
+}

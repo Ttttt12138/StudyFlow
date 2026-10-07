@@ -9,3 +9,4 @@ auto_test/test_document_ocr.py::test_active_pdf_and_encrypted_pdf_are_rejected
     writer.add_js("app.alert('not allowed')")
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+293 passed, 1 warning in 2.44s

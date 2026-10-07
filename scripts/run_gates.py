@@ -29,7 +29,7 @@ GATES = [
                  "--file", str(OUT / "openapi.yaml")], ROOT),
     ("c-ruff", [PY, "-m", "ruff", "check", "src", "auto_test", "scripts"], C_DIR),
     # The default pytest temp dir is not writable in some sandboxes.
-    ("c-tests", [PY, "-m", "pytest", "-q", "-p", "no:cacheprovider",
+    ("c-tests", [PY, "-m", "pytest", "-p", "no:cacheprovider",
                  f"--basetemp={ROOT / 'output' / 'pytest-tmp'}"], C_DIR),
     ("migrate", [PY, "manage.py", "migrate", "--noinput"], ROOT),
     # Throttle counters live in the database cache (docs/permissions.md §6).

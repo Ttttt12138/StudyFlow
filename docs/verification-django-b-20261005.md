@@ -39,4 +39,4 @@
 
 C 联调为 mock 模式，不调用真实模型或支付。三轮流程使用 Token 认证的 Django APIClient 和真实 PostgreSQL；另有实际 HTTP 只读冒烟，不包含浏览器/A 前端验收。单个 Django 预算场景导出到 C 时明确 complete=false，不冒充完整 readiness 多场景预算。
 
-迁移尚未应用到其他既有部署。旧 processing/unknown 放款必须先解决，迁移才允许继续；旧未放款报价需重新创建 B 报价。详见 [替换说明](django-b-lending.md) 和 [API 指南](../API_GUIDE.md)。
+迁移尚未应用到其他既有部署。旧 processing/unknown 放款必须先解决，迁移才允许继续；旧未放款报价需重新创建 B 报价。详见 [替换说明](django-b-lending.md) 和 [API 指南](api/guide.md)。

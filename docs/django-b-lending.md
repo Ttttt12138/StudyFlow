@@ -1,6 +1,6 @@
 # B 借款替换 Django 借款功能
 
-2026-10-05，按用户确定的方向：保留 `/api/v2`，以独立 B 的业务规则替换原 Django 借款功能，旧 `studyflow-backend` 留作参考。
+2026-10-05，按用户确定的方向：保留 `/api/v2`，以独立 B 的业务规则替换原 Django 借款功能，旧独立项目 `studyflow-backend` 留作参考，现位于 [`legacy/studyflow-backend/`](../legacy/studyflow-backend/)，不属于本次提交。
 
 ## 代码边界
 

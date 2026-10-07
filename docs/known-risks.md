@@ -10,7 +10,7 @@
 |---|---|---|---|---|---|
 | F1 | 余额由 Python 读改写维护，钱包表本身没有不可变触发器 | 中 | 所有余额变动只经 `finance.wallets.post`（锁用户行和余额行）；数据库 CHECK 约束保证本币和外币余额 ≥ 0；分录和换汇记录不可变；测试覆盖"分录合计 = 余额"不变量及并发场景 | 已缓解 | `finance/wallets.py`、`auto_test/test_multicurrency*.py` |
 | F2 | 串行化依赖锁用户行而非钱包行，新写路径若遗漏用户锁会产生竞态 | 中 | `CommandView` 统一加锁；并发测试 | 部分缓解 | `finance/workflow_api.py`、`finance/test_concurrency.py` |
-| F3 | 全部资金操作为模拟，无真实银行、支付或汇款通道 | 中 | 响应与文档标注 simulated / is_mock | 开放（设计范围） | `08_Backend_Completion_Report.txt` |
+| F3 | 全部资金操作为模拟，无真实银行、支付或汇款通道 | 中 | 响应与文档标注 simulated / is_mock | 开放（设计范围） | `docs/legacy/08_Backend_Completion_Report.txt` |
 | F4 | 本币固定为 THB（借款核心只支持 THB）；外币只能作为钱包余额持有，并沿已配置的汇路换汇 | 低 | 启动时校验本币和币种精度 | 部分缓解（设计范围） | `config/settings.py`、`docs/multi-currency.md` |
 | F5 | 参考汇率为 Frankfurter v2 汇总的多家央行参考价，不是可成交的实时价；CI 使用固定汇率，固定值与市场价偏差约 8%（CNY/THB） | 中 | 响应中标注 `rate_source` 和 `rate_date`；超过 7 天的汇率拒绝生成报价；外部调用默认关闭 | 部分缓解 | `docs/fx-rates.md` |
 | F6 | 学生自填汇率的报价曾可用于换汇，从而凭空制造余额（W1 审查发现） | 高 | 换汇只接受服务端按汇路定价的报价；回归测试 `test_manual_quote_exploit_is_rejected` | 已缓解 | `finance/wallets.py` |

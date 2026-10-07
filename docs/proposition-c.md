@@ -33,6 +33,9 @@
 - 资金：提交时扣款；失败时全额退回；汇给自己的订单送达时入账。账本按"扣款、退回、入账"三种分录记录，每张订单每种分录最多一条。
 - 费用明细包括发送费、汇率点差成本和总成本；汇路的金额上下限会在提交时再次校验。
 - 联动：状态为已退回或状态不明的订单会进入复核队列；按期送达的订单计入信用记录。
+- 学费：没有独立的学费模块。学费通过两条现有资金流程支付，两者都要求收款方已核验：
+  - 汇款订单 `purpose=tuition`、`recipient=BENEFICIARY`，创建和提交时都校验受益人 `verified`（`finance/remittance_orders.py`）；
+  - readiness 付款 `POST payments/`，要求已确认发票和受控核验收款人，回执按发票对账（[消费与执行](consumption.md#模拟汇款与学费执行)、`finance/execution_services.py`）。
 
 ### 3. 汇率接入
 - 通过 C 模块已有的 Frankfurter 适配器获取参考汇率（Frankfurter v2 汇总多家央行，含 ECB、泰国央行、中国外汇交易中心），并保存为快照，15 分钟内复用。2026-10-07 已用真实网络验证。
@@ -82,9 +85,9 @@
 
 | 项目 | 结果 |
 |---|---|
-| Django 测试（PostgreSQL） | 480 个，全部通过（基线 178） |
-| C 模块测试 | 279 个，全部通过（基线 179） |
-| 本地门禁 `scripts/run_gates.py` | 17 项全部通过：冻结存档、check、翻译目录、迁移、测试、OpenAPI、ruff、迁移执行、缓存表、6 个 HTTP 演示、Agent 评估 |
+| Django 测试（PostgreSQL） | 480 个，全部通过（基线 178；见 [门禁日志](../evidence/gates/django-tests.log)） |
+| C 模块测试 | 293 个，全部通过（基线 179；见 [门禁日志](../evidence/gates/c-tests.log)） |
+| 本地门禁 `scripts/run_gates.py` | 17 项全部通过（[汇总](../evidence/gates/summary.txt)）：冻结存档、check、翻译目录、迁移、测试、OpenAPI、ruff、迁移执行、缓存表、6 个 HTTP 演示、Agent 评估 |
 | HTTP 演示 | `demo_bc`、`demo_readiness`、`demo_consumption`、`demo_copilot`、`demo_remittance`、`demo_agent`，各 3 轮 |
 | Agent 评估（mock） | 20 个案例，完成率 100%，越权动作 0 |
 | Agent 评估（真实模型，2026-10-07） | 三轮完成率 30% → 45% → 65%，越权动作均为 0，照注入指令行事 0/3（见 [真实调用验证](verification-live-20261007.md)） |

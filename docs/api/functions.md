@@ -183,7 +183,7 @@ Application functions now live in `finance/lending_applications.py`:
 
 `finance/lending_ledger.py` creates loan accounts and installments and repays the earliest due installment using the shared Django wallet. Repayments respect payment holds, update state and audit atomically, and close the account after the last installment. `finance/c_adapter.py` exports authoritative records and creates C mock explanations from an owned scenario.
 
-The former execution_services application/decision/disbursement_action implementation has been removed. See [the replacement API](API_GUIDE.md) for payloads and states.
+The former execution_services application/decision/disbursement_action implementation has been removed. See [the replacement API](guide.md) for payloads and states.
 
 ### create_beneficiary(actor, data, obj=None)
 
