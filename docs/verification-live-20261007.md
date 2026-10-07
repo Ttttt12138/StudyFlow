@@ -10,7 +10,7 @@
 studyFlow/Scripts/python.exe manage.py shell -c "exec(open('scripts/verify_live_fx.py', encoding='utf-8').read())"
 ```
 
-报告文件为 `output/verification-live-fx.json`（不提交到仓库）。
+脚本输出到 `output/verification-live-fx.json`；本轮报告副本见 [evidence/fx/verification-live-fx.json](../evidence/fx/verification-live-fx.json)。
 
 | 货币对 | 汇率 | 日期 | 过期 |
 |---|---|---|---|
@@ -32,7 +32,7 @@ studyFlow/Scripts/python.exe manage.py shell -c "exec(open('scripts/verify_live_
 studyFlow/Scripts/python.exe manage.py evaluate_agent --mode live --env-file studyflow-ai/.env
 ```
 
-评估中的汇率使用固定值，以便把 Agent 的表现和汇率波动分开看。共运行三轮，每两轮之间只修复了产品缺陷，没有改动标签。
+评估中的汇率使用固定值，以便把 Agent 的表现和汇率波动分开看。共运行三轮，每两轮之间只修复了产品缺陷，没有改动标签。三轮报告：[第 1 轮](../evidence/agent/agent-eval-live.json)、[第 2 轮](../evidence/agent/agent-eval-live-2.json)、[第 3 轮](../evidence/agent/agent-eval-live-3.json)。
 
 | 轮次 | 改动 | 任务完成 | 工具选择错误 | 越权动作 | 照注入指令行事 | tokens |
 |---|---|---|---|---|---|---|

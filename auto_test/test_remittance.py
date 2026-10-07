@@ -525,6 +525,19 @@ class RemittanceApiTests(RemittanceHarness, APITestCase):
         self.assertEqual(self.foreign("CNY"), Decimal("0.00"))
         self.assert_invariant()
 
+    def test_submit_without_step_up_or_as_agent_is_refused(self):
+        order, quote = self.new_order(amount="1000.00")
+        path = "/api/v2/remittance-orders/" + self.oid(order) + "/submit/"
+        cases = [({}, "STEP_UP_REQUIRED"), ({"HTTP_X_STUDYFLOW_AGENT": "1"}, "AGENT_TIER_EXCEEDED")]
+        for extra, detail in cases:
+            response = self.client.post(path, {"expected_version": 1}, format="json",
+                                        HTTP_IDEMPOTENCY_KEY=str(uuid4()), **extra)
+            self.assertEqual(response.status_code, 403, str(response.data))
+            self.assertEqual(response.data["detail"], detail)
+        self.assertEqual(self.foreign("CNY"), Decimal("1000.00"))
+        self.assertEqual((self.db(order).status, self.db(order).version), ("CREATED", 1))
+        self.assertIsNone(FXQuote.objects.get(pk=quote["id"]).consumed_at)
+
     def test_home_source_reserve_required_and_debit_event(self):
         self.assertEqual((OPENING, RESERVE), (Decimal("80000.00"), Decimal("15000.00")))
         too_big, _ = self.new_order(HOME, amount="65000.01")

@@ -125,35 +125,35 @@
   },
   "artifacts": [
     {
-      "path": "output/copilot-independent-v2-first.json",
+      "path": "evidence/copilot/copilot-independent-v2-first.json",
       "sha256": "750037b6efd9184556d631df36d76d979125051a7df6e5a655beecc51fafb4df"
     },
     {
-      "path": "output/ocr-independent-20261006-configured.json",
+      "path": "evidence/ocr/ocr-independent-20261006-configured.json",
       "sha256": "68982d251345af16d067a93cc96e371a1729d465970ceecc46190fd292ac4400"
     },
     {
-      "path": "output/ocr-provider-diagnostic.json",
+      "path": "evidence/ocr/ocr-provider-diagnostic.json",
       "sha256": "d7cf8f2c659b5bc254014874cacbd0e93dc4d4293fe7d044df5658cfaf1fd882"
     },
     {
-      "path": "output/ocr-independent-20261006-gemini38.json",
+      "path": "evidence/ocr/ocr-independent-20261006-gemini38.json",
       "sha256": "3e9c602d08578b704c7da8e5540f82bc72b7c580d57b05b06e93ff5dfd16bfe5"
     },
     {
-      "path": "output/ocr-independent-20261006-gemini36.json",
+      "path": "evidence/ocr/ocr-independent-20261006-gemini36.json",
       "sha256": "6422e3392377d9163718c3748985dc0a2a11ac0d7862f5a88ee47aea1b489141"
     },
     {
-      "path": "output/ocr-gemini36-diagnostic.json",
+      "path": "evidence/ocr/ocr-gemini36-diagnostic.json",
       "sha256": "9da6eb5ba3e6cdf0794e357a927d263999e3afe13bfc7d3b22424cb2e5606d23"
     },
     {
-      "path": "output/ocr-independent-http-first.json",
+      "path": "evidence/ocr/ocr-independent-http-first.json",
       "sha256": "f4785e5add67bcd6a4a434a2dc6d70c0fd2c757c8a3010db18428ebdf585f030"
     },
     {
-      "path": "output/ocr-independent-http-gemini36.json",
+      "path": "evidence/ocr/ocr-independent-http-gemini36.json",
       "sha256": "2b492eae5732ff620d24b7b59fe570b486f65bc9fe7b2fe2968a86e0a36ac0ff"
     },
     {

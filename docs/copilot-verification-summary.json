@@ -15,14 +15,14 @@
   "first_frozen_test_passed": false,
   "latest_regression_targets_met": true,
   "independent_frozen_test_passed": false,
-  "latest_regression": "output/copilot-eval-5944e657bcfa4aa5bc287e2c07b61851.json",
+  "latest_regression": "evidence/copilot/copilot-eval-5944e657bcfa4aa5bc287e2c07b61851.json",
   "ocr": {
     "live_call_performed": false,
     "reason": "deployment_policy_gates_not_configured_and_model_missing"
   },
   "artifacts": [
     {
-      "path": "output/copilot-87171484db1c41eb9cd39d7e4f6aa648.json",
+      "path": "evidence/copilot/copilot-87171484db1c41eb9cd39d7e4f6aa648.json",
       "sha256": "a5ec3cbef83e98912726207c99be9a03c43e3ddd0984848dfd8089d7ef05e334",
       "mode": "mock",
       "runs": [
@@ -106,7 +106,7 @@
       ]
     },
     {
-      "path": "output/copilot-9851955e088242dab0e5b88324e2ac52.json",
+      "path": "evidence/copilot/copilot-9851955e088242dab0e5b88324e2ac52.json",
       "sha256": "33ba34a3de686c5bba0cd1599e8a26c43b5ed72b0e405fee278c638e75feeef6",
       "mode": "live",
       "runs": [
@@ -134,7 +134,7 @@
       ]
     },
     {
-      "path": "output/copilot-4cd158889be94b8194b9f895babc2687.json",
+      "path": "evidence/copilot/copilot-4cd158889be94b8194b9f895babc2687.json",
       "sha256": "9e94727a610127f40949400f9f3f20513e789588175331703048027fd50e2d7a",
       "mode": "live",
       "runs": [
@@ -162,7 +162,7 @@
       ]
     },
     {
-      "path": "output/copilot-eval-69c402c5ba9e459595a10d0071a29bee.json",
+      "path": "evidence/copilot/copilot-eval-69c402c5ba9e459595a10d0071a29bee.json",
       "sha256": "479578ff6e93fe0e62e592d7eb9d1cf0478d4a5285d1a8cd38e79dd42421d3e1",
       "mode": "live",
       "prompt_version": null,
@@ -258,7 +258,7 @@
       }
     },
     {
-      "path": "output/copilot-eval-949f52cf1531449182e24ab394a47f2f.json",
+      "path": "evidence/copilot/copilot-eval-949f52cf1531449182e24ab394a47f2f.json",
       "sha256": "ff46876a82c9d286950ddc7c399b0c25895919119a257801dd9c7e734207e3f3",
       "mode": "live",
       "prompt_version": "1.2",
@@ -324,7 +324,7 @@
       }
     },
     {
-      "path": "output/copilot-eval-858c7302432e4ddf984e057fb4540289.json",
+      "path": "evidence/copilot/copilot-eval-858c7302432e4ddf984e057fb4540289.json",
       "sha256": "ab47131d0faa9ac164e7fe6d4998acfdc3c83cc72eb3d9cfcd86c30c50b70b3c",
       "mode": "live",
       "prompt_version": "1.2",
@@ -362,7 +362,7 @@
       }
     },
     {
-      "path": "output/copilot-eval-9ec9264f13cb4d0b9c379f032be12dd3.json",
+      "path": "evidence/copilot/copilot-eval-9ec9264f13cb4d0b9c379f032be12dd3.json",
       "sha256": "0e2f2c891271ef7d7c27917ed8897bf80549d24cd089c693618100064072ff26",
       "mode": "live",
       "prompt_version": "1.3",
@@ -470,7 +470,7 @@
       }
     },
     {
-      "path": "output/copilot-eval-5944e657bcfa4aa5bc287e2c07b61851.json",
+      "path": "evidence/copilot/copilot-eval-5944e657bcfa4aa5bc287e2c07b61851.json",
       "sha256": "f07f5d06d366cc8159fcfa999b2bb44605395e6ac547eb3baf09affedfeb471d",
       "mode": "live",
       "prompt_version": "1.4",

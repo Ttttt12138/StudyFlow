@@ -97,7 +97,7 @@
   },
   "artifacts": [
     {
-      "path": "output/copilot-independent-v3-first.json",
+      "path": "evidence/copilot/copilot-independent-v3-first.json",
       "sha256": "46fb9c292f2b4fbefba324845b02ba03d908f08df93a64f4c5987ab70433f3b3"
     }
   ]

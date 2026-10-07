@@ -1,0 +1,306 @@
+{
+  "passed": true,
+  "runs": [
+    {
+      "run_id": "d87ff4f293cb4326b71967577f50a216",
+      "remittance_session": {
+        "steps": [
+          [
+            "get_balances",
+            "OK"
+          ],
+          [
+            "list_corridors",
+            "OK"
+          ],
+          [
+            "create_live_quote",
+            "OK"
+          ],
+          [
+            "create_live_quote",
+            "OK"
+          ],
+          [
+            "create_live_quote",
+            "OK"
+          ],
+          [
+            "rank_quotes",
+            "OK"
+          ],
+          [
+            "create_remittance_order",
+            "OK"
+          ],
+          [
+            "submit_remittance_order",
+            "PROPOSED"
+          ],
+          [
+            "",
+            "FINAL"
+          ]
+        ],
+        "answer": "比较了 3 个渠道，选择 Demo Economy Wire (economy)：发送 5000.00 CNY，费用 7.50，汇率 4.5885000000（fixture，2026-10-07），到账约 22908.09 THB，约 5 天。提交动作已生成，等待你本人确认（需要二次验证），尚未执行。以上均为模拟资金。",
+        "confirmed": "CONFIRMED"
+      },
+      "conversion_session": {
+        "steps": [
+          [
+            "get_balances",
+            "OK"
+          ],
+          [
+            "list_corridors",
+            "OK"
+          ],
+          [
+            "create_live_quote",
+            "OK"
+          ],
+          [
+            "convert_balance",
+            "PROPOSED"
+          ],
+          [
+            "",
+            "FINAL"
+          ]
+        ],
+        "answer": "Compared 1 routes; chose Demo Express Remit (express): send 2000.00 CNY, fee 40.00, rate 4.5724000000 (fixture, 2026-10-07), about 8961.90 THB in about 1 days. The submission is prepared and awaits your confirmation with re-authentication; nothing has been executed. All funds are simulated.",
+        "decision": "REJECTED"
+      },
+      "status_query": {
+        "steps": [
+          [
+            "list_remittance_orders",
+            "OK"
+          ],
+          [
+            "",
+            "FINAL"
+          ]
+        ],
+        "answer": "最近 1 张汇款订单：SUBMITTED。以上均为模拟资金。"
+      },
+      "policy": [
+        {
+          "action": "remittance.submit",
+          "target_id": "a1308798-83c4-4025-b93d-a0732487abc4",
+          "amount": "5000.00",
+          "currency": "CNY",
+          "tier": "T2",
+          "step_up": true
+        }
+      ],
+      "planner_mode": "mock",
+      "is_simulated": true
+    },
+    {
+      "run_id": "331f1dc2e3ac484ca64ff747a666b24e",
+      "remittance_session": {
+        "steps": [
+          [
+            "get_balances",
+            "OK"
+          ],
+          [
+            "list_corridors",
+            "OK"
+          ],
+          [
+            "create_live_quote",
+            "OK"
+          ],
+          [
+            "create_live_quote",
+            "OK"
+          ],
+          [
+            "create_live_quote",
+            "OK"
+          ],
+          [
+            "rank_quotes",
+            "OK"
+          ],
+          [
+            "create_remittance_order",
+            "OK"
+          ],
+          [
+            "submit_remittance_order",
+            "PROPOSED"
+          ],
+          [
+            "",
+            "FINAL"
+          ]
+        ],
+        "answer": "比较了 3 个渠道，选择 Demo Economy Wire (economy)：发送 5000.00 CNY，费用 7.50，汇率 4.5885000000（fixture，2026-10-07），到账约 22908.09 THB，约 5 天。提交动作已生成，等待你本人确认（需要二次验证），尚未执行。以上均为模拟资金。",
+        "confirmed": "CONFIRMED"
+      },
+      "conversion_session": {
+        "steps": [
+          [
+            "get_balances",
+            "OK"
+          ],
+          [
+            "list_corridors",
+            "OK"
+          ],
+          [
+            "create_live_quote",
+            "OK"
+          ],
+          [
+            "convert_balance",
+            "PROPOSED"
+          ],
+          [
+            "",
+            "FINAL"
+          ]
+        ],
+        "answer": "Compared 1 routes; chose Demo Express Remit (express): send 2000.00 CNY, fee 40.00, rate 4.5724000000 (fixture, 2026-10-07), about 8961.90 THB in about 1 days. The submission is prepared and awaits your confirmation with re-authentication; nothing has been executed. All funds are simulated.",
+        "decision": "REJECTED"
+      },
+      "status_query": {
+        "steps": [
+          [
+            "list_remittance_orders",
+            "OK"
+          ],
+          [
+            "",
+            "FINAL"
+          ]
+        ],
+        "answer": "最近 1 张汇款订单：SUBMITTED。以上均为模拟资金。"
+      },
+      "policy": [
+        {
+          "action": "remittance.submit",
+          "target_id": "add50494-cb4a-4dbc-8215-f2f1970da9bd",
+          "amount": "5000.00",
+          "currency": "CNY",
+          "tier": "T2",
+          "step_up": true
+        }
+      ],
+      "planner_mode": "mock",
+      "is_simulated": true
+    },
+    {
+      "run_id": "3835ab12409748ab8ea30ed5c074642e",
+      "remittance_session": {
+        "steps": [
+          [
+            "get_balances",
+            "OK"
+          ],
+          [
+            "list_corridors",
+            "OK"
+          ],
+          [
+            "create_live_quote",
+            "OK"
+          ],
+          [
+            "create_live_quote",
+            "OK"
+          ],
+          [
+            "create_live_quote",
+            "OK"
+          ],
+          [
+            "rank_quotes",
+            "OK"
+          ],
+          [
+            "create_remittance_order",
+            "OK"
+          ],
+          [
+            "submit_remittance_order",
+            "PROPOSED"
+          ],
+          [
+            "",
+            "FINAL"
+          ]
+        ],
+        "answer": "比较了 3 个渠道，选择 Demo Economy Wire (economy)：发送 5000.00 CNY，费用 7.50，汇率 4.5885000000（fixture，2026-10-07），到账约 22908.09 THB，约 5 天。提交动作已生成，等待你本人确认（需要二次验证），尚未执行。以上均为模拟资金。",
+        "confirmed": "CONFIRMED"
+      },
+      "conversion_session": {
+        "steps": [
+          [
+            "get_balances",
+            "OK"
+          ],
+          [
+            "list_corridors",
+            "OK"
+          ],
+          [
+            "create_live_quote",
+            "OK"
+          ],
+          [
+            "convert_balance",
+            "PROPOSED"
+          ],
+          [
+            "",
+            "FINAL"
+          ]
+        ],
+        "answer": "Compared 1 routes; chose Demo Express Remit (express): send 2000.00 CNY, fee 40.00, rate 4.5724000000 (fixture, 2026-10-07), about 8961.90 THB in about 1 days. The submission is prepared and awaits your confirmation with re-authentication; nothing has been executed. All funds are simulated.",
+        "decision": "REJECTED"
+      },
+      "status_query": {
+        "steps": [
+          [
+            "list_remittance_orders",
+            "OK"
+          ],
+          [
+            "",
+            "FINAL"
+          ]
+        ],
+        "answer": "最近 1 张汇款订单：SUBMITTED。以上均为模拟资金。"
+      },
+      "policy": [
+        {
+          "action": "remittance.submit",
+          "target_id": "c7fc4115-14ee-4404-bc48-28547b67ead2",
+          "amount": "5000.00",
+          "currency": "CNY",
+          "tier": "T2",
+          "step_up": true
+        }
+      ],
+      "planner_mode": "mock",
+      "is_simulated": true
+    }
+  ],
+  "throttling": {
+    "rates": {
+      "user": "1000/hour",
+      "anon": "100/hour",
+      "auth": "10/min",
+      "step_up": "10/hour",
+      "money": "60/hour",
+      "sponsor": "20/hour",
+      "agent": "30/hour"
+    },
+    "raised": {},
+    "counters": "isolated per command invocation"
+  }
+}

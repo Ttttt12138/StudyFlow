@@ -1,8 +1,8 @@
 # StudyFlow Backend API Reference
 
 This is the concise endpoint reference for frontend and extraction-service
-integration. For detailed workflow explanations, see API_GUIDE.md. The generated
-machine-readable contract is openapi.yaml.
+integration. For detailed workflow explanations, see [guide.md](guide.md). The generated
+machine-readable contract is [openapi.yaml](../../openapi.yaml).
 
 ## Connection
 

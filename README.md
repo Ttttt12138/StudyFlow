@@ -71,7 +71,7 @@ studyFlow/Scripts/python.exe manage.py demo_bc --runs 3 --output output/django-b
 
 ## 借款替换及迁移
 
-新借款只接受 B 的 THB、1–60 期、比例年利率和首期日期，不再接受旧 `annual_rate_percent`、宽限期或外币借款创建字段。新流程详见 [API 指南](API_GUIDE.md) 和 [替换说明](docs/django-b-lending.md)。
+新借款只接受 B 的 THB、1–60 期、比例年利率和首期日期，不再接受旧 `annual_rate_percent`、宽限期或外币借款创建字段。新流程详见 [API 指南](docs/api/guide.md) 和 [替换说明](docs/django-b-lending.md)。
 
 `0005/0006` 迁移保留旧报价和账本，给已结算贷款建立还款账户，不重复入账。未放款的旧引擎报价保留只读，需重新创建 B 报价。若旧放款仍处于 processing/unknown，迁移会停止并要求先用旧版解决结果，避免未知资金状态被当成失败或成功；迁移不支持自动倒退。
 

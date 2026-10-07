@@ -1,0 +1,44 @@
+{
+  "synthetic": true,
+  "live": true,
+  "model": "gemini-3.5-flash-lite",
+  "fixture_version": "ocr-demo-v1",
+  "results": [
+    {
+      "file": "invoice-en.png",
+      "passed": true,
+      "missing": [],
+      "uncertain_pages": []
+    },
+    {
+      "file": "invoice-en.pdf",
+      "passed": true,
+      "missing": [],
+      "uncertain_pages": []
+    },
+    {
+      "file": "invoice-zh.png",
+      "passed": false,
+      "error_code": "OCR_UNAVAILABLE"
+    },
+    {
+      "file": "invoice-zh.pdf",
+      "passed": true,
+      "missing": [],
+      "uncertain_pages": []
+    },
+    {
+      "file": "invoice-zh-en.png",
+      "passed": true,
+      "missing": [],
+      "uncertain_pages": []
+    },
+    {
+      "file": "invoice-zh-en.pdf",
+      "passed": true,
+      "missing": [],
+      "uncertain_pages": []
+    }
+  ],
+  "passed": false
+}

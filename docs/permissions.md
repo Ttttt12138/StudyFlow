@@ -23,7 +23,7 @@ Agent（W4）发起的调用最高 T1；T2 及以上只能生成待确认动作�
 | `loan.repay` | `POST loan-accounts/{id}/repay/` | 借款账户 id | 当期 `installment_number` 的应还金额，本币 |
 | `remittance.submit` | W3 汇款订单提交 | 订单 id | 发送金额与币种 |
 
-新增 T2 动作必须登记到 `finance/policy.py` 的动作目录（`ACTIONS`：目标模型、主体解析、申请校验），并在路由上声明（`command(..., policy="payment.submit")`、`resource(..., "wallet.convert")`）。`remittance.submit` 已预留，W3 路由接入前对它申请 step-up 或审批返回 400 `ACTION_NOT_AVAILABLE`。
+新增 T2 动作必须登记到 `finance/policy.py` 的动作目录（`ACTIONS`：目标模型、主体解析、申请校验），并在路由上声明（`command(..., policy="payment.submit")`、`resource(..., "wallet.convert")`）。`remittance.submit` 已在 `finance/remittance_api.py` 的提交路由上声明；Agent 提议的确认路由声明为 `agent.confirm`，按其代理的底层动作检查。
 
 不会让资金离开钱包的调用不做策略检查，直接交给业务规则处理：重复提交已提交的付款（原样返回）、偿还已结清的分期、目标不存在或不属于本人（由业务返回 404/400）。Agent 发起的调用须带请求头 `X-StudyFlow-Agent`，T2 路由对其一律返回 `AGENT_TIER_EXCEEDED`。
 
