@@ -66,6 +66,12 @@ class LiveAgentProvider:
                 "plan", context.model_dump_json(), PlannerOutput, instruction)
         except ProviderFailure as exc:
             exc.record.prompt_version = prompts.VERSION
+            text = (getattr(exc, "raw_output", None) or "").strip()
+            # Some gateways let the model answer in plain prose instead of the JSON envelope.
+            # Prose cannot call a tool, so it is accepted as the final answer; malformed JSON is not.
+            if exc.code == "INVALID_MODEL_OUTPUT" and text and not text.startswith(("{", "[")):
+                exc.record.error_code = None
+                return FinalStep(answer=text[:2000]), exc.record
             raise
         record.prompt_version = prompts.VERSION
         return output.step, record

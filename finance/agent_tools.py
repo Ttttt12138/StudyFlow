@@ -129,13 +129,41 @@ def _convert(user, data):
                     {"quote_id": str(quote.id), "source_amount": money.fmt(amount, quote.source_currency)})
 
 
+# Live models filled names into id fields and invented purposes when the schema only said
+# "string"; formats, enums and hints tell them where each value must come from.
+HINTS = {
+    "corridor_id": "id of a corridor from list_corridors",
+    "quote_id": "id of a live quote from create_live_quote",
+    "quote_ids": "ids of live quotes from create_live_quote",
+    "beneficiary_id": "id of a verified beneficiary from list_beneficiaries (not its name)",
+    "order_id": "id of a CREATED order from create_remittance_order",
+    "send_amount": "decimal string in the corridor's source currency, e.g. \"5000.00\"",
+    "source_amount": "decimal string equal to the quote's send_amount",
+    "recipient": "SELF credits the student's own wallet in the target currency; BENEFICIARY pays a "
+                 "verified third party",
+}
+
+
+def _field_schema(name, field):
+    kind = type(field).__name__
+    schema = {"type": {"ListField": "array", "IntegerField": "integer"}.get(kind, "string")}
+    if kind == "UUIDField":
+        schema["format"] = "uuid"
+    elif kind == "DateField":
+        schema["format"] = "date"
+    elif kind == "ChoiceField":
+        schema["enum"] = list(field.choices)
+    elif kind == "ListField" and type(field.child).__name__ == "UUIDField":
+        schema["items"] = {"type": "string", "format": "uuid"}
+    if name in HINTS:
+        schema["description"] = HINTS[name]
+    return schema
+
+
 def _schema(serializer):
     properties, required = {}, []
     for name, field in serializer().fields.items():
-        kind = {"UUIDField": "string", "CharField": "string", "DateField": "string",
-                "ChoiceField": "string", "ListField": "array", "IntegerField": "integer"}.get(
-                    type(field).__name__, "string")
-        properties[name] = {"type": kind}
+        properties[name] = _field_schema(name, field)
         if field.required:
             required.append(name)
     return {"type": "object", "properties": properties, "required": required}
@@ -153,7 +181,7 @@ class Tool:
 
 TOOLS = {tool.name: tool for tool in [
     Tool("get_balances", "T0", "Wallet balances per currency with indicative home value.", Empty, _balances),
-    Tool("get_fx_rate", "T0", "Reference FX rate (ECB via Frankfurter, or fixture) with date and source.",
+    Tool("get_fx_rate", "T0", "Reference FX rate (central-bank blend via Frankfurter, or fixture) with date and source.",
          RateInput, _rate),
     Tool("list_corridors", "T0", "Enabled remittance corridors with limits, fees and settlement days.",
          CorridorFilter, _corridors),
@@ -164,7 +192,10 @@ TOOLS = {tool.name: tool for tool in [
          RankInput, _rank),
     Tool("create_live_quote", "T1", "Price a corridor for a send amount (10-minute quote).",
          LiveQuoteInput, _live_quote),
-    Tool("create_remittance_order", "T1", "Create a remittance order in CREATED status from a live quote.",
+    Tool("create_remittance_order", "T1", "Create a remittance order in CREATED status from a live quote. "
+         "Use recipient SELF when the student moves money into their own wallet or names no other "
+         "recipient; use BENEFICIARY only with a verified beneficiary_id. Nothing is sent until the "
+         "student confirms submit_remittance_order.",
          OrderInput, _create_order),
     Tool("submit_remittance_order", "T2", "Propose submitting an order; the student must confirm.",
          OrderRef, _submit_order),

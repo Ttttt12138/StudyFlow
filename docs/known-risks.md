@@ -12,7 +12,7 @@
 | F2 | 串行化依赖锁用户行而非钱包行，新写路径若遗漏用户锁会产生竞态 | 中 | `CommandView` 统一加锁；并发测试 | 部分缓解 | `finance/workflow_api.py`、`finance/test_concurrency.py` |
 | F3 | 全部资金操作为模拟，无真实银行、支付或汇款通道 | 中 | 响应与文档标注 simulated / is_mock | 开放（设计范围） | `08_Backend_Completion_Report.txt` |
 | F4 | 本币固定为 THB（借款核心只支持 THB）；外币只能作为钱包余额持有，并沿已配置的汇路换汇 | 低 | 启动时校验本币和币种精度 | 部分缓解（设计范围） | `config/settings.py`、`docs/multi-currency.md` |
-| F5 | 参考汇率为 ECB 每日价（Frankfurter），不是可成交的实时价；CI 使用固定汇率 | 中 | 响应中标注 `rate_source` 和 `rate_date`；超过 7 天的汇率拒绝生成报价；外部调用默认关闭 | 部分缓解 | `docs/fx-rates.md` |
+| F5 | 参考汇率为 Frankfurter v2 汇总的多家央行参考价，不是可成交的实时价；CI 使用固定汇率，固定值与市场价偏差约 8%（CNY/THB） | 中 | 响应中标注 `rate_source` 和 `rate_date`；超过 7 天的汇率拒绝生成报价；外部调用默认关闭 | 部分缓解 | `docs/fx-rates.md` |
 | F6 | 学生自填汇率的报价曾可用于换汇，从而凭空制造余额（W1 审查发现） | 高 | 换汇只接受服务端按汇路定价的报价；回归测试 `test_manual_quote_exploit_is_rejected` | 已缓解 | `finance/wallets.py` |
 | F7 | 运营人员办理资金到账时仍可引用学生的手填报价，到账金额取决于运营人员的核对 | 中 | 只有运营人员能办理；报价用过一次即失效；有审计 | 开放（W3 起汇入改走汇款订单） | `finance/execution_services.py` |
 | F8 | 本币换出的换汇以"已确认支出"事件写入状态，readiness 会把它列为已付义务；报价消耗会触发 readiness 重算 | 低 | 事件 id 带 `conversion:` 前缀，可区分 | 开放 | `finance/wallets.py` |
@@ -51,7 +51,7 @@
 | M3 | 规则组未达验收阈值 | 中 | live 模式优先模型路由 | 开放 | `docs/verification-independent-20261006.md` |
 | M4 | 曾出现 LLM `INVALID_MODEL_OUTPUT` | 低 | 结构化输出、重试、确定性复核 | 部分缓解 | `docs/verification-readiness-20261005.md` |
 | M5 | Agent 由 LLM 规划工具调用；模型可能选错工具、编造参数或受工具结果中的注入文本影响 | 中 | 规划器每步只返回一个工具调用，并按工具清单和参数校验；T2 动作只生成待确认动作，须学生本人二次验证后确认；每会话最多 10 次调用、4 次写操作；评估集含注入样本，越权动作必须为 0（CI 门禁） | 部分缓解 | `docs/agent.md`、`finance/agent_runner.py` |
-| M6 | Agent 评估只在 mock 规则规划器上运行，评估集与规则出自同一作者；真实模型（live）的任务完成率和注入抵抗率尚未测量 | 中 | 评估命令支持 `--mode live`；运行时的安全约束与模式无关 | 开放（live 评估需批准外部调用） | `finance/agent_evaluation.py`、`studyflow-ai/evals/agent-v1/` |
+| M6 | Agent 真实模型（gpt-6-luna）在 20 个案例上的任务完成率为 65%（第 3 轮）。剩余失败多为合理的澄清，但评估集与标签由同一作者编写、每轮只跑一次，第 3 轮不是冻结测试 | 中 | 三轮评估越权动作均为 0、照注入指令行事 0/3；T2 安全约束由执行循环强制，与模型无关 | 部分缓解 | `docs/verification-live-20261007.md` |
 | M7 | API 错误信息的中英文翻译由 AI 完成，未经母语人工审校；briefing、通知等拼接文本仍为英文 | 低 | 错误码不变，客户端可按码处理；目录完整性有 CI 检查 | 部分缓解 | `docs/i18n.md` |
 | M8 | 确认 Agent 提议时看不到收款人；规则规划器在多个已核验收款人中取最早的一个 | 低 | 待确认动作的 `details` 显示收款方式与收款人；学生须二次验证后才执行 | 部分缓解 | `finance/agent_tools.py` |
 | M9 | live 模式下单个用户可触发大量模型调用（每会话最多 11 次） | 低 | 会话创建受 `agent` 作用域限流（默认 30 次/小时） | 已缓解 | `finance/agent_api.py` |

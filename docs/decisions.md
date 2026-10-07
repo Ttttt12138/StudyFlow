@@ -9,7 +9,7 @@
 | D3 | 汇路 | CNY/USD/EUR→THB、THB→CNY，各 express/standard/economy 三档 | 默认 | `Corridor` 种子数据（W1） |
 | D4 | 单笔/日/月限额（T2） | THB 50,000/100,000/300,000；CNY 10,000/20,000/60,000；USD 1,500/3,000/9,000；EUR 1,400/2,800/8,400（另有 GBP、JPY） | 默认 | `finance/policy_defaults.py` → `PolicyLimit` 表（W2B） |
 | D5 | Step-up 方式 | 重新输入密码，签发 5 分钟范围令牌；不引入 TOTP 依赖 | 默认 | W2B |
-| D6 | 汇率来源 | Frankfurter（ECB 每日参考价），CI 与测试使用固定数据；真实网络调用需单独批准 | 默认 | `STUDYFLOW_FX_LIVE`（W2A） |
+| D6 | 汇率来源 | Frankfurter v2（多家央行参考价汇总），CI 与测试使用固定数据；真实网络调用需单独批准 | 默认 | `STUDYFLOW_FX_LIVE`（W2A） |
 | D7 | Agent 模型 | 沿用 C 的 LLM 配置；CI 用 mock 规则 planner；live 调用需单独批准 | 默认 | W4 |
 | D8 | 多语言 | zh-hans、en；暂不含泰语 | 默认 | W5 |
 | D9 | 信用建立 | 内部准时记录档案（模拟），不对接征信、不输出数值评分 | 默认 | W4 |

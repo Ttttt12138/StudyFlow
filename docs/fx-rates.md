@@ -1,6 +1,6 @@
 # 汇率接入
 
-Django 通过 C 模块已有的 Frankfurter 适配器（`studyflow_ai.readiness.fx.FxAdapter`）获取参考汇率，用于生成按汇路定价的报价和估算外币余额的本币价值。Frankfurter 提供的是欧洲央行（ECB）每个工作日公布的参考汇率，不是可成交的实时价；报价和响应中以 `rate_source`、`rate_date` 如实标注。汇款执行仍为模拟。
+Django 通过 C 模块已有的 Frankfurter 适配器（`studyflow_ai.readiness.fx.FxAdapter`）获取参考汇率，用于生成按汇路定价的报价和估算外币余额的本币价值。Frankfurter v2 汇总的多家央行与官方机构参考价（2026-10-07 实测来源含 ECB、泰国央行 BOT、中国外汇交易中心 CFETS 等 41 家），按工作日更新，不是可成交的实时价；报价和响应中以 `rate_source`、`rate_date` 如实标注。汇款执行仍为模拟。
 
 ## 配置
 
@@ -9,7 +9,9 @@ Django 通过 C 模块已有的 Frankfurter 适配器（`studyflow_ai.readiness.
 | `STUDYFLOW_FX_LIVE` | `false` | `true` 时调用 Frankfurter；否则使用内置固定汇率（`fixture`），CI 和测试使用固定汇率 |
 | `STUDYFLOW_FX_CACHE_SECONDS` | `900` | 同一货币对在该时间内复用已保存的汇率，不重复请求 |
 
-固定汇率（`fixture`，每单位折合 THB）：USD 33.00、EUR 36.50、CNY 4.60、GBP 42.00、JPY 0.22；交叉汇率经 THB 换算。固定汇率模式不发起任何网络请求。
+固定汇率（`fixture`，每单位折合 THB）：USD 33.00、EUR 36.50、CNY 4.60、GBP 42.00、JPY 0.22；交叉汇率经 THB 换算。固定汇率模式不发起任何网络请求。这些数值只用于测试和演示，与市场价有偏差（2026-10-07 实测 CNY/THB 为 5.0187，固定值低约 8%），不得用于估算真实成本。
+
+实测记录：`scripts/verify_live_fx.py` 对全部 4 个货币对取真实汇率，并按 12 条汇路各生成一份报价（事务内回滚），报告写入 `output/verification-live-fx.json`。2026-10-07 运行结果：4 个货币对均返回当日汇率、没有过期标记，12 份报价的手续费、点差和到账金额与公式手算一致。
 
 ## 数据
 

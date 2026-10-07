@@ -548,6 +548,49 @@ def test_live_provider_failure_propagates_with_prompt_version():
     assert raised.value.record.prompt_version == "agent-1.0"
 
 
+def _unparsed(text):
+    record = CallRecord(provider="openai", purpose="plan", model="m", mode="live",
+                        error_code="INVALID_MODEL_OUTPUT")
+    failure = ProviderFailure("INVALID_MODEL_OUTPUT", record)
+    failure.raw_output = text
+    return failure
+
+
+def test_live_plain_prose_reply_becomes_final_answer():
+    # Observed live: the gateway sometimes returns prose instead of the JSON envelope.
+    fake = FakeOpenAI(failure=_unparsed("余额不足，无法汇出 40,000 元。所有资金均为模拟。"))
+    step, record = AgentPlanner(LiveAgentProvider(fake)).next_step(ctx())
+    assert isinstance(step, FinalStep) and step.answer.startswith("余额不足")
+    assert record.error_code is None and record.prompt_version == "agent-1.0"
+
+
+@pytest.mark.parametrize("text", ['{"step": {"kind": "tool_call"', "[1, 2", "", None])
+def test_live_malformed_json_or_empty_reply_still_fails(text):
+    fake = FakeOpenAI(failure=_unparsed(text))
+    with pytest.raises(ProviderFailure) as raised:
+        AgentPlanner(LiveAgentProvider(fake)).next_step(ctx())
+    assert raised.value.code == "INVALID_MODEL_OUTPUT"
+
+
+def test_unparsed_text_is_extracted_only_from_json_errors():
+    from pydantic import BaseModel, ValidationError
+
+    from studyflow_ai.providers.live import _unparsed_text
+
+    class Model(BaseModel):
+        x: int
+
+    try:
+        Model.model_validate_json("plain words")
+    except ValidationError as exc:
+        assert _unparsed_text(exc) == "plain words"
+    try:
+        Model.model_validate_json('{"x": "nope"}')
+    except ValidationError as exc:
+        assert _unparsed_text(exc) is None
+    assert _unparsed_text(ValueError("x")) is None
+
+
 def test_live_provider_finish_requires_final():
     fake = FakeOpenAI(ToolCallStep(tool="get_balances", arguments_json="{}"))
     with pytest.raises(ProviderFailure) as raised:

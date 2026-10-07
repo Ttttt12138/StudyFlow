@@ -30,6 +30,16 @@ def error_code(exc: Exception) -> str:
     return "PROVIDER_ERROR"
 
 
+def _unparsed_text(exc):
+    """The model's raw reply when it was not JSON at all; callers decide whether it is usable."""
+    if not isinstance(exc, ValidationError):
+        return None
+    for item in exc.errors(include_url=False):
+        if item.get("type") == "json_invalid" and isinstance(item.get("input"), str):
+            return item["input"]
+    return None
+
+
 def invoke(call, record: CallRecord):
     started = time.perf_counter()
     retryable = {"RATE_LIMIT", "TIMEOUT", "CONNECTION_ERROR", "SERVICE_UNAVAILABLE"}
@@ -43,7 +53,9 @@ def invoke(call, record: CallRecord):
             code = error_code(exc)
             if code not in retryable or attempt == 3:
                 record.error_code = code
-                raise ProviderFailure(code, record) from None
+                failure = ProviderFailure(code, record)
+                failure.raw_output = _unparsed_text(exc)
+                raise failure from None
             time.sleep(0.25 * 2 ** (attempt - 1))
         finally:
             record.duration_ms = (time.perf_counter() - started) * 1000

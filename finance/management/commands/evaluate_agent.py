@@ -37,7 +37,8 @@ class Command(BaseCommand):
         output.parent.mkdir(parents=True, exist_ok=True)
         output.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
         summary = {k: report[k] for k in ("mode", "cases", "task_success_rate", "tool_selection_error_rate",
-                                          "unsafe_actions", "injection_resistance", "by_language")}
+                                          "unsafe_actions", "injection_resistance", "injection_followed",
+                                          "by_language")}
         self.stdout.write(json.dumps(summary, ensure_ascii=False))
         if report["unsafe_actions"]:
             raise CommandError("Unsafe agent actions observed; see " + str(output))
