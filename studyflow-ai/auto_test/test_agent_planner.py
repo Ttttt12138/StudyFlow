@@ -522,7 +522,7 @@ def test_live_provider_request_shape():
     context = ctx(goal="send 300 USD to THB", locale="en")
     step, record = AgentPlanner(LiveAgentProvider(fake)).next_step(context)
     assert step.tool == "get_balances"
-    assert record.prompt_version == "agent-1.0" == prompts.VERSION
+    assert record.prompt_version == prompts.VERSION
     ((purpose, text, schema, instruction),) = fake.calls
     assert purpose == "plan"
     assert schema is PlannerOutput
@@ -535,7 +535,7 @@ def test_live_provider_output_is_still_validated():
     with pytest.raises(ProviderFailure) as raised:
         AgentPlanner(LiveAgentProvider(fake)).next_step(ctx())
     assert raised.value.code == "INVALID_TOOL_CALL"
-    assert raised.value.record.prompt_version == "agent-1.0"
+    assert raised.value.record.prompt_version == prompts.VERSION
 
 
 def test_live_provider_failure_propagates_with_prompt_version():
@@ -545,7 +545,7 @@ def test_live_provider_failure_propagates_with_prompt_version():
     with pytest.raises(ProviderFailure) as raised:
         AgentPlanner(LiveAgentProvider(fake)).next_step(ctx())
     assert raised.value.code == "TIMEOUT"
-    assert raised.value.record.prompt_version == "agent-1.0"
+    assert raised.value.record.prompt_version == prompts.VERSION
 
 
 def _unparsed(text):
@@ -561,10 +561,30 @@ def test_live_plain_prose_reply_becomes_final_answer():
     fake = FakeOpenAI(failure=_unparsed("余额不足，无法汇出 40,000 元。所有资金均为模拟。"))
     step, record = AgentPlanner(LiveAgentProvider(fake)).next_step(ctx())
     assert isinstance(step, FinalStep) and step.answer.startswith("余额不足")
-    assert record.error_code is None and record.prompt_version == "agent-1.0"
+    assert record.error_code is None and record.prompt_version == prompts.VERSION
 
 
-@pytest.mark.parametrize("text", ['{"step": {"kind": "tool_call"', "[1, 2", "", None])
+def test_live_envelope_with_stray_closing_brackets_is_recovered_and_validated():
+    # Observed live (agent-v1 tuning): a valid envelope followed by one extra "}".
+    text = ('{"step":{"kind":"tool_call","tool":"get_balances","arguments_json":"{}",'
+            '"rationale":"check funds"}}}')
+    step, record = AgentPlanner(LiveAgentProvider(FakeOpenAI(failure=_unparsed(text)))).next_step(ctx())
+    assert isinstance(step, ToolCallStep) and step.tool == "get_balances"
+    assert record.error_code is None and record.prompt_version == prompts.VERSION
+    # The recovered call still goes through tool validation.
+    bad = text.replace("get_balances", "submit_everything")
+    with pytest.raises(ProviderFailure) as raised:
+        AgentPlanner(LiveAgentProvider(FakeOpenAI(failure=_unparsed(bad)))).next_step(ctx())
+    assert raised.value.code == "INVALID_TOOL_CALL"
+
+
+@pytest.mark.parametrize("text", [
+    '{"step": {"kind": "tool_call"', "[1, 2", "", None,
+    # Anything other than stray closing brackets after the envelope is not recovered.
+    '{"step":{"kind":"final","answer":"ok"}} and more',
+    '{"step":{"kind":"final","answer":"ok"}}{"step":{"kind":"final","answer":"again"}}',
+    '{"not_a_step": 1}}',
+])
 def test_live_malformed_json_or_empty_reply_still_fails(text):
     fake = FakeOpenAI(failure=_unparsed(text))
     with pytest.raises(ProviderFailure) as raised:
@@ -597,7 +617,7 @@ def test_live_provider_finish_requires_final():
         AgentPlanner(LiveAgentProvider(fake)).next_step(ctx(steps_remaining=0))
     assert raised.value.code == "INVALID_TOOL_CALL"
     assert raised.value.record.error_code == "INVALID_TOOL_CALL"
-    assert raised.value.record.prompt_version == "agent-1.0"
+    assert raised.value.record.prompt_version == prompts.VERSION
     instruction = fake.calls[0][3]
     assert instruction.startswith(prompts.AGENT) and "final" in instruction[len(prompts.AGENT):]
 
@@ -605,7 +625,7 @@ def test_live_provider_finish_requires_final():
 def test_live_provider_finish_returns_final():
     fake = FakeOpenAI(FinalStep(answer="All funds are simulated."))
     step, record = AgentPlanner(LiveAgentProvider(fake)).next_step(ctx(steps_remaining=0))
-    assert isinstance(step, FinalStep) and record.prompt_version == "agent-1.0"
+    assert isinstance(step, FinalStep) and record.prompt_version == prompts.VERSION
 
 
 def test_live_provider_close_closes_underlying():

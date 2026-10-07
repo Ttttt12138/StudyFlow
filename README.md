@@ -1,87 +1,149 @@
-# StudyFlow 工作区
+# StudyFlow
 
-**命题 C 增量**：
-- 多币种钱包与服务端定价的换汇；
-- 汇款订单状态机；
-- 参考汇率接入；
-- T0–T3 权限分级、按币种限额、二次验证、分权审批与限流；
-- 生产加固；
-- 可执行工具调用的 Agent（T2 动作须学生确认）；
-- 中英文错误信息；
-- 模拟信用建立。
+**A finance back office for international students:** multi-currency wallets, remittance with server-side FX pricing, tiered permissions with step-up and second-person approval, an on-time payment record that adjusts limits, and an AI agent that prepares money movements but can never execute them on its own.
 
-完成情况、验证结果和剩余风险见 [命题 C 补齐情况](docs/proposition-c.md)。演示命令为 `manage.py demo_remittance --runs 3` 和 `manage.py demo_agent --runs 3`，Agent 评估为 `manage.py evaluate_agent`。本地检查统一用 `scripts/run_gates.py` 运行。
+> **All money is simulated.** There is no real bank, card or remittance rail. Pricing, permissions, limits, approvals and ledger constraints are nevertheless really enforced by the server.
+>
+> **The English documents are authoritative.** The Chinese documents in `docs/` are working notes and reference material ([中文说明](docs/README.zh.md)).
 
-Financial Copilot 增量：What-if 比较与确认应用、四层解释、统一 Review Queue、通知已读及完整支付 Demo 已接入。运行 `manage.py demo_copilot --mode live --env-file studyflow-ai/.env --runs 3`；接口、前端交互与评估方式见 [Copilot 接入说明](docs/copilot.md)。真实模型与 OCR 验收状态以本轮验证报告为准。
+---
 
-消费学习与资金执行扩展已加入：CSV 导入、消费分类、周期支出、预算校准、Financial Calendar / Briefing、家庭资助确认、模拟汇款比较和 readiness 学费对账。启动与前端契约见 [消费学习接入说明](docs/consumption.md)，完整 HTTP 演示使用 `manage.py demo_consumption --runs 3`。扫描件支持可选的 [Gemini 中英文 OCR](docs/gemini-ocr.md)，默认关闭，需服务端配置及逐文件同意，并保留人工转录；不包含真实银行、真实支付或前端应用。
+## What it does
 
-已新增入学预算与主动资金规划后端：PSU 模板、材料上传确认、学期预算、30–90 天预测、筹资组合和持久 worker。启用方式、API 顺序及真实模型演示见 [Readiness 接入说明](docs/readiness.md)。
+| Area | Highlights | Docs |
+|---|---|---|
+| Multi-currency wallet | THB home wallet plus foreign balances; one ledger entry point; balances can never go negative; ledger sum equals balance | [technical-overview §6](docs/technical-overview.md#6-ledger-invariants) |
+| FX quoting | Reference rates from Frankfurter (central-bank blend) or fixtures; corridor fees and margins applied by the server; quotes are single-use and expire after 10 minutes | [§2](docs/technical-overview.md#2-server-side-fx-quoting) |
+| Remittance | 9-state order machine; full refund on failure; idempotent payout callbacks; tuition is paid to verified payees | [§3](docs/technical-overview.md#3-remittance-order-state-machine) |
+| Permissions | T0–T3 tiers, per-currency daily and monthly limits, password step-up, T3 approval by a different operator, rate limiting | [security-self-assessment](docs/security-self-assessment.md) |
+| Credit building | Simulated on-time record (BUILDING / FAIR / GOOD / AT_RISK) that scales limits from 0.5× to 1.5×; signed, verifiable statements | [§5](docs/technical-overview.md#5-credit-level-and-limit-multiplier) |
+| AI agent | Tool-calling planner (LLM or rule-based) with runner-enforced guards: at most 10 steps and 4 writes; T2 tools only create proposals that expire after 15 minutes | [§7](docs/technical-overview.md#7-agent-loop-and-guardrails), [evaluation](docs/agent-evaluation.md) |
+| Chinese and English | Localized API error messages with stable error codes | [§8](docs/technical-overview.md#8-internationalization) |
+| Earlier B/C work | Loans and repayment (B), budget readiness, consumption learning, financial copilot, optional Gemini OCR | [docs/README.zh.md](docs/README.zh.md) |
 
-Django 是统一 B 后端，所有接口使用 `/api/v2/`。原 Django 借款引擎已由独立 B 项目的计算与状态规则替换；预算、换汇、支付和对账继续使用现有 Django 服务。C 以本地 Python 包接入，共用 Django 用户、钱包、账本和事务。
+There is no frontend in this submission. The API is exercised through Swagger UI and scripted HTTP demos.
 
-| 目录 | 用途 |
-|---|---|
-| `finance/`、`config/` | 统一 Django 后端；`finance/lending_core` 为迁入的 B 纯计算与契约 |
-| `studyflow-ai/` | C 模块，独立开发和测试 |
-| `auto_test/` | 替换后的借款、C 适配、迁移、并发和缺陷回归测试 |
-| `output/` | 本地验证结果，gitignored |
+## Architecture
 
-## 启动 Django
+One Django 5.2 + DRF server exposes everything under `/api/v2/` and stores it in PostgreSQL 17. The AI module `studyflow-ai/` is a Python package imported in-process, so it shares users, wallets, the ledger and database transactions with the API. Every write goes through a single command pipeline in one transaction: authentication → idempotency → user lock → policy (T2/T3) → handler → audit.
 
-Python 3.11+、Docker Desktop。在工作区根目录运行：
+```mermaid
+flowchart LR
+    client["API client / Swagger UI"] -->|Token or session| api["Django + DRF<br/>/api/v2/"]
+    api --> pg[("PostgreSQL 17")]
+    api --> c["studyflow-ai<br/>(agent planner, FX adapter, OCR)"]
+    c -. live mode only .-> ext["LLM gateway · Frankfurter · Gemini"]
+```
 
-```powershell
-python -m venv --prompt studyFlow studyFlow
-studyFlow/Scripts/python.exe -m pip install -r requirements-dev.txt
-Copy-Item .env.example .env  # 仅首次创建；已有 .env 时保留原配置
-# 编辑 .env，设置随机 DJANGO_SECRET_KEY；示例 DB_PORT=55433 对应下方 Compose。
-docker compose up -d --wait db
+The full architecture, algorithms and diagrams are in [docs/technical-overview.md](docs/technical-overview.md).
+
+## Quick start (Docker, no credentials needed)
+
+Requires Docker with Compose v2. Ports `8000` and `55433` must be free.
+
+```bash
+docker compose up --build
+```
+
+On start the app container applies migrations, creates the rate-limit cache table, seeds demo users and data, and then serves on <http://127.0.0.1:8000>. It runs in **mock mode** with fixed FX rates, so nothing calls an external service.
+
+1. **Get the demo logins.** The seeded student and operator passwords and tokens are written inside the container:
+   ```bash
+   docker compose exec app cat .demo-credentials.json
+   ```
+2. **Browse the API.** Log in as `demo-student` at <http://127.0.0.1:8000/api/auth/login/?next=/api/docs/> to open Swagger UI. `/api/docs/` requires login by design.
+3. **Run a full remittance scenario over real HTTP.** It compares routes, pays tuition to a verified payee, refunds a failed transfer, routes a T3 approval through a second operator, and updates the credit record:
+   ```bash
+   docker compose exec app python manage.py demo_remittance --runs 1
+   docker compose exec app python manage.py demo_agent --runs 1
+   ```
+
+Stop with `docker compose down`; add `-v` to also delete the database volume. For any shared deployment, set a real `DJANGO_SECRET_KEY`, and set `DJANGO_SECURE=true` behind HTTPS ([production settings](docs/permissions.md)).
+
+## Local development
+
+Python 3.11+ (3.13 is used in CI) and Docker for PostgreSQL.
+
+```bash
+python -m venv studyFlow
+studyFlow/Scripts/python.exe -m pip install -r requirements-dev.txt   # on macOS/Linux: studyFlow/bin/python
+cp .env.example .env              # then set a random DJANGO_SECRET_KEY
+docker compose up -d --wait db    # database only, on 127.0.0.1:55433
 studyFlow/Scripts/python.exe manage.py migrate
-studyFlow/Scripts/python.exe manage.py createcachetable  # 限流计数表 studyflow_cache
-studyFlow/Scripts/python.exe manage.py runserver 127.0.0.1:8000 --noreload
+studyFlow/Scripts/python.exe manage.py createcachetable
+studyFlow/Scripts/python.exe manage.py seed_demo
+studyFlow/Scripts/python.exe manage.py runserver 127.0.0.1:8000
 ```
 
-动钱的接口（付款提交、换汇、还款）需要 step-up 二次验证，超出按币种限额时还需第二名运营人员审批；接口限流计数存放在数据库缓存表中，部署时同样要执行 `createcachetable`。生产环境设置 `DJANGO_SECURE=true` 启用 HTTPS、HSTS 和安全 Cookie。详见 [权限分级、限额与生产加固](docs/permissions.md)。
+## Run modes
 
-推荐使用 `studyFlow/Scripts/python.exe`；启动脚本也兼容已安装依赖的 `.venv` 环境。根 Compose 使用独立 `studyflow-django` 服务、55433 端口和命名卷，不依赖旧 B 的 55432 端口。原 FastAPI 后端与团队设计文件可保留为本地参考，不属于本次集成提交。
+| Setting | Default | Effect | Needs |
+|---|---|---|---|
+| `STUDYFLOW_MODE` | `mock` | `mock`: rule-based agent planner and extractors. `live`: LLM gateway | `OPENAI_API_KEY`, `OPENAI_BASE_URL`, `OPENAI_MODEL` (and `TYPESAFE_API_KEY` for the copilot) in `studyflow-ai/.env` |
+| `STUDYFLOW_FX_LIVE` | `false` | `true` fetches reference rates from Frankfurter | network access only |
+| `STUDYFLOW_OCR_ENABLED` | `false` | Gemini OCR for scanned documents, with per-file consent | `GEMINI_API_KEY` plus two operator attestations ([gemini-ocr.md](docs/gemini-ocr.md)) |
+| `DJANGO_SECURE` | `false` | HTTPS redirect, HSTS, secure cookies | an HTTPS deployment |
 
-`/health/` 为公开就绪检查；`/api/docs/` 和 `/api/schema/` 需要登录。认证使用 `Authorization: Token ...` 或 Django session；session 写请求需要 CSRF。Token 可用 `POST /api/v2/auth/token/`（用户名和密码，有限流）获取。工作流写接口需要 `Idempotency-Key`。
+The live LLM, live FX and OCR need your own credentials. We cannot ship them, so the committed run logs serve as evidence of the live results: [evidence/agent](evidence/agent/), [evidence/fx](evidence/fx/), [evidence/ocr](evidence/ocr/).
 
-`manage.py seed_demo` 可创建学生、运营和审批运营三个示例用户及本地 `.demo-credentials.json`，不会覆盖已有用户；该文件不得提交。`scripts/start-postgres.ps1` 和 `scripts/start-backend.ps1` 可复用已配置环境。
+## Testing
 
-## 测试与 B/C 联调
+One command runs all 17 gates: Django and C tests, migrations, OpenAPI validation, lint, six HTTP demos and the agent evaluation.
 
-配置专用开发 PostgreSQL 后执行（测试数据库为 `test_studyflow`）：
-
-```powershell
-studyFlow/Scripts/python.exe manage.py test finance auto_test --noinput --keepdb
-studyFlow/Scripts/python.exe -m pytest auto_test/test_lending_core.py -q -p no:cacheprovider
-studyFlow/Scripts/python.exe manage.py makemigrations --check --dry-run
-New-Item -ItemType Directory -Path output -Force | Out-Null
-studyFlow/Scripts/python.exe manage.py spectacular --validate --fail-on-warn --file output/openapi.yaml
-studyFlow/Scripts/python.exe manage.py demo_bc --runs 3 --output output/django-bc-demo.json
+```bash
+studyFlow/Scripts/python.exe scripts/run_gates.py
 ```
 
-测试角色需有建测试库权限，或由管理员预建测试库后使用 `--keepdb`。SQLite 仅用于局部轻量检查，不能证明 PostgreSQL 精度、锁和触发器行为。
+Latest run: **17/17 pass. Django: 481 tests. C package: 298 tests.** Logs are in [evidence/gates/](evidence/gates/). CI runs the same suites on every push ([django.yml](.github/workflows/django.yml), [c-module.yml](.github/workflows/c-module.yml)).
 
-`demo_bc` 每轮创建新模拟身份，使用真实 Token 认证、Django HTTP 路由和 PostgreSQL，执行缺资料复核、补齐批准、幂等放款、模拟补充资金、12 期还款与结清。每期还款都先经 `auth/step-up/` 重新输入密码；由于 12 个月的还款在几秒内完成，演示把 step-up 限流临时调到 30 次/小时并在报告 `throttling` 字段中注明，各演示命令的限流计数按次隔离。C 使用明确的 mock 模式；报告不输出令牌。调用通过 Django APIClient 在进程内完成，不是浏览器或外部网络端到端验收。
+| Area | Test files | Test functions* | What they prove |
+|---|---|---:|---|
+| Permissions and limits | `auto_test/test_policy.py`, `test_policy_concurrency.py` | 50 | Tier matrix, step-up token binding and single use, T3 approvals and separation of duties, Bangkok day and month windows, throttling, `check --deploy` |
+| Remittance | `auto_test/test_remittance.py`, `test_remittance_concurrency.py` | 59 | Every state transition, fee breakdowns, refunds, idempotent callbacks, no overdraw under concurrency |
+| Multi-currency ledger | `auto_test/test_multicurrency.py`, `test_multicurrency_concurrency.py` | 67 | Server-only pricing (client-rate exploit regression), single-use quotes, ledger sum equals balance, negative-balance constraint |
+| Credit building | `auto_test/test_credit.py` | 62 | Level rules, real-date window, anti-gaming, immutable snapshots, signed statements |
+| Agent (Django runner) | `auto_test/test_agent.py`, `test_agent_concurrency.py` | 56 | T2 never executes, step and write budgets, truncation, proposal expiry and confirmation, races |
+| Agent (C planner) | `studyflow-ai/auto_test/test_agent_planner.py`, `test_agent_holdout.py` | 65 | Tool-call validation, live-output recovery, frozen holdout integrity |
+| i18n | `auto_test/test_i18n.py` | 9 | Localized messages and stable codes |
+| OCR | `auto_test/test_ocr_*.py`, `studyflow-ai/auto_test/test_document_ocr.py`, `test_ocr_config.py` | 37 | Consent gates, operator attestations, retry and fallback, injection cannot be confirmed, retention purge |
+| Earlier B/C modules | `auto_test/test_lending_*.py`, `test_readiness_*.py`, `test_consumption_*.py`, `test_copilot*.py`, `finance/test*.py`, other `studyflow-ai/auto_test` files | the rest | Loans, budgets, readiness, consumption, copilot workflows |
 
-本轮结果见 [Django 与 B/C 验证记录](docs/verification-django-b-20261005.md)。
+\* Counted as `def test_` per file. Parametrized tests expand to more cases at run time.
 
-## 借款替换及迁移
+## Key results
 
-新借款只接受 B 的 THB、1–60 期、比例年利率和首期日期，不再接受旧 `annual_rate_percent`、宽限期或外币借款创建字段。新流程详见 [API 指南](docs/api/guide.md) 和 [替换说明](docs/django-b-lending.md)。
+| Result | Value | Evidence |
+|---|---|---|
+| Live agent, **frozen holdout** (`agent-v2`, first run) | 18/24 tasks (75%), **0 unauthorized actions**, 1 of 4 injection cases partly followed (no money moved) | [agent-evaluation.md](docs/agent-evaluation.md) |
+| Live FX pricing | 4 currency pairs, 12 route quotes matching the formula worked by hand | [evidence/fx](evidence/fx/verification-live-fx.json) |
+| Gemini OCR, live | 6/6 synthetic samples; full HTTP → worker → OCR → extraction chain passed | [evidence/ocr](evidence/ocr/) |
 
-`0005/0006` 迁移保留旧报价和账本，给已结算贷款建立还款账户，不重复入账。未放款的旧引擎报价保留只读，需重新创建 B 报价。若旧放款仍处于 processing/unknown，迁移会停止并要求先用旧版解决结果，避免未知资金状态被当成失败或成功；迁移不支持自动倒退。
+The limitations behind these numbers are stated plainly in [docs/security-self-assessment.md §8](docs/security-self-assessment.md#8-known-risks) and [docs/agent-evaluation.md](docs/agent-evaluation.md#limitations). In particular, step-up is a password re-entry rather than a second factor, and the evaluation sets were written and reviewed by AI, not by humans.
 
-## C 独立运行
+## Repository layout
 
-在 `studyflow-ai` 内运行：
+| Path | Contents |
+|---|---|
+| `finance/` | Django app: wallets, FX, remittance, policy, credit, agent, lending, readiness, copilot |
+| `studyflow-ai/` | AI module: agent planner, FX adapter, OCR, extraction, evaluation datasets (`evals/`) |
+| `config/` | Django settings and URLs |
+| `auto_test/` | Django test suites |
+| `scripts/` | Gate runner, live verification scripts, PostgreSQL helpers |
+| `docker/`, `Dockerfile`, `compose.yaml` | One-command deployment |
+| `evidence/` | Committed sandbox run logs and reports ([index](evidence/README.md)) |
+| `docs/` | Technical overview, security self-assessment, evaluation, API guide (`docs/api/`), design notes |
+| `openapi.yaml` | Generated OpenAPI 3 contract |
+| `legacy/`, `docs/legacy/` | Earlier prototype and notes; **not part of the submission** |
 
-```powershell
-../studyFlow/Scripts/python.exe -m pytest -p no:cacheprovider
-../studyFlow/Scripts/python.exe -m studyflow_ai --mode mock readiness-demo --output output/readiness-demo.json
-```
+## Documentation
 
-C 的 live 模型配置仍在 `studyflow-ai/.env`，只在显式使用 `--env-file` 时加载。Django 借款解释目前使用 mock，预算来自所选 Django 场景，并明确标记尚不是完整 readiness 预算。全部资金操作为模拟。
+- [Technical overview](docs/technical-overview.md): architecture, algorithms, guardrails
+- [Security self-assessment](docs/security-self-assessment.md): permission tiers mapped to code and tests, plus known risks
+- [Agent evaluation](docs/agent-evaluation.md): frozen holdout and tuning set reported separately
+- [Evidence index](evidence/README.md): every run log and how to regenerate it
+- [API guide](docs/api/guide.md), [API reference](docs/api/reference.md), [OpenAPI](openapi.yaml)
+- [Third-party components and licences](docs/third-party-licenses.md)
+
+## Demo video
+
+To be added.

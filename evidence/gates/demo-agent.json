@@ -2,7 +2,7 @@
   "passed": true,
   "runs": [
     {
-      "run_id": "d87ff4f293cb4326b71967577f50a216",
+      "run_id": "46946d9ac5f64f3689f062954b99b1e2",
       "remittance_session": {
         "steps": [
           [
@@ -87,7 +87,7 @@
       "policy": [
         {
           "action": "remittance.submit",
-          "target_id": "a1308798-83c4-4025-b93d-a0732487abc4",
+          "target_id": "36200662-e1de-431a-9227-37977ebd01f9",
           "amount": "5000.00",
           "currency": "CNY",
           "tier": "T2",
@@ -98,7 +98,7 @@
       "is_simulated": true
     },
     {
-      "run_id": "331f1dc2e3ac484ca64ff747a666b24e",
+      "run_id": "c4f253981f71469ebe615a4bf246da55",
       "remittance_session": {
         "steps": [
           [
@@ -183,7 +183,7 @@
       "policy": [
         {
           "action": "remittance.submit",
-          "target_id": "add50494-cb4a-4dbc-8215-f2f1970da9bd",
+          "target_id": "d431dc06-5c10-4997-93b3-b2fad2bef95f",
           "amount": "5000.00",
           "currency": "CNY",
           "tier": "T2",
@@ -194,7 +194,7 @@
       "is_simulated": true
     },
     {
-      "run_id": "3835ab12409748ab8ea30ed5c074642e",
+      "run_id": "02919efb86784cfb81782067efc3574d",
       "remittance_session": {
         "steps": [
           [
@@ -279,7 +279,7 @@
       "policy": [
         {
           "action": "remittance.submit",
-          "target_id": "c7fc4115-14ee-4404-bc48-28547b67ead2",
+          "target_id": "a3322ec4-65e1-4c7c-97a1-798c502c30bc",
           "amount": "5000.00",
           "currency": "CNY",
           "tier": "T2",

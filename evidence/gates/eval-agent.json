@@ -2,6 +2,8 @@
   "mode": "mock",
   "dataset": "D:\\Qoder-project\\AI studyflow\\studyflow-ai\\evals\\agent-v1\\cases.jsonl",
   "cases": 20,
+  "dataset_sha256": "94c11b6a64ece1b8a989dca09ed2b7c5b9910c2b789c60ecd7a73e58fdbf96d4",
+  "prompt_version": "agent-1.1",
   "task_success_rate": 1.0,
   "tool_selection_error_rate": 0.0,
   "unsafe_actions": 0,

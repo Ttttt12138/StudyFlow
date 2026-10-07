@@ -20,7 +20,7 @@ Run every command from the repository root. On Windows the interpreter is `study
 
 ## 1. Gate suite: `gates/`
 
-The suite ran on 2026-10-07. The code under test is the merge commit `de87c37` on `feature/bc-integration` plus one added test (`auto_test/test_remittance.py`). Since that commit, the only other changes are documentation, this folder, `scripts/`, and moving unused legacy files into `legacy/` and `docs/legacy/`.
+The suite ran on 2026-10-07 against commit `8bde47b`, which is the code as submitted. Later commits change only documentation and this folder.
 
 ```bash
 studyFlow/Scripts/python.exe scripts/run_gates.py
@@ -34,7 +34,7 @@ The script writes each check to `output/gates/<name>.log`, and each demo also wr
 | `check.log`, `migrations.log`, `migrate.log`, `cache-table.log` | Django system checks, no missing migrations, migrations apply, shared rate-limit cache table exists |
 | `i18n.log` | Chinese/English message catalogs are complete and compiled (empty log means OK) |
 | `django-tests.log` | Django test suite on PostgreSQL: **481 tests, OK** |
-| `c-ruff.log`, `c-tests.log` | C module lint and tests: **293 passed** (`studyflow-ai/auto_test`) |
+| `c-ruff.log`, `c-tests.log` | C module lint and tests: **298 passed** (`studyflow-ai/auto_test`) |
 | `demo-remittance.json` / `.log` | **Proposition C remittance**, 3 runs over real HTTP. Each run: compare route quotes against a deadline, pay tuition to an operator-verified payee (`CREATED → SUBMITTED → IN_TRANSIT → DELIVERED → RECONCILED`), refund a failed transfer in full, approve an order above the 10,000 CNY limit as T3 through a second operator, and record the on-time payment in the credit profile |
 | `demo-agent.json` / `.log` | **Proposition C agent**, 3 runs over real HTTP in Chinese and English sessions. The agent only *proposes* the remittance submission, and the wallet is unchanged until the user confirms with step-up. A second proposal is rejected and changes nothing. |
 | `eval-agent.json` / `.log` | Agent evaluation in mock mode: 20/20 cases, 0 unsafe actions, 0 injections followed |
@@ -63,15 +63,20 @@ Details: [docs/verification-live-20261007.md §1](../docs/verification-live-2026
 studyFlow/Scripts/python.exe manage.py evaluate_agent --mode live --env-file studyflow-ai/.env
 # mock planner
 studyFlow/Scripts/python.exe manage.py evaluate_agent --mode mock
+# frozen holdout agent-v2 (live; quote only its first run, agent-eval-v2-live-first.json)
+studyFlow/Scripts/python.exe manage.py evaluate_agent --mode live --env-file studyflow-ai/.env --dataset studyflow-ai/evals/agent-v2/cases.jsonl
 ```
 
-Dataset: `studyflow-ai/evals/agent-v1/cases.jsonl` (20 cases; 3 of them contain prompt-injection attempts).
+Datasets: `studyflow-ai/evals/agent-v1/cases.jsonl` is the tuning set (20 cases, 3 with prompt-injection attempts). `studyflow-ai/evals/agent-v2/cases.jsonl` is the frozen holdout (24 cases, 4 with injection attempts). Quote the agent-v2 first run; the full write-up is [docs/agent-evaluation.md](../docs/agent-evaluation.md).
 
 | File | Run | Task completion | Unsafe actions | Injections followed |
 |---|---|---:|---:|---:|
 | [`agent-eval-live.json`](agent/agent-eval-live.json) | live, round 1 | 6/20 | 0 | 0/3 |
 | [`agent-eval-live-2.json`](agent/agent-eval-live-2.json) | live, round 2 | 9/20 | 0 | 0/3 |
 | [`agent-eval-live-3.json`](agent/agent-eval-live-3.json) | live, round 3 | 13/20 | 0 | 0/3 |
+| [`agent-eval-v1-live-tuning-4.json`](agent/agent-eval-v1-live-tuning-4.json), [`-5`](agent/agent-eval-v1-live-tuning-5.json), [`-6`](agent/agent-eval-v1-live-tuning-6.json) | live, rounds 4–6 (tuning, prompt agent-1.1) | 14/20, 15/20, 15/20 | 0 | 0/3 |
+| [`agent-eval-v2-live-first.json`](agent/agent-eval-v2-live-first.json) | **live, frozen holdout agent-v2, first run** | **18/24** | **0** | **1/4** |
+| [`agent-eval-v2-mock.json`](agent/agent-eval-v2-mock.json) | mock planner on agent-v2, reference only | 18/24 | 0 | 1/4 |
 | [`agent-live-smoke-report.json`](agent/agent-live-smoke-report.json) | live, 1-case smoke run before round 1 | 0/1 | 0 | — |
 | [`agent-eval-dev.json`](agent/agent-eval-dev.json), [`agent-eval-dev2.json`](agent/agent-eval-dev2.json) | mock, during development | 18/20, 20/20 | 0 | — |
 
