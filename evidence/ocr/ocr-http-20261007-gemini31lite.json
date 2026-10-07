@@ -1,0 +1,265 @@
+{
+  "passed": true,
+  "synthetic": true,
+  "ocr_mode": "live",
+  "extraction_mode": "live",
+  "transport": "real_loopback_http",
+  "database": "PostgreSQL",
+  "run_id": "9b377bb96b884e88ae1a8b9354a6f8d5",
+  "before": {
+    "financial_version": 1,
+    "budget_version": 2,
+    "wallet_balance": "10000.00",
+    "ledger_count": 0
+  },
+  "after": {
+    "financial_version": 1,
+    "budget_version": 2,
+    "wallet_balance": "10000.00",
+    "ledger_count": 0
+  },
+  "job_status": "DONE",
+  "material_status": "NEEDS_REVIEW",
+  "issues": [
+    {
+      "code": "MISSING_COST_FIELD",
+      "field": "period",
+      "locator": null,
+      "message": "missing cost field"
+    },
+    {
+      "code": "MISSING_COST_FIELD",
+      "field": "year",
+      "locator": null,
+      "message": "missing cost field"
+    },
+    {
+      "code": "SOURCE_UNCONFIRMED",
+      "field": null,
+      "locator": null,
+      "message": "source unconfirmed"
+    }
+  ],
+  "source_type": "gemini_ocr",
+  "ocr_model": "gemini-3.1-flash-lite",
+  "pages": [
+    {
+      "text": "合成演示 SYNTHETIC DEMO 示例学校 Demo School 发票 Invoice: DEMO-MIX-001 学费 Tuition: THB 10000.00 截止日期 Due date: 2026-11-10",
+      "number": 1,
+      "language": "zh-en",
+      "uncertain": false
+    }
+  ],
+  "consent": {
+    "accepted": true,
+    "actor_id": "888",
+    "accepted_at": "2026-10-07T07:23:56.480820+00:00",
+    "notice_version": "gemini-ocr-v1",
+    "extraction_mode": "live"
+  },
+  "original_sha256": "03336180e218a31bb7711a38fc469e763edf3adaf480f9d6c1188c405deb934f",
+  "source_sha256": "03336180e218a31bb7711a38fc469e763edf3adaf480f9d6c1188c405deb934f",
+  "steps": [
+    {
+      "route": "readiness/semesters",
+      "status": "DONE",
+      "actor": "student",
+      "record_id": "537b1122-62c4-43bf-befe-c7ab3a4ea041",
+      "versions": {
+        "state_version": 1,
+        "analysis_version": 0
+      },
+      "elapsed_ms": 296.86
+    },
+    {
+      "route": "demo/initialize",
+      "status": "DONE",
+      "actor": "student",
+      "record_id": "80f90c1a-ff78-4736-9c9f-9e2d6f9a68ab",
+      "versions": {},
+      "elapsed_ms": 23.68
+    },
+    {
+      "route": "readiness/imports/ocr-notice",
+      "status": "DONE",
+      "actor": "student",
+      "record_id": null,
+      "versions": {},
+      "elapsed_ms": 7.23
+    },
+    {
+      "route": "readiness/state",
+      "status": "DONE",
+      "actor": "student",
+      "record_id": null,
+      "versions": {
+        "state_version": 1,
+        "budget_version": 2,
+        "analysis_version": 0
+      },
+      "elapsed_ms": 36.0
+    },
+    {
+      "route": "readiness/imports",
+      "status": "DONE",
+      "actor": "student",
+      "record_id": "3ba957dd-a015-42d7-82bc-48f1fd059eb9",
+      "versions": {
+        "state_version": 1,
+        "budget_version": 2
+      },
+      "elapsed_ms": 32.33
+    },
+    {
+      "route": "readiness/checks/37f53271-718d-4a5c-87b8-150b4298d2f5",
+      "status": "DONE",
+      "actor": "student",
+      "record_id": "37f53271-718d-4a5c-87b8-150b4298d2f5",
+      "versions": {},
+      "elapsed_ms": 8.11
+    },
+    {
+      "route": "readiness/imports/3ba957dd-a015-42d7-82bc-48f1fd059eb9",
+      "status": "DONE",
+      "actor": "student",
+      "record_id": "3ba957dd-a015-42d7-82bc-48f1fd059eb9",
+      "versions": {
+        "state_version": 1,
+        "budget_version": 2
+      },
+      "elapsed_ms": 9.71
+    },
+    {
+      "route": "review-queue",
+      "status": "DONE",
+      "actor": "student",
+      "record_id": null,
+      "versions": {},
+      "elapsed_ms": 7.94
+    }
+  ],
+  "extraction_calls": [
+    {
+      "mode": "live",
+      "model": "jev-1.13.0",
+      "purpose": "classify",
+      "attempts": 1,
+      "provider": "typesafe",
+      "error_code": null,
+      "request_id": null,
+      "duration_ms": 341.83689998462796,
+      "input_tokens": 707,
+      "output_tokens": 129,
+      "prompt_version": "1.5"
+    },
+    {
+      "mode": "live",
+      "model": "openai/gpt-6-luna",
+      "purpose": "extract",
+      "attempts": 1,
+      "provider": "openai",
+      "error_code": null,
+      "request_id": null,
+      "duration_ms": 3747.320599970408,
+      "input_tokens": 791,
+      "output_tokens": 293,
+      "prompt_version": "readiness-2.3"
+    }
+  ],
+  "review_items": {
+    "count": 1,
+    "items": [
+      {
+        "id": "9c69629a-f4d3-49dc-9fc3-59ca212e2a90",
+        "type": "reviewitem",
+        "created_at": "2026-10-07T07:24:03.250Z",
+        "key": "ImportMaterial:3ba957dd-a015-42d7-82bc-48f1fd059eb9",
+        "kind": "material",
+        "entity_id": "3ba957dd-a015-42d7-82bc-48f1fd059eb9",
+        "status": "OPEN",
+        "version": 1,
+        "assignee": null,
+        "details": {
+          "issues": [
+            {
+              "code": "MISSING_COST_FIELD",
+              "field": "period",
+              "locator": null,
+              "message": "missing cost field"
+            },
+            {
+              "code": "MISSING_COST_FIELD",
+              "field": "year",
+              "locator": null,
+              "message": "missing cost field"
+            },
+            {
+              "code": "SOURCE_UNCONFIRMED",
+              "field": null,
+              "locator": null,
+              "message": "source unconfirmed"
+            }
+          ],
+          "status": "NEEDS_REVIEW",
+          "conflicts": {
+            "tuition": {
+              "existing": {
+                "paid": null,
+                "year": 2026,
+                "amount": "41000.00",
+                "campus": "Phuket",
+                "period": "semester",
+                "cost_id": "tuition",
+                "category": "tuition",
+                "conflict": true,
+                "currency": "THB",
+                "due_date": null,
+                "evidence": [
+                  {
+                    "field": "amount",
+                    "quote": "41,000",
+                    "locator": "TUITION & FEES / B.B.A. International Business",
+                    "source_id": "https://sites.google.com/phuket.psu.ac.th/fispsuphuket/International-Students"
+                  }
+                ],
+                "component": "tuition",
+                "synthetic": false,
+                "observed_at": "2026-10-05T14:38:06Z",
+                "source_refs": [
+                  "https://sites.google.com/phuket.psu.ac.th/fispsuphuket/International-Students"
+                ],
+                "valid_until": "2026-12-15",
+                "alternatives": [
+                  {
+                    "source": "3ba957dd-a015-42d7-82bc-48f1fd059eb9",
+                    "candidate": {
+                      "amount": "10000.00",
+                      "currency": "THB",
+                      "due_date": "2026-11-10",
+                      "invoice_id": "DEMO-MIX-001"
+                    }
+                  }
+                ],
+                "confidence_type": "UNCONFIRMED"
+              },
+              "candidate": {
+                "amount": "10000.00",
+                "currency": "THB",
+                "due_date": "2026-11-10",
+                "invoice_id": "DEMO-MIX-001"
+              }
+            },
+            "profile.school": {
+              "existing": "Prince of Songkla University",
+              "candidate": "示例学校 Demo School"
+            }
+          },
+          "next_action": "confirm_material"
+        },
+        "updated_at": "2026-10-07T07:24:03.250Z"
+      }
+    ],
+    "next": null,
+    "previous": null
+  }
+}

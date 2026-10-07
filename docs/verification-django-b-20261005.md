@@ -28,14 +28,14 @@
 
 ## 可检查证据
 
-- [Django 测试日志](../output/django-bc-20261005/django-tests.txt)
-- [B 计算 JUnit](../output/django-bc-20261005/b-core-junit.xml)
-- [C 回归 JUnit](../output/django-bc-20261005/c-junit.xml)
-- [三轮联调完整报告](../output/django-bc-20261005/demo.json)
-- [HTTP 检查结果](../output/django-bc-20261005/http-smoke.json)
+- [Django 测试日志](../evidence/django-bc-20261005/django-tests.txt)
+- [B 计算 JUnit](../evidence/django-bc-20261005/b-core-junit.xml)
+- [C 回归 JUnit](../evidence/django-bc-20261005/c-junit.xml)
+- [三轮联调完整报告](../evidence/django-bc-20261005/demo.json)
+- [HTTP 检查结果](../evidence/django-bc-20261005/http-smoke.json)
 - [已更新 OpenAPI](../openapi.yaml)
 
-以上 output 文件为本机产物，gitignored。最初 C 测试的 JUnit 写入工作区外层输出目录被环境拒绝；改在 C 自己的 output 中生成后复制，完整重跑退出码为 0。
+以上文件原为本机 `output/` 产物，现原样复制到 `evidence/` 入库。最初 C 测试的 JUnit 写入工作区外层输出目录被环境拒绝；改在 C 自己的 output 中生成后复制，完整重跑退出码为 0。
 
 C 联调为 mock 模式，不调用真实模型或支付。三轮流程使用 Token 认证的 Django APIClient 和真实 PostgreSQL；另有实际 HTTP 只读冒烟，不包含浏览器/A 前端验收。单个 Django 预算场景导出到 C 时明确 complete=false，不冒充完整 readiness 多场景预算。
 

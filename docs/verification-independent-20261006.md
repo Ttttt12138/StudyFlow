@@ -13,7 +13,7 @@
 - [冻结数据](../studyflow-ai/evals/copilot-holdout-v2/cases.jsonl)
 - [审核包](../studyflow-ai/evals/copilot-holdout-v2/review-packet.md)及[代审记录](../studyflow-ai/evals/copilot-holdout-v2/review.json)
 - [预先固定的验证协议及 146 份运行代码哈希](../studyflow-ai/evals/copilot-holdout-v2/protocol.json)
-- [完整首次运行报告](../output/copilot-independent-v2-first.json)
+- [完整首次运行报告](../evidence/copilot/copilot-independent-v2-first.json)
 
 用户授权由 AI 代审。这里的独立性指测试材料未用于之前调参、三组均只运行冻结后的首次测试；同一 AI 编写并审核合成标签，因此不是外部机构双盲评审。运行中及运行后没有修改提示词、规则、数据或评分逻辑。OCR 模型配置变化不改变盲测的 Jev／OpenAI 模型。
 
@@ -56,18 +56,18 @@
 
 成功样本的预设金额、发票号、日期文本均匹配，且无不确定页。这是合成关键文本核验，不是全文字符准确率；服务失败样本没有足够结果评估识别准确性。
 
-3.6 的单请求诊断实际返回 **HTTP 503 / UNAVAILABLE**，27.63 秒，消息说明当前需求过高。[脱敏诊断](../output/ocr-gemini36-diagnostic.json)。因此已经确认存在真实识别能力，但本轮服务可用性和整组 OCR 验收**未通过**。没有降低识别要求，也没有自动切换 mock。
+3.6 的单请求诊断实际返回 **HTTP 503 / UNAVAILABLE**，27.63 秒，消息说明当前需求过高。[脱敏诊断](../evidence/ocr/ocr-gemini36-diagnostic.json)。因此已经确认存在真实识别能力，但本轮服务可用性和整组 OCR 验收**未通过**。没有降低识别要求，也没有自动切换 mock。
 
 证据：
 
-- [旧模型失败](../output/ocr-independent-20261006-configured.json)及[404 诊断](../output/ocr-provider-diagnostic.json)
-- [3.8 六份测试](../output/ocr-independent-20261006-gemini38.json)
-- [3.6 六份测试](../output/ocr-independent-20261006-gemini36.json)
+- [旧模型失败](../evidence/ocr/ocr-independent-20261006-configured.json)及[404 诊断](../evidence/ocr/ocr-provider-diagnostic.json)
+- [3.8 六份测试](../evidence/ocr/ocr-independent-20261006-gemini38.json)
+- [3.6 六份测试](../evidence/ocr/ocr-independent-20261006-gemini36.json)
 
 另外进行了真实 HTTP → PostgreSQL worker → Gemini 的扫描 PDF 上传验证，包含逐文件同意和真实模型模式。3.8、3.6 两次均因 OCR_UNAVAILABLE 转入 `NEEDS_MANUAL_INPUT`，worker 为 `DONE`，Review Queue 有 `material` 事项。前后均为财务版本 1、预算版本 2、钱包 10,000.00、账本 0 条。因此**真实失败保护已通过；成功 OCR→提取→待复核的完整链条尚未通过**。
 
-- [3.8 HTTP 失败保护记录](../output/ocr-independent-http-first.json)
-- [3.6 HTTP 失败保护记录](../output/ocr-independent-http-gemini36.json)
+- [3.8 HTTP 失败保护记录](../evidence/ocr/ocr-independent-http-first.json)
+- [3.6 HTTP 失败保护记录](../evidence/ocr/ocr-independent-http-gemini36.json)
 
 官方 [GenerateContent 契约](https://ai.google.dev/api/generate-content) 支持图片／PDF和 `store` 请求字段；[错误排查指南](https://ai.google.dev/gemini-api/docs/troubleshooting)将 503 视为可重试错误并建议有上限的退避。本轮保留既有显式重试机制，未增加自动反复外发原图的行为。
 
@@ -107,10 +107,10 @@ studyFlow/Scripts/python.exe manage.py verify_document_ocr --live --output outpu
 
 | 模型 | 六份合成样本 | 证据 |
 |---|---:|---|
-| gemini-3.5-flash-lite（单次，无重试） | 5/6，中文 PNG 遇 1 次 503 | [报告](../output/ocr-probe-20261007-gemini35lite.json) |
-| gemini-3.1-flash-lite（单次，无重试） | 6/6 | [报告](../output/ocr-probe-20261007-gemini31lite.json) |
-| gemini-3.1-flash-lite + 兜底 3.5-flash-lite，最多 3 次 | 6/6 | [报告](../output/ocr-live-20261007-gemini31lite-fallback.json) |
+| gemini-3.5-flash-lite（单次，无重试） | 5/6，中文 PNG 遇 1 次 503 | [报告](../evidence/ocr/ocr-probe-20261007-gemini35lite.json) |
+| gemini-3.1-flash-lite（单次，无重试） | 6/6 | [报告](../evidence/ocr/ocr-probe-20261007-gemini31lite.json) |
+| gemini-3.1-flash-lite + 兜底 3.5-flash-lite，最多 3 次 | 6/6 | [报告](../evidence/ocr/ocr-live-20261007-gemini31lite-fallback.json) |
 
-主模型切换为 `gemini-3.1-flash-lite`（正式版），新增对 503/429/超时的有界重试及模型轮换，规则见 [配置说明](gemini-ocr.md#失败并发与请求边界)。真实 HTTP → PostgreSQL worker → Gemini → C live 提取链条首次完整通过：材料进入 `NEEDS_REVIEW`、`source_type=gemini_ocr`、模型 `gemini-3.1-flash-lite`，前后财务版本 1、预算版本 2、钱包 10,000.00、账本 0 条（[记录](../output/ocr-http-20261007-gemini31lite.json)）。
+主模型切换为 `gemini-3.1-flash-lite`（正式版），新增对 503/429/超时的有界重试及模型轮换，规则见 [配置说明](gemini-ocr.md#失败并发与请求边界)。真实 HTTP → PostgreSQL worker → Gemini → C live 提取链条首次完整通过：材料进入 `NEEDS_REVIEW`、`source_type=gemini_ocr`、模型 `gemini-3.1-flash-lite`，前后财务版本 1、预算版本 2、钱包 10,000.00、账本 0 条（[记录](../evidence/ocr/ocr-http-20261007-gemini31lite.json)）。
 
 仍然只是六份清晰合成样本的关键文本核验；本轮 live 运行未触发重试，重试和轮换行为由 MockTransport 测试覆盖。studyflow-ai 293 项、Django OCR/readiness 32 项测试通过。被 v2/v3 协议记录哈希的 5 个文件已按约定在 `frozen/` 保存修改前副本。

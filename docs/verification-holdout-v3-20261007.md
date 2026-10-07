@@ -7,7 +7,7 @@
 - 新建 16 个模板家族，共 160 条测试样本，覆盖中文、英文和中英混合；开发集沿用 copilot-v1 的 80 条，未作改动。构建脚本会核对家族名和文本，确认与 v1、v2 都不重叠：[build_copilot_holdout_v3.py](../studyflow-ai/scripts/build_copilot_holdout_v3.py)
 - 冻结时间：2026-10-07T00:08:47 +07:00；数据 SHA256 为 `4adedfee15b8ecf288f6eaa9e9fcf29b8a21021dce82f4efe0edd7ba49ffd67f`。
 - [冻结数据](../studyflow-ai/evals/copilot-holdout-v3/cases.jsonl)、[审核包](../studyflow-ai/evals/copilot-holdout-v3/review-packet.md)、[代审记录](../studyflow-ai/evals/copilot-holdout-v3/review.json)，以及记录了 146 个代码文件哈希的[协议](../studyflow-ai/evals/copilot-holdout-v3/protocol.json)。固定配置为 prompt 1.4 和 `rules-1.2-multilingual`。
-- 冻结前没有用任何规则或模型跑过 v3；三组各只运行这一次首测：[完整报告](../output/copilot-independent-v3-first.json)（SHA256 `46fb9c29…33f3b3`）。
+- 冻结前没有用任何规则或模型跑过 v3；三组各只运行这一次首测：[完整报告](../evidence/copilot/copilot-independent-v3-first.json)（SHA256 `46fb9c29…33f3b3`）。
 
 **独立性限制：** 合成标签由同一 AI 编写和审核，这个 AI 也是根据 v2 失败样本写 rules-1.2 修复的人，因此这不是外部双盲评审。用户授权由 AI 代审标签。
 

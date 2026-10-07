@@ -33,9 +33,9 @@
 
 HTTP Demo 证据：
 
-- [mock 主线与异常](../output/copilot-87171484db1c41eb9cd39d7e4f6aa648.json)
-- [初次 live 三轮](../output/copilot-9851955e088242dab0e5b88324e2ac52.json)
-- [统一模型分类语义后的 live 三轮](../output/copilot-4cd158889be94b8194b9f895babc2687.json)
+- [mock 主线与异常](../evidence/copilot/copilot-87171484db1c41eb9cd39d7e4f6aa648.json)
+- [初次 live 三轮](../evidence/copilot/copilot-9851955e088242dab0e5b88324e2ac52.json)
+- [统一模型分类语义后的 live 三轮](../evidence/copilot/copilot-4cd158889be94b8194b9f895babc2687.json)
 
 异常集包含冲突学费、异常金额、重复支付、资金不足、收款人变更、模型失败、支付失败、OCR 不可用、版本过期和对账不一致。正常授权主线同时通过。故障注入属于测试命令，未开放公共故障接口。
 
@@ -55,13 +55,13 @@ HTTP Demo 证据：
 | LLM-only | 89.375% | 85.455% | 0 | 100% | 1 |
 | Jev＋LLM | 84.375% | 84.545% | 0 | 100% | 0 |
 
-首次冻结测试**未通过**。完整失败证据保留在 [首次测试报告](../output/copilot-eval-69c402c5ba9e459595a10d0071a29bee.json)。后续修正集中在统一类别语义、中文未来付款日与已支付日期的区分、来源定位符校验；未修改冻结样本或降低准确率阈值。模型概率格式或外部调用失败同样留在结果中。
+首次冻结测试**未通过**。完整失败证据保留在 [首次测试报告](../evidence/copilot/copilot-eval-69c402c5ba9e459595a10d0071a29bee.json)。后续修正集中在统一类别语义、中文未来付款日与已支付日期的区分、来源定位符校验；未修改冻结样本或降低准确率阈值。模型概率格式或外部调用失败同样留在结果中。
 
 后续同数据集运行均标为回归，不能替代未见数据的新独立盲测。
 
-中间回归证据也保留：[prompt 1.2 完成的规则与 LLM 两组](../output/copilot-eval-949f52cf1531449182e24ab394a47f2f.json)、[prompt 1.2 Jev＋LLM](../output/copilot-eval-858c7302432e4ddf984e057fb4540289.json)、[prompt 1.3 三组](../output/copilot-eval-9ec9264f13cb4d0b9c379f032be12dd3.json)。1.3 的规则组与 LLM-only 达标，Jev＋LLM 字段联合为 104/110（94.545%），六条资助承诺丢失预计日期，均进入复核。1.4 进一步明确保留预计资助日期不代表已到账；未改变任何标签或门槛。
+中间回归证据也保留：[prompt 1.2 完成的规则与 LLM 两组](../evidence/copilot/copilot-eval-949f52cf1531449182e24ab394a47f2f.json)、[prompt 1.2 Jev＋LLM](../evidence/copilot/copilot-eval-858c7302432e4ddf984e057fb4540289.json)、[prompt 1.3 三组](../evidence/copilot/copilot-eval-9ec9264f13cb4d0b9c379f032be12dd3.json)。1.3 的规则组与 LLM-only 达标，Jev＋LLM 字段联合为 104/110（94.545%），六条资助承诺丢失预计日期，均进入复核。1.4 进一步明确保留预计资助日期不代表已到账；未改变任何标签或门槛。
 
-最终 prompt 1.4 [真实三组回归](../output/copilot-eval-5944e657bcfa4aa5bc287e2c07b61851.json) 已完成，命令退出码 0：
+最终 prompt 1.4 [真实三组回归](../evidence/copilot/copilot-eval-5944e657bcfa4aa5bc287e2c07b61851.json) 已完成，命令退出码 0：
 
 | 组别 | 分类准确率 | 字段联合准确率 | 关键静默漏报 | 危险样本拦截 | 调用错误 |
 |---|---:|---:|---:|---:|---:|
