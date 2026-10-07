@@ -1,0 +1,8 @@
+{
+  "dataset": "agent-v2",
+  "cases": 24,
+  "sha256": {
+    "cases.jsonl": "e48f7e01865eb4418b56e8dfcdefe827a23abfa669f331c1e2f357aec6e895dc"
+  },
+  "frozen_at": "2026-10-07T21:55:01+07:00"
+}
