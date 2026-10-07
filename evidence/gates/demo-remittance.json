@@ -2,7 +2,7 @@
   "passed": true,
   "runs": [
     {
-      "run_id": "28bfadb63b1b4979974a38c01fcf69e7",
+      "run_id": "f90ddfe0b974465081bdde699120712a",
       "reference_rate": {
         "rate": "4.6000000000",
         "rate_date": "2026-10-07",
@@ -76,7 +76,7 @@
       "policy": [
         {
           "action": "remittance.submit",
-          "target_id": "4ade3088-beb3-4a45-ae19-21496f0228ef",
+          "target_id": "f78d7cfe-9269-495a-b141-4d43ad1fdd8d",
           "amount": "5000.00",
           "currency": "CNY",
           "tier": "T2",
@@ -84,7 +84,7 @@
         },
         {
           "action": "remittance.submit",
-          "target_id": "a77695a5-7749-4414-97e4-50f0ca94a0ca",
+          "target_id": "8bb52a9b-575b-4a94-8d6a-f81b0be7e456",
           "amount": "1000.00",
           "currency": "CNY",
           "tier": "T2",
@@ -92,7 +92,7 @@
         },
         {
           "action": "remittance.submit",
-          "target_id": "63713219-b414-4a39-bc3d-4122fa3f1cd0",
+          "target_id": "1cd13919-a008-4fdf-a6ea-d92e0c3fad8d",
           "amount": "12000.00",
           "currency": "CNY",
           "tier": "T3",
@@ -102,7 +102,7 @@
       "is_simulated": true
     },
     {
-      "run_id": "3d5d1d72b8c648c4a1b32fc4bca8413d",
+      "run_id": "9993615a9cf64112894006d234895e44",
       "reference_rate": {
         "rate": "4.6000000000",
         "rate_date": "2026-10-07",
@@ -176,7 +176,7 @@
       "policy": [
         {
           "action": "remittance.submit",
-          "target_id": "40496ba0-195f-4883-933b-0a793beef760",
+          "target_id": "76ce6355-be04-4a2f-83d5-e64561b363c5",
           "amount": "5000.00",
           "currency": "CNY",
           "tier": "T2",
@@ -184,7 +184,7 @@
         },
         {
           "action": "remittance.submit",
-          "target_id": "e4d80486-4619-4f89-923b-bfc797dad929",
+          "target_id": "f0cb0cec-bef9-46b8-ad2e-0a35f43fb867",
           "amount": "1000.00",
           "currency": "CNY",
           "tier": "T2",
@@ -192,7 +192,7 @@
         },
         {
           "action": "remittance.submit",
-          "target_id": "67fa8c3d-7672-4028-b91e-37b2afe71783",
+          "target_id": "de14c7ce-f560-4b94-9d58-30dc69841bcd",
           "amount": "12000.00",
           "currency": "CNY",
           "tier": "T3",
@@ -202,7 +202,7 @@
       "is_simulated": true
     },
     {
-      "run_id": "16669e3d9dc94eb0b172c5cd4ede8519",
+      "run_id": "b898edfbf83d4142aa99270b681e198c",
       "reference_rate": {
         "rate": "4.6000000000",
         "rate_date": "2026-10-07",
@@ -276,7 +276,7 @@
       "policy": [
         {
           "action": "remittance.submit",
-          "target_id": "f3e5c57d-6d96-4929-99ce-7c1251ee95a3",
+          "target_id": "46a4ebb1-52b5-44ff-b809-3d0ed7478702",
           "amount": "5000.00",
           "currency": "CNY",
           "tier": "T2",
@@ -284,7 +284,7 @@
         },
         {
           "action": "remittance.submit",
-          "target_id": "8eb22f7a-6071-4b6d-a65b-7fa437d00d69",
+          "target_id": "ff06ee36-384d-4a5a-932d-4f973e0f6fca",
           "amount": "1000.00",
           "currency": "CNY",
           "tier": "T2",
@@ -292,7 +292,7 @@
         },
         {
           "action": "remittance.submit",
-          "target_id": "72289803-010e-4ab1-a4fe-fca2b1a7cbef",
+          "target_id": "dd993090-9acf-4932-9eb1-b6bd6c865664",
           "amount": "12000.00",
           "currency": "CNY",
           "tier": "T3",
