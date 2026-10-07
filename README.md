@@ -1,5 +1,7 @@
 # StudyFlow 工作区
 
+学生五步前端已接入 Django 会话登录与 `/api/v2/`，安装、启动和测试见 [Task A 前端](frontend/README.md)，接口核对与验证记录见 [前端集成结果](docs/frontend-integration.md)。预算、预测、筹资和申请判断继续由 B 负责，材料提取与证据保留继续由 C 负责。
+
 **命题 C 增量**：
 - 多币种钱包与服务端定价的换汇；
 - 汇款订单状态机；
@@ -14,7 +16,7 @@
 
 Financial Copilot 增量：What-if 比较与确认应用、四层解释、统一 Review Queue、通知已读及完整支付 Demo 已接入。运行 `manage.py demo_copilot --mode live --env-file studyflow-ai/.env --runs 3`；接口、前端交互与评估方式见 [Copilot 接入说明](docs/copilot.md)。真实模型与 OCR 验收状态以本轮验证报告为准。
 
-消费学习与资金执行扩展已加入：CSV 导入、消费分类、周期支出、预算校准、Financial Calendar / Briefing、家庭资助确认、模拟汇款比较和 readiness 学费对账。启动与前端契约见 [消费学习接入说明](docs/consumption.md)，完整 HTTP 演示使用 `manage.py demo_consumption --runs 3`。扫描件支持可选的 [Gemini 中英文 OCR](docs/gemini-ocr.md)，默认关闭，需服务端配置及逐文件同意，并保留人工转录；不包含真实银行、真实支付或前端应用。
+消费学习与资金执行扩展已加入：CSV 导入、消费分类、周期支出、预算校准、Financial Calendar / Briefing、家庭资助确认、模拟汇款比较和 readiness 学费对账。启动与前端契约见 [消费学习接入说明](docs/consumption.md)，完整 HTTP 演示使用 `manage.py demo_consumption --runs 3`。扫描件支持可选的 [Gemini 中英文 OCR](docs/gemini-ocr.md)，默认关闭，需服务端配置及逐文件同意，并保留人工转录；不包含真实银行或真实支付。
 
 已新增入学预算与主动资金规划后端：PSU 模板、材料上传确认、学期预算、30–90 天预测、筹资组合和持久 worker。启用方式、API 顺序及真实模型演示见 [Readiness 接入说明](docs/readiness.md)。
 
