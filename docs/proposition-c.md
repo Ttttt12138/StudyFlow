@@ -85,7 +85,7 @@
 
 | 项目 | 结果 |
 |---|---|
-| Django 测试（PostgreSQL） | 480 个，全部通过（基线 178；见 [门禁日志](../evidence/gates/django-tests.log)） |
+| Django 测试（PostgreSQL） | 481 个，全部通过（基线 178；见 [门禁日志](../evidence/gates/django-tests.log)） |
 | C 模块测试 | 293 个，全部通过（基线 179；见 [门禁日志](../evidence/gates/c-tests.log)） |
 | 本地门禁 `scripts/run_gates.py` | 17 项全部通过（[汇总](../evidence/gates/summary.txt)）：冻结存档、check、翻译目录、迁移、测试、OpenAPI、ruff、迁移执行、缓存表、6 个 HTTP 演示、Agent 评估 |
 | HTTP 演示 | `demo_bc`、`demo_readiness`、`demo_consumption`、`demo_copilot`、`demo_remittance`、`demo_agent`，各 3 轮 |

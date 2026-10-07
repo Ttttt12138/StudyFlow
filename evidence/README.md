@@ -20,7 +20,7 @@ Run every command from the repository root. On Windows the interpreter is `study
 
 ## 1. Gate suite: `gates/`
 
-The suite ran on 2026-10-07. The application code under test is identical to the merge commit `de87c37` on `feature/bc-integration`. Only documentation, this folder and `scripts/` have changed since.
+The suite ran on 2026-10-07. The code under test is the merge commit `de87c37` on `feature/bc-integration` plus one added test (`auto_test/test_remittance.py`). Since that commit, the only other changes are documentation, this folder, `scripts/`, and moving unused legacy files into `legacy/` and `docs/legacy/`.
 
 ```bash
 studyFlow/Scripts/python.exe scripts/run_gates.py
@@ -33,7 +33,7 @@ The script writes each check to `output/gates/<name>.log`, and each demo also wr
 | `holdout-freeze.log` | Code pinned by the v2/v3 blind-test protocols is still recoverable (empty log means OK) |
 | `check.log`, `migrations.log`, `migrate.log`, `cache-table.log` | Django system checks, no missing migrations, migrations apply, shared rate-limit cache table exists |
 | `i18n.log` | Chinese/English message catalogs are complete and compiled (empty log means OK) |
-| `django-tests.log` | Django test suite on PostgreSQL: **480 tests, OK** |
+| `django-tests.log` | Django test suite on PostgreSQL: **481 tests, OK** |
 | `c-ruff.log`, `c-tests.log` | C module lint and tests: **293 passed** (`studyflow-ai/auto_test`) |
 | `demo-remittance.json` / `.log` | **Proposition C remittance**, 3 runs over real HTTP. Each run: compare route quotes against a deadline, pay tuition to an operator-verified payee (`CREATED → SUBMITTED → IN_TRANSIT → DELIVERED → RECONCILED`), refund a failed transfer in full, approve an order above the 10,000 CNY limit as T3 through a second operator, and record the on-time payment in the credit profile |
 | `demo-agent.json` / `.log` | **Proposition C agent**, 3 runs over real HTTP in Chinese and English sessions. The agent only *proposes* the remittance submission, and the wallet is unchanged until the user confirms with step-up. A second proposal is rejected and changes nothing. |
