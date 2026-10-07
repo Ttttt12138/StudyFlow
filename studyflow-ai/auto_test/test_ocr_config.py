@@ -46,3 +46,17 @@ def test_explicit_c_env_loader_includes_ocr_settings(tmp_path):
         load_env_file(path)
         assert os.environ["GEMINI_API_KEY"] == "explicit-secret"
         assert "DJANGO_SECRET_KEY" not in os.environ
+
+
+def test_fallback_models_and_attempt_cap(tmp_path):
+    path = tmp_path / ".env"
+    path.write_text(
+        "STUDYFLOW_OCR_FALLBACK_MODELS= gemini-a, ,gemini-b \nSTUDYFLOW_OCR_MAX_ATTEMPTS=99\n",
+        encoding="utf-8",
+    )
+    with patch.dict("os.environ", {}, clear=True):
+        settings = OcrSettings.from_env(path)
+    assert settings.fallback_models == ("gemini-a", "gemini-b")
+    assert settings.max_attempts == 5
+    with patch.dict("os.environ", {}, clear=True):
+        assert OcrSettings.from_env(tmp_path / "none").max_attempts == 3

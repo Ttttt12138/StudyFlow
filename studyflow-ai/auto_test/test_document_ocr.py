@@ -211,3 +211,95 @@ def test_pdf_file_attachment_annotation_is_rejected():
     writer.write(buffer)
     with pytest.raises(InputError, match="PDF_ACTIVE_CONTENT"):
         prepare_document("pdf", buffer.getvalue())
+
+
+def retrying_extractor(handler, **options):
+    sleeps = []
+    provider = GeminiDocumentTextExtractor(
+        api_key="test-secret",
+        model="gemini-primary",
+        transport=httpx.MockTransport(handler),
+        sleep=sleeps.append,
+        **options,
+    )
+    return provider, sleeps
+
+
+def test_overloaded_primary_falls_back_to_next_model():
+    models = []
+
+    def handle(request):
+        models.append(request.url.path.rsplit("/", 1)[-1])
+        if "gemini-primary" in request.url.path:
+            return httpx.Response(503, json={"error": {"status": "UNAVAILABLE"}})
+        return httpx.Response(200, json=response())
+
+    provider, sleeps = retrying_extractor(
+        handle, fallback_models=("gemini-backup",), max_attempts=3
+    )
+    result = provider.recognize(prepare_document("image", png()))
+    assert models == ["gemini-primary:generateContent", "gemini-backup:generateContent"]
+    assert result.model == "gemini-backup"
+    assert len(sleeps) == 1 and 0 < sleeps[0] <= 4.5
+
+
+def test_single_model_retries_rate_limit_and_timeout_with_backoff():
+    outcomes = iter(["timeout", 429, 200])
+
+    def handle(request):
+        outcome = next(outcomes)
+        if outcome == "timeout":
+            raise httpx.ReadTimeout("slow", request=request)
+        return httpx.Response(outcome, json=response())
+
+    provider, sleeps = retrying_extractor(handle, max_attempts=3)
+    assert provider.recognize(prepare_document("image", png())).model == "gemini-primary"
+    assert len(sleeps) == 2 and sleeps[1] > sleeps[0] - 0.5
+
+
+def test_retry_budget_is_bounded_and_reports_last_error():
+    calls = []
+
+    def handle(request):
+        calls.append(request)
+        return httpx.Response(503, text="test-secret")
+
+    provider, sleeps = retrying_extractor(
+        handle, fallback_models=("gemini-backup",), max_attempts=3
+    )
+    with pytest.raises(InputError, match="^OCR_UNAVAILABLE$"):
+        provider.recognize(prepare_document("image", png()))
+    assert len(calls) == 3 and len(sleeps) == 2
+
+
+@pytest.mark.parametrize(
+    "reply",
+    [
+        httpx.Response(401),
+        httpx.Response(200, json=response(candidates=[])),
+        httpx.Response(
+            200,
+            json={"candidates": [{"finishReason": "STOP", "content": {"parts": [{"text": "x"}]}}]},
+        ),
+    ],
+)
+def test_non_transient_failures_are_not_retried(reply):
+    calls = []
+
+    def handle(request):
+        calls.append(request)
+        return reply
+
+    provider, sleeps = retrying_extractor(
+        handle, fallback_models=("gemini-backup",), max_attempts=3
+    )
+    with pytest.raises(InputError):
+        provider.recognize(prepare_document("image", png()))
+    assert len(calls) == 1 and not sleeps
+
+
+def test_fallback_model_cannot_redirect_request():
+    with pytest.raises(InputError, match="OCR_NOT_CONFIGURED"):
+        GeminiDocumentTextExtractor(
+            api_key="secret", model="gemini-ok", fallback_models=("../../x?key=y",)
+        )

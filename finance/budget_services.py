@@ -5,31 +5,48 @@ from django.utils import timezone
 from django.db.models import Max
 from .calculations import forecast
 from .services import json_value
-from .workflow_models import FXQuote,BudgetScenario,FundingSource,FundingPlan,LoanSimulation,Disbursement,SimulatedApplication
+from . import money
+from .workflow_models import Corridor,FXQuote,BudgetScenario,FundingSource,FundingPlan,LoanSimulation,Disbursement,SimulatedApplication
 from .workflow_common import require,owned,current,audit,record,shift_date
 from .loan_engine import loan_schedule
 
 def create_fx(actor,data,obj=None):
     require(timezone.now() < data["expires_at"] <= timezone.now()+timedelta(days=30),
         "Mock quote validity must be in the next 30 days.")
-    require(data["source_currency"] != "THB","THB needs no conversion quote.")
-    if data["source_currency"] == "JPY":
-        require(data["sender_fee"] == data["sender_fee"].to_integral_value(),"JPY fees must be whole units.")
+    data = dict(data)
+    source,target = data["source_currency"],data["target_currency"]
+    require(source != target,"SAME_CURRENCY_QUOTE")
+    money.require_precision(data["sender_fee"],source)
+    money.require_precision(data["receiver_fee"],target)
+    corridor_id = data.pop("corridor_id",None)
+    if corridor_id:
+        corridor = Corridor.objects.filter(pk=corridor_id).first()
+        require(corridor is not None,"CORRIDOR_NOT_FOUND")
+        require(corridor.enabled,"CORRIDOR_DISABLED")
+        require((corridor.source_currency,corridor.target_currency) == (source,target),
+            "CORRIDOR_CURRENCY_MISMATCH")
+        data["corridor"] = corridor
     quote = FXQuote.objects.create(owner=actor,**data)
     audit(actor,actor,"fx.mock_quote_created",quote)
     return record(quote)
 
-def convert(owner,amount,currency,quote_id=None,expense=False):
-    amount = Decimal(amount)
-    if currency == "JPY":
-        require(amount == amount.to_integral_value(),"JPY amounts must be whole units.")
-    if currency == "THB":
-        require(not quote_id,"Do not attach an FX quote to THB.")
+def convert(owner,amount,currency,quote_id=None,expense=False,consume=False):
+    amount = money.require_precision(amount,currency)
+    home = money.home_currency()
+    if currency == home:
+        require(not quote_id,f"Do not attach an FX quote to {home}.")
         return amount.quantize(Decimal(".01")),0,None
     require(quote_id is not None,"A valid FX quote is required for foreign currency.")
     quote = owned(FXQuote,owner,quote_id)
-    require(quote.source_currency == currency and quote.target_currency == "THB","FX currency direction mismatch.")
+    require(quote.source_currency == currency and quote.target_currency == home,"FX currency direction mismatch.")
     require(quote.expires_at > timezone.now(),"FX quote expired; create a new quote and revision.")
+    if consume:
+        # Settlement uses a quote once; estimates (scenarios, comparisons) may reread it.
+        require(quote.consumed_at is None,"QUOTE_CONSUMED")
+        from .remittance_models import RemittanceOrder
+        require(not RemittanceOrder.objects.filter(quote=quote).exists(),"QUOTE_IN_USE")
+        quote.consumed_at = timezone.now()
+        quote.save(update_fields=["consumed_at"])
     with localcontext() as context:
         context.prec = 48
         if expense:

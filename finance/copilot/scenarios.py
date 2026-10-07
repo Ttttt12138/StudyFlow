@@ -16,6 +16,7 @@ from finance.workflow_models import Beneficiary, FundingSource, FXQuote, LoanSim
 
 from .models import PlanningPreference, WhatIfRun
 from .simulation import evaluate, patch_costs
+from finance.money import home_currency
 
 
 def dependencies(owner, semester):
@@ -150,7 +151,7 @@ def differences(owner, semester, scenario):
                 else None,
                 "after": {
                     **source,
-                    "currency": "THB",
+                    "currency": home_currency(),
                     "certainty": "estimated",
                     "status": "PENDING",
                 },
@@ -217,7 +218,7 @@ def apply_support(owner, changes, run):
     for index, change in enumerate(changes):
         data = {
             "amount": Decimal(change["amount"]),
-            "currency": "THB",
+            "currency": home_currency(),
             "available_on": date.fromisoformat(change["available_on"]),
             "purpose": "Applied what-if support",
         }

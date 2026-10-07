@@ -11,6 +11,7 @@ from finance.workflow_models import DemoWallet, FundingSource
 from .budget import calculate, forward_snapshot, money
 from .models import ReadinessRun, Semester
 from .templates import REQUIRED, get_template
+from finance.money import home_currency
 
 
 def active(owner):
@@ -52,7 +53,7 @@ def create_semester(owner, data, obj=None):
             owner,
             0,
             {
-                "currency": "THB",
+                "currency": home_currency(),
                 "as_of": data["as_of"],
                 "opening_balance": data["opening_balance"],
                 "reserve": data["reserve"] or "0.00",
@@ -120,7 +121,7 @@ def converted_draft(owner, draft):
 
     result = deepcopy(draft)
     for cost in result["costs"]:
-        if cost.get("currency") not in {None, "THB"} and cost.get("fx_quote_id"):
+        if cost.get("currency") not in {None, home_currency()} and cost.get("fx_quote_id"):
             quote = owned(FXQuote, owner, cost["fx_quote_id"])
             if quote.expires_at <= timezone.now():
                 cost["fx_issue"] = "FX_EXPIRED"
@@ -140,7 +141,7 @@ def converted_draft(owner, draft):
                         "rate": str(quote.rate),
                         "expires_at": quote.expires_at.isoformat(),
                     }
-            cost["currency"] = "THB"
+            cost["currency"] = home_currency()
     return result
 
 
@@ -295,7 +296,7 @@ def financial_state(owner):
             if wallet
             else "USER_DECLARED",
             "balance_as_of": planning["as_of"],
-            "currency": "THB",
+            "currency": home_currency(),
         },
         "confirmed_obligations": [
             e

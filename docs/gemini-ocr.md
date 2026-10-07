@@ -13,7 +13,9 @@ Gemini 只转录，不计算金额、不核验收款人、不授权付款。转�
 ```dotenv
 STUDYFLOW_OCR_ENABLED=true
 GEMINI_API_KEY=<server-side-secret>
-STUDYFLOW_OCR_MODEL=<available-gemini-model-supporting-pdf-image-and-json-schema>
+STUDYFLOW_OCR_MODEL=gemini-3.1-flash-lite
+STUDYFLOW_OCR_FALLBACK_MODELS=gemini-3.5-flash-lite
+STUDYFLOW_OCR_MAX_ATTEMPTS=3
 STUDYFLOW_OCR_PAID_SERVICE_CONFIRMED=true
 STUDYFLOW_OCR_ADULT_ONLY_CONFIRMED=true
 STUDYFLOW_OCR_TIMEOUT=60
@@ -82,7 +84,8 @@ file=<PNG/JPEG/PDF bytes>
 - 固定 HTTPS 官方主机；API key 只在请求头，禁止重定向和环境代理；不使用 Files API、搜索、URL 抓取、函数或代码执行工具，`store=false` 禁用可选请求日志。
 - 这不能承诺 Google 的安全监测零留存，也不替代部署环境的存储加密、网络出口策略或文件解析进程资源隔离。
 - 默认每用户每小时最多 10 次外发尝试；基于数据库行锁及审计计数。worker 在外发前写入尝试记录，进程中断后不会自动重发。
-- 超时、429、鉴权错误、安全拦截、截断、缺页、非中英文或非法 JSON 均返回固定 `OCR_*` 错误码，任务结束并转人工，不存供应商原始错误响应。
+- 服务商临时故障（503/5xx、429、超时、连接错误）在同一任务内做有上限的重试：按 `STUDYFLOW_OCR_MODEL` → `STUDYFLOW_OCR_FALLBACK_MODELS` 顺序轮换，每次间隔带随机抖动的指数退避（约 0.5–4.5 秒），总请求数不超过 `STUDYFLOW_OCR_MAX_ATTEMPTS`（1–5，默认 3，设为 1 即关闭），总时长不超过 180 秒以留在 5 分钟 worker 租约内。重试发送的是用户已同意的同一份处理后文件，发往同一服务商；每用户每小时限额按任务计数，一个任务最多产生 `MAX_ATTEMPTS` 次外发请求。`processing.ocr.model` 记录实际成功的模型。
+- 鉴权错误、安全拦截、截断、缺页、非中英文或非法 JSON 不重试；重试耗尽后同样返回固定 `OCR_*` 错误码，任务结束并转人工，不存供应商原始错误响应。
 - OCR 成功后缓存经过契约校验的转录；下游提取暂时失败时复用缓存，不重复发送原文件。旧 lease 不能覆盖新结果。
 - 文件中的提示指令是不可信数据；现有可疑指令检测与确认阻断继续生效。检测规则并非完整的提示注入防御，付款权限隔离才是必要边界。
 

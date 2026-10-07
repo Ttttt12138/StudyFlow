@@ -1,5 +1,6 @@
 import base64
 import json
+import random
 import re
 import time
 from pathlib import Path
@@ -122,12 +123,30 @@ def _validate_pages(result, count):
         raise InputError("OCR_UNSUPPORTED_LANGUAGE")
 
 
+MODEL_PATTERN = r"gemini-[A-Za-z0-9_.-]{1,100}"
+# Transient provider capacity failures; the same consented bytes may go to the next model.
+RETRYABLE = {"OCR_UNAVAILABLE", "OCR_RATE_LIMITED", "OCR_TIMEOUT"}
+MAX_TOTAL_SECONDS = 180  # stays inside the 5-minute worker lease
+
+
 class GeminiDocumentTextExtractor:
-    def __init__(self, *, api_key, model, timeout=60, transport=None):
-        if not api_key or not re.fullmatch(r"gemini-[A-Za-z0-9_.-]{1,100}", model):
+    def __init__(
+        self,
+        *,
+        api_key,
+        model,
+        timeout=60,
+        transport=None,
+        fallback_models=(),
+        max_attempts=1,
+        sleep=time.sleep,
+    ):
+        models = list(dict.fromkeys([model, *fallback_models]))
+        if not api_key or not all(re.fullmatch(MODEL_PATTERN, m or "") for m in models):
             raise InputError("OCR_NOT_CONFIGURED")
-        self._api_key, self.model = api_key, model
+        self._api_key, self.model, self.models = api_key, model, models
         self.timeout, self._transport = min(max(timeout, 1), 90), transport
+        self.max_attempts, self._sleep = min(max(max_attempts, 1), 5), sleep
 
     def extract(self, kind: str, path: str) -> str:
         with Path(path).open("rb") as stream:
@@ -135,13 +154,27 @@ class GeminiDocumentTextExtractor:
         return self.recognize(prepare_document(kind, data)).text
 
     def recognize(self, document):
-        url = (
-            f"https://generativelanguage.googleapis.com/v1beta/models/{self.model}:generateContent"
-        )
+        """Bounded retry: rotate through models on transient errors, with jittered backoff."""
+        deadline = time.monotonic() + min(self.timeout * self.max_attempts, MAX_TOTAL_SECONDS)
+        for attempt in range(self.max_attempts):
+            model = self.models[attempt % len(self.models)]
+            remaining = deadline - time.monotonic()
+            try:
+                return self._recognize_once(document, model, min(self.timeout, remaining))
+            except InputError as exc:
+                last_attempt = attempt + 1 >= self.max_attempts
+                delay = min(0.5 * 2**attempt, 4) + random.uniform(0, 0.5)
+                no_time = deadline - time.monotonic() - delay < 5
+                if exc.code not in RETRYABLE or last_attempt or no_time:
+                    raise
+            self._sleep(delay)
+
+    def _recognize_once(self, document, model, timeout):
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
         started = time.monotonic()
         try:
             with httpx.Client(
-                timeout=self.timeout,
+                timeout=timeout,
                 follow_redirects=False,
                 trust_env=False,
                 transport=self._transport,
@@ -152,9 +185,9 @@ class GeminiDocumentTextExtractor:
                     headers={"x-goog-api-key": self._api_key},
                     json=_request_body(document),
                 ) as response:
-                    raw = _read_response(response, started, self.timeout)
+                    raw = _read_response(response, started, timeout)
         except httpx.TimeoutException:
             raise InputError("OCR_TIMEOUT") from None
         except httpx.HTTPError:
             raise InputError("OCR_UNAVAILABLE") from None
-        return _parse_response(raw, document.page_count, self.model)
+        return _parse_response(raw, document.page_count, model)

@@ -1,6 +1,53 @@
+import uuid
 from django.db import models
 from django.db.models import Q
 from .models import OwnedRecord, FinancialState
+
+class Corridor(models.Model):
+    """Global simulated remittance route; not user data."""
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    code = models.SlugField(max_length=50, unique=True)
+    provider = models.CharField(max_length=100)
+    tier = models.CharField(max_length=20, choices=[
+        ("express", "Express"), ("standard", "Standard"), ("economy", "Economy")])
+    source_currency = models.CharField(max_length=3)
+    target_currency = models.CharField(max_length=3)
+    enabled = models.BooleanField(default=True)
+    min_amount = models.DecimalField(max_digits=16, decimal_places=2)
+    max_amount = models.DecimalField(max_digits=16, decimal_places=2)
+    fee_fixed = models.DecimalField(max_digits=16, decimal_places=2, default=0)
+    fee_percent = models.DecimalField(max_digits=6, decimal_places=4, default=0)
+    fx_margin_bps = models.PositiveIntegerField(default=0)
+    settlement_min_days = models.PositiveSmallIntegerField(default=0)
+    settlement_days = models.PositiveSmallIntegerField(default=0)
+    is_simulated = models.BooleanField(default=True)
+    class Meta:
+        ordering = ["source_currency", "target_currency", "settlement_days", "code"]
+        constraints = [
+            models.CheckConstraint(condition=~Q(source_currency=models.F("target_currency")),
+                name="corridor_distinct_currencies"),
+            models.CheckConstraint(condition=Q(min_amount__gt=0, max_amount__gte=models.F("min_amount")),
+                name="corridor_amount_range"),
+            models.CheckConstraint(condition=Q(settlement_min_days__lte=models.F("settlement_days")),
+                name="corridor_settlement_range"),
+            models.CheckConstraint(condition=Q(fee_fixed__gte=0, fee_percent__gte=0, fee_percent__lt=1),
+                name="corridor_fee_range"),
+        ]
+
+class FxRateSnapshot(models.Model):
+    """Reference rate fetched (or fixture-provided) for one currency pair; global data."""
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    base = models.CharField(max_length=3)
+    quote = models.CharField(max_length=3)
+    rate = models.DecimalField(max_digits=24, decimal_places=10)
+    rate_date = models.DateField()
+    fetched_at = models.DateTimeField()
+    source = models.CharField(max_length=20, choices=[("frankfurter", "Frankfurter"), ("fixture", "Fixture")])
+    basis = models.CharField(max_length=300, blank=True)
+    class Meta:
+        indexes = [models.Index(fields=["base", "quote", "-fetched_at"], name="fx_snapshot_pair_latest")]
+        constraints = [models.CheckConstraint(condition=Q(rate__gt=0), name="fx_snapshot_positive_rate"),
+            models.CheckConstraint(condition=~Q(base=models.F("quote")), name="fx_snapshot_distinct_pair")]
 
 class FXQuote(OwnedRecord):
     route_name = models.CharField(max_length=100, default='Simulated route')
@@ -14,6 +61,14 @@ class FXQuote(OwnedRecord):
     settlement_days = models.PositiveSmallIntegerField(default=0)
     expires_at = models.DateTimeField()
     is_mock = models.BooleanField(default=True)
+    corridor = models.ForeignKey(Corridor, null=True, blank=True, on_delete=models.PROTECT)
+    rate_source = models.CharField(max_length=20, default="manual", choices=[
+        ("manual", "Manual"), ("frankfurter", "Frankfurter"), ("fixture", "Fixture")])
+    mid_rate = models.DecimalField(max_digits=24, decimal_places=10, null=True, blank=True)
+    rate_date = models.DateField(null=True, blank=True)
+    consumed_at = models.DateTimeField(null=True, blank=True)
+    # Corridor-priced quotes are valid only for the amount their percentage fee was computed on.
+    quoted_amount = models.DecimalField(max_digits=16, decimal_places=2, null=True, blank=True)
 
 class BudgetScenario(OwnedRecord):
     state = models.ForeignKey(FinancialState, on_delete=models.PROTECT)
@@ -65,7 +120,38 @@ class DemoWallet(OwnedRecord):
     balance = models.DecimalField(max_digits=18, decimal_places=2)
     clock = models.DateField()
     class Meta:
-        constraints = [models.UniqueConstraint(fields=["owner"], name="one_demo_wallet_per_owner")]
+        constraints = [models.UniqueConstraint(fields=["owner"], name="one_demo_wallet_per_owner"),
+            models.CheckConstraint(condition=Q(balance__gte=0), name="demo_wallet_balance_nonnegative")]
+
+class WalletBalance(OwnedRecord):
+    """Foreign-currency holding; the home currency stays on DemoWallet.balance."""
+    wallet = models.ForeignKey(DemoWallet, on_delete=models.PROTECT, related_name="foreign_balances")
+    currency = models.CharField(max_length=3)
+    balance = models.DecimalField(max_digits=18, decimal_places=2, default=0)
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["owner", "currency"], name="wallet_balance_owner_currency_unique"),
+            models.CheckConstraint(condition=Q(balance__gte=0), name="wallet_balance_nonnegative"),
+        ]
+
+class CurrencyConversion(OwnedRecord):
+    """Settled exchange between two of the owner's balances; each quote converts once."""
+    quote = models.OneToOneField(FXQuote, on_delete=models.PROTECT)
+    source_currency = models.CharField(max_length=3)
+    source_amount = models.DecimalField(max_digits=18, decimal_places=2)
+    target_currency = models.CharField(max_length=3)
+    target_amount = models.DecimalField(max_digits=18, decimal_places=2)
+    rate = models.DecimalField(max_digits=24, decimal_places=10)
+    sender_fee = models.DecimalField(max_digits=16, decimal_places=2)
+    receiver_fee = models.DecimalField(max_digits=16, decimal_places=2)
+    effective_on = models.DateField()
+    class Meta:
+        constraints = [
+            models.CheckConstraint(condition=~Q(source_currency=models.F("target_currency")),
+                name="conversion_distinct_currencies"),
+            models.CheckConstraint(condition=Q(source_amount__gt=0, target_amount__gt=0),
+                name="conversion_positive_amounts"),
+        ]
 
 class Beneficiary(OwnedRecord):
     name = models.CharField(max_length=150)
@@ -84,6 +170,7 @@ class Payment(OwnedRecord):
     due_on = models.DateField()
     status = models.CharField(max_length=30, default="draft")
     authorized_until = models.DateTimeField(null=True)
+    submitted_at = models.DateTimeField(null=True, blank=True)
     receipt = models.JSONField(null=True)
     class Meta:
         constraints = [models.CheckConstraint(condition=(Q(plan__isnull=False, readiness_plan__isnull=True) | Q(plan__isnull=True, readiness_plan__isnull=False)), name='payment_exactly_one_plan'), models.UniqueConstraint(
@@ -92,22 +179,45 @@ class Payment(OwnedRecord):
             name="one_active_or_settled_payment_per_event",
         )]
 
+def _exactly_one_origin(**signs):
+    """Each ledger row has exactly one origin and that origin's sign."""
+    rows = [Q(**{f"{other}__isnull": other != origin for other in signs}) & sign
+            for origin, sign in signs.items()]
+    condition = rows[0]
+    for row in rows[1:]:
+        condition |= row
+    return condition
+
 class DemoLedgerEntry(OwnedRecord):
     installment = models.OneToOneField("finance.LoanInstallment", null=True, on_delete=models.PROTECT)
     sequence = models.PositiveIntegerField(default=1)
     funding_source = models.OneToOneField(FundingSource, null=True, on_delete=models.PROTECT)
     disbursement = models.OneToOneField(Disbursement, null=True, on_delete=models.PROTECT)
     payment = models.OneToOneField(Payment, null=True, on_delete=models.PROTECT)
+    conversion = models.ForeignKey(CurrencyConversion, null=True, on_delete=models.PROTECT, related_name="legs")
+    remittance_order = models.ForeignKey("finance.RemittanceOrder", null=True, on_delete=models.PROTECT,
+                                         related_name="legs")
+    remittance_leg = models.CharField(max_length=10, null=True, blank=True,
+                                      choices=[("debit", "Debit"), ("refund", "Refund"), ("credit", "Credit")])
+    currency = models.CharField(max_length=3, default="THB")
     amount = models.DecimalField(max_digits=18, decimal_places=2)
     effective_on = models.DateField()
     class Meta:
         constraints = [models.CheckConstraint(
-            condition=((Q(disbursement__isnull=False,payment__isnull=True,funding_source__isnull=True,amount__gt=0) |
-                       Q(disbursement__isnull=True,payment__isnull=False,funding_source__isnull=True,amount__lt=0) |
-                       Q(disbursement__isnull=True,payment__isnull=True,funding_source__isnull=False,amount__gt=0)) & Q(installment__isnull=True)) |
-                       Q(disbursement__isnull=True,payment__isnull=True,funding_source__isnull=True,installment__isnull=False,amount__lt=0),
+            condition=_exactly_one_origin(disbursement=Q(amount__gt=0), payment=Q(amount__lt=0),
+                funding_source=Q(amount__gt=0), installment=Q(amount__lt=0), conversion=~Q(amount=0),
+                remittance_order=Q(remittance_leg="debit", amount__lt=0)
+                    | Q(remittance_leg__in=["refund", "credit"], amount__gt=0)),
             name="ledger_origin_and_sign",
-        ), models.UniqueConstraint(fields=["owner","sequence"], name="ledger_owner_sequence_unique")]
+        ), models.CheckConstraint(
+            condition=Q(remittance_order__isnull=True, remittance_leg__isnull=True)
+                | Q(remittance_order__isnull=False, remittance_leg__isnull=False),
+            name="ledger_remittance_leg_pairing",
+        ), models.UniqueConstraint(fields=["remittance_order","remittance_leg"],
+            condition=Q(remittance_order__isnull=False), name="ledger_remittance_leg_unique"),
+        models.UniqueConstraint(fields=["owner","sequence"], name="ledger_owner_sequence_unique"),
+        models.UniqueConstraint(fields=["conversion","currency"], condition=Q(conversion__isnull=False),
+            name="ledger_conversion_leg_unique")]
 
 class IdempotencyRecord(OwnedRecord):
     scope = models.CharField(max_length=150)

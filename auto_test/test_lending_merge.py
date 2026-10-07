@@ -3,10 +3,14 @@ from decimal import Decimal
 from unittest.mock import patch
 from uuid import uuid4
 
+from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.test import override_settings
 from rest_framework.test import APITestCase
 
 from finance.models import FinancialState
+from finance.policy_defaults import ensure_default_limits
+from finance.policy_flow import client_flow, step_up_header
 from finance.workflow_models import DemoLedgerEntry, DemoWallet, Disbursement
 
 TERMS = {
@@ -17,6 +21,7 @@ TERMS = {
     "fees": "600.00",
     "first_due_date": "2026-11-01",
 }
+PASSWORD = "merge-student-pass-1"
 SNAPSHOT = {
     "currency": "THB",
     "as_of": "2026-10-02",
@@ -28,20 +33,28 @@ SNAPSHOT = {
 
 class LendingHarness:
     def setUp(self):
+        ensure_default_limits()
         users = get_user_model().objects
-        self.student = users.create_user(username="merge-student")
+        self.student = users.create_user(username="merge-student", password=PASSWORD)
         self.operator = users.create_user(username="merge-operator", is_staff=True)
         self.other = users.create_user(username="merge-other")
+        self.flow = client_flow(self.student, PASSWORD)
         self.post("state", {"expected_version": 0, "snapshot": deepcopy(SNAPSHOT)})
         self.post("demo/initialize", {"state_version": 1})
 
+    def step_up(self, path, data):
+        """Repayments are T2: re-authenticate through POST auth/step-up/ first."""
+        return step_up_header(self.flow, path, data)
+
     def post(self, path, data, *, operator=False, code=201, key=None):
+        headers = {} if operator else self.step_up(path, data)
         self.client.force_authenticate(self.operator if operator else self.student)
         response = self.client.post(
             "/api/v2/" + path + "/",
             data,
             format="json",
             HTTP_IDEMPOTENCY_KEY=key or str(uuid4()),
+            **headers,
         )
         self.assertEqual(response.status_code, code, response.data)
         return response.data.get("data", response.data)
@@ -145,6 +158,9 @@ class LendingMergeTests(LendingHarness, APITestCase):
         )
         self.assertEqual(DemoLedgerEntry.objects.count(), 1)
 
+    # Twelve installments (plus replays) are repaid within seconds of real time here, which is
+    # beyond the 10/hour step-up budget a real student would ever need.
+    @override_settings(STUDYFLOW_THROTTLE_RATES={**settings.STUDYFLOW_THROTTLE_RATES, "step_up": "60/hour"})
     def test_repayment_lifecycle_and_idempotency(self):
         _, _, route, account = self.fund()
         self.post(route, {"expected_version": 3}, operator=True, code=200, key="settle")

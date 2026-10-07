@@ -13,9 +13,10 @@ from rest_framework.views import APIView
 from finance import sponsorship as sponsor
 from finance.remittances import compare
 from finance.serializers import MoneyField
+from finance.throttles import AnonThrottle, ScopedThrottle
 from finance.workflow_api import CommandView, ResourceView
 from finance.workflow_common import require
-from finance.workflow_serializers import CURRENCIES, CommandResponse, Input
+from finance.workflow_serializers import CURRENCIES, HOME_CURRENCY, CommandResponse, Input
 
 
 class SponsorInput(Input):
@@ -45,7 +46,7 @@ class DecisionInput(TermsInput):
 
 class ComparisonInput(Input):
     quote_ids = s.ListField(child=s.UUIDField(), min_length=2, max_length=10)
-    source_currency = s.ChoiceField(choices=[c for c in CURRENCIES if c != "THB"])
+    source_currency = s.ChoiceField(choices=[c for c in CURRENCIES if c != HOME_CURRENCY])
     amount = MoneyField()
     required_amount = MoneyField()
     send_on = s.DateField()
@@ -112,6 +113,9 @@ class IssueView(CommandView):
 class ConfirmationView(APIView):
     authentication_classes = ()
     permission_classes = (AllowAny,)
+    # Anonymous, so counted per client IP.
+    throttle_classes = (AnonThrottle, ScopedThrottle)
+    throttle_scope = "sponsor"
 
     @extend_schema(
         responses=CommandResponse,

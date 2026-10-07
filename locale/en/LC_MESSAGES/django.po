@@ -1,0 +1,674 @@
+# English translations for StudyFlow.
+# Copyright (C) 2026 ORGANIZATION
+# This file is distributed under the same license as the StudyFlow project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: StudyFlow 2\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2026-10-07 00:00+0000\n"
+"PO-Revision-Date: 2026-10-07 00:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: finance/policy.py:166
+msgid "ACTION_NOT_AVAILABLE"
+msgstr "This action does not support step-up or approval requests."
+
+#: finance/copilot/reviews.py:196
+msgid "ACTIVE_OPERATOR_REQUIRED"
+msgstr "Assign the review to an active operator."
+
+#: finance/readiness/services.py:42
+msgid "ACTIVE_SEMESTER_EXISTS"
+msgstr "You already have an active semester. Update it instead of creating a new one."
+
+#: finance/policy.py:264
+msgid "AGENT_TIER_EXCEEDED"
+msgstr "This action needs your own verification and cannot be performed by the AI agent."
+
+#: finance/readiness/funding.py:118
+msgid "ALLOCATION_EXCEEDS_CAPACITY"
+msgstr "The allocation is larger than the amount available from this funding source."
+
+#: finance/agent_runner.py:80
+msgid "ALREADY_PROPOSED"
+msgstr "The same action is already waiting for your confirmation."
+
+#: finance/money.py:30
+msgid "AMOUNT_PRECISION_INVALID"
+msgstr "The amount has more decimal places than this currency allows."
+
+#: finance/policy.py:363
+msgid "APPROVAL_ALREADY_OPEN"
+msgstr "An approval request for this action is already pending or approved."
+
+#: finance/policy.py:408
+msgid "APPROVAL_NOT_PENDING"
+msgstr "This approval request has already been decided or has expired."
+
+#: finance/policy.py:276
+msgid "APPROVAL_REQUIRED"
+msgstr "This action needs operator approval. Submit an approval request first."
+
+#: finance/remittance_orders.py:103
+msgid "BENEFICIARY_NOT_VERIFIED"
+msgstr "This beneficiary has not been verified yet."
+
+#: finance/remittance_orders.py:101
+msgid "BENEFICIARY_REQUIRED"
+msgstr "Provide a beneficiary_id when sending to a beneficiary."
+
+#: finance/readiness/payment_bridge.py:140
+msgid "BENEFICIARY_VERIFICATION_REVOKED"
+msgstr "The beneficiary's verification was revoked, so this payment cannot proceed."
+
+#: finance/consumption/imports.py:188
+msgid "CATEGORY_AMOUNT_DIRECTION"
+msgstr ""
+"The amount sign does not match the category: Income and Refund must be positive, and other "
+"categories except Transfer must be negative."
+
+#: finance/sponsorship.py:80
+msgid "COMPLETE_TERMS_REQUIRED"
+msgstr "To revise the request, provide amount, currency, available_on and purpose."
+
+#: finance/copilot/scenarios.py:269
+msgid "CONFIRMATION_INVALID_OR_EXPIRED"
+msgstr "The confirmation is invalid or has expired. Preview the scenario again."
+
+#: finance/copilot/scenarios.py:270
+msgid "CONFIRMATION_MISMATCH"
+msgstr "The confirmation does not match this scenario, or the data has changed. Preview it again."
+
+#: finance/readiness/payment_bridge.py:39
+msgid "CONFIRMED_UNPAID_TUITION_REQUIRED"
+msgstr "Select a confirmed tuition expense that has not been paid yet."
+
+#: finance/consumption/imports.py:240
+msgid "CONFIRM_BALANCE_AS_OF_TODAY"
+msgstr "Confirm the balance as of today; as_of must be the current demo date."
+
+#: finance/readiness/funding.py:50
+msgid "CONTRACTUAL_COST_CANNOT_BE_REDUCED"
+msgstr ""
+"Contractual costs cannot be reduced; only food, transport, communications and settlement costs "
+"can."
+
+#: finance/fx_rates.py:121
+msgid "CONVERSION_NOT_POSITIVE"
+msgstr "The amount does not cover the fees, so nothing would be received."
+
+#: finance/fx_rates.py:111
+msgid "CORRIDOR_AMOUNT_OUT_OF_RANGE"
+msgstr "The amount is outside the limits for this corridor."
+
+#: finance/budget_services.py:26
+msgid "CORRIDOR_CURRENCY_MISMATCH"
+msgstr "The quote currencies do not match this corridor."
+
+#: finance/budget_services.py:25
+msgid "CORRIDOR_DISABLED"
+msgstr "This corridor is currently unavailable. Choose another corridor."
+
+#: finance/budget_services.py:24
+msgid "CORRIDOR_NOT_FOUND"
+msgstr "The corridor was not found."
+
+#: finance/readiness/funding.py:38
+msgid "COST_ACTION_UNAVAILABLE"
+msgstr ""
+"This cost cannot be adjusted because it is paid, has no amount, is not in THB or has an "
+"unresolved conflict."
+
+#: finance/copilot/simulation.py:24
+msgid "COST_BASELINE_MISSING"
+msgstr "This cost has no baseline estimate to adjust."
+
+#: finance/copilot/simulation.py:25
+msgid "COST_NOT_APPLICABLE"
+msgstr "This cost is marked not applicable or is not in THB, so it cannot be changed here."
+
+#: finance/copilot/simulation.py:23
+msgid "COST_NOT_EDITABLE"
+msgstr "This cost was not found or has already been paid."
+
+#: finance/copilot/simulation.py:195
+msgid "COST_OVERRIDE_REQUIRES_THB_BASELINE"
+msgstr "Only costs in THB can be overridden in a scenario."
+
+#: finance/readiness/services.py:165
+msgid "COST_PREDATES_OPENING_CONFIRM_ALREADY_PAID_OR_CHANGE_DATE"
+msgstr "This cost is dated before your opening balance date. Mark it as already paid or change its date."
+
+#: finance/consumption/imports.py:87
+msgid "COVERAGE_DATE_MISMATCH"
+msgstr "A selected row is outside its account's coverage period, or the period ends after today."
+
+#: finance/consumption/serializers.py:25
+msgid "COVERAGE_DATE_ORDER"
+msgstr "The coverage end date cannot be earlier than the start date."
+
+#: finance/consumption/imports.py:96
+msgid "COVERAGE_REQUIRES_SELECTED_ACCOUNT"
+msgstr "Each account in the coverage list needs at least one selected row."
+
+#: finance/money.py:21
+msgid "CURRENCY_NOT_SUPPORTED"
+msgstr "This currency is not supported."
+
+#: finance/remittance_orders.py:107
+msgid "DEADLINE_OUT_OF_RANGE"
+msgstr "The deadline must be between the current demo date and one year after it."
+
+#: finance/consumption/imports.py:85
+msgid "DECLARE_ACCOUNT_COVERAGE"
+msgstr "Declare a coverage period for every account that has selected rows."
+
+#: finance/readiness/services.py:48
+msgid "DECLARE_PLANNING_FUNDS_AND_DATE"
+msgstr "Provide opening_balance and as_of to start planning."
+
+#: finance/readiness/ocr.py:202
+msgid "DOCUMENT_PROCESSING_IN_PROGRESS"
+msgstr "This document is still being processed. Try again when processing finishes."
+
+#: finance/copilot/reviews.py:165
+msgid "DOMAIN_ACTION_REQUIRED"
+msgstr "Provide a supported domain_action for this review item."
+
+#: finance/readiness/funding.py:35
+msgid "DUPLICATE_COST_ACTION"
+msgstr "Each cost can have only one action per plan."
+
+#: finance/consumption/imports.py:81
+msgid "DUPLICATE_COVERAGE_ACCOUNT"
+msgstr "Each account can appear only once in the coverage list."
+
+#: finance/readiness/funding.py:79
+msgid "DUPLICATE_INSTALLMENT_DATE"
+msgstr "Each installment must have a different date."
+
+#: finance/readiness/funding.py:102
+msgid "DUPLICATE_OR_RECEIVED_FUNDING"
+msgstr "This funding source is already allocated, already received or part of opening funds."
+
+#: finance/remittances.py:9
+msgid "DUPLICATE_QUOTE"
+msgstr "The same quote is listed more than once."
+
+#: finance/consumption/imports.py:100
+msgid "ERROR_ROWS_PREVENT_COMPLETE_COVERAGE"
+msgstr "The file has rows with errors, so coverage cannot be marked complete."
+
+#: finance/workflow_serializers.py:122
+msgid "EXACTLY_ONE_PAYMENT_PLAN_REQUIRED"
+msgstr "Provide exactly one of plan_id or readiness_plan_id."
+
+#: finance/readiness/imports.py:271
+msgid "EXPLICIT_CONFLICT_RESOLUTION_REQUIRED"
+msgstr "This cost changed or conflicts with existing data. Choose a resolution in conflict_resolutions."
+
+#: finance/budget_services.py:113
+msgid "FAMILY_SUPPORT_REQUIRES_SPONSOR_CONFIRMATION"
+msgstr "Only the sponsor can confirm family support. Save it as estimated and send a sponsor request."
+
+#: finance/consumption/api.py:52
+msgid "FILE_SIZE_LIMIT"
+msgstr "The file must not be empty and must be 5 MB or smaller."
+
+#: finance/budget_services.py:102
+msgid "FIRST_DUE_DATE_NOT_FUTURE"
+msgstr "The first due date must be after today."
+
+#: finance/readiness/funding.py:113
+msgid "FUNDING_ALREADY_IN_STATE"
+msgstr "This funding is already included in your financial state."
+
+#: finance/copilot/simulation.py:51
+msgid "FUNDING_DATE_IN_PAST"
+msgstr "The funding date cannot be in the past."
+
+#: finance/fx_rates.py:29
+msgid "FX_RATE_UNAVAILABLE"
+msgstr "Exchange rates are temporarily unavailable. Try again later."
+
+#: finance/readiness/services.py:101
+msgid "HISTORICAL_OVERRIDE_FORBIDDEN"
+msgstr "New planned changes cannot take effect in the past."
+
+#: finance/execution_services.py:195
+msgid "HOLD_REQUIRES_FOREIGN_CURRENCY"
+msgstr "Only foreign-currency funding can be held in its original currency."
+
+#: finance/execution_services.py:196
+msgid "HOLD_WITHOUT_QUOTE"
+msgstr "Do not send fx_quote_id when holding funds in the source currency."
+
+#: finance/consumption/api.py:64
+msgid "IDEMPOTENCY_CONFLICT"
+msgstr "This Idempotency-Key was already used with a different request. Use a new key."
+
+#: finance/consumption/api.py:58
+msgid "IDEMPOTENCY_KEY_REQUIRED"
+msgstr "Provide an Idempotency-Key header of 1-100 characters."
+
+#: finance/consumption/imports.py:73
+msgid "IMPORT_ALREADY_COMMITTED"
+msgstr "This import has already been confirmed and cannot be changed."
+
+#: finance/readiness/imports.py:245
+msgid "IMPORT_NOT_REVIEWABLE"
+msgstr "This document is not waiting for review."
+
+#: finance/readiness/imports.py:241
+msgid "IMPORT_SEMESTER_MISMATCH"
+msgstr "This document belongs to a different semester."
+
+#: finance/lending_ledger.py:127
+msgid "INSTALLMENT_NOT_DUE"
+msgstr "This installment is not due yet."
+
+#: finance/lending_ledger.py:123
+msgid "INSTALLMENT_NOT_PAYABLE"
+msgstr "Pay the earliest unpaid installment first."
+
+#: finance/readiness/funding.py:67
+msgid "INSTALLMENT_REQUIRES_TUITION"
+msgstr "Only one-time or per-semester tuition can be split into installments."
+
+#: finance/readiness/funding.py:73
+msgid "INSTALLMENT_TOTAL_MISMATCH"
+msgstr "The installments must add up to the full cost amount."
+
+#: finance/lending_ledger.py:155
+msgid "INSUFFICIENT_BALANCE"
+msgstr "Your wallet balance is not enough for this transaction."
+
+#: finance/wallets.py:50
+msgid "INSUFFICIENT_BALANCE_OR_PRECISION"
+msgstr "This transaction would make the wallet balance negative or exceed the supported limit."
+
+#: finance/readiness/funding.py:20
+msgid "INVALID_ALLOCATION_AMOUNT"
+msgstr "Enter a positive amount with at most two decimal places."
+
+#: finance/copilot/simulation.py:29
+msgid "INVALID_EFFECTIVE_DATE"
+msgstr "The effective date must be between today and the semester end date."
+
+#: finance/copilot/simulation.py:109
+msgid "INVALID_LOAN_DATES"
+msgstr "The loan receipt date cannot be in the past, and the first due date must come after it."
+
+#: finance/consumption/imports.py:200
+msgid "INVALID_REFUND_LINK"
+msgstr "A refund must be a positive amount linked to a reviewed purchase."
+
+#: finance/consumption/imports.py:76
+msgid "INVALID_SELECTED_ROWS"
+msgstr "The selected rows contain duplicates or rows that are not in this import."
+
+#: finance/sponsorship.py:129
+msgid "INVALID_SPONSOR_TOKEN"
+msgstr "This sponsor link is invalid."
+
+#: finance/lending_applications.py:95
+msgid "INVALID_STATE"
+msgstr "This loan application's current status does not allow this action."
+
+#: finance/agent_tools.py:114
+msgid "INVALID_TRANSITION"
+msgstr "This remittance order's current status does not allow this action."
+
+#: finance/support_api.py:94
+msgid "INVITATION_SUPERSEDED"
+msgstr "This sponsor invitation has been replaced by a newer one or is no longer pending."
+
+#: finance/readiness/imports.py:212
+msgid "INVOICE_ALREADY_IMPORTED"
+msgstr "This invoice was already imported from another document."
+
+#: finance/readiness/payment_bridge.py:103
+msgid "INVOICE_IDENTITY_CHANGED"
+msgstr "The invoice details changed after verification. Import the invoice again."
+
+#: finance/readiness/imports.py:211
+msgid "INVOICE_IDENTITY_CONFLICT"
+msgstr "An invoice with the same issuer and number already exists with different details."
+
+#: finance/readiness/payment_bridge.py:100
+msgid "INVOICE_IDENTITY_REQUIRED"
+msgstr "This tuition must come from a verified THB invoice before it can be paid."
+
+#: finance/sponsorship.py:85
+msgid "JPY_WHOLE_UNITS_REQUIRED"
+msgstr "JPY amounts must be whole numbers."
+
+#: finance/readiness/services.py:91
+msgid "KEEP_REQUIRED_COSTS_OR_MARK_NOT_APPLICABLE"
+msgstr "Existing costs cannot be removed. Mark them as not applicable instead."
+
+#: finance/remittance_orders.py:208
+msgid "LEDGER_CREDIT_MISSING"
+msgstr "The ledger has no matching credit for this order, so it cannot be reconciled."
+
+#: finance/remittance_orders.py:206
+msgid "LEDGER_DEBIT_MISSING"
+msgstr "The ledger has no matching debit for this order, so it cannot be reconciled."
+
+#: finance/readiness/funding.py:152
+msgid "LEGACY_LOAN_UNSUPPORTED"
+msgstr "This loan was simulated with an older version. Create a new loan quote."
+
+#: finance/lending_ledger.py:121
+msgid "LOAN_CLOSED"
+msgstr "This loan is already closed."
+
+#: finance/readiness/funding.py:156
+msgid "LOAN_REQUIRES_EXACT_NET_PROCEEDS_QUOTE"
+msgstr "Allocate exactly the net proceeds from the loan quote."
+
+#: finance/readiness/funding.py:160
+msgid "LOAN_UNAVAILABLE"
+msgstr "This loan's application was rejected, cancelled or already disbursed."
+
+#: finance/readiness/funding.py:49
+msgid "LOCKED_COST_CANNOT_BE_REDUCED"
+msgstr "This cost is locked and cannot be reduced."
+
+#: finance/readiness/imports.py:302
+msgid "MANUAL_INPUT_NOT_REQUESTED"
+msgstr "This document does not need manual input."
+
+#: finance/readiness/funding.py:109
+msgid "NONCASH_SOURCE_REQUIRES_ACTION"
+msgstr "Installment and spending-reduction sources must be applied as cost actions, not allocations."
+
+#: finance/readiness/services.py:19
+msgid "NO_ACTIVE_SEMESTER"
+msgstr "No active semester was found. Create a semester first."
+
+#: finance/readiness/ocr.py:146
+msgid "OCR_CONSENT_REQUIRED"
+msgstr "Accept the current OCR notice before the document can be processed."
+
+#: finance/readiness/ocr.py:46
+msgid "OCR_NOTICE_VERSION_MISMATCH"
+msgstr "The OCR notice has been updated. Review and accept the current version."
+
+#: finance/readiness/ocr.py:143
+msgid "OCR_RETRY_NOT_AVAILABLE"
+msgstr "OCR can be retried only for documents waiting for manual input."
+
+#: finance/readiness/ocr.py:145
+msgid "OCR_SOURCE_EXPIRED"
+msgstr "The original file is no longer available. Upload it again."
+
+#: finance/sponsorship.py:103
+msgid "OPERATOR_REQUIRED"
+msgstr "Only an operator can issue a sponsor link."
+
+#: finance/copilot/simulation.py:34
+msgid "OVERRIDE_AFTER_OBLIGATION"
+msgstr "The change must take effect on or before the cost's due date."
+
+#: finance/consumption/imports.py:107
+msgid "PARTIAL_SELECTION_PREVENTS_COMPLETE_COVERAGE"
+msgstr "To mark coverage complete, select every row in that account's coverage period."
+
+#: finance/readiness/payment_bridge.py:49
+msgid "PAYMENT_ALREADY_EXISTS"
+msgstr "This expense already has an active or settled payment."
+
+#: finance/readiness/payment_bridge.py:124
+msgid "PAYMENT_DEADLINE_PASSED"
+msgstr "The payment due date has passed."
+
+#: finance/readiness/funding.py:224
+msgid "PAYMENT_HORIZON_EXCEEDS_730_DAYS"
+msgstr "The plan cannot extend more than 730 days from today."
+
+#: finance/readiness/payment_bridge.py:139
+msgid "PAYMENT_STATE_CHANGED"
+msgstr "Your financial state changed after this payment was created. Create a new payment."
+
+#: finance/agent_runner.py:195
+msgid "PENDING_ACTION_CLOSED"
+msgstr "This proposed action is no longer pending."
+
+#: finance/policy.py:87
+msgid "POLICY_SUBJECT_MISMATCH"
+msgstr "The amount or currency does not match the target of this request."
+
+#: finance/sponsorship.py:84
+msgid "POSITIVE_SUPPORT_REQUIRED"
+msgstr "The support amount must be greater than zero."
+
+#: finance/readiness/imports.py:256
+msgid "PROFILE_CONFLICT_REQUIRES_REVIEW"
+msgstr "Resolve the conflicting profile fields in conflict_resolutions before confirming."
+
+#: finance/readiness/services.py:98
+msgid "PROTECTED_COST_REVIEW"
+msgstr "This cost is locked, verified, in conflict or paid, so planned changes need review."
+
+#: finance/lending_applications.py:56
+msgid "QUOTE_ALREADY_USED"
+msgstr "This loan quote already has an application. Create a new quote."
+
+#: finance/wallets.py:111
+msgid "QUOTE_AMOUNT_MISMATCH"
+msgstr "The amount must match the quoted amount."
+
+#: finance/budget_services.py:45
+msgid "QUOTE_CONSUMED"
+msgstr "This quote has already been used. Request a new quote."
+
+#: finance/agent_tools.py:92
+msgid "QUOTE_CURRENCY_MISMATCH"
+msgstr "The selected quotes do not use the expected currencies."
+
+#: finance/lending_applications.py:26
+msgid "QUOTE_EXPIRED"
+msgstr "This quote has expired. Request a new quote."
+
+#: finance/budget_services.py:47
+msgid "QUOTE_IN_USE"
+msgstr "This quote is already linked to a remittance order."
+
+#: finance/agent_tools.py:126
+msgid "QUOTE_NOT_EXECUTABLE"
+msgstr "This quote cannot be executed. Request a live quote for a specific amount."
+
+#: finance/readiness/payment_bridge.py:16
+msgid "READINESS_FUNDING_PLAN_REQUIRED"
+msgstr "Use a funding plan from the current semester's readiness check."
+
+#: finance/readiness/payment_bridge.py:27
+msgid "READINESS_PLAN_NOT_EXECUTABLE"
+msgstr "This funding plan is no longer valid and cannot be executed."
+
+#: finance/sponsorship.py:70
+msgid "RECEIVED_SUPPORT_IS_IMMUTABLE"
+msgstr "Support that has already been received cannot be changed."
+
+#: finance/readiness/funding.py:60
+msgid "REDUCTION_EXCEEDS_EXPENSE"
+msgstr "The reduction cannot be larger than the cost amount."
+
+#: finance/consumption/imports.py:214
+msgid "REFUND_EXCEEDS_PURCHASE"
+msgstr "Total refunds cannot exceed the original purchase amount."
+
+#: finance/consumption/imports.py:216
+msgid "REFUND_LINK_REQUIRED"
+msgstr "Link the refund to the original purchase using refund_of."
+
+#: finance/copilot/reviews.py:235
+msgid "REPLACEMENT_EVIDENCE_REQUIRED"
+msgstr "Import verified documents for the proposed amounts before resolving this review."
+
+#: finance/sponsorship.py:104
+msgid "REQUEST_NOT_PENDING"
+msgstr "This sponsor request is not pending, so a link cannot be issued."
+
+#: finance/remittance_orders.py:154
+msgid "RESERVE_REQUIRED"
+msgstr "This transaction would bring your balance below the reserve."
+
+#: finance/copilot/reviews.py:167
+msgid "REVIEW_ACTION_MISMATCH"
+msgstr "This action does not apply to this type of review item."
+
+#: finance/copilot/reviews.py:199
+msgid "REVIEW_ALREADY_RESOLVED"
+msgstr "This review item has already been resolved."
+
+#: finance/copilot/scenarios.py:281
+msgid "REVIEW_REQUIRED"
+msgstr "This scenario changes protected costs and needs review before it can be applied."
+
+#: finance/consumption/imports.py:151
+msgid "REVIEW_SIMILAR_TRANSACTION"
+msgstr "A similar transaction already exists. Add this row to keep_similar_rows to import it anyway."
+
+#: finance/budget_services.py:18
+msgid "SAME_CURRENCY_QUOTE"
+msgstr "The source and target currencies must be different."
+
+#: finance/copilot/scenarios.py:277
+msgid "SCENARIO_ALREADY_APPLIED"
+msgstr "A different scenario from this run has already been applied."
+
+#: finance/copilot/scenarios.py:177
+msgid "SCENARIO_NOT_FOUND"
+msgstr "The scenario was not found."
+
+#: finance/remittance_orders.py:105
+msgid "SELF_RECIPIENT_HAS_NO_BENEFICIARY"
+msgstr "Do not provide beneficiary_id when sending to yourself."
+
+#: finance/copilot/simulation.py:189
+msgid "SEMESTER_NOT_ACTIVE"
+msgstr "The semester has ended or ends too far in the future to plan."
+
+#: finance/policy.py:404
+msgid "SEPARATION_OF_DUTIES"
+msgstr "You cannot decide this approval because you requested it, own it or verified its beneficiary."
+
+#: finance/readiness/funding.py:203
+msgid "SETTLED_COST_CANNOT_CHANGE"
+msgstr "A cost with settled payments cannot be changed."
+
+#: finance/copilot/simulation.py:200
+msgid "SETTLED_COST_IS_IMMUTABLE"
+msgstr "This cost has already been paid and cannot be changed."
+
+#: finance/readiness/payment_bridge.py:128
+msgid "SETTLED_FUNDS_REQUIRED"
+msgstr "Settled wallet funds are not enough to cover this payment and keep the reserve."
+
+#: finance/workflow_serializers.py:26
+msgid "SETTLEMENT_RANGE_INVALID"
+msgstr "settlement_min_days cannot be greater than settlement_days."
+
+#: finance/readiness/imports.py:233
+msgid "SIMILAR_INVOICE_REQUIRES_EXPLICIT_REVIEW"
+msgstr "A similar cost already exists. Choose how to handle it in conflict_resolutions."
+
+#: finance/execution_services.py:188
+msgid "SPONSOR_CONFIRMATION_REQUIRED"
+msgstr "Family support can be received only after the sponsor confirms it."
+
+#: finance/copilot/scenarios.py:229
+msgid "SPONSOR_REQUEST_REQUIRED"
+msgstr "This support source has no sponsor request. Create one first."
+
+#: finance/sponsorship.py:175
+msgid "SPONSOR_TERMS_CHANGED"
+msgstr "The support terms have changed. Reload the link to review the latest terms."
+
+#: finance/sponsorship.py:134
+msgid "SPONSOR_TOKEN_EXPIRED"
+msgstr "This sponsor link has expired. Ask the student for a new link."
+
+#: finance/sponsorship.py:138
+msgid "SPONSOR_TOKEN_REVOKED"
+msgstr "This sponsor link is no longer valid because the request was changed or withdrawn."
+
+#: finance/sponsorship.py:146
+msgid "SPONSOR_TOKEN_USED"
+msgstr "This sponsor link has already been used."
+
+#: finance/policy.py:325
+msgid "STEP_UP_FAILED"
+msgstr "The password is incorrect, so step-up verification failed."
+
+#: finance/policy.py:270
+msgid "STEP_UP_INVALID"
+msgstr ""
+"The X-Step-Up-Token is invalid, expired or does not match this action. Complete step-up "
+"verification again."
+
+#: finance/policy.py:278
+msgid "STEP_UP_REQUIRED"
+msgstr ""
+"This action requires step-up verification. Re-enter your password and send the X-Step-Up-Token "
+"header."
+
+#: finance/copilot/simulation.py:55
+msgid "SUPPORT_NOT_EDITABLE"
+msgstr "Only family support in THB that has not been received can be changed in a scenario."
+
+#: finance/readiness/services.py:171
+msgid "TOO_MANY_SCHEDULED_EVENTS"
+msgstr "The plan has too many scheduled items (maximum 1000)."
+
+#: finance/consumption/imports.py:135
+msgid "TRANSACTION_ID_CONFLICT"
+msgstr "A transaction with this ID was already imported with different details."
+
+#: finance/readiness/funding.py:170
+msgid "UNAFFORDABLE_LOAN"
+msgstr "This loan is not affordable based on your repayment profile."
+
+#: finance/consumption/analysis.py:250
+msgid "UNKNOWN_COST"
+msgstr "The cost was not found in the current semester budget."
+
+#: finance/readiness/templates.py:46
+msgid "UNKNOWN_TEMPLATE_VERSION"
+msgstr "The budget template or version was not found."
+
+#: finance/readiness/imports.py:246
+msgid "UNTRUSTED_DOCUMENT_REJECTED"
+msgstr "This document contains untrusted instructions and cannot be confirmed."
+
+#: finance/readiness/funding.py:18
+msgid "USE_DECIMAL_STRING"
+msgstr "Send the amount as a decimal string, such as 1250.00."
+
+#: finance/readiness/services.py:104
+msgid "USE_IMPORT_CONFIRMATION_TO_VERIFY"
+msgstr "Verified costs can be set or changed only by confirming an imported document."
+
+#: finance/readiness/payment_bridge.py:91
+msgid "VERIFIED_INVOICE_BENEFICIARY_REQUIRED"
+msgstr "Use the verified beneficiary named on the invoice."
+
+#: finance/readiness/funding.py:55
+msgid "VERIFIED_OBLIGATION_CANNOT_BE_REDUCED"
+msgstr "A verified obligation cannot be reduced."
+
+#: finance/readiness/payment_bridge.py:83
+msgid "VERIFIED_TUITION_INVOICE_REQUIRED"
+msgstr "This payment needs a tuition cost backed by a verified invoice."
+

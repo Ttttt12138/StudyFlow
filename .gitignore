@@ -20,3 +20,4 @@ examples/demo-ids.json
 postgres-local.log
 output/
 deliverables/
+.claude/worktrees/

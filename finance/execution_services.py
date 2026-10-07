@@ -9,11 +9,8 @@ from .workflow_models import (
 from .workflow_common import require,owned,current,audit,append_state,record,shift_date
 from .budget_services import evaluate_plan,convert
 from .services import VersionConflict
-
-def wallet(owner):
-    item = DemoWallet.objects.filter(owner=owner).first()
-    require(item is not None,"Initialize the isolated demo wallet first.")
-    return item
+from . import money
+from .wallets import wallet, post
 
 def available(item):
     held = Payment.objects.filter(owner=item.owner,status__in=["pending","unknown"]).aggregate(
@@ -95,7 +92,7 @@ def authorize(actor,data,obj):
     obj.save(update_fields=["authorized_until","status"])
     audit(obj.owner,actor,"payment.authorized",obj,{
         "state_version":state.version,"plan_id":str(obj.plan_id or obj.readiness_plan_id),
-        "beneficiary_id":str(obj.beneficiary_id),"amount":str(obj.amount),"currency":"THB",
+        "beneficiary_id":str(obj.beneficiary_id),"amount":str(obj.amount),"currency":money.home_currency(),
         "mock_fee":"0.00","expires_at":obj.authorized_until.isoformat(),
     })
     return record(obj)
@@ -120,7 +117,8 @@ def submit(actor,data,obj):
     require(available(item)-obj.amount >= Decimal(state.snapshot["reserve"]),
         "Available settled demo funds cannot cover payment and reserve; promises are not balance.")
     obj.status = "pending"
-    obj.save(update_fields=["status"])
+    obj.submitted_at = timezone.now()
+    obj.save(update_fields=["status","submitted_at"])
     audit(obj.owner,actor,"payment.mock_submitted",obj,{"operation_key":str(obj.id)})
     return record(obj)
 
@@ -140,16 +138,12 @@ def payment_event(actor,data,obj):
         event = next((e for e in snapshot["events"] if e["id"] == obj.event_id),None)
         require(event is not None and Decimal(event["amount"]) == obj.amount,
             "Submitted obligation was changed; resolve state before processing adapter evidence.")
-        sequence = DemoLedgerEntry.objects.filter(owner=obj.owner).count()+1
-        DemoLedgerEntry.objects.create(owner=obj.owner,payment=obj,amount=-obj.amount,
-            effective_on=item.clock,sequence=sequence)
-        item.balance -= obj.amount
-        item.save(update_fields=["balance"])
+        sequence = post(item,money.home_currency(),-obj.amount,{"payment":obj}).sequence
         event["date"] = item.clock.isoformat()
         event["settled_sequence"] = sequence
         append_state(obj.owner,snapshot,actor,"state.payment_settled")
         obj.receipt = {"reference":"mock:"+str(obj.id),"operation_key":str(obj.id),
-            "event_id":obj.event_id,"amount":format(obj.amount,".2f"),"currency":"THB",
+            "event_id":obj.event_id,"amount":format(obj.amount,".2f"),"currency":money.home_currency(),
             "beneficiary_id":str(obj.beneficiary_id),"is_simulated":True,
             "settled_on":item.clock.isoformat()}
         if obj.invoice_snapshot:
@@ -195,25 +189,32 @@ def receive_funding(actor,data,obj):
     require(obj.kind != "loan","Loans must use the application/disbursement flow.")
     require(not obj.already_in_opening,"Opening funds cannot be received twice.")
     item = wallet(obj.owner)
-    amount,days,_ = convert(obj.owner,obj.amount,obj.currency,data.get("fx_quote_id"))
+    hold = data.get("hold_in_source_currency", False)
+    if hold:
+        # Foreign holdings stay outside the home-currency cash-flow state until converted.
+        require(obj.currency != money.home_currency(),"HOLD_REQUIRES_FOREIGN_CURRENCY")
+        require(not data.get("fx_quote_id"),"HOLD_WITHOUT_QUOTE")
+        money.require_supported(obj.currency)
+        amount,days,currency = money.require_precision(obj.amount,obj.currency),0,obj.currency
+    else:
+        amount,days,_ = convert(obj.owner,obj.amount,obj.currency,data.get("fx_quote_id"),consume=True)
+        currency = money.home_currency()
     require(item.clock >= shift_date(obj.available_on,days),"Funding has not reached its availability/settlement date.")
     state = current(obj.owner)
     require(not any(event["id"] == obj.economic_key for event in state.snapshot["events"]),
         "Funding is already represented in state.")
-    sequence = DemoLedgerEntry.objects.filter(owner=obj.owner).count()+1
-    DemoLedgerEntry.objects.create(owner=obj.owner,funding_source=obj,amount=amount,
-        effective_on=item.clock,sequence=sequence)
-    require(item.balance+amount <= Decimal("9999999999999999.99"),"Wallet precision limit exceeded.")
-    item.balance += amount
-    item.save(update_fields=["balance"])
-    snapshot = deepcopy(state.snapshot)
-    snapshot["events"].append({"id":"received:"+str(obj.id),"label":"Simulated "+obj.kind,
-        "kind":"income","amount":format(amount,".2f"),"date":item.clock.isoformat(),"certainty":"confirmed",
-        "settled_sequence":sequence})
-    append_state(obj.owner,snapshot,actor,"state.funding_received")
+    require(hold or item.balance+amount <= money.MAX_BALANCE,"Wallet precision limit exceeded.")
+    sequence = post(item,currency,amount,{"funding_source":obj}).sequence
+    if not hold:
+        snapshot = deepcopy(state.snapshot)
+        snapshot["events"].append({"id":"received:"+str(obj.id),"label":"Simulated "+obj.kind,
+            "kind":"income","amount":format(amount,".2f"),"date":item.clock.isoformat(),"certainty":"confirmed",
+            "settled_sequence":sequence})
+        append_state(obj.owner,snapshot,actor,"state.funding_received")
     obj.received = True
     obj.save(update_fields=["received"])
     if obj.kind in {'family', 'family_support'}:
         SponsorRequest.objects.filter(source=obj).update(status='RECEIVED')
-    audit(obj.owner,actor,"funding.mock_received",obj,{"is_simulated":True})
+    audit(obj.owner,actor,"funding.mock_received",obj,{"is_simulated":True,"currency":currency,
+        "amount":money.fmt(amount,currency),"held_in_source_currency":hold})
     return record(obj)

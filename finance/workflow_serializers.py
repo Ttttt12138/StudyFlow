@@ -1,8 +1,10 @@
 from decimal import Decimal
+from django.conf import settings
 from rest_framework import serializers as s
-from .serializers import StrictInputMixin, MoneyField
+from .serializers import StrictInputMixin, MoneyField, CurrencyAmountField
 
-CURRENCIES = ["THB","USD","EUR","CNY","GBP","JPY"]
+CURRENCIES = settings.STUDYFLOW_SUPPORTED_CURRENCIES
+HOME_CURRENCY = settings.STUDYFLOW_HOME_CURRENCY
 
 class Input(StrictInputMixin, s.Serializer):
     pass
@@ -11,10 +13,11 @@ class FXInput(Input):
     route_name = s.CharField(max_length=100, default='Simulated route')
     settlement_min_days = s.IntegerField(min_value=0, max_value=60, default=0)
     source_currency = s.ChoiceField(choices=CURRENCIES)
-    target_currency = s.ChoiceField(choices=["THB"], default="THB")
+    target_currency = s.ChoiceField(choices=CURRENCIES, default=HOME_CURRENCY)
+    corridor_id = s.UUIDField(required=False, allow_null=True)
     rate = s.DecimalField(max_digits=24,decimal_places=10,min_value=Decimal("0.0000000001"))
-    sender_fee = MoneyField()
-    receiver_fee = MoneyField()
+    sender_fee = CurrencyAmountField()
+    receiver_fee = CurrencyAmountField()
     settlement_days = s.IntegerField(min_value=0,max_value=60)
     expires_at = s.DateTimeField()
 
@@ -26,7 +29,7 @@ class FXInput(Input):
 class ExpenseOverride(Input):
     event_id = s.CharField(max_length=100)
     amount = MoneyField(allow_null=True)
-    currency = s.ChoiceField(choices=CURRENCIES,default="THB")
+    currency = s.ChoiceField(choices=CURRENCIES,default=HOME_CURRENCY)
     fx_quote_id = s.UUIDField(required=False,allow_null=True)
     certainty = s.ChoiceField(choices=["confirmed","estimated","missing"])
 
@@ -140,6 +143,16 @@ class HistoryResponse(s.Serializer):
 
 class ReceiveInput(Input):
     fx_quote_id = s.UUIDField(required=False,allow_null=True)
+    hold_in_source_currency = s.BooleanField(default=False)
+
+class LiveQuoteInput(Input):
+    corridor_id = s.UUIDField()
+    send_amount = CurrencyAmountField()
+
+class ConversionInput(Input):
+    quote_id = s.UUIDField()
+    source_amount = CurrencyAmountField()
+    state_version = s.IntegerField(min_value=1)
 
 class CompareInput(Input):
     loan_ids = s.ListField(child=s.UUIDField(),min_length=2,max_length=10)

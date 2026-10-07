@@ -6,6 +6,7 @@ from finance.readiness.services import active
 from finance.services import VersionConflict
 from finance.workflow_common import current, owned, require
 from finance.workflow_models import Beneficiary
+from finance.money import home_currency
 
 
 def evaluate_payment(owner, run):
@@ -97,7 +98,7 @@ def invoice_evidence(owner, semester, event, beneficiary):
         invoice_id=cost["invoice_id"],
     ).first()
     require(
-        identity is not None and cost["currency"] == "THB", "INVOICE_IDENTITY_REQUIRED"
+        identity is not None and cost["currency"] == home_currency(), "INVOICE_IDENTITY_REQUIRED"
     )
     require(
         identity.fingerprint == invoice_fingerprint(cost), "INVOICE_IDENTITY_CHANGED"

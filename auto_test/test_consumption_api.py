@@ -13,9 +13,13 @@ from rest_framework.test import APITestCase
 
 from finance.consumption.analysis import analyze, refresh
 from finance.consumption.models import ObservedTransaction
+from finance.policy_defaults import ensure_default_limits
+from finance.policy_flow import client_flow, step_up_header
 from finance.readiness.models import Semester
 from finance.workflow_common import current
 from finance.workflow_models import DemoLedgerEntry, DemoWallet, IdempotencyRecord
+
+PASSWORD = "learning-student-pass-1"
 
 
 @override_settings(
@@ -25,10 +29,18 @@ from finance.workflow_models import DemoLedgerEntry, DemoWallet, IdempotencyReco
 )
 class ConsumptionApiTests(APITestCase):
     def setUp(self):
-        self.user = get_user_model().objects.create_user(username="learning-student")
+        ensure_default_limits()
+        self.user = get_user_model().objects.create_user(
+            username="learning-student", password=PASSWORD
+        )
         self.operator = get_user_model().objects.create_user(
             username="learning-operator", is_staff=True
         )
+        approver = get_user_model().objects.create_user(
+            username="learning-approver", is_staff=True
+        )
+        # Payment submission is T2: the student re-authenticates through auth/step-up/.
+        self.flow = client_flow(self.user, PASSWORD, approver)
         self.client.force_authenticate(self.user)
         self.semester = self.post(
             "readiness/semesters",
@@ -42,6 +54,7 @@ class ConsumptionApiTests(APITestCase):
             data,
             format="json",
             HTTP_IDEMPOTENCY_KEY=key or uuid4().hex,
+            **step_up_header(self.flow, route, data),
         )
         self.assertEqual(response.status_code, status, response.data)
         return response.data.get("data", response.data)

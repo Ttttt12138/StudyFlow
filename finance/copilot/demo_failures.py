@@ -32,6 +32,8 @@ def rejected(demo, route, body, statuses=(400, 409)):
         headers={
             "Authorization": "Token " + demo.tokens["student"],
             "Idempotency-Key": uuid4().hex,
+            # T2 routes pass the policy so the rejection comes from the domain rule under test.
+            **demo.step_up(route, body),
         },
     )
     require(

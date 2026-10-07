@@ -66,6 +66,14 @@ def classify(instance):
             if instance.status == "reconciliation_exception"
             else "Inspect failure and create a new payment after correction",
         }
+    if name == "RemittanceOrder" and instance.status in {"REFUNDED", "UNKNOWN"}:
+        return "remittance", {
+            "status": instance.status,
+            "failure_reason": instance.failure_reason,
+            "next_action": "Wait for the operator to resolve the transfer"
+            if instance.status == "UNKNOWN"
+            else "Funds were refunded; create a new order after correcting the cause",
+        }
     if name == "ReadinessJob" and instance.status == "RETRY":
         return "model_failure", {
             "error_code": instance.error_code,
