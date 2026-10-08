@@ -141,6 +141,10 @@ HINTS = {
     "source_amount": "decimal string equal to the quote's send_amount",
     "recipient": "SELF credits the student's own wallet in the target currency; BENEFICIARY pays a "
                  "verified third party",
+    # agent-v1 live round 3: three sends stopped only to ask for the purpose. The student
+    # still sees and confirms it on the proposal, so a stated default is safe.
+    "purpose": "tuition for school fees, living for rent or daily costs, family_support for family; "
+               "use other when the goal states no purpose (do not stop to ask)",
 }
 
 

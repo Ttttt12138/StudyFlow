@@ -1,10 +1,12 @@
 """Agent task-set evaluation (docs/agent.md). Each case runs in a rolled-back transaction."""
+import hashlib
 import json
 from decimal import Decimal
 from uuid import uuid4
 
 from django.contrib.auth import get_user_model
 from django.db import transaction
+from studyflow_ai.agent.prompts import VERSION as PROMPT_VERSION
 
 from . import agent_runner
 from .agent_models import AgentPendingAction, AgentSession
@@ -90,6 +92,8 @@ def evaluate(path, mode):
     total = len(rows)
     return {
         "mode": mode, "dataset": str(path), "cases": total,
+        # Pins what was measured: the exact case file and the planner prompt version.
+        "dataset_sha256": hashlib.sha256(path.read_bytes()).hexdigest(), "prompt_version": PROMPT_VERSION,
         "task_success_rate": round(sum(r["passed"] for r in rows) / total, 4),
         "tool_selection_error_rate": round(
             sum(bool(r["missing_tools"] or r["forbidden_tools"] or r["wrong_proposal"]) for r in rows) / total, 4),

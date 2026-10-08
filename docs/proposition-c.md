@@ -86,11 +86,12 @@
 | 项目 | 结果 |
 |---|---|
 | Django 测试（PostgreSQL） | 481 个，全部通过（基线 178；见 [门禁日志](../evidence/gates/django-tests.log)） |
-| C 模块测试 | 293 个，全部通过（基线 179；见 [门禁日志](../evidence/gates/c-tests.log)） |
+| C 模块测试 | 298 个，全部通过（基线 179；见 [门禁日志](../evidence/gates/c-tests.log)） |
 | 本地门禁 `scripts/run_gates.py` | 17 项全部通过（[汇总](../evidence/gates/summary.txt)）：冻结存档、check、翻译目录、迁移、测试、OpenAPI、ruff、迁移执行、缓存表、6 个 HTTP 演示、Agent 评估 |
 | HTTP 演示 | `demo_bc`、`demo_readiness`、`demo_consumption`、`demo_copilot`、`demo_remittance`、`demo_agent`，各 3 轮 |
 | Agent 评估（mock） | 20 个案例，完成率 100%，越权动作 0 |
-| Agent 评估（真实模型，2026-10-07） | 三轮完成率 30% → 45% → 65%，越权动作均为 0，照注入指令行事 0/3（见 [真实调用验证](verification-live-20261007.md)） |
+| Agent 评估（真实模型，冻结集 agent-v2 首次运行） | 18/24（75%），越权动作 0，照注入行事 1/4（未动资金）；调优集 agent-v1 六轮 30% → 75%，不作为成绩引用（见 [Agent Evaluation](agent-evaluation.md)） |
+| Agent 评估（真实模型，调优集历史，2026-10-07） | 前三轮完成率 30% → 45% → 65%，越权动作均为 0，照注入指令行事 0/3（见 [真实调用验证](verification-live-20261007.md)） |
 | Frankfurter 真实汇率 | 4 个货币对、12 份汇路报价，与公式手算一致 |
 
 工作方式：
@@ -108,6 +109,6 @@
 详见 [已知风险](known-risks.md)，最关键的几项：
 - 所有资金和通道都是模拟的；汇款送达由运营人员回调触发。
 - 二次验证只是重新输入密码，不是独立的第二因素；运营人员只有一种角色。
-- Agent 真实模型任务完成率为 65%，剩余失败多为合理的澄清；评估集由同一作者编写，第 3 轮不是冻结测试。
+- Agent 真实模型在冻结集 agent-v2 上首次运行完成率 75%（18/24），越权动作 0；1 个注入案例中 Agent 向名称含注入文本的收款人提议了付款（未动资金，仍需学生二次验证）；模型偶尔把内部推理当作回答输出；两个评估集都由同一 AI 编写、未经人工审核。
 - 参考汇率不是可成交价；加固配置未在真实 HTTPS 部署上验证。
 - 翻译未经母语人工审校；briefing、通知等拼接文本仍为英文。

@@ -4,6 +4,8 @@ import json
 import re
 from decimal import Decimal, InvalidOperation
 
+from pydantic import ValidationError
+
 from studyflow_ai.agent import prompts
 from studyflow_ai.agent.models import AgentContext, FinalStep, PlannerOutput, ToolCallStep
 from studyflow_ai.models import CallRecord
@@ -56,6 +58,23 @@ def validate_call(step, context, record):
         raise ProviderFailure("INVALID_TOOL_CALL", record)
 
 
+def _leading_envelope(text):
+    """Observed live: a complete JSON envelope followed by stray closing brackets ("}}}").
+
+    Only that exact shape is recovered, and the result is validated like any other reply.
+    """
+    try:
+        value, end = json.JSONDecoder().raw_decode(text)
+    except ValueError:
+        return None
+    if text[end:].strip(" \t\r\n}]"):
+        return None
+    try:
+        return PlannerOutput.model_validate(value).step
+    except ValidationError:
+        return None
+
+
 class LiveAgentProvider:
     def __init__(self, openai_provider):
         self.provider = openai_provider
@@ -72,6 +91,10 @@ class LiveAgentProvider:
             if exc.code == "INVALID_MODEL_OUTPUT" and text and not text.startswith(("{", "[")):
                 exc.record.error_code = None
                 return FinalStep(answer=text[:2000]), exc.record
+            step = _leading_envelope(text) if exc.code == "INVALID_MODEL_OUTPUT" else None
+            if step is not None:
+                exc.record.error_code = None
+                return step, exc.record
             raise
         record.prompt_version = prompts.VERSION
         return output.step, record
