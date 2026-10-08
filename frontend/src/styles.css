@@ -129,3 +129,46 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .funding-comparison details,.application-group,.backend-section details{transition:background-color .18s ease,border-color .18s ease}
 .funding-comparison details:hover,.application-group:hover{border-color:#b8d0bd}
 @media(max-width:650px){.next-action{align-items:flex-start;flex-direction:column;gap:4px}}
+
+.dashboard-entry{margin-top:8px}
+.dashboard-app main{max-width:1220px}
+.dashboard-app nav button:hover,.dashboard-link:hover{background:#edf5ee;color:#1e6146}
+.dashboard-app .sidebar-note{margin-bottom:16px}
+.dashboard-controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 0 24px;font-size:13px;color:#526b5e}
+.dashboard-controls label{font-weight:650}
+.dashboard-controls select{min-height:42px;border:1px solid #cdded1;background:white;color:#263c39;border-radius:7px;padding:8px 30px 8px 12px}
+.dashboard-controls .secondary{min-height:42px}
+.dashboard-hero{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:32px;margin-bottom:18px;background:linear-gradient(120deg,#fff 55%,#ecf5ef)}
+.dashboard-hero h2{font-size:31px;letter-spacing:-.9px;margin:9px 0}
+.dashboard-hero p{font-size:14px;color:#526b5e;margin:0 0 12px}
+.dashboard-hero small,.dashboard-panel small{font-size:12px;color:#617368}
+.dashboard-hero-action{flex-shrink:0}
+.dashboard-hero-action .primary{min-height:46px;font-size:13px}
+.dashboard-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-bottom:18px}
+.dashboard-panel{min-width:0;padding:25px}
+.dashboard-panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:18px}
+.dashboard-panel h2{font-size:20px;margin:0 0 12px}
+.dashboard-panel p{font-size:13px;color:#526b5e;margin:8px 0 16px}
+.dashboard-icon{display:grid;place-items:center;width:36px;height:36px;border-radius:10px;background:#eaf3ed;color:#27694f;font-size:22px}
+.dashboard-feature-value{display:block;font-size:18px}
+.dashboard-panel>.calendar-pill{margin-right:12px}
+.dashboard-link{border:0;background:transparent;color:#286950;padding:7px 8px;margin-left:-8px;border-radius:6px;font-size:12px;font-weight:650;text-align:left;white-space:nowrap}
+.dashboard-list{list-style:none;margin:0 0 14px;padding:0}
+.dashboard-list li{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:13px 0;border-top:1px solid #e8eee9;font-size:13px}
+.dashboard-list li>span:first-child{min-width:0;overflow-wrap:anywhere}
+.dashboard-list li>span:last-child{white-space:nowrap}
+.dashboard-list strong,.dashboard-list small{display:block}
+.dashboard-list small{margin-top:5px}
+.dashboard-reviews{margin-bottom:18px}
+.dashboard-next{padding:20px 5px 5px}
+.dashboard-next h2{font-size:16px}
+.dashboard-next p{font-size:12px;color:#617368}
+.dashboard-next>div{display:flex;gap:8px;flex-wrap:wrap}
+.dashboard-next span{border:1px solid #dce7dd;background:#f6faf6;color:#526b5e;border-radius:999px;padding:8px 12px;font-size:11px}
+.dashboard-state{padding:42px;text-align:center;min-height:220px}
+.dashboard-state .activity-dot{display:inline-block}
+.dashboard-state h2{margin:14px 0 6px}
+.dashboard-state p{font-size:14px;color:#526b5e}
+.dashboard-state .primary{margin-top:14px}
+@media(max-width:900px){.dashboard-hero{padding:25px}.dashboard-grid{gap:12px}.dashboard-panel{padding:20px}}
+@media(max-width:650px){.dashboard-app nav{display:grid;grid-template-columns:1fr 1fr;margin-top:18px}.dashboard-app nav button{min-width:0}.dashboard-app nav button:first-child{grid-column:1/-1}.dashboard-hero{display:block;padding:23px}.dashboard-hero h2{font-size:27px}.dashboard-hero-action{margin-top:18px}.dashboard-grid{grid-template-columns:1fr}.dashboard-list li{align-items:flex-start;flex-wrap:wrap}.dashboard-panel{padding:20px}.dashboard-state{padding:30px 18px}}

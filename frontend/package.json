@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
-    "test": "node tests/browser.mjs && node tests/connected.mjs && node tests/preview.mjs",
+    "test": "node tests/browser.mjs && node tests/connected.mjs && node tests/preview.mjs && node tests/dashboard.mjs && node tests/dashboard-connected.mjs",
     "test:integration": "node tests/integration.mjs"
   },
   "dependencies": {

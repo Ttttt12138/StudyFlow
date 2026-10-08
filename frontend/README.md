@@ -44,3 +44,11 @@ See [contract comparison](../docs/frontend-contract-audit.md) and [integration r
 - C's original extraction/evidence is never edited. Confirmation uses IDs from B's merged proposed draft; document corrections require explicit review reasons. Verified saved costs cannot be edited directly in the expense UI.
 - Decimal strings and null are preserved. Unknown amounts/payment status/period remain unknown; NOT_APPLICABLE requires a separate reason. Reserve is top-level, not an expense category.
 - Progress, budgets, calendars, funding plans, loan quotes, affordability profiles and applications restore from Django after reload. Browser-only unsaved edits are deliberately temporary.
+
+## Student dashboard
+
+After Django session login, open **Dashboard** in the journey navigation. It reads the current briefing, financial calendar, notification metadata and owned review queue. Panels retry independently and compare state/budget/analysis versions; unsaved plan edits are clearly flagged. Notification/review controls are read-only. Upcoming dates show the first five backend events; list pagination is explicitly indicated.
+
+The signed-out setup also offers **Preview student dashboard**: fixed demo data, no Django financial requests, read-only scenario controls. Dashboard preview navigation opens the synthetic journey. It never enters live mode implicitly.
+
+See [current dashboard integration evidence](../docs/frontend-dashboard-integration.md). `npm test` includes two dashboard browser suites; `npm run test:integration` exercises actual Django and PostgreSQL with C mock providers and disposable student data. In the cloud workspace use `npm ci --cache /tmp/studyflow-npm-cache` if the default npm cache is unwritable.

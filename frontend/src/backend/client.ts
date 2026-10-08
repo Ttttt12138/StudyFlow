@@ -16,7 +16,7 @@ export class DjangoClient {
   constructor(private csrfToken: string) {}
   async request<T>(
     path: string,
-    options: { method?: "GET" | "POST"; body?: unknown; key?: string } = {},
+    options: { method?: "GET" | "POST"; body?: unknown; key?: string; raw?: boolean } = {},
   ): Promise<T> {
     const method = options.method ?? "GET";
     const headers: Record<string, string> = {};
@@ -47,9 +47,12 @@ export class DjangoClient {
     }
     const payload: unknown = await response.json().catch(() => null);
     if (!response.ok) throw new ApiError(response.status, payload);
-    return payload && typeof payload === "object" && "data" in payload
+    return !options.raw && payload && typeof payload === "object" && "data" in payload
       ? (payload as { data: T }).data
       : (payload as T);
+  }
+  rawGet<T>(path: string) {
+    return this.request<T>(path, { raw: true });
   }
   get<T>(path: string) {
     return this.request<T>(path);

@@ -415,6 +415,7 @@ try {
   assert.match(await calendar.innerText(), /Costs without a complete schedule/);
   assert.match(await calendar.innerText(), /Amount missing/);
   await page.getByRole("button", { name: "Update 90-day calendar" }).click();
+  await calendar.getByText(/Backend forecast: incomplete/).waitFor();
   assert.match(await calendar.innerText(), /Backend forecast: incomplete/);
   assert.match(await calendar.innerText(), /scheduled item\(s\) lack enough information/);
   await page.getByRole("navigation").getByRole("button", { name: "Funding" }).click();

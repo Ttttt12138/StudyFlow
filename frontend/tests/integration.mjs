@@ -21,8 +21,8 @@ page.on('request', req => {const path = new URL(req.url()).pathname; if(path.sta
 const origin = process.env.TEST_URL || 'http://127.0.0.1:5173';
 const nav = name => page.getByRole('navigation').getByRole('button',{name});
 const button = name => page.getByRole('button',{name,exact:true});
-async function get(path){const r=await page.request.get(`${origin}/api/v2/${path}`); assert.equal(r.status(),200,`${path}: ${await r.text()}`); const payload=await r.json(); return payload.data ?? payload;}
-async function post(path,body,key=randomUUID()){const s=await(await page.request.get(`${origin}/api/auth/session/`)).json(); return page.request.post(`${origin}/api/v2/${path}`,{data:body,headers:{'X-CSRFToken':s.csrf_token,'Idempotency-Key':key}});}
+async function get(path){endpoints.add(`GET /api/v2/${path}`);const r=await page.request.get(`${origin}/api/v2/${path}`); assert.equal(r.status(),200,`${path}: ${await r.text()}`); const payload=await r.json(); return payload.data ?? payload;}
+async function post(path,body,key=randomUUID()){endpoints.add(`POST /api/v2/${path}`);const s=await(await page.request.get(`${origin}/api/auth/session/`)).json(); return page.request.post(`${origin}/api/v2/${path}`,{data:body,headers:{'X-CSRFToken':s.csrf_token,'Idempotency-Key':key}});}
 try {
  await page.goto(origin);
  await page.getByRole('link',{name:'Sign in to StudyFlow'}).click();
@@ -45,6 +45,7 @@ try {
  const original=structuredClone(material.result.draft); assert.ok(original.costs.some(c=>c.evidence.length));
  await button('Refresh processing status').click(); await page.getByRole('heading',{name:'Review information from your document'}).waitFor();
  await page.getByLabel('tuition proposed amount').fill('66000.00');
+ await page.getByLabel('tuition proposed due date').fill(dates.due);
  await page.getByLabel('tuition proposed payment status').selectOption('false');
  for(const label of await page.locator('label').all()){const text=await label.innerText(); if(/^resolve conflict:|^review reason for/i.test(text)) await label.locator('input').fill('Reviewed synthetic UAT correction and original evidence.');}
  await page.getByLabel('Document issuer').fill('Synthetic UAT issuer');
@@ -117,7 +118,38 @@ try {
  await button('Submit transcription').click(); await page.getByText('Manual transcription queued for extraction.').waitFor();
  await waitImport('NEEDS_REVIEW'); await button('Refresh processing status').click();
  await page.getByRole('heading',{name:'Review information from your document'}).waitFor();
+ await page.unroute("**/api/v2/readiness/budgets/");
+ // Complete-result fixture uses actual student APIs; spending UI remains outside this task.
+ state=await get('readiness/state/');semester=await get(`readiness/semesters/${state.semester_id}/`);
+ const completeDraft=structuredClone(semester.draft);
+ for(const cost of completeDraft.costs){if(cost.confidence_type!=='VERIFIED'&&!cost.locked){cost.applicability='NOT_APPLICABLE';cost.applicability_reason='Reviewed disposable UAT fixture: not applicable';cost.conflict=false;}}
+ const completeRev=await post('readiness/semesters/revise/',{semester_id:state.semester_id,state_version:state.state_version,budget_version:state.budget_version,analysis_version:state.analysis_version,draft:completeDraft});assert.equal(completeRev.status(),201,await completeRev.text());
+ const lastMonthStart=iso(new Date(Date.UTC(today.getUTCFullYear(),today.getUTCMonth()-1,1)));
+ const transactionDate=iso(new Date(Date.UTC(today.getUTCFullYear(),today.getUTCMonth()-1,5)));
+ const sessionForCsv=await(await page.request.get(`${origin}/api/auth/session/`)).json();
+ endpoints.add('POST /api/v2/readiness/transaction-imports/');
+ const csv=await page.request.post(`${origin}/api/v2/readiness/transaction-imports/`,{headers:{'X-CSRFToken':sessionForCsv.csrf_token,'Idempotency-Key':randomUUID()},multipart:{source_type:'synthetic',file:{name:'uat-history.csv',mimeType:'text/csv',buffer:Buffer.from(`transaction_id,account_id,date,amount,currency,counterparty,description\nuat-rent,uat-account,${transactionDate},-100.00,THB,Demo Condo,Monthly rent\n`)}}});assert.equal(csv.status(),202,await csv.text());
+ const csvBatch=(await csv.json()).data;
+ const coverage=await post(`readiness/transaction-imports/${csvBatch.id}/confirm/`,{selected_rows:csvBatch.preview.rows.map(r=>r.locator),coverage:[{account_id:'uat-account',start:lastMonthStart,end:dates.asOf,complete:true}]});assert.equal(coverage.status(),201,await coverage.text());
+ state=await get('readiness/state/');
+ const balanceConfirmation=await post('readiness/balance-confirmations/',{state_version:state.state_version,amount:'50000.00',as_of:dates.asOf});assert.equal(balanceConfirmation.status(),201,await balanceConfirmation.text());
+ state=await get('readiness/state/');
+ const completeBudget=await post('readiness/budgets/',{semester_id:state.semester_id,state_version:state.state_version,budget_version:state.budget_version,analysis_version:state.analysis_version});assert.equal(completeBudget.status(),201,await completeBudget.text());
+ const completeResult=(await completeBudget.json()).data;assert.equal(completeResult.result.complete,true,JSON.stringify(completeResult.result.issues));
+ await nav('Dashboard').click();
+ await page.getByRole('heading',{name:'Dashboard',exact:true}).waitFor();
+ await page.getByText(/unread · .* total/).waitFor();
+ const briefing=await get('readiness/briefing/'), calendar=await get('readiness/calendar/');
+ const nr=await page.request.get(`${origin}/api/v2/readiness/notifications/`), notifications=await nr.json();
+ const reviews=await get('review-queue/');
+ assert.equal(nr.status(),200); assert.ok(Array.isArray(notifications.data)); assert.ok(Array.isArray(reviews.items));
+ const main=await page.locator('main').innerText();
+ assert.ok(main.includes(`${notifications.unread_count} unread · ${notifications.count} total`));
+ if(briefing.next_obligation) assert.ok(main.includes(briefing.next_obligation.label));
+ assert.ok(Array.isArray(calendar.calendar));
+ for(const width of [1440,390]){await page.setViewportSize({width,height:1000});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);await page.screenshot({path:`${root}output/frontend/dashboard-${width}.png`,fullPage:true});}
+ await page.setViewportSize({width:1440,height:1000});await page.reload();await page.getByRole('heading',{name:'Admission information'}).waitFor();await nav('Dashboard').click();await page.getByText(/unread · .* total/).waitFor();
  assert.deepEqual(errors,[]);
- writeFileSync(`${root}output/frontend/integration.json`,JSON.stringify({passed:true,backend:'Django/PostgreSQL 17',authentication:'actual Django session login + CSRF',worker:'readiness_worker --mode mock',extraction:'C mock, synthetic fixture',endpoints:[...endpoints].sort(),checks:['original extraction preserved','merged stable IDs','verified fee locked','unknown costs persist','reload','local edits stale','real 409 recovery','lost committed budget/source responses retried without duplicates','B-authored results','desktop/mobile no overflow','text PDF without OCR consent','image with OCR disabled and manual transcription'],liveModels:false},null,2));
+ writeFileSync(`${root}output/frontend/integration.json`,JSON.stringify({passed:true,tested_at:new Date().toISOString(),backend_commit:execFileSync('git',['rev-parse','origin/feature/bc-integration'],{cwd:root,encoding:'utf8'}).trim(),backend:'Django/PostgreSQL 17',authentication:'actual Django session login + CSRF',worker:'readiness_worker --mode mock',extraction:'C mock, synthetic fixture',endpoints:[...endpoints].sort(),checks:['original extraction preserved','merged stable IDs','verified fee locked','unknown costs persist','reload','local edits stale','real 409 recovery','lost committed budget/source responses retried without duplicates','B-authored results','desktop/mobile no overflow','text PDF without OCR consent','image with OCR disabled and manual transcription','dashboard live briefing/calendar/notifications/reviews and reload','complete budget after real CSV coverage and balance confirmation; NOT_APPLICABLE distinct from null'],liveModels:false},null,2));
  console.log('PASS: real PostgreSQL/session/CSRF/C mock worker five-step browser integration.');
 } catch(error){mkdirSync(`${root}output/frontend`,{recursive:true});await page.screenshot({path:`${root}output/frontend/integration-failure.png`,fullPage:true});console.error('Current UI:',(await page.locator('main').innerText().catch(()=>'No main')).slice(-4500));throw error;} finally {await browser.close();}

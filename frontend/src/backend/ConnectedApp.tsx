@@ -1,3 +1,5 @@
+import { LiveDashboard } from "../dashboard/LiveDashboard";
+import { DashboardPreview } from "../dashboard/DashboardPreview";
 import { useEffect, useRef, useState } from "react";
 import { ApiError, DjangoClient, getAll, type StudyFlowClient } from "./client";
 import { PaymentCalendar } from "./PaymentCalendar";
@@ -79,6 +81,8 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
   const [errorDetails, setErrorDetails] = useState<unknown>(null);
   const [notice, setNotice] = useState("");
   const [step, setStep] = useState(0);
+  const [dashboard, setDashboard] = useState(false);
+  const [dashboardPreview, setDashboardPreview] = useState(false);
   const [showSteps, setShowSteps] = useState(false);
   const [templates, setTemplates] = useState<Template[]>([]);
   const [selectedTemplate, setSelectedTemplate] = useState("");
@@ -308,6 +312,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
     ++connectionEpoch.current;
     const api = createPreviewClient();
     setError("");
+    setDashboard(false);
     setPreview(true);
     setClient(api);
     await refresh(api);
@@ -658,6 +663,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
           : step === 3
             ? !funding || !resultFresh(funding, state) ? "Request an updated funding recommendation." : "Review conditions and compare the loan quotes."
             : application ? explainCode(application.status) : "Select a quote, then create a simulated application draft.";
+  if (dashboardPreview) return <DashboardPreview onExit={() => setDashboardPreview(false)} onJourney={(index) => { setDashboardPreview(false); void startPreview().then(() => setStep(index)); }}/>;
   return (
     <div className={`app connected ${preview ? "preview-mode" : ""}`}>
       <aside>
@@ -666,6 +672,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
           href="#"
           onClick={(e) => {
             e.preventDefault();
+            setDashboard(false);
             setStep(0);
           }}
         >
@@ -674,16 +681,17 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
         </a>
         <div className="journey-label">YOUR STUDY PLAN</div>
         <button className="mobile-step-toggle secondary" aria-expanded={showSteps} aria-controls="connected-steps" onClick={() => setShowSteps(!showSteps)}>
-          Step {step + 1} of 5 · {steps[step]} <span aria-hidden="true">{showSteps ? "−" : "+"}</span>
+          {dashboard ? "Dashboard" : `Step ${step + 1} of 5 · ${steps[step]}`} <span aria-hidden="true">{showSteps ? "−" : "+"}</span>
         </button>
         <nav id="connected-steps" className={showSteps ? "steps-open" : ""} aria-label="Study planning steps">
+          {!preview && client && <button className={dashboard ? "active" : ""} onClick={() => { setDashboard(true); setShowSteps(false); }}>Dashboard</button>}
           {steps.map((name, i) => (
             <button
               key={name}
-              className={step === i ? "active" : ""}
-              aria-current={step === i ? "step" : undefined}
+              className={!dashboard && step === i ? "active" : ""}
+              aria-current={!dashboard && step === i ? "step" : undefined}
               disabled={!state && i > 0}
-              onClick={() => { setStep(i); setShowSteps(false); }}
+              onClick={() => { setDashboard(false); setStep(i); setShowSteps(false); }}
             >
               <span className="step-number">0{i + 1}</span>
               {name}
@@ -701,10 +709,11 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
       </aside>
       <div className="workspace">
         <header>
-          <span>StudyFlow / {steps[step]}</span>
+          <span>StudyFlow / {dashboard ? "Dashboard" : steps[step]}</span>
           <span className="avatar" aria-label={session?.username ?? "Student"}>{session?.username?.slice(0, 2).toUpperCase() ?? "ST"}</span>
         </header>
         <main>
+          {dashboard && client && !preview ? <LiveDashboard api={client as DjangoClient} dirty={dirty} onJourney={(index) => { setDashboard(false); setStep(index); }} /> : <>
           <div className="section-heading">
             <div>
               <span className="eyebrow">STEP 0{step + 1} / 05</span>
@@ -749,7 +758,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                 <a className="primary" href={`/api/auth/login/?next=${encodeURIComponent(window.location.origin + "/")}`}>Sign in to StudyFlow</a>
                 <button className="secondary" disabled={busy} onClick={connect}>Refresh sign-in session</button>
               </div>
-              <div className="preview-prompt"><span>Just looking around?</span><button className="secondary" onClick={startPreview}>Preview connected pages</button><button className="secondary" onClick={onDemo}>Explore the original demo</button></div>
+              <div className="preview-prompt"><span>Just looking around?</span><button className="secondary" onClick={startPreview}>Preview connected pages</button><button className="secondary" onClick={onDemo}>Explore the original demo</button><button className="secondary" onClick={() => setDashboardPreview(true)}>Preview student dashboard</button></div>
             </section>
           ) : (
             <>
@@ -1078,7 +1087,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                                   </label>
                                   <label>
                                     Due date
-                                    <input disabled={preview}
+                                    <input disabled={preview} aria-label={`${c.cost_id} proposed due date`}
                                       type="date"
                                       value={c.due_date ?? ""}
                                       onChange={(e) =>
@@ -1739,6 +1748,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
               )}
             </>
           )}
+        </>}
         </main>
         <footer>
           StudyFlow · Student journey
