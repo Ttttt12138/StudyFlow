@@ -34,6 +34,7 @@ urlpatterns = [
         lending_ledger.repay,
         LoanAccount,
         namespace="b-lending",
+        policy="loan.repay",
     ),
     command(
         "applications/<uuid:pk>/explain/",

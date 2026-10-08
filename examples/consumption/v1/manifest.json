@@ -1,0 +1,47 @@
+{
+  "version": "consumption-v1",
+  "seed": 20261005,
+  "synthetic": true,
+  "as_of": "2026-10-01",
+  "coverage": {
+    "start": "2026-07-01",
+    "end": "2026-09-30"
+  },
+  "files": {
+    "history.csv": {
+      "sha256": "bb7beab00770b5f5492248b19308d238ffd5b59bbc63c2040eb89f4b2e2c52bd",
+      "rows": 99
+    },
+    "duplicate.csv": {
+      "sha256": "30cfea8222014bc41f0b71587346c0f9512bb859848ee987c49a83ece60f256a",
+      "rows": 1
+    },
+    "partial-month.csv": {
+      "sha256": "eeb63de70a766f7e037e9d6955bf14e700c811f7639edd67d498cd3fc92886a7",
+      "rows": 14
+    },
+    "refund.csv": {
+      "sha256": "992777e1d212c5bac97b750a7e047166b59b2c793fb5966aebe1e2e5500b3e4f",
+      "rows": 1
+    },
+    "missing-records.csv": {
+      "sha256": "0a6a5a72f9d683ab50f77b2624cf62fa11a5e98d0c35c4f643de25b759755f68",
+      "rows": 2
+    },
+    "rising-costs.csv": {
+      "sha256": "be2454e293f1f0b081af2c566cd4cb78626c931da4ff93aeed566b96f0879f40",
+      "rows": 3
+    }
+  },
+  "expected": {
+    "food_monthly_median": "4310.00",
+    "recurring_categories": [
+      "rent",
+      "mobile",
+      "transport",
+      "subscription"
+    ],
+    "wallet_change_from_import": "0.00",
+    "transfer_is_spending": false
+  }
+}

@@ -31,7 +31,7 @@ def detect_recurring(transactions, as_of: date) -> list[RecurringObligation]:
     groups = defaultdict(list)
     for tx in transactions:
         if tx.date <= as_of and tx.amount < 0 and tx.status == Status.READY:
-            groups[(tx.account_id, normalized(tx.counterparty))].append(tx)
+            groups[(tx.account_id, tx.currency, normalized(tx.counterparty))].append(tx)
     results = []
     for rows in groups.values():
         result = _pattern(sorted(rows, key=lambda tx: tx.date), as_of)
@@ -58,6 +58,8 @@ def _pattern(rows, as_of):
 
 
 def _obligation(rows, pattern, as_of):
+    from studyflow_ai.bank_data import classify_transaction
+
     months, amount, day, month_ends = pattern
     review = len(months) < 3 or len(months) != len(rows)
     is_rent = any(
@@ -66,7 +68,10 @@ def _obligation(rows, pattern, as_of):
     )
     return RecurringObligation(
         account_id=rows[0].account_id,
-        category="rent" if is_rent else "other",
+        category="rent" if is_rent else {
+            "Mobile": "mobile", "Subscription": "subscription", "Transport": "transport",
+            "Utilities": "utilities",
+        }.get(classify_transaction(rows[-1])["category"], "other"),
         counterparty=rows[0].counterparty,
         amount=amount.quantize(Decimal("0.01")),
         expected_next_date=next_date(rows[-1].date, day, month_ends, as_of),

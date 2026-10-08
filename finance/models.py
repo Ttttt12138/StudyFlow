@@ -41,5 +41,13 @@ class AuditEvent(OwnedRecord):
 # Register the bounded v2 workflow models with Django.
 from .workflow_models import (FXQuote, BudgetScenario, LoanSimulation, FundingSource, FundingPlan, SimulatedApplication, Disbursement, DemoWallet, Beneficiary, Payment, DemoLedgerEntry, IdempotencyRecord)
 from .lending_models import AffordabilityProfile, LoanAccount, LoanInstallment
+from .consumption.models import (BankAccount, TransactionImport, ObservedTransaction,
+                                 ClassificationRevision, AccountCoverage, RecurringExpense, CalibrationRevision, BalanceConfirmation)
 from .readiness.models import (Semester, ReadinessRun, ImportMaterial, InvoiceIdentity,
                                ReadinessJob, CheckLease, RiskCard, NotificationOutbox)
+from .sponsorship import SponsorRequest
+from .policy_models import PolicyLimit, ApprovalRequest, StepUpGrant
+from .credit_models import CreditSnapshot
+from .remittance_models import RemittanceOrder, RemittanceStatusEvent
+from .agent_models import AgentSession, AgentStep, AgentPendingAction
+from .copilot.models import WhatIfRun, PlanningPreference, ReviewItem, ReviewAction, ExplanationTrace

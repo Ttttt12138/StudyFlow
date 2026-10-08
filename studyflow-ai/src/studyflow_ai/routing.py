@@ -1,6 +1,8 @@
 from studyflow_ai.models import RouteContext, RouteResult, Status
 from studyflow_ai.providers.base import ProviderFailure
 
+MIN_PROBABILITY = 0.80
+
 
 class Router:
     def __init__(self, classifier):
@@ -35,7 +37,7 @@ class Router:
             return self._finish(result, "REVIEW", "CLASSIFIER_UNAVAILABLE")
         if judgment.anomaly >= 0.5:
             return self._finish(result, "REVIEW", "POSSIBLE_ANOMALY")
-        if max(judgment.probabilities.values()) < 0.80:
+        if max(judgment.probabilities.values()) < MIN_PROBABILITY:
             return self._finish(result, "REVIEW", "LOW_CLASSIFICATION_PROBABILITY")
         if judgment.category == "irrelevant":
             can_skip = not context.financial_clues and judgment.probabilities["irrelevant"] >= 0.95

@@ -1,8 +1,8 @@
 # StudyFlow Backend API Reference
 
 This is the concise endpoint reference for frontend and extraction-service
-integration. For detailed workflow explanations, see API_GUIDE.md. The generated
-machine-readable contract is openapi.yaml.
+integration. For detailed workflow explanations, see [guide.md](guide.md). The generated
+machine-readable contract is [openapi.yaml](../../openapi.yaml).
 
 ## Connection
 
@@ -25,13 +25,20 @@ the saved response. Reusing the key with a different body returns HTTP 400.
 The original POST state/ and POST forecasts/ APIs do not use Idempotency-Key.
 State writes instead use expected_version.
 
+Tokens can be obtained with `POST /api/v2/auth/token/` (`{"username", "password"}`,
+throttled). Money-moving commands (payments/{id}/submit/, conversions/,
+loan-accounts/{id}/repay/) additionally need `X-Step-Up-Token` from
+`POST /api/v2/auth/step-up/`, and above the per-currency limits an approved
+`approvals/` request decided by a second operator. See docs/permissions.md for tiers,
+limits, approval rules, denial bodies and rate limits (HTTP 429).
+
 ## Roles
 
 | Role | Permitted operations |
 |---|---|
-| Student | Own state, scenarios, plans, loans, application submission, authorization, reconciliation |
-| Demo operator | Mock review/decision, beneficiary verification, funding/disbursement/payment outcomes |
-| Anonymous | Health endpoint only |
+| Student | Own state, scenarios, plans, loans, application submission, authorization, reconciliation; T2 commands after step-up |
+| Demo operator | Mock review/decision, beneficiary verification, funding/disbursement/payment outcomes, approval decisions (not for payees they verified, nor their own requests) |
+| Anonymous | Health, auth/token/ and sponsor confirmation only |
 
 The operator is a controlled local simulator. AI extraction or planning components
 must use student-scoped access and must never receive operator credentials.
@@ -52,7 +59,8 @@ Paginated list:
 | 201 | New command completed |
 | 400 | Invalid field, business rule, transition, or idempotency conflict |
 | 401 | Missing or invalid authentication |
-| 403 | Authenticated user lacks the operator/staff role |
+| 403 | Authenticated user lacks the operator/staff role, or a policy denial (`STEP_UP_REQUIRED`, `STEP_UP_INVALID`, `APPROVAL_REQUIRED`, `AGENT_TIER_EXCEEDED`, `SEPARATION_OF_DUTIES`, `STEP_UP_FAILED`) |
+| 429 | Rate limit exceeded; retry after the `Retry-After` header |
 | 404 | Record absent or owned by another student |
 | 409 | Stale financial-state version |
 | 503 | Database unavailable or migrations pending |
@@ -420,7 +428,8 @@ Student request:
     {}
 
 Submission rechecks authorization, state, plan, quote, recipient, deadline, holds,
-settled wallet funds, and reserve. It creates a hold but no ledger debit.
+settled wallet funds, and reserve. It creates a hold but no ledger debit. It is a T2
+action: send `X-Step-Up-Token` (and hold an approved approval when above the limits).
 
 ### POST /api/v2/payments/{id}/adapter-event/
 

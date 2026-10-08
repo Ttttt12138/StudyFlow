@@ -1,0 +1,67 @@
+name: Student frontend integration
+on: [push, pull_request]
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: studyflow
+          POSTGRES_USER: studyflow
+          POSTGRES_PASSWORD: local-simulation-only
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U studyflow -d studyflow"
+          --health-interval 2s --health-timeout 3s --health-retries 30
+    env:
+      DJANGO_SECRET_KEY: ci-only-not-a-deployment-secret
+      DB_NAME: studyflow
+      DB_USER: studyflow
+      DB_PASSWORD: local-simulation-only
+      DB_HOST: 127.0.0.1
+      DB_PORT: "5432"
+      STUDYFLOW_READINESS_ENABLED: "true"
+      STUDYFLOW_CONSUMPTION_ENABLED: "true"
+      STUDYFLOW_MODE: mock
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: |
+          python -m venv .venv
+          .venv/bin/python -m pip install -r requirements-dev.txt
+          .venv/bin/python manage.py migrate --noinput
+          .venv/bin/python manage.py createcachetable
+      - working-directory: frontend
+        run: |
+          npm ci
+          npm run build
+          npx playwright install --with-deps chromium
+          echo "CHROMIUM_PATH=$(node --input-type=module -e 'import {chromium} from "playwright"; process.stdout.write(chromium.executablePath())')" >> "$GITHUB_ENV"
+      - name: Start development services and check readiness
+        run: |
+          mkdir -p output/frontend
+          .venv/bin/python manage.py runserver 127.0.0.1:8000 --noreload > output/frontend/django.log 2>&1 &
+          .venv/bin/python manage.py readiness_worker --mode mock > output/frontend/worker.log 2>&1 &
+          npm --prefix frontend run dev -- --host 127.0.0.1 > output/frontend/vite.log 2>&1 &
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:8000/health/ && curl --fail --silent --output /dev/null http://127.0.0.1:5173; then exit 0; fi
+            sleep 1
+          done
+          exit 1
+      - working-directory: frontend
+        run: |
+          npm test
+          npm run test:integration
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: student-frontend-validation
+          path: output/frontend/

@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 
-def load_env_file(path):
+def read_env_file(path):
     allowed = {
         "STUDYFLOW_MODE",
         "OPENAI_API_KEY",
@@ -11,7 +11,18 @@ def load_env_file(path):
         "OPENAI_MODEL",
         "TYPESAFE_API_KEY",
         "TYPESAFE_DEFAULT_MODEL",
+        "GEMINI_API_KEY",
+        "STUDYFLOW_OCR_MODEL",
+        "STUDYFLOW_OCR_FALLBACK_MODELS",
+        "STUDYFLOW_OCR_MAX_ATTEMPTS",
+        "STUDYFLOW_OCR_ENABLED",
+        "STUDYFLOW_OCR_TIMEOUT",
+        "STUDYFLOW_OCR_PAID_SERVICE_CONFIRMED",
+        "STUDYFLOW_OCR_ADULT_ONLY_CONFIRMED",
+        "STUDYFLOW_OCR_REQUESTS_PER_HOUR",
+        "STUDYFLOW_DOCUMENT_RETENTION_DAYS",
     }
+    values = {}
     for line in Path(path).read_text(encoding="utf-8-sig").splitlines():
         if not line.strip() or line.lstrip().startswith("#"):
             continue
@@ -22,7 +33,12 @@ def load_env_file(path):
             value = value.strip()
             if len(value) >= 2 and value[0] == value[-1] and value[0] in "\"'":
                 value = value[1:-1]
-            os.environ[key.strip()] = value
+            values[key.strip()] = value
+    return values
+
+
+def load_env_file(path):
+    os.environ.update(read_env_file(path))
 
 
 DEFAULT_OPENAI_MODEL = "openai/gpt-6-luna"

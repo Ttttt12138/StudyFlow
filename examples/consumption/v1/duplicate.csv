@@ -1,0 +1,2 @@
+transaction_id,account_id,date,amount,currency,counterparty,description
+7-rent,demo-main,2026-07-05,-9000.00,THB,Demo Condo,Monthly rent

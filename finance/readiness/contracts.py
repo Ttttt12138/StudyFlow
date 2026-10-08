@@ -7,6 +7,8 @@ from pydantic import Field, field_validator, model_validator
 from studyflow_ai.models import Contract
 from studyflow_ai.readiness.models import CostItem, SemesterProfile
 
+from finance.lending_core.schemas import Amount
+
 
 class Profile(SemesterProfile):
     city: str | None = None
@@ -14,10 +16,20 @@ class Profile(SemesterProfile):
     lifestyle_profile: str | None = None
 
 
+class PlannedOverride(Contract):
+    effective_on: date
+    amount: Amount = Field(le=Decimal("99999999999999.99"))
+
+
 class Cost(CostItem):
+    locked: bool = False
     cost_id: str = Field(min_length=1, max_length=100, pattern=r"^[a-zA-Z0-9_-]+$")
     component: str | None = None
     observed_at: datetime | None = None
+    verified_at: datetime | None = None
+    planned_overrides: list[PlannedOverride] = Field(
+        default_factory=list, max_length=24
+    )
     valid_until: date | None = None
     confidence: float | None = Field(default=None, ge=0, le=1)
     synthetic: bool = False

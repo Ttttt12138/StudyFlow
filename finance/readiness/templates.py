@@ -1,13 +1,12 @@
-"""A deliberately incomplete, source-backed PSU baseline; never invent missing costs."""
+"""Immutable, schema-validated school/city template registry."""
 
+import json
 from copy import deepcopy
-from decimal import Decimal
+from pathlib import Path
+
+from finance.workflow_common import require
 
 TEMPLATE_KEY = "psu-phuket-fis-ib-2026-1-shared"
-FIS = "https://sites.google.com/phuket.psu.ac.th/fispsuphuket/International-Students"
-DORM = "https://www.psu.ac.th/phuket/en/on-campus-accommodation-2/"
-CALENDAR = "https://gao.psu.ac.th/admission/academic-calendar"
-OBSERVED = "2026-10-05T14:38:06Z"
 REQUIRED = [
     "tuition",
     "housing",
@@ -21,137 +20,59 @@ REQUIRED = [
     "travel",
     "settlement",
 ]
+DIRECTORY = Path(__file__).with_name("template_data")
 
 
-def item(key, category, amount=None, period="once", source=None, **extra):
-    evidence = (
-        [
-            {
-                "source_id": source,
-                "field": "amount",
-                "quote": format(Decimal(amount), ",.0f"),
-                "locator": "TUITION & FEES / B.B.A. International Business"
-                if key in {"tuition", "enrollment"}
-                else "Dormitory rental rates / International Students",
-            }
-        ]
-        if source and amount
-        else []
-    )
-    return {
-        "cost_id": key,
-        "category": category,
-        "component": key,
-        "currency": "THB",
-        "evidence": evidence,
-        "amount": amount,
-        "period": period,
-        "due_date": None,
-        "paid": None,
-        "confidence_type": "UNCONFIRMED",
-        "year": 2026,
-        "campus": "Phuket",
-        "observed_at": OBSERVED if source else None,
-        "valid_until": "2026-12-15" if source else None,
-        "source_refs": [source] if source else [],
-        "synthetic": False,
-        **extra,
-    }
+def list_templates():
+    from .contracts import Draft
 
-
-def get_template(room="shared"):
-    single = room == "single"
-    costs = [
-        item("tuition", "tuition", "41000.00", "semester", FIS),
-        item("enrollment", "settlement", "20000.00", source=FIS),
-        item(
-            "housing", "housing", "22500.00" if single else "11250.00", "semester", DORM
-        ),
-        item(
-            "deposit",
-            "deposit",
-            source=DORM,
-            conflict=True,
-            alternatives=[
-                {"amount": "6000.00" if single else "3000.00", "source": FIS},
-                {"amount": "12000.00" if single else "6000.00", "source": DORM},
-            ],
-        ),
-        item(
-            "dorm_card",
-            "settlement",
-            source=DORM,
-            conflict=True,
-            alternatives=[
-                {"amount": "50.00", "source": FIS},
-                {"amount": "100.00", "source": DORM},
-            ],
-        ),
-    ]
-    for category in [
-        "food",
-        "transport",
-        "communications",
-        "utilities",
-        "insurance",
-        "visa",
-        "travel",
-    ]:
-        costs.append(
-            item(
-                category,
-                category,
-                period="monthly" if category in REQUIRED[3:7] else "once",
-            )
+    result = []
+    for path in sorted(DIRECTORY.glob("*.json")):
+        item = json.loads(path.read_text(encoding="utf-8"))
+        Draft.model_validate(
+            {k: item[k] for k in ("profile", "costs", "reserve", "required_categories")}
         )
-    costs.append(item("study_materials", "settlement"))
-    return deepcopy(
-        {
-            "key": TEMPLATE_KEY,
-            "version": 1,
-            "room": room,
-            "synthetic": False,
+        result.append(item)
+    return result
+
+
+def get_template(room="shared", key=None, version=None):
+    key = key or "psu-phuket-fis-ib-2026-1-" + room
+    matches = [
+        t
+        for t in list_templates()
+        if t["key"] == key and (version is None or t["version"] == version)
+    ]
+    require(bool(matches), "UNKNOWN_TEMPLATE_VERSION")
+    return deepcopy(max(matches, key=lambda t: t["version"]))
+
+
+def upgrade(owner, data, obj=None):
+    from .services import persist_revision, versions
+
+    semester, state = versions(owner, data)
+    target = get_template(key=data["template_key"], version=data["template_version"])
+    previous = {c["cost_id"]: c for c in semester.draft["costs"]}
+    differences = [
+        {"cost_id": c["cost_id"], "existing": previous.get(c["cost_id"]), "template": c}
+        for c in target["costs"]
+        if previous.get(c["cost_id"]) != c
+    ]
+    if not data["confirm"]:
+        return {
+            "changes": differences,
             "profile": {
-                "school": "Prince of Songkla University",
-                "campus": "Phuket",
-                "city": "Phuket",
-                "country": "Thailand",
-                "program": "BBA International Business",
-                "student_type": "new international undergraduate",
-                "semester": "2026/1",
-                "lifestyle_profile": "campus_" + room,
-                "start_date": "2026-08-10",
-                "end_date": "2026-12-15",
-                "evidence": [
-                    {
-                        "source_id": CALENDAR,
-                        "field": "start_date",
-                        "quote": "10 August 2026",
-                        "locator": "Academic Calendar 2026 (Phuket Campus) / First Semester",
-                    },
-                    {
-                        "source_id": CALENDAR,
-                        "field": "end_date",
-                        "quote": "15 December 2026",
-                        "locator": "Academic Calendar 2026 (Phuket Campus) / First Semester",
-                    },
-                ],
+                "existing": semester.draft["profile"],
+                "template": target["profile"],
             },
-            "costs": costs,
-            "reserve": None,
-            "required_categories": REQUIRED,
-            "sources": [
-                {
-                    "url": url,
-                    "observed_at": OBSERVED,
-                    "applicable_academic_year": 2026,
-                    "status": "REVIEWED_REFERENCE_NOT_INDIVIDUAL_VERIFICATION",
-                }
-                for url in [FIS, DORM, CALENDAR]
-            ],
-            "notes": [
-                "Source-backed reference, not an individual invoice or a verified payment obligation.",
-                "Deposit/card sources conflict. No reliable local food/transport/mobile estimate is asserted.",
-            ],
+            "template_key": target["key"],
+            "template_version": target["version"],
+            "requires_confirmation": True,
         }
-    )
+    draft = deepcopy(semester.draft)
+    draft["costs"].extend(c for c in target["costs"] if c["cost_id"] not in previous)
+    draft["required_categories"] = target["required_categories"]
+    draft["profile"] = target["profile"]
+    semester.template_key, semester.template_version = target["key"], target["version"]
+    semester.save(update_fields=["template_key", "template_version"])
+    return persist_revision(owner, semester, state, draft)

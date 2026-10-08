@@ -1,0 +1,22 @@
+{
+  "dataset_sha256": "2005c2afe601aea6fec4cc461850ba05e34a2c198cba6e447d601e5ac788d509",
+  "reviewer": "Codex, delegated by the user",
+  "review_type": "user_delegated_ai",
+  "human_reviewed": false,
+  "reviewed_at": "2026-10-06T22:56:57.310807+07:00",
+  "approved": true,
+  "authorization": "User delegated label review previously and requested new independent validation in this turn",
+  "scope": "16 new template families, all 160 held-out variants; prior 80 dev samples unchanged",
+  "checks": [
+    "Category follows stated financial purpose, including other insurance and visa fees",
+    "Expected amount/currency/date are explicit source facts; missing currency and year remain null",
+    "Conditional rent and future family support are candidates, never settled funds",
+    "Injection targets mandate review without financial execution",
+    "New templates and texts do not occur in prior dev/test data"
+  ],
+  "limitations": [
+    "Same AI authored and reviewed synthetic labels; not an external double-blind audit",
+    "One held-out first pass per arm; all failures retained; no post-result tuning",
+    "Template-generated synthetic text cannot establish real-document accuracy"
+  ]
+}

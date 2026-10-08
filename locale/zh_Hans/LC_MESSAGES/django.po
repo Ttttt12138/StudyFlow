@@ -1,0 +1,1260 @@
+# Chinese (Simplified) translations for StudyFlow.
+# Copyright (C) 2026 ORGANIZATION
+# This file is distributed under the same license as the StudyFlow project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: StudyFlow 2\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2026-10-07 00:00+0000\n"
+"PO-Revision-Date: 2026-10-07 00:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_Hans\n"
+"Language-Team: zh_Hans <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: finance/budget_services.py:39
+msgid "A valid FX quote is required for foreign currency."
+msgstr "外币金额需要提供有效的汇率报价。"
+
+#: finance/policy.py:166
+msgid "ACTION_NOT_AVAILABLE"
+msgstr "此操作不支持二次验证或审批请求。"
+
+#: finance/copilot/reviews.py:196
+msgid "ACTIVE_OPERATOR_REQUIRED"
+msgstr "请将该复核分配给一名有效的运营人员。"
+
+#: finance/readiness/services.py:42
+msgid "ACTIVE_SEMESTER_EXISTS"
+msgstr "已有进行中的学期，请更新该学期，而不是新建学期。"
+
+#: finance/policy.py:264
+msgid "AGENT_TIER_EXCEEDED"
+msgstr "此操作需要您本人验证，AI 助手无法直接执行。"
+
+#: finance/readiness/funding.py:118
+msgid "ALLOCATION_EXCEEDS_CAPACITY"
+msgstr "分配金额超过了该资金来源的可用金额。"
+
+#: finance/agent_runner.py:80
+msgid "ALREADY_PROPOSED"
+msgstr "相同的操作已在等待您确认。"
+
+#: finance/money.py:30
+msgid "AMOUNT_PRECISION_INVALID"
+msgstr "金额的小数位数超过了该币种允许的位数。"
+
+#: finance/policy.py:363
+msgid "APPROVAL_ALREADY_OPEN"
+msgstr "此操作已有待处理或已通过的审批请求。"
+
+#: finance/policy.py:408
+msgid "APPROVAL_NOT_PENDING"
+msgstr "该审批请求已处理或已过期。"
+
+#: finance/policy.py:276
+msgid "APPROVAL_REQUIRED"
+msgstr "此操作需要运营人员审批，请先提交审批请求。"
+
+#: finance/execution_services.py:128
+msgid "Adapter result requires a submitted task."
+msgstr "只有已提交的任务才能记录适配器结果。"
+
+#: finance/execution_services.py:31
+msgid "Advance at most 730 days per command."
+msgstr "每次最多只能将演示时钟推进 730 天。"
+
+#: finance/management/commands/demo_agent.py:20
+msgid "Agent did not propose the submission"
+msgstr "AI 助手未提出提交操作"
+
+#: finance/management/commands/demo_agent.py:21
+msgid "Agent moved money before confirmation"
+msgstr "AI 助手在确认前转移了资金"
+
+#: finance/management/commands/demo_agent.py:18
+msgid "Agent session did not complete"
+msgstr "AI 助手会话未完成"
+
+#: finance/budget_services.py:156
+msgid "Allocation exceeds source capacity or is not positive."
+msgstr "分配金额必须大于零，且不能超过资金来源的可用金额。"
+
+#: finance/serializers.py:37
+msgid "Amount exceeds supported monetary precision."
+msgstr "金额超出支持的精度范围。"
+
+#: finance/policy.py:95
+msgid "Amount must be positive."
+msgstr "金额必须大于零。"
+
+#: finance/management/commands/demo_bc.py:116
+msgid "Approval cannot create cash"
+msgstr "审批不应凭空产生资金"
+
+#: finance/management/commands/demo_remittance.py:76
+msgid "Approved T3 order not submitted"
+msgstr "已审批的 T3 汇款订单未提交"
+
+#: finance/execution_services.py:111
+msgid "Authorization expired."
+msgstr "授权已过期。"
+
+#: finance/management/commands/demo_readiness.py:289
+msgid "Automatic post-repayment check failed"
+msgstr "还款后的自动检查未通过"
+
+#: finance/execution_services.py:117
+msgid "Available settled demo funds cannot cover payment and reserve; promises are not balance."
+msgstr "可用的已结算模拟资金不足以支付本笔款项并保留储备金；尚未到账的承诺资金不计入余额。"
+
+#: finance/remittance_orders.py:103
+msgid "BENEFICIARY_NOT_VERIFIED"
+msgstr "该收款人尚未通过验证。"
+
+#: finance/remittance_orders.py:101
+msgid "BENEFICIARY_REQUIRED"
+msgstr "汇款给收款人时，请提供 beneficiary_id。"
+
+#: finance/readiness/payment_bridge.py:140
+msgid "BENEFICIARY_VERIFICATION_REVOKED"
+msgstr "收款人验证已被撤销，此付款无法继续。"
+
+#: finance/execution_services.py:66
+msgid "Beneficiary needs controlled mock verification."
+msgstr "收款人需要先完成受控的模拟验证。"
+
+#: finance/execution_services.py:89
+msgid "Beneficiary verification was revoked."
+msgstr "收款人验证已被撤销。"
+
+#: finance/c_adapter.py:135
+msgid "C changed authoritative loan numbers."
+msgstr "C 模块更改了权威的贷款数据。"
+
+#: finance/management/commands/demo_readiness.py:245
+msgid "C completeness must agree with B"
+msgstr "C 模块的完整性判断必须与 B 模块一致"
+
+#: finance/management/commands/demo_bc.py:173
+msgid "C reallocates received funds"
+msgstr "C 模块重新分配了已到账资金"
+
+#: finance/consumption/imports.py:188
+msgid "CATEGORY_AMOUNT_DIRECTION"
+msgstr "金额正负与类别不符：Income 和 Refund 必须为正数，除 Transfer 外的其他类别必须为负数。"
+
+#: finance/sponsorship.py:80
+msgid "COMPLETE_TERMS_REQUIRED"
+msgstr "修改请求时，请提供 amount、currency、available_on 和 purpose。"
+
+#: finance/copilot/scenarios.py:269
+msgid "CONFIRMATION_INVALID_OR_EXPIRED"
+msgstr "确认凭证无效或已过期，请重新预览该情景。"
+
+#: finance/copilot/scenarios.py:270
+msgid "CONFIRMATION_MISMATCH"
+msgstr "确认凭证与该情景不匹配或数据已变化，请重新预览。"
+
+#: finance/readiness/payment_bridge.py:39
+msgid "CONFIRMED_UNPAID_TUITION_REQUIRED"
+msgstr "请选择一项已确认且尚未支付的学费支出。"
+
+#: finance/consumption/imports.py:240
+msgid "CONFIRM_BALANCE_AS_OF_TODAY"
+msgstr "请按今天确认余额；as_of 必须为当前演示日期。"
+
+#: finance/readiness/funding.py:50
+msgid "CONTRACTUAL_COST_CANNOT_BE_REDUCED"
+msgstr "合同约定的费用不能削减；只有餐饮、交通、通讯和安顿类费用可以削减。"
+
+#: finance/fx_rates.py:121
+msgid "CONVERSION_NOT_POSITIVE"
+msgstr "金额不足以覆盖费用，换汇后到账金额不会大于零。"
+
+#: finance/fx_rates.py:111
+msgid "CORRIDOR_AMOUNT_OUT_OF_RANGE"
+msgstr "金额超出该汇路允许的范围。"
+
+#: finance/budget_services.py:26
+msgid "CORRIDOR_CURRENCY_MISMATCH"
+msgstr "报价币种与该汇路不匹配。"
+
+#: finance/budget_services.py:25
+msgid "CORRIDOR_DISABLED"
+msgstr "该汇路暂不可用，请选择其他汇路。"
+
+#: finance/budget_services.py:24
+msgid "CORRIDOR_NOT_FOUND"
+msgstr "未找到该汇路。"
+
+#: finance/readiness/funding.py:38
+msgid "COST_ACTION_UNAVAILABLE"
+msgstr "该费用无法调整：可能已支付、没有金额、不是 THB 计价或存在未解决的冲突。"
+
+#: finance/copilot/simulation.py:24
+msgid "COST_BASELINE_MISSING"
+msgstr "该费用没有可供调整的基准估算。"
+
+#: finance/copilot/simulation.py:25
+msgid "COST_NOT_APPLICABLE"
+msgstr "该费用已标记为不适用或不是 THB 计价，无法在此修改。"
+
+#: finance/copilot/simulation.py:23
+msgid "COST_NOT_EDITABLE"
+msgstr "未找到该费用，或该费用已支付。"
+
+#: finance/copilot/simulation.py:195
+msgid "COST_OVERRIDE_REQUIRES_THB_BASELINE"
+msgstr "情景中只能调整以 THB 计价的费用。"
+
+#: finance/readiness/services.py:165
+msgid "COST_PREDATES_OPENING_CONFIRM_ALREADY_PAID_OR_CHANGE_DATE"
+msgstr "该费用日期早于期初余额日期，请将其标记为已支付或修改日期。"
+
+#: finance/consumption/imports.py:87
+msgid "COVERAGE_DATE_MISMATCH"
+msgstr "所选行不在对应账户的覆盖期间内，或覆盖期间的结束日期晚于今天。"
+
+#: finance/consumption/serializers.py:25
+msgid "COVERAGE_DATE_ORDER"
+msgstr "覆盖期间的结束日期不能早于开始日期。"
+
+#: finance/consumption/imports.py:96
+msgid "COVERAGE_REQUIRES_SELECTED_ACCOUNT"
+msgstr "覆盖列表中的每个账户至少需要选择一行交易。"
+
+#: finance/management/commands/demo_consumption.py:100
+msgid "CSV changed wallet"
+msgstr "CSV 导入改变了钱包余额"
+
+#: finance/money.py:21
+msgid "CURRENCY_NOT_SUPPORTED"
+msgstr "不支持该币种。"
+
+#: finance/management/commands/demo_consumption.py:96
+msgid "Calibration did not apply"
+msgstr "校准未生效"
+
+#: finance/budget_services.py:150
+msgid "Cancelled or rejected borrowing cannot fund a plan."
+msgstr "已取消或被拒绝的借款不能用于资金计划。"
+
+#: finance/management/commands/demo_bc.py:115
+msgid "Complete inputs should approve"
+msgstr "输入完整时应获批准"
+
+#: finance/management/commands/demo_readiness.py:255
+msgid "Complete synthetic repayment profile did not approve"
+msgstr "完整的合成还款档案未获批准"
+
+#: finance/budget_services.py:105
+msgid "Computed installment exceeds the shared Django monetary precision."
+msgstr "计算出的分期金额超出系统统一的金额精度。"
+
+#: finance/execution_services.py:51
+msgid "Confirm expense estimates before execution."
+msgstr "执行前请先确认支出估算。"
+
+#: finance/workflow_common.py:14
+msgid "Confirm financial state first."
+msgstr "请先确认财务状况。"
+
+#: finance/execution_services.py:70
+msgid "Confirm this beneficiary on the expense before creating a payment."
+msgstr "创建付款前，请先在该支出上确认此收款人。"
+
+#: finance/management/commands/demo_agent.py:24
+msgid "Confirmation did not submit the order"
+msgstr "确认后未提交汇款订单"
+
+#: finance/serializers.py:54
+msgid "Confirmed events require amount and date."
+msgstr "已确认的事项必须包含金额和日期。"
+
+#: finance/budget_services.py:75
+msgid "Confirmed expense amount cannot be missing."
+msgstr "已确认支出的金额不能为空。"
+
+#: finance/budget_services.py:58
+msgid "Converted amount exceeds supported monetary precision."
+msgstr "换汇后的金额超出支持的精度范围。"
+
+#: finance/lending_applications.py:52
+msgid "Create a new B quote; legacy simulations are read-only."
+msgstr "请创建新的 B 报价；旧版模拟仅供查看。"
+
+#: finance/remittance_orders.py:107
+msgid "DEADLINE_OUT_OF_RANGE"
+msgstr "截止日期须在演示当前日期起一年之内，且不能早于当前日期。"
+
+#: finance/consumption/imports.py:85
+msgid "DECLARE_ACCOUNT_COVERAGE"
+msgstr "请为每个包含所选行的账户声明覆盖期间。"
+
+#: finance/readiness/services.py:48
+msgid "DECLARE_PLANNING_FUNDS_AND_DATE"
+msgstr "开始规划前，请提供 opening_balance 和 as_of。"
+
+#: finance/readiness/ocr.py:202
+msgid "DOCUMENT_PROCESSING_IN_PROGRESS"
+msgstr "该文件仍在处理中，请在处理完成后重试。"
+
+#: finance/copilot/reviews.py:165
+msgid "DOMAIN_ACTION_REQUIRED"
+msgstr "请为该复核项提供受支持的 domain_action。"
+
+#: finance/readiness/funding.py:35
+msgid "DUPLICATE_COST_ACTION"
+msgstr "每项费用在一个计划中只能有一个调整操作。"
+
+#: finance/consumption/imports.py:81
+msgid "DUPLICATE_COVERAGE_ACCOUNT"
+msgstr "每个账户在覆盖列表中只能出现一次。"
+
+#: finance/readiness/funding.py:79
+msgid "DUPLICATE_INSTALLMENT_DATE"
+msgstr "每期分期付款的日期必须不同。"
+
+#: finance/readiness/funding.py:102
+msgid "DUPLICATE_OR_RECEIVED_FUNDING"
+msgstr "该资金来源已被分配、已到账或已计入期初资金。"
+
+#: finance/remittances.py:9
+msgid "DUPLICATE_QUOTE"
+msgstr "同一报价被重复列出。"
+
+#: finance/workflow_common.py:42
+msgid "Date plus settlement delay is outside the supported calendar."
+msgstr "日期加上结算天数后超出了支持的日期范围。"
+
+#: finance/management/commands/demo_remittance.py:80
+msgid "Delivered order missing from on-time record"
+msgstr "已送达的汇款订单未计入准时记录"
+
+#: finance/management/commands/demo_remittance.py:64
+msgid "Delivery not reconciled on time"
+msgstr "送达后未按时完成对账"
+
+#: finance/execution_services.py:30
+msgid "Demo clock cannot move backward."
+msgstr "演示时钟不能回拨。"
+
+#: finance/execution_services.py:135
+msgid "Demo ledger balance invariant failed."
+msgstr "演示账本余额校验未通过。"
+
+#: finance/services.py:32
+msgid "Demo opening snapshot is fixed; balances change only through the ledger."
+msgstr "演示期初快照不可更改；余额只能通过账本变动。"
+
+#: finance/execution_services.py:21
+msgid "Demo wallet is already initialized."
+msgstr "演示钱包已初始化。"
+
+#: finance/management/commands/demo_readiness.py:272
+msgid "Disbursement replay differs"
+msgstr "放款重放结果不一致"
+
+#: finance/budget_services.py:68
+msgid "Duplicate expense override."
+msgstr "支出调整项重复。"
+
+#: finance/budget_services.py:190
+msgid "Duplicate loan comparison IDs."
+msgstr "贷款对比 ID 重复。"
+
+#: finance/lending_serializers.py:29
+msgid "Duplicate profile month."
+msgstr "档案月份重复。"
+
+#: finance/consumption/imports.py:100
+msgid "ERROR_ROWS_PREVENT_COMPLETE_COVERAGE"
+msgstr "文件中存在错误行，无法将覆盖期间标记为完整。"
+
+#: finance/workflow_serializers.py:122
+msgid "EXACTLY_ONE_PAYMENT_PLAN_REQUIRED"
+msgstr "plan_id 和 readiness_plan_id 必须且只能提供其中一个。"
+
+#: finance/readiness/imports.py:271
+msgid "EXPLICIT_CONFLICT_RESOLUTION_REQUIRED"
+msgstr "该费用已变化或与现有数据冲突，请在 conflict_resolutions 中选择处理方式。"
+
+#: finance/budget_services.py:117
+msgid "Economic source already exists; reuse it instead of creating a duplicate."
+msgstr "该资金来源已存在，请直接使用，不要重复创建。"
+
+#: finance/services.py:44
+msgid "Executed or submitted events cannot be rewritten."
+msgstr "已执行或已提交的事项不能修改。"
+
+#: finance/execution_services.py:50
+msgid "Execution requires a complete feasible plan without uncertain funding."
+msgstr "执行需要一个完整、可行且不含不确定资金的计划。"
+
+#: finance/management/commands/demo_remittance.py:78
+msgid "Expected exactly one T3 approval"
+msgstr "应恰好有一次 T3 审批"
+
+#: finance/execution_services.py:75
+msgid "Expense already has an active or settled payment."
+msgstr "该支出已有进行中或已结算的付款。"
+
+#: finance/execution_services.py:78
+msgid "Expense is overdue on the demo clock."
+msgstr "按演示时钟，该支出已逾期。"
+
+#: finance/execution_services.py:72
+msgid "Expense needs positive amount and due date."
+msgstr "支出需要有大于零的金额和到期日。"
+
+#: finance/budget_services.py:113
+msgid "FAMILY_SUPPORT_REQUIRES_SPONSOR_CONFIRMATION"
+msgstr "家庭资助只能由资助人确认，请先保存为预估并向资助人发送请求。"
+
+#: finance/consumption/api.py:52
+msgid "FILE_SIZE_LIMIT"
+msgstr "文件不能为空，且大小不能超过 5 MB。"
+
+#: finance/budget_services.py:102
+msgid "FIRST_DUE_DATE_NOT_FUTURE"
+msgstr "首个还款日必须晚于今天。"
+
+#: finance/readiness/funding.py:113
+msgid "FUNDING_ALREADY_IN_STATE"
+msgstr "该资金已计入您的财务状况。"
+
+#: finance/copilot/simulation.py:51
+msgid "FUNDING_DATE_IN_PAST"
+msgstr "资金到账日期不能早于当前日期。"
+
+#: finance/budget_services.py:41
+msgid "FX currency direction mismatch."
+msgstr "汇率报价的币种方向不匹配。"
+
+#: finance/budget_services.py:42
+msgid "FX quote expired; create a new quote and revision."
+msgstr "汇率报价已过期，请创建新的报价和修订版本。"
+
+#: finance/fx_rates.py:29
+msgid "FX_RATE_UNAVAILABLE"
+msgstr "汇率暂时无法获取，请稍后重试。"
+
+#: finance/copilot/demo_failures.py:132
+msgid "Failed adapter accepted"
+msgstr "失败的适配器结果被错误接受"
+
+#: finance/copilot/demo_failures.py:83
+msgid "Failed model did not enter retry"
+msgstr "模型失败后未进入重试"
+
+#: finance/copilot/demo_failures.py:133
+msgid "Failed payment posted ledger"
+msgstr "失败的付款写入了账本"
+
+#: finance/management/commands/demo_copilot.py:197
+msgid "Forecast update failed"
+msgstr "预测更新失败"
+
+#: finance/budget_services.py:116
+msgid "Funding amount must be positive."
+msgstr "资金金额必须大于零。"
+
+#: finance/execution_services.py:202
+msgid "Funding has not reached its availability/settlement date."
+msgstr "资金尚未到达可用日或结算日。"
+
+#: finance/execution_services.py:204
+msgid "Funding is already represented in state."
+msgstr "该资金已计入财务状况。"
+
+#: finance/budget_services.py:159
+msgid "Funding predates the opening snapshot."
+msgstr "资金到账日期早于期初快照日期。"
+
+#: finance/budget_services.py:144
+msgid "Funding source allocated twice in one plan."
+msgstr "同一资金来源在一个计划中被分配了两次。"
+
+#: finance/readiness/services.py:101
+msgid "HISTORICAL_OVERRIDE_FORBIDDEN"
+msgstr "新的计划调整生效日期不能早于今天。"
+
+#: finance/execution_services.py:195
+msgid "HOLD_REQUIRES_FOREIGN_CURRENCY"
+msgstr "只有外币资金才能以原币种持有。"
+
+#: finance/execution_services.py:196
+msgid "HOLD_WITHOUT_QUOTE"
+msgstr "以原币种持有资金时，请勿提供 fx_quote_id。"
+
+#: finance/consumption/api.py:64
+msgid "IDEMPOTENCY_CONFLICT"
+msgstr "该幂等键（Idempotency-Key）已用于不同的请求，请使用新的幂等键。"
+
+#: finance/consumption/api.py:58
+msgid "IDEMPOTENCY_KEY_REQUIRED"
+msgstr "请提供长度为 1-100 个字符的 Idempotency-Key 请求头。"
+
+#: finance/consumption/imports.py:73
+msgid "IMPORT_ALREADY_COMMITTED"
+msgstr "该导入已确认，无法更改。"
+
+#: finance/readiness/imports.py:245
+msgid "IMPORT_NOT_REVIEWABLE"
+msgstr "该文件当前不在待复核状态。"
+
+#: finance/readiness/imports.py:241
+msgid "IMPORT_SEMESTER_MISMATCH"
+msgstr "该文件属于其他学期。"
+
+#: finance/lending_ledger.py:127
+msgid "INSTALLMENT_NOT_DUE"
+msgstr "该期分期款尚未到期。"
+
+#: finance/lending_ledger.py:123
+msgid "INSTALLMENT_NOT_PAYABLE"
+msgstr "请先支付最早一期未付的分期款。"
+
+#: finance/readiness/funding.py:67
+msgid "INSTALLMENT_REQUIRES_TUITION"
+msgstr "只有一次性或按学期支付的学费可以分期支付。"
+
+#: finance/readiness/funding.py:73
+msgid "INSTALLMENT_TOTAL_MISMATCH"
+msgstr "各期分期金额之和必须等于该费用的总额。"
+
+#: finance/lending_ledger.py:155
+msgid "INSUFFICIENT_BALANCE"
+msgstr "钱包余额不足以完成此交易。"
+
+#: finance/wallets.py:50
+msgid "INSUFFICIENT_BALANCE_OR_PRECISION"
+msgstr "此交易会使钱包余额为负或超出支持的上限。"
+
+#: finance/readiness/funding.py:20
+msgid "INVALID_ALLOCATION_AMOUNT"
+msgstr "请输入大于零且最多两位小数的金额。"
+
+#: finance/copilot/simulation.py:29
+msgid "INVALID_EFFECTIVE_DATE"
+msgstr "生效日期必须介于今天和学期结束日期之间。"
+
+#: finance/copilot/simulation.py:109
+msgid "INVALID_LOAN_DATES"
+msgstr "贷款到账日期不能早于今天，且首个还款日必须晚于到账日期。"
+
+#: finance/consumption/imports.py:200
+msgid "INVALID_REFUND_LINK"
+msgstr "退款必须为正数金额，并关联到一笔已复核的消费。"
+
+#: finance/consumption/imports.py:76
+msgid "INVALID_SELECTED_ROWS"
+msgstr "所选行有重复，或包含不属于本次导入的行。"
+
+#: finance/sponsorship.py:129
+msgid "INVALID_SPONSOR_TOKEN"
+msgstr "该资助人链接无效。"
+
+#: finance/lending_applications.py:95
+msgid "INVALID_STATE"
+msgstr "该贷款申请的当前状态不允许执行此操作。"
+
+#: finance/agent_tools.py:114
+msgid "INVALID_TRANSITION"
+msgstr "该汇款订单的当前状态不允许执行此操作。"
+
+#: finance/support_api.py:94
+msgid "INVITATION_SUPERSEDED"
+msgstr "该资助人邀请已被新的邀请取代，或已不再处于待处理状态。"
+
+#: finance/readiness/imports.py:212
+msgid "INVOICE_ALREADY_IMPORTED"
+msgstr "该发票已通过其他文件导入。"
+
+#: finance/readiness/payment_bridge.py:103
+msgid "INVOICE_IDENTITY_CHANGED"
+msgstr "发票信息在验证后已发生变化，请重新导入发票。"
+
+#: finance/readiness/imports.py:211
+msgid "INVOICE_IDENTITY_CONFLICT"
+msgstr "已存在开票方和发票号相同但内容不同的发票。"
+
+#: finance/readiness/payment_bridge.py:100
+msgid "INVOICE_IDENTITY_REQUIRED"
+msgstr "该学费需要来自已验证的 THB 发票才能支付。"
+
+#: finance/agent_api.py:59
+msgid "Idempotency key was used with a different request."
+msgstr "该幂等键已用于另一个不同的请求。"
+
+#: finance/agent_api.py:43
+msgid "Idempotency-Key header (1-100 characters) is required."
+msgstr "需要提供 Idempotency-Key 请求头（1-100 个字符）。"
+
+#: finance/management/commands/demo_copilot.py:186
+msgid "Initial gap mismatch"
+msgstr "初始资金缺口不符"
+
+#: finance/wallets.py:26
+msgid "Initialize the isolated demo wallet first."
+msgstr "请先初始化独立的演示钱包。"
+
+#: finance/lending_serializers.py:19
+msgid "Invalid calendar month."
+msgstr "无效的日历月份。"
+
+#: finance/management/commands/demo_consumption.py:201
+msgid "Invoice extraction failed"
+msgstr "发票信息提取失败"
+
+#: finance/management/commands/demo_consumption.py:245
+msgid "Invoice reconciliation failed"
+msgstr "发票对账失败"
+
+#: finance/budget_services.py:120
+msgid "JPY amount must be whole units."
+msgstr "JPY 金额必须为整数。"
+
+#: finance/sponsorship.py:85
+msgid "JPY_WHOLE_UNITS_REQUIRED"
+msgstr "JPY 金额必须为整数。"
+
+#: finance/readiness/services.py:91
+msgid "KEEP_REQUIRED_COSTS_OR_MARK_NOT_APPLICABLE"
+msgstr "不能删除已有费用，请将其标记为不适用。"
+
+#: finance/remittance_orders.py:208
+msgid "LEDGER_CREDIT_MISSING"
+msgstr "账本中没有该汇款订单对应的入账记录，无法对账。"
+
+#: finance/remittance_orders.py:206
+msgid "LEDGER_DEBIT_MISSING"
+msgstr "账本中没有该汇款订单对应的扣款记录，无法对账。"
+
+#: finance/readiness/funding.py:152
+msgid "LEGACY_LOAN_UNSUPPORTED"
+msgstr "该贷款由旧版模拟生成，请创建新的贷款报价。"
+
+#: finance/lending_ledger.py:121
+msgid "LOAN_CLOSED"
+msgstr "该贷款已结清。"
+
+#: finance/readiness/funding.py:156
+msgid "LOAN_REQUIRES_EXACT_NET_PROCEEDS_QUOTE"
+msgstr "分配金额必须与贷款报价的净到手金额完全一致。"
+
+#: finance/readiness/funding.py:160
+msgid "LOAN_UNAVAILABLE"
+msgstr "该贷款的申请已被拒绝、已取消或已放款。"
+
+#: finance/readiness/funding.py:49
+msgid "LOCKED_COST_CANNOT_BE_REDUCED"
+msgstr "该费用已锁定，不能削减。"
+
+#: finance/wallets.py:41
+msgid "Ledger amount must be non-zero."
+msgstr "账本金额不能为零。"
+
+#: finance/services.py:51
+msgid "Ledger event prefixes are reserved."
+msgstr "账本事项前缀为系统保留。"
+
+#: finance/execution_services.py:169
+msgid "Ledger settlement missing."
+msgstr "缺少账本结算记录。"
+
+#: finance/c_adapter.py:52
+msgid "Legacy foreign loans cannot use the B THB adapter."
+msgstr "旧版外币贷款不能使用 B 模块的 THB 适配器。"
+
+#: finance/budget_services.py:124
+msgid "Loan already has a funding source."
+msgstr "该贷款已有对应的资金来源。"
+
+#: finance/lending_ledger.py:99
+msgid "Loan already represented in state."
+msgstr "该贷款已计入财务状况。"
+
+#: finance/budget_services.py:127
+msgid "Loan availability cannot predate the financial snapshot."
+msgstr "贷款可用日期不能早于财务快照日期。"
+
+#: finance/management/commands/demo_bc.py:159
+msgid "Loan did not close"
+msgstr "贷款未结清"
+
+#: finance/budget_services.py:123
+msgid "Loan funding requires an owned simulation."
+msgstr "贷款资金需要关联您自己的贷款模拟。"
+
+#: finance/budget_services.py:153
+msgid "Loan is already received; use the updated state, not another funding allocation."
+msgstr "贷款已到账，请使用更新后的财务状况，不要再次分配资金。"
+
+#: finance/management/commands/demo_copilot.py:152
+msgid "Loan not approved"
+msgstr "贷款未获批准"
+
+#: finance/management/commands/demo_readiness.py:273
+msgid "Loan receipt not exact"
+msgstr "贷款到账金额不准确"
+
+#: finance/budget_services.py:125
+msgid "Loan source must use its calculated net proceeds and currency."
+msgstr "贷款资金来源必须使用计算出的净到手金额和币种。"
+
+#: finance/execution_services.py:189
+msgid "Loans must use the application/disbursement flow."
+msgstr "贷款必须通过申请和放款流程到账。"
+
+#: finance/readiness/imports.py:302
+msgid "MANUAL_INPUT_NOT_REQUESTED"
+msgstr "该文件不需要手动输入。"
+
+#: finance/management/commands/demo_readiness.py:168
+msgid "Material extraction failed"
+msgstr "材料信息提取失败"
+
+#: finance/management/commands/demo_bc.py:92
+msgid "Missing inputs must require review"
+msgstr "输入缺失时必须进入复核"
+
+#: finance/budget_services.py:14
+msgid "Mock quote validity must be in the next 30 days."
+msgstr "模拟报价的有效期必须在未来 30 天内。"
+
+#: finance/copilot/demo_failures.py:84
+msgid "Model failure moved funds"
+msgstr "模型失败时转移了资金"
+
+#: finance/management/commands/demo_copilot.py:191
+msgid "Model planning failed"
+msgstr "模型规划失败"
+
+#: finance/readiness/funding.py:109
+msgid "NONCASH_SOURCE_REQUIRES_ACTION"
+msgstr "分期和削减支出类来源需作为费用调整操作使用，不能直接分配。"
+
+#: finance/readiness/services.py:19
+msgid "NO_ACTIVE_SEMESTER"
+msgstr "没有进行中的学期，请先创建学期。"
+
+#: finance/budget_services.py:57
+msgid "Net funding must be positive after fees."
+msgstr "扣除费用后的净资金必须大于零。"
+
+#: finance/management/commands/demo_bc.py:130
+msgid "Net receipt differs from quote"
+msgstr "实际到账净额与报价不符"
+
+#: finance/management/commands/demo_readiness.py:247
+msgid "No B-validated funding candidate"
+msgstr "没有通过 B 模块验证的资金方案"
+
+#: finance/management/commands/demo_remittance.py:57
+msgid "No feasible route recommended"
+msgstr "未推荐任何可行的汇款路线"
+
+#: finance/management/commands/demo_readiness.py:169
+msgid "No source-supported costs extracted"
+msgstr "未提取到有来源依据的费用"
+
+#: finance/copilot/demo_failures.py:161
+msgid "OCR unavailable did not request manual input"
+msgstr "OCR 不可用时未要求手动输入"
+
+#: finance/readiness/ocr.py:146
+msgid "OCR_CONSENT_REQUIRED"
+msgstr "处理文件前，请先同意当前的 OCR 告知。"
+
+#: finance/readiness/ocr.py:46
+msgid "OCR_NOTICE_VERSION_MISMATCH"
+msgstr "OCR 告知已更新，请查看并同意最新版本。"
+
+#: finance/readiness/ocr.py:143
+msgid "OCR_RETRY_NOT_AVAILABLE"
+msgstr "只有等待手动输入的文件才能重新进行 OCR。"
+
+#: finance/readiness/ocr.py:145
+msgid "OCR_SOURCE_EXPIRED"
+msgstr "原始文件已不可用，请重新上传。"
+
+#: finance/sponsorship.py:103
+msgid "OPERATOR_REQUIRED"
+msgstr "只有运营人员可以发出资助人链接。"
+
+#: finance/copilot/simulation.py:34
+msgid "OVERRIDE_AFTER_OBLIGATION"
+msgstr "调整的生效日期不能晚于该费用的到期日。"
+
+#: finance/execution_services.py:85
+msgid "Only draft payments can be authorized."
+msgstr "只有草稿状态的付款才能授权。"
+
+#: finance/budget_services.py:132
+msgid "Only loan funding can reference a loan simulation."
+msgstr "只有贷款类资金才能关联贷款模拟。"
+
+#: finance/policy_api.py:128
+msgid "Only operations staff can decide approvals."
+msgstr "只有运营人员可以处理审批。"
+
+#: finance/workflow_api.py:50
+msgid "Only the controlled demo operator can perform this transition."
+msgstr "只有受控的演示运营人员可以执行此状态变更。"
+
+#: finance/budget_services.py:147
+msgid "Opening funds cannot be counted as new funding."
+msgstr "期初资金不能计为新增资金。"
+
+#: finance/execution_services.py:190
+msgid "Opening funds cannot be received twice."
+msgstr "期初资金不能重复入账。"
+
+#: finance/copilot/reviews.py:169
+msgid "Operator review required"
+msgstr "需要运营人员复核"
+
+#: finance/management/commands/demo_copilot.py:254
+msgid "Output already exists; use a new report path"
+msgstr "输出文件已存在，请使用新的报告路径"
+
+#: finance/budget_services.py:70
+msgid "Override must reference an existing expense."
+msgstr "调整项必须对应一项已有支出。"
+
+#: finance/consumption/imports.py:107
+msgid "PARTIAL_SELECTION_PREVENTS_COMPLETE_COVERAGE"
+msgstr "要将覆盖期间标记为完整，请选中该账户覆盖期间内的所有行。"
+
+#: finance/readiness/payment_bridge.py:49
+msgid "PAYMENT_ALREADY_EXISTS"
+msgstr "该支出已有进行中或已结算的付款。"
+
+#: finance/readiness/payment_bridge.py:124
+msgid "PAYMENT_DEADLINE_PASSED"
+msgstr "付款截止日期已过。"
+
+#: finance/readiness/funding.py:224
+msgid "PAYMENT_HORIZON_EXCEEDS_730_DAYS"
+msgstr "计划期限不能超过自今天起的 730 天。"
+
+#: finance/readiness/payment_bridge.py:139
+msgid "PAYMENT_STATE_CHANGED"
+msgstr "创建该付款后财务状况已变化，请重新创建付款。"
+
+#: finance/agent_runner.py:195
+msgid "PENDING_ACTION_CLOSED"
+msgstr "该提议的操作已不再处于待处理状态。"
+
+#: finance/policy.py:87
+msgid "POLICY_SUBJECT_MISMATCH"
+msgstr "金额或币种与该请求的目标不一致。"
+
+#: finance/sponsorship.py:84
+msgid "POSITIVE_SUPPORT_REQUIRED"
+msgstr "资助金额必须大于零。"
+
+#: finance/readiness/imports.py:256
+msgid "PROFILE_CONFLICT_REQUIRES_REVIEW"
+msgstr "确认前，请在 conflict_resolutions 中处理有冲突的档案字段。"
+
+#: finance/readiness/services.py:98
+msgid "PROTECTED_COST_REVIEW"
+msgstr "该费用已锁定、已验证、存在冲突或已支付，计划调整需经过复核。"
+
+#: finance/execution_services.py:116
+msgid "Payment deadline passed."
+msgstr "付款截止日期已过。"
+
+#: finance/execution_services.py:110
+msgid "Payment needs authorization."
+msgstr "付款需要先授权。"
+
+#: finance/management/commands/demo_copilot.py:180
+msgid "Payment not reconciled"
+msgstr "付款未完成对账"
+
+#: finance/management/commands/demo_copilot.py:163
+msgid "Payment plan not executable"
+msgstr "付款计划无法执行"
+
+#: finance/execution_services.py:68
+msgid "Payment requires a confirmed expense."
+msgstr "付款需要对应一项已确认的支出。"
+
+#: finance/execution_services.py:74
+msgid "Plan horizon does not cover the payment."
+msgstr "计划期限未覆盖该付款日期。"
+
+#: finance/management/commands/demo_consumption.py:286
+msgid "Post-loan risk was not detected"
+msgstr "未检测到贷款后的风险"
+
+#: finance/management/commands/demo_copilot.py:201
+msgid "Post-payment reserve gap"
+msgstr "付款后出现储备金缺口"
+
+#: finance/lending_applications.py:56
+msgid "QUOTE_ALREADY_USED"
+msgstr "该贷款报价已用于申请，请创建新的报价。"
+
+#: finance/wallets.py:111
+msgid "QUOTE_AMOUNT_MISMATCH"
+msgstr "金额必须与报价金额一致。"
+
+#: finance/budget_services.py:45
+msgid "QUOTE_CONSUMED"
+msgstr "该报价已被使用，请重新获取报价。"
+
+#: finance/agent_tools.py:92
+msgid "QUOTE_CURRENCY_MISMATCH"
+msgstr "所选报价的币种与预期不一致。"
+
+#: finance/lending_applications.py:26
+msgid "QUOTE_EXPIRED"
+msgstr "该报价已过期，请重新获取报价。"
+
+#: finance/budget_services.py:47
+msgid "QUOTE_IN_USE"
+msgstr "该报价已关联到一个汇款订单。"
+
+#: finance/agent_tools.py:126
+msgid "QUOTE_NOT_EXECUTABLE"
+msgstr "该报价无法执行，请针对具体金额获取实时报价。"
+
+#: finance/wallet_api.py:41
+msgid "Query parameters base and quote are required."
+msgstr "需要提供查询参数 base 和 quote。"
+
+#: finance/readiness/payment_bridge.py:16
+msgid "READINESS_FUNDING_PLAN_REQUIRED"
+msgstr "请使用当前学期就绪检查生成的资金计划。"
+
+#: finance/readiness/payment_bridge.py:27
+msgid "READINESS_PLAN_NOT_EXECUTABLE"
+msgstr "该资金计划已不再有效，无法执行。"
+
+#: finance/sponsorship.py:70
+msgid "RECEIVED_SUPPORT_IS_IMMUTABLE"
+msgstr "已到账的资助不能修改。"
+
+#: finance/readiness/funding.py:60
+msgid "REDUCTION_EXCEEDS_EXPENSE"
+msgstr "削减金额不能超过该费用的金额。"
+
+#: finance/consumption/imports.py:214
+msgid "REFUND_EXCEEDS_PURCHASE"
+msgstr "退款总额不能超过原消费金额。"
+
+#: finance/consumption/imports.py:216
+msgid "REFUND_LINK_REQUIRED"
+msgstr "请通过 refund_of 将退款关联到原消费。"
+
+#: finance/copilot/reviews.py:235
+msgid "REPLACEMENT_EVIDENCE_REQUIRED"
+msgstr "解决该复核前，请先导入与拟议金额一致的已验证文件。"
+
+#: finance/sponsorship.py:104
+msgid "REQUEST_NOT_PENDING"
+msgstr "该资助请求不处于待处理状态，无法发出链接。"
+
+#: finance/remittance_orders.py:154
+msgid "RESERVE_REQUIRED"
+msgstr "此交易会使余额低于储备金。"
+
+#: finance/copilot/reviews.py:167
+msgid "REVIEW_ACTION_MISMATCH"
+msgstr "该操作不适用于此类复核项。"
+
+#: finance/copilot/reviews.py:199
+msgid "REVIEW_ALREADY_RESOLVED"
+msgstr "该复核项已解决。"
+
+#: finance/copilot/scenarios.py:281
+msgid "REVIEW_REQUIRED"
+msgstr "该情景涉及受保护的费用，需经过复核后才能应用。"
+
+#: finance/consumption/imports.py:151
+msgid "REVIEW_SIMILAR_TRANSACTION"
+msgstr "已存在相似的交易；如仍要导入，请将该行加入 keep_similar_rows。"
+
+#: finance/management/commands/demo_readiness.py:243
+msgid "Readiness model check did not finish"
+msgstr "就绪评估的模型检查未完成"
+
+#: finance/execution_services.py:167
+msgid "Receipt does not match obligation."
+msgstr "回执与应付款项不符。"
+
+#: finance/copilot/demo_failures.py:143
+msgid "Receipt mismatch not held for review"
+msgstr "回执不符的付款未被保留待复核"
+
+#: finance/management/commands/demo_remittance.py:72
+msgid "Refund missing"
+msgstr "缺少退款"
+
+#: finance/copilot/demo_failures.py:43
+msgid "Rejected action posted ledger"
+msgstr "被拒绝的操作写入了账本"
+
+#: finance/management/commands/demo_agent.py:29
+msgid "Rejected proposal changed the wallet"
+msgstr "被拒绝的提议改变了钱包余额"
+
+#: finance/lending_ledger.py:140
+msgid "Repayment has an existing payment task."
+msgstr "该还款已有付款任务。"
+
+#: finance/lending_ledger.py:136
+msgid "Repayment state is unavailable or already settled."
+msgstr "还款状态不可用或已结清。"
+
+#: finance/management/commands/demo_bc.py:126
+msgid "Replay changed result"
+msgstr "重放改变了结果"
+
+#: finance/management/commands/demo_consumption.py:324
+msgid "Runs must be 1-10"
+msgstr "运行次数必须在 1 到 10 之间"
+
+#: finance/management/commands/demo_copilot.py:250
+msgid "Runs must be 1–10"
+msgstr "运行次数必须在 1 到 10 之间"
+
+#: finance/budget_services.py:18
+msgid "SAME_CURRENCY_QUOTE"
+msgstr "源币种和目标币种必须不同。"
+
+#: finance/copilot/scenarios.py:277
+msgid "SCENARIO_ALREADY_APPLIED"
+msgstr "本次运行中已应用了另一个情景。"
+
+#: finance/copilot/scenarios.py:177
+msgid "SCENARIO_NOT_FOUND"
+msgstr "未找到该情景。"
+
+#: finance/remittance_orders.py:105
+msgid "SELF_RECIPIENT_HAS_NO_BENEFICIARY"
+msgstr "汇款给自己时，请勿提供 beneficiary_id。"
+
+#: finance/copilot/simulation.py:189
+msgid "SEMESTER_NOT_ACTIVE"
+msgstr "该学期已结束，或结束日期过远，无法规划。"
+
+#: finance/policy.py:404
+msgid "SEPARATION_OF_DUTIES"
+msgstr "您不能处理此审批，因为该审批由您发起、属于您或其收款人由您验证。"
+
+#: finance/readiness/funding.py:203
+msgid "SETTLED_COST_CANNOT_CHANGE"
+msgstr "已有结算付款的费用不能修改。"
+
+#: finance/copilot/simulation.py:200
+msgid "SETTLED_COST_IS_IMMUTABLE"
+msgstr "该费用已结算，不能修改。"
+
+#: finance/readiness/payment_bridge.py:128
+msgid "SETTLED_FUNDS_REQUIRED"
+msgstr "钱包中已结算的资金不足以支付此款项并保留储备金。"
+
+#: finance/workflow_serializers.py:26
+msgid "SETTLEMENT_RANGE_INVALID"
+msgstr "settlement_min_days 不能大于 settlement_days。"
+
+#: finance/readiness/imports.py:233
+msgid "SIMILAR_INVOICE_REQUIRES_EXPLICIT_REVIEW"
+msgstr "已存在相似的费用，请在 conflict_resolutions 中选择处理方式。"
+
+#: finance/execution_services.py:188
+msgid "SPONSOR_CONFIRMATION_REQUIRED"
+msgstr "家庭资助需经资助人确认后才能入账。"
+
+#: finance/copilot/scenarios.py:229
+msgid "SPONSOR_REQUEST_REQUIRED"
+msgstr "该资助来源没有资助人请求，请先创建。"
+
+#: finance/sponsorship.py:175
+msgid "SPONSOR_TERMS_CHANGED"
+msgstr "资助条款已变更，请重新打开链接查看最新条款。"
+
+#: finance/sponsorship.py:134
+msgid "SPONSOR_TOKEN_EXPIRED"
+msgstr "该资助人链接已过期，请向学生索取新链接。"
+
+#: finance/sponsorship.py:138
+msgid "SPONSOR_TOKEN_REVOKED"
+msgstr "该资助人链接已失效，因为请求已被修改或撤回。"
+
+#: finance/sponsorship.py:146
+msgid "SPONSOR_TOKEN_USED"
+msgstr "该资助人链接已被使用。"
+
+#: finance/policy.py:325
+msgid "STEP_UP_FAILED"
+msgstr "密码不正确，二次验证失败。"
+
+#: finance/policy.py:270
+msgid "STEP_UP_INVALID"
+msgstr "X-Step-Up-Token 无效、已过期或与此操作不匹配，请重新进行二次验证。"
+
+#: finance/policy.py:278
+msgid "STEP_UP_REQUIRED"
+msgstr "此操作需要二次验证，请重新输入密码并在请求头中附带 X-Step-Up-Token。"
+
+#: finance/copilot/simulation.py:55
+msgid "SUPPORT_NOT_EDITABLE"
+msgstr "情景中只能修改尚未到账、以 THB 计价的家庭资助。"
+
+#: finance/budget_services.py:55
+msgid "Sender fee consumes the allocation."
+msgstr "汇款手续费已抵消全部分配金额。"
+
+#: finance/budget_services.py:72
+msgid "Settled expenses and contractual loan repayments cannot be overridden."
+msgstr "已结算的支出和合同约定的贷款还款不能调整。"
+
+#: finance/execution_services.py:158
+msgid "Settlement receipt required."
+msgstr "需要提供结算回执。"
+
+#: finance/services.py:47
+msgid "Settlement sequence is controlled by the ledger."
+msgstr "结算序号由账本控制。"
+
+#: finance/budget_services.py:148
+msgid "Source already appears in the financial state."
+msgstr "该资金来源已出现在财务状况中。"
+
+#: finance/budget_services.py:146
+msgid "Source is already received; use the updated state."
+msgstr "该资金来源已到账，请使用更新后的财务状况。"
+
+#: finance/management/commands/demo_consumption.py:130
+msgid "Sponsor confirmation failed"
+msgstr "资助人确认失败"
+
+#: finance/management/commands/demo_consumption.py:124
+msgid "Sponsor preview failed"
+msgstr "资助人预览失败"
+
+#: finance/services.py:10
+msgid "State version changed. Refresh and retry."
+msgstr "状态版本已变化，请刷新后重试。"
+
+#: finance/copilot/reviews.py:171
+msgid "Student confirmation required"
+msgstr "需要学生本人确认"
+
+#: finance/management/commands/demo_remittance.py:60
+msgid "Submit did not debit CNY"
+msgstr "提交后未扣减 CNY"
+
+#: finance/execution_services.py:139
+msgid "Submitted obligation was changed; resolve state before processing adapter evidence."
+msgstr "已提交的应付款项已被修改；请先处理财务状况，再处理适配器凭证。"
+
+#: finance/execution_services.py:101
+msgid "Submitted payments cannot be cancelled without adapter resolution."
+msgstr "已提交的付款需待适配器给出结果后才能取消。"
+
+#: finance/management/commands/demo_readiness.py:240
+msgid "Synthetic budget must be complete"
+msgstr "合成预算必须完整"
+
+#: finance/management/commands/demo_consumption.py:278
+msgid "Synthetic loan approval failed"
+msgstr "合成贷款审批未通过"
+
+#: finance/readiness/services.py:171
+msgid "TOO_MANY_SCHEDULED_EVENTS"
+msgstr "计划中的排期事项过多（最多 1000 项）。"
+
+#: finance/consumption/imports.py:135
+msgid "TRANSACTION_ID_CONFLICT"
+msgstr "具有相同 ID 的交易已导入，但内容不同。"
+
+#: finance/readiness/funding.py:170
+msgid "UNAFFORDABLE_LOAN"
+msgstr "根据您的还款档案，该贷款超出承受能力。"
+
+#: finance/consumption/analysis.py:250
+msgid "UNKNOWN_COST"
+msgstr "当前学期预算中未找到该费用。"
+
+#: finance/readiness/templates.py:46
+msgid "UNKNOWN_TEMPLATE_VERSION"
+msgstr "未找到该预算模板或版本。"
+
+#: finance/readiness/imports.py:246
+msgid "UNTRUSTED_DOCUMENT_REJECTED"
+msgstr "该文件包含不可信的指令内容，无法确认。"
+
+#: finance/readiness/funding.py:18
+msgid "USE_DECIMAL_STRING"
+msgstr "金额请使用十进制字符串，例如 1250.00。"
+
+#: finance/readiness/services.py:104
+msgid "USE_IMPORT_CONFIRMATION_TO_VERIFY"
+msgstr "已验证的费用只能通过确认导入文件来设置或修改。"
+
+#: finance/copilot/demo_failures.py:97
+msgid "Underfunded plan passed"
+msgstr "资金不足的计划被错误通过"
+
+#: finance/budget_services.py:130
+msgid "Undisbursed loan cannot be opening funds."
+msgstr "未放款的贷款不能作为期初资金。"
+
+#: finance/budget_services.py:129
+msgid "Undisbursed loans must remain estimated."
+msgstr "未放款的贷款必须保持为预估状态。"
+
+#: finance/management/commands/demo_remittance.py:65
+msgid "Unexpected history"
+msgstr "状态历史不符合预期"
+
+#: finance/management/commands/demo_copilot.py:118
+msgid "Unexpected residual borrowing"
+msgstr "剩余借款金额不符合预期"
+
+#: finance/serializers.py:25
+msgid "Use an exact decimal string for money."
+msgstr "金额请使用精确的十进制字符串。"
+
+#: finance/execution_services.py:61
+msgid "Use the loan account repayment endpoint."
+msgstr "请使用贷款账户的还款接口。"
+
+#: finance/readiness/payment_bridge.py:91
+msgid "VERIFIED_INVOICE_BENEFICIARY_REQUIRED"
+msgstr "请使用发票上指定且已验证的收款人。"
+
+#: finance/readiness/funding.py:55
+msgid "VERIFIED_OBLIGATION_CANNOT_BE_REDUCED"
+msgstr "已验证的应付款项不能削减。"
+
+#: finance/readiness/payment_bridge.py:83
+msgid "VERIFIED_TUITION_INVOICE_REQUIRED"
+msgstr "此付款需要对应一项有已验证发票支持的学费。"
+
+#: finance/management/commands/demo_bc.py:160
+msgid "Wallet does not reconcile"
+msgstr "钱包余额对账不一致"
+
+#: finance/execution_services.py:206
+msgid "Wallet precision limit exceeded."
+msgstr "超出钱包金额精度上限。"
+
+#: finance/management/commands/demo_consumption.py:162
+msgid "Wrong remittance recommendation"
+msgstr "汇款推荐结果错误"
+

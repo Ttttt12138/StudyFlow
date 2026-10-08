@@ -2,28 +2,29 @@ import json
 from pathlib import Path
 from uuid import uuid4
 
-from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand, CommandError
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APIClient
+
+from finance.policy_flow import PolicyFlow, scripted_throttling, scripted_user
 
 
 class Demo:
     def __init__(self):
         run_id = uuid4().hex
-        users = get_user_model().objects
-        self.student = users.create_user(username="bc-student-" + run_id)
-        self.operator = users.create_user(
-            username="bc-operator-" + run_id, is_staff=True
-        )
+        self.student, password = scripted_user("bc-student-" + run_id)
+        self.operator, _ = scripted_user("bc-operator-" + run_id, staff=True)
         self.tokens = {
             role: Token.objects.create(user=user).key
             for role, user in [("student", self.student), ("operator", self.operator)]
         }
         self.client = APIClient(HTTP_HOST="localhost")
         self.run_id = run_id
+        # Repayments are T2: the student re-enters the password via auth/step-up/ each time.
+        self.policy = PolicyFlow(self.student, password, self.post)
 
     def post(self, route, body, *, operator=False, key=None):
+        token = None if operator else self.policy.token(route, body)
         self.client.credentials(
             HTTP_AUTHORIZATION="Token "
             + self.tokens["operator" if operator else "student"]
@@ -33,6 +34,7 @@ class Demo:
             body,
             format="json",
             HTTP_IDEMPOTENCY_KEY=key or uuid4().hex,
+            **({"HTTP_X_STEP_UP_TOKEN": token} if token else {}),
         )
         if response.status_code not in {200, 201}:
             raise CommandError(f"{route}: {response.status_code}: {response.data}")
@@ -135,7 +137,7 @@ class Demo:
             "funding-sources",
             {
                 "economic_key": "demo-topup",
-                "kind": "family",
+                "kind": "external_savings",
                 "currency": "THB",
                 "amount": "600.00",
                 "available_on": "2026-10-02",
@@ -187,6 +189,7 @@ class Demo:
                 "approved": approved_explanation,
                 "received": received,
             },
+            "policy": self.policy.log,
             "ledger": [
                 record(row)
                 for row in DemoLedgerEntry.objects.filter(owner=self.student).order_by(
@@ -211,7 +214,12 @@ class Command(BaseCommand):
         parser.add_argument("--runs", type=int, choices=range(1, 4), default=1)
 
     def handle(self, *args, **options):
-        reports = [Demo().run() for _ in range(options["runs"])]
+        # Twelve monthly repayments happen within seconds here, so the 10/hour step-up budget
+        # is raised for this scripted run; the report records the rates used.
+        with scripted_throttling(step_up="30/hour") as throttling:
+            reports = [
+                {**Demo().run(), "throttling": throttling} for _ in range(options["runs"])
+            ]
         output = options["output"]
         output.parent.mkdir(parents=True, exist_ok=True)
         output.write_text(

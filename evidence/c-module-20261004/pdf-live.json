@@ -1,0 +1,333 @@
+{
+  "schema_version": "2.0",
+  "trace_id": "3e7b38324762438aa786ae9ab4e321d9",
+  "source_refs": [
+    "cli-material"
+  ],
+  "status": "NEEDS_REVIEW",
+  "issues": [
+    {
+      "code": "SOURCE_UNCONFIRMED",
+      "field": null,
+      "locator": null,
+      "message": "source unconfirmed"
+    }
+  ],
+  "draft": {
+    "profile": {
+      "school": "Example University",
+      "campus": "Bangkok",
+      "country": "Thailand",
+      "program": "Computing",
+      "student_type": "International",
+      "start_date": "2026-10-01",
+      "end_date": "2027-01-31",
+      "evidence": [
+        {
+          "source_id": "cli-material",
+          "field": "school",
+          "quote": "School: Example University",
+          "locator": "line:1"
+        },
+        {
+          "source_id": "cli-material",
+          "field": "campus",
+          "quote": "Campus: Bangkok",
+          "locator": "line:2"
+        },
+        {
+          "source_id": "cli-material",
+          "field": "country",
+          "quote": "Country: Thailand",
+          "locator": "line:3"
+        },
+        {
+          "source_id": "cli-material",
+          "field": "program",
+          "quote": "Program: Computing",
+          "locator": "line:4"
+        },
+        {
+          "source_id": "cli-material",
+          "field": "student_type",
+          "quote": "Student type: International",
+          "locator": "line:5"
+        },
+        {
+          "source_id": "cli-material",
+          "field": "start_date",
+          "quote": "Start date: 2026-10-01",
+          "locator": "line:6"
+        },
+        {
+          "source_id": "cli-material",
+          "field": "end_date",
+          "quote": "End date: 2027-01-31",
+          "locator": "line:7"
+        }
+      ]
+    },
+    "costs": [
+      {
+        "cost_id": "3e6d83f9fd114fccb82f4a5734ad403f",
+        "category": "tuition",
+        "currency": "THB",
+        "amount": "65000",
+        "lower": null,
+        "upper": null,
+        "period": "semester",
+        "due_date": "2026-10-15",
+        "year": 2026,
+        "campus": null,
+        "paid": false,
+        "refundable": null,
+        "invoice_id": null,
+        "applicability": "APPLICABLE",
+        "applicability_reason": null,
+        "confidence_type": "UNCONFIRMED",
+        "verification_reference": null,
+        "evidence": [
+          {
+            "source_id": "cli-material",
+            "field": "amount",
+            "quote": "THB 65000",
+            "locator": "line:8"
+          },
+          {
+            "source_id": "cli-material",
+            "field": "currency",
+            "quote": "THB 65000",
+            "locator": "line:8"
+          },
+          {
+            "source_id": "cli-material",
+            "field": "period",
+            "quote": "period=semester",
+            "locator": "line:8"
+          },
+          {
+            "source_id": "cli-material",
+            "field": "year",
+            "quote": "year=2026",
+            "locator": "line:8"
+          },
+          {
+            "source_id": "cli-material",
+            "field": "due_date",
+            "quote": "due_date=2026-10-15",
+            "locator": "line:8"
+          },
+          {
+            "source_id": "cli-material",
+            "field": "paid",
+            "quote": "paid=false",
+            "locator": "line:8"
+          }
+        ],
+        "source_refs": [
+          "cli-material"
+        ]
+      },
+      {
+        "cost_id": "8688f2b01b1140db9bbf19f5f6b8ce2f",
+        "category": "housing",
+        "currency": "THB",
+        "amount": null,
+        "lower": "8000",
+        "upper": "10000",
+        "period": "monthly",
+        "due_date": null,
+        "year": 2026,
+        "campus": null,
+        "paid": null,
+        "refundable": null,
+        "invoice_id": null,
+        "applicability": "APPLICABLE",
+        "applicability_reason": null,
+        "confidence_type": "UNCONFIRMED",
+        "verification_reference": null,
+        "evidence": [
+          {
+            "source_id": "cli-material",
+            "field": "lower",
+            "quote": "THB 8000-10000",
+            "locator": "line:9"
+          },
+          {
+            "source_id": "cli-material",
+            "field": "upper",
+            "quote": "THB 8000-10000",
+            "locator": "line:9"
+          },
+          {
+            "source_id": "cli-material",
+            "field": "currency",
+            "quote": "THB 8000-10000",
+            "locator": "line:9"
+          },
+          {
+            "source_id": "cli-material",
+            "field": "period",
+            "quote": "period=monthly",
+            "locator": "line:9"
+          },
+          {
+            "source_id": "cli-material",
+            "field": "year",
+            "quote": "year=2026",
+            "locator": "line:9"
+          }
+        ],
+        "source_refs": [
+          "cli-material"
+        ]
+      },
+      {
+        "cost_id": "61721fe3a27d4a9aa65e9a3756464d6a",
+        "category": "food",
+        "currency": "THB",
+        "amount": null,
+        "lower": "6000",
+        "upper": "10000",
+        "period": "monthly",
+        "due_date": null,
+        "year": 2026,
+        "campus": null,
+        "paid": null,
+        "refundable": null,
+        "invoice_id": null,
+        "applicability": "APPLICABLE",
+        "applicability_reason": null,
+        "confidence_type": "UNCONFIRMED",
+        "verification_reference": null,
+        "evidence": [
+          {
+            "source_id": "cli-material",
+            "field": "lower",
+            "quote": "THB 6000-10000",
+            "locator": "line:10"
+          },
+          {
+            "source_id": "cli-material",
+            "field": "upper",
+            "quote": "THB 6000-10000",
+            "locator": "line:10"
+          },
+          {
+            "source_id": "cli-material",
+            "field": "currency",
+            "quote": "THB 6000-10000",
+            "locator": "line:10"
+          },
+          {
+            "source_id": "cli-material",
+            "field": "period",
+            "quote": "period=monthly",
+            "locator": "line:10"
+          },
+          {
+            "source_id": "cli-material",
+            "field": "year",
+            "quote": "year=2026",
+            "locator": "line:10"
+          }
+        ],
+        "source_refs": [
+          "cli-material"
+        ]
+      },
+      {
+        "cost_id": "fc75124dc5004bd6bebfc3efddff24fa",
+        "category": "deposit",
+        "currency": "THB",
+        "amount": "9000",
+        "lower": null,
+        "upper": null,
+        "period": "once",
+        "due_date": null,
+        "year": 2026,
+        "campus": null,
+        "paid": null,
+        "refundable": true,
+        "invoice_id": null,
+        "applicability": "APPLICABLE",
+        "applicability_reason": null,
+        "confidence_type": "UNCONFIRMED",
+        "verification_reference": null,
+        "evidence": [
+          {
+            "source_id": "cli-material",
+            "field": "amount",
+            "quote": "THB 9000",
+            "locator": "line:11"
+          },
+          {
+            "source_id": "cli-material",
+            "field": "currency",
+            "quote": "THB 9000",
+            "locator": "line:11"
+          },
+          {
+            "source_id": "cli-material",
+            "field": "period",
+            "quote": "period=once",
+            "locator": "line:11"
+          },
+          {
+            "source_id": "cli-material",
+            "field": "year",
+            "quote": "year=2026",
+            "locator": "line:11"
+          },
+          {
+            "source_id": "cli-material",
+            "field": "refundable",
+            "quote": "refundable=true",
+            "locator": "line:11"
+          }
+        ],
+        "source_refs": [
+          "cli-material"
+        ]
+      }
+    ],
+    "provenance": [
+      {
+        "source_id": "cli-material",
+        "final_url": null,
+        "fetched_at": "2026-10-04T13:27:19.193367Z",
+        "content_sha256": "de13385b5994afb7db68c615cc5bbfbf15bc83e985966e078422ad5df6f68e09",
+        "media_type": "application/pdf"
+      }
+    ]
+  },
+  "route": "EXTRACT",
+  "calls": [
+    {
+      "provider": "typesafe",
+      "purpose": "classify",
+      "model": "jev-1.13.0",
+      "mode": "live",
+      "prompt_version": "1.0",
+      "duration_ms": 381.91270001698285,
+      "input_tokens": 629,
+      "output_tokens": 129,
+      "attempts": 1,
+      "error_code": null,
+      "request_id": null
+    },
+    {
+      "provider": "openai",
+      "purpose": "extract",
+      "model": "openai/gpt-6-luna",
+      "mode": "live",
+      "prompt_version": "readiness-2.2",
+      "duration_ms": 5109.5548999728635,
+      "input_tokens": 908,
+      "output_tokens": 830,
+      "attempts": 1,
+      "error_code": null,
+      "request_id": null
+    }
+  ]
+}

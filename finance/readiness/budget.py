@@ -6,6 +6,7 @@ from datetime import date, timedelta
 from decimal import ROUND_HALF_UP, Decimal
 
 from finance.calculations import forecast
+from finance.money import home_currency
 
 ZERO = Decimal(0)
 CENT = Decimal(".01")
@@ -44,13 +45,26 @@ def portions(item, profile):
 
 
 def cost_events(item, profile, amount):
+    if "forecast_schedule" in item and not item.get("paid"):
+        return [
+            {
+                "id": "cost:" + item["cost_id"] + ":" + day,
+                "label": item["category"],
+                "kind": "expense",
+                "amount": money(amount_on(item, date.fromisoformat(day), amount)),
+                "date": day,
+                "certainty": "estimated",
+                "source_type": "inferred_monthly_schedule",
+            }
+            for day in item["forecast_schedule"]
+        ]
     rows = portions(item, profile)
     if item.get("paid") or not rows or any(day is None for day, _ in rows):
         return []
     # Round cumulative totals, so splitting an expense never manufactures cents.
     cumulative, previous, result = ZERO, ZERO, []
     for day, fraction in rows:
-        cumulative += amount * fraction
+        cumulative += amount_on(item, day, amount) * fraction
         rounded = Decimal(money(cumulative))
         result.append(
             {
@@ -71,6 +85,16 @@ def cost_events(item, profile, amount):
     return result
 
 
+def amount_on(item, day, default):
+    value = default
+    for override in sorted(
+        item.get("planned_overrides", []), key=lambda row: row["effective_on"]
+    ):
+        if day is not None and day.isoformat() >= override["effective_on"]:
+            value = Decimal(override["amount"])
+    return value
+
+
 def item_issues(item, as_of):
     issues = []
     if item.get("fx_issue"):
@@ -81,7 +105,7 @@ def item_issues(item, as_of):
         issues.append("EXPIRED_SOURCE:" + item["cost_id"])
     if item.get("paid") is None:
         issues.append("PAYMENT_STATUS_MISSING:" + item["cost_id"])
-    if item.get("currency") != "THB":
+    if item.get("currency") != home_currency():
         issues.append("FX_REQUIRED:" + item["cost_id"])
     return issues
 
@@ -125,14 +149,20 @@ def calculate(draft, opening, as_of=None):
         ):
             issues.append("CAMPUS_MISMATCH:" + item["cost_id"])
         values, periods = bounds(item), portions(item, draft["profile"])
-        if values is None or not periods or item.get("currency") != "THB":
+        if values is None or not periods or item.get("currency") != home_currency():
             issues.append("MISSING:" + item["cost_id"])
             continue
         if any(day is None for day, _ in periods) and not item.get("paid"):
             issues.append("DATE_MISSING:" + item["cost_id"])
-        fraction = sum((part for _, part in periods), ZERO)
         for index, value in enumerate(values):
-            amount = Decimal(money(value * fraction))
+            amount = Decimal(
+                money(
+                    sum(
+                        (amount_on(item, day, value) * part for day, part in periods),
+                        ZERO,
+                    )
+                )
+            )
             totals[index] += amount
             if not item.get("paid"):
                 remaining[index] += amount
@@ -147,7 +177,7 @@ def calculate(draft, opening, as_of=None):
         "gap": money(gap),
         "complete": not issues,
         "sufficient": not issues and gap == 0,
-        "currency": "THB",
+        "currency": home_currency(),
         "issues": sorted(set(issues)),
         "events": events,
         "assumptions": [
@@ -178,9 +208,23 @@ def forward_snapshot(snapshot, now):
 
 def project(snapshot, draft, now, horizon=90, conditional=False):
     result = forward_snapshot(snapshot, now)
+    overridden = {c["cost_id"] for c in draft["costs"] if c.get("planned_overrides")}
+    result["events"] = [
+        e
+        for e in result["events"]
+        if not (
+            e["id"].startswith("cost:")
+            and e["id"].split(":")[1] in overridden
+            and "settled_sequence" not in e
+            and e.get("date")
+            and e["date"] >= now.isoformat()
+        )
+    ]
     budget = calculate(draft, result["opening_balance"], now)
     result["reserve"] = draft.get("reserve") or "0.00"
-    existing = {event["id"] for event in snapshot["events"]}
+    existing = {event["id"] for event in result["events"]} | {
+        event["id"] for event in snapshot["events"] if "settled_sequence" in event
+    }
     for event in budget["events"]:
         if event["id"] not in existing:
             event = dict(event)
@@ -195,6 +239,7 @@ def project(snapshot, draft, now, horizon=90, conditional=False):
         result["events"] = [e for e in result["events"] if e["id"] not in excluded]
     output = forecast(result, now + timedelta(days=horizon - 1), include_estimates=True)
     output.update(
+        reserve=money(result["reserve"]),
         daily=daily_balances(result, output, now, horizon),
         budget_issues=budget["issues"],
         excluded_unconfirmed_income=excluded,

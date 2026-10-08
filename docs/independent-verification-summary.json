@@ -1,0 +1,172 @@
+{
+  "verified_at": "2026-10-06T23:13:29.352629+07:00",
+  "synthetic": true,
+  "runtime_code_unchanged_during_blind_test": true,
+  "frozen_code_file_count": 146,
+  "dataset_sha256": "2005c2afe601aea6fec4cc461850ba05e34a2c198cba6e447d601e5ac788d509",
+  "review_type": "user_delegated_ai",
+  "independent_frozen_test_passed": false,
+  "arms": {
+    "rules": {
+      "samples": 160,
+      "classification_accuracy": 0.8875,
+      "joint_field_accuracy": 0.7333333333333333,
+      "joint_field_denominator": 120,
+      "critical_silent_misses": 0,
+      "missing_event_rate": 0,
+      "review_rate": 0.875,
+      "false_positive_rate": 0.0,
+      "latency_mean_ms": 0.2740299983997829,
+      "latency_p95_ms": 0.5184999899938703,
+      "llm_calls_per_event": 0.0,
+      "llm_event_invocation_rate": 0,
+      "llm_calls_by_purpose": {
+        "classify": 0,
+        "extract": 0,
+        "plan": 0
+      },
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "provider_errors": 0,
+      "models": [
+        "rules-1.1-multilingual"
+      ],
+      "acceptance_targets_met": false,
+      "dangerous_denominator": 10,
+      "dangerous_block_rate": 1.0,
+      "targets_met": false,
+      "plan_candidate_count": 10,
+      "plan_valid_rate": 0.0,
+      "plan_conditional_rate": 1.0,
+      "plan_invalid_rate": 0.0
+    },
+    "llm_only": {
+      "samples": 160,
+      "classification_accuracy": 0.9375,
+      "joint_field_accuracy": 1.0,
+      "joint_field_denominator": 120,
+      "critical_silent_misses": 0,
+      "missing_event_rate": 0,
+      "review_rate": 0.69375,
+      "false_positive_rate": 0.0,
+      "latency_mean_ms": 8734.808502496162,
+      "latency_p95_ms": 20793.162400019355,
+      "llm_calls_per_event": 1.9375,
+      "llm_event_invocation_rate": 0.9375,
+      "llm_calls_by_purpose": {
+        "classify": 160,
+        "extract": 140,
+        "plan": 10
+      },
+      "input_tokens": 237252,
+      "output_tokens": 70132,
+      "provider_errors": 0,
+      "models": [
+        "openai/gpt-6-luna"
+      ],
+      "acceptance_targets_met": true,
+      "dangerous_denominator": 10,
+      "dangerous_block_rate": 1.0,
+      "targets_met": true,
+      "plan_candidate_count": 22,
+      "plan_valid_rate": 0.0,
+      "plan_conditional_rate": 0.7727272727272727,
+      "plan_invalid_rate": 0.22727272727272727
+    },
+    "jev_llm": {
+      "samples": 160,
+      "classification_accuracy": 0.9375,
+      "joint_field_accuracy": 1.0,
+      "joint_field_denominator": 120,
+      "critical_silent_misses": 0,
+      "missing_event_rate": 0,
+      "review_rate": 0.71875,
+      "false_positive_rate": 0.0,
+      "latency_mean_ms": 5236.602928757202,
+      "latency_p95_ms": 15314.59540000651,
+      "llm_calls_per_event": 0.9375,
+      "llm_event_invocation_rate": 0.875,
+      "llm_calls_by_purpose": {
+        "classify": 0,
+        "extract": 140,
+        "plan": 10
+      },
+      "input_tokens": 244855,
+      "output_tokens": 66599,
+      "provider_errors": 0,
+      "models": [
+        "jev-1.13.0",
+        "openai/gpt-6-luna"
+      ],
+      "acceptance_targets_met": true,
+      "dangerous_denominator": 10,
+      "dangerous_block_rate": 1.0,
+      "targets_met": true,
+      "plan_candidate_count": 20,
+      "plan_valid_rate": 0.0,
+      "plan_conditional_rate": 0.75,
+      "plan_invalid_rate": 0.25
+    }
+  },
+  "ocr": {
+    "active_model": "gemini-3.6-flash",
+    "real_requests_performed": true,
+    "passed": false,
+    "samples": 6,
+    "samples_passed": 1,
+    "diagnostic_http_status": 503,
+    "successful_http_pipeline_passed": false,
+    "failure_preserves_financial_facts": true,
+    "review_queue_count": 1
+  },
+  "tests": {
+    "new_freeze_checks_passed": 2,
+    "ruff_passed": true
+  },
+  "artifacts": [
+    {
+      "path": "evidence/copilot/copilot-independent-v2-first.json",
+      "sha256": "750037b6efd9184556d631df36d76d979125051a7df6e5a655beecc51fafb4df"
+    },
+    {
+      "path": "evidence/ocr/ocr-independent-20261006-configured.json",
+      "sha256": "68982d251345af16d067a93cc96e371a1729d465970ceecc46190fd292ac4400"
+    },
+    {
+      "path": "evidence/ocr/ocr-provider-diagnostic.json",
+      "sha256": "d7cf8f2c659b5bc254014874cacbd0e93dc4d4293fe7d044df5658cfaf1fd882"
+    },
+    {
+      "path": "evidence/ocr/ocr-independent-20261006-gemini38.json",
+      "sha256": "3e9c602d08578b704c7da8e5540f82bc72b7c580d57b05b06e93ff5dfd16bfe5"
+    },
+    {
+      "path": "evidence/ocr/ocr-independent-20261006-gemini36.json",
+      "sha256": "6422e3392377d9163718c3748985dc0a2a11ac0d7862f5a88ee47aea1b489141"
+    },
+    {
+      "path": "evidence/ocr/ocr-gemini36-diagnostic.json",
+      "sha256": "9da6eb5ba3e6cdf0794e357a927d263999e3afe13bfc7d3b22424cb2e5606d23"
+    },
+    {
+      "path": "evidence/ocr/ocr-independent-http-first.json",
+      "sha256": "f4785e5add67bcd6a4a434a2dc6d70c0fd2c757c8a3010db18428ebdf585f030"
+    },
+    {
+      "path": "evidence/ocr/ocr-independent-http-gemini36.json",
+      "sha256": "2b492eae5732ff620d24b7b59fe570b486f65bc9fe7b2fe2968a86e0a36ac0ff"
+    },
+    {
+      "path": "studyflow-ai/evals/copilot-holdout-v2/manifest.json",
+      "sha256": "1ce79b01ee8cf284726fbc0902881ef40e7d9ca47b5c72d518bd5a1b3b5d7f66"
+    },
+    {
+      "path": "studyflow-ai/evals/copilot-holdout-v2/protocol.json",
+      "sha256": "40730945b34febfac7811eff4d8ea699baa2c49a84f4fc30f1688f85451ad86e"
+    },
+    {
+      "path": "studyflow-ai/evals/copilot-holdout-v2/review.json",
+      "sha256": "d3483844c2220d51b2dbdad4a6a5bee6c4c075c9d1b8cf72e0f53e82559869c3"
+    }
+  ]
+}

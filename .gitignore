@@ -19,3 +19,5 @@ examples/demo-ids.json
 *.log
 postgres-local.log
 output/
+deliverables/
+.claude/worktrees/

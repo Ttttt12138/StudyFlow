@@ -5,7 +5,9 @@ from decimal import Decimal
 from .lending_models import LoanAccount, LoanInstallment
 from .services import VersionConflict
 from .workflow_common import append_state, audit, current, record, require
-from .workflow_models import DemoLedgerEntry, FundingSource, Payment
+from .money import home_currency
+from .wallets import post
+from .workflow_models import FundingSource, Payment
 
 
 def wallet_for(owner):
@@ -59,22 +61,8 @@ def create_account(disbursement):
 
 
 def post_entry(item, amount, origin):
-    balance = item.balance + amount
-    require(
-        Decimal(0) <= balance <= Decimal("9999999999999999.99"),
-        "INSUFFICIENT_BALANCE_OR_PRECISION",
-    )
-    sequence = DemoLedgerEntry.objects.filter(owner=item.owner).count() + 1
-    entry = DemoLedgerEntry.objects.create(
-        owner=item.owner,
-        amount=amount,
-        sequence=sequence,
-        effective_on=item.clock,
-        **origin,
-    )
-    item.balance = balance
-    item.save(update_fields=["balance"])
-    return entry
+    # B lending settles in the home currency only.
+    return post(item, home_currency(), amount, origin)
 
 
 def loan_events(disbursement, entry):

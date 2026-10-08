@@ -70,8 +70,12 @@ def parse_csv(text: str, source_id: str):
     required = {"account_id", "date", "amount", "currency", "counterparty", "description"}
     if not required.issubset(reader.fieldnames or []):
         raise InputError("CSV_MISSING_COLUMNS")
+    if len(reader.fieldnames) != len(set(reader.fieldnames)):
+        raise InputError('CSV_DUPLICATE_COLUMNS')
     transactions, issues = [], []
-    for row in reader:
+    for index, row in enumerate(reader, 1):
+        if index > 10000:
+            raise InputError('CSV_ROW_LIMIT')
         locator = f"row:{reader.line_num}"
         try:
             transactions.append(_transaction(row, source_id, locator))

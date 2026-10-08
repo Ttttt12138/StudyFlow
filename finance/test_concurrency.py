@@ -14,12 +14,19 @@ from .test_workflows import LOAN
 from .models import FinancialState
 from .workflow_models import DemoWallet,DemoLedgerEntry,LoanSimulation
 from .workflow_common import current
+from .policy_defaults import ensure_default_limits
+from .policy_flow import client_flow, step_up_header
+
+PASSWORD = "parallel-student-pass-1"
 
 @skipUnless(connection.vendor == "postgresql", "Requires real PostgreSQL locking and triggers")
 class PostgresConcurrencyTests(TransactionTestCase):
     def setUp(self):
-        self.user = get_user_model().objects.create_user(username="parallel-student")
+        ensure_default_limits()
+        self.user = get_user_model().objects.create_user(username="parallel-student",password=PASSWORD)
         self.operator = get_user_model().objects.create_user(username="parallel-operator",is_staff=True)
+        approver = get_user_model().objects.create_user(username="parallel-approver",is_staff=True)
+        self.flow = client_flow(self.user,PASSWORD,approver)
         self.client = APIClient()
         self.client.force_authenticate(self.user)
         response = self.client.post("/api/v2/state/",{"expected_version":0,"snapshot":deepcopy(BASE)},format="json")
@@ -37,6 +44,7 @@ class PostgresConcurrencyTests(TransactionTestCase):
         actor_id = self.operator.pk if operator else self.user.pk
         barrier = Barrier(2)
         key = str(uuid4())
+        headers = [{} if operator else step_up_header(self.flow,paths[i],bodies[i]) for i in range(2)]
         def work(index):
             try:
                 actor = get_user_model().objects.get(pk=actor_id)
@@ -44,7 +52,7 @@ class PostgresConcurrencyTests(TransactionTestCase):
                 client.force_authenticate(actor)
                 barrier.wait(timeout=10)
                 response = client.post("/api/v2/"+paths[index]+"/",bodies[index],format="json",
-                    HTTP_IDEMPOTENCY_KEY=key if same_key else str(uuid4()))
+                    HTTP_IDEMPOTENCY_KEY=key if same_key else str(uuid4()),**headers[index])
                 return response.status_code
             finally:
                 connections.close_all()
@@ -52,7 +60,7 @@ class PostgresConcurrencyTests(TransactionTestCase):
             return sorted(executor.map(work,range(2)))
 
     def test_concurrent_receipt_creates_one_credit(self):
-        source = self.command("funding-sources",{"economic_key":"parent","kind":"family","currency":"THB",
+        source = self.command("funding-sources",{"economic_key":"parent","kind":"external_savings","currency":"THB",
             "amount":"9000","available_on":"2026-10-02","certainty":"confirmed"})
         path = "funding-sources/"+source["id"]+"/receive"
         self.assertEqual(self.parallel([path,path],[{},{}],operator=True),[201,201])
@@ -70,7 +78,7 @@ class PostgresConcurrencyTests(TransactionTestCase):
         self.assertEqual(FinancialState.objects.filter(owner=self.user).count(),2)
 
     def test_concurrent_payments_cannot_overspend_holds(self):
-        source = self.command("funding-sources",{"economic_key":"promise","kind":"family","currency":"THB",
+        source = self.command("funding-sources",{"economic_key":"promise","kind":"external_savings","currency":"THB",
             "amount":"9000","available_on":"2026-10-03","certainty":"confirmed"})
         beneficiary = self.command("beneficiaries",{"name":"Mock school","destination_label":"MOCK"})
         self.command("beneficiaries/"+beneficiary["id"]+"/verify",{"verified":True},operator=True)
@@ -96,7 +104,7 @@ class PostgresConcurrencyTests(TransactionTestCase):
         self.assertEqual(state.snapshot["opening_balance"],"80000.00")
 
     def test_failed_audit_rolls_back_credit_and_version(self):
-        source = self.command("funding-sources",{"economic_key":"rollback","kind":"family","currency":"THB",
+        source = self.command("funding-sources",{"economic_key":"rollback","kind":"external_savings","currency":"THB",
             "amount":"9000","available_on":"2026-10-02","certainty":"confirmed"})
         self.client.force_authenticate(self.operator)
         with patch("finance.workflow_common.AuditEvent.objects.create",side_effect=RuntimeError("test fault")):
