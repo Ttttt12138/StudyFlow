@@ -52,3 +52,11 @@ After Django session login, open **Dashboard** in the journey navigation. It rea
 The signed-out setup also offers **Preview student dashboard**: fixed demo data, no Django financial requests, read-only scenario controls. Dashboard preview navigation opens the synthetic journey. It never enters live mode implicitly.
 
 See [current dashboard integration evidence](../docs/frontend-dashboard-integration.md). `npm test` includes two dashboard browser suites; `npm run test:integration` exercises actual Django and PostgreSQL with C mock providers and disposable student data. In the cloud workspace use `npm ci --cache /tmp/studyflow-npm-cache` if the default npm cache is unwritable.
+
+## Reviewed UX and wallet/remittance
+
+The welcome screen and read-only five-step tour now use the reviewed Task A presentation from source commit `20d1527`. “Use my own information” focuses Django session sign-in; no token entry was imported. Saved journey behavior and the live dashboard remain in place.
+
+Signed-in students can open **Wallet & transfers** under **More options**. `/?wallet=1` also opens it directly; `/?wallet=preview` opens only its clearly labeled read-only synthetic preview. The wallet uses the established session/CSRF API client and follows all owned list pages. B owns prices, balances and decisions. Only simulation is supported here; backend setup, recipient verification and separate-operator approval are required where applicable.
+
+With the documented local Django/PostgreSQL mock setup running, `npm run test:wallet-integration` exercises real HTTP with disposable students and two operators, fixture FX, safe retries, T2/T3, expiry and permissions. Operator assistance is test setup, not a student UI capability. See [reviewed UX and wallet integration](../docs/frontend-ux-wallet-integration.md) for exact scope, contracts and evidence.

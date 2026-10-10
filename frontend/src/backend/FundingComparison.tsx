@@ -10,25 +10,30 @@ type Props = {
   onReviewQuote: (id: string) => void;
   onValidatePlan: () => void;
   validationDisabled: boolean;
-  savedPlanCurrent: boolean;
   savedPlan: Run<Record<string, unknown>> | null;
+  preview?: boolean;
 };
 
 function value(input: unknown): string | null {
   return typeof input === "string" && input.trim() ? input : null;
 }
 
-export function FundingComparison({ recommendation, current, sources, quotes, application, onReviewQuote, onValidatePlan, validationDisabled, savedPlan, savedPlanCurrent }: Props) {
+export function FundingComparison({ recommendation, current, sources, quotes, application, onReviewQuote, onValidatePlan, validationDisabled, savedPlan, preview = false }: Props) {
   const plan = recommendation?.result.nonloan_plan;
   const allocationBySource = new Map(plan?.allocations.map((item) => [item.source_id, item.amount]) ?? []);
   return <section className="card backend-section funding-comparison" aria-labelledby="funding-comparison-title">
+    <span className="eyebrow">YOUR FUNDING PLAN</span>
     <h2 id="funding-comparison-title">Compare funding and loan options</h2>
-    <p>These are separate backend responses. A source is not received cash until marked received; a loan quote is not an approval or disbursement.</p>
+    <p>See what may be available, what has arrived, and which conditions still need attention. A loan quote is a simulation, not an approval or payment.</p>
     {recommendation && !current && <div className="stale-banner" role="status"><strong>Recommendation needs updating</strong><span>Your planning data changed. Request a new funding recommendation before relying on the plan below.</span></div>}
-    <div className="comparison-grid">
+    <div className="result-highlights funding-highlights"><div><span>{recommendation && !current ? "Outdated remaining gap" : "Reported remaining gap"}</span><strong>{plan ? money(plan.remaining_gap, "THB") : "No recommendation yet"}</strong><small>{plan ? recommendation?.result.is_recommendation_final ? "Recommendation marked final" : "Recommendation has conditions or missing information" : "Request a funding recommendation below"}</small></div><div><span>Plan status</span><strong>{plan ? explainCode(plan.validation) : "Waiting for a recommendation"}</strong><small>{plan ? `${plan.conditions.length} condition${plan.conditions.length === 1 ? "" : "s"} reported` : "No student decision has been made here"}</small></div></div>
+    <details className="result-details student-explainer"><summary>What does this funding status mean?</summary><p>A condition means something still needs checking, such as support that has been promised but not received. A quote shows possible loan terms; it is not an approval or money in your account. The backend supplies these statuses and amounts.</p></details>
+    {plan?.conditions.length ? <div className="result-attention"><strong>What needs attention</strong><ul>{plan.conditions.map((condition, index) => <li key={index}>{explainCode(condition)}</li>)}</ul></div> : null}
+    {preview && <div className="preview-funding-glance" role="region" aria-label="Sample funding options"><div><strong>Sample funding sources</strong>{sources.length ? sources.map(source => <p key={source.id}>{source.kind.replaceAll("_", " ")} · {money(source.amount, source.currency)} · {source.received ? "Received" : "Not received"}</p>) : <p>No funding sources supplied.</p>}</div><div><strong>{quotes.length} simulated loan quote{quotes.length === 1 ? "" : "s"}</strong>{quotes.length ? quotes.map((quote, index) => <p key={quote.id}>Option {index + 1} · {money(quote.result?.net_proceeds, quote.inputs?.currency ?? "THB")} net proceeds · {money(quote.result?.total_repayment, quote.inputs?.currency ?? "THB")} total repayment</p>) : <p>No quotes supplied.</p>}</div></div>}
+    <details className="result-details funding-section"><summary>Explore funding sources and plan details</summary><div className="comparison-grid">
       <div className="comparison-panel">
         <h3>Funding sources</h3>
-        <p>Dates and amounts reported for each source. B’s suggested allocations appear only when a recommendation is available.</p>
+        <p>Money promised for later stays separate from money marked received. Suggested allocations appear only when B provides them.</p>
         {sources.length ? <ul className="comparison-list">{sources.map((source) => <li key={source.id}>
           <strong>{source.kind.replaceAll("_", " ")}</strong>
           <dl>
@@ -59,12 +64,11 @@ export function FundingComparison({ recommendation, current, sources, quotes, ap
           <details><summary>Backend codes</summary><p>Validation: {plan.validation} · Affordability: {plan.affordability}</p>{plan.conditions.map((condition, index) => <p key={index}>{condition}</p>)}</details>
           <p className="comparison-note">B’s validation and conditions determine whether this plan is ready. Amounts here are displayed exactly as returned.</p>
           <button className="secondary" disabled={validationDisabled} onClick={onValidatePlan}>Check suggested funding plan</button>
-          {savedPlan && !savedPlanCurrent && <p className="stale-banner" role="status">Saved plan needs updating. This validation belongs to earlier inputs.</p>}
           {savedPlan && <p role="status">Saved validation: {value(savedPlan.result.validation) ? explainCode(value(savedPlan.result.validation)!) : "Not supplied"} · Remaining gap: {money(savedPlan.result.remaining_gap, "THB")}</p>}
         </> : <p className="comparison-empty">Request a funding recommendation to see B’s proposed combination and remaining gap.</p>}
       </div>
-    </div>
-    <h3>Simulated loan quotes</h3>
+    </div></details>
+    <details className="result-details funding-section"><summary>Compare {quotes.length} simulated loan quote{quotes.length === 1 ? "" : "s"}</summary><h3>Simulated loan quotes</h3>
     <p>Compare the terms B returned for each quote. This screen does not rank quotes or decide whether repayments are affordable.</p>
     {quotes.length ? <div className="comparison-grid quote-grid">{quotes.map((quote) => {
       const result = quote.result;
@@ -92,6 +96,6 @@ export function FundingComparison({ recommendation, current, sources, quotes, ap
         })}</ul></details>}
         <button className="secondary" onClick={() => onReviewQuote(quote.id)}>Review this quote</button>
       </article>;
-    })}</div> : <p className="comparison-empty">No loan quotes returned by B. Create a quote in Simulated application to compare its terms here.</p>}
+    })}</div> : <p className="comparison-empty">No loan quotes returned by B. Create a quote in Simulated application to compare its terms here.</p>}</details>
   </section>;
 }

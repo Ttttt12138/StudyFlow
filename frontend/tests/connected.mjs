@@ -296,7 +296,7 @@ try {
   await page.getByLabel("Opening balance (THB)").fill("50000.00");
   await page.getByLabel("Balance as of").fill("2026-08-01");
   await page.getByRole("button", { name: "Create semester" }).click();
-  await page.getByRole("heading", { name: "Admission information" }).waitFor();
+  await page.getByRole("heading", { name: "Check your school and dates" }).waitFor();
   await page.getByLabel("Admission document").setInputFiles({
     name: "offer.txt",
     mimeType: "text/plain",
@@ -310,7 +310,7 @@ try {
   await page
     .getByLabel("Resolve conflict: profile.school")
     .fill("Use the current PSU offer");
-  await page.getByLabel("Resolve conflict: tuition").fill("Reviewed corrected fee");
+  await page.getByLabel("review reason for tuition").fill("Reviewed corrected fee");
   await page.getByLabel("Document issuer").fill("PSU");
   await page
     .getByRole("button", { name: "Confirm selected information" })
@@ -332,7 +332,7 @@ try {
     "3500.00",
   );
   await page.reload();
-  await page.getByRole("heading", { name: "Admission information" }).waitFor();
+  await page.getByRole("heading", { name: "Check your school and dates" }).waitFor();
   await page
     .getByRole("navigation")
     .getByRole("button", { name: "Complete expenses" })
@@ -366,6 +366,8 @@ try {
   await page.getByRole("navigation").getByRole("button", { name: "Budget" }).click();
   assert.match(await calendar.innerText(), /Not received · estimated/);
   await page.getByRole("navigation").getByRole("button", { name: "Funding" }).click();
+  await page.getByText("Explore funding sources and plan details").click();
+  await page.getByText(/Compare \d+ simulated loan quotes?/).click();
   await page.getByRole("button", { name: "Get funding recommendation" }).click();
   await page.getByText("Your funding options are ready.").waitFor();
   const comparison = page.getByRole("region", { name: "Compare funding and loan options" });
@@ -403,11 +405,14 @@ try {
     .click();
   await page.locator(".application-status").getByText(/simulated application is under review/i).waitFor();
   await page.getByRole("navigation").getByRole("button", { name: "Funding" }).click();
+  await page.getByText("Explore funding sources and plan details").click();
+  await page.getByText(/Compare \d+ simulated loan quotes?/).click();
   assert.equal(await comparison.getByRole("article", { name: /Loan quote/ }).count(), 2);
   assert.match(await comparison.innerText(), /THB 10,662.00/);
   await comparison.getByRole("article", { name: "Loan quote quote-older" }).getByRole("button", { name: "Review this quote" }).click();
   assert.equal(await page.getByLabel("Select quote").inputValue(), "quote-older");
   await page.getByRole("navigation").getByRole("button", { name: "Complete expenses" }).click();
+  if (!await page.getByLabel("food amount").isVisible()) await page.locator("#cost-food .cost-details > summary").click();
   await page.getByLabel("food amount").fill("");
   await page.getByRole("button", { name: "Save expense revisions" }).click();
   await page.getByRole("navigation").getByRole("button", { name: "Budget" }).click();
@@ -419,6 +424,8 @@ try {
   assert.match(await calendar.innerText(), /Backend forecast: incomplete/);
   assert.match(await calendar.innerText(), /scheduled item\(s\) lack enough information/);
   await page.getByRole("navigation").getByRole("button", { name: "Funding" }).click();
+  await page.getByText("Explore funding sources and plan details").click();
+  await page.getByText(/Compare \d+ simulated loan quotes?/).click();
   assert.match(await comparison.innerText(), /Recommendation needs updating/);
   await page.screenshot({
     path: "/tmp/studyflow-connected-desktop.png",

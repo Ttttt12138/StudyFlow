@@ -41,7 +41,7 @@ try {
   await page.screenshot({ path: "/tmp/studyflow-dashboard-mobile.png", fullPage: true });
   await page.getByRole("button", { name: "View payment calendar" }).click();
   await page.getByRole("heading", { name: "Budget", exact: true }).waitFor();
-  assert.match(await page.getByRole("main").innerText(), /UI preview · synthetic data/);
+  assert.match(await page.getByRole("main").innerText(), /Read-only tour · synthetic data/);
   assert.equal(apiCalls, 0);
   assert.deepEqual(errors, []);
   console.log("PASS: dashboard mock, attention/clear/empty/stale/error/signed-out states, journey link, mobile layout, zero Django requests.");

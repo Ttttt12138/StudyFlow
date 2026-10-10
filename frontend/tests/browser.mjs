@@ -9,7 +9,7 @@ const confirmExpenses = async () => { await page.getByRole('checkbox').check(); 
 await page.route("**/api/auth/session/", route => route.fulfill({status: 200, contentType: "application/json", body: JSON.stringify({authenticated: false, username: null, csrf_token: "mock-csrf"})}));
 try {
  await page.goto(process.env.TEST_URL || 'http://127.0.0.1:5173');
- await page.getByRole('button', { name: 'View synthetic demo' }).click();
+ await page.getByRole('button', { name: 'Explore the original demo' }).click();
  await page.getByRole('heading', { name: 'Start with the facts.' }).waitFor();
  assert.equal(await page.getByRole('navigation').getByRole('button').count(), 5);
  assert.equal(await nav('Budget').isDisabled(), true);

@@ -33,7 +33,7 @@ try {
  await page.getByLabel('Balance as of').fill(dates.asOf);
  await page.getByLabel('Reserve (THB; optional until confirmed)').fill('15000.00');
  await button('Create semester').click();
- await page.getByRole('heading',{name:'Admission information'}).waitFor();
+ await page.getByRole('heading',{name:'Check your school and dates'}).waitFor();
  await page.getByLabel('start date',{exact:true}).fill(dates.start);
  await page.getByLabel('end date',{exact:true}).fill(dates.end);
  await button('Save profile corrections').click(); await page.getByText('Your expense changes were saved.').waitFor();
@@ -42,12 +42,14 @@ try {
  let material;
  for(let attempt=0;attempt<60;attempt++){material=(await get('readiness/imports/'))[0]; if(material.status==='NEEDS_REVIEW') break; await new Promise(resolve=>setTimeout(resolve,500));}
  assert.equal(material.status,'NEEDS_REVIEW',JSON.stringify(material));
+ assert.ok(Object.keys(material.result.merge_conflicts??{}).length>0,'C returned source conflicts');
+ assert.ok(material.result.issues.some(issue=>issue.code==='MISSING_COST_FIELD'),'C returned missing fields');
  const original=structuredClone(material.result.draft); assert.ok(original.costs.some(c=>c.evidence.length));
  await button('Refresh processing status').click(); await page.getByRole('heading',{name:'Review information from your document'}).waitFor();
  await page.getByLabel('tuition proposed amount').fill('66000.00');
  await page.getByLabel('tuition proposed due date').fill(dates.due);
  await page.getByLabel('tuition proposed payment status').selectOption('false');
- for(const label of await page.locator('label').all()){const text=await label.innerText(); if(/^resolve conflict:|^review reason for/i.test(text)) await label.locator('input').fill('Reviewed synthetic UAT correction and original evidence.');}
+ for(const input of await page.getByLabel(/^resolve conflict:|^review reason for/i).all()) await input.fill('Reviewed synthetic UAT correction and original evidence.');
  await page.getByLabel('Document issuer').fill('Synthetic UAT issuer');
  await button('Confirm selected information').click(); await page.getByText('Your document review was saved.').waitFor();
  const committed=await get(`readiness/imports/${material.id}/`); assert.equal(committed.status,'COMMITTED'); assert.deepEqual(committed.result.draft,original);
@@ -56,7 +58,7 @@ try {
  assert.equal(semester.draft.costs.find(c=>c.cost_id==='tuition').confidence_type,'VERIFIED');
  await nav('Complete expenses').click(); assert.equal(await page.getByLabel('tuition amount',{exact:true}).isDisabled(),true);
  await page.getByLabel('food amount',{exact:true}).fill(''); await button('Save expense revisions').click(); await page.getByText('Your expense changes were saved.').waitFor();
- await page.reload(); await page.getByRole('heading',{name:'Admission information'}).waitFor(); await nav('Complete expenses').click();
+ await page.reload(); await page.getByRole('heading',{name:'Check your school and dates'}).waitFor(); await nav('Complete expenses').click();
  assert.equal(await page.getByLabel('food amount',{exact:true}).inputValue(),'');
  await page.getByLabel('food amount',{exact:true}).fill('3500.00'); await nav('Budget').click();
  await page.getByRole('heading',{name:'Update needed',exact:true}).waitFor(); assert.equal(await button('Update budget results').isDisabled(),true);
@@ -82,7 +84,7 @@ try {
  await button('Save funding source').click(); await page.getByRole('alert').waitFor(); await button('Save funding source').click(); await page.getByText('Funding source recorded; it is not received money.').waitFor();
  const sources=await get('funding-sources/'); assert.equal(sources.count,1); assert.equal(sources.results[0].received,false);
  await button('Get funding recommendation').click(); await page.getByText('Your funding options are ready.').waitFor();
- await button('Check suggested funding plan').click(); await page.getByText('Your funding choices were reviewed.').waitFor();
+ await page.getByText('Explore funding sources and plan details').click();await button('Check suggested funding plan').click(); await page.getByText('Your funding choices were reviewed.').waitFor();
  await nav('Simulated application').click(); await page.getByText('1. Monthly affordability profile').click();
  await button('Add month').click(); await page.getByLabel('Month',{exact:true}).fill(dates.repayment.slice(0,7));
  await page.getByLabel('income',{exact:true}).fill('10000.00'); await page.getByLabel('living expenses',{exact:true}).fill('4000.00'); await page.getByLabel('existing repayments',{exact:true}).fill('0.00');
@@ -92,7 +94,7 @@ try {
  await button('Create application draft').click(); await page.getByText('Simulated application draft created.').waitFor();
  await button('Submit simulated application').click(); await page.getByText('Your application status was updated.').waitFor();
  const apps=await get('applications/'); assert.equal(apps.count,1); assert.equal(apps.results[0].status,'REJECTED');
- await page.reload(); await page.getByRole('heading',{name:'Admission information'}).waitFor(); await nav('Simulated application').click(); await page.locator('.application-status').waitFor();
+ await page.reload(); await page.getByRole('heading',{name:'Check your school and dates'}).waitFor(); await nav('Simulated application').click(); await page.locator('.application-status').waitFor();
  assert.match(await page.locator('.application-status').innerText(),/not approved|rejected/i);
  await button('Reload application state').click();
  mkdirSync(`${root}output/frontend`,{recursive:true});
@@ -136,11 +138,14 @@ try {
  state=await get('readiness/state/');
  const completeBudget=await post('readiness/budgets/',{semester_id:state.semester_id,state_version:state.state_version,budget_version:state.budget_version,analysis_version:state.analysis_version});assert.equal(completeBudget.status(),201,await completeBudget.text());
  const completeResult=(await completeBudget.json()).data;assert.equal(completeResult.result.complete,true,JSON.stringify(completeResult.result.issues));
+ // Compare the rendered count with the actual response used by the dashboard.
+ // The worker can create notifications between this load and a subsequent GET.
+ const notificationResponse=page.waitForResponse(response=>new URL(response.url()).pathname==='/api/v2/readiness/notifications/' && response.request().method()==='GET');
  await nav('Dashboard').click();
  await page.getByRole('heading',{name:'Dashboard',exact:true}).waitFor();
  await page.getByText(/unread · .* total/).waitFor();
  const briefing=await get('readiness/briefing/'), calendar=await get('readiness/calendar/');
- const nr=await page.request.get(`${origin}/api/v2/readiness/notifications/`), notifications=await nr.json();
+ const nr=await notificationResponse, notifications=await nr.json();
  const reviews=await get('review-queue/');
  assert.equal(nr.status(),200); assert.ok(Array.isArray(notifications.data)); assert.ok(Array.isArray(reviews.items));
  const main=await page.locator('main').innerText();
@@ -148,7 +153,7 @@ try {
  if(briefing.next_obligation) assert.ok(main.includes(briefing.next_obligation.label));
  assert.ok(Array.isArray(calendar.calendar));
  for(const width of [1440,390]){await page.setViewportSize({width,height:1000});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);await page.screenshot({path:`${root}output/frontend/dashboard-${width}.png`,fullPage:true});}
- await page.setViewportSize({width:1440,height:1000});await page.reload();await page.getByRole('heading',{name:'Admission information'}).waitFor();await nav('Dashboard').click();await page.getByText(/unread · .* total/).waitFor();
+ await page.setViewportSize({width:1440,height:1000});await page.reload();await page.getByRole('heading',{name:'Check your school and dates'}).waitFor();await nav('Dashboard').click();await page.getByText(/unread · .* total/).waitFor();
  assert.deepEqual(errors,[]);
  writeFileSync(`${root}output/frontend/integration.json`,JSON.stringify({passed:true,tested_at:new Date().toISOString(),backend_commit:execFileSync('git',['rev-parse','origin/feature/bc-integration'],{cwd:root,encoding:'utf8'}).trim(),backend:'Django/PostgreSQL 17',authentication:'actual Django session login + CSRF',worker:'readiness_worker --mode mock',extraction:'C mock, synthetic fixture',endpoints:[...endpoints].sort(),checks:['original extraction preserved','merged stable IDs','verified fee locked','unknown costs persist','reload','local edits stale','real 409 recovery','lost committed budget/source responses retried without duplicates','B-authored results','desktop/mobile no overflow','text PDF without OCR consent','image with OCR disabled and manual transcription','dashboard live briefing/calendar/notifications/reviews and reload','complete budget after real CSV coverage and balance confirmation; NOT_APPLICABLE distinct from null'],liveModels:false},null,2));
  console.log('PASS: real PostgreSQL/session/CSRF/C mock worker five-step browser integration.');

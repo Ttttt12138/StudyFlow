@@ -1,11 +1,14 @@
+import { PreviewWalkthrough } from "./PreviewWalkthrough";
+import { PreviewConfirmation } from "./PreviewConfirmation";
+import { PreviewApplication } from "./PreviewApplication";
 import { LiveDashboard } from "../dashboard/LiveDashboard";
 import { DashboardPreview } from "../dashboard/DashboardPreview";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { ApiError, DjangoClient, getAll, type StudyFlowClient } from "./client";
 import { PaymentCalendar } from "./PaymentCalendar";
 import { FundingComparison } from "./FundingComparison";
-import { explainCode, formatMoney } from "./presenters";
-import { createPreviewClient, previewBudget, previewFunding, previewImport } from "./previewAdapter";
+import { explainCode, formatDate, formatMoney } from "./presenters";
+import { createPreviewClient, previewBudget, previewFunding, previewImport, type PreviewScenario } from "./previewAdapter";
 import type {
   Application,
   BackendState,
@@ -37,6 +40,13 @@ const stepHelp = [
   "Compare the budget results for your saved information.",
   "Review possible funding and what is actually available.",
   "Review a quote and follow your simulated application.",
+];
+const previewStepHelp = [
+  "See sample admission details, source evidence, and a conflict that still needs review.",
+  "See documented and sample expenses, then try one fixed Food estimate.",
+  "Explore budget and calendar results supplied by fixed demo responses.",
+  "Compare sample funding sources, conditions, and simulated loan quotes.",
+  "Inspect a sample application status and its linked quote terms.",
 ];
 const categories = [
   "tuition",
@@ -72,10 +82,16 @@ function versionsMatch(
     (state.analysis_version == null || result.analysis_version === state.analysis_version)
   );
 }
-export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
+export function ConnectedApp({ onDemo, onWallet }: { onDemo: () => void; onWallet: (preview: boolean) => void }) {
   const [session, setSession] = useState<{authenticated: boolean; username: string | null; csrf_token: string} | null>(null);
   const [client, setClient] = useState<StudyFlowClient | null>(null);
   const [preview, setPreview] = useState(false);
+  const [previewScenario,setPreviewScenario]=useState<PreviewScenario>("missing");
+  const [showConnect,setShowConnect]=useState(false);
+  const [expandedCosts,setExpandedCosts]=useState<Record<string,boolean>>({});
+  const focusCostRef=useRef<string|null>(null);
+  const connectInputRef=useRef<HTMLAnchorElement|null>(null);
+  const focusApplicationStatusRef=useRef(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [errorDetails, setErrorDetails] = useState<unknown>(null);
@@ -141,6 +157,28 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
   const initialized = useRef(false);
   const fileIdentities = useRef(new WeakMap<File, string>());
   const keys = useRef(new Map<string, string>());
+  useLayoutEffect(() => {
+    if (!client || dashboardPreview || dashboard) return;
+    const costId = focusCostRef.current;
+    focusCostRef.current = null;
+    const target = costId ? document.getElementById(`cost-${costId}`) : null;
+    if (target) target.scrollIntoView({ block: "center", behavior: "instant" });
+    else window.scrollTo({ top: 0, behavior: "instant" });
+    (target ?? document.getElementById("connected-step-title"))?.focus({ preventScroll: true });
+  }, [step, client, dashboardPreview, dashboard]);
+  useLayoutEffect(() => {
+    if (!focusApplicationStatusRef.current || step !== 4 || !application) return;
+    const status = document.querySelector<HTMLElement>(".application-live-status");
+    if (!status) return;
+    focusApplicationStatusRef.current = false;
+    status.scrollIntoView({ block: "center", behavior: "instant" });
+    status.focus({ preventScroll: true });
+  }, [application, step]);
+  useLayoutEffect(() => {
+    if (client || !showConnect || !connectInputRef.current) return;
+    connectInputRef.current.scrollIntoView({ block: "center", behavior: "instant" });
+    connectInputRef.current.focus({ preventScroll: true });
+  }, [client, showConnect]);
   const versions = (): Versions => ({
     semester_id: state!.semester_id,
     state_version: state!.state_version,
@@ -148,8 +186,8 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
     analysis_version: state!.analysis_version,
   });
   useEffect(() => {
-    setApplication(applications.find((item) => (item.loan ?? item.quote_id) === quoteId) ?? null);
-  }, [applications, quoteId]);
+    setApplication(preview ? applications[0] ?? null : applications.find((item) => (item.loan ?? item.quote_id) === quoteId) ?? null);
+  }, [applications, quoteId, preview]);
   const dirty = !!draft && !!semester && JSON.stringify(draft) !== JSON.stringify(semester.draft);
   function resultFresh(result: Parameters<typeof versionsMatch>[0], current: BackendState | null) {
     return !dirty && versionsMatch(result, current);
@@ -310,7 +348,8 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
   useEffect(() => { if (!initialized.current) { initialized.current = true; void connect(); } }, []);
   async function startPreview() {
     ++connectionEpoch.current;
-    const api = createPreviewClient();
+    const api = createPreviewClient("missing");
+    setPreviewScenario("missing");
     setError("");
     setDashboard(false);
     setPreview(true);
@@ -325,9 +364,26 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
     setQuoteId("preview-quote");
     setNotice("Synthetic preview loaded. No Django account or live financial data is connected.");
   }
+  async function showPreviewScenario(scenario: PreviewScenario) {
+    if (!preview) return;
+    const api = createPreviewClient(scenario);
+    setBusy(true);
+    setError("");
+    try {
+      await refresh(api);
+      focusCostRef.current = "preview-food";
+      setClient(api);
+      setPreviewScenario(scenario);
+    } catch (reason) {
+      setError(issueText(reason));
+    } finally {
+      setBusy(false);
+    }
+  }
   function leavePreview() {
     ++connectionEpoch.current;
     setPreview(false);
+    setShowConnect(true);
     setClient(null);
     setState(null);
     setSemester(null);
@@ -552,6 +608,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
       const result = await send<Application>(client, "applications/", {
         quote_id: quoteId,
       });
+      focusApplicationStatusRef.current = true;
       setApplication(result);
       await refresh();
       setNotice("Simulated application draft created.");
@@ -565,6 +622,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
         `applications/${application.id}/action/`,
         { expected_version: application.version, action: "submit" },
       );
+      focusApplicationStatusRef.current = true;
       setApplication(result);
       await refresh();
       setNotice("Your application status was updated.");
@@ -639,31 +697,38 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
       ],
     });
   }
-  const conflicts = { ...(material?.result.merge_conflicts ?? {}) };
-  if (material?.status === "NEEDS_REVIEW" && draft && semester) {
-    for (const cost of draft.costs) {
-      const saved = semester.draft.costs.find((row) => row.cost_id === cost.cost_id);
-      if (selectedIds.includes(cost.cost_id) && saved &&
-          ["amount", "currency", "beneficiary_id"].some((field) => saved[field] !== cost[field])) {
-        conflicts[cost.cost_id] ??= "Explain your reviewed correction to the saved document cost.";
-      }
-    }
-  }
+  const conflicts = material?.result.merge_conflicts ?? {};
   const formDraft = draft ?? semester?.draft;
+  const missingCostCount = formDraft?.costs.filter((cost) => cost.amount == null && cost.applicability !== "NOT_APPLICABLE").length ?? 0;
+  const budgetData = budget?.result ?? state?.budget ?? null;
+  const nextScheduledCost = resultFresh(forecast, state) ? forecast?.result.timeline.find((event) => event.kind === "expense") : null;
   const nextAction = !state
     ? "Connect to a saved semester or open the synthetic preview."
     : step === 0
       ? material?.status === "NEEDS_REVIEW" ? "Review the document evidence and confirm your choices." : "Check admission details and upload a document when available."
       : step === 1
-        ? formDraft?.costs.some((cost) => cost.applicability !== "NOT_APPLICABLE" && cost.amount == null)
+        ? preview ? previewScenario === "missing" ? "Find Food and try the clearly labeled sample estimate." : "Sample Food is estimated. Open Budget to see the matching mock result." : formDraft?.costs.some((cost) => cost.applicability !== "NOT_APPLICABLE" && cost.amount == null)
           ? "Review costs with missing amounts, then save your expense revisions."
           : "Review the expense dates and save your revisions."
         : step === 2
-          ? budget && !resultFresh(budget, state) ? "Update the budget after your latest changes." : "Review B’s issues and the payment calendar."
+          ? preview ? previewScenario === "missing" ? "Find Food and try the sample estimate to see a new demo result." : "Food is estimated in this demo. Review the updated sample result and calendar." : budget && !resultFresh(budget, state) ? "Update the budget after your latest changes." : "Review B’s issues and the payment calendar."
           : step === 3
             ? !funding || !resultFresh(funding, state) ? "Request an updated funding recommendation." : "Review conditions and compare the loan quotes."
             : application ? explainCode(application.status) : "Select a quote, then create a simulated application draft.";
-  if (dashboardPreview) return <DashboardPreview onExit={() => setDashboardPreview(false)} onJourney={(index) => { setDashboardPreview(false); void startPreview().then(() => setStep(index)); }}/>;
+  const paymentCalendar = <PaymentCalendar
+    forecast={forecast}
+    current={resultFresh(forecast, state)}
+    costs={formDraft?.costs ?? []}
+    sources={sources}
+    busy={busy || preview || dirty}
+    preview={preview}
+    onUpdate={updateCalendar}
+  />;
+  if (dashboardPreview) return <DashboardPreview onExit={() => setDashboardPreview(false)} onJourney={(target) => {
+    setDashboardPreview(false);
+    if (!preview) void startPreview().then(() => setStep(target));
+    else setStep(target);
+  }} />;
   return (
     <div className={`app connected ${preview ? "preview-mode" : ""}`}>
       <aside>
@@ -672,19 +737,19 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
           href="#"
           onClick={(e) => {
             e.preventDefault();
-            setDashboard(false);
             setStep(0);
           }}
         >
           <span className="brand-icon">S</span>StudyFlow
           <span className="brand-dot">.</span>
         </a>
-        <div className="journey-label">YOUR STUDY PLAN</div>
+        {client && <div className="journey-label">YOUR STUDY PLAN</div>}
+        {client && <>
         <button className="mobile-step-toggle secondary" aria-expanded={showSteps} aria-controls="connected-steps" onClick={() => setShowSteps(!showSteps)}>
           {dashboard ? "Dashboard" : `Step ${step + 1} of 5 · ${steps[step]}`} <span aria-hidden="true">{showSteps ? "−" : "+"}</span>
         </button>
         <nav id="connected-steps" className={showSteps ? "steps-open" : ""} aria-label="Study planning steps">
-          {!preview && client && <button className={dashboard ? "active" : ""} onClick={() => { setDashboard(true); setShowSteps(false); }}>Dashboard</button>}
+          {!preview && <button className={dashboard ? "active" : ""} aria-current={dashboard ? "page" : undefined} onClick={()=>{setDashboard(true);setShowSteps(false);}}>Dashboard</button>}
           {steps.map((name, i) => (
             <button
               key={name}
@@ -698,34 +763,37 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
             </button>
           ))}
         </nav>
-        <div className="sidebar-note">
-          <strong>Your study plan</strong>
-          <p>Review each step at your own pace. Your saved information is available when you return.</p>
-        </div>
-        <button className="secondary" onClick={onDemo}>
+        </>}
+        {!client && <div className="sidebar-note"><strong>Take it one step at a time</strong><p>Start with your admission details. We'll help you see what comes next.</p></div>}
+        {client && <details className="student-more-menu"><summary>More options</summary><div>
+        {client && <button className="secondary student-side-action" onClick={onDemo}>
           View synthetic demo
-        </button>
-        {preview && <button className="secondary" onClick={leavePreview}>Connect to Django instead</button>}
+        </button>}
+        {preview && <button className="secondary dashboard-entry student-side-action" onClick={() => setDashboardPreview(true)}>Preview dashboard</button>}
+        {client && <button className="secondary dashboard-entry student-side-action" onClick={() => onWallet(preview)}>{preview ? "Preview wallet & transfers" : "Wallet & transfers"}</button>}
+        {preview && <button className="secondary student-side-action" onClick={leavePreview}>Connect to Django instead</button>}
+        </div></details>}
       </aside>
       <div className="workspace">
         <header>
-          <span>StudyFlow / {dashboard ? "Dashboard" : steps[step]}</span>
-          <span className="avatar" aria-label={session?.username ?? "Student"}>{session?.username?.slice(0, 2).toUpperCase() ?? "ST"}</span>
+          <span>StudyFlow / {dashboard ? "Dashboard" : client ? steps[step] : "Welcome"}</span>
+          <span className="avatar">ST</span>
         </header>
         <main>
-          {dashboard && client && !preview ? <LiveDashboard api={client as DjangoClient} dirty={dirty} onJourney={(index) => { setDashboard(false); setStep(index); }} /> : <>
-          <div className="section-heading">
+          {dashboard && client && !preview ? <LiveDashboard api={client as DjangoClient} dirty={dirty} onJourney={(index)=>{setDashboard(false);setStep(index);}}/> : <>
+          {client && <div className="section-heading">
             <div>
               <span className="eyebrow">STEP 0{step + 1} / 05</span>
-              <h1>{steps[step]}</h1>
-              <p>{stepHelp[step]}</p>
+              <h1 id="connected-step-title" tabIndex={-1}>{steps[step]}</h1>
+              <p>{preview ? previewStepHelp[step] : stepHelp[step]}</p>
             </div>
-          </div>
-          {preview && <div className="preview-banner" role="status"><strong>UI preview · synthetic data</strong><span>Explore all five connected screens without a token. Preview data cannot be saved, and calculation actions are disabled. Nothing is sent to Django.</span></div>}
+          </div>}
+          {client && <div className="student-progress" aria-label={`Step ${step + 1} of 5: ${steps[step]}`}><div><span>{preview ? "TOUR POSITION · NOTHING COMPLETED" : "CURRENT STEP"}</span><strong>Step {step + 1} of 5 · {steps[step]}</strong></div><div className="student-progress-track" aria-hidden="true"><span style={{ width: `${(step + 1) * 20}%` }}/></div></div>}
+          {preview && <section className="preview-banner" aria-label="Read-only tour"><div><strong>Read-only tour · synthetic data</strong><p>{previewScenario === "estimated" ? "A fixed sample estimate and matching mock results are displayed." : "You are exploring sample information."} Nothing here is saved, confirmed, submitted, or sent to Django.</p><p>{step === 0 ? "To review a real document, resolve conflicts, and confirm values, connect your student account." : step === 1 ? "To add or edit your own expenses and save them, connect your student account." : step === 2 ? "To request a budget for your saved information, connect your student account." : step === 3 ? "To add funding sources or request recommendations, connect your student account." : "To enter affordability details, create a quote, or submit an application, connect your student account."}</p></div><button className="secondary" onClick={leavePreview}>Use my own information</button></section>}
           {error && (
             <div className="stale-banner" role="alert">
               {error}
-              {!!errorDetails && <details><summary>View backend response</summary><pre className="backend-json">{JSON.stringify(errorDetails, null, 2)}</pre></details>}
+              {!!errorDetails && <details><summary>View backend response</summary><pre className="backend-json">{JSON.stringify(errorDetails,null,2)}</pre></details>}
               {unsavedDraft && (
                 <button
                   className="secondary"
@@ -742,33 +810,37 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
               )}
             </div>
           )}
-          {notice && (
+          {notice && (!preview || !notice.startsWith("Synthetic preview loaded")) && (
             <div className="demo" role="status">
               <span aria-hidden="true">✓</span> {notice}
             </div>
           )}
-          {client && <div className="next-action"><strong>What to do next</strong><span>{nextAction}</span></div>}
+          {client && !preview && <div className="next-action"><strong>Your next step</strong><span>{nextAction}</span></div>}
           {busy && <div className="activity" role="status"><span className="activity-dot" aria-hidden="true"/> Working on your request…</div>}
           {!client ? (
-            <section className="card backend-section">
-              <h2>Start your study plan</h2>
-              <p>Connect your student account to review saved admission information, expenses, and results.</p>
-              <div className="setup-details">
-                <p>Sign in with your StudyFlow account to restore your saved progress.</p>
-                <a className="primary" href={`/api/auth/login/?next=${encodeURIComponent(window.location.origin + "/")}`}>Sign in to StudyFlow</a>
-                <button className="secondary" disabled={busy} onClick={connect}>Refresh sign-in session</button>
-              </div>
-              <div className="preview-prompt"><span>Just looking around?</span><button className="secondary" onClick={startPreview}>Preview connected pages</button><button className="secondary" onClick={onDemo}>Explore the original demo</button><button className="secondary" onClick={() => setDashboardPreview(true)}>Preview student dashboard</button></div>
-            </section>
+            <div className="student-start">
+              <section className="student-welcome" aria-labelledby="welcome-title">
+                <span className="eyebrow">WELCOME TO STUDYFLOW</span>
+                <h1 id="welcome-title">A clearer plan for studying abroad.</h1>
+                <p>Check your admission details, understand upcoming costs, and explore your funding options—one step at a time.</p>
+                <div className="student-welcome-actions"><button className="primary" onClick={() => setDashboardPreview(true)}>Preview student dashboard <span aria-hidden="true">→</span></button><button className="secondary" onClick={startPreview}>Explore the five steps</button></div>
+                <small>Sample data only. You can explore without signing in or changing anything.</small>
+              </section>
+              <section className="student-start-grid" aria-label="How StudyFlow helps">
+                <article><span aria-hidden="true">01</span><h2>Check your information</h2><p>Review what your documents say and correct anything that needs attention.</p></article>
+                <article><span aria-hidden="true">02</span><h2>Plan your expenses</h2><p>Add costs you expect, including ones you don't know yet.</p></article>
+                <article><span aria-hidden="true">03</span><h2>See your next steps</h2><p>Explore budget, funding, and application results supplied by the system.</p></article>
+              </section>
+              <section className="student-developer-tools" id="student-sign-in"><h2>Connect to saved information</h2><p>Sign in with your StudyFlow account to restore your saved progress. The tour uses synthetic data.</p><a ref={connectInputRef} className="primary" href={`/api/auth/login/?next=${encodeURIComponent(window.location.origin+"/")}`}>Sign in to StudyFlow</a><button className="secondary" disabled={busy} onClick={connect}>Refresh sign-in session</button><div className="student-tool-links"><button className="secondary" onClick={()=>onWallet(true)}>Preview wallet & transfers</button><button className="secondary" onClick={onDemo}>Explore the original demo</button></div></section>
+            </div>
           ) : (
             <>
-              <div className="backend-toolbar">
+              {!preview && <div className="backend-toolbar">
                 <span>
                   {state
                     ? `Saved semester · ${semester?.draft.profile.semester || state.semester_id}`
                     : "No semester started yet"}
                 </span>
-                {!preview && <a className="secondary" href={`/api/auth/login/?next=${encodeURIComponent(window.location.origin + "/")}`}>Account sign-in</a>}
                 <button
                   className="secondary"
                   disabled={preview || busy}
@@ -776,7 +848,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                 >
                   Refresh saved information
                 </button>
-              </div>
+              </div>}
               {!state ? (
                 <section className="card backend-section">
                   <h2>Create a semester</h2>
@@ -787,7 +859,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                   </p>
                   <label>
                     Template
-                    <select disabled={preview}
+                    <select
                       value={selectedTemplate}
                       onChange={(e) => setSelectedTemplate(e.target.value)}
                     >
@@ -800,7 +872,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                   </label>
                   <label>
                     Opening balance (THB)
-                    <input disabled={preview}
+                    <input
                       value={openingBalance}
                       onChange={(e) => setOpeningBalance(e.target.value)}
                       inputMode="decimal"
@@ -808,7 +880,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                   </label>
                   <label>
                     Balance as of
-                    <input disabled={preview}
+                    <input
                       type="date"
                       value={asOf}
                       onChange={(e) => setAsOf(e.target.value)}
@@ -816,7 +888,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                   </label>
                   <label>
                     Reserve (THB; optional until confirmed)
-                    <input disabled={preview}
+                    <input
                       value={reserve}
                       onChange={(e) => setReserve(e.target.value)}
                       inputMode="decimal"
@@ -833,13 +905,13 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
               ) : (
                 <>
                   {step === 0 && (
-                    <>
+                    preview && formDraft ? <PreviewConfirmation draft={formDraft} material={material} onContinue={() => setStep(1)} /> : <fieldset className="preview-form-lock">
                       <section className="card backend-section">
-                        <h2>Admission information</h2>
+                        <h2>Check your school and dates</h2>
                         <p>
-                          Current saved profile. Extracted evidence and
-                          conflicts appear after an upload.
+                          Review the details below. You can correct the proposed values while the original document evidence stays available for comparison.
                         </p>
+                        {material?.status === "NEEDS_REVIEW" && <div className="expense-intro"><strong>Your document is ready to review</strong><span>Check any conflicting values, then choose which saved costs to confirm below.</span></div>}
                         <div className="backend-fields">{formDraft &&
                           [
                             "school",
@@ -853,7 +925,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                           ].map((field) => (
                             <label key={field}>
                               {field.replaceAll("_", " ")}
-                              <input disabled={preview}
+                              <input
                                 value={String(formDraft.profile[field] ?? "")}
                                 onChange={(e) =>
                                   editProfile(field, e.target.value)
@@ -863,7 +935,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                           ))}</div>
                         <button
                           className="secondary"
-                          disabled={preview || busy || material?.status === "NEEDS_REVIEW"}
+                          disabled={preview || busy}
                           onClick={saveDraft}
                         >
                           Save profile corrections
@@ -875,7 +947,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                           Use UTF-8 text, a text PDF, or an image if OCR is
                           enabled. Maximum 5 MiB. Processing is asynchronous.
                         </p>
-                        <input disabled={preview}
+                        <input
                           type="file"
                           aria-label="Admission document"
                           accept=".txt,.pdf,.png,.jpg,.jpeg"
@@ -902,7 +974,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                               <p>{ocrNotice.text_en}</p>
                               <label>
                                 Language
-                                <select disabled={preview}
+                                <select
                                   value={ocrLanguage}
                                   onChange={(e) =>
                                     setOcrLanguage(e.target.value)
@@ -916,7 +988,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                                 </select>
                               </label>
                               <label className="check">
-                                <input disabled={preview}
+                                <input
                                   type="checkbox"
                                   checked={ocrConsent}
                                   onChange={(e) =>
@@ -957,7 +1029,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                             {material.status === "NEEDS_MANUAL_INPUT" && (
                               <label>
                                 Manual transcription
-                                <textarea disabled={preview}
+                                <textarea
                                   value={transcription}
                                   onChange={(e) =>
                                     setTranscription(e.target.value)
@@ -1019,10 +1091,10 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                           </details>
                           {Object.entries(conflicts).map(([field, value]) => (
                             <label key={field}>
-                              Resolve conflict: {field}
-                              <small>{JSON.stringify(value)}</small>
-                              <input disabled={preview}
-                                value={resolutions[field] ?? ""}
+                              Sources disagree about {field.replace(/^profile\./, "").replaceAll("_", " ")}
+                              <small>Values found: {Array.isArray(value) ? value.join(" · ") : JSON.stringify(value)}. Check the source and explain which value you chose.</small>
+                              <input
+                                aria-label={`Resolve conflict: ${field}`} value={resolutions[field] ?? ""}
                                 onChange={(e) =>
                                   setResolutions({
                                     ...resolutions,
@@ -1033,10 +1105,9 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                               />
                             </label>
                           ))}
-                          <h3>Correct proposed values</h3>
+                          <h3>Check the suggested costs</h3>
                           <p>
-                            These edits change the proposed draft only. The
-                            original extraction and evidence remain above.
+                            You can correct a suggested cost here. The value found in your document remains available under original values and sources.
                           </p>
                           {formDraft?.costs
                             .filter(
@@ -1050,12 +1121,12 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                                 key={`proposed-${c.cost_id}`}
                               >
                                 <strong>
-                                  {c.component ?? c.category} · {c.cost_id}
+                                  {c.component ?? c.category}
                                 </strong>
                                 <div className="backend-fields">
                                   <label>
                                     Proposed amount
-                                    <input disabled={preview}
+                                    <input
                                       aria-label={`${c.cost_id} proposed amount`}
                                       value={c.amount ?? ""}
                                       onChange={(e) =>
@@ -1068,7 +1139,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                                   </label>
                                   <label>
                                     Currency
-                                    <input disabled={preview}
+                                    <input
                                       value={c.currency ?? ""}
                                       onChange={(e) =>
                                         editCost(c.cost_id, {
@@ -1087,7 +1158,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                                   </label>
                                   <label>
                                     Due date
-                                    <input disabled={preview} aria-label={`${c.cost_id} proposed due date`}
+                                    <input aria-label={`${c.cost_id} proposed due date`}
                                       type="date"
                                       value={c.due_date ?? ""}
                                       onChange={(e) =>
@@ -1109,11 +1180,9 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                                 ))}
                               </div>
                             ))}
-                          <h3>Select merged costs to confirm</h3>
+                          <h3>Choose the costs to confirm</h3>
                           <p>
-                            Extraction candidate IDs may differ from saved
-                            semester cost IDs. Only costs in the merged draft
-                            can be confirmed.
+                            Select the costs you checked against your document. Your corrections stay separate from the original extraction.
                           </p>
                           {material.result.proposed_draft?.costs
                             .filter(
@@ -1123,7 +1192,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                             )
                             .map((c) => (
                               <label className="check" key={c.cost_id}>
-                                <input disabled={preview}
+                                <input
                                   type="checkbox"
                                   checked={selectedIds.includes(c.cost_id)}
                                   onChange={(e) =>
@@ -1136,17 +1205,16 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                                     )
                                   }
                                 />
-                                {c.component ?? c.category} · {c.cost_id}
+                                {c.component ?? c.category}
                               </label>
                             ))}
                           {material.result.proposed_draft?.costs
                             .filter((c) => selectedIds.includes(c.cost_id))
                             .map((c) => (
                               <label key={`reason-${c.cost_id}`}>
-                                Review reason for {c.component ?? c.category} (
-                                {c.cost_id})
-                                <input disabled={preview}
-                                  value={resolutions[c.cost_id] ?? ""}
+                                Why you selected {c.component ?? c.category}
+                                <input
+                                  aria-label={c.conflict ? `Resolve conflict: ${c.cost_id}` : `review reason for ${c.cost_id}`} value={resolutions[c.cost_id] ?? ""}
                                   onChange={(e) =>
                                     setResolutions({
                                       ...resolutions,
@@ -1158,9 +1226,9 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                               </label>
                             ))}
                           <label>
-                            Document issuer
-                            <input disabled={preview}
-                              value={issuer}
+                            Name of the school or issuer on the document
+                            <input
+                              aria-label="Document issuer" value={issuer}
                               onChange={(e) => setIssuer(e.target.value)}
                             />
                           </label>
@@ -1173,40 +1241,29 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                           </button>
                         </section>
                       )}
-                    </>
+                    </fieldset>
                   )}
                   {step === 1 && formDraft && (
                     <section className="card backend-section">
-                      <h2>Semester expenses</h2>
+                      <h2>Complete your expenses</h2>
                       <p>
-                        Backend required categories:{" "}
-                        {formDraft.required_categories?.join(", ") ||
-                          "not supplied"}
-                        . Unknown amounts remain blank. Verified costs require a
-                        new import to change.
+                        Start with missing costs. You can leave an amount unknown; your budget will show what information is still needed.
                       </p>
                       <label>Reserve (THB)<input disabled={preview} aria-label="Saved reserve (THB)" inputMode="decimal" value={formDraft.reserve ?? ""} onChange={(e) => setDraft({...formDraft, reserve: e.target.value || null})}/></label>
-                      {formDraft.costs.map((c) => (
-                        <article className="backend-cost" key={c.cost_id}>
-                          <div className="backend-row">
-                            <strong>
-                              {c.component ?? c.category} · {c.cost_id}
-                            </strong>
-                            <span>
-                              {c.confidence_type ?? "UNCONFIRMED"} ·{" "}
-                              {c.source_refs?.length
-                                ? "document extraction"
-                                : c.synthetic
-                                  ? "template/demo"
-                                  : "student entry"}
-                            </span>
-                          </div>
+                      <div className="expense-intro"><strong>{missingCostCount} listed {missingCostCount === 1 ? "cost" : "costs"} still need an amount</strong><span>Categories needed for a complete plan: {formDraft.required_categories?.join(", ") || "not supplied"}.</span></div>
+                      <h3>Review your costs</h3>
+                      <p>{preview ? "This tour shows fixed sample costs. Use the Food example below to switch the entire demo result." : "Items needing an amount or source review appear first. Verified document costs need a new import to change."}</p>
+                      {[...formDraft.costs].sort((a, b) => Number(!!b.conflict || b.amount == null && b.applicability !== "NOT_APPLICABLE") - Number(!!a.conflict || a.amount == null && a.applicability !== "NOT_APPLICABLE")).map((c) => (
+                        <article className="backend-cost expense-review-card" key={c.cost_id} id={`cost-${c.cost_id}`} tabIndex={-1}>
+                          <div className="backend-row"><div><strong>{c.component ?? c.category}</strong><small>{c.source_refs?.length ? "From your document" : c.synthetic && c.amount == null ? "Sample expense · amount unknown" : c.synthetic ? "Sample starting value" : "Added by you"}</small></div><span className={`status ${c.amount == null && c.applicability !== "NOT_APPLICABLE" ? "missing" : (c.locked || c.confidence_type === "VERIFIED") ? "known" : "estimated"}`}>{c.conflict ? "Conflicting sources" : c.applicability === "NOT_APPLICABLE" ? "Not applicable" : c.amount == null ? "Amount unknown" : (c.locked || c.confidence_type === "VERIFIED") ? "Document verified" : c.synthetic ? "Sample amount" : c.source_refs?.length ? "Document value · review" : "Added by you"}</span></div>
+                          {preview ? <div className="preview-cost-summary">{c.cost_id === "preview-food" && <div className="preview-cost-context"><span>Step 2 · Complete expenses</span><button className="secondary" onClick={() => setStep(2)}>Back to Budget</button></div>}<strong>{c.amount == null ? "Amount unknown" : `${money(c.amount, c.currency ?? "THB")} · ${c.period ?? "period unknown"}`}</strong>{c.cost_id === "preview-food" && <button className="primary" disabled={busy} onClick={() => void showPreviewScenario(previewScenario === "missing" ? "estimated" : "missing")}>{previewScenario === "missing" ? "Try sample Food estimate: THB 3,000 monthly" : "Reset Food to missing"}</button>}<small>{c.cost_id === "preview-food" ? "This switches all demo expenses, budget, calendar, and funding responses together. Nothing is saved." : c.source_refs?.length ? "Value from the sample document." : "Fixed sample expense."}</small></div> : <details className="cost-details" open={expandedCosts[c.cost_id] ?? (!!c.conflict || c.amount == null && c.applicability !== "NOT_APPLICABLE")} onToggle={(event) => { const open = event.currentTarget.open; setExpandedCosts((previous) => previous[c.cost_id] === open ? previous : { ...previous, [c.cost_id]: open }); }}>
+                            <summary>{c.amount == null ? "Review missing cost" : `View details · ${money(c.amount, c.currency ?? "THB")}`}</summary>
                           <div className="backend-fields">
                             <label>
                               Category
                               <select
                                 value={c.category}
-                                disabled={preview || (c.locked || c.confidence_type === "VERIFIED")}
+                                disabled={(c.locked || c.confidence_type === "VERIFIED")}
                                 onChange={(e) =>
                                   editCost(c.cost_id, {
                                     category: e.target.value,
@@ -1223,7 +1280,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                               <input
                                 aria-label={`${c.cost_id} amount`}
                                 value={c.amount ?? ""}
-                                disabled={preview ||
+                                disabled={
                                   (c.locked || c.confidence_type === "VERIFIED") ||
                                   c.applicability === "NOT_APPLICABLE"
                                 }
@@ -1240,7 +1297,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                               Currency
                               <input
                                 value={c.currency ?? ""}
-                                disabled={preview || (c.locked || c.confidence_type === "VERIFIED")}
+                                disabled={(c.locked || c.confidence_type === "VERIFIED")}
                                 onChange={(e) =>
                                   editCost(c.cost_id, {
                                     currency:
@@ -1249,11 +1306,12 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                                 }
                               />
                             </label>
+                            <label>Payment status<select aria-label={`${c.cost_id} payment status`} disabled={!!c.locked || c.confidence_type==="VERIFIED"} value={c.paid==null?"":String(c.paid)} onChange={e=>editCost(c.cost_id,{paid:e.target.value===""?null:e.target.value==="true"})}><option value="">Unknown</option><option value="false">Unpaid</option><option value="true">Paid</option></select></label>
                             <label>
                               Period
                               <select
                                 value={c.period ?? ""}
-                                disabled={preview || (c.locked || c.confidence_type === "VERIFIED")}
+                                disabled={(c.locked || c.confidence_type === "VERIFIED")}
                                 onChange={(e) =>
                                   editCost(c.cost_id, {
                                     period: (e.target.value || null) as Cost["period"],
@@ -1273,7 +1331,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                               <input
                                 type="date"
                                 value={c.due_date ?? ""}
-                                disabled={preview || (c.locked || c.confidence_type === "VERIFIED")}
+                                disabled={(c.locked || c.confidence_type === "VERIFIED")}
                                 onChange={(e) =>
                                   editCost(c.cost_id, {
                                     due_date: e.target.value || null,
@@ -1282,16 +1340,10 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                               />
                             </label>
                             <label>
-                              Payment status
-                              <select aria-label={`${c.cost_id} payment status`} disabled={preview || (c.locked || c.confidence_type === "VERIFIED")} value={c.paid == null ? "" : String(c.paid)} onChange={(e) => editCost(c.cost_id, {paid: e.target.value === "" ? null : e.target.value === "true"})}>
-                                <option value="">Unknown</option><option value="false">Unpaid</option><option value="true">Paid</option>
-                              </select>
-                            </label>
-                            <label>
                               Applicability
                               <select
                                 value={c.applicability ?? "APPLICABLE"}
-                                disabled={preview || (c.locked || c.confidence_type === "VERIFIED")}
+                                disabled={(c.locked || c.confidence_type === "VERIFIED")}
                                 onChange={(e) =>
                                   editCost(c.cost_id, {
                                     applicability: e.target
@@ -1299,17 +1351,17 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                                   })
                                 }
                               >
-                                <option>APPLICABLE</option>
-                                <option>NOT_APPLICABLE</option>
+                                <option value="APPLICABLE">I expect this cost</option>
+                                <option value="NOT_APPLICABLE">This cost does not apply to me</option>
                               </select>
                             </label>
                           </div>
                           {c.applicability === "NOT_APPLICABLE" && (
                             <label>
-                              Reason
+                              Why this cost does not apply
                               <input
                                 value={c.applicability_reason ?? ""}
-                                disabled={preview || (c.locked || c.confidence_type === "VERIFIED")}
+                                disabled={(c.locked || c.confidence_type === "VERIFIED")}
                                 onChange={(e) =>
                                   editCost(c.cost_id, {
                                     applicability_reason:
@@ -1327,116 +1379,66 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                           {c.amount == null &&
                             c.applicability !== "NOT_APPLICABLE" && (
                               <p className="error">
-                                Amount missing; B will mark the budget
-                                incomplete.
+                                Amount still unknown. Your budget will remain incomplete until this is addressed.
                               </p>
                             )}
+                          </details>}
                         </article>
                       ))}
-                      <button
+                      {!preview && <><button
                         className="secondary"
-                        disabled={preview || busy}
+                        disabled={busy}
                         onClick={addCost}
                       >
                         Add expense
                       </button>
                       <button
                         className="primary"
-                        disabled={preview || busy}
+                        disabled={busy}
                         onClick={saveDraft}
                       >
                         Save expense revisions
-                      </button>
+                      </button></>}
                     </section>
                   )}
                   {step === 2 && (
                     <>
-                      <section className="card backend-section">
-                        <h2>Your budget scenarios</h2>
-                        <p>
-                          These figures come from your saved budget result. Request a new result after changing your information.
-                        </p>
-                        <button
-                          className="primary"
-                          disabled={preview || busy || dirty}
-                          onClick={calculateBudget}
-                        >
-                          Update budget results
-                        </button>
+                      <section className="card backend-section result-overview" aria-labelledby="budget-overview-title">
+                        <span className="eyebrow">YOUR BUDGET</span>
+                        {dirty && !preview && <div className="stale-banner" role="status"><h2>Update needed</h2><p>Save your expense edits before requesting or relying on budget results.</p></div>}
+                        <h2 id="budget-overview-title">{budgetData ? budget && !resultFresh(budget, state) ? "Update your budget results" : budgetData.complete ? preview ? "Demo budget inputs are complete" : "Your budget is ready to review" : "Your budget needs more information" : "Build your first budget"}</h2>
+                        <p>{preview ? "These figures are fixed demo responses for the current example state. Your real result would come from Django." : budgetData ? budgetData.complete ? "These figures reflect the information saved for this result." : "Some information is still missing. The reported amounts may change when you complete it." : "Save your costs, then request a budget result."}</p>
+                        {preview && budgetData?.complete && Object.keys(material?.result.merge_conflicts ?? {}).length > 0 && <div className="result-attention" role="note"><strong>Admission review is still unfinished</strong><p>This mock budget reports complete expense inputs after the sample Food estimate. The sample campus conflict on Confirm information is still unresolved; nothing was confirmed or saved.</p></div>}
+                        {budget && !resultFresh(budget, state) && <div className="stale-banner" role="status">Your information changed. Update the budget before relying on these figures.</div>}
+                        {budgetData && <>
+                          <div className="result-highlights"><div><span>Reported funding gap</span><strong>{formatMoney(budgetData.gap, budgetData.currency)}</strong><small>{preview ? budgetData.complete ? "Complete mock result · sample estimate" : "Incomplete mock result · Food missing" : budgetData.complete ? "From your saved budget result" : "Incomplete result · review missing information"}</small></div><div><span>Next scheduled cost</span><strong>{nextScheduledCost ? nextScheduledCost.label : "Check payment calendar"}</strong><small>{nextScheduledCost ? `${formatDate(nextScheduledCost.date)} · ${formatMoney(nextScheduledCost.amount, forecast!.result.currency)}` : "Shown when an up-to-date calendar is available"}</small></div></div>
+                          <details className="result-details student-explainer"><summary>What does “funding gap” mean?</summary><p>It is the shortfall reported by the budget service for this result. A missing expense can change the result, so check the completeness label before relying on the figure. StudyFlow does not treat an unknown cost as zero.</p></details>
+                          {budgetData.issues.length > 0 && <div className="result-attention"><strong>Before relying on this budget</strong><ul>{budgetData.issues.map((issue) => <li key={issue}>{explainCode(issue)}</li>)}</ul></div>}
+                          <details className="result-details"><summary>Compare low, base, and high scenarios</summary><div className="backend-scenarios">{(["low", "base", "high"] as const).map((name) => <div key={name}><span>{name}</span><strong>{formatMoney(budgetData[name], budgetData.currency)}</strong></div>)}</div><p>Remaining base: {formatMoney(budgetData.remaining_base, budgetData.currency)}. These are B's returned figures, not a browser calculation.</p></details>
+                          <details className="result-details"><summary>Assumptions and result details</summary>{budgetData.assumptions.length ? <ul>{budgetData.assumptions.map((item, index) => <li key={index}>{item}</li>)}</ul> : <p>No assumptions were supplied.</p>}<p>Information: {budgetData.complete ? "complete" : "incomplete"} · B reported gap: {budgetData.sufficient ? "No gap" : "Gap or issues to review"}</p>{budgetData.issues.length > 0 && <details><summary>View backend issue codes</summary><ul>{budgetData.issues.map((item) => <li key={item}>{item}</li>)}</ul></details>}</details>
+                        </>}
+                        {!preview && <button className="primary" disabled={busy || dirty} onClick={calculateBudget}>Update budget results</button>}
                       </section>
-                      {(budget?.result ?? state.budget) && (
-                        <section className="card backend-section">
-                          <div className="backend-row">
-                            <h2>
-                              {dirty || (budget && !resultFresh(budget, state))
-                                ? "Update needed"
-                                : "Current budget"}
-                            </h2>
-                            <span>
-                              Currency:{" "}
-                              {(budget?.result ?? state.budget).currency}
-                            </span>
-                          </div>
-                          {(dirty || (budget && !resultFresh(budget, state))) && (
-                            <p className="error">
-                              Your information changed. Save your edits and update the budget before relying on these figures.
-                            </p>
-                          )}
-                          <div className="backend-scenarios">
-                            {(["low", "base", "high"] as const).map((name) => (
-                              <div key={name}>
-                                <span>{name}</span>
-                                <strong>
-                                  {money(
-                                    (budget?.result ?? state.budget)[name],
-                                  )}
-                                </strong>
-                              </div>
-                            ))}
-                          </div>
-                          <p>Planning funds: {money(state.assets.planning_balance, state.assets.currency)} · Basis: {state.assets.basis.replaceAll("_", " ")} · Reserve: {money(semester?.draft.reserve, state.assets.currency)}</p>
-                          <p>
-                            Remaining base:{" "}
-                            {money(
-                              (budget?.result ?? state.budget).remaining_base,
-                            )}{" "}
-                            · Funding gap:{" "}
-                            {money((budget?.result ?? state.budget).gap)}
-                          </p>
-                          <p>
-                            Information {((budget?.result ?? state.budget).complete) ? "complete" : "incomplete"} · {((budget?.result ?? state.budget).sufficient) ? "No gap reported" : "Review the funding gap and issues below"}
-                          </p>
-                          <h3>Assumptions</h3>
-                          <ul>{(budget?.result ?? state.budget).assumptions.map((item) => <li key={item}>{item}</li>)}</ul>
-                          <h3>Issues</h3>
-                          {(budget?.result ?? state.budget).issues.length ? (
-                            <ul>
-                              {(budget?.result ?? state.budget).issues.map(
-                                (x) => (
-                                  <li key={x}>{explainCode(x)}</li>
-                                ),
-                              )}
-                            </ul>
-                          ) : (
-                            <p>No issues reported for this budget.</p>
-                          )}
-                          {!!(budget?.result ?? state.budget).issues.length && <details><summary>View backend issue codes</summary><ul>{(budget?.result ?? state.budget).issues.map((x) => <li key={x}>{x}</li>)}</ul></details>}
-                        </section>
-                      )}
-                      <PaymentCalendar
-                        forecast={forecast}
-                        current={resultFresh(forecast, state)}
-                        costs={formDraft?.costs ?? []}
-                        sources={sources}
-                        busy={busy || preview || dirty}
-                        onUpdate={updateCalendar}
-                      />
+                      {preview && <PreviewWalkthrough scenario={previewScenario} onOpenExpenses={() => { focusCostRef.current = "preview-food"; setStep(1); setShowSteps(false); }} />}
+                      {preview ? <details className="preview-calendar-details"><summary>Explore the detailed payment calendar</summary>{paymentCalendar}</details> : paymentCalendar}
                     </>
                   )}
                   {step === 3 && (
                     <>
-                      <section className="card backend-section">
-                        <h2>Funding sources</h2>
+                      <FundingComparison
+                        preview={preview}
+                        recommendation={funding}
+                        current={resultFresh(funding, state)}
+                        sources={sources}
+                        quotes={quotes}
+                        application={application}
+                        savedPlan={savedFunding}
+                        onValidatePlan={saveFundingPlan}
+                        validationDisabled={preview || busy || !resultFresh(funding, state)}
+                        onReviewQuote={(id) => { setQuoteId(id); setStep(4); }}
+                      />
+                      {!preview && <section className="card backend-section">
+                        <h2>Add or update a funding source</h2>
                         <p>
                           Promised or estimated funding is separate from money you have received. Review each source and its conditions.
                         </p>
@@ -1445,7 +1447,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                         <div className="backend-fields">
                           <label>
                             Kind
-                            <select disabled={preview}
+                            <select
                               value={sourceKind}
                               onChange={(e) => setSourceKind(e.target.value)}
                             >
@@ -1456,7 +1458,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                           </label>
                           <label>
                             Amount THB
-                            <input disabled={preview}
+                            <input
                               value={sourceAmount}
                               onChange={(e) => setSourceAmount(e.target.value)}
                               inputMode="decimal"
@@ -1464,7 +1466,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                           </label>
                           <label>
                             Available on
-                            <input disabled={preview}
+                            <input
                               type="date"
                               value={sourceDate}
                               onChange={(e) => setSourceDate(e.target.value)}
@@ -1481,30 +1483,19 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                         </details>
                         <button
                           className="primary"
-                          disabled={preview || busy || dirty}
+                          disabled={preview || busy}
                           onClick={recommend}
                         >
                           Get funding recommendation
                         </button>
-                      </section>
-                      <FundingComparison
-                        recommendation={funding}
-                        current={resultFresh(funding, state)}
-                        sources={sources}
-                        quotes={quotes}
-                        application={application}
-                        savedPlan={savedFunding}
-                        savedPlanCurrent={resultFresh(savedFunding, state)}
-                        onValidatePlan={saveFundingPlan}
-                        validationDisabled={preview || busy || !resultFresh(funding, state)}
-                        onReviewQuote={(id) => { setQuoteId(id); setStep(4); }}
-                      />
+                      </section>}
                     </>
                   )}
                   {step === 4 && (
-                    <>
+                    preview ? <PreviewApplication application={application} quotes={quotes} selectedQuoteId={quoteId} onBack={() => setStep(3)} /> : <fieldset className="preview-form-lock">
                       <section className="card backend-section">
-                        <h2>Simulated loan application</h2>
+                        <h2>{application ? "Your simulated application" : "Prepare a simulated application"}</h2>
+                        {application && <div className="application-status application-live-status" role="status" tabIndex={-1}><strong>{explainCode(application.status)}</strong><span>Application {application.id} · version {application.version}</span><span>Assessment: {application.assessment?.status ? explainCode(application.assessment.status) : "Not yet assessed"}</span></div>}
                         <p>
                           Create or select a quote, then submit a draft. You can follow its review status here. This is a simulation; no money moves.
                         </p>
@@ -1517,7 +1508,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                           <div className="backend-fields" key={index}>
                             <label>
                               Month
-                              <input disabled={preview}
+                              <input
                                 type="month"
                                 value={row.month}
                                 onChange={(e) =>
@@ -1540,7 +1531,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                             ).map((field) => (
                               <label key={field}>
                                 {field.replaceAll("_", " ")}
-                                <input disabled={preview}
+                                <input
                                   value={row[field] ?? ""}
                                   onChange={(e) =>
                                     setProfileMonths(
@@ -1560,7 +1551,6 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                             ))}
                             <button
                               className="secondary"
-                              disabled={preview || busy}
                               onClick={() =>
                                 setProfileMonths(
                                   profileMonths.filter((_, i) => i !== index),
@@ -1573,7 +1563,6 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                         ))}
                         <button
                           className="secondary"
-                          disabled={preview || busy}
                           onClick={() =>
                             setProfileMonths([
                               ...profileMonths,
@@ -1601,7 +1590,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                         <div className="backend-fields">
                           <label>
                             Principal THB
-                            <input disabled={preview}
+                            <input
                               value={principal}
                               onChange={(e) => setPrincipal(e.target.value)}
                               inputMode="decimal"
@@ -1609,7 +1598,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                           </label>
                           <label>
                             Annual rate as fraction
-                            <input disabled={preview}
+                            <input
                               value={rate}
                               onChange={(e) => setRate(e.target.value)}
                               placeholder="0.12"
@@ -1617,14 +1606,14 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                           </label>
                           <label>
                             Fees THB
-                            <input disabled={preview}
+                            <input
                               value={fees}
                               onChange={(e) => setFees(e.target.value)}
                             />
                           </label>
                           <label>
                             Months
-                            <input disabled={preview}
+                            <input
                               type="number"
                               min="1"
                               max="60"
@@ -1634,7 +1623,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                           </label>
                           <label>
                             First due date
-                            <input disabled={preview}
+                            <input
                               type="date"
                               value={firstDue}
                               onChange={(e) => setFirstDue(e.target.value)}
@@ -1652,7 +1641,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                         <h3>3. Review a quote and application</h3>
                         <label>
                           Select quote
-                          <select disabled={preview}
+                          <select
                             value={quoteId}
                             onChange={(e) => setQuoteId(e.target.value)}
                           >
@@ -1708,11 +1697,6 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                         </button>
                         {application && (
                           <>
-                            <p className="application-status"><strong>{explainCode(application.status)}</strong><span>Application {application.id} · version {application.version}</span></p>
-                            <p>
-                              Assessment:{" "}
-                              {application.assessment?.status ? explainCode(application.assessment.status) : "Not yet assessed"}
-                            </p>
                             {application.assessment && (
                               <details>
                                 <summary>View B assessment</summary>
@@ -1742,8 +1726,9 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                           </>
                         )}
                       </section>
-                    </>
+                    </fieldset>
                   )}
+                  {preview && step >= 1 && step < 4 && <div className="preview-next-step"><span>This tour does not save or complete a step.</span><button className="primary" onClick={() => { setStep(step + 1); setShowSteps(false); }}>Continue to {steps[step + 1]} <span aria-hidden="true">→</span></button></div>}
                 </>
               )}
             </>
@@ -1751,7 +1736,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
         </>}
         </main>
         <footer>
-          StudyFlow · Student journey
+          StudyFlow · Django connected draft
           <span>Backend controls calculations and decisions</span>
         </footer>
       </div>

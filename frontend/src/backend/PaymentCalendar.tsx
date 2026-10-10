@@ -7,6 +7,7 @@ type Props = {
   costs: Cost[];
   sources: FundingSource[];
   busy: boolean;
+  preview?: boolean;
   onUpdate: () => void;
 };
 
@@ -17,7 +18,7 @@ const dateLabel = (value: string | null | undefined) => {
   return value ? formatDate(value) : "Date missing";
 };
 
-export function PaymentCalendar({ forecast, current, costs, sources, busy, onUpdate }: Props) {
+export function PaymentCalendar({ forecast, current, costs, sources, busy, preview = false, onUpdate }: Props) {
   const result = forecast?.result;
   const attention = costs.filter((cost) =>
     cost.applicability !== "NOT_APPLICABLE" && !cost.paid &&
@@ -39,7 +40,7 @@ export function PaymentCalendar({ forecast, current, costs, sources, busy, onUpd
         <h2 id="payment-calendar-title">Payment calendar</h2>
         <p>See when planned costs fall due and where the backend expects a reserve gap. Funding dates are shown separately below.</p>
       </div>
-      <button className="secondary" disabled={busy} onClick={onUpdate}>Update 90-day calendar</button>
+      {!preview && <button className="secondary" disabled={busy} onClick={onUpdate}>Update 90-day calendar</button>}
     </div>
     {!result ? <div className="calendar-empty">Request a 90-day forecast to see dated costs and projected balances.</div> : <>
       {!current && <div className="stale-banner" role="status"><strong>Update needed</strong><span>Your saved information changed. Update the calendar before relying on these figures.</span></div>}

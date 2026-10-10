@@ -6,8 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
-    "test": "node tests/browser.mjs && node tests/connected.mjs && node tests/preview.mjs && node tests/dashboard.mjs && node tests/dashboard-connected.mjs",
-    "test:integration": "node tests/integration.mjs"
+    "test": "node tests/browser.mjs && node tests/connected.mjs && node tests/preview.mjs && node tests/dashboard.mjs && node tests/dashboard-connected.mjs && node tests/wallet.mjs",
+    "test:integration": "node tests/integration.mjs",
+    "test:wallet-integration": "node tests/wallet-integration.mjs"
   },
   "dependencies": {
     "react": "^19.0.0",

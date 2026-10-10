@@ -16,10 +16,10 @@ export class DjangoClient {
   constructor(private csrfToken: string) {}
   async request<T>(
     path: string,
-    options: { method?: "GET" | "POST"; body?: unknown; key?: string; raw?: boolean } = {},
+    options: { method?: "GET" | "POST"; body?: unknown; key?: string; raw?: boolean; headers?: Record<string,string> } = {},
   ): Promise<T> {
     const method = options.method ?? "GET";
-    const headers: Record<string, string> = {};
+    const headers: Record<string, string> = { ...options.headers };
     if (method === "POST") {
       headers["X-CSRFToken"] = this.csrfToken;
       headers["Idempotency-Key"] = options.key ?? crypto.randomUUID();

@@ -59,17 +59,51 @@ export const previewImport: ImportRecord = {
 };
 export const previewBudget: Run<BudgetResult> = { id: "preview-budget", state_version: 1, budget_version: 1, analysis_version: 1, result: budgetResult };
 export const previewFunding: Run<FundingResult> = { id: "preview-funding", state_version: 1, budget_version: 1, analysis_version: 1, result: fundingResult };
+// A fixed example expense for the guided UI walkthrough. It is never saved or
+// used to calculate a budget; only Django/B can return an updated result.
+export const previewAfterFoodExample = {
+  expense: { label: "Food", amount: "3000.00", currency: "THB", period: "monthly", certainty: "estimated" },
+};
 const previewForecast: Run<ForecastResult> = { id: "preview-forecast", state_version: 1, budget_version: 1, analysis_version: 1, result: forecastResult };
 
-export function createPreviewClient(): StudyFlowClient {
+// Two authored response sets keep the demo coherent without browser calculations.
+const estimatedDraft: Draft = { ...draft, costs: draft.costs.map(cost => cost.cost_id === "preview-food" ? { ...cost, amount: previewAfterFoodExample.expense.amount } : cost) };
+const estimatedBudget: BudgetResult = {
+  ...budgetResult, low: "98000.00", base: "104000.00", high: "113000.00", remaining_base: "104000.00", gap: "54000.00",
+  complete: true, issues: [], state_version: 2, budget_version: 2,
+  assumptions: ["Fixed demo response. This example assumes all other backend requirements, including consumption coverage, were met."],
+};
+const estimatedState: BackendState = { ...state, state_version: 2, budget_version: 2, analysis_version: 2, budget: estimatedBudget, estimated_expenses: estimatedDraft.costs };
+const estimatedSemester: Semester = { ...semester, version: 2, draft: estimatedDraft };
+const estimatedForecast: ForecastResult = {
+  ...forecastResult, status: "complete", complete: true, missing_event_ids: [], budget_issues: [], maximum_reserve_gap: "42000.00", ending_balance: "-27000.00",
+  assumptions: ["Fixed demo calendar for the sample Food estimate. No browser calculation is performed."],
+  timeline: [
+    { id: "cost:preview-housing:2026-11-01", date: "2026-11-01", label: "Housing", kind: "expense", amount: "9000.00", certainty: "estimated", balance_after: "41000.00", reserve_gap: "0.00" },
+    { id: "cost:preview-food:2026-11-01", date: "2026-11-01", label: "Food", kind: "expense", amount: "3000.00", certainty: "estimated", balance_after: "38000.00", reserve_gap: "0.00" },
+    { id: "cost:preview-tuition:2026-11-15", date: "2026-11-15", label: "Tuition", kind: "expense", amount: "41000.00", certainty: "confirmed", balance_after: "-3000.00", reserve_gap: "18000.00" },
+    { id: "cost:preview-housing:2026-12-01", date: "2026-12-01", label: "Housing", kind: "expense", amount: "9000.00", certainty: "estimated", balance_after: "-12000.00", reserve_gap: "27000.00" },
+    { id: "cost:preview-food:2026-12-01", date: "2026-12-01", label: "Food", kind: "expense", amount: "3000.00", certainty: "estimated", balance_after: "-15000.00", reserve_gap: "30000.00" },
+    { id: "cost:preview-housing:2027-01-01", date: "2027-01-01", label: "Housing", kind: "expense", amount: "9000.00", certainty: "estimated", balance_after: "-24000.00", reserve_gap: "39000.00" },
+    { id: "cost:preview-food:2027-01-01", date: "2027-01-01", label: "Food", kind: "expense", amount: "3000.00", certainty: "estimated", balance_after: "-27000.00", reserve_gap: "42000.00" },
+  ],
+};
+const estimatedFunding: FundingResult = { ...fundingResult, recommended_borrowing_net: "34000.00", assumptions: ["Fixed demo recommendation for the sample Food estimate."], nonloan_plan: { ...fundingResult.nonloan_plan, remaining_gap: "34000.00" } };
+const estimatedBudgetRun: Run<BudgetResult> = { id: "preview-budget-estimated", state_version: 2, budget_version: 2, analysis_version: 2, result: estimatedBudget };
+const estimatedForecastRun: Run<ForecastResult> = { id: "preview-forecast-estimated", state_version: 2, budget_version: 2, analysis_version: 2, result: estimatedForecast };
+const estimatedFundingRun: Run<FundingResult> = { id: "preview-funding-estimated", state_version: 2, budget_version: 2, analysis_version: 2, result: estimatedFunding };
+
+export type PreviewScenario = "missing" | "estimated";
+export function createPreviewClient(scenario: PreviewScenario = "missing"): StudyFlowClient {
   return {
     async get<T>(path: string): Promise<T> {
+      const estimated = scenario === "estimated";
       const responses: Record<string, unknown> = {
-        "readiness/state/": state,
-        "readiness/semesters/preview-semester/": semester,
-        "readiness/budgets/": [previewBudget],
-        "readiness/forecasts/": [previewForecast],
-        "readiness/funding-plans/recommend/": [previewFunding],
+        "readiness/state/": estimated ? estimatedState : state,
+        "readiness/semesters/preview-semester/": estimated ? estimatedSemester : semester,
+        "readiness/budgets/": [estimated ? estimatedBudgetRun : previewBudget],
+        "readiness/forecasts/": [estimated ? estimatedForecastRun : previewForecast],
+        "readiness/funding-plans/recommend/": [estimated ? estimatedFundingRun : previewFunding],
         "readiness/funding-plans/": [],
         "funding-sources/": { results: sources },
         "loans/": { results: quotes },
