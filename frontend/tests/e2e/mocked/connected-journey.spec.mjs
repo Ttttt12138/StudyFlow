@@ -388,7 +388,8 @@ test('connected contract flow, payment calendar with B forecast, missing cost, f
     await comparison.getByRole("article", { name: "Loan quote quote-older" }).getByText("All quote terms").click();
     assert.match(await comparison.getByRole("article", { name: "Loan quote quote-older" }).innerText(), /Total interest[\s\S]*Amount not supplied/);
     await comparison.getByRole("button", { name: "Check suggested funding plan" }).click();
-    assert.match(await comparison.innerText(), /Saved validation: This plan has conditions that still need attention./);
+    // The validation is a POST round trip; wait for its status instead of reading text immediately.
+    await comparison.getByText(/Saved validation: This plan has conditions that still need attention./).waitFor();
     await page.getByRole("button", { name: "Refresh saved information" }).click();
     assert.match(await comparison.innerText(), /Saved validation: This plan has conditions that still need attention./);
     await comparison.getByText("Conditions to review").click();

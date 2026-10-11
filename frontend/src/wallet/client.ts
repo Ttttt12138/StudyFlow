@@ -1,4 +1,5 @@
 import { ApiError, DjangoClient, getAll } from "../backend/client";
+import { getLang, translate } from "../i18n";
 import type { Approval, Beneficiary, Corridor, Order, Page, PolicyError, Quote, WalletBalances, WalletSnapshot } from "./types";
 
 export class WalletApiError extends Error {
@@ -19,9 +20,9 @@ export class SessionWalletClient implements WalletClient {
   private api: Promise<DjangoClient> | null = null;
   private async session(): Promise<DjangoClient> {
     if(!this.api) this.api=fetch('/api/auth/session/',{credentials:'same-origin'}).then(async response=>{
-      if(!response.ok) throw new WalletApiError(response.status,{detail:'Could not check the sign-in session.'});
+      if(!response.ok) throw new WalletApiError(response.status,{detail:translate(getLang(),'common.err.session')});
       const identity=await response.json();
-      if(!identity.authenticated) throw new WalletApiError(401,{detail:'Sign in to StudyFlow to view your wallet.'});
+      if(!identity.authenticated) throw new WalletApiError(401,{detail:translate(getLang(),'common.err.walletSignIn')});
       return new DjangoClient(identity.csrf_token);
     }).catch(error=>{this.api=null;throw error;});
     return this.api;
@@ -46,7 +47,7 @@ export class SessionWalletClient implements WalletClient {
 }
 
 function errorText(error: unknown) {
-  return error instanceof WalletApiError ? `HTTP ${error.status}: ${error.message}` : error instanceof Error ? error.message : "This section could not load.";
+  return error instanceof WalletApiError ? `HTTP ${error.status}: ${error.message}` : error instanceof Error ? error.message : translate(getLang(), "common.err.section");
 }
 
 /** Reads are independent so a failing notification or approval list does not hide balances. */

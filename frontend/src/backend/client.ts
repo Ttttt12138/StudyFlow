@@ -1,3 +1,4 @@
+import { acceptLanguage, getLang, translate } from "../i18n";
 // Readable text for Django error bodies: a message/detail string, or DRF field errors.
 export function errorMessage(details: unknown, status: number): string {
   if (typeof details === "string") return details;
@@ -28,7 +29,8 @@ export class DjangoClient {
     options: { method?: "GET" | "POST"; body?: unknown; key?: string; raw?: boolean; headers?: Record<string,string> } = {},
   ): Promise<T> {
     const method = options.method ?? "GET";
-    const headers: Record<string, string> = { ...options.headers };
+    // Django localizes error messages (code + message) from Accept-Language.
+    const headers: Record<string, string> = { "Accept-Language": acceptLanguage(), ...options.headers };
     if (method === "POST") {
       headers["Idempotency-Key"] = options.key ?? crypto.randomUUID();
       if (!(options.body instanceof FormData))
@@ -50,7 +52,7 @@ export class DjangoClient {
       } catch {
         throw new ApiError(
           0,
-          "Could not reach Django. Check that the server is running on port 8000.",
+          translate(getLang(), "common.err.unreachable"),
         );
       }
     };
@@ -64,7 +66,7 @@ export class DjangoClient {
     }
     if (!response.ok) throw new ApiError(response.status, payload ?? null);
     if (payload === undefined && response.status !== 204)
-      throw new ApiError(response.status, "Django returned a response that is not JSON. Please retry.");
+      throw new ApiError(response.status, translate(getLang(), "common.err.notJson"));
     return !options.raw && payload && typeof payload === "object" && "data" in payload
       ? (payload as { data: T }).data
       : (payload as T);

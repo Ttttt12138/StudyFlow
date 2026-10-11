@@ -1,4 +1,5 @@
 import type { DashboardData, DashboardScenario } from "./types";
+import { translate, type Lang } from "../i18n";
 
 // Synthetic, fixed responses shaped like Django's briefing, calendar, notifications and review queue.
 // No balances, risk labels, amounts or dates are calculated in the browser.
@@ -32,10 +33,10 @@ const attention: DashboardData = {
   },
 };
 
-export async function loadDashboardPreview(scenario: DashboardScenario): Promise<DashboardData> {
+export async function loadDashboardPreview(scenario: DashboardScenario, lang: Lang = "en"): Promise<DashboardData> {
   // Keep an observable loading state for the preview; no network request is made.
   await new Promise((resolve) => setTimeout(resolve, 180));
-  if (scenario === "error") throw new Error("The demo dashboard could not load. Try again.");
+  if (scenario === "error") throw new Error(translate(lang, "dash.mock.error"));
   const data = structuredClone(attention);
   if (scenario === "clear") {
     data.briefing.status = "SAFE";

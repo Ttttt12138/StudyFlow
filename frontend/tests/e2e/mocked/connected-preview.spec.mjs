@@ -49,7 +49,7 @@ test('token-free connected preview, five screens, calendar, read-only boundary, 
     await food.getByRole("button", { name: "Back to Budget" }).click();
     assert.match(await page.locator(".result-highlights").innerText(), /THB 54,000.00/);
     assert.match(await page.locator(".result-highlights").innerText(), /Complete mock result/);
-    assert.match(await page.getByRole("note").innerText(), /campus conflict.*still unresolved/i);
+    assert.match(await page.locator(".result-attention").innerText(), /campus conflict.*still unresolved/i);
     await page.getByText("Explore the detailed payment calendar").click();
     assert.match(await page.getByRole("region", { name: "Payment calendar" }).innerText(), /Food/);
     await page.getByRole("button", { name: /Step 3 of 5/ }).click();
