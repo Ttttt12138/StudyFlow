@@ -15,8 +15,8 @@ const beneficiaries: Beneficiary[] = [
   { id: "preview-pending", name: "Campus housing", destination_label: "Housing office", verified: false },
 ];
 const quotes: Quote[] = [
-  { id: "preview-quote-standard", corridor_id: "preview-standard", route_name: "Example route (standard)", source_currency: "USD", target_currency: "THB", send_amount: "200.00", net_received: "6520.00", rate: "33.0000000000", sender_fee: "2.00", receiver_fee: "14.00", settlement_min_days: 2, settlement_days: 4, expires_at: "2027-01-01T00:00:00Z", rate_source: "fixture", rate_date: "2026-10-08", is_mock: true },
-  { id: "preview-quote-express", corridor_id: "preview-express", route_name: "Example route (express)", source_currency: "USD", target_currency: "THB", send_amount: "200.00", net_received: "6480.00", rate: "32.9000000000", sender_fee: "3.00", receiver_fee: "1.00", settlement_min_days: 0, settlement_days: 1, expires_at: "2027-01-01T00:00:00Z", rate_source: "fixture", rate_date: "2026-10-08", is_mock: true },
+  { id: "preview-quote-standard", corridor_id: "preview-standard", route_name: "Example route (standard)", source_currency: "USD", target_currency: "THB", send_amount: "200.00", net_received: "6520.00", rate: "33.0000000000", sender_fee: "2.00", receiver_fee: "14.00", settlement_min_days: 2, settlement_days: 4, expires_at: "", rate_source: "fixture", rate_date: "2026-10-08", is_mock: true },
+  { id: "preview-quote-express", corridor_id: "preview-express", route_name: "Example route (express)", source_currency: "USD", target_currency: "THB", send_amount: "200.00", net_received: "6480.00", rate: "32.9000000000", sender_fee: "3.00", receiver_fee: "1.00", settlement_min_days: 0, settlement_days: 1, expires_at: "", rate_source: "fixture", rate_date: "2026-10-08", is_mock: true },
 ];
 const baseOrder: Order = {
   id: "preview-order", version: 2, quote: quotes[0].id, status: "SUBMITTED", effective_status: "SUBMITTED", recipient: "BENEFICIARY", beneficiary: beneficiaries[0].id,
@@ -25,7 +25,11 @@ const baseOrder: Order = {
   history: [{ from: "", to: "CREATED", version: 1, at: "2026-10-08T08:00:00Z", note: "" }, { from: "CREATED", to: "SUBMITTED", version: 2, at: "2026-10-08T09:00:00Z", note: "" }], is_simulated: true,
 };
 export type WalletPreviewScenario = "submitted" | "pending" | "refunded" | "unknown" | "expired" | "empty";
-export function previewQuotes() { return structuredClone(quotes); }
+// Preview quotes stay current for an hour from when they are shown, whatever today's date is.
+export function previewQuotes() {
+  const expiresAt = new Date(Date.now() + 60 * 60 * 1000).toISOString();
+  return structuredClone(quotes).map((quote) => ({ ...quote, expires_at: expiresAt }));
+}
 export function createWalletPreview(scenario: WalletPreviewScenario): WalletClient {
   const order = structuredClone(baseOrder);
   if (scenario === "pending") { order.status = "CREATED"; order.effective_status = "CREATED"; order.version = 1; order.submitted_at = null; order.history = order.history.slice(0, 1); }

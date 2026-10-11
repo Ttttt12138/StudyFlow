@@ -9,6 +9,7 @@ import { PaymentCalendar } from "./PaymentCalendar";
 import { FundingComparison } from "./FundingComparison";
 import { explainCode, formatDate, formatMoney } from "./presenters";
 import { createPreviewClient, previewBudget, previewFunding, previewImport, type PreviewScenario } from "./previewAdapter";
+import { importTouched, rebaseOnSaved, templateId, uploadKind, versionsMatch } from "./logic";
 import type {
   Application,
   BackendState,
@@ -68,22 +69,7 @@ function issueText(error: unknown) {
     return `${error.status ? `HTTP ${error.status}: ` : ""}${error.message}`;
   return error instanceof Error ? error.message : String(error);
 }
-function versionsMatch(
-  result: { state_version: number; budget_version: number; analysis_version?: number; semester?: string; semester_id?: string } | null,
-  state: BackendState | null,
-) {
-  return (
-    !!result &&
-    !!state &&
-    (!result.semester || result.semester === state.semester_id) &&
-    (!result.semester_id || result.semester_id === state.semester_id) &&
-    result.state_version === state.state_version &&
-    result.budget_version === state.budget_version &&
-    (state.analysis_version == null || result.analysis_version === state.analysis_version)
-  );
-}
 export function ConnectedApp({ onDemo, onWallet }: { onDemo: () => void; onWallet: (preview: boolean) => void }) {
-  const [session, setSession] = useState<{authenticated: boolean; username: string | null; csrf_token: string} | null>(null);
   const [client, setClient] = useState<StudyFlowClient | null>(null);
   const [preview, setPreview] = useState(false);
   const [previewScenario,setPreviewScenario]=useState<PreviewScenario>("missing");
@@ -141,6 +127,7 @@ export function ConnectedApp({ onDemo, onWallet }: { onDemo: () => void; onWalle
   const [profileVersion, setProfileVersion] = useState(0);
   const [profileMonths, setProfileMonths] = useState<
     Array<{
+      rowKey: string;
       month: string;
       income: string | null;
       living_expenses: string | null;
@@ -157,6 +144,9 @@ export function ConnectedApp({ onDemo, onWallet }: { onDemo: () => void; onWalle
   const initialized = useRef(false);
   const fileIdentities = useRef(new WeakMap<File, string>());
   const keys = useRef(new Map<string, string>());
+  const actionKeys = useRef<string[]>([]);
+  // Last saved draft seen from Django, to tell local edits apart from changes saved elsewhere.
+  const savedDraft = useRef<{ semesterId: string; draft: Draft } | null>(null);
   useLayoutEffect(() => {
     if (!client || dashboardPreview || dashboard) return;
     const costId = focusCostRef.current;
@@ -189,6 +179,13 @@ export function ConnectedApp({ onDemo, onWallet }: { onDemo: () => void; onWalle
     setApplication(preview ? applications[0] ?? null : applications.find((item) => (item.loan ?? item.quote_id) === quoteId) ?? null);
   }, [applications, quoteId, preview]);
   const dirty = !!draft && !!semester && JSON.stringify(draft) !== JSON.stringify(semester.draft);
+  const reviewing = material?.status === "NEEDS_REVIEW" && !!material.result.proposed_draft;
+  // Review answers belong to one document; never carry them over to the next upload.
+  useEffect(() => {
+    setIssuer("");
+    setResolutions({});
+    setTranscription("");
+  }, [material?.id]);
   function resultFresh(result: Parameters<typeof versionsMatch>[0], current: BackendState | null) {
     return !dirty && versionsMatch(result, current);
   }
@@ -206,6 +203,7 @@ export function ConnectedApp({ onDemo, onWallet }: { onDemo: () => void; onWalle
     const payloadKey = `${identity}:${body instanceof FormData ? JSON.stringify([...body.entries()].map(([name, value]) => [name, value instanceof File ? fileKey(value) : value])) : JSON.stringify(body)}`;
     const key = keys.current.get(payloadKey) ?? crypto.randomUUID();
     keys.current.set(payloadKey, key);
+    actionKeys.current.push(payloadKey);
     try {
       const result = await api.post<T>(path, body, key);
       return result;
@@ -216,7 +214,8 @@ export function ConnectedApp({ onDemo, onWallet }: { onDemo: () => void; onWalle
       throw e;
     }
   }
-  async function refresh(api = client, stillCurrent = () => true) {
+  // keepEdits=false after saving, confirming or switching data sources: Django's draft replaces local edits.
+  async function refresh(api = client, stillCurrent = () => true, keepEdits = true) {
     if (!api) return;
     const next = await api.get<BackendState>("readiness/state/");
     const term = await api.get<Semester>(
@@ -244,15 +243,25 @@ export function ConnectedApp({ onDemo, onWallet }: { onDemo: () => void; onWalle
         api.get<Run<BudgetResult>[]>("readiness/budgets/"),
       ]);
     if (!stillCurrent()) return;
+    const previous = savedDraft.current;
+    savedDraft.current = { semesterId: term.id, draft: structuredClone(term.draft) };
     setState(next);
     setSemester(term);
-    setDraft(structuredClone(term.draft));
+    if (!keepEdits || !dirty || !draft || !previous || previous.semesterId !== term.id) setDraft(structuredClone(term.draft));
+    else if (JSON.stringify(previous.draft) !== JSON.stringify(term.draft)) {
+      // Saved elsewhere since these edits started: never send them on top of the newer draft unseen.
+      if (reviewing && material) setDraft(rebaseOnSaved(draft, term.draft, material.id));
+      else {
+        setUnsavedDraft(structuredClone(draft));
+        setDraft(structuredClone(term.draft));
+      }
+    }
     setSources(fundingSources);
     setQuotes(loanQuotes);
     setApplications(applications);
     if (!quoteId && applications[0]) setQuoteId(applications[0].loan ?? applications[0].quote_id ?? "");
     setProfileVersion(profile.version);
-    setProfileMonths(profile.months);
+    setProfileMonths(profile.months.map((row) => ({ ...row, rowKey: crypto.randomUUID() })));
     setForecast(forecasts[0] ?? null);
     setFunding(recommendations[0] ?? null);
     setSavedFunding(fundingPlans[0] ?? null);
@@ -264,21 +273,20 @@ export function ConnectedApp({ onDemo, onWallet }: { onDemo: () => void; onWalle
     setError("");
     setErrorDetails(null);
     setNotice("");
+    actionKeys.current = [];
     try {
       await action();
+      // Retries after a failed reload reuse their keys; a later deliberate repeat gets a new result.
+      for (const payloadKey of actionKeys.current) keys.current.delete(payloadKey);
     } catch (e) {
       setErrorDetails(e instanceof ApiError ? e.details : null);
       if (e instanceof ApiError && e.status === 409 && client) {
-        const edits = draft ? structuredClone(draft) : null;
+        // refresh() keeps unsaved edits that still apply and sets aside those overtaken by a newer save.
         try { await refresh(client); } catch (reloadError) {
-          setUnsavedDraft(edits);
           setError(`Your information changed, but the latest data could not be loaded. Retry refreshing before saving. ${issueText(reloadError)}`);
           return;
         }
-        setUnsavedDraft(edits);
-        setError(
-          "A newer state was saved. Review the latest data, then restore your unsaved edits if appropriate.",
-        );
+        setError("A newer state was saved. Review the latest data before trying again.");
       } else setError(issueText(e));
     } finally {
       setBusy(false);
@@ -291,7 +299,6 @@ export function ConnectedApp({ onDemo, onWallet }: { onDemo: () => void; onWalle
       if (!response.ok) throw new ApiError(response.status, "Could not check your sign-in session.");
       const identity = await response.json().catch(() => { throw new Error("The sign-in service returned an unexpected response. Please retry or contact support."); });
       if (epoch !== connectionEpoch.current) return;
-      setSession(identity);
       if (!identity.authenticated) return;
       const api = new DjangoClient(identity.csrf_token);
       const list = await api.get<Template[]>("readiness/templates/");
@@ -308,7 +315,7 @@ export function ConnectedApp({ onDemo, onWallet }: { onDemo: () => void; onWalle
       );
       if (epoch !== connectionEpoch.current) return;
       setTemplates(list);
-      setSelectedTemplate(list[0]?.key ?? "");
+      setSelectedTemplate(list[0] ? templateId(list[0]) : "");
       setClient(api);
       try {
         const restored = await refresh(api, () => epoch === connectionEpoch.current);
@@ -316,7 +323,7 @@ export function ConnectedApp({ onDemo, onWallet }: { onDemo: () => void; onWalle
         const imports = await api
           .get<ImportRecord[]>("readiness/imports/");
         const pending = imports.find((item) =>
-          (!item.semester || item.semester === restored?.semester_id) && ["QUEUED", "NEEDS_REVIEW", "NEEDS_MANUAL_INPUT"].includes(
+          (!item.semester_id || item.semester_id === restored?.semester_id) && ["QUEUED", "NEEDS_REVIEW", "NEEDS_MANUAL_INPUT"].includes(
             item.status,
           ),
         );
@@ -325,17 +332,7 @@ export function ConnectedApp({ onDemo, onWallet }: { onDemo: () => void; onWalle
             `readiness/imports/${pending.id}/`,
           );
           setMaterial(currentImport);
-          if (
-            currentImport.status === "NEEDS_REVIEW" &&
-            currentImport.result.proposed_draft
-          ) {
-            setDraft(structuredClone(currentImport.result.proposed_draft));
-            setSelectedIds(
-              currentImport.result.proposed_draft.costs
-                .filter((cost) => cost.source_refs?.includes(currentImport.id) || cost.conflict)
-                .map((cost) => cost.cost_id),
-            );
-          }
+          if (savedDraft.current) loadProposal(currentImport, savedDraft.current.draft);
         }
         setNotice("Existing semester loaded.");
       } catch (e) {
@@ -346,15 +343,28 @@ export function ConnectedApp({ onDemo, onWallet }: { onDemo: () => void; onWalle
     });
   }
   useEffect(() => { if (!initialized.current) { initialized.current = true; void connect(); } }, []);
+  function loadProposal(record: ImportRecord, base: Draft) {
+    const proposed = record.status === "NEEDS_REVIEW" ? record.result.proposed_draft : undefined;
+    if (!proposed) return;
+    const next = rebaseOnSaved(proposed, base, record.id);
+    setDraft(next);
+    setSelectedIds(next.costs.filter((cost) => importTouched(cost, record.id)).map((cost) => cost.cost_id));
+  }
   async function startPreview() {
-    ++connectionEpoch.current;
+    const epoch = ++connectionEpoch.current;
     const api = createPreviewClient("missing");
     setPreviewScenario("missing");
     setError("");
     setDashboard(false);
     setPreview(true);
     setClient(api);
-    await refresh(api);
+    try {
+      await refresh(api, () => epoch === connectionEpoch.current, false);
+    } catch (reason) {
+      setError(issueText(reason));
+      return false;
+    }
+    if (epoch !== connectionEpoch.current) return false;
     setMaterial(structuredClone(previewImport));
     setSelectedIds(previewImport.result.proposed_draft?.costs
       .filter((cost) => cost.source_refs?.includes(previewImport.id))
@@ -363,14 +373,17 @@ export function ConnectedApp({ onDemo, onWallet }: { onDemo: () => void; onWalle
     setFunding(structuredClone(previewFunding));
     setQuoteId("preview-quote");
     setNotice("Synthetic preview loaded. No Django account or live financial data is connected.");
+    return true;
   }
   async function showPreviewScenario(scenario: PreviewScenario) {
     if (!preview) return;
     const api = createPreviewClient(scenario);
+    const epoch = connectionEpoch.current;
     setBusy(true);
     setError("");
     try {
-      await refresh(api);
+      await refresh(api, () => epoch === connectionEpoch.current, false);
+      if (epoch !== connectionEpoch.current) return;
       focusCostRef.current = "preview-food";
       setClient(api);
       setPreviewScenario(scenario);
@@ -401,6 +414,7 @@ export function ConnectedApp({ onDemo, onWallet }: { onDemo: () => void; onWalle
     setSavedFunding(null);
     setQuoteId("");
     setUnsavedDraft(null);
+    savedDraft.current = null;
     keys.current.clear();
     setError("");
     setNotice("");
@@ -408,35 +422,33 @@ export function ConnectedApp({ onDemo, onWallet }: { onDemo: () => void; onWalle
   async function createSemester() {
     if (!client) return;
     await act(async () => {
-      const template = templates.find((x) => x.key === selectedTemplate);
+      const template = templates.find((x) => templateId(x) === selectedTemplate);
       const body = {
-        template_key: selectedTemplate,
+        template_key: template?.key,
         template_version: template?.version,
-        room: selectedTemplate.endsWith("single") ? "single" : "shared",
+        room: template?.key.endsWith("single") ? "single" : "shared",
         opening_balance: openingBalance,
         as_of: asOf,
         reserve: reserve || null,
       };
       await send(client, "readiness/semesters/", body);
-      await refresh();
+      await refresh(client, undefined, false);
       setUnsavedDraft(null);
       setNotice("Semester created. Review its template and missing costs.");
     });
   }
   async function uploadMaterial() {
     if (!client || !state || !upload) return;
+    const kind = uploadKind(upload);
+    if (!kind) {
+      setError("Choose a PDF, PNG, JPEG or plain-text (.txt) document.");
+      return;
+    }
     await act(async () => {
       const form = new FormData();
       for (const [key, value] of Object.entries(versions()))
         if (value !== undefined) form.append(key, String(value));
-      form.append(
-        "kind",
-        upload.type.startsWith("image/")
-          ? "image"
-          : upload.type === "application/pdf"
-            ? "pdf"
-            : "text",
-      );
+      form.append("kind", kind);
       form.append("language", ocrLanguage);
       if (ocrConsent && ocrNotice) {
         form.append("ocr_consent", "true");
@@ -462,14 +474,8 @@ export function ConnectedApp({ onDemo, onWallet }: { onDemo: () => void; onWalle
         `readiness/imports/${material.id}/`,
       );
       setMaterial(next);
-      if (next.status === "NEEDS_REVIEW" && next.result.proposed_draft) {
-        setDraft(structuredClone(next.result.proposed_draft));
-        setSelectedIds(
-          next.result.proposed_draft.costs
-            .filter((c) => c.source_refs?.includes(next.id) || c.conflict)
-            .map((c) => c.cost_id),
-        );
-      }
+      const base = draft ?? savedDraft.current?.draft;
+      if (base) loadProposal(next, base);
     });
   }
   async function transcribeMaterial() {
@@ -490,15 +496,21 @@ export function ConnectedApp({ onDemo, onWallet }: { onDemo: () => void; onWalle
       setError("Enter the issuer and select at least one extracted cost.");
       return;
     }
+    const relevant = new Set([...selectedIds, ...Object.keys(conflicts)]);
+    const conflictResolutions = Object.fromEntries(
+      Object.entries(resolutions)
+        .map(([id, reason]) => [id, reason.trim()])
+        .filter(([id, reason]) => relevant.has(id) && reason),
+    );
     await act(async () => {
       await send(client, `readiness/imports/${material.id}/confirm/`, {
         ...versions(),
         draft,
         issuer,
         selected_cost_ids: selectedIds,
-        conflict_resolutions: resolutions,
+        conflict_resolutions: conflictResolutions,
       });
-      await refresh();
+      await refresh(client, undefined, false);
       setMaterial(null);
       setNotice("Your document review was saved.");
     });
@@ -510,7 +522,7 @@ export function ConnectedApp({ onDemo, onWallet }: { onDemo: () => void; onWalle
         ...versions(),
         draft,
       });
-      await refresh();
+      await refresh(client, undefined, false);
       setUnsavedDraft(null);
       setNotice("Your expense changes were saved.");
     });
@@ -633,10 +645,10 @@ export function ConnectedApp({ onDemo, onWallet }: { onDemo: () => void; onWalle
     await act(async () => {
       const result = await send<{
         version: number;
-        months: typeof profileMonths;
+        months: Array<Omit<(typeof profileMonths)[number], "rowKey">>;
       }>(client, "affordability-profile/", {
         expected_version: profileVersion,
-        months: profileMonths,
+        months: profileMonths.map(({ rowKey: _rowKey, ...row }) => row),
       });
       setProfileVersion(result.version);
       await refresh();
@@ -726,7 +738,7 @@ export function ConnectedApp({ onDemo, onWallet }: { onDemo: () => void; onWalle
   />;
   if (dashboardPreview) return <DashboardPreview onExit={() => setDashboardPreview(false)} onJourney={(target) => {
     setDashboardPreview(false);
-    if (!preview) void startPreview().then(() => setStep(target));
+    if (!preview) void startPreview().then((started) => { if (started) setStep(target); });
     else setStep(target);
   }} />;
   return (
@@ -794,20 +806,24 @@ export function ConnectedApp({ onDemo, onWallet }: { onDemo: () => void; onWalle
             <div className="stale-banner" role="alert">
               {error}
               {!!errorDetails && <details><summary>View backend response</summary><pre className="backend-json">{JSON.stringify(errorDetails,null,2)}</pre></details>}
-              {unsavedDraft && (
-                <button
-                  className="secondary"
-                  onClick={() => {
-                    setDraft(unsavedDraft);
-                    setUnsavedDraft(null);
-                    setError(
-                      "Restored local edits on top of the latest version. Review every value before saving.",
-                    );
-                  }}
-                >
-                  Restore my unsaved edits
-                </button>
-              )}
+            </div>
+          )}
+          {unsavedDraft && (
+            <div className="stale-banner" role="status">
+              A newer version was saved after you started editing, so your unsaved edits were set aside.
+              Restoring them replaces the newer values on screen; review every value before saving.
+              <button
+                className="secondary"
+                onClick={() => {
+                  setDraft(unsavedDraft);
+                  setUnsavedDraft(null);
+                  setError("");
+                  setNotice("Restored your local edits on top of the latest version. Review every value before saving.");
+                }}
+              >
+                Restore my unsaved edits
+              </button>
+              <button className="secondary" onClick={() => setUnsavedDraft(null)}>Keep the latest version</button>
             </div>
           )}
           {notice && (!preview || !notice.startsWith("Synthetic preview loaded")) && (
@@ -823,7 +839,7 @@ export function ConnectedApp({ onDemo, onWallet }: { onDemo: () => void; onWalle
                 <span className="eyebrow">WELCOME TO STUDYFLOW</span>
                 <h1 id="welcome-title">A clearer plan for studying abroad.</h1>
                 <p>Check your admission details, understand upcoming costs, and explore your funding options—one step at a time.</p>
-                <div className="student-welcome-actions"><button className="primary" onClick={() => setDashboardPreview(true)}>Preview student dashboard <span aria-hidden="true">→</span></button><button className="secondary" onClick={startPreview}>Explore the five steps</button></div>
+                <div className="student-welcome-actions"><button className="primary" onClick={() => setDashboardPreview(true)}>Preview student dashboard <span aria-hidden="true">→</span></button><button className="secondary" onClick={() => void startPreview()}>Explore the five steps</button></div>
                 <small>Sample data only. You can explore without signing in or changing anything.</small>
               </section>
               <section className="student-start-grid" aria-label="How StudyFlow helps">
@@ -864,7 +880,7 @@ export function ConnectedApp({ onDemo, onWallet }: { onDemo: () => void; onWalle
                       onChange={(e) => setSelectedTemplate(e.target.value)}
                     >
                       {templates.map((t) => (
-                        <option key={t.key} value={t.key}>
+                        <option key={templateId(t)} value={templateId(t)}>
                           {t.key} · v{t.version}
                         </option>
                       ))}
@@ -1022,10 +1038,10 @@ export function ConnectedApp({ onDemo, onWallet }: { onDemo: () => void; onWalle
                             >
                               Refresh processing status
                             </button>
-                            {material.result.issues?.map((i) => (
-                              <p key={i.code}>{explainCode(i.code)}</p>
+                            {material.result.issues?.map((i, n) => (
+                              <p key={`${i.code}-${n}`}>{explainCode(i.code)}</p>
                             ))}
-                            {!!material.result.issues?.length && <details><summary>View extraction codes</summary>{material.result.issues.map((i) => <p key={i.code}>{i.code}</p>)}</details>}
+                            {!!material.result.issues?.length && <details><summary>View extraction codes</summary>{material.result.issues.map((i, n) => <p key={`${i.code}-${n}`}>{i.code}</p>)}</details>}
                             {material.status === "NEEDS_MANUAL_INPUT" && (
                               <label>
                                 Manual transcription
@@ -1413,7 +1429,7 @@ export function ConnectedApp({ onDemo, onWallet }: { onDemo: () => void; onWalle
                         {budgetData && <>
                           <div className="result-highlights"><div><span>Reported funding gap</span><strong>{formatMoney(budgetData.gap, budgetData.currency)}</strong><small>{preview ? budgetData.complete ? "Complete mock result · sample estimate" : "Incomplete mock result · Food missing" : budgetData.complete ? "From your saved budget result" : "Incomplete result · review missing information"}</small></div><div><span>Next scheduled cost</span><strong>{nextScheduledCost ? nextScheduledCost.label : "Check payment calendar"}</strong><small>{nextScheduledCost ? `${formatDate(nextScheduledCost.date)} · ${formatMoney(nextScheduledCost.amount, forecast!.result.currency)}` : "Shown when an up-to-date calendar is available"}</small></div></div>
                           <details className="result-details student-explainer"><summary>What does “funding gap” mean?</summary><p>It is the shortfall reported by the budget service for this result. A missing expense can change the result, so check the completeness label before relying on the figure. StudyFlow does not treat an unknown cost as zero.</p></details>
-                          {budgetData.issues.length > 0 && <div className="result-attention"><strong>Before relying on this budget</strong><ul>{budgetData.issues.map((issue) => <li key={issue}>{explainCode(issue)}</li>)}</ul></div>}
+                          {budgetData.issues.length > 0 && <div className="result-attention"><strong>Before relying on this budget</strong><ul>{budgetData.issues.map((issue, n) => <li key={`${issue}-${n}`}>{explainCode(issue)}</li>)}</ul></div>}
                           <details className="result-details"><summary>Compare low, base, and high scenarios</summary><div className="backend-scenarios">{(["low", "base", "high"] as const).map((name) => <div key={name}><span>{name}</span><strong>{formatMoney(budgetData[name], budgetData.currency)}</strong></div>)}</div><p>Remaining base: {formatMoney(budgetData.remaining_base, budgetData.currency)}. These are B's returned figures, not a browser calculation.</p></details>
                           <details className="result-details"><summary>Assumptions and result details</summary>{budgetData.assumptions.length ? <ul>{budgetData.assumptions.map((item, index) => <li key={index}>{item}</li>)}</ul> : <p>No assumptions were supplied.</p>}<p>Information: {budgetData.complete ? "complete" : "incomplete"} · B reported gap: {budgetData.sufficient ? "No gap" : "Gap or issues to review"}</p>{budgetData.issues.length > 0 && <details><summary>View backend issue codes</summary><ul>{budgetData.issues.map((item) => <li key={item}>{item}</li>)}</ul></details>}</details>
                         </>}
@@ -1428,6 +1444,7 @@ export function ConnectedApp({ onDemo, onWallet }: { onDemo: () => void; onWalle
                       <FundingComparison
                         preview={preview}
                         recommendation={funding}
+                        homeCurrency={state?.assets.currency ?? budgetData?.currency}
                         current={resultFresh(funding, state)}
                         sources={sources}
                         quotes={quotes}
@@ -1505,7 +1522,7 @@ export function ConnectedApp({ onDemo, onWallet }: { onDemo: () => void; onWalle
                           Enter each repayment month. Leave unknown values blank and include other debts under existing repayments.
                         </p>
                         {profileMonths.map((row, index) => (
-                          <div className="backend-fields" key={index}>
+                          <div className="backend-fields" key={row.rowKey}>
                             <label>
                               Month
                               <input
@@ -1567,6 +1584,7 @@ export function ConnectedApp({ onDemo, onWallet }: { onDemo: () => void; onWalle
                             setProfileMonths([
                               ...profileMonths,
                               {
+                                rowKey: crypto.randomUUID(),
                                 month: "",
                                 income: null,
                                 living_expenses: null,
@@ -1632,7 +1650,7 @@ export function ConnectedApp({ onDemo, onWallet }: { onDemo: () => void; onWalle
                         </div>
                         <button
                           className="secondary"
-                          disabled={preview || busy || !principal || !rate || !firstDue}
+                          disabled={preview || busy || !principal || !rate || !firstDue || !/^[1-9]\d*$/.test(months)}
                           onClick={addQuote}
                         >
                           Create loan quote

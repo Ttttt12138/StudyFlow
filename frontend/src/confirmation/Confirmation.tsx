@@ -4,7 +4,9 @@ import { problem } from './adapter';
 export function Confirmation({ admission, review, onChange, onContinue }: { admission: Admission; review: Review; onChange: (review: Review) => void; onContinue: () => void }) {
  const [source, setSource] = useState<Evidence | null>(null);
  const dialog = useRef<HTMLDialogElement>(null);
- useEffect(() => { if (source) dialog.current?.showModal(); }, [source]);
+ const opener = useRef<HTMLButtonElement | null>(null);
+ // Closing the dialog returns focus to the button that opened it.
+ useEffect(() => { if (source) dialog.current?.showModal(); else { opener.current?.focus(); opener.current = null; } }, [source]);
  const issues = admission.fields.filter(f => problem(f, review.corrections));
  return <>
  <div className="section-heading"><div><span className="eyebrow">STEP 01 / 05</span><h1>Start with the facts.</h1><p>Review your admission details before planning your study costs.</p></div><span className="tag">Admission review</span></div>
@@ -15,7 +17,7 @@ export function Confirmation({ admission, review, onChange, onContinue }: { admi
  <div className="field-top"><label htmlFor={field.id}>{field.label}{field.required && <span className="required"> *</span>}</label><span className={`status ${field.status}`}>{field.status}</span></div>
  <input id={field.id} type={field.kind === 'date' ? 'date' : 'text'} inputMode={field.kind === 'amount' ? 'decimal' : undefined} value={corrected ? review.corrections[field.id] : field.original ?? ''} placeholder="Not supplied — enter verified information" aria-required={field.required} aria-invalid={!!error} aria-describedby={`${field.id}-detail`} onChange={e => onChange({ corrections: { ...review.corrections, [field.id]: e.target.value }, confirmed: false })}/>
  <div id={`${field.id}-detail`}><div className="original">Extracted: {field.original ?? 'Not supplied'}{corrected && <span className="corrected"> · Student correction</span>}</div>{field.alternatives && <div className="conflict"><strong>Conflicting source values</strong>{field.alternatives.map(a => <div key={a.source}>{a.value} — {a.source}</div>)}</div>}{error && <p className="error">{error}</p>}</div>
- <div className="sources">{field.evidence.length ? field.evidence.map(e => <button className="source-button" key={e.id} onClick={() => setSource(e)}>↗ Inspect source</button>) : <span>No source evidence supplied</span>}{corrected && <button className="reset" onClick={() => { const corrections = { ...review.corrections }; delete corrections[field.id]; onChange({ corrections, confirmed: false }); }}>Restore extraction</button>}</div>
+ <div className="sources">{field.evidence.length ? field.evidence.map(e => <button className="source-button" key={e.id} onClick={event => { opener.current = event.currentTarget; setSource(e); }}>↗ Inspect source</button>) : <span>No source evidence supplied</span>}{corrected && <button className="reset" onClick={() => { const corrections = { ...review.corrections }; delete corrections[field.id]; onChange({ corrections, confirmed: false }); }}>Restore extraction</button>}</div>
  </div>; })}</div>
  <div className="confirmation"><div className="readiness" role="status">{issues.length ? `${issues.length} required field${issues.length === 1 ? '' : 's'} need attention before you can confirm.` : 'All required fields are addressed. Please confirm your review.'}</div><label className="check"><input type="checkbox" disabled={!!issues.length} checked={review.confirmed} onChange={e => onChange({ ...review, confirmed: e.target.checked })}/><span>I have reviewed the admission information and confirm these values.<small>Confirmation records your review in this draft only.</small></span></label></div>
  <div className="card-footer"><span>* Required for this draft’s confirmation workflow</span><button className="primary" disabled={!!issues.length || !review.confirmed} onClick={onContinue}>Continue to expenses <span>→</span></button></div></section>

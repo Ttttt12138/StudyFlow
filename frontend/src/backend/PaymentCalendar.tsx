@@ -54,8 +54,8 @@ export function PaymentCalendar({ forecast, current, costs, sources, busy, previ
       {(!result.complete || result.missing_event_ids.length > 0 || result.budget_issues.length > 0 || (result.data_issues?.length ?? 0) > 0) &&
         <div className="calendar-attention" role="status"><strong>Needs attention</strong><p>Missing or uncertain inputs may change this forecast. Review the items below and the budget issues.</p>
           {result.missing_event_ids.length > 0 && <p>{result.missing_event_ids.length} scheduled item(s) lack enough information. Check the costs listed below.</p>}
-          {result.budget_issues.length > 0 && <ul>{result.budget_issues.map((issue) => <li key={issue}>{explainCode(issue)}</li>)}</ul>}
-          {!!result.data_issues?.length && <ul>{result.data_issues.map((issue) => <li key={issue}>{explainCode(issue)}</li>)}</ul>}
+          {result.budget_issues.length > 0 && <ul>{result.budget_issues.map((issue, n) => <li key={`${issue}-${n}`}>{explainCode(issue)}</li>)}</ul>}
+          {!!result.data_issues?.length && <ul>{result.data_issues.map((issue, n) => <li key={`${issue}-${n}`}>{explainCode(issue)}</li>)}</ul>}
           <details><summary>View backend issue codes</summary><p>{[...result.missing_event_ids, ...result.budget_issues, ...(result.data_issues ?? [])].join(", ")}</p></details>
         </div>}
       <h3>Scheduled costs and income</h3>

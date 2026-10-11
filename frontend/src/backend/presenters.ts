@@ -18,6 +18,13 @@ export function formatDate(value: unknown): string {
   return Number.isNaN(parsed.getTime()) ? value : new Intl.DateTimeFormat("en", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" }).format(parsed);
 }
 
+/** Day of a timestamp in the viewer's time zone; slicing the UTC string can show the previous day. */
+export function formatTimestampDate(value: unknown): string {
+  if (typeof value !== "string" || !value) return "Date not supplied";
+  const parsed = new Date(value);
+  return Number.isNaN(parsed.getTime()) ? value : new Intl.DateTimeFormat("en", { day: "numeric", month: "short", year: "numeric" }).format(parsed);
+}
+
 const label = (value: string) => value.replaceAll("_", " ").replaceAll("-", " ").toLowerCase();
 
 export function explainCode(code: string): string {

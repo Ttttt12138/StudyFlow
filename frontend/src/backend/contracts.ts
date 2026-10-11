@@ -68,7 +68,7 @@ export type BackendState = Versions & {
   expected_income: unknown[];
 };
 export type ImportRecord = {
-  semester?: string;
+  semester_id?: string;
   id: string;
   status: string;
   job_status: string | null;
