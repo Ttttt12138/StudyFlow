@@ -1,0 +1,50 @@
+name: studyflow-django
+# `docker compose up --build` starts PostgreSQL and the API in mock mode: no API keys,
+# no external calls, all money simulated. For local development without the app
+# container, `docker compose up -d db` still starts only the database.
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: studyflow
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-local-simulation-only}
+      POSTGRES_DB: studyflow
+    ports:
+      - "127.0.0.1:55433:5432"
+    volumes:
+      - django_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U studyflow -d studyflow"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  app:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      # Local demo only. Set a real random secret (and DJANGO_SECURE=true behind HTTPS)
+      # for any shared deployment; see docs/permissions.md §7.
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:-compose-local-demo-only-not-a-secret}
+      DJANGO_DEBUG: "False"
+      DJANGO_ALLOWED_HOSTS: 127.0.0.1,localhost
+      DB_NAME: studyflow
+      DB_USER: studyflow
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-local-simulation-only}
+      DB_HOST: db
+      DB_PORT: "5432"
+      # Mock planners and fixed FX rates: runs offline with no credentials.
+      STUDYFLOW_MODE: ${STUDYFLOW_MODE:-mock}
+      STUDYFLOW_FX_LIVE: ${STUDYFLOW_FX_LIVE:-false}
+      STUDYFLOW_READINESS_ENABLED: "true"
+      STUDYFLOW_CONSUMPTION_ENABLED: "true"
+      STUDYFLOW_SEED_DEMO: "true"
+    ports:
+      - "127.0.0.1:8000:8000"
+
+volumes:
+  django_data:

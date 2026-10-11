@@ -7,7 +7,7 @@ name = "studyflow-ai"
 version = "0.2.0"
 description = "StudyFlow C: evidence-aware ingestion, routing and candidate planning"
 requires-python = ">=3.11"
-dependencies = ["pydantic>=2.10,<3", "pypdf>=5,<7", "openai>=2,<3", "typesafe-sdk>=0.1,<2", "tzdata>=2025.1", "Babel>=2.17,<3"]
+dependencies = ["pydantic>=2.10,<3", "pypdf>=5,<7", "openai>=2,<3", "typesafe-sdk>=0.1,<2", "tzdata>=2025.1", "Babel>=2.17,<3", "httpx>=0.28,<1", "Pillow>=12.1,<13"]
 
 [project.optional-dependencies]
 dev = ["pytest>=8,<10", "pytest-cov>=6,<8", "ruff>=0.11,<1", "build>=1,<2"]
@@ -35,3 +35,4 @@ select = ["E4", "E7", "E9", "F", "I", "B"]
 
 [tool.ruff.lint.flake8-bugbear]
 extend-immutable-calls = ["fastapi.Depends", "fastapi.File", "fastapi.Form"]
+

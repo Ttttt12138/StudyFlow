@@ -1,0 +1,26 @@
+# Secrets and local state must never enter the image.
+**/.env
+**/.demo-credentials.json
+.pg-password
+.postgres/
+**/*.sqlite3
+
+# Virtual environments, caches and run outputs.
+.git/
+studyFlow/
+.venv/
+review-b-venv/
+**/__pycache__/
+**/.pytest_cache/
+**/.ruff_cache/
+**/*.egg-info/
+**/output/
+studyflow-ai/dist/
+deliverables/
+.claude/
+
+# Not needed at runtime (the API image holds B and C only).
+evidence/
+legacy/
+frontend/
+docs/

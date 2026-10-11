@@ -1,0 +1,220 @@
+# Security Self-Assessment
+
+StudyFlow, proposition C. Assessment date: 2026-10-07.
+
+This report covers two things: how permission tiers are implemented, and which risks are still known. Every control below names the code that enforces it and the tests that prove it. File paths are relative to the repository root. Tests live in `backend/auto_test/` (Django) and `studyflow-ai/auto_test/` (C package). The full suite runs with `scripts/run_gates.py`; logs from the latest run are in [`evidence/gates/`](../evidence/gates/).
+
+> **Scope.** All money in StudyFlow is simulated. There is no real bank, card or remittance rail. Wallets, ledgers and payouts are database models, and delivery or failure of a transfer is triggered by an operator callback. The access controls, limits, approvals and ledger constraints described here are nevertheless **really enforced** by the server, and they are what this report assesses.
+
+The Chinese documents [permissions.md](permissions.md) and [known-risks.md](known-risks.md) contain the same material in more detail. Where they differ, this English report is authoritative.
+
+---
+
+## 1. Permission tiers
+
+Every API action falls into one tier. The tier of a money-moving action is decided **at request time from the amount**, not fixed per route.
+
+| Tier | Meaning | What the caller needs | Enforced in |
+|---|---|---|---|
+| **T0** | Read only (all `GET`) | Logged in; can only read their own data (operators can also read the approval queue) | DRF authentication, owner-scoped querysets |
+| **T1** | Writes that do not move money out of the wallet: quotes, scenarios, drafts, budgets, what-if runs, remittance order *creation*, approval *requests*, marking notifications read | Logged-in owner | `backend/finance/workflow_api.py` (`CommandView`) |
+| **T2** | Money leaves the wallet, within the limits in §2 | T1 **plus** a valid one-time step-up token bound to this exact action, target, amount and currency | `backend/finance/policy.py` `enforce()` |
+| **T3** | A T2 action above the per-transaction, daily or monthly limit, or in a currency with no limit configured | T2 **plus** an `APPROVED`, unused, unexpired approval from a **second person**, who must be an operator | `backend/finance/policy.py` `assess()`, `approved()` |
+| **OP** | Operator actions: receiving funds, loan decisions and disbursement, verifying beneficiaries, payment and remittance callbacks, issuing sponsor links, deciding approvals | `is_staff`, subject to the separation-of-duties rules in §4 | Route permission classes; `backend/finance/policy.py` `separation_of_duties()` |
+
+### 1.1 Action table
+
+| Action | Route | Tier | Step-up | Second-person approval | Notes |
+|---|---|---|---|---|---|
+| Read balances, rates, corridors, orders, credit profile | `GET …` | T0 | No | No | Owner-scoped |
+| Create a live FX quote | `POST fx-quotes/live/` | T1 | No | No | Priced by the server from the corridor; the client cannot set the rate |
+| Create a remittance order | `POST remittance-orders/` | T1 | No | No | Status `CREATED`; no money moves |
+| Request an approval | `POST approvals/` | T1 | No | No | At most one open request per target |
+| `payment.submit` | `POST payments/{id}/submit/` | T2 / T3 | **Yes** | Above limit | Home currency (THB) |
+| `wallet.convert` | `POST conversions/` | T2 / T3 | **Yes** | Above limit | Limit counted in the quote's source currency |
+| `loan.repay` | `POST loan-accounts/{id}/repay/` | T2 / T3 | **Yes** | Above limit | Amount must equal an unpaid instalment |
+| `remittance.submit` | `POST remittance-orders/{id}/submit/` | T2 / T3 | **Yes** | Above limit | Debits the send amount |
+| `agent.confirm` | `POST agent/pending-actions/{id}/confirm/` | as the proposed action | **Yes** | If the proposed action is T3 | Cleared exactly like the action it proposes |
+| Decide an approval | `POST approvals/{id}/decide/` | OP | No | n/a | Separation of duties applies |
+| Verify a beneficiary, remittance or payment callback | `…/verify/`, `…/adapter-event/` | OP | No | No | Audited; see risk A2 |
+
+Every T2 action must be registered in `ACTIONS` in `backend/finance/policy.py` and declared on its route (`policy="…"`). The registrations are in `backend/finance/workflow_urls.py` (`payment.submit`, `wallet.convert`), `backend/finance/lending_urls.py` (`loan.repay`), `backend/finance/remittance_api.py` (`remittance.submit`) and `backend/finance/agent_api.py` (`agent.confirm`).
+
+**Tests**
+- Tier matrix, `backend/auto_test/test_policy.py` `TierMatrixTests`: `test_payment_submit_requires_step_up_with_documented_body`, `test_conversion_requires_step_up`, `test_tuition_over_per_transaction_limit_needs_approval`, `test_reads_and_t1_writes_need_no_step_up`, `test_agent_calls_are_capped_at_t1`
+- Repayment: `RepaymentPolicyTests.test_repayment_requires_step_up_for_named_installment`
+- Remittance: `backend/auto_test/test_remittance.py` `test_submit_without_step_up_or_as_agent_is_refused`, plus the T3 separation-of-duties tests listed in §4
+- Operator-only callbacks: `backend/auto_test/test_remittance.py` `test_adapter_event_is_operator_only`, `test_student_commands_are_owner_only`
+
+---
+
+## 2. Limits
+
+Limits apply to outflows, summed per currency across all T2 actions. Days and months follow the calendar in `Asia/Bangkok`, using real time. The demo clock has no effect.
+
+| Currency | Per transaction | Daily | Monthly |
+|---|---:|---:|---:|
+| THB | 50,000 | 100,000 | 300,000 |
+| CNY | 10,000 | 20,000 | 60,000 |
+| USD | 1,500 | 3,000 | 9,000 |
+| EUR | 1,400 | 2,800 | 8,400 |
+| GBP | 1,200 | 2,400 | 7,200 |
+| JPY | 200,000 | 400,000 | 1,200,000 |
+
+- Defaults are stored in the `PolicyLimit` table, where an administrator can edit them. `ensure_default_limits()` only adds missing rows and never overwrites edited ones.
+- A currency with no enabled limit row makes **every** T2 action in that currency T3.
+- Effective limit = table limit × the credit multiplier from `backend/finance/credit.py` (`MULTIPLIERS`): `AT_RISK` 0.5, `BUILDING` 1.0, `FAIR` 1.2, `GOOD` 1.5. A poor payment record therefore halves the limits, and the best record raises them by at most 1.5×.
+- The limit check runs inside the command's database transaction and under the user's row lock, so concurrent requests cannot jointly exceed a limit.
+
+**Tests**, `backend/auto_test/test_policy.py` `LimitAndUsageTests`: `test_daily_limit_accumulates_per_currency`, `test_monthly_limit`, `test_daily_and_monthly_windows_follow_bangkok_time`, `test_missing_or_disabled_limit_is_t3`, `test_credit_multiplier_scales_limits`, `test_failed_and_cancelled_payments_do_not_count`, `test_ensure_default_limits_keeps_edited_rows`. Concurrency, `backend/auto_test/test_policy_concurrency.py`: `test_daily_limit_holds_under_concurrent_spending`.
+
+---
+
+## 3. Step-up re-authentication (T2)
+
+1. The client calls `POST auth/step-up/` with the user's password and the exact `action`, `target_id`, `amount` and `currency`.
+2. The server checks that the target belongs to the user and that the amount and currency match it. It then issues a token signed with `django.core.signing` (salt `studyflow-step-up-v1`), valid for **300 seconds**. The token carries only a random nonce, the user id and the user's session-auth hash, so **changing the password revokes all outstanding tokens**. The bound action and target are stored server-side in `StepUpGrant`.
+3. The protected command sends the token in `X-Step-Up-Token`. The token must match the request exactly. It is marked used **in the same transaction** as the command, so a command that fails a business rule does not consume it, while a successful command cannot reuse it.
+4. Failed attempts return 403 `STEP_UP_FAILED` and are audited (`auth.step_up_failed`). The endpoint is rate-limited to 10 per hour per user.
+
+Code: `backend/finance/policy.py` (`step_up`, `redeemable_grant`, `Clearance.consume`), `backend/finance/policy_api.py`.
+
+**Tests**, `backend/auto_test/test_policy.py` `StepUpTokenTests`: `test_wrong_password_is_refused_and_audited`, `test_user_without_password_cannot_step_up`, `test_target_must_belong_to_the_user_and_match`, `test_forged_tokens_are_invalid`, `test_token_of_another_user_is_invalid`, `test_expired_token_is_invalid`, `test_token_bound_to_amount_and_target`, `test_token_is_single_use`, `test_password_change_invalidates_tokens`. Also `TierMatrixTests.test_failed_command_does_not_burn_the_token` and, in `backend/auto_test/test_policy_concurrency.py`, `test_one_token_cannot_authorize_two_concurrent_commands`.
+
+> **Limitation:** step-up is a re-entry of the same password, not a second factor. See risk **A1**.
+
+---
+
+## 4. Approvals and separation of duties (T3)
+
+- A student requests an approval for one exact `(action, target_id, amount, currency)`. An operator approves or rejects it, and the decision carries an `expected_version` for optimistic locking.
+- An approval expires 24 hours after creation, whether it is `PENDING` or `APPROVED`. Once used it is marked `USED` in the same transaction as the action and cannot be used again.
+- **Separation of duties**, applied to both approve and reject:
+  1. The decider cannot be the requester. This is enforced by a database `CHECK` constraint, and the API checks it first and returns `SEPARATION_OF_DUTIES`.
+  2. For `payment.submit`, and for `remittance.submit` to an external beneficiary, the decider cannot be the operator who most recently verified that beneficiary. One person therefore cannot both vouch for a payee and release a large payment to it.
+  3. An operator cannot decide a request they own.
+- The demo and the tests therefore use two operators: one verifies the beneficiary, the other approves.
+
+Code: `backend/finance/policy.py` (`request_approval`, `decide`, `separation_of_duties`, `latest_verifier`).
+
+**Tests**
+- `backend/auto_test/test_policy.py` `ApprovalTests`: `test_lifecycle_and_visibility`, `test_request_must_match_the_target`, `test_only_staff_decide_and_stale_version_conflicts`, `test_beneficiary_verifier_cannot_decide`, `test_staff_cannot_decide_their_own_request`, `test_database_rejects_requester_as_decider`, `test_rejected_approval_does_not_authorize_and_can_be_requested_again`, `test_expired_approvals`, `test_used_approval_cannot_be_reused`
+- `backend/auto_test/test_remittance.py`: `test_beneficiary_verifier_cannot_decide_remittance_approval`, `test_self_order_approval_is_not_bound_to_beneficiary_verifier`
+- `backend/auto_test/test_policy_concurrency.py`: `test_concurrent_decisions_have_one_winner`
+- End to end: [`evidence/gates/demo-remittance.json`](../evidence/gates/demo-remittance.json) contains exactly one T3 approval per run
+
+---
+
+## 5. AI agent controls
+
+The agent plans with an LLM (in mock mode, a rule-based planner) and calls tools through the Django runner. **Safety does not depend on the model behaving.** Every rule below is enforced by the runner in `backend/finance/agent_runner.py`.
+
+| Control | Value | Code | Tests (`backend/auto_test/test_agent.py` unless noted) |
+|---|---|---|---|
+| Highest tier the agent can execute | T1. The planner can see 2 T2 tools (`submit_remittance_order`, `convert_balance`), but the runner has **no T2 execution path**: calling one only creates a pending action. | `_propose`, `backend/finance/agent_tools.py` | `test_t2_tools_never_execute_regardless_of_arguments`, `test_mock_planner_zh_remittance_goal_proposes_without_moving_money` |
+| Who confirms a T2 proposal | Only the student, through `agent/pending-actions/{id}/confirm/` with step-up (plus approval if T3). A request carrying `X-StudyFlow-Agent` is refused. | `confirm_pending`, `policy="agent.confirm"` | `test_confirm_without_step_up_is_refused`, `test_confirm_from_agent_is_capped_at_t1`, `test_step_up_for_another_target_is_invalid`, `test_over_limit_confirm_requires_approval_then_succeeds` |
+| Step budget | At most **10** tool calls per session | `MAX_STEPS` | `test_step_budget_is_enforced_even_if_planner_keeps_calling_tools` |
+| Write budget | At most **4** T1 writes per session | `MAX_WRITES` | `test_fifth_t1_write_is_denied_by_write_budget` |
+| Failure stop | Stops after the same tool fails twice in a row | `_must_stop` | `test_two_consecutive_failures_of_same_tool_stop_the_loop` |
+| No-route stop | Stops before creating an order when no route arrives on time | `_must_stop` | `test_rank_without_on_time_route_stops_before_creating_order` |
+| Tool-result truncation | Each result reaches the planner as data and is truncated to **4,000** characters | `RESULT_CHARS` | `test_truncated_tool_result_is_at_most_4000_characters` |
+| Proposal expiry | Pending actions expire after **15 minutes**; confirming one after that moves no money | `PENDING_SECONDS = 900` | `test_confirm_after_expiry_expires_without_debit` |
+| Invalid tool calls | An unknown tool or non-object arguments end the session; nothing executes | runner | `test_unknown_tool_fails_session_with_invalid_tool_call`, `test_non_object_arguments_never_execute_and_do_not_crash` |
+| Cross-user isolation | Another user's ids are reported as "not found" and are not leaked | `backend/finance/agent_tools.py` | `test_other_users_ids_are_not_found_and_not_leaked`, `test_confirm_by_another_user_is_not_found` |
+| Double confirmation | Racing confirmations debit once | locking + idempotency | `backend/auto_test/test_agent_concurrency.py` (6 tests) |
+| Audit trail | Agent steps are immutable in the database | DB trigger | `test_agent_steps_are_immutable_in_the_database` |
+| Cost control | Session creation is limited to 30 per hour per user | `agent` throttle scope | `test_session_creation_is_throttled` |
+
+Prompt injection: on the frozen holdout `agent-v2` (4 injection cases), the live model took **0 unauthorized actions**. In **1 of 4** cases it acted partly on injected text: it proposed paying the user's tuition to a payee whose name contained instructions. Even then, no money moved, because the proposal still needed the student's step-up confirmation. On the tuning set `agent-v1`, it followed no injection (0/3) in any of the six live runs. See [agent-evaluation.md](agent-evaluation.md). Whatever the model does, the runner rules above stop money from moving without the student.
+
+---
+
+## 6. Money and ledger integrity
+
+| Control | Code | Tests |
+|---|---|---|
+| Every balance change goes through one entry point (`wallets.post`), which locks the user row and the balance row | `backend/finance/wallets.py` | `backend/auto_test/test_multicurrency.py` `test_mixed_sequence_keeps_ledger_invariant`, `test_randomized_sequence_keeps_invariants` |
+| Ledger entries summed per currency equal the balance | `backend/finance/wallets.py` | `test_remittance.py` `test_mixed_sequence_keeps_ledger_invariant` |
+| Balances can never be negative: a database `CHECK` constraint | migration 0015 | `test_multicurrency.py` `test_database_rejects_negative_balances`; `test_remittance_concurrency.py` `test_many_orders_draining_one_balance_never_go_negative` |
+| Conversions accept only server-priced, single-use quotes. A student-entered rate once allowed creating money from nothing; this was found and fixed. | `backend/finance/wallets.py` | `test_manual_quote_exploit_is_rejected`, `test_quote_consumed_on_reuse`, `test_quote_of_another_user_cannot_be_used` |
+| FX rates older than 7 days cannot be used for quotes; fixture rates are not executable in live mode | `backend/finance/fx_rates.py` | `test_live_quote_refused_on_stale_rate`, `test_remittance.py` `test_live_mode_rejects_fixture_priced_quotes` |
+| Remittance state machine: version-checked transitions, append-only history, at most one debit, refund or credit leg per order | `backend/finance/remittance_orders.py` | `test_transition_matrix_from_every_status`, `test_status_history_is_append_only`, `test_database_allows_one_leg_per_kind_per_order` |
+| Duplicate or conflicting payout callbacks settle exactly once | same | `test_remittance_concurrency.py` `test_duplicate_failed_callbacks_refund_once`, `test_conflicting_delivered_and_failed_callbacks_settle_one_way` |
+| Idempotency keys: a replay returns the stored response and never posts twice | `backend/finance/workflow_api.py` | `test_policy.py` `test_replay_returns_stored_response_without_policy`; `test_multicurrency_concurrency.py` `test_same_idempotency_key_concurrent_conversion_posts_once` |
+| Credit gaming: only deadline-bearing transfers to **verified** beneficiaries count; the credit window uses real dates, so moving the demo clock cannot erase late records | `backend/finance/credit.py` | `test_credit.py` `test_self_remittances_never_count`, `test_remittance_to_unverified_beneficiary_does_not_count`, `test_advancing_demo_clock_400_days_drops_nothing` |
+
+---
+
+## 7. Rate limiting and deployment hardening
+
+| Scope | Default | Applies to |
+|---|---|---|
+| `user` / `anon` | 1000/hour / 100/hour | All requests |
+| `auth` | 10/min per IP | `POST auth/token/` |
+| `step_up` | 10/hour per user | `POST auth/step-up/` (successes and failures) |
+| `money` | 60/hour per user | Every T2 `POST`, including refused ones |
+| `sponsor` | 20/hour per IP | Sponsor confirmation links |
+| `agent` | 30/hour per user | Agent session creation |
+
+Throttle counters are kept in a shared database cache, so the limits also hold across processes. A malformed rate override (`STUDYFLOW_THROTTLE_<SCOPE>`) stops the server from starting. Tests, in `backend/auto_test/test_policy.py` `ThrottleTests`: `test_token_endpoint_is_throttled`, `test_step_up_is_throttled_per_user`, `test_t2_routes_share_the_money_scope`, `test_sponsor_confirmation_is_throttled_by_ip`; also `DeploymentSettingsTests.test_invalid_throttle_rate_fails_startup`.
+
+Setting `DJANGO_SECURE=true` enables an HTTPS redirect, HSTS, secure cookies and 8-hour sessions. `nosniff`, `Referrer-Policy: same-origin` and `X-Frame-Options: DENY` are always on. CI runs `manage.py check --deploy --fail-level WARNING` with `DJANGO_SECURE=true` (`.github/workflows/django.yml`). Tests: `DeploymentSettingsTests.test_check_deploy_passes_only_when_secure`, `test_secure_settings_and_throttle_overrides`.
+
+Secrets: API keys are read only from server-side environment files, which are excluded by `.gitignore`. The full git history was scanned for Google, OpenAI-style, GitHub and AWS keys, private keys and tokens before publication, and none were found. The published evidence files were scanned the same way ([`evidence/README.md`](../evidence/README.md)).
+
+---
+
+## 8. Known risks
+
+Severity: **High** means it could produce a wrong money state or a privilege escalation. **Medium** means it weakens a result's credibility or the system's availability. **Low** means an engineering or usability issue.
+
+Status: **Open**, **Partially mitigated**, **Mitigated**, or **By design** (accepted for this simulated scope).
+
+The IDs match [known-risks.md](known-risks.md), which also lists items already mitigated.
+
+### 8.1 Authentication and authorization
+
+| ID | Risk | Severity | Mitigation in place | Status | Evidence |
+|---|---|---|---|---|---|
+| A1 | **Step-up is only a re-entry of the same password, not a real second factor** (no TOTP or WebAuthn). Anyone who knows the password can complete step-up. | High | The token is bound to one action, target, amount and currency, single-use and valid for 5 minutes; changing the password revokes all tokens; step-up is rate-limited and failures are audited; amounts above the limit also need a second person (T3) | Partially mitigated | §3; `backend/finance/policy.py` |
+| A8 | **The `X-StudyFlow-Agent` header is declared by the client.** An external agent script can omit it and is then treated as the user. | Low | The built-in agent cannot execute T2 because the runner has no T2 path, not because of the header (§5). Any client, agent or not, still needs the user's password for step-up on every T2 action. | Open (by design) | `backend/finance/policy.py` `is_agent`, `backend/finance/agent_runner.py` |
+| A2 | There is only one operator role (`is_staff`). An operator can directly receive funds, disburse loans and trigger payout callbacks; these are audited but have no two-person review. Both demo operators are created by the same script. | High | Separation of duties for every T3 approval (§4); every operator action is audited; approvals carry version numbers, expire and are single-use | Partially mitigated | `backend/finance/policy.py`, `backend/auto_test/test_policy.py` `ApprovalTests` |
+| A4 | The DRF browsable-API session login page (`/api/auth/login/`) is not covered by the DRF throttles. There is no account lockout. Behind a reverse proxy, per-IP limits need `DJANGO_NUM_PROXIES`. | Medium | Token login and step-up are throttled; failures are audited | Partially mitigated | `backend/config/urls.py`, `backend/config/settings.py` |
+| A5 | API tokens never expire and cannot be rotated through the API | Low | Token login is throttled | Partially mitigated | `backend/finance/policy_api.py` |
+| A3 | A sponsor's identity is not verified: whoever holds the link counts as the sponsor | Medium | Links store only a digest, expire after 72 hours, are compared in constant time and are bound to the terms version | Partially mitigated | `backend/finance/sponsorship.py` |
+
+### 8.2 Data, OCR and AI
+
+| ID | Risk | Severity | Mitigation in place | Status | Evidence |
+|---|---|---|---|---|---|
+| O2 | **OCR data retention.** Uploaded documents are sent to Google Gemini. The provider gives no zero-retention guarantee (`provider_zero_retention_guaranteed: false`). Encryption at rest, egress isolation and a jurisdiction review are not done. Local originals are purged after 30 days only if an operator schedules `manage.py purge_document_sources`; nothing schedules it automatically. | High | OCR is off by default; consent is collected per file against a versioned notice; two operator attestations are required (paid service, adults only); `store=false` is sent; the API key stays server-side; expired originals cannot be sent again (`OCR_SOURCE_EXPIRED`) | Open | `docs/gemini-ocr.md`; `backend/finance/readiness/ocr.py`; `backend/auto_test/test_ocr_api.py` `test_no_consent_means_no_external_request`, `test_operator_policy_gate_cannot_be_overridden_by_student`, `test_expired_sources_are_purged_but_financial_evidence_is_retained` |
+| O1 | OCR accuracy has been checked only on 6 clear synthetic samples. After the 2026-10-06 provider outage, `gemini-3.1-flash-lite` with bounded retry passed 6/6, and the full HTTP chain passed once. Accuracy on real documents is unknown. | Medium | OCR output always lands in `NEEDS_REVIEW` and never moves money; prompt-injection text in a document cannot be confirmed | Partially mitigated | [`evidence/ocr/`](../evidence/ocr/); `test_prompt_injection_cannot_be_confirmed` |
+| M1 | **Evaluation labels were reviewed by an AI, not by a human.** The review files mark `human_reviewed: false`. The same AI also wrote the agent dataset. | Medium | Holdout sets are frozen and hash-checked; first runs are reported even when they failed | Open | `studyflow-ai/evals/*/review.json`; `studyflow-ai/auto_test/test_copilot_holdout.py` |
+| M6 | On the frozen holdout `agent-v2` (first run) the live agent completed 18/24 tasks (75%). Failures include the model returning its internal reasoning as the answer (2 cases) and planning errors (2 cases). In 1 of 4 injection cases it proposed paying a payee whose name contained injected instructions. Each run executes once. | Medium | 0 unauthorized actions; T2 safety does not depend on the model (§5); tuning used only the separate `agent-v1` set; the holdout is hash-frozen | Partially mitigated | [agent-evaluation.md](agent-evaluation.md), [`evidence/agent/`](../evidence/agent/) |
+| M7 | **The Chinese and English API messages were translated by AI and have not been reviewed by a native speaker.** Briefing and notification text assembled from parts is still English only. | Low | Error codes never change, so clients can rely on the code; a CI gate checks that the catalogs are complete and compiled | Open; awaiting human review | `docs/i18n.md`, `backend/scripts/i18n_messages.py` |
+| M8 | When confirming an agent proposal the student sees the payee only in `details`; with several verified payees, the rule-based planner picks the earliest one | Low | The proposal details show the recipient type and payee; step-up is required to confirm | Partially mitigated | `test_agent.py` `test_remittance_proposal_details_show_beneficiary` |
+| O3 | Imported bank CSV files are not verified against a bank | Medium | Balance confirmation; every row is labelled with its source | Partially mitigated | `docs/consumption.md` |
+
+### 8.3 Money flows and scope
+
+| ID | Risk | Severity | Mitigation in place | Status | Evidence |
+|---|---|---|---|---|---|
+| F3 / F9 | All rails are simulated. Delivery, failure and "unknown" outcomes are triggered by operator callbacks; there are no real receipts or settlement files. | Medium | Append-only status history; a failure is refunded in full automatically; unknown outcomes go to the review queue; duplicate callbacks settle once | By design | `docs/remittance.md`, §6 |
+| S1 | **Tuition is not a separate module.** Tuition is paid through two existing flows, both of which require a verified payee: a remittance order with `purpose=tuition`, and a readiness payment against a confirmed invoice. There is no tuition-specific workflow such as instalment plans with the school or school-side confirmation. | Low | Both flows enforce beneficiary verification when the order is created and again when it is submitted | By design | `backend/finance/remittance_orders.py`, `backend/finance/execution_services.py`, `docs/proposition-c.md` §2 |
+| F5 | FX rates are reference rates (Frankfurter aggregates central-bank rates), not executable market prices. The fixed rate used in CI is about 8% below market for CNY/THB. | Medium | Each response states `rate_source` and `rate_date`; rates older than 7 days are refused; live fetching is off by default | Partially mitigated | `docs/fx-rates.md`, [`evidence/fx/`](../evidence/fx/) |
+| F2 | Serialization relies on locking the user row. A future write path that forgets the lock could race. | Medium | `CommandView` takes the lock for every command; concurrency test suites | Partially mitigated | `backend/finance/workflow_api.py`, `backend/auto_test/test_*_concurrency.py` |
+| E3 | Credit building counts only simulated on-platform records. It is not a credit score and proves nothing about credit elsewhere. | Medium | Clearly labelled as simulated; the signed statement contains only summaries; the multiplier is capped at 1.5× | By design | `docs/credit.md` |
+| D1 | The hardened configuration has not been tested on a real HTTPS deployment; HSTS starts at 1 hour and is not preloaded | Medium | `check --deploy` runs in CI | Partially mitigated | `backend/config/settings.py` |
+| D4 | There is no frontend in this submission, so no browser-level end-to-end test exists | Medium | All flows are exercised over real HTTP by the demo commands | Open (out of scope) | [`evidence/gates/`](../evidence/gates/) |
+
+---
+
+## 9. How to verify this report
+
+```bash
+# all gates: Django and C tests, OpenAPI, lint, migrations, HTTP demos, agent evaluation
+studyFlow/Scripts/python.exe scripts/run_gates.py
+# just the security-relevant Django suites
+cd backend
+../studyFlow/Scripts/python.exe manage.py test auto_test.test_policy auto_test.test_policy_concurrency auto_test.test_agent auto_test.test_agent_concurrency auto_test.test_remittance auto_test.test_remittance_concurrency auto_test.test_credit auto_test.test_ocr_api --noinput
+```

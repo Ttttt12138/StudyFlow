@@ -1073,7 +1073,11 @@
       "category": {
         "enum": [
           "rent",
-          "other"
+          "other",
+          "mobile",
+          "subscription",
+          "transport",
+          "utilities"
         ],
         "title": "Category",
         "type": "string"
@@ -1117,7 +1121,7 @@
         "type": "array"
       },
       "rule_version": {
-        "default": "monthly-1.0",
+        "default": "monthly-1.1",
         "title": "Rule Version",
         "type": "string"
       },

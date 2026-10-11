@@ -1,0 +1,150 @@
+{
+  "passed": false,
+  "synthetic": true,
+  "ocr_mode": "live",
+  "extraction_mode": "live",
+  "transport": "real_loopback_http",
+  "database": "PostgreSQL",
+  "run_id": "e1db0b6a7c8b4f9db1ff14a60df1c3c2",
+  "before": {
+    "financial_version": 1,
+    "budget_version": 2,
+    "wallet_balance": "10000.00",
+    "ledger_count": 0
+  },
+  "after": {
+    "financial_version": 1,
+    "budget_version": 2,
+    "wallet_balance": "10000.00",
+    "ledger_count": 0
+  },
+  "job_status": "DONE",
+  "material_status": "NEEDS_MANUAL_INPUT",
+  "issues": [
+    {
+      "code": "OCR_UNAVAILABLE"
+    }
+  ],
+  "source_type": null,
+  "ocr_model": null,
+  "pages": null,
+  "consent": {
+    "accepted": true,
+    "actor_id": "91",
+    "accepted_at": "2026-10-06T16:09:06.018241+00:00",
+    "notice_version": "gemini-ocr-v1",
+    "extraction_mode": "live"
+  },
+  "original_sha256": "03336180e218a31bb7711a38fc469e763edf3adaf480f9d6c1188c405deb934f",
+  "source_sha256": "03336180e218a31bb7711a38fc469e763edf3adaf480f9d6c1188c405deb934f",
+  "steps": [
+    {
+      "route": "readiness/semesters",
+      "status": "DONE",
+      "actor": "student",
+      "record_id": "96a7fdb8-f181-4c93-9ed7-07dc23a7ddca",
+      "versions": {
+        "state_version": 1,
+        "analysis_version": 0
+      },
+      "elapsed_ms": 231.91
+    },
+    {
+      "route": "demo/initialize",
+      "status": "DONE",
+      "actor": "student",
+      "record_id": "e39d58f8-d8c6-44a7-aaba-d16a91567f40",
+      "versions": {},
+      "elapsed_ms": 21.47
+    },
+    {
+      "route": "readiness/imports/ocr-notice",
+      "status": "DONE",
+      "actor": "student",
+      "record_id": null,
+      "versions": {},
+      "elapsed_ms": 3.86
+    },
+    {
+      "route": "readiness/state",
+      "status": "DONE",
+      "actor": "student",
+      "record_id": null,
+      "versions": {
+        "state_version": 1,
+        "budget_version": 2,
+        "analysis_version": 0
+      },
+      "elapsed_ms": 11.33
+    },
+    {
+      "route": "readiness/imports",
+      "status": "DONE",
+      "actor": "student",
+      "record_id": "58292d7b-7f52-441a-be50-4ce364e21202",
+      "versions": {
+        "state_version": 1,
+        "budget_version": 2
+      },
+      "elapsed_ms": 36.28
+    },
+    {
+      "route": "readiness/checks/feaafd8c-f5d3-4d06-b700-b0e03785aca2",
+      "status": "DONE",
+      "actor": "student",
+      "record_id": "feaafd8c-f5d3-4d06-b700-b0e03785aca2",
+      "versions": {},
+      "elapsed_ms": 4.26
+    },
+    {
+      "route": "readiness/imports/58292d7b-7f52-441a-be50-4ce364e21202",
+      "status": "DONE",
+      "actor": "student",
+      "record_id": "58292d7b-7f52-441a-be50-4ce364e21202",
+      "versions": {
+        "state_version": 1,
+        "budget_version": 2
+      },
+      "elapsed_ms": 5.22
+    },
+    {
+      "route": "review-queue",
+      "status": "DONE",
+      "actor": "student",
+      "record_id": null,
+      "versions": {},
+      "elapsed_ms": 4.62
+    }
+  ],
+  "extraction_calls": [],
+  "review_items": {
+    "count": 1,
+    "items": [
+      {
+        "id": "2c76acae-dbed-4042-88c1-291ccfb13919",
+        "type": "reviewitem",
+        "created_at": "2026-10-06T16:09:19.144Z",
+        "key": "ImportMaterial:58292d7b-7f52-441a-be50-4ce364e21202",
+        "kind": "material",
+        "entity_id": "58292d7b-7f52-441a-be50-4ce364e21202",
+        "status": "OPEN",
+        "version": 1,
+        "assignee": null,
+        "details": {
+          "issues": [
+            {
+              "code": "OCR_UNAVAILABLE"
+            }
+          ],
+          "status": "NEEDS_MANUAL_INPUT",
+          "conflicts": {},
+          "next_action": "transcribe"
+        },
+        "updated_at": "2026-10-06T16:09:19.144Z"
+      }
+    ],
+    "next": null,
+    "previous": null
+  },
+  "error_type": "AssertionError"
+}

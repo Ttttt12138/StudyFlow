@@ -181,7 +181,7 @@ class IngestResult(Envelope):
 
 class RecurringObligation(Envelope):
     account_id: str
-    category: Literal["rent", "other"]
+    category: Literal["rent", "other", "mobile", "subscription", "transport", "utilities"]
     counterparty: str
     amount: Money
     currency: Literal["THB"] = "THB"
@@ -189,7 +189,7 @@ class RecurringObligation(Envelope):
     expected_next_date: Date
     confidence_type: Literal["INFERRED"] = "INFERRED"
     supporting_transaction_ids: list[str]
-    rule_version: str = "monthly-1.0"
+    rule_version: str = "monthly-1.1"
     basis: str
 
 

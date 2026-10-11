@@ -1,0 +1,191 @@
+"""Deliberately limited rule baseline, also used for transparent offline demos."""
+
+import re
+from decimal import Decimal
+
+from studyflow_ai.models import CallRecord, Classification, PlanningContext
+from studyflow_ai.provider_models import (
+    ExtractedEvent,
+    ExtractedField,
+    Extraction,
+    Proposals,
+    ProposedPlan,
+    ProposedStep,
+)
+
+# English keywords are word-bounded: a bare "lease" used to match "Please pay".
+KEYWORDS = {
+    "tuition": r"\btuition\b|\bsemester fees?\b|学费|学期费用",
+    "rent": r"\brent\b|\brental\b|\blease\b|房租|租金|租赁费用",
+    "utility": r"\belectricity\b|\bwater bills?\b|\butility\b|电费|水费|水电费",
+    "family_support": r"\bfamily\b|\bsponsors?\b|\bparents\b|父母|家长|资助",
+    "living": r"\bgrocery\b|\bgroceries\b|\bfood\b|\btransport\b|食品|交通",
+}
+FINANCIAL = r"THB|USD|EUR|\bpayment\b|\bbalance\b|\binvoice\b|\bfee\b|\btransfer\b"
+SUSPICIOUS = (
+    r"ignore (?:previous|all|prior) instructions|transfer all funds|system prompt|override.*policy|忽略.*指令|绕过.*政策|转出全部资金|全部资金转入"
+)
+# Only copular negation ("this is not tuition") is masked, up to the end of the clause;
+# imperative text such as "do not pay tuition late" keeps its category.
+NEGATED = (
+    r"(?:\b(?:is|are|was|were)\s+not\b|\b(?:isn't|aren't|wasn't|weren't)\b|不是|并非|不属于|而非)"
+    r"[^.;。；!?！？\n]*"
+)
+LABEL = r"^\s*(?:category|类别|类型)\s*[:：]\s*(.+)$"
+AMOUNT = r"(?:THB|USD|EUR)\s*([\d,]+(?:\.\d+)?)"
+DUE = r"(?<!\d)(\d{4}-\d{2}-\d{2})(?!\d)"
+
+
+def _keyword_category(text):
+    text = re.sub(NEGATED, " ", text, flags=re.I)
+    for category, pattern in KEYWORDS.items():
+        if re.search(pattern, text, re.I):
+            return category
+    return None
+
+
+def category_for(text):
+    for label in re.findall(LABEL, text, re.I | re.M):
+        if category := _keyword_category(label):
+            return category
+    if category := _keyword_category(text):
+        return category
+    return "other" if re.search(FINANCIAL, text, re.I) else "irrelevant"
+
+
+def financial_clues(text):
+    return category_for(text) != "irrelevant"
+
+
+def _match(pattern, text):
+    found = re.search(pattern, text, re.I)
+    return found.group(1).strip() if found else None
+
+
+def _line_fields(text):
+    amount = _match(AMOUNT, text)
+    if amount is None:
+        amount = _match(r"(?:金额|数额|amount)\s*([\d,]+(?:\.\d+)?)", text)
+    return {
+        "amount": amount,
+        "currency": _match(r"(?<![A-Za-z])(THB|USD|EUR)(?![A-Za-z])", text),
+        "due_date": _match(DUE, text),
+        "counterparty": _match(r"Beneficiary:\s*([^.;\n]+)", text),
+        "invoice_id": _match(r"\b(INV-[\w-]+)\b", text),
+    }
+
+
+def _event(category, fields, evidence):
+    amount = fields.get("amount")
+    return ExtractedEvent(
+        category=category,
+        amount=amount.replace(",", "") if amount else None,
+        currency=fields.get("currency"),
+        date=None,
+        due_date=fields.get("due_date"),
+        counterparty=fields.get("counterparty"),
+        invoice_id=fields.get("invoice_id"),
+        evidence=evidence,
+    )
+
+
+def _extract_events(text):
+    """Group values split across lines into one event per amount.
+
+    A header or ``Category:`` line without values sets the category for the value lines
+    below it, and a date on its own line joins the open event when that event has no date.
+    """
+    document = category_for(text)
+    if document == "irrelevant":
+        return []
+    events, context, current = [], None, None
+
+    def flush():
+        # Fragments with neither an amount nor their own category (e.g. an issue date) are dropped.
+        if current and (current["fields"].get("amount") or current["category"]):
+            category = current["category"] or current["context"] or document
+            events.append(_event(category, current["fields"], current["evidence"]))
+
+    for index, line in enumerate(text.splitlines(), 1):
+        locator = _match(r"^\[(.*?)\]", line) or f"line:{index}"
+        own = _keyword_category(line)
+        if label := _match(LABEL, line):
+            own = _keyword_category(label) or own
+        fields = {k: v for k, v in _line_fields(line).items() if v}
+        if not fields:
+            context = own or context
+            continue
+        if current:
+            clash = any(k in current["fields"] for k in ("amount", "invoice_id", "due_date") if k in fields)
+            if clash and not own and "amount" not in fields and "invoice_id" not in fields:
+                continue  # A second bare date belongs to no new event.
+            if clash or (own and current["category"] not in (None, own)):
+                flush()
+                current = None
+        if current is None:
+            current = {"category": None, "context": context, "fields": {}, "evidence": []}
+        for key, value in fields.items():
+            current["fields"].setdefault(key, value)
+            current["evidence"].append(ExtractedField(field=key, quote=value, locator=locator))
+        current["category"] = current["category"] or own
+    flush()
+    if not events:
+        # Keep a value-less candidate so incomplete financial material still reaches review.
+        events.append(_event(document, current["fields"] if current else {}, current["evidence"] if current else []))
+    return events
+
+
+class RuleProvider:
+    def __init__(self, mode="rules"):
+        self.mode = mode
+
+    def record(self, purpose):
+        return CallRecord(provider="rules", purpose=purpose, model="rules-1.2-multilingual", mode=self.mode)
+
+    def classify(self, text):
+        category = category_for(text)
+        distribution = {
+            name: float(name == category) for name in (*KEYWORDS, "other", "irrelevant")
+        }
+        return Classification(
+            category=category,
+            probabilities=distribution,
+            confidence=None,
+            financial_relevance=float(category != "irrelevant"),
+            anomaly=float(bool(re.search(SUSPICIOUS, text, re.I))),
+            needs_planning=float("shortfall" in text.lower()),
+        ), self.record("classify")
+
+    def extract(self, text):
+        return Extraction(events=_extract_events(text)), self.record("extract")
+
+    def plan(self, context: PlanningContext):
+        target = context.forecast.funding_target
+        buffer = context.forecast.buffer
+        explanation = f"Request {target:.2f} THB; minimum shortfall {context.risk.gap:.2f} THB."
+        if buffer > Decimal("0"):
+            explanation += f" Includes a backend-provided buffer of {buffer:.2f} THB."
+        plan = ProposedPlan(
+            kind="family_support",
+            required_funding=f"{target:.2f}",
+            steps=[
+                ProposedStep(
+                    action="Request family funding", by_date=context.now.date().isoformat()
+                ),
+                ProposedStep(
+                    action="Verify receipt and request a fresh forecast before payment",
+                    by_date=context.risk.due_date.isoformat(),
+                ),
+            ],
+            prerequisites=[
+                "Sponsor agreement",
+                "Funds actually received",
+                "Fresh forecast and payment authorization",
+            ],
+            source_refs=[context.risk.risk_id, *context.risk.source_refs],
+            explanation=explanation,
+        )
+        return Proposals(plans=[plan]), self.record("plan")
+
+    def close(self):
+        pass

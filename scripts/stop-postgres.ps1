@@ -1,3 +1,4 @@
 $ErrorActionPreference = 'Stop'
-$backendRoot = Split-Path -Parent $PSScriptRoot
-& 'C:\Program Files\PostgreSQL\16\bin\pg_ctl.exe' stop -D (Join-Path $backendRoot '.postgres') -m fast
+Set-Location -LiteralPath (Split-Path -Parent $PSScriptRoot)
+& docker compose stop db
+if ($LASTEXITCODE -ne 0) { throw 'Could not stop the project PostgreSQL container.' }

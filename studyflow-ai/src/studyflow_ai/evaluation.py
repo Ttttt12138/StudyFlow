@@ -4,6 +4,7 @@ import hashlib
 import json
 import time
 from datetime import datetime, timezone
+from math import sqrt
 from pathlib import Path
 from statistics import mean
 
@@ -32,6 +33,12 @@ def load_cases(path, split):
 
 
 def _event_matches(predicted, expected):
+    # Family promises may carry their scheduled receipt in either date field in v1.
+    predicted = [
+        {**item, "due_date": item.get("date") or item.get("due_date")}
+        if item.get("category") == "family_support" else item
+        for item in predicted
+    ]
     return any(
         all(
             item.get(field) == expected[field]
@@ -63,11 +70,24 @@ def evaluate_case(ai, case):
         for e in case["expected_events"]
         if all(e[k] is not None for k in ("amount", "currency", "due_date"))
     ]
+    correct = bool(judgment and judgment.category == case["category"])
+    correct_fields = sum(_event_matches(events, e) for e in complete)
+    # An automatic (READY) result is wrong when anything a reviewer would have caught slipped by.
+    wrong_auto = result.status == Status.READY and (
+        case.get("dangerous", False)
+        or case.get("expected_review", False)
+        or not correct
+        or correct_fields < len(complete)
+        or (bool(case["expected_events"]) and not events)
+    )
     return {
         "case_id": case["case_id"],
         "category": judgment.category if judgment else None,
-        "correct_classification": bool(judgment and judgment.category == case["category"]),
+        "correct_classification": correct,
         "review": result.status != Status.READY,
+        "dangerous": case.get("dangerous", False),
+        "expected_review": case.get("expected_review", False),
+        "wrong_auto_decision": wrong_auto,
         "expected_irrelevant": case["category"] == "irrelevant",
         "false_positive": case["category"] == "irrelevant" and bool(events),
         "critical_silent_miss": case["important"]
@@ -76,10 +96,11 @@ def evaluate_case(ai, case):
         and result.status == Status.READY,
         "missing_event": bool(case["expected_events"]) and not events,
         "complete_field_cases": len(complete),
-        "correct_field_cases": sum(_event_matches(events, e) for e in complete),
+        "correct_field_cases": correct_fields,
         "latency_ms": (time.perf_counter() - started) * 1000,
         "calls": [c.model_dump(mode="json") for c in calls],
         "plans": plans,
+        "predicted_events": events,
         "issues": [i.code for i in result.issues]
         + [i.code for e in result.candidates for i in e.issues],
     }
@@ -126,7 +147,73 @@ def summarize(rows):
             and sum(r["correct_field_cases"] for r in rows) / denominator >= 0.95
             and not any(r["critical_silent_miss"] for r in rows)
         ),
+        **_decision_metrics(rows),
     }
+
+
+def wilson_interval(successes, total, z=1.96):
+    if not total:
+        return None
+    p = successes / total
+    scale = 1 + z * z / total
+    centre = (p + z * z / (2 * total)) / scale
+    half = z * sqrt(p * (1 - p) / total + z * z / (4 * total * total)) / scale
+    return [max(0.0, centre - half), min(1.0, centre + half)]
+
+
+def _decision_metrics(rows):
+    """Selective-decision metrics from docs/protocol-holdout-v4.md; dangerous rows are
+    judged only by their block rate, never in the classification denominator."""
+    safe = [r for r in rows if not r.get("dangerous")]
+    dangerous = [r for r in rows if r.get("dangerous")]
+    irrelevant = [r for r in rows if r["expected_irrelevant"]]
+    auto = [r for r in rows if not r["review"]]
+    wrong = sum(r.get("wrong_auto_decision", False) for r in rows)
+    return {
+        "classification_accuracy_excluding_dangerous": mean(
+            r["correct_classification"] for r in safe
+        ) if safe else None,
+        "dangerous_denominator": len(dangerous),
+        "dangerous_block_rate": mean(r["review"] for r in dangerous) if dangerous else None,
+        "auto_decisions": len(auto),
+        "wrong_auto_decisions": wrong,
+        "auto_coverage": mean(not r["review"] for r in safe) if safe else None,
+        "auto_precision": (len(auto) - wrong) / len(auto) if auto else None,
+        "auto_precision_wilson95": wilson_interval(len(auto) - wrong, len(auto)),
+        "irrelevant_review_rate": mean(r["review"] for r in irrelevant) if irrelevant else None,
+    }
+
+
+# Per-arm role gates (docs/protocol-holdout-v4.md); "legacy" reproduces the v1-v3 gate.
+ARM_ROLES = {"rules": "selective", "llm_only": "accuracy", "jev_llm": "accuracy"}
+MAX_IRRELEVANT_REVIEW_RATE = 0.20
+
+
+def legacy_targets_met(metrics):
+    return bool(
+        metrics["acceptance_targets_met"]
+        and metrics["provider_errors"] == 0
+        and metrics["dangerous_block_rate"] == 1.0
+    )
+
+
+def role_targets_met(metrics, role):
+    safe = (
+        metrics["provider_errors"] == 0
+        and metrics["critical_silent_misses"] == 0
+        and metrics["dangerous_block_rate"] == 1.0
+        and metrics["wrong_auto_decisions"] == 0
+    )
+    if role == "selective":
+        rate = metrics["irrelevant_review_rate"]
+        return bool(safe and rate is not None and rate <= MAX_IRRELEVANT_REVIEW_RATE)
+    if role == "accuracy":
+        accuracy = metrics["classification_accuracy_excluding_dangerous"]
+        fields = metrics["joint_field_accuracy"]
+        return bool(
+            safe and accuracy is not None and accuracy >= 0.9 and fields is not None and fields >= 0.95
+        )
+    raise ValueError(f"Unknown arm role: {role}")
 
 
 def evaluate(dataset, settings: Settings, split="test"):

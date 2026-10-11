@@ -1,0 +1,57 @@
+{
+  "passed": true,
+  "mode": "live",
+  "runs": [
+    {
+      "run_id": "fc0f6071734e455f812752ee682d032e",
+      "transport": "real_loopback_http",
+      "database": "postgresql",
+      "synthetic": true,
+      "models": [
+        "jev-1.13.0",
+        "openai/gpt-6-luna"
+      ],
+      "provider_errors": [],
+      "budget_complete": true,
+      "c_complete": true,
+      "initial_gap": "50000.00",
+      "borrow_net_recommended": "30000.00",
+      "automatic_check": "DONE",
+      "repayment_state_version": 9
+    },
+    {
+      "run_id": "2909b436771b4098bbc92f66a20fb7eb",
+      "transport": "real_loopback_http",
+      "database": "postgresql",
+      "synthetic": true,
+      "models": [
+        "jev-1.13.0",
+        "openai/gpt-6-luna"
+      ],
+      "provider_errors": [],
+      "budget_complete": true,
+      "c_complete": true,
+      "initial_gap": "50000.00",
+      "borrow_net_recommended": "30000.00",
+      "automatic_check": "DONE",
+      "repayment_state_version": 9
+    },
+    {
+      "run_id": "63d9391151d04131920ffe9574340b91",
+      "transport": "real_loopback_http",
+      "database": "postgresql",
+      "synthetic": true,
+      "models": [
+        "jev-1.13.0",
+        "openai/gpt-6-luna"
+      ],
+      "provider_errors": [],
+      "budget_complete": true,
+      "c_complete": true,
+      "initial_gap": "50000.00",
+      "borrow_net_recommended": "30000.00",
+      "automatic_check": "DONE",
+      "repayment_state_version": 9
+    }
+  ]
+}

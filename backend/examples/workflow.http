@@ -1,0 +1,215 @@
+# VS Code REST Client syntax. Copy tokens from the private .demo-credentials.json.
+# Do not commit tokens. Use a fresh Idempotency-Key for each NEW command;
+# repeat the same key and body for a retry.
+@base = http://127.0.0.1:8000/api/v2
+@studentToken = REPLACE_LOCALLY
+@operatorToken = REPLACE_LOCALLY
+@loanId = SEE_examples_demo-ids.json
+@appId = REPLACE_FROM_APPLICATION_RESPONSE
+@accountId = REPLACE_FROM_DISBURSEMENT_RESPONSE
+@planId = REPLACE_FROM_PLAN_RESPONSE
+@beneficiaryId = SEE_examples_demo-ids.json
+@paymentId = REPLACE_FROM_PAYMENT_RESPONSE
+@scenarioId = REPLACE_FROM_CURRENT_SCENARIO_RESPONSE
+@version = 1
+
+### List seeded budgets
+GET {{base}}/scenarios/
+Authorization: Token {{studentToken}}
+
+### Create application (student)
+POST {{base}}/applications/
+Authorization: Token {{studentToken}}
+Idempotency-Key: demo-application-1
+Content-Type: application/json
+
+{"quote_id":"{{loanId}}"}
+
+### Submit application (student)
+POST {{base}}/applications/{{appId}}/action/
+Authorization: Token {{studentToken}}
+Idempotency-Key: demo-submit-application-1
+Content-Type: application/json
+
+{"action":"submit","expected_version":1}
+
+### Supply all repayment months (student; expected_version=0 for the first profile)
+POST {{base}}/affordability-profile/
+Authorization: Token {{studentToken}}
+Idempotency-Key: demo-profile-1
+Content-Type: application/json
+
+{
+  "expected_version": 0,
+  "months": [
+    {
+      "month": "2026-11",
+      "income": "10000.00",
+      "living_expenses": "4000.00",
+      "existing_repayments": "1000.00"
+    },
+    {
+      "month": "2026-12",
+      "income": "10000.00",
+      "living_expenses": "4000.00",
+      "existing_repayments": "1000.00"
+    },
+    {
+      "month": "2027-01",
+      "income": "10000.00",
+      "living_expenses": "4000.00",
+      "existing_repayments": "1000.00"
+    },
+    {
+      "month": "2027-02",
+      "income": "10000.00",
+      "living_expenses": "4000.00",
+      "existing_repayments": "1000.00"
+    },
+    {
+      "month": "2027-03",
+      "income": "10000.00",
+      "living_expenses": "4000.00",
+      "existing_repayments": "1000.00"
+    },
+    {
+      "month": "2027-04",
+      "income": "10000.00",
+      "living_expenses": "4000.00",
+      "existing_repayments": "1000.00"
+    },
+    {
+      "month": "2027-05",
+      "income": "10000.00",
+      "living_expenses": "4000.00",
+      "existing_repayments": "1000.00"
+    },
+    {
+      "month": "2027-06",
+      "income": "10000.00",
+      "living_expenses": "4000.00",
+      "existing_repayments": "1000.00"
+    },
+    {
+      "month": "2027-07",
+      "income": "10000.00",
+      "living_expenses": "4000.00",
+      "existing_repayments": "1000.00"
+    },
+    {
+      "month": "2027-08",
+      "income": "10000.00",
+      "living_expenses": "4000.00",
+      "existing_repayments": "1000.00"
+    },
+    {
+      "month": "2027-09",
+      "income": "10000.00",
+      "living_expenses": "4000.00",
+      "existing_repayments": "1000.00"
+    },
+    {
+      "month": "2027-10",
+      "income": "10000.00",
+      "living_expenses": "4000.00",
+      "existing_repayments": "1000.00"
+    }
+  ]
+}
+
+### Re-evaluate missing-input application (operator); B chooses the outcome
+POST {{base}}/applications/{{appId}}/decision/
+Authorization: Token {{operatorToken}}
+Idempotency-Key: demo-review-1
+Content-Type: application/json
+
+{"expected_version":2,"reason":"Monthly inputs supplied"}
+
+### Disburse once (operator); only proceed after APPROVED, using the returned version
+POST {{base}}/applications/{{appId}}/disburse/
+Authorization: Token {{operatorToken}}
+Idempotency-Key: demo-disburse-1
+Content-Type: application/json
+
+{"expected_version":3}
+
+### Read NEW state version after settlement
+GET {{base}}/state/
+Authorization: Token {{studentToken}}
+
+### Recalculate scenario against the new version (update @version above)
+POST {{base}}/scenarios/
+Authorization: Token {{studentToken}}
+Idempotency-Key: demo-post-funding-scenario-1
+Content-Type: application/json
+
+{"state_version":{{version}},"kind":"expected","end_date":"2026-10-31"}
+
+### New funding plan -- funds now appear in state, so do not add them again
+POST {{base}}/funding-plans/
+Authorization: Token {{studentToken}}
+Idempotency-Key: demo-post-funding-plan-1
+Content-Type: application/json
+
+{"scenario_id":"{{scenarioId}}","allocations":[]}
+
+# The seed already binds the expense to this mock-verified beneficiary.
+# For a different beneficiary, confirm beneficiary_id on the expense using POST state/,
+# then create a NEW scenario and funding plan against that version.
+
+### Create tuition payment
+POST {{base}}/payments/
+Authorization: Token {{studentToken}}
+Idempotency-Key: demo-tuition-1
+Content-Type: application/json
+
+{"plan_id":"{{planId}}","beneficiary_id":"{{beneficiaryId}}","event_id":"tuition"}
+
+### Student authorization bound to exact state, plan, beneficiary and amount
+POST {{base}}/payments/{{paymentId}}/authorize/
+Authorization: Token {{studentToken}}
+Idempotency-Key: demo-authorize-tuition-1
+Content-Type: application/json
+
+{"state_version":{{version}},"expires_in_seconds":900}
+
+### Submit -- reserves funds; does not report settlement
+POST {{base}}/payments/{{paymentId}}/submit/
+Authorization: Token {{studentToken}}
+Idempotency-Key: demo-submit-tuition-1
+Content-Type: application/json
+
+{}
+
+### Controlled mock settlement callback
+POST {{base}}/payments/{{paymentId}}/adapter-event/
+Authorization: Token {{operatorToken}}
+Idempotency-Key: demo-settle-tuition-1
+Content-Type: application/json
+
+{"outcome":"settled"}
+
+### Reconcile receipt against task/expense reference
+POST {{base}}/payments/{{paymentId}}/reconcile/
+Authorization: Token {{studentToken}}
+Idempotency-Key: demo-reconcile-tuition-1
+Content-Type: application/json
+
+{}
+
+### Inspect immutable demo ledger
+GET {{base}}/ledger/
+Authorization: Token {{studentToken}}
+
+### Read loan account; repayments use its own version and the earliest due installment
+GET {{base}}/loan-accounts/{{accountId}}/
+Authorization: Token {{studentToken}}
+
+# Advance the demo clock only when ready for repayment; see manage.py demo_bc for a complete run.
+### Repay the first installment (only on or after its due date)
+POST {{base}}/loan-accounts/{{accountId}}/repay/
+Authorization: Token {{studentToken}}
+Idempotency-Key: demo-repay-1
+Content-Type: application/json
+
+{"expected_version":1,"installment_number":1}

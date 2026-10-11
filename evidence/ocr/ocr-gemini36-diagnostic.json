@@ -1,0 +1,11 @@
+{
+  "model": "gemini-3.6-flash",
+  "sample": "invoice-en.png",
+  "timeout_seconds": 90,
+  "http_status": 503,
+  "status": "UNAVAILABLE",
+  "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+  "model_version": null,
+  "usage": null,
+  "elapsed_seconds": 27.63
+}

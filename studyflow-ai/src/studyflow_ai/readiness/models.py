@@ -15,6 +15,7 @@ Category = Literal[
     "food",
     "transport",
     "communications",
+    "subscription",
     "utilities",
     "insurance",
     "visa",
@@ -108,6 +109,7 @@ class SemesterProfile(Contract):
 
 class CostItem(Contract):
     cost_id: str = Field(default_factory=lambda: uuid4().hex)
+    component: str | None = None
     category: Category
     currency: str | None = None
     amount: str | None = None
@@ -270,7 +272,7 @@ class BudgetSnapshot(Contract):
 
 class FundingSource(Contract):
     funding_id: str
-    kind: Literal["family_support", "scholarship", "installment", "reduce_spending", "borrowing"]
+    kind: Literal["existing_liquid_funds", "family_support", "scholarship", "installment", "reduce_spending", "borrowing"]
     allocatable: MoneyValue
     available_date: date | None
     conditions: list[str]
@@ -318,6 +320,13 @@ class ApplicationSnapshot(Contract):
     simulated: Literal[True] = True
 
 
+class FundingActionOption(Contract):
+    action_id: str
+    kind: Literal["installment", "reduce_spending"]
+    cost_id: str
+    conditions: list[str] = Field(default_factory=list)
+
+
 class FundingContext(Contract):
     student_id: str
     now: AwareDatetime
@@ -325,6 +334,7 @@ class FundingContext(Contract):
     sources: list[FundingSource]
     loan_quotes: list[LoanQuote]
     applications: list[ApplicationSnapshot] = Field(default_factory=list)
+    actions: list[FundingActionOption] = Field(default_factory=list)
 
     @model_validator(mode="after")
     def unique_identifiers(self):
@@ -339,6 +349,8 @@ class FundingContext(Contract):
             raise ValueError("Borrowing source requires a quote")
         if any(a.quote_id not in quotes for a in self.applications):
             raise ValueError("Application references an unknown quote")
+        if len({a.action_id for a in self.actions}) != len(self.actions):
+            raise ValueError("Duplicate action ID")
         return self
 
 
@@ -349,12 +361,16 @@ class Allocation(Contract):
 
 class FundingCandidate(Contract):
     candidate_id: str = Field(default_factory=lambda: uuid4().hex)
-    allocations: list[Allocation] = Field(min_length=1)
+    allocations: list[Allocation]
+    action_ids: list[str] = Field(default_factory=list)
     source_refs: list[str]
     conditions: list[str]
     explanation: str
     validation: Literal["PENDING", "CONDITIONAL", "VALID", "INVALID", "STALE"] = "PENDING"
     issues: list[Issue] = Field(default_factory=list)
+    borrowing_net: MoneyValue | None = None
+    financing_cost: MoneyValue | None = None
+    remaining_gap: MoneyValue | None = None
 
 
 class LoanExplanation(Contract):

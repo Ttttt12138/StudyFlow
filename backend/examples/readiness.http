@@ -1,0 +1,61 @@
+@base = http://127.0.0.1:8000/api/v2
+@token = replace-with-local-token
+@semester = replace-with-semester-uuid
+@stateVersion = 1
+@budgetVersion = 1
+
+### Enable STUDYFLOW_READINESS_ENABLED=true and start readiness_worker first.
+GET {{base}}/readiness/templates/
+Authorization: Token {{token}}
+
+### A planning declaration is not a bank receipt. Explicitly confirm the reserve.
+POST {{base}}/readiness/semesters/
+Authorization: Token {{token}}
+Idempotency-Key: semester-example-1
+Content-Type: application/json
+
+{"room":"shared","opening_balance":"140000.00","as_of":"2026-08-01","reserve":"15000.00"}
+
+### Refresh all three version fields before every new write.
+GET {{base}}/readiness/state/
+Authorization: Token {{token}}
+
+### Incomplete template returns known subtotals and issues, never "funds sufficient".
+POST {{base}}/readiness/budgets/
+Authorization: Token {{token}}
+Idempotency-Key: budget-example-1
+Content-Type: application/json
+
+{"semester_id":"{{semester}}","state_version":{{stateVersion}},"budget_version":{{budgetVersion}}}
+
+### Forecast includes estimates but excludes unconfirmed income by default.
+POST {{base}}/readiness/forecasts/
+Authorization: Token {{token}}
+Idempotency-Key: forecast-example-1
+Content-Type: application/json
+
+{"semester_id":"{{semester}}","state_version":{{stateVersion}},"budget_version":{{budgetVersion}},"horizon":90,"conditional":false}
+
+### Deterministic nonloan-first recommendation; does not submit a loan.
+POST {{base}}/readiness/funding-plans/recommend/
+Authorization: Token {{token}}
+Idempotency-Key: recommendation-example-1
+Content-Type: application/json
+
+{"semester_id":"{{semester}}","state_version":{{stateVersion}},"budget_version":{{budgetVersion}},"actions":[]}
+
+### Queue real/mock AI according to the worker's explicit configuration.
+POST {{base}}/readiness/checks/
+Authorization: Token {{token}}
+Idempotency-Key: check-example-1
+Content-Type: application/json
+
+{"semester_id":"{{semester}}","state_version":{{stateVersion}},"budget_version":{{budgetVersion}}}
+
+### Risk cards and deduplicated notifications.
+GET {{base}}/readiness/risks/
+Authorization: Token {{token}}
+
+###
+GET {{base}}/readiness/notifications/
+Authorization: Token {{token}}

@@ -1,0 +1,7 @@
+# Keep versioned fixture bytes stable for checksum verification on every OS.
+backend/examples/consumption/v1/*.csv -text
+backend/examples/ocr/v1/*.pdf binary
+backend/examples/ocr/v1/*.png binary
+
+# Shell scripts run inside Linux containers; CRLF would break them.
+*.sh text eol=lf

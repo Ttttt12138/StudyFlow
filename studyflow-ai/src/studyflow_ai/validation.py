@@ -38,6 +38,8 @@ def evidence_matches(value, evidence, text):
 
 
 def _located_text(text, locator):
+    if re.fullmatch(r"\[(?:line|page):\d+\]", locator):
+        locator = locator[1:-1]
     if locator.startswith("line:"):
         try:
             index = int(locator.split(":")[1]) - 1

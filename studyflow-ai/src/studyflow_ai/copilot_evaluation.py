@@ -1,0 +1,124 @@
+"""Three-arm evaluation with a human-review gate and inspectable denominators."""
+
+import hashlib
+import json
+from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime, timezone
+from pathlib import Path
+
+from studyflow_ai.api import StudyFlowAI
+from studyflow_ai.config import providers
+from studyflow_ai.demo_backend import DemoBackend
+from studyflow_ai.evaluation import (
+    ARM_ROLES,
+    evaluate_case,
+    legacy_targets_met,
+    load_cases,
+    role_targets_met,
+    summarize,
+)
+from studyflow_ai.providers import prompts
+from studyflow_ai.providers.rules import RuleProvider
+
+
+def review_valid(path, manifest):
+    if not path:
+        return False
+    review = json.loads(Path(path).read_text(encoding="utf-8"))
+    return bool(
+        review.get("reviewer")
+        and review.get("reviewed_at")
+        and review.get("approved") is True
+        and review.get("dataset_sha256") == manifest["sha256"]
+        and review.get("review_type") in {"human", "user_delegated_ai"}
+    )
+
+
+def evaluate(
+    dataset,
+    settings,
+    split="dev",
+    review=None,
+    progress=None,
+    arms=None,
+    evaluation_kind="frozen_test",
+):
+    cases, manifest = load_cases(dataset, split)
+    approved = review_valid(review, manifest)
+    if split == "test" and settings.mode == "live" and not approved:
+        raise ValueError(
+            "Human or explicitly user-delegated label approval is required before the live test"
+        )
+    classifier, llm = providers(settings)
+    rules = RuleProvider()
+    configurations = {"rules": (rules, rules), "llm_only": (llm, llm), "jev_llm": (classifier, llm)}
+    # Datasets frozen before the v4 protocol keep the legacy gate; nothing is re-judged.
+    acceptance = manifest.get("acceptance", "legacy")
+    if acceptance not in {"legacy", "role-v1"}:
+        raise ValueError(f"Unknown acceptance protocol: {acceptance}")
+    review_record = json.loads(Path(review).read_text(encoding="utf-8")) if review else {}
+    report = dict(
+        schema_version="copilot-eval-v1",
+        evaluation_kind=evaluation_kind,
+        acceptance=acceptance,
+        prompt_version=prompts.VERSION,
+        prompt_sha256=hashlib.sha256(
+            (prompts.CLASSIFY + prompts.EXTRACT + prompts.PLAN).encode()
+        ).hexdigest(),
+        mode=settings.mode,
+        split=split,
+        timestamp=datetime.now(timezone.utc).isoformat(),
+        dataset=manifest,
+        human_reviewed=approved and review_record.get("review_type") == "human",
+        review=review_record,
+        live_acceptance=False,
+        arms={},
+        cost={"currency": None, "amount": None, "reason": "No verified provider tariff configured"},
+    )
+    try:
+        for name, pair in configurations.items():
+            if arms and name not in arms:
+                continue
+
+            def run_case(case, pair=pair):
+                row = evaluate_case(StudyFlowAI(*pair, DemoBackend()), case)
+                row["language"] = case["language"]
+                return row
+
+            rows = []
+            with ThreadPoolExecutor(max_workers=3) as pool:
+                for row in pool.map(run_case, cases):
+                    rows.append(row)
+                    if progress:
+                        progress(name, len(rows), len(cases))
+            metrics = summarize(rows)
+            metrics["role"] = ARM_ROLES[name]
+            metrics["legacy_targets_met"] = legacy_targets_met(metrics)
+            metrics["role_targets_met"] = role_targets_met(metrics, ARM_ROLES[name])
+            metrics["targets_met"] = metrics[
+                "role_targets_met" if acceptance == "role-v1" else "legacy_targets_met"
+            ]
+            report["arms"][name] = {"metrics": metrics, "cases": rows}
+            if progress:
+                progress(name, len(rows), len(cases), report)
+    finally:
+        for provider in {id(p): p for p in (classifier, llm)}.values():
+            provider.close()
+    report["live_acceptance"] = bool(
+        settings.mode == "live"
+        and split == "test"
+        and approved
+        and len(report["arms"]) == 3
+        and all(a["metrics"]["targets_met"] for a in report["arms"].values())
+    )
+    report["independent_frozen_test_passed"] = (
+        report["live_acceptance"] and evaluation_kind == "frozen_test"
+    )
+    for arm in report["arms"].values():
+        plans = [p for row in arm["cases"] for p in row["plans"]]
+        arm["metrics"]["plan_candidate_count"] = len(plans)
+        for status in ("VALID", "CONDITIONAL", "INVALID"):
+            arm["metrics"]["plan_" + status.lower() + "_rate"] = (
+                sum(p.get("validation") == status for p in plans) / len(plans) if plans else None
+            )
+    return report

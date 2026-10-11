@@ -1,7 +1,7 @@
 # StudyFlow C 功能验证报告
 
-**验证日期：2026-10-04（Asia/Bangkok）**<br>
-开始：2026-10-04T20:25:03.898931+07:00；完成：2026-10-04T20:30:13.706490+07:00。<br>
+**验证日期：2026-10-04（Asia/Bangkok）**  
+开始：2026-10-04T20:25:03.898931+07:00；完成：2026-10-04T20:30:13.706490+07:00。  
 对象：当前工作区源码，studyflow-ai 0.2.0，Windows / Python 3.13.5。
 
 ## 结论
@@ -14,15 +14,15 @@
 
 | 项目 | 本次结果 | 证据 |
 |---|---|---|
-| 自动化测试 | **130/130 通过**；77 项原有测试 + 53 项 v2 测试；0 失败、0 错误、0 跳过 | [JUnit](../output/verification-2026-10-04-1791120299950/tests.xml)、[执行日志](../output/verification-2026-10-04-1791120299950/pytest.log) |
-| 语句覆盖率 | **87.19%**；不等同于功能或真实材料准确率 | [覆盖率](../output/verification-2026-10-04-1791120299950/coverage.json) |
-| Ruff 静态检查 | 0 问题 | [检查结果](../output/verification-2026-10-04-1791120299950/ruff.json) |
-| 离线行为与契约核对 | 15/15 检查通过 | [检查断言](../output/verification-2026-10-04-1791120299950/offline-checks.json) |
-| 真实模型固定演示 | **连续 3 次通过**，每次资料与固定 B 草稿成功衔接 | [完整调用结果](../output/verification-2026-10-04-1791120299950/live-verification.json) |
-| 真实 PDF 提取 | 学校、学费、住宿/餐饮区间及押金提取成功 | [提取结果](../output/verification-2026-10-04-1791120299950/pdf-live.json) |
-| 真实汇率服务 | CNY → THB 成功，状态 READY | [汇率记录](../output/verification-2026-10-04-1791120299950/fx-live.json) |
-| 冻结测试集真实评估 | **32/32 通过（100% 逐例断言通过率）** | [逐例结果](../output/verification-2026-10-04-1791120299950/evaluation-live.json) |
-| v1/v2 共享契约 | 已导出的 Schema 与当前源码一致 | [契约核对](../output/verification-2026-10-04-1791120299950/offline-checks.json) |
+| 自动化测试 | **130/130 通过**；77 项原有测试 + 53 项 v2 测试；0 失败、0 错误、0 跳过 | [JUnit](../../evidence/c-module-20261004/tests.xml)、[执行日志](../../evidence/c-module-20261004/pytest.log) |
+| 语句覆盖率 | **87.19%**；不等同于功能或真实材料准确率 | [覆盖率](../../evidence/c-module-20261004/coverage.json) |
+| Ruff 静态检查 | 0 问题 | [检查结果](../../evidence/c-module-20261004/ruff.json) |
+| 离线行为与契约核对 | 15/15 检查通过 | [检查断言](../../evidence/c-module-20261004/offline-checks.json) |
+| 真实模型固定演示 | **连续 3 次通过**，每次资料与固定 B 草稿成功衔接 | [完整调用结果](../../evidence/c-module-20261004/live-verification.json) |
+| 真实 PDF 提取 | 学校、学费、住宿/餐饮区间及押金提取成功 | [提取结果](../../evidence/c-module-20261004/pdf-live.json) |
+| 真实汇率服务 | CNY → THB 成功，状态 READY | [汇率记录](../../evidence/c-module-20261004/fx-live.json) |
+| 冻结测试集真实评估 | **32/32 通过（100% 逐例断言通过率）** | [逐例结果](../../evidence/c-module-20261004/evaluation-live.json) |
+| v1/v2 共享契约 | 已导出的 Schema 与当前源码一致 | [契约核对](../../evidence/c-module-20261004/offline-checks.json) |
 
 ## 核心业务行为
 
@@ -78,13 +78,13 @@
 
 ## 证据与复现
 
-本次独立证据目录：`output/verification-2026-10-04-1791120299950`。
+本次独立证据目录：原为 `studyflow-ai/output/verification-2026-10-04-1791120299950`，现原样复制到 [`evidence/c-module-20261004/`](../../evidence/c-module-20261004/)（不含 pytest 临时目录）。
 
-- [机器可读汇总](../output/verification-2026-10-04-1791120299950/summary.json)
-- [环境、依赖与文件哈希](../output/verification-2026-10-04-1791120299950/environment.json)
-- [v1 离线演示](../output/verification-2026-10-04-1791120299950/demo-v1.json) / [v2 离线演示](../output/verification-2026-10-04-1791120299950/demo-v2.json)
-- [真实三次演示及冲突识别](../output/verification-2026-10-04-1791120299950/live-verification.json)
-- [32 条冻结测试的逐例输出](../output/verification-2026-10-04-1791120299950/evaluation-live.json)
+- [机器可读汇总](../../evidence/c-module-20261004/summary.json)
+- [环境、依赖与文件哈希](../../evidence/c-module-20261004/environment.json)
+- [v1 离线演示](../../evidence/c-module-20261004/demo-v1.json) / [v2 离线演示](../../evidence/c-module-20261004/demo-v2.json)
+- [真实三次演示及冲突识别](../../evidence/c-module-20261004/live-verification.json)
+- [32 条冻结测试的逐例输出](../../evidence/c-module-20261004/evaluation-live.json)
 
 在项目根目录执行：
 

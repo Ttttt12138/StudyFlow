@@ -1,0 +1,4 @@
+transaction_id,account_id,date,amount,currency,counterparty,description
+7-extra-food,demo-main,2026-07-20,-75000.00,THB,Demo Grocery,Food
+8-extra-food,demo-main,2026-08-20,-75000.00,THB,Demo Grocery,Food
+9-extra-food,demo-main,2026-09-20,-75000.00,THB,Demo Grocery,Food

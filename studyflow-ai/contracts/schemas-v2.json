@@ -181,6 +181,18 @@
             "title": "Cost Id",
             "type": "string"
           },
+          "component": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Component"
+          },
           "category": {
             "enum": [
               "tuition",
@@ -189,6 +201,7 @@
               "food",
               "transport",
               "communications",
+              "subscription",
               "utilities",
               "insurance",
               "visa",
@@ -714,6 +727,18 @@
             "title": "Cost Id",
             "type": "string"
           },
+          "component": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Component"
+          },
           "category": {
             "enum": [
               "tuition",
@@ -722,6 +747,7 @@
               "food",
               "transport",
               "communications",
+              "subscription",
               "utilities",
               "insurance",
               "visa",
@@ -1145,6 +1171,7 @@
               "food",
               "transport",
               "communications",
+              "subscription",
               "utilities",
               "insurance",
               "visa",
@@ -1584,6 +1611,18 @@
             "title": "Cost Id",
             "type": "string"
           },
+          "component": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Component"
+          },
           "category": {
             "enum": [
               "tuition",
@@ -1592,6 +1631,7 @@
               "food",
               "transport",
               "communications",
+              "subscription",
               "utilities",
               "insurance",
               "visa",
@@ -2368,6 +2408,41 @@
         "title": "CurrencyPair",
         "type": "object"
       },
+      "FundingActionOption": {
+        "additionalProperties": false,
+        "properties": {
+          "action_id": {
+            "title": "Action Id",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "installment",
+              "reduce_spending"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "cost_id": {
+            "title": "Cost Id",
+            "type": "string"
+          },
+          "conditions": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Conditions",
+            "type": "array"
+          }
+        },
+        "required": [
+          "action_id",
+          "kind",
+          "cost_id"
+        ],
+        "title": "FundingActionOption",
+        "type": "object"
+      },
       "FundingSource": {
         "additionalProperties": false,
         "properties": {
@@ -2377,6 +2452,7 @@
           },
           "kind": {
             "enum": [
+              "existing_liquid_funds",
               "family_support",
               "scholarship",
               "installment",
@@ -2655,6 +2731,13 @@
         },
         "title": "Applications",
         "type": "array"
+      },
+      "actions": {
+        "items": {
+          "$ref": "#/$defs/FundingActionOption"
+        },
+        "title": "Actions",
+        "type": "array"
       }
     },
     "required": [
@@ -2825,8 +2908,14 @@
             "items": {
               "$ref": "#/$defs/Allocation"
             },
-            "minItems": 1,
             "title": "Allocations",
+            "type": "array"
+          },
+          "action_ids": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Action Ids",
             "type": "array"
           },
           "source_refs": {
@@ -2865,6 +2954,39 @@
             },
             "title": "Issues",
             "type": "array"
+          },
+          "borrowing_net": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/MoneyValue"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "financing_cost": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/MoneyValue"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "remaining_gap": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/MoneyValue"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
           }
         },
         "required": [
@@ -3380,6 +3502,7 @@
               "food",
               "transport",
               "communications",
+              "subscription",
               "utilities",
               "insurance",
               "visa",
@@ -3504,8 +3627,14 @@
             "items": {
               "$ref": "#/$defs/Allocation"
             },
-            "minItems": 1,
             "title": "Allocations",
+            "type": "array"
+          },
+          "action_ids": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Action Ids",
             "type": "array"
           },
           "source_refs": {
@@ -3544,6 +3673,39 @@
             },
             "title": "Issues",
             "type": "array"
+          },
+          "borrowing_net": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/MoneyValue"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "financing_cost": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/MoneyValue"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "remaining_gap": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/MoneyValue"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
           }
         },
         "required": [

@@ -1,0 +1,18 @@
+{
+  "version": "copilot-v1",
+  "sha256": "b43e8506be238db8339ee3f820a77aeb246c29dfd07da6f4f25f0c11b94a79d5",
+  "counts": {
+    "dev": 80,
+    "test": 160
+  },
+  "human_reviewed": false,
+  "synthetic": true,
+  "frozen": true,
+  "thresholds": {
+    "classification_accuracy": 0.9,
+    "joint_field_accuracy": 0.95,
+    "critical_silent_misses": 0,
+    "dangerous_block_rate": 1.0
+  },
+  "limitations": "Synthetic multilingual templates; effects on real documents are unverified. Safety-blocked inputs have no authorized extraction target."
+}

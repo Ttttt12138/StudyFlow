@@ -4,24 +4,30 @@
     {
       "label": "Django check",
       "type": "process",
-      "command": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
+      "command": "${workspaceFolder}\\studyFlow\\Scripts\\python.exe",
       "args": [
         "manage.py",
         "check"
       ],
-      "problemMatcher": []
+      "problemMatcher": [],
+      "options": {
+        "cwd": "${workspaceFolder}/backend"
+      }
     },
     {
       "label": "Tests (isolated SQLite)",
       "type": "process",
-      "command": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
+      "command": "${workspaceFolder}\\studyFlow\\Scripts\\python.exe",
       "args": [
         "manage.py",
         "test",
         "--settings=config.test_settings"
       ],
       "problemMatcher": [],
-      "group": "test"
+      "group": "test",
+      "options": {
+        "cwd": "${workspaceFolder}/backend"
+      }
     }
   ]
 }

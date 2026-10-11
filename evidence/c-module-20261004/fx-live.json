@@ -1,0 +1,22 @@
+{
+  "schema_version": "2.0",
+  "trace_id": "385886708375403b843b2cd39c960ac0",
+  "source_refs": [],
+  "status": "READY",
+  "issues": [],
+  "quotes": [
+    {
+      "pair": {
+        "base": "CNY",
+        "quote": "THB"
+      },
+      "rate": "5.0145",
+      "rate_date": "2026-10-04",
+      "fetched_at": "2026-10-04T13:26:12.798985Z",
+      "source": "https://api.frankfurter.dev/v2/rate/CNY/THB?date=2026-10-04&expand=providers",
+      "manual": false,
+      "basis": "Providers: BCEAO, BDI, BI, BNA, BNM, BNR, BOC, BOE, BOM, BOT, CBC, CBG, CBKKW, CBM, CBO, CBR, CBSL, CBU, CFETS, CNB, DNB, ECB, FRED, IMF, LB, MAS, MNB, NB, NBC, NBK, NBKR, NBP, NBRM, NBT, NBU, NRB, RB, RBA, RBM, SARB, SBI",
+      "stale": false
+    }
+  ]
+}

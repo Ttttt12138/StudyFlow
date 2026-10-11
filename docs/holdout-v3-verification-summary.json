@@ -1,0 +1,104 @@
+{
+  "verified_at": "2026-10-06T17:09:19.890328+00:00",
+  "synthetic": true,
+  "evaluation_kind": "frozen_test",
+  "dataset": "studyflow-ai/evals/copilot-holdout-v3/cases.jsonl",
+  "dataset_sha256": "4adedfee15b8ecf288f6eaa9e9fcf29b8a21021dce82f4efe0edd7ba49ffd67f",
+  "prompt_version": "1.4",
+  "review_type": "user_delegated_ai",
+  "live_acceptance": false,
+  "independent_frozen_test_passed": false,
+  "arms": {
+    "rules": {
+      "samples": 160,
+      "classification_accuracy": 0.7625,
+      "joint_field_accuracy": 0.8166666666666667,
+      "joint_field_denominator": 120,
+      "critical_silent_misses": 6,
+      "review_rate": 0.875,
+      "false_positive_rate": 0.0,
+      "latency_mean_ms": 0.33803812257247046,
+      "latency_p95_ms": 0.851099961437285,
+      "llm_calls_by_purpose": {
+        "classify": 0,
+        "extract": 0,
+        "plan": 0
+      },
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "provider_errors": 0,
+      "models": [
+        "rules-1.2-multilingual"
+      ],
+      "dangerous_denominator": 10,
+      "dangerous_block_rate": 1.0,
+      "targets_met": false,
+      "plan_candidate_count": 10,
+      "plan_conditional_rate": 1.0,
+      "plan_invalid_rate": 0.0
+    },
+    "llm_only": {
+      "samples": 160,
+      "classification_accuracy": 0.9625,
+      "joint_field_accuracy": 0.925,
+      "joint_field_denominator": 120,
+      "critical_silent_misses": 0,
+      "review_rate": 0.64375,
+      "false_positive_rate": 0.0,
+      "latency_mean_ms": 7780.588039998111,
+      "latency_p95_ms": 18939.864300074987,
+      "llm_calls_by_purpose": {
+        "classify": 164,
+        "extract": 140,
+        "plan": 10
+      },
+      "input_tokens": 238607,
+      "output_tokens": 73579,
+      "provider_errors": 0,
+      "models": [
+        "openai/gpt-6-luna"
+      ],
+      "dangerous_denominator": 10,
+      "dangerous_block_rate": 1.0,
+      "targets_met": false,
+      "plan_candidate_count": 22,
+      "plan_conditional_rate": 0.7727272727272727,
+      "plan_invalid_rate": 0.22727272727272727
+    },
+    "jev_llm": {
+      "samples": 160,
+      "classification_accuracy": 0.9625,
+      "joint_field_accuracy": 0.95,
+      "joint_field_denominator": 120,
+      "critical_silent_misses": 0,
+      "review_rate": 0.61875,
+      "false_positive_rate": 0.0,
+      "latency_mean_ms": 4722.486478128121,
+      "latency_p95_ms": 12642.881199950352,
+      "llm_calls_by_purpose": {
+        "classify": 0,
+        "extract": 140,
+        "plan": 10
+      },
+      "input_tokens": 246201,
+      "output_tokens": 71382,
+      "provider_errors": 0,
+      "models": [
+        "jev-1.13.0",
+        "openai/gpt-6-luna"
+      ],
+      "dangerous_denominator": 10,
+      "dangerous_block_rate": 1.0,
+      "targets_met": true,
+      "plan_candidate_count": 26,
+      "plan_conditional_rate": 0.7692307692307693,
+      "plan_invalid_rate": 0.23076923076923078
+    }
+  },
+  "artifacts": [
+    {
+      "path": "evidence/copilot/copilot-independent-v3-first.json",
+      "sha256": "46fb9c292f2b4fbefba324845b02ba03d908f08df93a64f4c5987ab70433f3b3"
+    }
+  ]
+}
