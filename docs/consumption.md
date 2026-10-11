@@ -7,22 +7,24 @@
 沿用根 README 的 Python 环境与 PostgreSQL 配置，执行：
 
 ```powershell
-studyFlow/Scripts/python.exe manage.py migrate --noinput
-studyFlow/Scripts/python.exe manage.py createcachetable
+Set-Location backend  # Django commands run inside backend/
+../studyFlow/Scripts/python.exe manage.py migrate --noinput
+../studyFlow/Scripts/python.exe manage.py createcachetable
 $env:STUDYFLOW_READINESS_ENABLED='true'
 $env:STUDYFLOW_CONSUMPTION_ENABLED='true'
-studyFlow/Scripts/python.exe manage.py runserver 127.0.0.1:8000 --noreload
+../studyFlow/Scripts/python.exe manage.py runserver 127.0.0.1:8000 --noreload
 # 另开终端，设置相同环境变量：
-studyFlow/Scripts/python.exe manage.py readiness_worker --mode mock
+../studyFlow/Scripts/python.exe manage.py readiness_worker --mode mock
 ```
 
 消费学习默认关闭。开启后预测、筹资评估、风险检查使用校准结果；关闭后保留原预算行为和已导入记录。家庭资助权限收紧始终生效，不能通过关闭消费学习绕过。
 
 ```powershell
-studyFlow/Scripts/python.exe manage.py test finance auto_test --noinput --keepdb
-studyFlow/Scripts/python.exe manage.py makemigrations --check --dry-run
-studyFlow/Scripts/python.exe manage.py spectacular --validate --fail-on-warn --file output/openapi.yaml
-studyFlow/Scripts/python.exe manage.py demo_consumption --runs 3
+Set-Location backend  # Django commands run inside backend/
+../studyFlow/Scripts/python.exe manage.py test finance auto_test --noinput --keepdb
+../studyFlow/Scripts/python.exe manage.py makemigrations --check --dry-run
+../studyFlow/Scripts/python.exe manage.py spectacular --validate --fail-on-warn --file output/openapi.yaml
+../studyFlow/Scripts/python.exe manage.py demo_consumption --runs 3
 ```
 
 演示使用随机模拟身份、Token、PostgreSQL、实际 HTTP 路由和 mock C 模型；报告输出至 `output/consumption-http-demo.json`，不输出访问令牌或 Sponsor 链接令牌。失败报告包含 `passed=false` 和错误类别。它不代表浏览器、真实银行或真实模型效果验收。
@@ -115,10 +117,10 @@ CSV 必需列：`account_id,date,amount,currency,counterparty,description`；可
 
 ## 模板、OCR 与页面状态
 
-模板位于 `finance/readiness/template_data/`。注册表自动读取并校验数据文件，提供 PSU shared/single 和一个 Synthetic Bangkok 学校样例。学期创建支持 `template_key/template_version`，固定版本；`templates/upgrade/` 首次 `confirm=false` 返回差异，再携带相同版本上下文 `confirm=true` 显式升级。保留已有个人费用，仅增加缺项并采用选定学校资料；冲突或缺失资料继续阻止完整结论。
+模板位于 `backend/finance/readiness/template_data/`。注册表自动读取并校验数据文件，提供 PSU shared/single 和一个 Synthetic Bangkok 学校样例。学期创建支持 `template_key/template_version`，固定版本；`templates/upgrade/` 首次 `confirm=false` 返回差异，再携带相同版本上下文 `confirm=true` 显式升级。保留已有个人费用，仅增加缺项并采用选定学校资料；冲突或缺失资料继续阻止完整结论。
 
 材料上传支持 `kind=image`。中文和英文图片、扫描 PDF 可通过可选 Gemini OCR 转录，需服务端启用及逐文件外发同意；默认关闭。未配置、未同意或识别失败时返回 `NEEDS_MANUAL_INPUT`，任务正常结束。`POST readiness/imports/{id}/transcribe/` 保留人工路径。配置、授权、来源、清理与验收见 [Gemini OCR 契约](gemini-ocr.md)。
 
 前端实现应包含以下状态：导入中/待复核/提交完成、错误行和疑似重复确认、分析处理中/版本过期、预算前后差异、资料不足、资助待确认/拒绝/撤销/过期/到账、支付 pending/unknown/settled/reconciled/reconciliation_exception、OCR 待人工输入。所有模拟页面明确显示 **Demo / simulated financial data**；来源徽标必须同时显示来源类型，不能把用户上传或算法推断显示为银行核验。
 
-合成样本位于 `examples/consumption/v1/`；`manifest.json` 记录固定种子、覆盖期、校验值及预期结果。`scripts/build_consumption_fixtures.py` 可重建样本。新真实学校仍需独立来源核对；Gemini 真实识别效果须单独执行 live 验收，不能用模拟测试代替。
+合成样本位于 `backend/examples/consumption/v1/`；`manifest.json` 记录固定种子、覆盖期、校验值及预期结果。`backend/scripts/build_consumption_fixtures.py` 可重建样本。新真实学校仍需独立来源核对；Gemini 真实识别效果须单独执行 live 验收，不能用模拟测试代替。

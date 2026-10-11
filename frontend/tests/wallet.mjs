@@ -1,7 +1,8 @@
 import { chromium } from "playwright";
 import assert from "node:assert/strict";
+import { executablePath, screenshot } from "./support.mjs";
 
-const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || "/usr/bin/chromium", headless: true, args: ["--no-sandbox"] });
+const browser = await chromium.launch({ executablePath, headless: true, args: ["--no-sandbox"] });
 const base = process.env.TEST_URL || "http://127.0.0.1:5173";
 const errors = [];
 let previewCalls = 0;
@@ -25,7 +26,7 @@ try {
   await preview.getByText("No simulated remittances have been created for this student.").waitFor();
   assert.equal(await preview.getByRole("button", { name: "Get backend quotes" }).isDisabled(), true);
   assert.equal(await preview.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
-  await preview.screenshot({ path: "/tmp/studyflow-wallet-preview-mobile.png", fullPage: true });
+  await preview.screenshot({ path: screenshot('wallet-preview-mobile.png'), fullPage: true });
   assert.equal(previewCalls, 0);
   await preview.close();
 
@@ -127,7 +128,7 @@ try {
   assert.equal(calls.some((item) => item.path.includes("adapter-event") || item.path.includes("verify/") || item.path.includes("decide/")), false);
   await page.reload();
   await page.getByText("Submitted to the simulated processing route.", { exact: false }).waitFor();
-  await page.screenshot({ path: "/tmp/studyflow-wallet-live-mock-desktop.png", fullPage: true });
+  await page.screenshot({ path: screenshot('wallet-live-mock-desktop.png'), fullPage: true });
   assert.deepEqual(errors, []);
   console.log("PASS: wallet preview statuses and no API; mocked Django session/CSRF quotes, beneficiary gate, approval, step-up, lost response, reload, and mobile layout.");
 } finally { await browser.close(); }

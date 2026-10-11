@@ -4,12 +4,12 @@ import assert from 'node:assert/strict';
 import {execFileSync} from 'node:child_process';
 import {randomUUID} from 'node:crypto';
 import {mkdirSync,writeFileSync} from 'node:fs';
-import {fileURLToPath} from 'node:url';
-const root=fileURLToPath(new URL('../../',import.meta.url)),origin=process.env.TEST_URL||'http://127.0.0.1:5173';
+import { root, backend, python, executablePath } from './support.mjs';
+const origin=process.env.TEST_URL||'http://127.0.0.1:5173';
 const names={student:`wallet-uat-${randomUUID()}`,verifier:`verifier-${randomUUID()}`,approver:`approver-${randomUUID()}`};
 const passwords={student:randomUUID(),verifier:randomUUID(),approver:randomUUID()};
-execFileSync(`${root}.venv/bin/python`,['manage.py','shell','-c','import os,json; from django.contrib.auth import get_user_model; from finance.corridors import ensure_default_corridors; from finance.policy_defaults import ensure_default_limits; names=json.loads(os.environ["UAT_NAMES"]); passwords=json.loads(os.environ["UAT_PASSWORDS"]); [get_user_model().objects.create_user(username=n,password=passwords[k],is_staff=k!="student") for k,n in names.items()]; ensure_default_corridors(); ensure_default_limits()'],{cwd:root,env:{...process.env,UAT_NAMES:JSON.stringify(names),UAT_PASSWORDS:JSON.stringify(passwords)},stdio:'pipe'});
-const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',args:['--no-sandbox']});
+execFileSync(python,['manage.py','shell','-c','import os,json; from django.contrib.auth import get_user_model; from finance.corridors import ensure_default_corridors; from finance.policy_defaults import ensure_default_limits; names=json.loads(os.environ["UAT_NAMES"]); passwords=json.loads(os.environ["UAT_PASSWORDS"]); [get_user_model().objects.create_user(username=n,password=passwords[k],is_staff=k!="student") for k,n in names.items()]; ensure_default_corridors(); ensure_default_limits()'],{cwd:backend,env:{...process.env,UAT_NAMES:JSON.stringify(names),UAT_PASSWORDS:JSON.stringify(passwords)},stdio:'pipe'});
+const browser=await chromium.launch({executablePath,args:['--no-sandbox']});
 const contexts={},pages={},endpoints=new Set(),errors=[];
 async function login(kind){const ctx=await browser.newContext({viewport:{width:1440,height:1000}});contexts[kind]=ctx;const page=await ctx.newPage();pages[kind]=page;page.on('pageerror',e=>errors.push(e.message));page.on('request',req=>{const p=new URL(req.url()).pathname;if(p.startsWith('/api/'))endpoints.add(`${kind}: ${req.method()} ${p}`);});await page.goto(`${origin}/api/auth/login/?next=${encodeURIComponent(origin+'/?wallet=1')}`);await page.getByLabel('Username').fill(names[kind]);await page.getByLabel('Password').fill(passwords[kind]);await page.getByRole('button',{name:'Log in',exact:true}).click();await page.getByRole('heading',{name:'Wallet & transfers',exact:true}).waitFor();}
 async function get(path,kind='student'){endpoints.add(`${kind}: GET /api/v2/${path}`);const r=await contexts[kind].request.get(`${origin}/api/v2/${path}`);assert.equal(r.status(),200,`${path}: ${await r.text()}`);const p=await r.json();return p.data??p;}
@@ -55,7 +55,7 @@ try{
  // Controlled backend fixture expiry, then real reads/commands; no long blocking wait.
  const expiryQuote=await successful('fx-quotes/live/',{corridor_id:route.id,send_amount:'1000.00'});
  const expiryOrder=await successful('remittance-orders/',{quote_id:expiryQuote.id,recipient:'SELF',purpose:'living'});
- execFileSync(`${root}.venv/bin/python`,['manage.py','shell','-c','import os; from django.utils import timezone; from datetime import timedelta; from finance.workflow_models import FXQuote; FXQuote.objects.filter(pk=os.environ["UAT_QUOTE"]).update(expires_at=timezone.now()-timedelta(seconds=1))'],{cwd:root,env:{...process.env,UAT_QUOTE:expiryQuote.id},stdio:'pipe'});
+ execFileSync(python,['manage.py','shell','-c','import os; from django.utils import timezone; from datetime import timedelta; from finance.workflow_models import FXQuote; FXQuote.objects.filter(pk=os.environ["UAT_QUOTE"]).update(expires_at=timezone.now()-timedelta(seconds=1))'],{cwd:backend,env:{...process.env,UAT_QUOTE:expiryQuote.id},stdio:'pipe'});
  assert.equal((await get(`remittance-orders/${expiryOrder.id}/`)).effective_status,'EXPIRED');
  const expiryRejected=await post('remittance-orders/',{quote_id:expiryQuote.id,recipient:'SELF',purpose:'living'});assert.equal(expiryRejected.status(),400);
  // Real version conflict on a prepared order; no backend security settings disabled.

@@ -20,7 +20,9 @@ services:
       retries: 30
 
   app:
-    build: .
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
     depends_on:
       db:
         condition: service_healthy

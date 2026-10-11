@@ -1,5 +1,7 @@
 # 新独立盲测与 Gemini 真实 OCR 验证
 
+> 路径说明（2026-10-11 更新）：B 模块已移入 `backend/`。下文 Django 命令在 `backend/` 下运行，`manage.py`、`finance/`、`auto_test/`、`openapi.yaml` 等路径均相对 `backend/`；测试结果保留当时的记录。
+
 验证日期：2026-10-06，Asia/Bangkok。两项验证均已实际执行，**尚未全部达到验收门槛**。本报告保留失败，不用此前回归成绩代替新盲测，也不把一次 OCR 成功当作整组通过。
 
 ## 新独立盲测
@@ -74,8 +76,9 @@
 ## 重现与后续
 
 ```powershell
-studyFlow/Scripts/python.exe manage.py evaluate_copilot --mode live --split test --evaluation-kind regression --dataset studyflow-ai/evals/copilot-holdout-v2/cases.jsonl --env-file studyflow-ai/.env --review studyflow-ai/evals/copilot-holdout-v2/review.json
-studyFlow/Scripts/python.exe manage.py verify_document_ocr --live --output output/ocr-new-attempt.json
+Set-Location backend
+../studyFlow/Scripts/python.exe manage.py evaluate_copilot --mode live --split test --evaluation-kind regression --dataset ../studyflow-ai/evals/copilot-holdout-v2/cases.jsonl --env-file ../studyflow-ai/.env --review ../studyflow-ai/evals/copilot-holdout-v2/review.json
+../studyFlow/Scripts/python.exe manage.py verify_document_ocr --live --output output/ocr-new-attempt.json
 ```
 
 上面重跑 v2 的命令故意标为 regression；首次独立记录不可覆盖。下一步是单独修复规则的跨行归属和否定语境，并在 Gemini 服务恢复后重新验证相同 OCR 样本及完整上传链条。

@@ -1,5 +1,7 @@
 # Django 借款替换与 B/C 验证记录
 
+> 路径说明（2026-10-11 更新）：B 模块已移入 `backend/`。下文 Django 命令在 `backend/` 下运行，`manage.py`、`finance/`、`auto_test/`、`openapi.yaml` 等路径均相对 `backend/`；测试结果保留当时的记录。
+
 日期：2026-10-05（Asia/Bangkok）。环境：Windows、Python 3.13.5、Django 5.2.17、PostgreSQL 17.11。
 
 统一服务为 Django `/api/v2`，借款计算与状态规则采用原 B 实现。旧 FastAPI 项目保留参考，不作为运行依赖。验证使用新建的 `studyflow-django` PostgreSQL 容器（localhost:55433），测试库 `test_studyflow`；没有把其他现有业务数据库作为测试库。
@@ -33,7 +35,7 @@
 - [C 回归 JUnit](../evidence/django-bc-20261005/c-junit.xml)
 - [三轮联调完整报告](../evidence/django-bc-20261005/demo.json)
 - [HTTP 检查结果](../evidence/django-bc-20261005/http-smoke.json)
-- [已更新 OpenAPI](../openapi.yaml)
+- [已更新 OpenAPI](../backend/openapi.yaml)
 
 以上文件原为本机 `output/` 产物，现原样复制到 `evidence/` 入库。最初 C 测试的 JUnit 写入工作区外层输出目录被环境拒绝；改在 C 自己的 output 中生成后复制，完整重跑退出码为 0。
 

@@ -5,6 +5,22 @@ info:
   description: 'StudyFlow demo: budgets, FX, funding, loans and policy-controlled
     simulated execution. All settlements are simulated.'
 paths:
+  /api/auth/session/:
+    get:
+      operationId: get_api_auth_session
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentSession'
+          description: ''
   /api/v2/affordability-profile/:
     get:
       operationId: get_api_v2_affordability_profile
@@ -5329,6 +5345,20 @@ components:
       - expires_in_seconds
       - target_id
       - token
+    StudentSession:
+      type: object
+      properties:
+        authenticated:
+          type: boolean
+        username:
+          type: string
+          nullable: true
+        csrf_token:
+          type: string
+      required:
+      - authenticated
+      - csrf_token
+      - username
     SupportedCurrencyEnum:
       enum:
       - THB

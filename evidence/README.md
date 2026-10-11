@@ -42,12 +42,13 @@ The script writes each check to `output/gates/<name>.log`, and each demo also wr
 
 In mock mode the agent planner is rule-based, so the 20/20 result shows the plumbing and the runner's safety checks work. It does **not** measure model quality. For model quality, see `agent/`.
 
-`openapi.yaml` is not copied. It is byte-identical to the tracked [`openapi.yaml`](../openapi.yaml).
+`backend/openapi.yaml` is not copied. It is byte-identical to the tracked [`backend/openapi.yaml`](../backend/openapi.yaml).
 
 ## 2. Live FX: `fx/`
 
 ```bash
-studyFlow/Scripts/python.exe manage.py shell -c "exec(open('scripts/verify_live_fx.py', encoding='utf-8').read())"
+cd backend  # Django commands run inside backend/
+../studyFlow/Scripts/python.exe manage.py shell -c "exec(open('scripts/verify_live_fx.py', encoding='utf-8').read())"
 ```
 
 | File | Result |
@@ -59,12 +60,13 @@ Details: [docs/verification-live-20261007.md §1](../docs/verification-live-2026
 ## 3. Agent evaluation: `agent/`
 
 ```bash
+cd backend  # Django commands run inside backend/
 # live model (needs the LLM gateway credentials in studyflow-ai/.env)
-studyFlow/Scripts/python.exe manage.py evaluate_agent --mode live --env-file studyflow-ai/.env
+../studyFlow/Scripts/python.exe manage.py evaluate_agent --mode live --env-file ../studyflow-ai/.env
 # mock planner
-studyFlow/Scripts/python.exe manage.py evaluate_agent --mode mock
+../studyFlow/Scripts/python.exe manage.py evaluate_agent --mode mock
 # frozen holdout agent-v2 (live; quote only its first run, agent-eval-v2-live-first.json)
-studyFlow/Scripts/python.exe manage.py evaluate_agent --mode live --env-file studyflow-ai/.env --dataset studyflow-ai/evals/agent-v2/cases.jsonl
+../studyFlow/Scripts/python.exe manage.py evaluate_agent --mode live --env-file ../studyflow-ai/.env --dataset ../studyflow-ai/evals/agent-v2/cases.jsonl
 ```
 
 Datasets: `studyflow-ai/evals/agent-v1/cases.jsonl` is the tuning set (20 cases, 3 with prompt-injection attempts). `studyflow-ai/evals/agent-v2/cases.jsonl` is the frozen holdout (24 cases, 4 with injection attempts). Quote the agent-v2 first run; the full write-up is [docs/agent-evaluation.md](../docs/agent-evaluation.md).
@@ -89,15 +91,16 @@ Failure analysis: [docs/verification-live-20261007.md §2](../docs/verification-
 
 ## 4. Gemini OCR: `ocr/`
 
-Every file here uses the synthetic samples in `examples/ocr/v1/`. The files are listed in chronological order: they show the provider failures first, then the fix.
+Every file here uses the synthetic samples in `backend/examples/ocr/v1/`. The files are listed in chronological order: they show the provider failures first, then the fix.
 
 ```bash
+cd backend  # Django commands run inside backend/
 # six-sample transcription check against the configured model(s)
-studyFlow/Scripts/python.exe manage.py verify_document_ocr --live --output output/<name>.json
+../studyFlow/Scripts/python.exe manage.py verify_document_ocr --live --output output/<name>.json
 # full chain: real loopback HTTP -> PostgreSQL worker -> Gemini -> C live extraction
-studyFlow/Scripts/python.exe scripts/verify_ocr_http.py output/<name>.json
+../studyFlow/Scripts/python.exe scripts/verify_ocr_http.py output/<name>.json
 # single raw request, to diagnose provider errors (the API key is redacted from the output)
-studyFlow/Scripts/python.exe scripts/diagnose_ocr_transport.py output/<name>.json
+../studyFlow/Scripts/python.exe scripts/diagnose_ocr_transport.py output/<name>.json
 ```
 
 | File | Result |

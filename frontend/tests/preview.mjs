@@ -1,7 +1,8 @@
 import { chromium } from "playwright";
 import assert from "node:assert/strict";
+import { executablePath, screenshot } from "./support.mjs";
 
-const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || "/usr/bin/chromium", headless: true, args: ["--no-sandbox"] });
+const browser = await chromium.launch({ executablePath, headless: true, args: ["--no-sandbox"] });
 const page = await browser.newPage({ viewport: { width: 1360, height: 900 } });
 const errors = [];
 let apiCalls = 0;
@@ -98,7 +99,7 @@ try {
   assert.equal(await page.locator(".student-more-menu").getByRole("button", { name: "Preview wallet & transfers" }).isVisible(), false);
   await page.getByRole("button", { name: /Step 5 of 5/ }).click();
   assert.equal(await nav.isVisible(), true);
-  await page.screenshot({ path: "/tmp/studyflow-preview-mobile.png", fullPage: true });
+  await page.screenshot({ path: screenshot('preview-mobile.png'), fullPage: true });
   await page.locator(".student-more-menu summary").click();
   await page.getByRole("button", { name: "Connect to Django instead" }).click();
   await page.getByRole("button", { name: "Explore the five steps" }).waitFor();

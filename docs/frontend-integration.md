@@ -1,5 +1,7 @@
 # Task A integration validation
 
+> Path note (updated 2026-10-11): the B module now lives in `backend/`. Django commands below run inside `backend/`, and paths such as `manage.py`, `finance/`, `auto_test/` and `openapi.yaml` are relative to it. Results are kept as recorded at the time.
+
 Validated 2026-10-07 (Asia/Bangkok) against the latest team `feature/bc-integration` commit **3be0eb79c7a04e852da74efd337d458ce3862ea1**. The environment initially held e45d5d8; Task A changes were preserved while the checkout was fast-forwarded and the API comparison/validation was repeated. The uploaded ZIP was adapted into `frontend/`; its declared ee577dc source commit cannot be independently verified without Git metadata. Initial comparison is in [frontend-contract-audit.md](frontend-contract-audit.md). Run/setup instructions are in [frontend/README.md](../frontend/README.md).
 
 ## Result and ownership

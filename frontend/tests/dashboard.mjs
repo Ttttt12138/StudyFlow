@@ -1,7 +1,8 @@
 import { chromium } from "playwright";
 import assert from "node:assert/strict";
+import { executablePath, screenshot } from "./support.mjs";
 
-const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || "/usr/bin/chromium", headless: true, args: ["--no-sandbox"] });
+const browser = await chromium.launch({ executablePath, headless: true, args: ["--no-sandbox"] });
 const page = await browser.newPage({ viewport: { width: 1360, height: 900 } });
 const errors = [];
 let apiCalls = 0;
@@ -38,7 +39,7 @@ try {
   await page.getByRole("heading", { name: "More information needed" }).waitFor();
   await page.setViewportSize({ width: 390, height: 844 });
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
-  await page.screenshot({ path: "/tmp/studyflow-dashboard-mobile.png", fullPage: true });
+  await page.screenshot({ path: screenshot('dashboard-mobile.png'), fullPage: true });
   await page.getByRole("button", { name: "View payment calendar" }).click();
   await page.getByRole("heading", { name: "Budget", exact: true }).waitFor();
   assert.match(await page.getByRole("main").innerText(), /Read-only tour · synthetic data/);

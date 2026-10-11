@@ -6,12 +6,14 @@ from django.core.exceptions import ImproperlyConfigured
 from studyflow_ai.ocr_config import OcrSettings
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+# backend/ (B) sits next to studyflow-ai/ (C) and frontend/ (A).
+STUDYFLOW_AI_DIR = BASE_DIR.parent / "studyflow-ai"
 # Capture C configuration before loading B's .env so B cannot shadow C's API settings.
-_C_OCR = OcrSettings.from_env(BASE_DIR / "studyflow-ai" / ".env")
+_C_OCR = OcrSettings.from_env(STUDYFLOW_AI_DIR / ".env")
 load_dotenv(BASE_DIR / ".env")
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "")
 if not SECRET_KEY:
-    raise ImproperlyConfigured("Set DJANGO_SECRET_KEY in .env.")
+    raise ImproperlyConfigured("Set DJANGO_SECRET_KEY in backend/.env.")
 DEBUG = os.getenv("DJANGO_DEBUG", "False").lower() == "true"
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
 INSTALLED_APPS = [

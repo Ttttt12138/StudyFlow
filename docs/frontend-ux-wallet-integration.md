@@ -1,5 +1,7 @@
 # Reviewed Task A UX and wallet integration — 10 October 2026
 
+> Path note (updated 2026-10-11): the B module now lives in `backend/`. Django commands below run inside `backend/`, and paths such as `manage.py`, `finance/`, `auto_test/` and `openapi.yaml` are relative to it. Results are kept as recorded at the time.
+
 ## Baseline and source verification
 
 Final checkout: `front-end` at **b23511789a38f9be8ac7e5b20d50427258ae03c4**, clean before this task. It includes the five-step session-authenticated journey, live dashboard, and team backend **feature/bc-integration / 341e66a81d9338ca54d7de4f18f4c35f5225a43f**. Fetching the team branch confirmed that it has not advanced. No branch merge, commit or push was performed during this task.
@@ -27,7 +29,7 @@ Wallet navigation preserves the mounted journey's unsaved edits/retry identities
 
 ## Current backend audit before requests changed
 
-Inspected current `finance/urls.py`, `workflow_urls.py`, `workflow_api.py`, `workflow_serializers.py`, `wallet_api.py`, `fx_rates.py`, `remittance_api.py`, `remittance_orders.py`, `policy_api.py`, `policy.py`, and readiness/consumption/copilot routes/contracts. Django session authentication and CSRF requirements are unchanged.
+Inspected current `backend/finance/urls.py`, `workflow_urls.py`, `workflow_api.py`, `workflow_serializers.py`, `wallet_api.py`, `fx_rates.py`, `remittance_api.py`, `remittance_orders.py`, `policy_api.py`, `policy.py`, and readiness/consumption/copilot routes/contracts. Django session authentication and CSRF requirements are unchanged.
 
 All routes below have the `/api/v2/` prefix:
 

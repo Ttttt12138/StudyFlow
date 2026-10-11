@@ -1,12 +1,14 @@
 # Student dashboard integration — 8 October 2026
 
+> Path note (updated 2026-10-11): the B module now lives in `backend/`. Django commands below run inside `backend/`, and paths such as `manage.py`, `finance/`, `auto_test/` and `openapi.yaml` are relative to it. Results are kept as recorded at the time.
+
 The final checkout is `front-end`. Its previous frontend commit was ebff923; the latest team backend `feature/bc-integration` at **341e66a81d9338ca54d7de4f18f4c35f5225a43f** was merged locally as abb0133 before dashboard verification. Only the README needed merge resolution: upstream English documentation was retained and the frontend documentation link preserved. The team branch was not modified or pushed.
 
 The supplied Task A ZIP identifies **e8ff7f3c31cdb8d21550e59825a95bac38c6c987** in its archive comment. It contains no Git working tree. Dashboard components, presentation types, synthetic adapter and styles were adapted into the existing `frontend/`; the existing final-repository five-step implementation and Django session authentication were preserved. ZIP documentation was reference material.
 
 ## Current contract comparison
 
-Read `finance/urls.py`, `finance/readiness/api.py`, `finance/consumption/api.py`, `finance/consumption/monitoring.py`, `finance/copilot/api.py`, `finance/copilot/reviews.py`, readiness serializers and the final frontend requests before changes.
+Read `backend/finance/urls.py`, `backend/finance/readiness/api.py`, `backend/finance/consumption/api.py`, `backend/finance/consumption/monitoring.py`, `backend/finance/copilot/api.py`, `backend/finance/copilot/reviews.py`, readiness serializers and the final frontend requests before changes.
 
 | Read | Actual response and integration |
 |---|---|

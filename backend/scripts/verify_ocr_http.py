@@ -11,7 +11,7 @@ sys.path.insert(0, str(ROOT))
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 from studyflow_ai.config import load_env_file
 
-load_env_file(ROOT / "studyflow-ai/.env")
+load_env_file(ROOT.parent / "studyflow-ai/.env")
 import django
 
 django.setup()

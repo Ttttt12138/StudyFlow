@@ -2,7 +2,7 @@
 
 This is the concise endpoint reference for frontend and extraction-service
 integration. For detailed workflow explanations, see [guide.md](guide.md). The generated
-machine-readable contract is [openapi.yaml](../../openapi.yaml).
+machine-readable contract is [openapi.yaml](../../backend/openapi.yaml).
 
 ## Connection
 

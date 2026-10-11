@@ -87,12 +87,13 @@ Excluding v2-18 would leave 18/23. We still report 18/24.
 ## Reproduce
 
 ```bash
+cd backend  # Django commands run inside backend/
 # frozen holdout, live model (needs the gateway credentials in studyflow-ai/.env)
-studyFlow/Scripts/python.exe manage.py evaluate_agent --mode live --env-file studyflow-ai/.env --dataset studyflow-ai/evals/agent-v2/cases.jsonl
+../studyFlow/Scripts/python.exe manage.py evaluate_agent --mode live --env-file ../studyflow-ai/.env --dataset ../studyflow-ai/evals/agent-v2/cases.jsonl
 # tuning set, live model
-studyFlow/Scripts/python.exe manage.py evaluate_agent --mode live --env-file studyflow-ai/.env
+../studyFlow/Scripts/python.exe manage.py evaluate_agent --mode live --env-file ../studyflow-ai/.env
 # mock planner (CI gate on the tuning set; no credentials)
-studyFlow/Scripts/python.exe manage.py evaluate_agent --mode mock --min-success 1.0
+../studyFlow/Scripts/python.exe manage.py evaluate_agent --mode mock --min-success 1.0
 ```
 
 Each report records `dataset_sha256` and `prompt_version`. A new live run will not reproduce the exact numbers, because the model is not deterministic. The committed first-run report is the evidence, and any later run on `agent-v2` is a regression run.

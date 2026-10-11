@@ -9,20 +9,22 @@
 在仓库根目录使用 `studyFlow/Scripts/python.exe`：
 
 ```powershell
-studyFlow/Scripts/python.exe manage.py migrate --noinput
-studyFlow/Scripts/python.exe manage.py createcachetable
+Set-Location backend  # Django commands run inside backend/
+../studyFlow/Scripts/python.exe manage.py migrate --noinput
+../studyFlow/Scripts/python.exe manage.py createcachetable
 $env:STUDYFLOW_READINESS_ENABLED='true'
-studyFlow/Scripts/python.exe manage.py runserver 127.0.0.1:8000 --noreload
+../studyFlow/Scripts/python.exe manage.py runserver 127.0.0.1:8000 --noreload
 # 另开终端启动常驻 worker
-studyFlow/Scripts/python.exe manage.py readiness_worker --mode live --env-file studyflow-ai/.env
+../studyFlow/Scripts/python.exe manage.py readiness_worker --mode live --env-file ../studyflow-ai/.env
 ```
 
 完整演示命令自行启动随机端口 HTTP 服务并执行持久 worker 工作，不依赖浏览器：
 
 ```powershell
-studyFlow/Scripts/python.exe manage.py demo_copilot --mode live --env-file studyflow-ai/.env --runs 3
-studyFlow/Scripts/python.exe manage.py demo_copilot --mode mock --scenario all
-studyFlow/Scripts/python.exe manage.py sync_review_queue
+Set-Location backend  # Django commands run inside backend/
+../studyFlow/Scripts/python.exe manage.py demo_copilot --mode live --env-file ../studyflow-ai/.env --runs 3
+../studyFlow/Scripts/python.exe manage.py demo_copilot --mode mock --scenario all
+../studyFlow/Scripts/python.exe manage.py sync_review_queue
 ```
 
 `demo_copilot` 默认生成唯一报告，显式 `--output` 指向已有文件时拒绝覆盖。每轮新建隔离的学生和运营身份，业务日期固定。主线为合成录取材料 → 用户确认 → 50,000 THB 缺口 → Sponsor 确认及 20,000 模拟到账 → 剩余 30,000 净借款 → 学费支付、对账 → 自动预测。为清楚展示资金链，主线固定关闭消费校准；消费学习集成另由原 `demo_consumption` 及回归覆盖。
@@ -116,14 +118,14 @@ Jev 的实际 provider 为 `typesafe`，LLM 为 `openai`。`EXECUTED/FAILED/NOT_
 首轮冻结测试与调参后的回归必须分别报告。查看过测试集错误后重跑同一数据集时，使用 `--evaluation-kind regression`；即使回归达到全部指标，也不能声称通过了新的独立盲测。报告分别提供 `live_acceptance`（本轮三组指标）与 `independent_frozen_test_passed`。本次实际证据见 [验收记录](verification-copilot-20261006.md)。
 
 ```powershell
-studyFlow/Scripts/python.exe manage.py evaluate_copilot --mode live --split test --env-file studyflow-ai/.env --review studyflow-ai/evals/copilot-v1/review.json
+../studyFlow/Scripts/python.exe manage.py evaluate_copilot --mode live --split test --env-file ../studyflow-ai/.env --review studyflow-ai/evals/copilot-v1/review.json
 # 已用于诊断的数据集重跑时标记为回归
-studyFlow/Scripts/python.exe manage.py evaluate_copilot --mode live --split test --evaluation-kind regression --env-file studyflow-ai/.env --review studyflow-ai/evals/copilot-v1/review.json
-studyFlow/Scripts/python.exe manage.py verify_document_ocr --live --output output/ocr-live.json
+../studyFlow/Scripts/python.exe manage.py evaluate_copilot --mode live --split test --evaluation-kind regression --env-file ../studyflow-ai/.env --review studyflow-ai/evals/copilot-v1/review.json
+../studyFlow/Scripts/python.exe manage.py verify_document_ocr --live --output output/ocr-live.json
 ```
 
 三组均要求分类 ≥90%、关键字段联合 ≥95%、关键静默漏报为零、危险样本全部转复核且无调用错误。安全预拦截样本在保守分类指标中计作未分类；不要求绕过安全层调用模型。家庭资助预计日期按 v1 合同允许的 `date` 或 `due_date` 统一比较，金额及日期仍须精确一致。三组输入、业务日期和后端相同；mock 的“LLM”不可用于真实模型比较。
 
 报告保存逐样本输出、调用模式、模型版本、耗时、tokens 和失败。没有经核实的服务费率时成本金额留空，不编造费用。正式门槛未通过时命令非零退出并保留报告。Gemini 验收仍由现有配置及策略标志控制；不在本轮自动替用户声明运营确认。
 
-机器可读嵌套合同见 `copilot-contracts.json`，总接口见根 `openapi.yaml`。部署数据库新增 `0014_copilot_workflows`，不重写历史钱包、账本或财务状态。
+机器可读嵌套合同见 `copilot-contracts.json`，总接口见根 `backend/openapi.yaml`。部署数据库新增 `0014_copilot_workflows`，不重写历史钱包、账本或财务状态。

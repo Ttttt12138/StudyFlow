@@ -1,6 +1,7 @@
 import { chromium } from 'playwright';
 import assert from 'node:assert/strict';
-const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || '/usr/bin/chromium', headless: true, args: ['--no-sandbox'] });
+import { executablePath, screenshot } from './support.mjs';
+const browser = await chromium.launch({ executablePath, headless: true, args: ['--no-sandbox'] });
 const page = await browser.newPage({ viewport: { width: 1440, height: 1100 } });
 const errors = []; page.on('pageerror', e => errors.push(e.message));
 const nav = name => page.getByRole('navigation').getByRole('button', { name, exact: false });
@@ -24,10 +25,10 @@ try {
  assert.equal(await page.locator('.stale-banner').count(), 0);
  assert.match(await page.locator('.scenario-card').first().innerText(), /USD 18,450/);
  assert.match(await page.locator('.scenario-card').nth(2).innerText(), /Insurance.*missing/is);
- await page.screenshot({ path: '/tmp/studyflow-budget-desktop.png', fullPage: true });
+ await page.screenshot({ path: screenshot('budget-desktop.png'), fullPage: true });
  await page.setViewportSize({ width: 390, height: 844 });
  assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), true);
- await page.screenshot({ path: '/tmp/studyflow-budget-mobile.png', fullPage: true });
+ await page.screenshot({ path: screenshot('budget-mobile.png'), fullPage: true });
  await page.setViewportSize({ width: 1440, height: 1100 });
  await page.getByRole('button', { name: 'Back to expenses' }).click();
  await page.getByRole('button', { name: '+ Housing' }).click();
@@ -42,7 +43,7 @@ try {
  assert.match(await page.locator('.budget-input-row').last().innerText(), /Amount unknown/);
  assert.match(await page.locator('.stale-banner').innerText(), /Recalculation is needed/);
  assert.equal(await page.getByRole('button', { name: 'Recalculate with B' }).isDisabled(), true);
- await page.screenshot({ path: '/tmp/studyflow-budget-stale.png', fullPage: true });
+ await page.screenshot({ path: screenshot('budget-stale.png'), fullPage: true });
  await page.getByRole('button', { name: 'Back to expenses' }).click();
  await row.getByRole('combobox', { name: 'Expense 1 status' }).selectOption('estimated');
  await row.getByRole('textbox', { name: 'Expense 1 amount' }).fill('-4');

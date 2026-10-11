@@ -1,7 +1,8 @@
 import { chromium } from "playwright";
 import assert from "node:assert/strict";
+import { executablePath, screenshot } from "./support.mjs";
 const browser = await chromium.launch({
-  executablePath: process.env.CHROMIUM_PATH || "/usr/bin/chromium",
+  executablePath,
   headless: true,
   args: ["--no-sandbox"],
 });
@@ -428,7 +429,7 @@ try {
   await page.getByText(/Compare \d+ simulated loan quotes?/).click();
   assert.match(await comparison.innerText(), /Recommendation needs updating/);
   await page.screenshot({
-    path: "/tmp/studyflow-connected-desktop.png",
+    path: screenshot('connected-desktop.png'),
     fullPage: true,
   });
   await page.setViewportSize({ width: 390, height: 844 });
@@ -439,7 +440,7 @@ try {
     true,
   );
   await page.screenshot({
-    path: "/tmp/studyflow-connected-mobile.png",
+    path: screenshot('connected-mobile.png'),
     fullPage: true,
   });
   assert.deepEqual(errors, []);

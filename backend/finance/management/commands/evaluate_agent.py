@@ -27,7 +27,7 @@ class Command(BaseCommand):
         output = options["output"] or Path("output") / f"agent-eval-{uuid4().hex}.json"
         if output.exists():
             raise CommandError("Report already exists")
-        dataset = options["dataset"] or settings.BASE_DIR / "studyflow-ai/evals/agent-v1/cases.jsonl"
+        dataset = options["dataset"] or settings.STUDYFLOW_AI_DIR / "evals/agent-v1/cases.jsonl"
         previous = settings.STUDYFLOW_AI_MODE
         settings.STUDYFLOW_AI_MODE = options["mode"]
         try:

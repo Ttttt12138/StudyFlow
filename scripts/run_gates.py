@@ -14,26 +14,27 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 PY = sys.executable
+B_DIR = ROOT / "backend"
 C_DIR = ROOT / "studyflow-ai"
 OUT = ROOT / "output" / "gates"
 
 GATES = [
     # Archives holdout-pinned files that changed; fails if a pinned version is unrecoverable.
     ("holdout-freeze", [PY, "scripts/freeze_holdout_code.py"], ROOT),
-    ("check", [PY, "manage.py", "check"], ROOT),
+    ("check", [PY, "manage.py", "check"], B_DIR),
     # Message catalogs match the code, are fully translated and compiled (docs/i18n.md).
-    ("i18n", [PY, "scripts/i18n_messages.py", "check"], ROOT),
-    ("migrations", [PY, "manage.py", "makemigrations", "--check", "--dry-run"], ROOT),
-    ("django-tests", [PY, "manage.py", "test", "finance", "auto_test", "--noinput", "--keepdb"], ROOT),
+    ("i18n", [PY, "scripts/i18n_messages.py", "check"], B_DIR),
+    ("migrations", [PY, "manage.py", "makemigrations", "--check", "--dry-run"], B_DIR),
+    ("django-tests", [PY, "manage.py", "test", "finance", "auto_test", "--noinput", "--keepdb"], B_DIR),
     ("openapi", [PY, "manage.py", "spectacular", "--validate", "--fail-on-warn",
-                 "--file", str(OUT / "openapi.yaml")], ROOT),
+                 "--file", str(OUT / "openapi.yaml")], B_DIR),
     ("c-ruff", [PY, "-m", "ruff", "check", "src", "auto_test", "scripts"], C_DIR),
     # The default pytest temp dir is not writable in some sandboxes.
     ("c-tests", [PY, "-m", "pytest", "-p", "no:cacheprovider",
                  f"--basetemp={ROOT / 'output' / 'pytest-tmp'}"], C_DIR),
-    ("migrate", [PY, "manage.py", "migrate", "--noinput"], ROOT),
+    ("migrate", [PY, "manage.py", "migrate", "--noinput"], B_DIR),
     # Throttle counters live in the database cache (docs/permissions.md §6).
-    ("cache-table", [PY, "manage.py", "createcachetable"], ROOT),
+    ("cache-table", [PY, "manage.py", "createcachetable"], B_DIR),
 ]
 DEMOS = [
     ("demo-bc", ["demo_bc", "--runs", "3"]),
@@ -54,7 +55,7 @@ def main():
     OUT.mkdir(parents=True, exist_ok=True)
     gates = list(GATES)
     if not args.skip_demos:
-        gates += [(name, [PY, "manage.py", *cmd, "--output", str(OUT / f"{name}.json")], ROOT)
+        gates += [(name, [PY, "manage.py", *cmd, "--output", str(OUT / f"{name}.json")], B_DIR)
                   for name, cmd in DEMOS]
     if args.only:
         gates = [g for g in gates if g[0] in args.only]

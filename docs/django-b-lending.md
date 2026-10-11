@@ -4,7 +4,7 @@
 
 ## 代码边界
 
-- `finance/lending_core/`：从 B 迁入的 Pydantic 输入模型、Decimal 等额本息和逐月还款能力算法，不依赖 FastAPI/SQLAlchemy。
+- `backend/finance/lending_core/`：从 B 迁入的 Pydantic 输入模型、Decimal 等额本息和逐月还款能力算法，不依赖 FastAPI/SQLAlchemy。
 - `loan_engine.py`：调用 B 核心，将同一还款表投影到 Django 原预算消费格式，没有第二套利息算法。
 - `lending_applications.py`：B 的自动审批、版本控制、取消和放款前复核。
 - `lending_models.py`、`lending_ledger.py`：Django 贷款账户与分期，复用原钱包、资金占用、流水和状态快照。

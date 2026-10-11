@@ -5,4 +5,4 @@ django-cors-headers==4.9.0
 drf-spectacular==0.30.0
 python-dotenv==1.2.4
 pydantic>=2.10,<3
--e ./studyflow-ai
+-e ../studyflow-ai

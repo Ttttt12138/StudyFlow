@@ -1,6 +1,6 @@
 """Verify the live Frankfurter path end to end (makes real HTTPS requests).
 
-Usage: studyFlow/Scripts/python.exe manage.py shell -c "exec(open('scripts/verify_live_fx.py', encoding='utf-8').read())"
+Usage: ../studyFlow/Scripts/python.exe manage.py shell -c "exec(open('scripts/verify_live_fx.py', encoding='utf-8').read())"
 Fetches reference rates for every seeded corridor pair, prices one live quote per corridor
 inside a rolled-back transaction, and writes output/verification-live-fx.json.
 """

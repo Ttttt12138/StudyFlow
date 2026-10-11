@@ -1,8 +1,14 @@
 name: Django B and C integration
 on: [push, pull_request]
+permissions:
+  contents: read
 jobs:
   django:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: backend
     services:
       postgres:
         image: postgres:17

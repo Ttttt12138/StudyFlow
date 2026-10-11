@@ -174,14 +174,14 @@ Moves the demo date forward by at most 730 days. The date cannot move backward.
 
 ### B application and repayment services
 
-Application functions now live in `finance/lending_applications.py`:
+Application functions now live in `backend/finance/lending_applications.py`:
 
 - create_application: owned immutable B quote, one application, first due date in the future.
 - application_action: versioned submit/cancel; submit automatically evaluates monthly affordability.
 - application_decision: operator re-evaluation of UNDER_REVIEW, without an approval override.
 - disburse: rechecks current affordability; records cash/account/ledger atomically or returns to review.
 
-`finance/lending_ledger.py` creates loan accounts and installments and repays the earliest due installment using the shared Django wallet. Repayments respect payment holds, update state and audit atomically, and close the account after the last installment. `finance/c_adapter.py` exports authoritative records and creates C mock explanations from an owned scenario.
+`backend/finance/lending_ledger.py` creates loan accounts and installments and repays the earliest due installment using the shared Django wallet. Repayments respect payment holds, update state and audit atomically, and close the account after the last installment. `backend/finance/c_adapter.py` exports authoritative records and creates C mock explanations from an owned scenario.
 
 The former execution_services application/decision/disbursement_action implementation has been removed. See [the replacement API](guide.md) for payloads and states.
 

@@ -60,10 +60,10 @@ document = {
     ],
     "docs": "docs/copilot.md",
 }
-(ROOT / "docs/copilot-contracts.json").write_text(
+(ROOT.parent / "docs/copilot-contracts.json").write_text(
     json.dumps(document, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
 )
-(ROOT / "docs/readiness-contracts.json").write_text(
+(ROOT.parent / "docs/readiness-contracts.json").write_text(
     json.dumps(
         {c.__name__: c.model_json_schema() for c in (Draft, FundingAction, Allocation)},
         indent=2,

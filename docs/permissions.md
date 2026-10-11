@@ -23,7 +23,7 @@ Agent（W4）发起的调用最高 T1；T2 及以上只能生成待确认动作�
 | `loan.repay` | `POST loan-accounts/{id}/repay/` | 借款账户 id | 当期 `installment_number` 的应还金额，本币 |
 | `remittance.submit` | W3 汇款订单提交 | 订单 id | 发送金额与币种 |
 
-新增 T2 动作必须登记到 `finance/policy.py` 的动作目录（`ACTIONS`：目标模型、主体解析、申请校验），并在路由上声明（`command(..., policy="payment.submit")`、`resource(..., "wallet.convert")`）。`remittance.submit` 已在 `finance/remittance_api.py` 的提交路由上声明；Agent 提议的确认路由声明为 `agent.confirm`，按其代理的底层动作检查。
+新增 T2 动作必须登记到 `backend/finance/policy.py` 的动作目录（`ACTIONS`：目标模型、主体解析、申请校验），并在路由上声明（`command(..., policy="payment.submit")`、`resource(..., "wallet.convert")`）。`remittance.submit` 已在 `backend/finance/remittance_api.py` 的提交路由上声明；Agent 提议的确认路由声明为 `agent.confirm`，按其代理的底层动作检查。
 
 不会让资金离开钱包的调用不做策略检查，直接交给业务规则处理：重复提交已提交的付款（原样返回）、偿还已结清的分期、目标不存在或不属于本人（由业务返回 404/400）。Agent 发起的调用须带请求头 `X-StudyFlow-Agent`，T2 路由对其一律返回 `AGENT_TIER_EXCEEDED`。
 
@@ -109,6 +109,6 @@ Agent（W4）发起的调用最高 T1；T2 及以上只能生成待确认动作�
 
 `DJANGO_SECURE=true` 时启用：HTTPS 重定向（`/health/` 除外，便于负载均衡器以 HTTP 探活）、HSTS（`DJANGO_HSTS_SECONDS`，默认 3600，确认无误后再调到 31536000；`DJANGO_HSTS_INCLUDE_SUBDOMAINS` 默认 true；默认不 preload，`DJANGO_HSTS_PRELOAD=true` 才开启）、Secure 会话 Cookie、Secure CSRF Cookie、会话 8 小时过期。反向代理下设置 `DJANGO_SECURE_PROXY_SSL_HEADER=true`（信任 `X-Forwarded-Proto`，只能在代理会覆盖该头时开启）。
 
-始终生效：HttpOnly/SameSite=Lax 会话 Cookie、`CSRF_TRUSTED_ORIGINS`（`DJANGO_CSRF_TRUSTED_ORIGINS`，逗号分隔）、`SECURE_CONTENT_TYPE_NOSNIFF`、`SECURE_REFERRER_POLICY=same-origin`、`X_FRAME_OPTIONS=DENY`。`.env.example` 默认 `DJANGO_DEBUG=False`。
+始终生效：HttpOnly/SameSite=Lax 会话 Cookie、`CSRF_TRUSTED_ORIGINS`（`DJANGO_CSRF_TRUSTED_ORIGINS`，逗号分隔）、`SECURE_CONTENT_TYPE_NOSNIFF`、`SECURE_REFERRER_POLICY=same-origin`、`X_FRAME_OPTIONS=DENY`。`backend/.env.example` 默认 `DJANGO_DEBUG=False`。
 
 CI 以 `DJANGO_SECURE=true` 和随机生成的强密钥运行 `manage.py check --deploy --fail-level WARNING`。不 preload 时 `security.W021` 被静默（preload 一旦提交难以撤回，属于部署方的决定）。
