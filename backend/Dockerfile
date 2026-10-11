@@ -6,7 +6,8 @@ FROM python:3.13-slim
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=1 \
-    PIP_DISABLE_PIP_VERSION_CHECK=1
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    DJANGO_STATIC_ROOT=/app/static
 
 # Same layout as the repository: /app/backend next to /app/studyflow-ai.
 WORKDIR /app/backend
@@ -20,6 +21,8 @@ RUN pip install -r requirements.lock.txt gunicorn==23.0.0 \
 
 COPY studyflow-ai ../studyflow-ai
 COPY backend .
+# Login page and admin assets; the web image (frontend/Dockerfile) copies and serves them.
+RUN DJANGO_SECRET_KEY=collectstatic-build-only python manage.py collectstatic --noinput
 RUN useradd --create-home --uid 10001 studyflow \
     && mkdir -p output \
     && chown -R studyflow:studyflow /app

@@ -1,0 +1,12 @@
+# Installed and built inside the image; tests and local output are not needed.
+node_modules/
+dist/
+.vite/
+test-results/
+tests/
+playwright.config.mjs
+vitest.config.ts
+**/*.log
+**/.env*
+Dockerfile
+.dockerignore
