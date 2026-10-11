@@ -59,6 +59,7 @@ class Command(BaseCommand):
                 progress,
                 options["arm"],
                 options["evaluation_kind"],
+                run_output=output,
             )
         except ValueError as exc:
             raise CommandError(str(exc)) from None

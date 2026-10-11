@@ -141,6 +141,8 @@ TIME_ZONE = "Asia/Bangkok"
 USE_I18N = True
 USE_TZ = True
 STATIC_URL = "static/"
+# Target of `collectstatic`; the Docker image sets it and the web container serves the files.
+STATIC_ROOT = os.getenv("DJANGO_STATIC_ROOT") or None
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 TEST_RUNNER = "config.test_runner.StudyFlowTestRunner"
 

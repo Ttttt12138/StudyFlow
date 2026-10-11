@@ -47,6 +47,12 @@ class Command(BaseCommand):
         for event in snapshot["events"]: event["beneficiary_id"] = beneficiary["id"]
         post("state",{"expected_version":0,"snapshot":snapshot})
         wallet = post("demo/initialize",{"state_version":1})
+        # Family savings held in CNY, so the wallet, remittance and agent journeys have a source balance.
+        family = post("funding-sources",{"economic_key":"demo-family-cny","kind":"external_savings","currency":"CNY",
+            "amount":"40000.00","available_on":snapshot["as_of"],"certainty":"confirmed"})
+        client.force_authenticate(operator)
+        post("funding-sources/"+family["id"]+"/receive",{"hold_in_source_currency":True})
+        client.force_authenticate(student)
         budgets = {}
         for kind,estimate in [("essential","6000.00"),("expected",None),("higher_cost","12400.00")]:
             overrides = [] if estimate is None else [{

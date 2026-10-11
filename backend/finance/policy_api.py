@@ -132,8 +132,17 @@ class ApprovalDecisionView(APIView):
         return Response({"data": approval_record(approval)})
 
 
+class LimitsView(APIView):
+    """T0: the student's effective outflow limits (base x credit multiplier) and usage."""
+
+    @extend_schema(responses=CommandResponse)
+    def get(self, request):
+        return Response({"data": policy.limits_summary(request.user)})
+
+
 urlpatterns = [
     path("auth/token/", TokenView.as_view()),
+    path("policy/limits/", LimitsView.as_view()),
     path("auth/step-up/", StepUpView.as_view()),
     path("approvals/", ApprovalListView.as_view()),
     path("approvals/<uuid:pk>/", ApprovalDetailView.as_view()),

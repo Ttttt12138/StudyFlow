@@ -181,6 +181,25 @@ def limits_for(owner, currency):
     return {k: getattr(row, k) * factor for k in ("per_transaction", "daily", "monthly")}
 
 
+def limits_summary(owner):
+    """Effective outflow limits and usage per currency, for the student's own limits view."""
+    from .credit import profile
+
+    credit = profile(owner)
+    factor = Decimal(credit["limit_multiplier"])
+
+    def text(value):
+        return format(Decimal(value).quantize(CENT), "f")
+    rows = []
+    for row in PolicyLimit.objects.filter(action="outflow", enabled=True).order_by("currency"):
+        base = {k: getattr(row, k) for k in ("per_transaction", "daily", "monthly")}
+        rows.append({"currency": row.currency, "base": {k: text(v) for k, v in base.items()},
+                     "effective": {k: text(v * factor) for k, v in base.items()},
+                     "usage": {k: text(v) for k, v in usage(owner, row.currency).items()}})
+    return {"credit_level": credit["level"], "limit_multiplier": credit["limit_multiplier"],
+            "window_zone": str(LIMIT_ZONE), "limits": rows, "is_simulated": True}
+
+
 def window_starts(now=None):
     local = timezone.localtime(now or timezone.now(), LIMIT_ZONE)
     day = local.replace(hour=0, minute=0, second=0, microsecond=0)

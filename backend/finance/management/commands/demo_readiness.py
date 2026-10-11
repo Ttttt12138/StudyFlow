@@ -2,6 +2,7 @@
 
 import json
 import threading
+import time
 from copy import deepcopy
 from pathlib import Path
 from uuid import uuid4
@@ -91,6 +92,12 @@ class Demo:
                 if job.status in {"DONE", "RETRY"}:
                     return self.request("readiness/checks/" + str(job_id))
             if not run_one(self.student):
+                if ReadinessJob.objects.filter(
+                    owner=self.student, status__in=["QUEUED", "RUNNING"]
+                ).exists():
+                    # A separate worker may hold the lease; no local claim does not mean done.
+                    time.sleep(0.05)
+                    continue
                 break
         if job_id:
             return self.request("readiness/checks/" + str(job_id))
@@ -182,7 +189,25 @@ class Demo:
                 },
             },
         )
+        if settings.STUDYFLOW_CONSUMPTION_ENABLED:
+            self.confirm_synthetic_history()
         return extracted
+
+    def confirm_synthetic_history(self):
+        """Supply the coverage required by the enabled consumption module, not cash."""
+        batch = self.request(
+            "readiness/transaction-imports",
+            data={"source_type": "synthetic"},
+            files={"file": ("synthetic-history.csv", (
+                "transaction_id,account_id,date,amount,currency,counterparty,description\n"
+                "prior-rent,readiness-demo,2026-07-05,-100.00,THB,Demo Condo,Monthly rent\n"
+            ).encode(), "text/csv")},
+        )
+        self.request("readiness/transaction-imports/" + batch["id"] + "/confirm", {
+            "selected_rows": [row["locator"] for row in batch["preview"]["rows"]],
+            "coverage": [{"account_id": "readiness-demo", "start": "2026-07-01",
+                          "end": "2026-08-01", "complete": True}],
+        })
 
     def financing(self):
         self.request(

@@ -489,6 +489,28 @@ class LimitAndUsageTests(PolicyHarness, APITestCase):
         self.assertEqual(body["usage"], {"daily": "0.00", "monthly": "0.00"})
         self.convert_cny("700.00")  # exactly at the daily limit is allowed
 
+    def test_limits_view_reports_effective_limits_and_usage(self):
+        PolicyLimit.objects.filter(currency="CNY").update(per_transaction=1000, daily=1500, monthly=2000)
+        self.hold("CNY", "5000.00")
+        self.convert_cny("800.00")
+        response = self.read("policy/limits")
+        self.assertEqual(response.status_code, 200, response.data)
+        data = response.data["data"]
+        self.assertEqual((data["credit_level"], data["limit_multiplier"], data["window_zone"], data["is_simulated"]),
+                         ("BUILDING", "1.0", "Asia/Bangkok", True))
+        cny = next(row for row in data["limits"] if row["currency"] == "CNY")
+        self.assertEqual(cny["base"], {"per_transaction": "1000.00", "daily": "1500.00", "monthly": "2000.00"})
+        self.assertEqual(cny["effective"], cny["base"])
+        self.assertEqual(cny["usage"], {"daily": "800.00", "monthly": "800.00"})
+        with patch("finance.credit.profile", return_value={"level": "GOOD", "limit_multiplier": "1.5"}):
+            rows = self.read("policy/limits").data["data"]["limits"]
+        cny = next(row for row in rows if row["currency"] == "CNY")
+        self.assertEqual(cny["effective"], {"per_transaction": "1500.00", "daily": "2250.00", "monthly": "3000.00"})
+        PolicyLimit.objects.filter(currency="CNY").update(enabled=False)
+        self.assertNotIn("CNY", [row["currency"] for row in self.read("policy/limits").data["data"]["limits"]])
+        self.client.force_authenticate(None)
+        self.assertIn(self.client.get("/api/v2/policy/limits/").status_code, (401, 403))
+
     def test_payments_and_debits_count_toward_home_usage(self):
         rent = self.payment("rent")
         self.submit(rent, "9000.00")

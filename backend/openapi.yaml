@@ -1899,6 +1899,23 @@ paths:
               schema:
                 $ref: '#/components/schemas/CommandResponse'
           description: ''
+  /api/v2/policy/limits/:
+    get:
+      operationId: get_api_v2_policy_limits
+      description: 'T0: the student''s effective outflow limits (base x credit multiplier)
+        and usage.'
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
   /api/v2/readiness/balance-confirmations/:
     post:
       operationId: post_api_v2_readiness_balance_confirmations
