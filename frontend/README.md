@@ -17,14 +17,21 @@ From `frontend/` (Node 22+ recommended; validated here on Node 24):
 
 ```sh
 npm ci
+npx playwright install chromium   # once, unless CHROMIUM_PATH points to an installed Chromium-based browser
 npm run build
-npm run dev    # keep running in its own terminal for the browser suites
-npm test
-npm run test:integration
+npm run dev                        # for manual use; the browser suites start Vite themselves
+npm test                           # unit tests (Vitest) + mocked browser suites (Playwright)
+npm run test:integration           # needs Django, PostgreSQL and the mock worker
 npm run test:wallet-integration
 ```
 
-`npm test` runs six **mocked/synthetic** Chromium browser suites. `npm run test:integration` requires the actual Django server, PostgreSQL and the **mock** worker; it creates unique synthetic student accounts and durable demo records. It does not print or save account passwords. Result reports/screenshots go to ignored `../output/frontend/`. The suites use Playwright's Chromium (`npx playwright install chromium`) unless `CHROMIUM_PATH` points to another Chromium-based browser. The integration suites call Django through `../.venv`; set `PYTHON` to use a different interpreter. It is safe to rerun against a dedicated development database, not a production database.
+| Command | What runs | Needs |
+|---|---|---|
+| `npm run test:unit` | Vitest unit tests next to the code (`src/**/*.test.ts`): money and date presentation, version freshness, import rebasing, upload kinds, API errors, pagination and CSRF renewal, form validation | nothing |
+| `npm run test:e2e` | Playwright project `mocked` (`tests/e2e/mocked/`): every journey against mocked or synthetic responses, desktop and phone widths | Chromium |
+| `npm run test:integration` / `test:wallet-integration` | Playwright project `integration` (`tests/e2e/integration/`): real HTTP against Django and PostgreSQL | Django on 127.0.0.1:8000, PostgreSQL, `readiness_worker --mode mock` |
+
+Playwright starts Vite (`playwright.config.mjs`) unless `TEST_URL` points at a running server, and pins the browser locale to `en-US`. The integration specs create unique synthetic accounts and durable demo records; they never print or save passwords and call Django through `../.venv` (set `PYTHON` for another interpreter). Run them against a dedicated development database, not a production database. Reports, failure screenshots and traces go to the ignored `../output/frontend/` (`report/`, `test-results/`); open a trace with `npx playwright show-trace <file>`.
 
 Vite proxies same-origin `/api` to Django at 127.0.0.1:8000 and preserves the browser Host/Origin for CSRF. Open the Vite dev origin and use **Sign in to StudyFlow**, the existing Django `/api/auth/login/` form. The browser returns to the frontend, reads `/api/auth/session/`, and sends cookies plus `X-CSRFToken`. A normal existing student account can be provisioned through Django admin; local demo credentials from `manage.py seed_demo` are also supported. There is no production student token entry or token stored in local/session storage.
 
