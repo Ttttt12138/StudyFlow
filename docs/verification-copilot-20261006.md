@@ -1,5 +1,7 @@
 # Copilot 实施与验收记录 — 2026-10-06
 
+> 路径说明（2026-10-11 更新）：B 模块已移入 `backend/`。下文 Django 命令在 `backend/` 下运行，`manage.py`、`finance/`、`auto_test/`、`openapi.yaml` 等路径均相对 `backend/`；测试结果保留当时的记录。
+
 后续已实际运行新独立盲测和 Gemini OCR，最新状态见 [独立验证报告](verification-independent-20261006.md)：两组模型达标、规则组未达标；Gemini 3.6 已有真实识别成功样本，但整组仍因 503／超时未通过。下文保留本次实施时的历史验证记录。
 
 工程功能与模型效果分别验收。资金、身份、材料均为合成 Demo；HTTP、PostgreSQL 和标为 live 的模型请求为实际执行。未建立真实银行或支付连接。

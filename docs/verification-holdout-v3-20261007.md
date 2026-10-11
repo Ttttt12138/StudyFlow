@@ -1,5 +1,7 @@
 # 独立盲测 v3 首测
 
+> 路径说明（2026-10-11 更新）：B 模块已移入 `backend/`。下文 Django 命令在 `backend/` 下运行，`manage.py`、`finance/`、`auto_test/`、`openapi.yaml` 等路径均相对 `backend/`；测试结果保留当时的记录。
+
 验证日期：2026-10-07，Asia/Bangkok。v2 在规则修复后已转为回归集，v3 用作新的独立首测集。**三组没有全部达标，整体不通过。** 所有失败均保留，结果出来后没有修改提示词、规则、数据、标签或评分逻辑。
 
 ## 协议
@@ -54,7 +56,8 @@ LLM-only 组共调用 164 次分类，多于 160 条样本，原始报告里有�
 - v3 用于改进后同样转为回归集，此后重跑必须加 `--evaluation-kind regression`。
 
 ```powershell
-studyFlow/Scripts/python.exe manage.py evaluate_copilot --mode live --split test --evaluation-kind regression --dataset studyflow-ai/evals/copilot-holdout-v3/cases.jsonl --env-file studyflow-ai/.env --review studyflow-ai/evals/copilot-holdout-v3/review.json
+Set-Location backend
+../studyFlow/Scripts/python.exe manage.py evaluate_copilot --mode live --split test --evaluation-kind regression --dataset ../studyflow-ai/evals/copilot-holdout-v3/cases.jsonl --env-file ../studyflow-ai/.env --review ../studyflow-ai/evals/copilot-holdout-v3/review.json
 ```
 
 ## 静默漏报修复（2026-10-07，回归，不是独立盲测）

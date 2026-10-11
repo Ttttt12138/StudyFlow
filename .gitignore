@@ -12,7 +12,7 @@ build/
 dist/
 .env
 .demo-credentials.json
-examples/demo-ids.json
+backend/examples/demo-ids.json
 .postgres/
 .pg-password
 *.sqlite3

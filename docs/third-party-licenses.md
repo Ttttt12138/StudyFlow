@@ -1,6 +1,6 @@
 # Third-Party Components and Licenses
 
-Generated on 2026-10-07 from the installed package metadata (`importlib.metadata`), starting from `requirements.lock.txt` and `studyflow-ai/pyproject.toml` and following every transitive runtime dependency. Versions are the pinned ones the project runs and tests with.
+Generated on 2026-10-07 from the installed package metadata (`importlib.metadata`), starting from `backend/requirements.lock.txt` and `studyflow-ai/pyproject.toml` and following every transitive runtime dependency. Versions are the pinned ones the project runs and tests with.
 
 > **Project licence.** This repository does not yet contain a `LICENSE` file for StudyFlow's own code. The team must choose one before publishing. Every third-party licence below permits use in a closed or open project, subject to the notes at the end.
 

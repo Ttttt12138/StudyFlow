@@ -9,4 +9,4 @@ These files come from the first days of the project (2026-10-04). They are kept 
 | `07_API_Readiness_Audit.txt` | Gap audit of an even earlier backend workspace. Its "not ready" verdict predates the Django backend. |
 | `08_Backend_Completion_Report.txt` | Completion report for the first Django/PostgreSQL MVP |
 
-For the current system, see the top-level `README.md`, `openapi.yaml` and the documents in `docs/`.
+For the current system, see the top-level `README.md`, `backend/openapi.yaml` and the documents in `docs/`.

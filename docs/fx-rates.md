@@ -11,7 +11,7 @@ Django 通过 C 模块已有的 Frankfurter 适配器（`studyflow_ai.readiness.
 
 固定汇率（`fixture`，每单位折合 THB）：USD 33.00、EUR 36.50、CNY 4.60、GBP 42.00、JPY 0.22；交叉汇率经 THB 换算。固定汇率模式不发起任何网络请求。这些数值只用于测试和演示，与市场价有偏差（2026-10-07 实测 CNY/THB 为 5.0187，固定值低约 8%），不得用于估算真实成本。
 
-实测记录：`scripts/verify_live_fx.py` 对全部 4 个货币对取真实汇率，并按 12 条汇路各生成一份报价（事务内回滚），报告写入 `output/verification-live-fx.json`。2026-10-07 运行结果：4 个货币对均返回当日汇率、没有过期标记，12 份报价的手续费、点差和到账金额与公式手算一致。
+实测记录：`backend/scripts/verify_live_fx.py` 对全部 4 个货币对取真实汇率，并按 12 条汇路各生成一份报价（事务内回滚），报告写入 `output/verification-live-fx.json`。2026-10-07 运行结果：4 个货币对均返回当日汇率、没有过期标记，12 份报价的手续费、点差和到账金额与公式手算一致。
 
 ## 数据
 

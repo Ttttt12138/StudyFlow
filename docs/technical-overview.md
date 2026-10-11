@@ -46,7 +46,7 @@ flowchart LR
   - `STUDYFLOW_FX_LIVE=false` uses fixed FX rates; `true` calls Frankfurter.
 
   Gemini OCR is a third opt-in that is off by default. It needs operator attestations and per-file consent.
-- **Every write goes through `CommandView`** (`finance/workflow_api.py`). In one database transaction it:
+- **Every write goes through `CommandView`** (`backend/finance/workflow_api.py`). In one database transaction it:
   1. authenticates the caller;
   2. checks the `Idempotency-Key` (a replay returns the stored response);
   3. takes a row lock on the user;
@@ -60,13 +60,16 @@ flowchart LR
 
 | Path | Contents |
 |---|---|
-| `finance/` | Django app: wallets, FX, remittance, policy, credit, agent, lending (B), readiness, copilot, consumption |
-| `finance/lending_core/` | B's pure loan calculations and contracts |
+| `frontend/` | A: React + Vite student app and browser suites |
+| `backend/` | B: Django project root (`manage.py`, requirements, Dockerfile) |
+| `backend/finance/` | Django app: wallets, FX, remittance, policy, credit, agent, lending (B), readiness, copilot, consumption |
+| `backend/finance/lending_core/` | B's pure loan calculations and contracts |
 | `studyflow-ai/` | C package: agent planner and prompts, FX adapter, OCR, extraction, evaluation sets (`evals/`) |
-| `config/` | Django settings, URLs, OpenAPI schema hooks |
-| `auto_test/` | Django tests (481), including concurrency suites |
+| `backend/config/` | Django settings, URLs, OpenAPI schema hooks |
+| `backend/auto_test/` | Django tests (481), including concurrency suites |
 | `studyflow-ai/auto_test/` | C package tests |
-| `scripts/` | `run_gates.py` (all checks), live verification scripts, PostgreSQL helpers |
+| `scripts/` | `run_gates.py` (all checks across A/B/C), holdout freeze, PostgreSQL helpers |
+| `backend/scripts/` | i18n catalog tool, fixture builders, live verification scripts |
 | `evidence/` | Committed run logs and reports ([index](../evidence/README.md)) |
 | `docs/` | Design and verification documents; `docs/api/` holds the API guide and reference |
 | `legacy/`, `docs/legacy/` | Earlier prototype and notes; not part of the submission |
@@ -75,10 +78,10 @@ flowchart LR
 
 ## 2. Server-side FX quoting
 
-The client never supplies a rate. A quote is priced by the server from a corridor and a reference rate (`finance/fx_rates.py` `create_live_quote`).
+The client never supplies a rate. A quote is priced by the server from a corridor and a reference rate (`backend/finance/fx_rates.py` `create_live_quote`).
 
 1. **Reference (mid) rate.** The mid rate comes from Frankfurter, through the C adapter, which blends central-bank reference rates (ECB, Bank of Thailand, CFETS and others). In mock mode it comes from fixed fixtures. Snapshots are cached for 15 minutes. On a fetch failure the last snapshot is used, but a rate older than **7 days** is refused (`STALE_FX_RATE`). In live mode, fixture rates are never executable.
-2. **Corridor.** There are 12 corridors (`finance/corridors.py`): CNY, USD and EUR → THB, and THB → CNY, each with express, standard and economy tiers. Each tier has a fixed fee, a percentage fee, an FX margin, min/max amounts and settlement days.
+2. **Corridor.** There are 12 corridors (`backend/finance/corridors.py`): CNY, USD and EUR → THB, and THB → CNY, each with express, standard and economy tiers. Each tier has a fixed fee, a percentage fee, an FX margin, min/max amounts and settlement days.
 3. **Customer rate** = `mid × (1 − margin_bps / 10000)`, rounded **down** to 10 decimal places.
 4. **Sender fee** = `fee_fixed + amount × fee_percent`, rounded half-up to the source currency's precision.
 5. **Net received** = `(amount − sender_fee) × rate − receiver_fee`, rounded half-up to the target precision. Live quotes have a receiver fee of 0.
@@ -113,7 +116,7 @@ stateDiagram-v2
     DELIVERED --> RECONCILED: reconcile
 ```
 
-Source: `TRANSITIONS` in `finance/remittance_orders.py`.
+Source: `TRANSITIONS` in `backend/finance/remittance_orders.py`.
 - Each transition checks the order's version and appends one row to an immutable status history (a database trigger blocks updates and deletes).
 - **Money legs:**
   - `submit` debits the send amount from the source balance. For a THB source, the wallet must keep the student's reserve (`RESERVE_REQUIRED`).
@@ -140,7 +143,7 @@ Limits are kept per currency in the `PolicyLimit` table and multiplied by the cr
 
 ## 5. Credit level and limit multiplier
 
-Source: `finance/credit.py`. The credit level is a simulated on-time record, not a credit score.
+Source: `backend/finance/credit.py`. The credit level is a simulated on-time record, not a credit score.
 
 - **Evidence counted:**
   - loan instalments;
@@ -162,17 +165,17 @@ Source: `finance/credit.py`. The credit level is a simulated on-time record, not
 
 ## 6. Ledger invariants
 
-Source: `finance/wallets.py`, migrations `0015`–`0017`.
+Source: `backend/finance/wallets.py`, migrations `0015`–`0017`.
 
 1. **One entry point.** Every balance change goes through `wallets.post()`. It locks the user row and the balance row, assigns a per-owner sequence number and writes one ledger entry.
 2. **Non-negative balances.** A database `CHECK` constraint enforces this for both the home (THB) wallet and foreign `WalletBalance` rows.
 3. **Ledger equals balance.** For each currency, the sum of ledger entries equals the balance. Randomized and mixed-sequence tests check this after every step.
 4. **Immutability.** Ledger entries, conversions, remittance status history and agent steps cannot be updated or deleted.
-5. **Exactly-once effects.** Idempotency keys, single-use quotes and step-up tokens, and per-order leg constraints mean that a retried or racing request never posts twice. Concurrency suites (`auto_test/test_*_concurrency.py`) run real parallel requests against PostgreSQL.
+5. **Exactly-once effects.** Idempotency keys, single-use quotes and step-up tokens, and per-order leg constraints mean that a retried or racing request never posts twice. Concurrency suites (`backend/auto_test/test_*_concurrency.py`) run real parallel requests against PostgreSQL.
 
 ## 7. Agent loop and guardrails
 
-Source: `finance/agent_runner.py`, `finance/agent_tools.py`, `studyflow-ai/src/studyflow_ai/agent/`.
+Source: `backend/finance/agent_runner.py`, `backend/finance/agent_tools.py`, `studyflow-ai/src/studyflow_ai/agent/`.
 
 ```mermaid
 flowchart TD

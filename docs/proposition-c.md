@@ -6,16 +6,16 @@
 
 | # | 缺口 | 状态 | 文档 | 主要实现 |
 |---|---|---|---|---|
-| 1 | 多币种核心 | 完成 | [多币种钱包](multi-currency.md) | `finance/wallets.py`、`finance/money.py`、迁移 0015 |
-| 2 | 汇款订单状态机 | 完成 | [汇款订单](remittance.md) | `finance/remittance_orders.py`、迁移 0017 |
-| 3 | 实时汇率接入 | 完成（参考汇率） | [汇率接入](fx-rates.md) | `finance/fx_rates.py` 调用 C 的 Frankfurter 适配器 |
-| 4 | 权限分级 T0–T3 | 完成 | [权限分级](permissions.md) | `finance/policy.py`、`finance/throttles.py`、迁移 0016 |
+| 1 | 多币种核心 | 完成 | [多币种钱包](multi-currency.md) | `backend/finance/wallets.py`、`backend/finance/money.py`、迁移 0015 |
+| 2 | 汇款订单状态机 | 完成 | [汇款订单](remittance.md) | `backend/finance/remittance_orders.py`、迁移 0017 |
+| 3 | 实时汇率接入 | 完成（参考汇率） | [汇率接入](fx-rates.md) | `backend/finance/fx_rates.py` 调用 C 的 Frankfurter 适配器 |
+| 4 | 权限分级 T0–T3 | 完成 | [权限分级](permissions.md) | `backend/finance/policy.py`、`backend/finance/throttles.py`、迁移 0016 |
 | 5 | 已知风险清单 | 完成，持续维护 | [已知风险](known-risks.md) | — |
-| 6 | 生产加固 | 完成（配置级） | [权限分级 §7](permissions.md) | `config/settings.py`（`DJANGO_SECURE`） |
+| 6 | 生产加固 | 完成（配置级） | [权限分级 §7](permissions.md) | `backend/config/settings.py`（`DJANGO_SECURE`） |
 | 7 | 前端 | 不在范围 | — | — |
-| 8 | 工具调用 Agent | 完成 | [Agent](agent.md) | C：`studyflow_ai.agent`；Django：`finance/agent_*.py`、迁移 0018 |
-| 9 | 多语言 | 完成（API 错误信息） | [多语言](i18n.md) | `finance/i18n.py`、`locale/` |
-| 10 | 信用建立 | 完成（模拟） | [信用建立](credit.md) | `finance/credit.py` |
+| 8 | 工具调用 Agent | 完成 | [Agent](agent.md) | C：`studyflow_ai.agent`；Django：`backend/finance/agent_*.py`、迁移 0018 |
+| 9 | 多语言 | 完成（API 错误信息） | [多语言](i18n.md) | `backend/finance/i18n.py`、`backend/locale/` |
+| 10 | 信用建立 | 完成（模拟） | [信用建立](credit.md) | `backend/finance/credit.py` |
 
 ## 逐项说明
 
@@ -34,8 +34,8 @@
 - 费用明细包括发送费、汇率点差成本和总成本；汇路的金额上下限会在提交时再次校验。
 - 联动：状态为已退回或状态不明的订单会进入复核队列；按期送达的订单计入信用记录。
 - 学费：没有独立的学费模块。学费通过两条现有资金流程支付，两者都要求收款方已核验：
-  - 汇款订单 `purpose=tuition`、`recipient=BENEFICIARY`，创建和提交时都校验受益人 `verified`（`finance/remittance_orders.py`）；
-  - readiness 付款 `POST payments/`，要求已确认发票和受控核验收款人，回执按发票对账（[消费与执行](consumption.md#模拟汇款与学费执行)、`finance/execution_services.py`）。
+  - 汇款订单 `purpose=tuition`、`recipient=BENEFICIARY`，创建和提交时都校验受益人 `verified`（`backend/finance/remittance_orders.py`）；
+  - readiness 付款 `POST payments/`，要求已确认发票和受控核验收款人，回执按发票对账（[消费与执行](consumption.md#模拟汇款与学费执行)、`backend/finance/execution_services.py`）。
 
 ### 3. 汇率接入
 - 通过 C 模块已有的 Frankfurter 适配器获取参考汇率（Frankfurter v2 汇总多家央行，含 ECB、泰国央行、中国外汇交易中心），并保存为快照，15 分钟内复用。2026-10-07 已用真实网络验证。

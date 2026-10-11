@@ -66,7 +66,10 @@ def test_blind_protocol_records_exact_runtime_code(version):
     # A file changed after the first blind run must keep its frozen copy under frozen/.
     for path, digest in protocol["code_sha256"].items():
         current = ROOT.parent / path
-        if not _matches_digest(current, digest):
+        if not current.exists():
+            # Protocols pinned B files by their path before B moved under backend/.
+            current = ROOT.parent / "backend" / path
+        if not current.exists() or not _matches_digest(current, digest):
             current = folder / "frozen" / (path + ".txt")
         assert _matches_digest(current, digest), path
 

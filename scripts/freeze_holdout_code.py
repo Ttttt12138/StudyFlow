@@ -2,7 +2,7 @@
 
 The holdout protocols pin the exact code used for their blind runs. When a pinned
 file changes, its pinned version (found in git history) must be stored under
-evals/<holdout>/frozen/<path>.txt. Run this before committing changes to finance/.
+evals/<holdout>/frozen/<path>.txt. Run this before committing changes to backend/finance/.
 """
 import hashlib
 import json
@@ -23,6 +23,12 @@ def _matches(raw, digest):
     return any(hashlib.sha256(data).hexdigest() == digest for data in _variants(raw))
 
 
+def _current(path):
+    """Protocols pinned B files by their path before B moved under backend/."""
+    moved = ROOT / "backend" / path
+    return moved if not (ROOT / path).exists() and moved.exists() else ROOT / path
+
+
 def _pinned_from_history(path, digest):
     """Newest committed version of `path` whose content matches the pinned digest."""
     commits = subprocess.run(["git", "log", "--format=%H", "--", path], cwd=ROOT,
@@ -41,7 +47,7 @@ def main():
         folder = protocol_path.parent
         protocol = json.loads(protocol_path.read_text(encoding="utf-8"))
         for path, digest in protocol.get("code_sha256", {}).items():
-            current = ROOT / path
+            current = _current(path)
             if current.exists() and _matches(current.read_bytes(), digest):
                 continue
             frozen = folder / "frozen" / (path + ".txt")

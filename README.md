@@ -21,7 +21,7 @@
 | Chinese and English | Localized API error messages with stable error codes | [§8](docs/technical-overview.md#8-internationalization) |
 | Earlier B/C work | Loans and repayment (B), budget readiness, consumption learning, financial copilot, optional Gemini OCR | [docs/README.zh.md](docs/README.zh.md) |
 
-There is no frontend in this submission. The API is exercised through Swagger UI and scripted HTTP demos.
+The repository holds three modules side by side: **A** `frontend/` (React student app, see [frontend setup](frontend/README.md)), **B** `backend/` (Django API) and **C** `studyflow-ai/` (AI package imported by B). The frontend signs in with the Django session; the API can also be exercised through Swagger UI and scripted HTTP demos.
 
 ## Architecture
 
@@ -29,9 +29,9 @@ One Django 5.2 + DRF server exposes everything under `/api/v2/` and stores it in
 
 ```mermaid
 flowchart LR
-    client["API client / Swagger UI"] -->|Token or session| api["Django + DRF<br/>/api/v2/"]
+    client["frontend/ (A) · API client · Swagger UI"] -->|Token or session| api["backend/ (B)<br/>Django + DRF /api/v2/"]
     api --> pg[("PostgreSQL 17")]
-    api --> c["studyflow-ai<br/>(agent planner, FX adapter, OCR)"]
+    api --> c["studyflow-ai/ (C)<br/>(agent planner, FX adapter, OCR)"]
     c -. live mode only .-> ext["LLM gateway · Frankfurter · Gemini"]
 ```
 
@@ -64,16 +64,21 @@ Stop with `docker compose down`; add `-v` to also delete the database volume. Fo
 
 Python 3.11+ (3.13 is used in CI) and Docker for PostgreSQL.
 
+The virtual environment lives at the repository root; Django commands run inside `backend/`.
+
 ```bash
 python -m venv studyFlow
-studyFlow/Scripts/python.exe -m pip install -r requirements-dev.txt   # on macOS/Linux: studyFlow/bin/python
-cp .env.example .env              # then set a random DJANGO_SECRET_KEY
 docker compose up -d --wait db    # database only, on 127.0.0.1:55433
-studyFlow/Scripts/python.exe manage.py migrate
-studyFlow/Scripts/python.exe manage.py createcachetable
-studyFlow/Scripts/python.exe manage.py seed_demo
-studyFlow/Scripts/python.exe manage.py runserver 127.0.0.1:8000
+cd backend
+../studyFlow/Scripts/python.exe -m pip install -r requirements-dev.txt   # on macOS/Linux: ../studyFlow/bin/python
+cp .env.example .env              # then set a random DJANGO_SECRET_KEY
+../studyFlow/Scripts/python.exe manage.py migrate
+../studyFlow/Scripts/python.exe manage.py createcachetable
+../studyFlow/Scripts/python.exe manage.py seed_demo
+../studyFlow/Scripts/python.exe manage.py runserver 127.0.0.1:8000
 ```
+
+The student frontend then runs with `npm ci && npm run dev` in `frontend/` ([frontend setup](frontend/README.md)).
 
 ## Run modes
 
@@ -94,19 +99,19 @@ One command runs all 17 gates: Django and C tests, migrations, OpenAPI validatio
 studyFlow/Scripts/python.exe scripts/run_gates.py
 ```
 
-Latest run: **17/17 pass. Django: 481 tests. C package: 298 tests.** Logs are in [evidence/gates/](evidence/gates/). CI runs the same suites on every push ([django.yml](.github/workflows/django.yml), [c-module.yml](.github/workflows/c-module.yml)).
+Latest run: **17/17 pass. Django: 481 tests. C package: 298 tests.** Logs are in [evidence/gates/](evidence/gates/). CI runs the same suites on every push ([django.yml](.github/workflows/django.yml), [c-module.yml](.github/workflows/c-module.yml)), plus the frontend build and browser suites ([frontend.yml](.github/workflows/frontend.yml)).
 
 | Area | Test files | Test functions* | What they prove |
 |---|---|---:|---|
-| Permissions and limits | `auto_test/test_policy.py`, `test_policy_concurrency.py` | 50 | Tier matrix, step-up token binding and single use, T3 approvals and separation of duties, Bangkok day and month windows, throttling, `check --deploy` |
-| Remittance | `auto_test/test_remittance.py`, `test_remittance_concurrency.py` | 59 | Every state transition, fee breakdowns, refunds, idempotent callbacks, no overdraw under concurrency |
-| Multi-currency ledger | `auto_test/test_multicurrency.py`, `test_multicurrency_concurrency.py` | 67 | Server-only pricing (client-rate exploit regression), single-use quotes, ledger sum equals balance, negative-balance constraint |
-| Credit building | `auto_test/test_credit.py` | 62 | Level rules, real-date window, anti-gaming, immutable snapshots, signed statements |
-| Agent (Django runner) | `auto_test/test_agent.py`, `test_agent_concurrency.py` | 56 | T2 never executes, step and write budgets, truncation, proposal expiry and confirmation, races |
+| Permissions and limits | `backend/auto_test/test_policy.py`, `test_policy_concurrency.py` | 50 | Tier matrix, step-up token binding and single use, T3 approvals and separation of duties, Bangkok day and month windows, throttling, `check --deploy` |
+| Remittance | `backend/auto_test/test_remittance.py`, `test_remittance_concurrency.py` | 59 | Every state transition, fee breakdowns, refunds, idempotent callbacks, no overdraw under concurrency |
+| Multi-currency ledger | `backend/auto_test/test_multicurrency.py`, `test_multicurrency_concurrency.py` | 67 | Server-only pricing (client-rate exploit regression), single-use quotes, ledger sum equals balance, negative-balance constraint |
+| Credit building | `backend/auto_test/test_credit.py` | 62 | Level rules, real-date window, anti-gaming, immutable snapshots, signed statements |
+| Agent (Django runner) | `backend/auto_test/test_agent.py`, `test_agent_concurrency.py` | 56 | T2 never executes, step and write budgets, truncation, proposal expiry and confirmation, races |
 | Agent (C planner) | `studyflow-ai/auto_test/test_agent_planner.py`, `test_agent_holdout.py` | 65 | Tool-call validation, live-output recovery, frozen holdout integrity |
-| i18n | `auto_test/test_i18n.py` | 9 | Localized messages and stable codes |
-| OCR | `auto_test/test_ocr_*.py`, `studyflow-ai/auto_test/test_document_ocr.py`, `test_ocr_config.py` | 37 | Consent gates, operator attestations, retry and fallback, injection cannot be confirmed, retention purge |
-| Earlier B/C modules | `auto_test/test_lending_*.py`, `test_readiness_*.py`, `test_consumption_*.py`, `test_copilot*.py`, `finance/test*.py`, other `studyflow-ai/auto_test` files | the rest | Loans, budgets, readiness, consumption, copilot workflows |
+| i18n | `backend/auto_test/test_i18n.py` | 9 | Localized messages and stable codes |
+| OCR | `backend/auto_test/test_ocr_*.py`, `studyflow-ai/auto_test/test_document_ocr.py`, `test_ocr_config.py` | 37 | Consent gates, operator attestations, retry and fallback, injection cannot be confirmed, retention purge |
+| Earlier B/C modules | `backend/auto_test/test_lending_*.py`, `test_readiness_*.py`, `test_consumption_*.py`, `test_copilot*.py`, `backend/finance/test*.py`, other `studyflow-ai/auto_test` files | the rest | Loans, budgets, readiness, consumption, copilot workflows |
 
 \* Counted as `def test_` per file. Parametrized tests expand to more cases at run time.
 
@@ -124,15 +129,19 @@ The limitations behind these numbers are stated plainly in [docs/security-self-a
 
 | Path | Contents |
 |---|---|
-| `finance/` | Django app: wallets, FX, remittance, policy, credit, agent, lending, readiness, copilot |
-| `studyflow-ai/` | AI module: agent planner, FX adapter, OCR, extraction, evaluation datasets (`evals/`) |
-| `config/` | Django settings and URLs |
-| `auto_test/` | Django test suites |
-| `scripts/` | Gate runner, live verification scripts, PostgreSQL helpers |
-| `docker/`, `Dockerfile`, `compose.yaml` | One-command deployment |
+| `frontend/` | **A**: React + Vite student app and its browser suites ([setup](frontend/README.md)) |
+| `backend/` | **B**: Django project (`manage.py`, `requirements*.txt`, `.env.example`) |
+| `backend/finance/` | Django app: wallets, FX, remittance, policy, credit, agent, lending, readiness, copilot |
+| `backend/config/` | Django settings and URLs |
+| `backend/auto_test/` | Django test suites |
+| `backend/scripts/` | i18n catalog tool, fixture builders, live verification scripts, `start-backend` |
+| `backend/Dockerfile`, `backend/docker/` | API image (built from the repository root because it includes C) |
+| `backend/openapi.yaml` | Generated OpenAPI 3 contract |
+| `studyflow-ai/` | **C**: AI module: agent planner, FX adapter, OCR, extraction, evaluation datasets (`evals/`) |
+| `scripts/` | Cross-module gate runner, holdout freeze, PostgreSQL helpers |
+| `compose.yaml` | One-command deployment |
 | `evidence/` | Committed sandbox run logs and reports ([index](evidence/README.md)) |
 | `docs/` | Technical overview, security self-assessment, evaluation, API guide (`docs/api/`), design notes |
-| `openapi.yaml` | Generated OpenAPI 3 contract |
 | `legacy/`, `docs/legacy/` | Earlier prototype and notes; **not part of the submission** |
 
 ## Documentation
@@ -141,7 +150,7 @@ The limitations behind these numbers are stated plainly in [docs/security-self-a
 - [Security self-assessment](docs/security-self-assessment.md): permission tiers mapped to code and tests, plus known risks
 - [Agent evaluation](docs/agent-evaluation.md): frozen holdout and tuning set reported separately
 - [Evidence index](evidence/README.md): every run log and how to regenerate it
-- [API guide](docs/api/guide.md), [API reference](docs/api/reference.md), [OpenAPI](openapi.yaml)
+- [API guide](docs/api/guide.md), [API reference](docs/api/reference.md), [OpenAPI](backend/openapi.yaml)
 - [Third-party components and licences](docs/third-party-licenses.md)
 
 ## Demo video
