@@ -3,6 +3,9 @@
 import re
 from decimal import Decimal
 
+from studyflow_ai.date_semantics import due_date_issue, explicit_due_dates
+from studyflow_ai.instruction_safety import SUSPICIOUS as SUSPICIOUS
+from studyflow_ai.instruction_safety import untrusted_instructions
 from studyflow_ai.models import CallRecord, Classification, PlanningContext
 from studyflow_ai.provider_models import (
     ExtractedEvent,
@@ -12,19 +15,22 @@ from studyflow_ai.provider_models import (
     ProposedPlan,
     ProposedStep,
 )
+from studyflow_ai.settlements import mask_components
 
 # English keywords are word-bounded: a bare "lease" used to match "Please pay".
 KEYWORDS = {
     "tuition": r"\btuition\b|\bsemester fees?\b|学费|学期费用",
-    "rent": r"\brent\b|\brental\b|\blease\b|房租|租金|租赁费用",
+    "rent": r"\brent\b|\brental\b|\blease\b|\bsublet(?:ting)?\b|房租|租金|租赁费用|转租",
     "utility": r"\belectricity\b|\bwater bills?\b|\butility\b|电费|水费|水电费",
-    "family_support": r"\bfamily\b|\bsponsors?\b|\bparents\b|父母|家长|资助",
-    "living": r"\bgrocery\b|\bgroceries\b|\bfood\b|\btransport\b|食品|交通",
+    "family_support": (
+        r"\bfamily\b|\bsponsors?\b|\bparents\b|父母|家长|资助"
+        r"|\b(?:brother|sister|uncle|aunt|grandparents?)\b[^.\n]{0,70}"
+        r"\b(?:promises?|sends?|supports?|transfers?|THB|USD|EUR)\b"
+        r"|(?:爸妈|哥哥|姐姐|叔叔|阿姨|祖父母).{0,30}(?:承诺|汇款|生活费|转账)"
+    ),
+    "living": r"\bgrocery\b|\bgroceries\b|\bfood\b|\btransport\b|食品|交通|生鲜|菜钱",
 }
 FINANCIAL = r"THB|USD|EUR|\bpayment\b|\bbalance\b|\binvoice\b|\bfee\b|\btransfer\b"
-SUSPICIOUS = (
-    r"ignore (?:previous|all|prior) instructions|transfer all funds|system prompt|override.*policy|忽略.*指令|绕过.*政策|转出全部资金|全部资金转入"
-)
 # Only copular negation ("this is not tuition") is masked, up to the end of the clause;
 # imperative text such as "do not pay tuition late" keeps its category.
 NEGATED = (
@@ -100,10 +106,11 @@ def _line_fields(text):
     amount = _match(AMOUNT, text)
     if amount is None:
         amount = _match(r"(?:金额|数额|amount)\s*([\d,]+(?:\.\d+)?)", text)
+    deadlines = explicit_due_dates(text)
     return {
         "amount": amount,
         "currency": _match(r"(?<![A-Za-z])(THB|USD|EUR)(?![A-Za-z])", text),
-        "due_date": _match(DUE, text),
+        "due_date": deadlines[0] if deadlines else _match(DUE, text),
         "counterparty": _match(r"Beneficiary:\s*([^.;\n]+)", text),
         "invoice_id": _match(r"\b(INV-[\w-]+)\b", text),
     }
@@ -140,8 +147,9 @@ def _extract_events(text):
             category = current["category"] or current["context"] or document
             events.append(_event(category, current["fields"], current["evidence"]))
 
-    for index, line in enumerate(text.splitlines(), 1):
+    for index, line in enumerate(mask_components(text).splitlines(), 1):
         locator = _match(r"^\[(.*?)\]", line) or f"line:{index}"
+        line = re.sub(r"^\[(?:line|page):\d+\]\s?", "", line)
         own = _keyword_category(line)
         if label := _match(LABEL, line):
             own = _keyword_category(label) or own
@@ -152,6 +160,8 @@ def _extract_events(text):
         if current:
             clash = any(k in current["fields"] for k in ("amount", "invoice_id", "due_date") if k in fields)
             if clash and not own and "amount" not in fields and "invoice_id" not in fields:
+                if "due_date" in fields:
+                    current["evidence"].append(ExtractedField(field="due_date", quote=line, locator=locator))
                 continue  # A second bare date belongs to no new event.
             if clash or (own and current["category"] not in (None, own)):
                 flush()
@@ -160,7 +170,7 @@ def _extract_events(text):
             current = {"category": None, "context": context, "fields": {}, "evidence": []}
         for key, value in fields.items():
             current["fields"].setdefault(key, value)
-            current["evidence"].append(ExtractedField(field=key, quote=value, locator=locator))
+            current["evidence"].append(ExtractedField(field=key, quote=line if key == "due_date" else value, locator=locator))
         current["category"] = current["category"] or own
     flush()
     if not events:
@@ -174,7 +184,7 @@ class RuleProvider:
         self.mode = mode
 
     def record(self, purpose):
-        return CallRecord(provider="rules", purpose=purpose, model="rules-1.3-multilingual", mode=self.mode)
+        return CallRecord(provider="rules", purpose=purpose, model="rules-1.5-safe-settlements", mode=self.mode)
 
     def classify(self, text):
         category = category_for(text)
@@ -183,12 +193,17 @@ class RuleProvider:
         distribution = {
             name: top if name == category else (1 - top) / (len(names) - 1) for name in names
         }
+        attack = float(untrusted_instructions(text))
+        conflict = float(any(due_date_issue([line], "") == "CONFLICTING_DUE_DATE"
+                             for line in text.splitlines()))
         return Classification(
             category=category,
             probabilities=distribution,
             confidence=top,
             financial_relevance=float(category != "irrelevant"),
-            anomaly=float(bool(re.search(SUSPICIOUS, text, re.I))),
+            anomaly=max(attack, conflict),
+            instruction_risk=attack,
+            payment_conflict=conflict,
             needs_planning=float("shortfall" in text.lower()),
         ), self.record("classify")
 

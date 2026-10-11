@@ -161,7 +161,7 @@ def test_wrong_auto_decision_flags_only_unreviewed_mistakes():
     assert run(_case(text, "rent", events=[{**event, "category": "rent"}]))["wrong_auto_decision"]
     assert run(_case(text, "tuition", expected_review=True, events=[event]))["wrong_auto_decision"]
     # A mistake that reaches review is not an automatic decision.
-    unsure = run(_case("Brother pledge THB 10.00 due 2026-10-15. Beneficiary: Me", "family_support"))
+    unsure = run(_case("Support pledge THB 10.00 due 2026-10-15. Beneficiary: Me", "family_support"))
     assert unsure["review"] and not unsure["wrong_auto_decision"]
 
 

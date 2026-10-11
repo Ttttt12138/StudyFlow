@@ -11,14 +11,17 @@ from studyflow_ai.config import providers
 from studyflow_ai.demo_backend import DemoBackend
 from studyflow_ai.evaluation import (
     ARM_ROLES,
+    arm_targets_met,
     evaluate_case,
     legacy_targets_met,
     load_cases,
     role_targets_met,
     summarize,
 )
+from studyflow_ai.holdout_v5 import claim_run, review_policy_matches, validate_run
 from studyflow_ai.providers import prompts
 from studyflow_ai.providers.rules import RuleProvider
+from studyflow_ai.regression_run import claim_regression
 
 
 def review_valid(path, manifest):
@@ -31,6 +34,7 @@ def review_valid(path, manifest):
         and review.get("approved") is True
         and review.get("dataset_sha256") == manifest["sha256"]
         and review.get("review_type") in {"human", "user_delegated_ai"}
+        and (manifest.get("version") != "copilot-holdout-v5" or review_policy_matches(review, manifest))
     )
 
 
@@ -42,13 +46,21 @@ def evaluate(
     progress=None,
     arms=None,
     evaluation_kind="frozen_test",
+    run_output=None,
 ):
     cases, manifest = load_cases(dataset, split)
+    if manifest.get("version") == "copilot-holdout-v5" and split != "test":
+        raise ValueError("v5 requires the complete test split")
     approved = review_valid(review, manifest)
+    review_record = json.loads(Path(review).read_text(encoding="utf-8")) if review else {}
+    validate_run(dataset, manifest, settings, review_record, arms, evaluation_kind)
     if split == "test" and settings.mode == "live" and not approved:
         raise ValueError(
             "Human or explicitly user-delegated label approval is required before the live test"
         )
+    provenance = None
+    if manifest.get("version") == "copilot-holdout-v5" and evaluation_kind == "regression":
+        provenance = claim_regression(dataset, manifest, (settings, run_output))
     classifier, llm = providers(settings)
     rules = RuleProvider()
     configurations = {"rules": (rules, rules), "llm_only": (llm, llm), "jev_llm": (classifier, llm)}
@@ -56,7 +68,6 @@ def evaluate(
     acceptance = manifest.get("acceptance", "legacy")
     if acceptance not in {"legacy", "role-v1"}:
         raise ValueError(f"Unknown acceptance protocol: {acceptance}")
-    review_record = json.loads(Path(review).read_text(encoding="utf-8")) if review else {}
     report = dict(
         schema_version="copilot-eval-v1",
         evaluation_kind=evaluation_kind,
@@ -71,17 +82,20 @@ def evaluate(
         dataset=manifest,
         human_reviewed=approved and review_record.get("review_type") == "human",
         review=review_record,
+        run_provenance=provenance,
         live_acceptance=False,
         arms={},
         cost={"currency": None, "amount": None, "reason": "No verified provider tariff configured"},
     )
     try:
+        if evaluation_kind == "frozen_test":
+            claim_run(dataset, manifest)
         for name, pair in configurations.items():
             if arms and name not in arms:
                 continue
 
             def run_case(case, pair=pair):
-                row = evaluate_case(StudyFlowAI(*pair, DemoBackend()), case)
+                row = evaluate_case(StudyFlowAI(*pair, DemoBackend()), case, manifest.get("scoring_policy", "complete_only"))
                 row["language"] = case["language"]
                 return row
 
@@ -95,9 +109,7 @@ def evaluate(
             metrics["role"] = ARM_ROLES[name]
             metrics["legacy_targets_met"] = legacy_targets_met(metrics)
             metrics["role_targets_met"] = role_targets_met(metrics, ARM_ROLES[name])
-            metrics["targets_met"] = metrics[
-                "role_targets_met" if acceptance == "role-v1" else "legacy_targets_met"
-            ]
+            metrics["targets_met"] = arm_targets_met(metrics, manifest)
             report["arms"][name] = {"metrics": metrics, "cases": rows}
             if progress:
                 progress(name, len(rows), len(cases), report)

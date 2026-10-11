@@ -1,3 +1,4 @@
+from studyflow_ai.instruction_safety import blocks_extraction
 from studyflow_ai.models import RouteContext, RouteResult, Status
 from studyflow_ai.providers.base import ProviderFailure
 
@@ -28,14 +29,18 @@ class Router:
         return self._decide(context, result)
 
     def _decide(self, context, result):
+        if result.classification and blocks_extraction(result.classification):
+            return self._finish(result, "REVIEW", "POSSIBLE_ANOMALY")
         if context.deterministic_risk:
             return self._finish(result, "PLAN", "BACKEND_RISK")
+        if result.classification is None:
+            return self._finish(result, "REVIEW", "CLASSIFIER_UNAVAILABLE")
         if context.needs_extraction:
             return self._finish(result, "EXTRACT", "DOCUMENT_EXTRACTION_REQUIRED")
         judgment = result.classification
         if judgment is None:
             return self._finish(result, "REVIEW", "CLASSIFIER_UNAVAILABLE")
-        if judgment.anomaly >= 0.5:
+        if blocks_extraction(judgment):
             return self._finish(result, "REVIEW", "POSSIBLE_ANOMALY")
         if max(judgment.probabilities.values()) < MIN_PROBABILITY:
             return self._finish(result, "REVIEW", "LOW_CLASSIFICATION_PROBABILITY")

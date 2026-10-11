@@ -137,6 +137,8 @@ class Classification(Contract):
     confidence: float | None = None
     financial_relevance: float = Field(ge=0, le=1)
     anomaly: float = Field(ge=0, le=1)
+    instruction_risk: float | None = Field(default=None, ge=0, le=1)
+    payment_conflict: float | None = Field(default=None, ge=0, le=1)
     needs_planning: float = Field(ge=0, le=1)
 
     @model_validator(mode="after")

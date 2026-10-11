@@ -2,6 +2,8 @@
 
 from typing import Literal
 
+from pydantic import Field
+
 from studyflow_ai.models import Category, Contract
 
 
@@ -59,4 +61,6 @@ class ClassificationOutput(Contract):
     probabilities: CategoryProbabilities
     financial_relevance: float
     anomaly: float
+    instruction_risk: float = Field(ge=0, le=1)
+    payment_conflict: float = Field(ge=0, le=1)
     needs_planning: float

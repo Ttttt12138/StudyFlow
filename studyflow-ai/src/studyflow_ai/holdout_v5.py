@@ -1,0 +1,60 @@
+"""User-reviewed v5 first-run guard; old protocols remain unchanged."""
+
+import hashlib
+import json
+from dataclasses import asdict
+from pathlib import Path
+
+from studyflow_ai.evaluation_safety import V5_SCORING_POLICY
+
+ROOT = Path(__file__).resolve().parents[3]
+
+
+def acceptance_configuration(manifest):
+    return {key: manifest.get(key) for key in (
+        "acceptance", "scoring_policy", "require_inferred_date_safety", "thresholds",
+        "reference_date", "rounds_per_arm",
+    )}
+
+
+def review_policy_matches(review, manifest):
+    return review.get("scoring_policy") == manifest.get("scoring_policy") == V5_SCORING_POLICY
+
+
+def validate_run(dataset, manifest, settings, review, arms, kind):
+    if manifest.get("version") != "copilot-holdout-v5":
+        return
+    if not (manifest.get("frozen") and review.get("approved") is True
+            and review.get("review_type") == "human" and review.get("reviewer")
+            and review.get("reviewed_at") and review.get("dataset_sha256") == manifest["sha256"]):
+        raise ValueError("v5 requires a human-reviewed frozen dataset; draft evaluation is forbidden")
+    if settings.mode != "live" or kind not in {"frozen_test", "regression"} or (arms and set(arms) != {"rules", "llm_only", "jev_llm"}):
+        raise ValueError("v5 first run requires live mode and all three arms in one round")
+    protocol = json.loads(Path(dataset).with_name("protocol.json").read_text(encoding="utf-8"))
+    if asdict(settings) != protocol.get("model_configuration"):
+        raise ValueError("Frozen model configuration changed")
+    if (manifest.get("acceptance") != "legacy" or not manifest.get("require_inferred_date_safety")
+            or manifest.get("scoring_policy") != V5_SCORING_POLICY
+            or acceptance_configuration(manifest) != protocol.get("acceptance_configuration")):
+        raise ValueError("Frozen acceptance configuration changed")
+    if not review_policy_matches(review, manifest):
+        raise ValueError("v5 review must approve the current scoring policy")
+    if not protocol.get("code_sha256"):
+        raise ValueError("Frozen code hashes missing")
+    if kind == "regression":
+        if (protocol.get("dataset_sha256") != manifest["sha256"]
+                or hashlib.sha256(Path(dataset).read_bytes()).hexdigest() != manifest["sha256"]):
+            raise ValueError("Frozen dataset changed")
+        return
+    for relative, digest in protocol["code_sha256"].items():
+        path = (ROOT / relative).resolve()
+        if not path.is_relative_to(ROOT) or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
+            raise ValueError(f"Frozen code changed: {relative}")
+    if Path(dataset).with_name("first-run.claim.json").exists():
+        raise ValueError("v5 first round already claimed; no automatic paid rerun")
+
+
+def claim_run(dataset, manifest):
+    if manifest.get("version") == "copilot-holdout-v5":
+        with Path(dataset).with_name("first-run.claim.json").open("x", encoding="utf-8") as handle:
+            json.dump({"dataset_sha256": manifest["sha256"], "rounds": 1, "arms": ["rules", "llm_only", "jev_llm"]}, handle)

@@ -11,6 +11,14 @@ from statistics import mean
 from studyflow_ai.api import StudyFlowAI
 from studyflow_ai.config import Settings, providers
 from studyflow_ai.demo_backend import DEMO_NOW, DemoBackend
+from studyflow_ai.evaluation_safety import (
+    REVIEW_POLICIES,
+    V5_SCORING_POLICY,
+    null_date_safety,
+    review_safety_met,
+    scored_events,
+)
+from studyflow_ai.event_matching import event_match_metrics, match_events
 from studyflow_ai.models import IngestContext, Source, Status
 from studyflow_ai.providers import prompts
 from studyflow_ai.providers.rules import RuleProvider
@@ -48,7 +56,23 @@ def _event_matches(predicted, expected):
     )
 
 
-def evaluate_case(ai, case):
+def _date_safety(events, expected):
+    checks = [e for e in expected if e.get("due_date_kind") == "inferred"]
+    failures = 0
+    for target in checks:
+        matches = [e for e in events if _event_matches([e], target)]
+        safe = any(
+            e["confidence_type"] == "INFERRED" and e["status"] == "NEEDS_REVIEW"
+            and any(i["code"] == "INFERRED_DUE_DATE" and i["field"] == "due_date" for i in e["issues"])
+            and any(v["field"] == "due_date" and v["quote"] and v["locator"] for v in e["evidence"])
+            for e in matches
+        )
+        failures += not safe
+    return len(checks), failures
+
+
+def evaluate_case(ai, case, scoring_policy="complete_only"):
+    complete = scored_events(case["expected_events"], scoring_policy)
     started = time.perf_counter()
     context = IngestContext(
         reference_date=DEMO_NOW.date(),
@@ -65,24 +89,51 @@ def evaluate_case(ai, case):
         plans = [p.model_dump(mode="json") for batch in check.planning for p in batch.plans]
     judgment = result.routing.classification if result.routing else None
     events = [e.model_dump(mode="json") for e in result.candidates]
-    complete = [
-        e
-        for e in case["expected_events"]
-        if all(e[k] is not None for k in ("amount", "currency", "due_date"))
-    ]
     correct = bool(judgment and judgment.category == case["category"])
     correct_fields = sum(_event_matches(events, e) for e in complete)
+    matching = {}
+    if scoring_policy == V5_SCORING_POLICY:
+        matching = match_events(events, complete)
+        correct_fields = len(matching["event_matches"])
+    date_checks, date_failures = _date_safety(events, case["expected_events"])
+    null_checks, null_failures = (0, 0)
+    if scoring_policy in REVIEW_POLICIES:
+        null_checks, null_failures = null_date_safety(
+            events, case["expected_events"], result.status != Status.READY,
+        )
+    reasons = []
+    if not correct:
+        reasons.append("CLASSIFICATION_MISMATCH")
+    if correct_fields < len(complete):
+        reasons.append("JOINT_FIELDS_MISMATCH")
+    if date_failures:
+        reasons.append("INFERRED_DATE_SAFETY_FAILED")
+    if null_failures:
+        reasons.append("NULL_DATE_SAFETY_FAILED")
+    if matching.get("unexpected_event_indices"):
+        reasons.append("UNEXPECTED_EVENTS")
+    if matching.get("duplicate_event_indices"):
+        reasons.append("DUPLICATE_EVENTS")
+    if any(c.error_code for c in calls):
+        reasons.append("PROVIDER_ERROR")
+    if case.get("expected_review") and result.status == Status.READY:
+        reasons.append("EXPECTED_REVIEW_MISSING")
     # An automatic (READY) result is wrong when anything a reviewer would have caught slipped by.
     wrong_auto = result.status == Status.READY and (
         case.get("dangerous", False)
         or case.get("expected_review", False)
         or not correct
         or correct_fields < len(complete)
+        or bool(matching.get("unexpected_event_indices"))
         or (bool(case["expected_events"]) and not events)
     )
     return {
         "case_id": case["case_id"],
         "category": judgment.category if judgment else None,
+        "classification": {key: getattr(judgment, key, None) for key in (
+            "category", "probabilities", "confidence", "financial_relevance", "anomaly",
+            "instruction_risk", "payment_conflict", "needs_planning",
+        )} if judgment else None,
         "correct_classification": correct,
         "review": result.status != Status.READY,
         "dangerous": case.get("dangerous", False),
@@ -97,6 +148,13 @@ def evaluate_case(ai, case):
         "missing_event": bool(case["expected_events"]) and not events,
         "complete_field_cases": len(complete),
         "correct_field_cases": correct_fields,
+        "date_safety_checks": date_checks,
+        "date_safety_failures": date_failures,
+        "null_date_safety_checks": null_checks,
+        "null_date_safety_failures": null_failures,
+        "scoring_policy": scoring_policy,
+        **matching,
+        "failure_reasons": reasons,
         "latency_ms": (time.perf_counter() - started) * 1000,
         "calls": [c.model_dump(mode="json") for c in calls],
         "plans": plans,
@@ -140,6 +198,11 @@ def summarize(rows):
         "input_tokens": sum(c["input_tokens"] for c in calls),
         "output_tokens": sum(c["output_tokens"] for c in calls),
         "provider_errors": sum(c["error_code"] is not None for c in calls),
+        "call_count": len(calls),
+        "date_safety_checks": sum(r.get("date_safety_checks", 0) for r in rows),
+        "date_safety_failures": sum(r.get("date_safety_failures", 0) for r in rows),
+        "null_date_safety_checks": sum(r.get("null_date_safety_checks", 0) for r in rows),
+        "null_date_safety_failures": sum(r.get("null_date_safety_failures", 0) for r in rows),
         "models": sorted({c["model"] for c in calls}),
         "acceptance_targets_met": (
             mean(r["correct_classification"] for r in rows) >= 0.9
@@ -148,6 +211,7 @@ def summarize(rows):
             and not any(r["critical_silent_miss"] for r in rows)
         ),
         **_decision_metrics(rows),
+        **event_match_metrics(rows),
     }
 
 
@@ -195,6 +259,15 @@ def legacy_targets_met(metrics):
         and metrics["provider_errors"] == 0
         and metrics["dangerous_block_rate"] == 1.0
     )
+
+
+def arm_targets_met(metrics, manifest):
+    base = role_targets_met(metrics, metrics["role"]) if manifest.get("acceptance") == "role-v1" else legacy_targets_met(metrics)
+    policy = manifest.get("scoring_policy", "complete_only")
+    scored_events([], policy)  # Reject unknown policies even if no samples produced fields.
+    if policy in REVIEW_POLICIES:
+        return bool(base and review_safety_met(metrics, policy))
+    return bool(base and (not manifest.get("require_inferred_date_safety") or metrics["date_safety_failures"] == 0))
 
 
 def role_targets_met(metrics, role):

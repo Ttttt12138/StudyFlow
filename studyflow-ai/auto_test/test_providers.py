@@ -199,6 +199,8 @@ def test_real_jev_sdk_with_mock_http_transport():
                 for key, value in {
                     "financial_relevance": 1,
                     "anomaly": 0,
+                    "instruction_risk": 0,
+                    "payment_conflict": 0,
                     "needs_planning": 0,
                 }.items()
             },
