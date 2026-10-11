@@ -20,6 +20,14 @@ they enforce a system rule.
 | finance/serializers.py | Core financial input validation |
 | finance/workflow_serializers.py | Workflow request validation |
 | finance/workflow_models.py | Persistent workflow and execution records |
+| finance/policy.py, policy_api.py, policy_models.py | T2/T3 action catalog, limits, step-up tokens, approvals and policy denials |
+| finance/agent_api.py, agent_runner.py, agent_tools.py, agent_models.py | Agent sessions, tool catalog, planner loop, pending actions and their confirmation |
+| finance/credit.py, credit_api.py, credit_models.py | Simulated on-time record, snapshots, signed statements and limit multiplier |
+| finance/i18n.py | Error `code`/localized `message` exception handler |
+
+Endpoint contracts for the policy, agent and credit modules are in
+[reference.md](reference.md); background design notes are in docs/permissions.md,
+docs/agent.md and docs/credit.md.
 
 ## Deterministic calculation functions
 

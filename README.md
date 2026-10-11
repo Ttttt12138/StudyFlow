@@ -39,20 +39,29 @@ The full architecture, algorithms and diagrams are in [docs/technical-overview.m
 
 ## Quick start (Docker, no credentials needed)
 
-Requires Docker with Compose v2. Ports `8000` and `55433` must be free.
+Requires Docker with Compose v2.17+. Ports `8080`, `8000` and `55433` must be free (set `STUDYFLOW_WEB_PORT` to move `8080`).
 
 ```bash
 docker compose up --build
 ```
 
-On start the app container applies migrations, creates the rate-limit cache table, seeds demo users and data, and then serves on <http://127.0.0.1:8000>. It runs in **mock mode** with fixed FX rates, so nothing calls an external service.
+| Service | Role |
+|---|---|
+| `db` | PostgreSQL 17 on `127.0.0.1:55433` (named volume `django_data`) |
+| `app` | Django + gunicorn on `127.0.0.1:8000`; applies migrations, creates the rate-limit cache table and seeds demo users and data on start |
+| `worker` | `readiness_worker --mode mock`, started once `app` is healthy |
+| `web` | Built student app (`frontend/`) behind nginx on <http://localhost:8080>; `/api/`, `/admin/` and `/health/` are proxied to `app` on the same origin, and Django's static files are served for its login page |
 
-1. **Get the demo logins.** The seeded student and operator passwords and tokens are written inside the container:
+Everything runs in **mock mode** with fixed FX rates, so nothing calls an external service.
+
+1. **Get the demo logins.** `manage.py seed_demo` writes the student and operator passwords and tokens inside the app container:
    ```bash
    docker compose exec app cat .demo-credentials.json
    ```
-2. **Browse the API.** Log in as `demo-student` at <http://127.0.0.1:8000/api/auth/login/?next=/api/docs/> to open Swagger UI. `/api/docs/` requires login by design.
-3. **Run a full remittance scenario over real HTTP.** It compares routes, pays tuition to a verified payee, refunds a failed transfer, routes a T3 approval through a second operator, and updates the credit record:
+   The file lasts until the container is recreated (for example by a later `--build`); the users stay in the database. Set a new password with `docker compose exec app python manage.py changepassword demo-student`.
+2. **Open the student app.** Go to <http://localhost:8080>, choose **Sign in to StudyFlow** and log in as `demo-student`; Django's login page returns you to the app.
+3. **Browse the API.** Log in at <http://localhost:8080/api/auth/login/?next=/api/docs/> to open Swagger UI. `/api/docs/` requires login by design.
+4. **Run a full remittance scenario over real HTTP.** It compares routes, pays tuition to a verified payee, refunds a failed transfer, routes a T3 approval through a second operator, and updates the credit record:
    ```bash
    docker compose exec app python manage.py demo_remittance --runs 1
    docker compose exec app python manage.py demo_agent --runs 1
@@ -130,6 +139,7 @@ The limitations behind these numbers are stated plainly in [docs/security-self-a
 | Path | Contents |
 |---|---|
 | `frontend/` | **A**: React + Vite student app and its browser suites ([setup](frontend/README.md)) |
+| `frontend/Dockerfile`, `frontend/docker/` | Web image: built app on nginx, same-origin proxy to the API |
 | `backend/` | **B**: Django project (`manage.py`, `requirements*.txt`, `.env.example`) |
 | `backend/finance/` | Django app: wallets, FX, remittance, policy, credit, agent, lending, readiness, copilot |
 | `backend/config/` | Django settings and URLs |
@@ -139,7 +149,7 @@ The limitations behind these numbers are stated plainly in [docs/security-self-a
 | `backend/openapi.yaml` | Generated OpenAPI 3 contract |
 | `studyflow-ai/` | **C**: AI module: agent planner, FX adapter, OCR, extraction, evaluation datasets (`evals/`) |
 | `scripts/` | Cross-module gate runner, holdout freeze, PostgreSQL helpers |
-| `compose.yaml` | One-command deployment |
+| `compose.yaml` | One-command demo: database, API, readiness worker and web app |
 | `evidence/` | Committed sandbox run logs and reports ([index](evidence/README.md)) |
 | `docs/` | Technical overview, security self-assessment, evaluation, API guide (`docs/api/`), design notes |
 | `legacy/`, `docs/legacy/` | Earlier prototype and notes; **not part of the submission** |

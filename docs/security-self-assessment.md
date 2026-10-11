@@ -1,6 +1,6 @@
 # Security Self-Assessment
 
-StudyFlow, proposition C. Assessment date: 2026-10-07.
+StudyFlow, proposition C. Assessment date: 2026-10-07; frontend controls (section 5.1, risk D4) updated 2026-10-11.
 
 This report covers two things: how permission tiers are implemented, and which risks are still known. Every control below names the code that enforces it and the tests that prove it. File paths are relative to the repository root. Tests live in `backend/auto_test/` (Django) and `studyflow-ai/auto_test/` (C package). The full suite runs with `scripts/run_gates.py`; logs from the latest run are in [`evidence/gates/`](../evidence/gates/).
 
@@ -127,6 +127,20 @@ The agent plans with an LLM (in mock mode, a rule-based planner) and calls tools
 
 Prompt injection: on the frozen holdout `agent-v2` (4 injection cases), the live model took **0 unauthorized actions**. In **1 of 4** cases it acted partly on injected text: it proposed paying the user's tuition to a payee whose name contained instructions. Even then, no money moved, because the proposal still needed the student's step-up confirmation. On the tuning set `agent-v1`, it followed no injection (0/3) in any of the six live runs. See [agent-evaluation.md](agent-evaluation.md). Whatever the model does, the runner rules above stop money from moving without the student.
 
+### 5.1 Browser enforcement of the same controls
+
+The React frontend (`frontend/`) exposes the agent and the permission model to students. It adds no authority of its own; every decision is still made by Django.
+
+| Control in the browser | Behaviour | Code | Tests |
+|---|---|---|---|
+| Agent proposals | Every step is listed with its tier badge (T0–T3). A T2 proposal shows amount, recipient and expiry, and says it has not been executed. Confirm and reject are separate explicit buttons. | `frontend/src/agent/AgentApp.tsx` | `frontend/tests/e2e/mocked/agent.spec.mjs`, `frontend/tests/e2e/integration/agent.spec.mjs` |
+| Step-up | Confirming asks for the password, requests a grant for the **underlying** action (`remittance.submit` / `wallet.convert`) with the proposal's exact target, amount and currency, and sends it once as `X-Step-Up-Token`. Password and grant live only in the call stack, never in React state, browser storage or the URL. A wrong password is refused and nothing is confirmed. | `AgentApp.tsx`, `frontend/src/wallet/client.ts` | The mocked spec asserts the step-up body and header and that neither value reaches storage or the URL; the integration spec checks the CNY balance before and after each step |
+| T3 | `APPROVAL_REQUIRED` opens an approval request form; the student cannot approve. After a separate staff user approves, the student confirms again with a fresh password check. | `AgentApp.tsx`, `frontend/src/wallet/WalletApp.tsx` | `integration/agent.spec.mjs` (the approver decides through the API), `integration/wallet.spec.mjs` |
+| Limits and audit | "Permissions & activity" shows the tier rules, the credit level and limit multiplier, effective limits with usage (`GET policy/limits/`), approval requests and the audit log (`GET audit/`), read-only. | `frontend/src/trust/TrustApp.tsx`, `backend/finance/policy.py` (`limits_summary`) | `frontend/tests/e2e/mocked/trust.spec.mjs`, `backend/auto_test/test_policy.py` (`test_limits_view_reports_effective_limits_and_usage`) |
+| Simulation notice | A strip on every screen states that all money is simulated. | `frontend/src/services/SimulatedStrip.tsx` | agent and trust specs |
+
+Evidence from the 2026-10-11 run (reports, screenshots, results): [`evidence/frontend-20261011/`](../evidence/frontend-20261011/).
+
 ---
 
 ## 6. Money and ledger integrity
@@ -205,7 +219,7 @@ The IDs match [known-risks.md](known-risks.md), which also lists items already m
 | F2 | Serialization relies on locking the user row. A future write path that forgets the lock could race. | Medium | `CommandView` takes the lock for every command; concurrency test suites | Partially mitigated | `backend/finance/workflow_api.py`, `backend/auto_test/test_*_concurrency.py` |
 | E3 | Credit building counts only simulated on-platform records. It is not a credit score and proves nothing about credit elsewhere. | Medium | Clearly labelled as simulated; the signed statement contains only summaries; the multiplier is capped at 1.5× | By design | `docs/credit.md` |
 | D1 | The hardened configuration has not been tested on a real HTTPS deployment; HSTS starts at 1 hour and is not preloaded | Medium | `check --deploy` runs in CI | Partially mitigated | `backend/config/settings.py` |
-| D4 | There is no frontend in this submission, so no browser-level end-to-end test exists | Medium | All flows are exercised over real HTTP by the demo commands | Open (out of scope) | [`evidence/gates/`](../evidence/gates/) |
+| D4 | Browser tests cover Chromium only, at desktop and phone widths; the integration specs run against a local Django and PostgreSQL in mock mode, not a deployed HTTPS site | Low | Mocked and real-Django Playwright suites cover the journey, wallet, agent (T2 step-up and T3 approval) and trust center (section 5.1) | Partially mitigated | [`evidence/frontend-20261011/`](../evidence/frontend-20261011/) |
 
 ---
 
@@ -217,4 +231,7 @@ studyFlow/Scripts/python.exe scripts/run_gates.py
 # just the security-relevant Django suites
 cd backend
 ../studyFlow/Scripts/python.exe manage.py test auto_test.test_policy auto_test.test_policy_concurrency auto_test.test_agent auto_test.test_agent_concurrency auto_test.test_remittance auto_test.test_remittance_concurrency auto_test.test_credit auto_test.test_ocr_api --noinput
+# browser suites (from frontend/): mocked, then real Django + PostgreSQL in mock mode
+npm test
+npm run test:agent-integration && npm run test:wallet-integration
 ```

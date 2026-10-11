@@ -1,6 +1,6 @@
 # Execution Evidence
 
-This folder holds the sandbox run logs and reports behind the claims in `docs/`. Every file is a verbatim copy of what a command wrote to the git-ignored `output/` folder. Nothing was edited after the run. `.gitattributes` keeps the bytes exact on every OS, so the SHA-256 digests recorded in `docs/*-verification-summary.json` stay valid.
+This folder holds the run logs and reports behind the claims in `docs/`. Raw execution reports are preserved as written by their commands; indexes, code fingerprints and explanatory summaries are identified separately. Historical reports are not overwritten. `.gitattributes` keeps evidence bytes exact on every OS, so recorded SHA-256 digests stay valid.
 
 **All money movement is simulated.** Wallets, ledgers, remittance rails and payouts are demo models. "Live" below means only that a real external service was called: the Frankfurter FX API, the LLM gateway configured for the C module, or Google Gemini for OCR. All test documents are synthetic, and no real user data is involved.
 
@@ -10,6 +10,8 @@ Run every command from the repository root. On Windows the interpreter is `study
 
 | Folder | What it proves | Mode | Date |
 |---|---|---|---|
+| [`verification-20261011/`](verification-20261011/) | Final dirty-workspace verification: 17 gates; 73 frontend units, 12 mocked and 6 real nginx/Django browser cases; three 6,000/9,000 THB reference replays; restart persistence; old-set regressions. v5 remains pending human review | mock models / fixture FX | 2026-10-11 |
+| [`frontend-20261011/`](frontend-20261011/) | Browser suites: 12 mocked + 3 real-Django Playwright specs (journey, wallet, AI assistant T2/T3, trust center), 73 unit tests, screenshots in English and Chinese | mock | 2026-10-11 |
 | [`gates/`](gates/) | The full local gate suite (17 checks) passes on the submitted code | mock | 2026-10-07 |
 | [`fx/`](fx/) | Server-side FX quotes from a live reference rate match the pricing formula | live FX | 2026-10-07 |
 | [`agent/`](agent/) | Agent task completion and safety on the 20-case dataset | live LLM + mock | 2026-10-07 |

@@ -31,6 +31,17 @@ Django 是统一 B 后端，所有接口使用 `/api/v2/`。原 Django 借款引
 | `backend/auto_test/` | 替换后的借款、C 适配、迁移、并发和缺陷回归测试 |
 | `output/` | 本地验证结果，gitignored；入库的证据副本在 `evidence/` |
 
+## 一键演示（Docker）
+
+需要 Docker Compose v2.17+，端口 8080、8000、55433 空闲（`STUDYFLOW_WEB_PORT` 可改 8080）。在仓库根目录执行：
+
+```powershell
+docker compose up --build
+docker compose exec app cat .demo-credentials.json  # seed_demo 生成的示例账号
+```
+
+启动 `db`（PostgreSQL）、`app`（Django + gunicorn，自动 migrate、createcachetable、seed_demo）、`worker`（`readiness_worker --mode mock`）和 `web`（nginx 托管前端构建产物，同源转发 `/api/`、`/admin/`、`/health/` 并提供 Django 登录页静态文件）。打开 <http://localhost:8080>，点击 **Sign in to StudyFlow** 以 `demo-student` 登录。全部为 mock 模式，不调用外部服务。`docker compose down` 停止；`-v` 会同时删除数据库卷。凭据文件在容器重建后丢失，用户仍在数据库中，可用 `docker compose exec app python manage.py changepassword demo-student` 重设。
+
 ## 启动 Django
 
 Python 3.11+、Docker Desktop。虚拟环境建在工作区根目录，Django 命令在 `backend/` 下运行：

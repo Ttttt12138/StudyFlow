@@ -2,6 +2,10 @@
 
 The connected React/TypeScript journey uses the final repository's Django API, saved semesters and C's evidence review. B owns every budget, forecast, funding, loan and application result. No frontend financial arithmetic, currency conversion, approval, payment or disbursement occurs. The ZIP was source material; its Git history, local token entry design and standalone configuration were not merged.
 
+## One-command demo
+
+From the repository root, `docker compose up --build` builds this app into the `web` service and starts it with PostgreSQL, Django and the mock readiness worker. Open <http://localhost:8080> and use **Sign in to StudyFlow** with the `demo-student` login from `docker compose exec app cat .demo-credentials.json` (written by `manage.py seed_demo`; see the [main README](../README.md#quick-start-docker-no-credentials-needed)). `Dockerfile` builds with Node 22 and serves `dist/` from nginx; `docker/nginx.conf` proxies `/api/`, `/admin/` and `/health/` to Django with the browser Host, as the Vite proxy does, and serves Django's collected static files for its login page.
+
 ## Development
 
 The repository keeps this app (A) next to the Django backend in `../backend/` (B) and the AI package in `../studyflow-ai/` (C). Prepare the Python environment as documented in the main README, start PostgreSQL, run `manage.py migrate --noinput` and `manage.py createcachetable` in `backend/` (required by the current backend’s database-backed throttles), then run these from `backend/` in separate terminals:
@@ -21,15 +25,16 @@ npx playwright install chromium   # once, unless CHROMIUM_PATH points to an inst
 npm run build
 npm run dev                        # for manual use; the browser suites start Vite themselves
 npm test                           # unit tests (Vitest) + mocked browser suites (Playwright)
-npm run test:integration           # needs Django, PostgreSQL and the mock worker
+  npm run test:integration           # all integration specs, including Agent/trust and 3 reference replays
 npm run test:wallet-integration
+npm run test:agent-integration     # AI assistant T2/T3 and trust center; no worker needed
 ```
 
 | Command | What runs | Needs |
 |---|---|---|
 | `npm run test:unit` | Vitest unit tests next to the code (`src/**/*.test.ts`): money and date presentation, version freshness, import rebasing, upload kinds, API errors, pagination and CSRF renewal, form validation | nothing |
 | `npm run test:e2e` | Playwright project `mocked` (`tests/e2e/mocked/`): every journey against mocked or synthetic responses, desktop and phone widths | Chromium |
-| `npm run test:integration` / `test:wallet-integration` | Playwright project `integration` (`tests/e2e/integration/`): real HTTP against Django and PostgreSQL | Django on 127.0.0.1:8000, PostgreSQL, `readiness_worker --mode mock` |
+| `npm run test:integration` / `test:wallet-integration` / `test:agent-integration` | Playwright project `integration` (`tests/e2e/integration/`): real HTTP against Django and PostgreSQL | Django on 127.0.0.1:8000, PostgreSQL, `readiness_worker --mode mock` |
 
 Playwright starts Vite (`playwright.config.mjs`) unless `TEST_URL` points at a running server, and pins the browser locale to `en-US`. The integration specs create unique synthetic accounts and durable demo records; they never print or save passwords and call Django through `../.venv` (set `PYTHON` for another interpreter). Run them against a dedicated development database, not a production database. Reports, failure screenshots and traces go to the ignored `../output/frontend/` (`report/`, `test-results/`); open a trace with `npx playwright show-trace <file>`.
 
@@ -37,7 +42,7 @@ Vite proxies same-origin `/api` to Django at 127.0.0.1:8000 and preserves the br
 
 ## Deployment boundary
 
-Build with `npm ci && npm run build`. Serve `frontend/dist` and `/api/` under **one origin**, with `/api/` forwarded to Django. Serve Django's collected static files for its existing login page; use Django's normal production WSGI/ASGI deployment, not runserver. Restrict allowed hosts to the deployment hostname. An HTTPS reverse proxy requires the current backend’s `DJANGO_SECURE=true`, correctly configured `DJANGO_SECURE_PROXY_SSL_HEADER` for a trusted proxy, and `DJANGO_CSRF_TRUSTED_ORIGINS` where needed; do not disable CSRF or relax CORS to substitute for correct routing. Hosting and live credentials were not deployed by this integration task. Vite is a development server, not the production hosting plan.
+Build with `npm ci && npm run build`. Serve `frontend/dist` and `/api/` under **one origin**, with `/api/` forwarded to Django. Serve Django's collected static files for its existing login page; use Django's normal production WSGI/ASGI deployment, not runserver. Restrict allowed hosts to the deployment hostname. An HTTPS reverse proxy requires the current backend’s `DJANGO_SECURE=true`, correctly configured `DJANGO_SECURE_PROXY_SSL_HEADER` for a trusted proxy, and `DJANGO_CSRF_TRUSTED_ORIGINS` where needed; do not disable CSRF or relax CORS to substitute for correct routing. The Compose `web` service is a local HTTP example of this layout, not a production deployment. Hosting and live credentials were not deployed by this integration task. Vite is a development server, not the production hosting plan.
 
 The synthetic connected preview is visibly labeled, read-only, and does not call financial APIs. The older three-screen demo is explicitly synthetic and remains separate from saved plans.
 
@@ -68,3 +73,17 @@ The welcome screen and read-only five-step tour now use the reviewed Task A pres
 Signed-in students can open **Wallet & transfers** under **More options**. `/?wallet=1` also opens it directly; `/?wallet=preview` opens only its clearly labeled read-only synthetic preview. The wallet uses the established session/CSRF API client and follows all owned list pages. B owns prices, balances and decisions. Only simulation is supported here; backend setup, recipient verification and separate-operator approval are required where applicable.
 
 With the documented local Django/PostgreSQL mock setup running, `npm run test:wallet-integration` exercises real HTTP with disposable students and two operators, fixture FX, safe retries, T2/T3, expiry and permissions. Operator assistance is test setup, not a student UI capability. See [reviewed UX and wallet integration](../docs/frontend-ux-wallet-integration.md) for exact scope, contracts and evidence.
+
+## AI assistant
+
+Under **More options**, signed-in students open **AI assistant** (`/?agent=1`; `/?agent=preview` is a fixed, read-only sample conversation with no Django request). The student writes a goal in plain language; `POST agent/sessions/` runs Django’s planner and returns every step. Each step shows its tool, permission tier (T0–T3), status, the planner’s reason and its raw arguments and result. The agent itself never goes beyond T1.
+
+A T2 tool only creates a proposal. The proposal card shows the amount leaving the wallet, the expected receipt, the recipient, the target and the expiry, and says that nothing has been executed. **Confirm with password** asks for the password, requests a step-up grant for the *underlying* action (`remittance.submit` or `wallet.convert`, with the proposal’s exact target, amount and currency) and sends it once as `X-Step-Up-Token` to `agent/pending-actions/{id}/confirm/`. The password and grant stay in the call stack only. When Django answers `APPROVAL_REQUIRED` (T3: above a limit), the card switches to an approval request; a separate staff user decides it, then the student confirms again with a fresh password check. **Reject** closes the proposal without executing anything. Recent conversations reopen from the list below.
+
+## Permissions & activity
+
+**Permissions & activity** (`/?trust=1`; preview `/?trust=preview`) is read-only. It shows the four permission tiers and what each needs; the simulated on-time record (level, counts, factors, next level, evidence, and the **limit multiplier** it sets); effective outflow limits per currency with today’s and this month’s usage (`GET policy/limits/`); the student’s approval requests; and the audit log (`GET audit/`, filterable by category, older pages on demand). Each section loads and fails independently. Tier badges also appear on the wallet’s password and approval steps.
+
+## Language and simulation notice
+
+A strip at the top of every screen says that all money is simulated and holds the **English / 中文** switch. The choice applies to every screen, is remembered in this browser (`localStorage` key `studyflow.lang`, optional) and is sent to Django as `Accept-Language`, so backend error messages follow it. Dictionaries live in `src/i18n/`; see [i18n](../docs/i18n.md). English text is unchanged from before the switch existed, and the browser suites pin `en-US`.

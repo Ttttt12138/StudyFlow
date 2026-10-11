@@ -46,7 +46,7 @@
 | D1 | 未配置 HTTPS 重定向、HSTS、安全 Cookie、CSRF 可信来源 | 中 | `DJANGO_SECURE=true` 启用 HTTPS 重定向、HSTS（默认 3600 秒、不 preload）、Secure Cookie、8 小时会话；始终启用 nosniff、Referrer-Policy、`X-Frame-Options: DENY`、`CSRF_TRUSTED_ORIGINS`；CI 运行 `check --deploy --fail-level WARNING`。剩余：未在真实 HTTPS 部署上验证；HSTS 时长需上线后人工调高；不 preload | 部分缓解 | `backend/config/settings.py`、`.github/workflows/django.yml` |
 | D2 | `backend/.env.example` 默认 `DJANGO_DEBUG=True` | 低 | 示例改为 `DJANGO_DEBUG=False`；已有本地 `.env` 不会被自动修改 | 已缓解 | `backend/.env.example` |
 | D3 | 未配置共享缓存；按进程计数的限流在多进程部署下失效 | 中 | `DatabaseCache`（表 `studyflow_cache`），所有进程共享；部署和 CI 执行 `createcachetable`，门禁脚本和启动脚本也会创建。剩余：每次请求增加几次数据库读写；缓存表缺失时所有请求报错 | 已缓解 | `backend/config/settings.py`、`scripts/run_gates.py` |
-| D4 | 无前端，未做浏览器端到端验收 | 中 | HTTP 进程内演示 | 开放（不在本轮范围） | `README.md` |
+| D4 | 浏览器验收已补齐，本地模拟环境不代表公网/真实支付验收 | 中 | 2026-10-11：12 个 mocked、6 个真实 Django 浏览器用例通过；独立 Compose nginx 同源入口，三账户参考节点 6,000/9,000 THB、刷新、录像；容器持久性另有报告 | 部分缓解 | `docs/verification-20261011.md`、`evidence/verification-20261011/` |
 
 ## AI 与评估
 
@@ -54,7 +54,7 @@
 |---|---|---|---|---|---|
 | M1 | 标注与评审由同一 AI 完成，评估独立性不足 | 中 | 冻结 holdout、哈希校验 | 开放 | `docs/verification-independent-20261006.md`、`docs/verification-holdout-v3-20261007.md` |
 | M2 | Copilot 首次冻结测试未通过，后续只是回归 | 中 | 结果如实标注 | 开放 | `docs/verification-copilot-20261006.md` |
-| M3 | 规则组未达验收阈值 | 中 | live 模式优先模型路由 | 开放 | `docs/verification-independent-20261006.md` |
+| M3 | v5三组冻结首测均未通过 | 中 | 三组各160条各一轮已完成。规则危险拦截0%、额外义务20；LLM-only分类157/160、字段140/150；Jev＋LLM分类160/160、字段140/150。两模型组未保留10条冲突日期候选，调用错误与静默漏报均0。用户审核及冻结完成，原始失败永久保留，不自动追加轮次 | 开放 | `evidence/verification-20261011/v5-first-live-summary.md` |
 | M4 | 曾出现 LLM `INVALID_MODEL_OUTPUT` | 低 | 结构化输出、重试、确定性复核 | 部分缓解 | `docs/verification-readiness-20261005.md` |
 | M5 | Agent 由 LLM 规划工具调用；模型可能选错工具、编造参数或受工具结果中的注入文本影响 | 中 | 规划器每步只返回一个工具调用，并按工具清单和参数校验；T2 动作只生成待确认动作，须学生本人二次验证后确认；每会话最多 10 次调用、4 次写操作；评估集含注入样本，越权动作必须为 0（CI 门禁） | 部分缓解 | `docs/agent.md`、`backend/finance/agent_runner.py` |
 | M6 | Agent 真实模型（gpt-6-luna）在冻结集 agent-v2（24 例）首次运行完成率 75%；失败包括模型把内部推理当作回答输出（2 例）和规划错误（2 例）；1 个注入案例中向名称含注入文本的收款人提议付款。两个评估集由同一 AI 编写、未经人工审核，每轮只跑一次 | 中 | 越权动作 0；T2 只生成提议、须学生二次验证，与模型无关；冻结协议与哈希校验；调优只用 agent-v1 | 部分缓解 | `docs/agent-evaluation.md`、`evidence/agent/` |

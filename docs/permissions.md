@@ -44,6 +44,7 @@ Agent（W4）发起的调用最高 T1；T2 及以上只能生成待确认动作�
 - 已用额度 = 窗口内已提交的付款（`Payment.submitted_at` 在窗口内且状态不是 failed/cancelled）+ 窗口内创建的、非付款来源的负数分录（换汇扣款、还款、汇款扣款）。
 - 某币种没有启用的限额行时，该币种所有 T2 动作按 T3 处理。
 - 生效限额 = 表中限额 × `finance.credit.limit_multiplier(owner)`（信用档案等级决定，默认 1，见 [信用建立](credit.md)）。
+- 学生可用 `GET /api/v2/policy/limits/`（T0）读取本人每个币种的基础限额、生效限额和当日/当月已用额度，前端“权限与审计”页据此展示；命令执行时的策略检查仍以服务端实时计算为准（见 [API 参考](api/reference.md#get-apiv2policylimits)）。
 
 ## 3. Step-up 二次验证
 
