@@ -1,0 +1,9 @@
+
+ RUN  v4.1.11 D:/Qoder-project/AI studyflow/frontend
+
+
+ Test Files  4 passed (4)
+      Tests  73 passed (73)
+   Start at  20:29:24
+   Duration  390ms (transform 372ms, setup 348ms, import 189ms, tests 53ms, environment 0ms)
+

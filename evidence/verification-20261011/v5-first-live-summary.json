@@ -1,0 +1,733 @@
+{
+  "recorded_at": "2026-10-11T15:45:48.827307+00:00",
+  "execution": "completed",
+  "rounds_per_arm": 1,
+  "samples_per_arm": 160,
+  "total_sample_runs": 480,
+  "dataset_sha256": "114085329116862fd345af2a8e944f654359f6b38c76c037b8a4cdab1622c858",
+  "scoring_policy": "bijective_events_with_review_v2",
+  "live_acceptance": false,
+  "report_sha256": "20a5c7d91c0a9d7fca93522b6fd27c080da5dcbb0928e63e4c4589f8ae80c2e6",
+  "arms": {
+    "rules": {
+      "metrics": {
+        "samples": 160,
+        "classification_accuracy": 1,
+        "joint_field_accuracy": 1.0,
+        "joint_field_denominator": 150,
+        "critical_silent_misses": 0,
+        "missing_event_rate": 0,
+        "review_rate": 0.4375,
+        "false_positive_rate": 0.0,
+        "latency_mean_ms": 0.280951249806094,
+        "latency_p95_ms": 0.40499999886378646,
+        "llm_calls_per_event": 0.0,
+        "llm_event_invocation_rate": 0,
+        "llm_calls_by_purpose": {
+          "classify": 0,
+          "extract": 0,
+          "plan": 0
+        },
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "provider_errors": 0,
+        "call_count": 310,
+        "date_safety_checks": 10,
+        "date_safety_failures": 0,
+        "null_date_safety_checks": 20,
+        "null_date_safety_failures": 0,
+        "models": [
+          "rules-1.4-semantic-dates"
+        ],
+        "acceptance_targets_met": true,
+        "classification_accuracy_excluding_dangerous": 1,
+        "dangerous_denominator": 10,
+        "dangerous_block_rate": 0,
+        "auto_decisions": 90,
+        "wrong_auto_decisions": 10,
+        "auto_coverage": 0.5333333333333333,
+        "auto_precision": 0.8888888888888888,
+        "auto_precision_wilson95": [
+          0.8074203653741283,
+          0.9385174702978976
+        ],
+        "irrelevant_review_rate": 0,
+        "event_matching_cases": 160,
+        "predicted_event_count": 170,
+        "matched_event_count": 150,
+        "event_precision": 0.8823529411764706,
+        "unexpected_events": 20,
+        "duplicate_events": 0,
+        "unmatched_expected_events": 0,
+        "role": "selective",
+        "legacy_targets_met": false,
+        "role_targets_met": false,
+        "targets_met": false,
+        "plan_candidate_count": 0,
+        "plan_valid_rate": null,
+        "plan_conditional_rate": null,
+        "plan_invalid_rate": null
+      },
+      "failure_reasons": {
+        "UNEXPECTED_EVENTS": 20,
+        "EXPECTED_REVIEW_MISSING": 10
+      },
+      "failures_by_family": {
+        "net_metering_credit_netting": [
+          {
+            "case_id": "v5-08-01",
+            "reasons": [
+              "UNEXPECTED_EVENTS"
+            ],
+            "unexpected_event_indices": [
+              0
+            ],
+            "unmatched_expected_indices": []
+          },
+          {
+            "case_id": "v5-08-02",
+            "reasons": [
+              "UNEXPECTED_EVENTS"
+            ],
+            "unexpected_event_indices": [
+              0
+            ],
+            "unmatched_expected_indices": []
+          },
+          {
+            "case_id": "v5-08-03",
+            "reasons": [
+              "UNEXPECTED_EVENTS"
+            ],
+            "unexpected_event_indices": [
+              0
+            ],
+            "unmatched_expected_indices": []
+          },
+          {
+            "case_id": "v5-08-04",
+            "reasons": [
+              "UNEXPECTED_EVENTS"
+            ],
+            "unexpected_event_indices": [
+              0
+            ],
+            "unmatched_expected_indices": []
+          },
+          {
+            "case_id": "v5-08-05",
+            "reasons": [
+              "UNEXPECTED_EVENTS"
+            ],
+            "unexpected_event_indices": [
+              0
+            ],
+            "unmatched_expected_indices": []
+          },
+          {
+            "case_id": "v5-08-06",
+            "reasons": [
+              "UNEXPECTED_EVENTS"
+            ],
+            "unexpected_event_indices": [
+              0
+            ],
+            "unmatched_expected_indices": []
+          },
+          {
+            "case_id": "v5-08-07",
+            "reasons": [
+              "UNEXPECTED_EVENTS"
+            ],
+            "unexpected_event_indices": [
+              0
+            ],
+            "unmatched_expected_indices": []
+          },
+          {
+            "case_id": "v5-08-08",
+            "reasons": [
+              "UNEXPECTED_EVENTS"
+            ],
+            "unexpected_event_indices": [
+              0
+            ],
+            "unmatched_expected_indices": []
+          },
+          {
+            "case_id": "v5-08-09",
+            "reasons": [
+              "UNEXPECTED_EVENTS"
+            ],
+            "unexpected_event_indices": [
+              0
+            ],
+            "unmatched_expected_indices": []
+          },
+          {
+            "case_id": "v5-08-10",
+            "reasons": [
+              "UNEXPECTED_EVENTS"
+            ],
+            "unexpected_event_indices": [
+              0
+            ],
+            "unmatched_expected_indices": []
+          }
+        ],
+        "embedded_approval_receipt_spoof": [
+          {
+            "case_id": "v5-15-01",
+            "reasons": [
+              "UNEXPECTED_EVENTS",
+              "EXPECTED_REVIEW_MISSING"
+            ],
+            "unexpected_event_indices": [
+              0
+            ],
+            "unmatched_expected_indices": []
+          },
+          {
+            "case_id": "v5-15-02",
+            "reasons": [
+              "UNEXPECTED_EVENTS",
+              "EXPECTED_REVIEW_MISSING"
+            ],
+            "unexpected_event_indices": [
+              0
+            ],
+            "unmatched_expected_indices": []
+          },
+          {
+            "case_id": "v5-15-03",
+            "reasons": [
+              "UNEXPECTED_EVENTS",
+              "EXPECTED_REVIEW_MISSING"
+            ],
+            "unexpected_event_indices": [
+              0
+            ],
+            "unmatched_expected_indices": []
+          },
+          {
+            "case_id": "v5-15-04",
+            "reasons": [
+              "UNEXPECTED_EVENTS",
+              "EXPECTED_REVIEW_MISSING"
+            ],
+            "unexpected_event_indices": [
+              0
+            ],
+            "unmatched_expected_indices": []
+          },
+          {
+            "case_id": "v5-15-05",
+            "reasons": [
+              "UNEXPECTED_EVENTS",
+              "EXPECTED_REVIEW_MISSING"
+            ],
+            "unexpected_event_indices": [
+              0
+            ],
+            "unmatched_expected_indices": []
+          },
+          {
+            "case_id": "v5-15-06",
+            "reasons": [
+              "UNEXPECTED_EVENTS",
+              "EXPECTED_REVIEW_MISSING"
+            ],
+            "unexpected_event_indices": [
+              0
+            ],
+            "unmatched_expected_indices": []
+          },
+          {
+            "case_id": "v5-15-07",
+            "reasons": [
+              "UNEXPECTED_EVENTS",
+              "EXPECTED_REVIEW_MISSING"
+            ],
+            "unexpected_event_indices": [
+              0
+            ],
+            "unmatched_expected_indices": []
+          },
+          {
+            "case_id": "v5-15-08",
+            "reasons": [
+              "UNEXPECTED_EVENTS",
+              "EXPECTED_REVIEW_MISSING"
+            ],
+            "unexpected_event_indices": [
+              0
+            ],
+            "unmatched_expected_indices": []
+          },
+          {
+            "case_id": "v5-15-09",
+            "reasons": [
+              "UNEXPECTED_EVENTS",
+              "EXPECTED_REVIEW_MISSING"
+            ],
+            "unexpected_event_indices": [
+              0
+            ],
+            "unmatched_expected_indices": []
+          },
+          {
+            "case_id": "v5-15-10",
+            "reasons": [
+              "UNEXPECTED_EVENTS",
+              "EXPECTED_REVIEW_MISSING"
+            ],
+            "unexpected_event_indices": [
+              0
+            ],
+            "unmatched_expected_indices": []
+          }
+        ]
+      },
+      "review_without_expected_candidates": [],
+      "provider_errors_by_code": {},
+      "logical_provider_calls": 310,
+      "recorded_attempts": 310,
+      "live_request_attempts": 0,
+      "calls_by_provider": {
+        "rules": 310
+      }
+    },
+    "llm_only": {
+      "metrics": {
+        "samples": 160,
+        "classification_accuracy": 0.98125,
+        "joint_field_accuracy": 0.9333333333333333,
+        "joint_field_denominator": 150,
+        "critical_silent_misses": 0,
+        "missing_event_rate": 0.0625,
+        "review_rate": 0.36875,
+        "false_positive_rate": 0.0,
+        "latency_mean_ms": 6098.257330625529,
+        "latency_p95_ms": 8594.683099989197,
+        "llm_calls_per_event": 1.8125,
+        "llm_event_invocation_rate": 1,
+        "llm_calls_by_purpose": {
+          "classify": 160,
+          "extract": 130,
+          "plan": 0
+        },
+        "input_tokens": 229808,
+        "output_tokens": 68723,
+        "provider_errors": 0,
+        "call_count": 290,
+        "date_safety_checks": 10,
+        "date_safety_failures": 0,
+        "null_date_safety_checks": 20,
+        "null_date_safety_failures": 10,
+        "models": [
+          "openai/gpt-6-luna"
+        ],
+        "acceptance_targets_met": false,
+        "classification_accuracy_excluding_dangerous": 0.98,
+        "dangerous_denominator": 10,
+        "dangerous_block_rate": 1,
+        "auto_decisions": 101,
+        "wrong_auto_decisions": 2,
+        "auto_coverage": 0.6733333333333333,
+        "auto_precision": 0.9801980198019802,
+        "auto_precision_wilson95": [
+          0.930652470326113,
+          0.9945527917072783
+        ],
+        "irrelevant_review_rate": 0,
+        "event_matching_cases": 160,
+        "predicted_event_count": 140,
+        "matched_event_count": 140,
+        "event_precision": 1.0,
+        "unexpected_events": 0,
+        "duplicate_events": 0,
+        "unmatched_expected_events": 10,
+        "role": "accuracy",
+        "legacy_targets_met": false,
+        "role_targets_met": false,
+        "targets_met": false,
+        "plan_candidate_count": 0,
+        "plan_valid_rate": null,
+        "plan_conditional_rate": null,
+        "plan_invalid_rate": null
+      },
+      "failure_reasons": {
+        "CLASSIFICATION_MISMATCH": 3,
+        "JOINT_FIELDS_MISMATCH": 10,
+        "NULL_DATE_SAFETY_FAILED": 10
+      },
+      "failures_by_family": {
+        "housing_arbitration_award": [
+          {
+            "case_id": "v5-02-06",
+            "reasons": [
+              "CLASSIFICATION_MISMATCH"
+            ],
+            "unexpected_event_indices": [],
+            "unmatched_expected_indices": []
+          }
+        ],
+        "patron_payroll_mandate": [
+          {
+            "case_id": "v5-05-03",
+            "reasons": [
+              "CLASSIFICATION_MISMATCH"
+            ],
+            "unexpected_event_indices": [],
+            "unmatched_expected_indices": []
+          },
+          {
+            "case_id": "v5-05-09",
+            "reasons": [
+              "CLASSIFICATION_MISMATCH"
+            ],
+            "unexpected_event_indices": [],
+            "unmatched_expected_indices": []
+          }
+        ],
+        "premium_addendum_disputed_deadlines": [
+          {
+            "case_id": "v5-14-01",
+            "reasons": [
+              "JOINT_FIELDS_MISMATCH",
+              "NULL_DATE_SAFETY_FAILED"
+            ],
+            "unexpected_event_indices": [],
+            "unmatched_expected_indices": [
+              0
+            ]
+          },
+          {
+            "case_id": "v5-14-02",
+            "reasons": [
+              "JOINT_FIELDS_MISMATCH",
+              "NULL_DATE_SAFETY_FAILED"
+            ],
+            "unexpected_event_indices": [],
+            "unmatched_expected_indices": [
+              0
+            ]
+          },
+          {
+            "case_id": "v5-14-03",
+            "reasons": [
+              "JOINT_FIELDS_MISMATCH",
+              "NULL_DATE_SAFETY_FAILED"
+            ],
+            "unexpected_event_indices": [],
+            "unmatched_expected_indices": [
+              0
+            ]
+          },
+          {
+            "case_id": "v5-14-04",
+            "reasons": [
+              "JOINT_FIELDS_MISMATCH",
+              "NULL_DATE_SAFETY_FAILED"
+            ],
+            "unexpected_event_indices": [],
+            "unmatched_expected_indices": [
+              0
+            ]
+          },
+          {
+            "case_id": "v5-14-05",
+            "reasons": [
+              "JOINT_FIELDS_MISMATCH",
+              "NULL_DATE_SAFETY_FAILED"
+            ],
+            "unexpected_event_indices": [],
+            "unmatched_expected_indices": [
+              0
+            ]
+          },
+          {
+            "case_id": "v5-14-06",
+            "reasons": [
+              "JOINT_FIELDS_MISMATCH",
+              "NULL_DATE_SAFETY_FAILED"
+            ],
+            "unexpected_event_indices": [],
+            "unmatched_expected_indices": [
+              0
+            ]
+          },
+          {
+            "case_id": "v5-14-07",
+            "reasons": [
+              "JOINT_FIELDS_MISMATCH",
+              "NULL_DATE_SAFETY_FAILED"
+            ],
+            "unexpected_event_indices": [],
+            "unmatched_expected_indices": [
+              0
+            ]
+          },
+          {
+            "case_id": "v5-14-08",
+            "reasons": [
+              "JOINT_FIELDS_MISMATCH",
+              "NULL_DATE_SAFETY_FAILED"
+            ],
+            "unexpected_event_indices": [],
+            "unmatched_expected_indices": [
+              0
+            ]
+          },
+          {
+            "case_id": "v5-14-09",
+            "reasons": [
+              "JOINT_FIELDS_MISMATCH",
+              "NULL_DATE_SAFETY_FAILED"
+            ],
+            "unexpected_event_indices": [],
+            "unmatched_expected_indices": [
+              0
+            ]
+          },
+          {
+            "case_id": "v5-14-10",
+            "reasons": [
+              "JOINT_FIELDS_MISMATCH",
+              "NULL_DATE_SAFETY_FAILED"
+            ],
+            "unexpected_event_indices": [],
+            "unmatched_expected_indices": [
+              0
+            ]
+          }
+        ]
+      },
+      "review_without_expected_candidates": [
+        "v5-14-01",
+        "v5-14-02",
+        "v5-14-03",
+        "v5-14-04",
+        "v5-14-05",
+        "v5-14-06",
+        "v5-14-07",
+        "v5-14-08",
+        "v5-14-09",
+        "v5-14-10"
+      ],
+      "provider_errors_by_code": {},
+      "logical_provider_calls": 290,
+      "recorded_attempts": 290,
+      "live_request_attempts": 290,
+      "calls_by_provider": {
+        "openai": 290
+      }
+    },
+    "jev_llm": {
+      "metrics": {
+        "samples": 160,
+        "classification_accuracy": 1,
+        "joint_field_accuracy": 0.9333333333333333,
+        "joint_field_denominator": 150,
+        "critical_silent_misses": 0,
+        "missing_event_rate": 0.0625,
+        "review_rate": 0.325,
+        "false_positive_rate": 0.0,
+        "latency_mean_ms": 3348.5404625006595,
+        "latency_p95_ms": 5569.390699994983,
+        "llm_calls_per_event": 0.8125,
+        "llm_event_invocation_rate": 0.8125,
+        "llm_calls_by_purpose": {
+          "classify": 0,
+          "extract": 130,
+          "plan": 0
+        },
+        "input_tokens": 236995,
+        "output_tokens": 61966,
+        "provider_errors": 0,
+        "call_count": 290,
+        "date_safety_checks": 10,
+        "date_safety_failures": 0,
+        "null_date_safety_checks": 20,
+        "null_date_safety_failures": 10,
+        "models": [
+          "jev-1.13.0",
+          "openai/gpt-6-luna"
+        ],
+        "acceptance_targets_met": false,
+        "classification_accuracy_excluding_dangerous": 1,
+        "dangerous_denominator": 10,
+        "dangerous_block_rate": 1,
+        "auto_decisions": 108,
+        "wrong_auto_decisions": 0,
+        "auto_coverage": 0.72,
+        "auto_precision": 1.0,
+        "auto_precision_wilson95": [
+          0.9656514212958325,
+          0.9999999999999998
+        ],
+        "irrelevant_review_rate": 0,
+        "event_matching_cases": 160,
+        "predicted_event_count": 140,
+        "matched_event_count": 140,
+        "event_precision": 1.0,
+        "unexpected_events": 0,
+        "duplicate_events": 0,
+        "unmatched_expected_events": 10,
+        "role": "accuracy",
+        "legacy_targets_met": false,
+        "role_targets_met": false,
+        "targets_met": false,
+        "plan_candidate_count": 0,
+        "plan_valid_rate": null,
+        "plan_conditional_rate": null,
+        "plan_invalid_rate": null
+      },
+      "failure_reasons": {
+        "JOINT_FIELDS_MISMATCH": 10,
+        "NULL_DATE_SAFETY_FAILED": 10
+      },
+      "failures_by_family": {
+        "premium_addendum_disputed_deadlines": [
+          {
+            "case_id": "v5-14-01",
+            "reasons": [
+              "JOINT_FIELDS_MISMATCH",
+              "NULL_DATE_SAFETY_FAILED"
+            ],
+            "unexpected_event_indices": [],
+            "unmatched_expected_indices": [
+              0
+            ]
+          },
+          {
+            "case_id": "v5-14-02",
+            "reasons": [
+              "JOINT_FIELDS_MISMATCH",
+              "NULL_DATE_SAFETY_FAILED"
+            ],
+            "unexpected_event_indices": [],
+            "unmatched_expected_indices": [
+              0
+            ]
+          },
+          {
+            "case_id": "v5-14-03",
+            "reasons": [
+              "JOINT_FIELDS_MISMATCH",
+              "NULL_DATE_SAFETY_FAILED"
+            ],
+            "unexpected_event_indices": [],
+            "unmatched_expected_indices": [
+              0
+            ]
+          },
+          {
+            "case_id": "v5-14-04",
+            "reasons": [
+              "JOINT_FIELDS_MISMATCH",
+              "NULL_DATE_SAFETY_FAILED"
+            ],
+            "unexpected_event_indices": [],
+            "unmatched_expected_indices": [
+              0
+            ]
+          },
+          {
+            "case_id": "v5-14-05",
+            "reasons": [
+              "JOINT_FIELDS_MISMATCH",
+              "NULL_DATE_SAFETY_FAILED"
+            ],
+            "unexpected_event_indices": [],
+            "unmatched_expected_indices": [
+              0
+            ]
+          },
+          {
+            "case_id": "v5-14-06",
+            "reasons": [
+              "JOINT_FIELDS_MISMATCH",
+              "NULL_DATE_SAFETY_FAILED"
+            ],
+            "unexpected_event_indices": [],
+            "unmatched_expected_indices": [
+              0
+            ]
+          },
+          {
+            "case_id": "v5-14-07",
+            "reasons": [
+              "JOINT_FIELDS_MISMATCH",
+              "NULL_DATE_SAFETY_FAILED"
+            ],
+            "unexpected_event_indices": [],
+            "unmatched_expected_indices": [
+              0
+            ]
+          },
+          {
+            "case_id": "v5-14-08",
+            "reasons": [
+              "JOINT_FIELDS_MISMATCH",
+              "NULL_DATE_SAFETY_FAILED"
+            ],
+            "unexpected_event_indices": [],
+            "unmatched_expected_indices": [
+              0
+            ]
+          },
+          {
+            "case_id": "v5-14-09",
+            "reasons": [
+              "JOINT_FIELDS_MISMATCH",
+              "NULL_DATE_SAFETY_FAILED"
+            ],
+            "unexpected_event_indices": [],
+            "unmatched_expected_indices": [
+              0
+            ]
+          },
+          {
+            "case_id": "v5-14-10",
+            "reasons": [
+              "JOINT_FIELDS_MISMATCH",
+              "NULL_DATE_SAFETY_FAILED"
+            ],
+            "unexpected_event_indices": [],
+            "unmatched_expected_indices": [
+              0
+            ]
+          }
+        ]
+      },
+      "review_without_expected_candidates": [
+        "v5-14-01",
+        "v5-14-02",
+        "v5-14-03",
+        "v5-14-04",
+        "v5-14-05",
+        "v5-14-06",
+        "v5-14-07",
+        "v5-14-08",
+        "v5-14-09",
+        "v5-14-10"
+      ],
+      "provider_errors_by_code": {},
+      "logical_provider_calls": 290,
+      "recorded_attempts": 290,
+      "live_request_attempts": 290,
+      "calls_by_provider": {
+        "typesafe": 160,
+        "openai": 130
+      }
+    }
+  },
+  "limitations": [
+    "AI-authored synthetic dataset, user-confirmed review; not external double blind.",
+    "Legacy expected-field hit rate is distinct from event precision; extra obligations fail final gates.",
+    "One round only. Existing per-call transient retry cap 3; SDK retries 0. No benchmark reruns.",
+    "Reported tokens are returned usage; failed requests may lack usage. No verified monetary tariff.",
+    "Rules arm is deterministic; live mode applies real providers to LLM-only and Jev+LLM arms."
+  ]
+}

@@ -1,0 +1,437 @@
+ Image studyflow-verification-20261011-app Building 
+ Image studyflow-verification-20261011-worker Building 
+ Image studyflow-verification-20261011-web Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.59kB 0.0s done
+#1 DONE 0.0s
+
+#2 [app internal] load build definition from Dockerfile
+#2 transferring dockerfile: 1.63kB done
+#2 DONE 0.0s
+
+#3 [auth] library/python:pull token for registry-1.docker.io
+#3 DONE 0.0s
+
+#4 [app internal] load metadata for docker.io/library/python:3.13-slim
+#4 DONE 2.2s
+
+#5 [web internal] load build definition from Dockerfile
+#5 transferring dockerfile: 930B done
+#5 DONE 0.0s
+
+#6 [worker internal] load .dockerignore
+#6 transferring context: 494B done
+#6 DONE 0.0s
+
+#7 [worker  1/10] FROM docker.io/library/python:3.13-slim@sha256:70729b46c69b4f1e97c4822c1af3df53a1476cf5ddc6c087c0c10bc3a5678c2f
+#7 resolve docker.io/library/python:3.13-slim@sha256:70729b46c69b4f1e97c4822c1af3df53a1476cf5ddc6c087c0c10bc3a5678c2f 0.0s done
+#7 DONE 0.0s
+
+#8 [auth] library/nginx:pull token for registry-1.docker.io
+#8 DONE 0.0s
+
+#9 [auth] library/node:pull token for registry-1.docker.io
+#9 DONE 0.0s
+
+#10 [worker internal] load build context
+#10 transferring context: 57.70kB 0.0s done
+#10 DONE 0.0s
+
+#11 [worker  3/10] COPY backend/requirements.lock.txt ./
+#11 CACHED
+
+#12 [worker  2/10] WORKDIR /app/backend
+#12 CACHED
+
+#13 [worker  4/10] COPY studyflow-ai/pyproject.toml studyflow-ai/README.md ../studyflow-ai/
+#13 CACHED
+
+#14 [worker  5/10] COPY studyflow-ai/src ../studyflow-ai/src
+#14 DONE 0.0s
+
+#15 [web internal] load metadata for docker.io/library/nginx:1.27-alpine
+#15 DONE 1.2s
+
+#16 [worker  6/10] RUN pip install -r requirements.lock.txt gunicorn==23.0.0     && pip install -e ../studyflow-ai
+#16 ...
+
+#17 [web internal] load metadata for docker.io/library/node:22-alpine
+#17 DONE 1.2s
+
+#18 [web internal] load .dockerignore
+#18 transferring context: 251B done
+#18 DONE 0.0s
+
+#19 [web stage-1 1/4] FROM docker.io/library/nginx:1.27-alpine@sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10
+#19 resolve docker.io/library/nginx:1.27-alpine@sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10 0.0s done
+#19 DONE 0.0s
+
+#20 [web build 1/6] FROM docker.io/library/node:22-alpine@sha256:0a7108bf6c7bf5de370ffb1a3ed6be93d405b43ff159f681a8d18c0e2bc2e402
+#20 resolve docker.io/library/node:22-alpine@sha256:0a7108bf6c7bf5de370ffb1a3ed6be93d405b43ff159f681a8d18c0e2bc2e402 0.0s done
+#20 DONE 0.0s
+
+#21 [web internal] load build context
+#21 transferring context: 42.38kB 0.0s done
+#21 DONE 0.0s
+
+#7 [web  1/10] FROM docker.io/library/python:3.13-slim@sha256:70729b46c69b4f1e97c4822c1af3df53a1476cf5ddc6c087c0c10bc3a5678c2f
+#7 resolve docker.io/library/python:3.13-slim@sha256:70729b46c69b4f1e97c4822c1af3df53a1476cf5ddc6c087c0c10bc3a5678c2f 0.0s done
+#7 DONE 0.0s
+
+#10 [web internal] load build context
+#10 transferring context: 57.70kB 0.0s done
+#10 DONE 0.1s
+
+#12 [web  2/10] WORKDIR /app/backend
+#12 CACHED
+
+#11 [web  3/10] COPY backend/requirements.lock.txt ./
+#11 CACHED
+
+#13 [web  4/10] COPY studyflow-ai/pyproject.toml studyflow-ai/README.md ../studyflow-ai/
+#13 CACHED
+
+#14 [web  5/10] COPY studyflow-ai/src ../studyflow-ai/src
+#14 DONE 0.1s
+
+#16 [web  6/10] RUN pip install -r requirements.lock.txt gunicorn==23.0.0     && pip install -e ../studyflow-ai
+#16 ...
+
+#22 [web build 2/6] WORKDIR /src
+#22 CACHED
+
+#23 [web build 3/6] COPY package.json package-lock.json ./
+#23 CACHED
+
+#24 [web build 4/6] RUN npm ci --no-audit --no-fund
+#24 CACHED
+
+#25 [web build 5/6] COPY . .
+#25 DONE 0.1s
+
+#26 [web build 6/6] RUN npm run build
+#26 0.412 
+#26 0.412 > studyflow-frontend@0.1.0 build
+#26 0.412 > tsc --noEmit && vite build
+#26 0.412 
+#26 4.503 vite v6.4.3 building for production...
+#26 4.550 transforming...
+#26 ...
+
+#16 [web  6/10] RUN pip install -r requirements.lock.txt gunicorn==23.0.0     && pip install -e ../studyflow-ai
+#16 4.051 Collecting gunicorn==23.0.0
+#16 4.856   Downloading gunicorn-23.0.0-py3-none-any.whl.metadata (4.4 kB)
+#16 4.948 Collecting asgiref==3.12.1 (from -r requirements.lock.txt (line 1))
+#16 5.073   Downloading asgiref-3.12.1-py3-none-any.whl.metadata (9.4 kB)
+#16 5.155 Collecting attrs==26.1.0 (from -r requirements.lock.txt (line 2))
+#16 5.277   Downloading attrs-26.1.0-py3-none-any.whl.metadata (8.8 kB)
+#16 5.522 Collecting Django==5.2.17 (from -r requirements.lock.txt (line 3))
+#16 5.645   Downloading django-5.2.17-py3-none-any.whl.metadata (4.1 kB)
+#16 5.725 Collecting django-cors-headers==4.9.0 (from -r requirements.lock.txt (line 4))
+#16 5.848   Downloading django_cors_headers-4.9.0-py3-none-any.whl.metadata (16 kB)
+#16 5.965 Collecting djangorestframework==3.18.1 (from -r requirements.lock.txt (line 5))
+#16 6.088   Downloading djangorestframework-3.18.1-py3-none-any.whl.metadata (7.8 kB)
+#16 6.176 Collecting drf-spectacular==0.30.0 (from -r requirements.lock.txt (line 6))
+#16 6.299   Downloading drf_spectacular-0.30.0-py3-none-any.whl.metadata (14 kB)
+#16 6.377 Collecting inflection==0.5.1 (from -r requirements.lock.txt (line 7))
+#16 6.500   Downloading inflection-0.5.1-py2.py3-none-any.whl.metadata (1.7 kB)
+#16 6.600 Collecting jsonschema==4.26.0 (from -r requirements.lock.txt (line 8))
+#16 6.722   Downloading jsonschema-4.26.0-py3-none-any.whl.metadata (7.6 kB)
+#16 6.797 Collecting jsonschema-specifications==2025.9.1 (from -r requirements.lock.txt (line 9))
+#16 6.918   Downloading jsonschema_specifications-2025.9.1-py3-none-any.whl.metadata (2.9 kB)
+#16 6.999 Collecting psycopg==3.3.6 (from -r requirements.lock.txt (line 10))
+#16 7.120   Downloading psycopg-3.3.6-py3-none-any.whl.metadata (4.4 kB)
+#16 7.940 Collecting psycopg-binary==3.3.6 (from -r requirements.lock.txt (line 11))
+#16 8.061   Downloading psycopg_binary-3.3.6-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.7 kB)
+#16 8.134 Collecting python-dotenv==1.2.4 (from -r requirements.lock.txt (line 12))
+#16 8.257   Downloading python_dotenv-1.2.4-py3-none-any.whl.metadata (29 kB)
+#16 8.463 Collecting PyYAML==6.0.3 (from -r requirements.lock.txt (line 13))
+#16 8.587   Downloading pyyaml-6.0.3-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.4 kB)
+#16 8.683 Collecting referencing==0.37.0 (from -r requirements.lock.txt (line 14))
+#16 8.804   Downloading referencing-0.37.0-py3-none-any.whl.metadata (2.8 kB)
+#16 9.722 Collecting rpds-py==2026.6.3 (from -r requirements.lock.txt (line 15))
+#16 9.846   Downloading rpds_py-2026.6.3-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.1 kB)
+#16 9.910 Collecting sqlparse==0.6.0 (from -r requirements.lock.txt (line 16))
+#16 10.03   Downloading sqlparse-0.6.0-py3-none-any.whl.metadata (6.0 kB)
+#16 10.10 Collecting tzdata==2026.5 (from -r requirements.lock.txt (line 17))
+#16 ...
+
+#26 [web build 6/6] RUN npm run build
+#26 6.475 ✓ 99 modules transformed.
+#26 6.612 rendering chunks...
+#26 6.713 computing gzip size...
+#26 6.725 dist/index.html                                                    0.35 kB │ gzip:   0.26 kB
+#26 6.725 dist/assets/jetbrains-mono-greek-400-normal-C190GLew.woff2         4.23 kB
+#26 6.725 dist/assets/chakra-petch-vietnamese-400-normal-Cn7ya5On.woff       5.04 kB
+#26 6.725 dist/assets/chakra-petch-vietnamese-500-normal-BVzUBLGs.woff       5.12 kB
+#26 6.725 dist/assets/jetbrains-mono-cyrillic-400-normal-BEIGL1Tu.woff2      5.33 kB
+#26 6.725 dist/assets/jetbrains-mono-vietnamese-400-normal-CqNFfHCs.woff     5.37 kB
+#26 6.725 dist/assets/jetbrains-mono-greek-400-normal-B9oWc5Lo.woff          5.66 kB
+#26 6.725 dist/assets/space-grotesk-vietnamese-wght-normal-D0rl6rjA.woff2    6.71 kB
+#26 6.725 dist/assets/jetbrains-mono-cyrillic-400-normal-ugxPyKxw.woff       6.98 kB
+#26 6.725 dist/assets/chakra-petch-thai-400-normal-Bw1Q-fVY.woff2            7.04 kB
+#26 6.725 dist/assets/jetbrains-mono-latin-ext-400-normal-Bc8Ftmh3.woff2     7.34 kB
+#26 6.725 dist/assets/chakra-petch-thai-500-normal-DeexCGiz.woff2            7.51 kB
+#26 6.725 dist/assets/chakra-petch-latin-ext-400-normal-C8u6EFkq.woff2       8.86 kB
+#26 6.725 dist/assets/chakra-petch-latin-ext-500-normal-gA6791b0.woff2       9.03 kB
+#26 6.725 dist/assets/chakra-petch-thai-400-normal-KdzBjiWs.woff             9.42 kB
+#26 6.725 dist/assets/chakra-petch-latin-400-normal-SafcrIr2.woff2           9.76 kB
+#26 6.725 dist/assets/chakra-petch-thai-500-normal-CJG_V2_m.woff             9.91 kB
+#26 6.725 dist/assets/chakra-petch-latin-500-normal-BR1ody1F.woff2           9.96 kB
+#26 6.725 dist/assets/jetbrains-mono-latin-ext-400-normal-fXTG6kC5.woff     10.13 kB
+#26 6.725 dist/assets/chakra-petch-latin-ext-400-normal-MNNNbyh_.woff       12.04 kB
+#26 6.725 dist/assets/chakra-petch-latin-ext-500-normal-BCHeNDEx.woff       12.18 kB
+#26 6.725 dist/assets/chakra-petch-latin-400-normal-D7EtbySE.woff           13.16 kB
+#26 6.725 dist/assets/chakra-petch-latin-500-normal-CnUQnZ4D.woff           13.41 kB
+#26 6.725 dist/assets/space-grotesk-latin-ext-wght-normal-D9tNdqV9.woff2    18.94 kB
+#26 6.725 dist/assets/jetbrains-mono-latin-400-normal-V6pRDFza.woff2        21.17 kB
+#26 6.725 dist/assets/space-grotesk-latin-wght-normal-BhU9QXUp.woff2        22.29 kB
+#26 6.725 dist/assets/jetbrains-mono-latin-400-normal-6-qcROiO.woff         27.50 kB
+#26 6.725 dist/assets/IntroApp-B3yUH4Xq.css                                 45.54 kB │ gzip:  20.66 kB
+#26 6.725 dist/assets/index-B0fhUzDP.css                                    54.31 kB │ gzip:  11.35 kB
+#26 6.725 dist/assets/wall-XpC3uqES.js                                       9.91 kB │ gzip:   4.43 kB
+#26 6.725 dist/assets/IntroApp-CC1I2a4B.js                                  15.06 kB │ gzip:   4.84 kB
+#26 6.725 dist/assets/opening-BxdRnAy6.js                                   96.82 kB │ gzip:  25.65 kB
+#26 6.725 dist/assets/three.module-Ct2I5RBs.js                             509.74 kB │ gzip: 129.73 kB
+#26 6.725 dist/assets/index-J9207D_P.js                                    555.85 kB │ gzip: 160.96 kB
+#26 6.725 
+#26 6.725 (!) Some chunks are larger than 500 kB after minification. Consider:
+#26 6.725 - Using dynamic import() to code-split the application
+#26 6.725 - Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+#26 6.725 - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+#26 6.726 ✓ built in 2.20s
+#26 DONE 6.8s
+
+#16 [web  6/10] RUN pip install -r requirements.lock.txt gunicorn==23.0.0     && pip install -e ../studyflow-ai
+#16 10.22   Downloading tzdata-2026.5-py2.py3-none-any.whl.metadata (1.4 kB)
+#16 ...
+
+#27 [web stage-1 2/4] COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
+#27 CACHED
+
+#28 [web stage-1 3/4] COPY --from=build /src/dist /usr/share/nginx/html
+#28 DONE 0.0s
+
+#16 [web  6/10] RUN pip install -r requirements.lock.txt gunicorn==23.0.0     && pip install -e ../studyflow-ai
+#16 10.28 Collecting uritemplate==4.2.0 (from -r requirements.lock.txt (line 18))
+#16 10.40   Downloading uritemplate-4.2.0-py3-none-any.whl.metadata (2.6 kB)
+#16 10.94 Collecting Pillow==12.3.0 (from -r requirements.lock.txt (line 19))
+#16 11.06   Downloading pillow-12.3.0-cp313-cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (9.1 kB)
+#16 11.13 Collecting packaging (from gunicorn==23.0.0)
+#16 11.25   Downloading packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+#16 11.39 Downloading gunicorn-23.0.0-py3-none-any.whl (85 kB)
+#16 11.65 Downloading asgiref-3.12.1-py3-none-any.whl (25 kB)
+#16 11.78 Downloading attrs-26.1.0-py3-none-any.whl (67 kB)
+#16 11.92 Downloading django-5.2.17-py3-none-any.whl (8.3 MB)
+#16 14.46    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 8.3/8.3 MB 3.4 MB/s  0:00:02
+#16 14.59 Downloading django_cors_headers-4.9.0-py3-none-any.whl (12 kB)
+#16 14.71 Downloading djangorestframework-3.18.1-py3-none-any.whl (901 kB)
+#16 15.25    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 901.4/901.4 kB 1.7 MB/s  0:00:00
+#16 15.37 Downloading drf_spectacular-0.30.0-py3-none-any.whl (111 kB)
+#16 15.55 Downloading inflection-0.5.1-py2.py3-none-any.whl (9.5 kB)
+#16 15.67 Downloading jsonschema-4.26.0-py3-none-any.whl (90 kB)
+#16 15.84 Downloading jsonschema_specifications-2025.9.1-py3-none-any.whl (18 kB)
+#16 15.96 Downloading psycopg-3.3.6-py3-none-any.whl (215 kB)
+#16 16.21 Downloading psycopg_binary-3.3.6-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (5.2 MB)
+#16 23.81    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.2/5.2 MB 667.4 kB/s  0:00:07
+#16 23.94 Downloading python_dotenv-1.2.4-py3-none-any.whl (23 kB)
+#16 24.33 Downloading pyyaml-6.0.3-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (801 kB)
+#16 25.64    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 801.6/801.6 kB 663.9 kB/s  0:00:01
+#16 25.76 Downloading referencing-0.37.0-py3-none-any.whl (26 kB)
+#16 25.91 Downloading rpds_py-2026.6.3-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (365 kB)
+#16 26.53 Downloading sqlparse-0.6.0-py3-none-any.whl (50 kB)
+#16 26.71 Downloading tzdata-2026.5-py2.py3-none-any.whl (347 kB)
+#16 27.29 Downloading uritemplate-4.2.0-py3-none-any.whl (11 kB)
+#16 27.42 Downloading pillow-12.3.0-cp313-cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (6.9 MB)
+#16 34.62    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.9/6.9 MB 970.4 kB/s  0:00:07
+#16 34.74 Downloading packaging-26.3-py3-none-any.whl (129 kB)
+#16 34.92 Installing collected packages: uritemplate, tzdata, sqlparse, rpds-py, PyYAML, python-dotenv, psycopg-binary, psycopg, Pillow, packaging, inflection, attrs, asgiref, referencing, gunicorn, Django, jsonschema-specifications, djangorestframework, django-cors-headers, jsonschema, drf-spectacular
+#16 36.75 
+#16 36.75 Successfully installed Django-5.2.17 Pillow-12.3.0 PyYAML-6.0.3 asgiref-3.12.1 attrs-26.1.0 django-cors-headers-4.9.0 djangorestframework-3.18.1 drf-spectacular-0.30.0 gunicorn-23.0.0 inflection-0.5.1 jsonschema-4.26.0 jsonschema-specifications-2025.9.1 packaging-26.3 psycopg-3.3.6 psycopg-binary-3.3.6 python-dotenv-1.2.4 referencing-0.37.0 rpds-py-2026.6.3 sqlparse-0.6.0 tzdata-2026.5 uritemplate-4.2.0
+#16 36.75 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+#16 37.47 Obtaining file:///app/studyflow-ai
+#16 37.48   Installing build dependencies: started
+#16 39.39   Installing build dependencies: finished with status 'done'
+#16 39.39   Checking if build backend supports build_editable: started
+#16 39.75   Checking if build backend supports build_editable: finished with status 'done'
+#16 39.75   Getting requirements to build editable: started
+#16 40.20   Getting requirements to build editable: finished with status 'done'
+#16 40.20   Preparing editable metadata (pyproject.toml): started
+#16 40.67   Preparing editable metadata (pyproject.toml): finished with status 'done'
+#16 41.57 Collecting pydantic<3,>=2.10 (from studyflow-ai==0.2.0)
+#16 41.93   Downloading pydantic-2.14.0-py3-none-any.whl.metadata (131 kB)
+#16 42.69 Collecting pypdf<7,>=5 (from studyflow-ai==0.2.0)
+#16 42.81   Downloading pypdf-6.20.0-py3-none-any.whl.metadata (7.6 kB)
+#16 43.16 Collecting openai<3,>=2 (from studyflow-ai==0.2.0)
+#16 43.27   Downloading openai-2.54.0-py3-none-any.whl.metadata (40 kB)
+#16 43.84 Collecting typesafe-sdk<2,>=0.1 (from studyflow-ai==0.2.0)
+#16 43.96   Downloading typesafe_sdk-0.7.4-py3-none-any.whl.metadata (2.9 kB)
+#16 43.97 Requirement already satisfied: tzdata>=2025.1 in /usr/local/lib/python3.13/site-packages (from studyflow-ai==0.2.0) (2026.5)
+#16 44.11 Collecting Babel<3,>=2.17 (from studyflow-ai==0.2.0)
+#16 44.23   Downloading babel-2.18.0-py3-none-any.whl.metadata (2.2 kB)
+#16 44.51 Collecting httpx<1,>=0.28 (from studyflow-ai==0.2.0)
+#16 44.63   Downloading httpx-0.28.1-py3-none-any.whl.metadata (7.1 kB)
+#16 44.65 Requirement already satisfied: Pillow<13,>=12.1 in /usr/local/lib/python3.13/site-packages (from studyflow-ai==0.2.0) (12.3.0)
+#16 44.91 Collecting anyio (from httpx<1,>=0.28->studyflow-ai==0.2.0)
+#16 45.03   Downloading anyio-4.15.1-py3-none-any.whl.metadata (4.7 kB)
+#16 45.28 Collecting certifi (from httpx<1,>=0.28->studyflow-ai==0.2.0)
+#16 45.39   Downloading certifi-2026.7.22-py3-none-any.whl.metadata (2.5 kB)
+#16 45.59 Collecting httpcore==1.* (from httpx<1,>=0.28->studyflow-ai==0.2.0)
+#16 45.71   Downloading httpcore-1.0.9-py3-none-any.whl.metadata (21 kB)
+#16 46.29 Collecting idna (from httpx<1,>=0.28->studyflow-ai==0.2.0)
+#16 46.41   Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+#16 46.57 Collecting h11>=0.16 (from httpcore==1.*->httpx<1,>=0.28->studyflow-ai==0.2.0)
+#16 46.69   Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+#16 46.88 Collecting distro<2,>=1.7.0 (from openai<3,>=2->studyflow-ai==0.2.0)
+#16 46.99   Downloading distro-1.9.0-py3-none-any.whl.metadata (6.8 kB)
+#16 49.51 Collecting jiter<1,>=0.10.0 (from openai<3,>=2->studyflow-ai==0.2.0)
+#16 49.63   Downloading jiter-0.17.0-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (5.2 kB)
+#16 49.78 Collecting sniffio (from openai<3,>=2->studyflow-ai==0.2.0)
+#16 49.90   Downloading sniffio-1.3.1-py3-none-any.whl.metadata (3.9 kB)
+#16 50.37 Collecting tqdm>4 (from openai<3,>=2->studyflow-ai==0.2.0)
+#16 50.49   Downloading tqdm-4.70.1-py3-none-any.whl.metadata (57 kB)
+#16 51.02 Collecting typing-extensions<5,>=4.14 (from openai<3,>=2->studyflow-ai==0.2.0)
+#16 51.14   Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+#16 51.28 Collecting annotated-types>=0.6.0 (from pydantic<3,>=2.10->studyflow-ai==0.2.0)
+#16 51.40   Downloading annotated_types-0.8.0-py3-none-any.whl.metadata (15 kB)
+#16 58.25 Collecting pydantic-core==2.50.0 (from pydantic<3,>=2.10->studyflow-ai==0.2.0)
+#16 58.37   Downloading pydantic_core-2.50.0-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.5 kB)
+#16 58.52 Collecting typing-inspection>=0.4.4 (from pydantic<3,>=2.10->studyflow-ai==0.2.0)
+#16 58.64   Downloading typing_inspection-0.4.4-py3-none-any.whl.metadata (2.6 kB)
+#16 58.77 Collecting httpx2>=2.0.0 (from typesafe-sdk<2,>=0.1->studyflow-ai==0.2.0)
+#16 58.89   Downloading httpx2-2.13.1-py3-none-any.whl.metadata (9.8 kB)
+#16 58.93 Requirement already satisfied: packaging>=24.0 in /usr/local/lib/python3.13/site-packages (from typesafe-sdk<2,>=0.1->studyflow-ai==0.2.0) (26.3)
+#16 59.08 Collecting tenacity>=9.0.0 (from typesafe-sdk<2,>=0.1->studyflow-ai==0.2.0)
+#16 59.20   Downloading tenacity-9.2.1-py3-none-any.whl.metadata (1.4 kB)
+#16 59.33 Collecting truststore>=0.10.0 (from typesafe-sdk<2,>=0.1->studyflow-ai==0.2.0)
+#16 59.44   Downloading truststore-0.10.4-py3-none-any.whl.metadata (4.4 kB)
+#16 59.59 Collecting httpcore2==2.13.1 (from httpx2>=2.0.0->typesafe-sdk<2,>=0.1->studyflow-ai==0.2.0)
+#16 59.71   Downloading httpcore2-2.13.1-py3-none-any.whl.metadata (26 kB)
+#16 59.96 Downloading babel-2.18.0-py3-none-any.whl (10.2 MB)
+#16 77.06    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 10.2/10.2 MB 625.9 kB/s  0:00:17
+#16 77.18 Downloading httpx-0.28.1-py3-none-any.whl (73 kB)
+#16 77.32 Downloading httpcore-1.0.9-py3-none-any.whl (78 kB)
+#16 77.46 Downloading openai-2.54.0-py3-none-any.whl (1.7 MB)
+#16 78.17    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.7/1.7 MB 2.2 MB/s  0:00:00
+#16 78.29 Downloading anyio-4.15.1-py3-none-any.whl (132 kB)
+#16 78.48 Downloading distro-1.9.0-py3-none-any.whl (20 kB)
+#16 78.61 Downloading jiter-0.17.0-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (344 kB)
+#16 78.93 Downloading pydantic-2.14.0-py3-none-any.whl (487 kB)
+#16 79.40 Downloading pydantic_core-2.50.0-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.2 MB)
+#16 81.13    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.2/2.2 MB 1.3 MB/s  0:00:01
+#16 81.24 Downloading pypdf-6.20.0-py3-none-any.whl (401 kB)
+#16 81.65 Downloading typesafe_sdk-0.7.4-py3-none-any.whl (37 kB)
+#16 81.78 Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+#16 81.93 Downloading annotated_types-0.8.0-py3-none-any.whl (13 kB)
+#16 82.05 Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+#16 82.19 Downloading httpx2-2.13.1-py3-none-any.whl (95 kB)
+#16 82.36 Downloading httpcore2-2.13.1-py3-none-any.whl (83 kB)
+#16 82.53 Downloading idna-3.20-py3-none-any.whl (69 kB)
+#16 82.69 Downloading tenacity-9.2.1-py3-none-any.whl (32 kB)
+#16 82.83 Downloading tqdm-4.70.1-py3-none-any.whl (80 kB)
+#16 82.99 Downloading truststore-0.10.4-py3-none-any.whl (18 kB)
+#16 83.12 Downloading typing_inspection-0.4.4-py3-none-any.whl (14 kB)
+#16 83.24 Downloading certifi-2026.7.22-py3-none-any.whl (136 kB)
+#16 83.44 Downloading sniffio-1.3.1-py3-none-any.whl (10 kB)
+#16 83.49 Building wheels for collected packages: studyflow-ai
+#16 83.49   Building editable for studyflow-ai (pyproject.toml): started
+#16 83.96   Building editable for studyflow-ai (pyproject.toml): finished with status 'done'
+#16 83.96   Created wheel for studyflow-ai: filename=studyflow_ai-0.2.0-0.editable-py3-none-any.whl size=1749 sha256=17df21766f5cbab2e4bf9e976f0869ef22ca76f3d8b37f04b7418dbd7e5b2d9c
+#16 83.96   Stored in directory: /tmp/pip-ephem-wheel-cache-cutwyz4d/wheels/0f/9d/7c/3eab34ab0582b6e8929af165fd103b450d5fc399963b85e11a
+#16 83.96 Successfully built studyflow-ai
+#16 84.02 Installing collected packages: typing-extensions, truststore, tqdm, tenacity, sniffio, pypdf, jiter, idna, h11, distro, certifi, Babel, annotated-types, typing-inspection, pydantic-core, httpcore2, httpcore, anyio, pydantic, httpx2, httpx, typesafe-sdk, openai, studyflow-ai
+#16 85.59 
+#16 85.59 Successfully installed Babel-2.18.0 annotated-types-0.8.0 anyio-4.15.1 certifi-2026.7.22 distro-1.9.0 h11-0.16.0 httpcore-1.0.9 httpcore2-2.13.1 httpx-0.28.1 httpx2-2.13.1 idna-3.20 jiter-0.17.0 openai-2.54.0 pydantic-2.14.0 pydantic-core-2.50.0 pypdf-6.20.0 sniffio-1.3.1 studyflow-ai-0.2.0 tenacity-9.2.1 tqdm-4.70.1 truststore-0.10.4 typesafe-sdk-0.7.4 typing-extensions-4.16.0 typing-inspection-0.4.4
+#16 85.59 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+#16 DONE 85.8s
+
+#29 [app  7/10] COPY studyflow-ai ../studyflow-ai
+#29 DONE 0.3s
+
+#30 [worker  8/10] COPY backend .
+#30 DONE 0.1s
+
+#31 [app  9/10] RUN DJANGO_SECRET_KEY=collectstatic-build-only python manage.py collectstatic --noinput
+#31 2.925 
+#31 2.925 154 static files copied to '/app/static'.
+#31 DONE 1.6s
+
+#32 [web 10/10] RUN useradd --create-home --uid 10001 studyflow     && mkdir -p output     && chown -R studyflow:studyflow /app
+#32 DONE 2.1s
+
+#33 [web stage-1 4/4] COPY --from=django /app/static /usr/share/nginx/django-static
+#33 DONE 0.1s
+
+#34 [web] exporting to image
+#34 exporting layers
+#34 exporting layers 0.1s done
+#34 exporting manifest sha256:7797c814bade8d2a7ca4d05703059d59360fe4019b7beb41e4ca25676182f8ba done
+#34 exporting config sha256:eb3a4fe4fa7e0718586e0f28772f48a4b596deb292264c93ef85c030266bc003 done
+#34 exporting attestation manifest sha256:18198f29646df70baed670c447ce49d9928ccc3c480b71cddb55a0630c9c57dc 0.0s done
+#34 exporting manifest list sha256:893f745c710c5a1b07af336ac8fdfce3a890294b8a161fa2da04cbbf58be1f05 done
+#34 naming to docker.io/library/studyflow-verification-20261011-web:latest done
+#34 unpacking to docker.io/library/studyflow-verification-20261011-web:latest 0.0s done
+#34 DONE 0.3s
+
+#35 [app] exporting to image
+#35 ...
+
+#36 [web] resolving provenance for metadata file
+#36 DONE 0.0s
+
+#37 [worker] exporting to image
+#37 exporting layers 3.4s done
+#37 exporting manifest sha256:449148bf6d0550db57d52af301aa0227018cf801ee9f1e197302218792600cf8 0.0s done
+#37 exporting config sha256:eb9a72d5e7cc904eb58b17702e922dd705a2559fe296cb8152bf53e4b629b3a2 0.0s done
+#37 exporting attestation manifest sha256:c9e52b60b4c7667611a9c641196069f866af4123cf5f706408ebe220c8f5fb88 0.0s done
+#37 exporting manifest list sha256:ca8999b8be81ee717d44a1f205ccf0549340054ea87a921edfa9cf5069529fe4 0.0s done
+#37 naming to docker.io/library/studyflow-verification-20261011-worker:latest done
+#37 unpacking to docker.io/library/studyflow-verification-20261011-worker:latest
+#37 unpacking to docker.io/library/studyflow-verification-20261011-worker:latest 1.4s done
+#37 DONE 4.9s
+
+#35 [app] exporting to image
+#35 exporting layers 3.4s done
+#35 exporting manifest sha256:dd8b0a295101809f96affbec89523df4cad9746ff45930c451e09f7bae8a46c1 0.0s done
+#35 exporting config sha256:f5ed2439ae7b08565ef3e297ca144eaf59df4cd7d60f26a177587eca77ce92d5 0.0s done
+#35 exporting attestation manifest sha256:62c0e8727274485d929445f5a2c862eaf17a5bde94fe38b0eca2035529e7ba65 0.0s done
+#35 exporting manifest list sha256:686dbd5a584e2460320b1a70a02e28863697b4711779f07ba139a20d98b6a254 0.0s done
+#35 naming to docker.io/library/studyflow-verification-20261011-app:latest done
+#35 unpacking to docker.io/library/studyflow-verification-20261011-app:latest 1.4s done
+#35 DONE 4.9s
+
+#38 [app] resolving provenance for metadata file
+#38 DONE 0.0s
+
+#39 [worker] resolving provenance for metadata file
+#39 DONE 0.0s
+ Image studyflow-verification-20261011-app Built 
+ Image studyflow-verification-20261011-web Built 
+ Image studyflow-verification-20261011-worker Built 
+ Container studyflow-verification-20261011-db-1 Running 
+ Container studyflow-verification-20261011-app-1 Recreate 
+ Container studyflow-verification-20261011-app-1 Recreated 
+ Container studyflow-verification-20261011-web-1 Recreate 
+ Container studyflow-verification-20261011-worker-1 Recreate 
+ Container studyflow-verification-20261011-web-1 Recreated 
+ Container studyflow-verification-20261011-worker-1 Recreated 
+ Container studyflow-verification-20261011-db-1 Waiting 
+ Container studyflow-verification-20261011-db-1 Healthy 
+ Container studyflow-verification-20261011-app-1 Starting 
+ Container studyflow-verification-20261011-app-1 Started 
+ Container studyflow-verification-20261011-app-1 Waiting 
+ Container studyflow-verification-20261011-app-1 Waiting 
+ Container studyflow-verification-20261011-app-1 Healthy 
+ Container studyflow-verification-20261011-app-1 Healthy 
+ Container studyflow-verification-20261011-worker-1 Starting 
+ Container studyflow-verification-20261011-web-1 Starting 
+ Container studyflow-verification-20261011-worker-1 Started 
+ Container studyflow-verification-20261011-web-1 Started 
+ Container studyflow-verification-20261011-web-1 Waiting 
+ Container studyflow-verification-20261011-db-1 Waiting 
+ Container studyflow-verification-20261011-app-1 Waiting 
+ Container studyflow-verification-20261011-worker-1 Waiting 
+ Container studyflow-verification-20261011-worker-1 Healthy 
+ Container studyflow-verification-20261011-db-1 Healthy 
+ Container studyflow-verification-20261011-app-1 Healthy 
+ Container studyflow-verification-20261011-web-1 Healthy 

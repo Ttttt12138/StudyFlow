@@ -1,0 +1,11 @@
+{
+  "recorded_at": "2026-10-11T15:31:23.458284+00:00",
+  "review": "completed_user_confirmed",
+  "engineering": "completed",
+  "scorer_fixes": "completed",
+  "freeze": "not_run",
+  "live_evaluation": "not_run",
+  "overall_acceptance": "not_passed",
+  "review_record": "../../studyflow-ai/evals/copilot-holdout-v5/review.json",
+  "model_calls_this_action": 0
+}

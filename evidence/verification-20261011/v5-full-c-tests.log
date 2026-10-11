@@ -1,0 +1,389 @@
+........................................................................ [ 21%]
+.......................................EEEE.................EE.......... [ 42%]
+....................................E.EEEEE..............EEEEE....EEEE.. [ 63%]
+...............................EE............E.......................... [ 84%]
+...........................E.......................                      [100%]
+=================================== ERRORS ====================================
+______________ ERROR at setup of test_cli_demo_and_schema_export ______________
+
+self = WindowsPath('D:/Qoder-project/AI studyflow/output/pytest-v5-full')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           PermissionError: [WinError 5] �ܾ����ʡ�: 'D:\\Qoder-project\\AI studyflow\\output\\pytest-v5-full'
+
+C:\ProgramData\miniconda3\Lib\pathlib\_local.py:722: PermissionError
+____________ ERROR at setup of test_cli_ingest_rejects_scanned_pdf ____________
+
+self = WindowsPath('D:/Qoder-project/AI studyflow/output/pytest-v5-full')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           PermissionError: [WinError 5] �ܾ����ʡ�: 'D:\\Qoder-project\\AI studyflow\\output\\pytest-v5-full'
+
+C:\ProgramData\miniconda3\Lib\pathlib\_local.py:722: PermissionError
+____________ ERROR at setup of test_cli_requires_real_credentials _____________
+
+self = WindowsPath('D:/Qoder-project/AI studyflow/output/pytest-v5-full')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           PermissionError: [WinError 5] �ܾ����ʡ�: 'D:\\Qoder-project\\AI studyflow\\output\\pytest-v5-full'
+
+C:\ProgramData\miniconda3\Lib\pathlib\_local.py:722: PermissionError
+_____________ ERROR at setup of test_cli_mock_cannot_verify_live ______________
+
+self = WindowsPath('D:/Qoder-project/AI studyflow/output/pytest-v5-full')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           PermissionError: [WinError 5] �ܾ����ʡ�: 'D:\\Qoder-project\\AI studyflow\\output\\pytest-v5-full'
+
+C:\ProgramData\miniconda3\Lib\pathlib\_local.py:722: PermissionError
+______ ERROR at setup of test_manifest_selects_acceptance_protocol[None] ______
+
+self = WindowsPath('D:/Qoder-project/AI studyflow/output/pytest-v5-full')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           PermissionError: [WinError 5] �ܾ����ʡ�: 'D:\\Qoder-project\\AI studyflow\\output\\pytest-v5-full'
+
+C:\ProgramData\miniconda3\Lib\pathlib\_local.py:722: PermissionError
+____ ERROR at setup of test_manifest_selects_acceptance_protocol[role-v1] _____
+
+self = WindowsPath('D:/Qoder-project/AI studyflow/output/pytest-v5-full')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           PermissionError: [WinError 5] �ܾ����ʡ�: 'D:\\Qoder-project\\AI studyflow\\output\\pytest-v5-full'
+
+C:\ProgramData\miniconda3\Lib\pathlib\_local.py:722: PermissionError
+______________ ERROR at setup of test_modified_dataset_rejected _______________
+
+self = WindowsPath('D:/Qoder-project/AI studyflow/output/pytest-v5-full')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           PermissionError: [WinError 5] �ܾ����ʡ�: 'D:\\Qoder-project\\AI studyflow\\output\\pytest-v5-full'
+
+C:\ProgramData\miniconda3\Lib\pathlib\_local.py:722: PermissionError
+__ ERROR at setup of test_v5_draft_cannot_run_even_with_generic_ai_approval ___
+
+self = WindowsPath('D:/Qoder-project/AI studyflow/output/pytest-v5-full')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           PermissionError: [WinError 5] �ܾ����ʡ�: 'D:\\Qoder-project\\AI studyflow\\output\\pytest-v5-full'
+
+C:\ProgramData\miniconda3\Lib\pathlib\_local.py:722: PermissionError
+_____ ERROR at setup of test_v5_requires_all_three_arms_in_one_first_run ______
+
+self = WindowsPath('D:/Qoder-project/AI studyflow/output/pytest-v5-full')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           PermissionError: [WinError 5] �ܾ����ʡ�: 'D:\\Qoder-project\\AI studyflow\\output\\pytest-v5-full'
+
+C:\ProgramData\miniconda3\Lib\pathlib\_local.py:722: PermissionError
+______ ERROR at setup of test_v5_rejects_changed_code_before_model_calls ______
+
+self = WindowsPath('D:/Qoder-project/AI studyflow/output/pytest-v5-full')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           PermissionError: [WinError 5] �ܾ����ʡ�: 'D:\\Qoder-project\\AI studyflow\\output\\pytest-v5-full'
+
+C:\ProgramData\miniconda3\Lib\pathlib\_local.py:722: PermissionError
+_ ERROR at setup of test_v5_cannot_restore_incomplete_scoring_after_freeze[change0] _
+
+self = WindowsPath('D:/Qoder-project/AI studyflow/output/pytest-v5-full')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           PermissionError: [WinError 5] �ܾ����ʡ�: 'D:\\Qoder-project\\AI studyflow\\output\\pytest-v5-full'
+
+C:\ProgramData\miniconda3\Lib\pathlib\_local.py:722: PermissionError
+_ ERROR at setup of test_v5_cannot_restore_incomplete_scoring_after_freeze[change1] _
+
+self = WindowsPath('D:/Qoder-project/AI studyflow/output/pytest-v5-full')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           PermissionError: [WinError 5] �ܾ����ʡ�: 'D:\\Qoder-project\\AI studyflow\\output\\pytest-v5-full'
+
+C:\ProgramData\miniconda3\Lib\pathlib\_local.py:722: PermissionError
+______ ERROR at setup of test_c_env_loads_secrets_without_exposing_them _______
+
+self = WindowsPath('D:/Qoder-project/AI studyflow/output/pytest-v5-full')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           PermissionError: [WinError 5] �ܾ����ʡ�: 'D:\\Qoder-project\\AI studyflow\\output\\pytest-v5-full'
+
+C:\ProgramData\miniconda3\Lib\pathlib\_local.py:722: PermissionError
+_____________ ERROR at setup of test_process_env_overrides_c_file _____________
+
+self = WindowsPath('D:/Qoder-project/AI studyflow/output/pytest-v5-full')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           PermissionError: [WinError 5] �ܾ����ʡ�: 'D:\\Qoder-project\\AI studyflow\\output\\pytest-v5-full'
+
+C:\ProgramData\miniconda3\Lib\pathlib\_local.py:722: PermissionError
+_________ ERROR at setup of test_absent_c_file_does_not_read_cwd_env __________
+
+self = WindowsPath('D:/Qoder-project/AI studyflow/output/pytest-v5-full')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           PermissionError: [WinError 5] �ܾ����ʡ�: 'D:\\Qoder-project\\AI studyflow\\output\\pytest-v5-full'
+
+C:\ProgramData\miniconda3\Lib\pathlib\_local.py:722: PermissionError
+_____ ERROR at setup of test_explicit_c_env_loader_includes_ocr_settings ______
+
+self = WindowsPath('D:/Qoder-project/AI studyflow/output/pytest-v5-full')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           PermissionError: [WinError 5] �ܾ����ʡ�: 'D:\\Qoder-project\\AI studyflow\\output\\pytest-v5-full'
+
+C:\ProgramData\miniconda3\Lib\pathlib\_local.py:722: PermissionError
+___________ ERROR at setup of test_fallback_models_and_attempt_cap ____________
+
+self = WindowsPath('D:/Qoder-project/AI studyflow/output/pytest-v5-full')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           PermissionError: [WinError 5] �ܾ����ʡ�: 'D:\\Qoder-project\\AI studyflow\\output\\pytest-v5-full'
+
+C:\ProgramData\miniconda3\Lib\pathlib\_local.py:722: PermissionError
+_______________________ ERROR at setup of test_text_pdf _______________________
+
+self = WindowsPath('D:/Qoder-project/AI studyflow/output/pytest-v5-full')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           PermissionError: [WinError 5] �ܾ����ʡ�: 'D:\\Qoder-project\\AI studyflow\\output\\pytest-v5-full'
+
+C:\ProgramData\miniconda3\Lib\pathlib\_local.py:722: PermissionError
+_______ ERROR at setup of test_unsupported_pdf[False-PDF_NO_TEXT_LAYER] _______
+
+self = WindowsPath('D:/Qoder-project/AI studyflow/output/pytest-v5-full')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           PermissionError: [WinError 5] �ܾ����ʡ�: 'D:\\Qoder-project\\AI studyflow\\output\\pytest-v5-full'
+
+C:\ProgramData\miniconda3\Lib\pathlib\_local.py:722: PermissionError
+_________ ERROR at setup of test_unsupported_pdf[True-PDF_ENCRYPTED] __________
+
+self = WindowsPath('D:/Qoder-project/AI studyflow/output/pytest-v5-full')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           PermissionError: [WinError 5] �ܾ����ʡ�: 'D:\\Qoder-project\\AI studyflow\\output\\pytest-v5-full'
+
+C:\ProgramData\miniconda3\Lib\pathlib\_local.py:722: PermissionError
+_____________________ ERROR at setup of test_damaged_pdf ______________________
+
+self = WindowsPath('D:/Qoder-project/AI studyflow/output/pytest-v5-full')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           PermissionError: [WinError 5] �ܾ����ʡ�: 'D:\\Qoder-project\\AI studyflow\\output\\pytest-v5-full'
+
+C:\ProgramData\miniconda3\Lib\pathlib\_local.py:722: PermissionError
+________________ ERROR at setup of test_v2_cli_schema_and_demo ________________
+
+self = WindowsPath('D:/Qoder-project/AI studyflow/output/pytest-v5-full')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           PermissionError: [WinError 5] �ܾ����ʡ�: 'D:\\Qoder-project\\AI studyflow\\output\\pytest-v5-full'
+
+C:\ProgramData\miniconda3\Lib\pathlib\_local.py:722: PermissionError
+___ ERROR at setup of test_explicit_env_file_does_not_execute_or_log_values ___
+
+self = WindowsPath('D:/Qoder-project/AI studyflow/output/pytest-v5-full')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           PermissionError: [WinError 5] �ܾ����ʡ�: 'D:\\Qoder-project\\AI studyflow\\output\\pytest-v5-full'
+
+C:\ProgramData\miniconda3\Lib\pathlib\_local.py:722: PermissionError
+_________ ERROR at setup of test_modified_readiness_dataset_rejected __________
+
+self = WindowsPath('D:/Qoder-project/AI studyflow/output/pytest-v5-full')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           PermissionError: [WinError 5] �ܾ����ʡ�: 'D:\\Qoder-project\\AI studyflow\\output\\pytest-v5-full'
+
+C:\ProgramData\miniconda3\Lib\pathlib\_local.py:722: PermissionError
+_ ERROR at setup of test_three_arm_report_uses_null_scoring_and_final_safety_gate _
+
+self = WindowsPath('D:/Qoder-project/AI studyflow/output/pytest-v5-full')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           PermissionError: [WinError 5] �ܾ����ʡ�: 'D:\\Qoder-project\\AI studyflow\\output\\pytest-v5-full'
+
+C:\ProgramData\miniconda3\Lib\pathlib\_local.py:722: PermissionError
+============================== warnings summary ===============================
+auto_test/test_document_ocr.py::test_active_pdf_and_encrypted_pdf_are_rejected
+  D:\Qoder-project\AI studyflow\studyflow-ai\auto_test\test_document_ocr.py:134: DeprecationWarning: add_js is deprecated and will be removed in pypdf 7.0.0. Use add_open_action instead.
+    writer.add_js("app.alert('not allowed')")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+ERROR auto_test/test_cli.py::test_cli_demo_and_schema_export - PermissionErro...
+ERROR auto_test/test_cli.py::test_cli_ingest_rejects_scanned_pdf - Permission...
+ERROR auto_test/test_cli.py::test_cli_requires_real_credentials - PermissionE...
+ERROR auto_test/test_cli.py::test_cli_mock_cannot_verify_live - PermissionErr...
+ERROR auto_test/test_copilot_evaluation.py::test_manifest_selects_acceptance_protocol[None]
+ERROR auto_test/test_copilot_evaluation.py::test_manifest_selects_acceptance_protocol[role-v1]
+ERROR auto_test/test_evaluation.py::test_modified_dataset_rejected - Permissi...
+ERROR auto_test/test_holdout_v5_guard.py::test_v5_draft_cannot_run_even_with_generic_ai_approval
+ERROR auto_test/test_holdout_v5_guard.py::test_v5_requires_all_three_arms_in_one_first_run
+ERROR auto_test/test_holdout_v5_guard.py::test_v5_rejects_changed_code_before_model_calls
+ERROR auto_test/test_holdout_v5_guard.py::test_v5_cannot_restore_incomplete_scoring_after_freeze[change0]
+ERROR auto_test/test_holdout_v5_guard.py::test_v5_cannot_restore_incomplete_scoring_after_freeze[change1]
+ERROR auto_test/test_ocr_config.py::test_c_env_loads_secrets_without_exposing_them
+ERROR auto_test/test_ocr_config.py::test_process_env_overrides_c_file - Permi...
+ERROR auto_test/test_ocr_config.py::test_absent_c_file_does_not_read_cwd_env
+ERROR auto_test/test_ocr_config.py::test_explicit_c_env_loader_includes_ocr_settings
+ERROR auto_test/test_ocr_config.py::test_fallback_models_and_attempt_cap - Pe...
+ERROR auto_test/test_pdf.py::test_text_pdf - PermissionError: [WinError 5] ��...
+ERROR auto_test/test_pdf.py::test_unsupported_pdf[False-PDF_NO_TEXT_LAYER] - ...
+ERROR auto_test/test_pdf.py::test_unsupported_pdf[True-PDF_ENCRYPTED] - Permi...
+ERROR auto_test/test_pdf.py::test_damaged_pdf - PermissionError: [WinError 5]...
+ERROR auto_test/test_readiness_cli.py::test_v2_cli_schema_and_demo - Permissi...
+ERROR auto_test/test_readiness_cli.py::test_explicit_env_file_does_not_execute_or_log_values
+ERROR auto_test/test_readiness_evaluation.py::test_modified_readiness_dataset_rejected
+ERROR auto_test/test_v5_scoring.py::test_three_arm_report_uses_null_scoring_and_final_safety_gate
+314 passed, 1 warning, 25 errors in 2.58s

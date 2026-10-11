@@ -1,0 +1,17 @@
+.F                                                                       [100%]
+================================== FAILURES ===================================
+__________ test_revised_families_do_not_reuse_identified_mechanisms ___________
+
+    def test_revised_families_do_not_reuse_identified_mechanisms():
+        folder = ROOT / "studyflow-ai/evals/copilot-holdout-v5"
+        cases = [json.loads(line) for line in (folder / "cases.jsonl").read_text(encoding="utf-8").splitlines()]
+        detect = overlap_module().mechanisms
+        for case in cases:
+            if case["case_id"].startswith("v5-08-"):
+>               assert "water_nonpayment_cutoff" not in detect(case["text"])
+E               AssertionError: assert 'water_nonpayment_cutoff' not in ['water_nonpayment_cutoff']
+E                +  where ['water_nonpayment_cutoff'] = <function mechanisms at 0x00000274FF4E0B80>('Utility mediation order. Water bill THB 3258; if unpaid after 2026-11-10, service will be suspended. Beneficiary: Desk H0')
+
+studyflow-ai\auto_test\test_v5_package.py:30: AssertionError
+=========================== short test summary info ===========================
+FAILED studyflow-ai\auto_test\test_v5_package.py::test_revised_families_do_not_reuse_identified_mechanisms

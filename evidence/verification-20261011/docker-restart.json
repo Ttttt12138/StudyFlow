@@ -1,0 +1,681 @@
+{
+  "passed": true,
+  "project": "studyflow-verification-20261011",
+  "accounts": [
+    "reference-55e5a883-8af2-401e-8f3c-6b554ebcb80f",
+    "reference-86ba57e6-8e63-4da5-99e5-660976873c3f",
+    "reference-93f31b1e-9144-45a6-8851-6f79b7bddc22"
+  ],
+  "state_sha256": "8d6f727f39c794edc2c08e5476829ccdf155218f7efc6b44cbf82954fd781201",
+  "before": {
+    "states": [
+      {
+        "owner__username": "reference-55e5a883-8af2-401e-8f3c-6b554ebcb80f",
+        "snapshot": {
+          "as_of": "2026-10-02",
+          "currency": "THB",
+          "events": [],
+          "opening_balance": "80000.00",
+          "reserve": "15000.00"
+        },
+        "version": 1
+      },
+      {
+        "owner__username": "reference-55e5a883-8af2-401e-8f3c-6b554ebcb80f",
+        "snapshot": {
+          "as_of": "2026-10-02",
+          "currency": "THB",
+          "events": [
+            {
+              "amount": "65000.00",
+              "certainty": "estimated",
+              "date": "2026-10-15",
+              "id": "cost:tuition:2026-10-15",
+              "kind": "expense",
+              "label": "tuition"
+            },
+            {
+              "amount": "9000.00",
+              "certainty": "estimated",
+              "date": "2026-10-05",
+              "id": "cost:housing:2026-10-05",
+              "kind": "expense",
+              "label": "housing"
+            }
+          ],
+          "opening_balance": "80000.00",
+          "reserve": "15000.00"
+        },
+        "version": 2
+      },
+      {
+        "owner__username": "reference-55e5a883-8af2-401e-8f3c-6b554ebcb80f",
+        "snapshot": {
+          "as_of": "2026-10-02",
+          "currency": "THB",
+          "events": [
+            {
+              "amount": "65000.00",
+              "certainty": "confirmed",
+              "date": "2026-10-15",
+              "id": "cost:tuition:2026-10-15",
+              "kind": "expense",
+              "label": "tuition"
+            },
+            {
+              "amount": "9000.00",
+              "certainty": "confirmed",
+              "date": "2026-10-05",
+              "id": "cost:housing:2026-10-05",
+              "kind": "expense",
+              "label": "housing"
+            }
+          ],
+          "opening_balance": "80000.00",
+          "reserve": "15000.00"
+        },
+        "version": 3
+      },
+      {
+        "owner__username": "reference-55e5a883-8af2-401e-8f3c-6b554ebcb80f",
+        "snapshot": {
+          "as_of": "2026-10-02",
+          "currency": "THB",
+          "events": [
+            {
+              "amount": "65000.00",
+              "certainty": "confirmed",
+              "date": "2026-10-15",
+              "id": "cost:tuition:2026-10-15",
+              "kind": "expense",
+              "label": "tuition"
+            },
+            {
+              "amount": "9000.00",
+              "certainty": "confirmed",
+              "date": "2026-10-05",
+              "id": "cost:housing:2026-10-05",
+              "kind": "expense",
+              "label": "housing"
+            },
+            {
+              "amount": "9000.00",
+              "certainty": "confirmed",
+              "date": "2026-10-02",
+              "id": "received:44e96611-91ad-4357-9d4d-619d4a30d6f7",
+              "kind": "income",
+              "label": "Simulated family",
+              "settled_sequence": 1
+            }
+          ],
+          "opening_balance": "80000.00",
+          "reserve": "15000.00"
+        },
+        "version": 4
+      },
+      {
+        "owner__username": "reference-86ba57e6-8e63-4da5-99e5-660976873c3f",
+        "snapshot": {
+          "as_of": "2026-10-02",
+          "currency": "THB",
+          "events": [],
+          "opening_balance": "80000.00",
+          "reserve": "15000.00"
+        },
+        "version": 1
+      },
+      {
+        "owner__username": "reference-86ba57e6-8e63-4da5-99e5-660976873c3f",
+        "snapshot": {
+          "as_of": "2026-10-02",
+          "currency": "THB",
+          "events": [
+            {
+              "amount": "65000.00",
+              "certainty": "estimated",
+              "date": "2026-10-15",
+              "id": "cost:tuition:2026-10-15",
+              "kind": "expense",
+              "label": "tuition"
+            },
+            {
+              "amount": "9000.00",
+              "certainty": "estimated",
+              "date": "2026-10-05",
+              "id": "cost:housing:2026-10-05",
+              "kind": "expense",
+              "label": "housing"
+            }
+          ],
+          "opening_balance": "80000.00",
+          "reserve": "15000.00"
+        },
+        "version": 2
+      },
+      {
+        "owner__username": "reference-86ba57e6-8e63-4da5-99e5-660976873c3f",
+        "snapshot": {
+          "as_of": "2026-10-02",
+          "currency": "THB",
+          "events": [
+            {
+              "amount": "65000.00",
+              "certainty": "confirmed",
+              "date": "2026-10-15",
+              "id": "cost:tuition:2026-10-15",
+              "kind": "expense",
+              "label": "tuition"
+            },
+            {
+              "amount": "9000.00",
+              "certainty": "confirmed",
+              "date": "2026-10-05",
+              "id": "cost:housing:2026-10-05",
+              "kind": "expense",
+              "label": "housing"
+            }
+          ],
+          "opening_balance": "80000.00",
+          "reserve": "15000.00"
+        },
+        "version": 3
+      },
+      {
+        "owner__username": "reference-86ba57e6-8e63-4da5-99e5-660976873c3f",
+        "snapshot": {
+          "as_of": "2026-10-02",
+          "currency": "THB",
+          "events": [
+            {
+              "amount": "65000.00",
+              "certainty": "confirmed",
+              "date": "2026-10-15",
+              "id": "cost:tuition:2026-10-15",
+              "kind": "expense",
+              "label": "tuition"
+            },
+            {
+              "amount": "9000.00",
+              "certainty": "confirmed",
+              "date": "2026-10-05",
+              "id": "cost:housing:2026-10-05",
+              "kind": "expense",
+              "label": "housing"
+            },
+            {
+              "amount": "9000.00",
+              "certainty": "confirmed",
+              "date": "2026-10-02",
+              "id": "received:2464c812-d3f3-4e85-8bf0-61d9e96c5453",
+              "kind": "income",
+              "label": "Simulated family",
+              "settled_sequence": 1
+            }
+          ],
+          "opening_balance": "80000.00",
+          "reserve": "15000.00"
+        },
+        "version": 4
+      },
+      {
+        "owner__username": "reference-93f31b1e-9144-45a6-8851-6f79b7bddc22",
+        "snapshot": {
+          "as_of": "2026-10-02",
+          "currency": "THB",
+          "events": [],
+          "opening_balance": "80000.00",
+          "reserve": "15000.00"
+        },
+        "version": 1
+      },
+      {
+        "owner__username": "reference-93f31b1e-9144-45a6-8851-6f79b7bddc22",
+        "snapshot": {
+          "as_of": "2026-10-02",
+          "currency": "THB",
+          "events": [
+            {
+              "amount": "65000.00",
+              "certainty": "estimated",
+              "date": "2026-10-15",
+              "id": "cost:tuition:2026-10-15",
+              "kind": "expense",
+              "label": "tuition"
+            },
+            {
+              "amount": "9000.00",
+              "certainty": "estimated",
+              "date": "2026-10-05",
+              "id": "cost:housing:2026-10-05",
+              "kind": "expense",
+              "label": "housing"
+            }
+          ],
+          "opening_balance": "80000.00",
+          "reserve": "15000.00"
+        },
+        "version": 2
+      },
+      {
+        "owner__username": "reference-93f31b1e-9144-45a6-8851-6f79b7bddc22",
+        "snapshot": {
+          "as_of": "2026-10-02",
+          "currency": "THB",
+          "events": [
+            {
+              "amount": "65000.00",
+              "certainty": "confirmed",
+              "date": "2026-10-15",
+              "id": "cost:tuition:2026-10-15",
+              "kind": "expense",
+              "label": "tuition"
+            },
+            {
+              "amount": "9000.00",
+              "certainty": "confirmed",
+              "date": "2026-10-05",
+              "id": "cost:housing:2026-10-05",
+              "kind": "expense",
+              "label": "housing"
+            }
+          ],
+          "opening_balance": "80000.00",
+          "reserve": "15000.00"
+        },
+        "version": 3
+      },
+      {
+        "owner__username": "reference-93f31b1e-9144-45a6-8851-6f79b7bddc22",
+        "snapshot": {
+          "as_of": "2026-10-02",
+          "currency": "THB",
+          "events": [
+            {
+              "amount": "65000.00",
+              "certainty": "confirmed",
+              "date": "2026-10-15",
+              "id": "cost:tuition:2026-10-15",
+              "kind": "expense",
+              "label": "tuition"
+            },
+            {
+              "amount": "9000.00",
+              "certainty": "confirmed",
+              "date": "2026-10-05",
+              "id": "cost:housing:2026-10-05",
+              "kind": "expense",
+              "label": "housing"
+            },
+            {
+              "amount": "9000.00",
+              "certainty": "confirmed",
+              "date": "2026-10-02",
+              "id": "received:904c4ffa-f1cc-4544-b4c6-fbe861ebb2cf",
+              "kind": "income",
+              "label": "Simulated family",
+              "settled_sequence": 1
+            }
+          ],
+          "opening_balance": "80000.00",
+          "reserve": "15000.00"
+        },
+        "version": 4
+      }
+    ],
+    "wallets": [
+      {
+        "balance": "89000.00",
+        "clock": "2026-10-02",
+        "owner__username": "reference-55e5a883-8af2-401e-8f3c-6b554ebcb80f"
+      },
+      {
+        "balance": "89000.00",
+        "clock": "2026-10-02",
+        "owner__username": "reference-86ba57e6-8e63-4da5-99e5-660976873c3f"
+      },
+      {
+        "balance": "89000.00",
+        "clock": "2026-10-02",
+        "owner__username": "reference-93f31b1e-9144-45a6-8851-6f79b7bddc22"
+      }
+    ]
+  },
+  "after": {
+    "states": [
+      {
+        "owner__username": "reference-55e5a883-8af2-401e-8f3c-6b554ebcb80f",
+        "snapshot": {
+          "as_of": "2026-10-02",
+          "currency": "THB",
+          "events": [],
+          "opening_balance": "80000.00",
+          "reserve": "15000.00"
+        },
+        "version": 1
+      },
+      {
+        "owner__username": "reference-55e5a883-8af2-401e-8f3c-6b554ebcb80f",
+        "snapshot": {
+          "as_of": "2026-10-02",
+          "currency": "THB",
+          "events": [
+            {
+              "amount": "65000.00",
+              "certainty": "estimated",
+              "date": "2026-10-15",
+              "id": "cost:tuition:2026-10-15",
+              "kind": "expense",
+              "label": "tuition"
+            },
+            {
+              "amount": "9000.00",
+              "certainty": "estimated",
+              "date": "2026-10-05",
+              "id": "cost:housing:2026-10-05",
+              "kind": "expense",
+              "label": "housing"
+            }
+          ],
+          "opening_balance": "80000.00",
+          "reserve": "15000.00"
+        },
+        "version": 2
+      },
+      {
+        "owner__username": "reference-55e5a883-8af2-401e-8f3c-6b554ebcb80f",
+        "snapshot": {
+          "as_of": "2026-10-02",
+          "currency": "THB",
+          "events": [
+            {
+              "amount": "65000.00",
+              "certainty": "confirmed",
+              "date": "2026-10-15",
+              "id": "cost:tuition:2026-10-15",
+              "kind": "expense",
+              "label": "tuition"
+            },
+            {
+              "amount": "9000.00",
+              "certainty": "confirmed",
+              "date": "2026-10-05",
+              "id": "cost:housing:2026-10-05",
+              "kind": "expense",
+              "label": "housing"
+            }
+          ],
+          "opening_balance": "80000.00",
+          "reserve": "15000.00"
+        },
+        "version": 3
+      },
+      {
+        "owner__username": "reference-55e5a883-8af2-401e-8f3c-6b554ebcb80f",
+        "snapshot": {
+          "as_of": "2026-10-02",
+          "currency": "THB",
+          "events": [
+            {
+              "amount": "65000.00",
+              "certainty": "confirmed",
+              "date": "2026-10-15",
+              "id": "cost:tuition:2026-10-15",
+              "kind": "expense",
+              "label": "tuition"
+            },
+            {
+              "amount": "9000.00",
+              "certainty": "confirmed",
+              "date": "2026-10-05",
+              "id": "cost:housing:2026-10-05",
+              "kind": "expense",
+              "label": "housing"
+            },
+            {
+              "amount": "9000.00",
+              "certainty": "confirmed",
+              "date": "2026-10-02",
+              "id": "received:44e96611-91ad-4357-9d4d-619d4a30d6f7",
+              "kind": "income",
+              "label": "Simulated family",
+              "settled_sequence": 1
+            }
+          ],
+          "opening_balance": "80000.00",
+          "reserve": "15000.00"
+        },
+        "version": 4
+      },
+      {
+        "owner__username": "reference-86ba57e6-8e63-4da5-99e5-660976873c3f",
+        "snapshot": {
+          "as_of": "2026-10-02",
+          "currency": "THB",
+          "events": [],
+          "opening_balance": "80000.00",
+          "reserve": "15000.00"
+        },
+        "version": 1
+      },
+      {
+        "owner__username": "reference-86ba57e6-8e63-4da5-99e5-660976873c3f",
+        "snapshot": {
+          "as_of": "2026-10-02",
+          "currency": "THB",
+          "events": [
+            {
+              "amount": "65000.00",
+              "certainty": "estimated",
+              "date": "2026-10-15",
+              "id": "cost:tuition:2026-10-15",
+              "kind": "expense",
+              "label": "tuition"
+            },
+            {
+              "amount": "9000.00",
+              "certainty": "estimated",
+              "date": "2026-10-05",
+              "id": "cost:housing:2026-10-05",
+              "kind": "expense",
+              "label": "housing"
+            }
+          ],
+          "opening_balance": "80000.00",
+          "reserve": "15000.00"
+        },
+        "version": 2
+      },
+      {
+        "owner__username": "reference-86ba57e6-8e63-4da5-99e5-660976873c3f",
+        "snapshot": {
+          "as_of": "2026-10-02",
+          "currency": "THB",
+          "events": [
+            {
+              "amount": "65000.00",
+              "certainty": "confirmed",
+              "date": "2026-10-15",
+              "id": "cost:tuition:2026-10-15",
+              "kind": "expense",
+              "label": "tuition"
+            },
+            {
+              "amount": "9000.00",
+              "certainty": "confirmed",
+              "date": "2026-10-05",
+              "id": "cost:housing:2026-10-05",
+              "kind": "expense",
+              "label": "housing"
+            }
+          ],
+          "opening_balance": "80000.00",
+          "reserve": "15000.00"
+        },
+        "version": 3
+      },
+      {
+        "owner__username": "reference-86ba57e6-8e63-4da5-99e5-660976873c3f",
+        "snapshot": {
+          "as_of": "2026-10-02",
+          "currency": "THB",
+          "events": [
+            {
+              "amount": "65000.00",
+              "certainty": "confirmed",
+              "date": "2026-10-15",
+              "id": "cost:tuition:2026-10-15",
+              "kind": "expense",
+              "label": "tuition"
+            },
+            {
+              "amount": "9000.00",
+              "certainty": "confirmed",
+              "date": "2026-10-05",
+              "id": "cost:housing:2026-10-05",
+              "kind": "expense",
+              "label": "housing"
+            },
+            {
+              "amount": "9000.00",
+              "certainty": "confirmed",
+              "date": "2026-10-02",
+              "id": "received:2464c812-d3f3-4e85-8bf0-61d9e96c5453",
+              "kind": "income",
+              "label": "Simulated family",
+              "settled_sequence": 1
+            }
+          ],
+          "opening_balance": "80000.00",
+          "reserve": "15000.00"
+        },
+        "version": 4
+      },
+      {
+        "owner__username": "reference-93f31b1e-9144-45a6-8851-6f79b7bddc22",
+        "snapshot": {
+          "as_of": "2026-10-02",
+          "currency": "THB",
+          "events": [],
+          "opening_balance": "80000.00",
+          "reserve": "15000.00"
+        },
+        "version": 1
+      },
+      {
+        "owner__username": "reference-93f31b1e-9144-45a6-8851-6f79b7bddc22",
+        "snapshot": {
+          "as_of": "2026-10-02",
+          "currency": "THB",
+          "events": [
+            {
+              "amount": "65000.00",
+              "certainty": "estimated",
+              "date": "2026-10-15",
+              "id": "cost:tuition:2026-10-15",
+              "kind": "expense",
+              "label": "tuition"
+            },
+            {
+              "amount": "9000.00",
+              "certainty": "estimated",
+              "date": "2026-10-05",
+              "id": "cost:housing:2026-10-05",
+              "kind": "expense",
+              "label": "housing"
+            }
+          ],
+          "opening_balance": "80000.00",
+          "reserve": "15000.00"
+        },
+        "version": 2
+      },
+      {
+        "owner__username": "reference-93f31b1e-9144-45a6-8851-6f79b7bddc22",
+        "snapshot": {
+          "as_of": "2026-10-02",
+          "currency": "THB",
+          "events": [
+            {
+              "amount": "65000.00",
+              "certainty": "confirmed",
+              "date": "2026-10-15",
+              "id": "cost:tuition:2026-10-15",
+              "kind": "expense",
+              "label": "tuition"
+            },
+            {
+              "amount": "9000.00",
+              "certainty": "confirmed",
+              "date": "2026-10-05",
+              "id": "cost:housing:2026-10-05",
+              "kind": "expense",
+              "label": "housing"
+            }
+          ],
+          "opening_balance": "80000.00",
+          "reserve": "15000.00"
+        },
+        "version": 3
+      },
+      {
+        "owner__username": "reference-93f31b1e-9144-45a6-8851-6f79b7bddc22",
+        "snapshot": {
+          "as_of": "2026-10-02",
+          "currency": "THB",
+          "events": [
+            {
+              "amount": "65000.00",
+              "certainty": "confirmed",
+              "date": "2026-10-15",
+              "id": "cost:tuition:2026-10-15",
+              "kind": "expense",
+              "label": "tuition"
+            },
+            {
+              "amount": "9000.00",
+              "certainty": "confirmed",
+              "date": "2026-10-05",
+              "id": "cost:housing:2026-10-05",
+              "kind": "expense",
+              "label": "housing"
+            },
+            {
+              "amount": "9000.00",
+              "certainty": "confirmed",
+              "date": "2026-10-02",
+              "id": "received:904c4ffa-f1cc-4544-b4c6-fbe861ebb2cf",
+              "kind": "income",
+              "label": "Simulated family",
+              "settled_sequence": 1
+            }
+          ],
+          "opening_balance": "80000.00",
+          "reserve": "15000.00"
+        },
+        "version": 4
+      }
+    ],
+    "wallets": [
+      {
+        "balance": "89000.00",
+        "clock": "2026-10-02",
+        "owner__username": "reference-55e5a883-8af2-401e-8f3c-6b554ebcb80f"
+      },
+      {
+        "balance": "89000.00",
+        "clock": "2026-10-02",
+        "owner__username": "reference-86ba57e6-8e63-4da5-99e5-660976873c3f"
+      },
+      {
+        "balance": "89000.00",
+        "clock": "2026-10-02",
+        "owner__username": "reference-93f31b1e-9144-45a6-8851-6f79b7bddc22"
+      }
+    ]
+  },
+  "health_status": 200,
+  "stop_output": " Container studyflow-verification-20261011-worker-1 Stopping \n Container studyflow-verification-20261011-web-1 Stopping \n Container studyflow-verification-20261011-web-1 Stopped \n Container studyflow-verification-20261011-worker-1 Stopped \n Container studyflow-verification-20261011-app-1 Stopping \n Container studyflow-verification-20261011-app-1 Stopped \n Container studyflow-verification-20261011-db-1 Stopping \n Container studyflow-verification-20261011-db-1 Stopped \n",
+  "start_output": " Container studyflow-verification-20261011-db-1 Starting \n Container studyflow-verification-20261011-db-1 Started \n Container studyflow-verification-20261011-db-1 Waiting \n Container studyflow-verification-20261011-db-1 Healthy \n Container studyflow-verification-20261011-app-1 Starting \n Container studyflow-verification-20261011-app-1 Started \n Container studyflow-verification-20261011-app-1 Waiting \n Container studyflow-verification-20261011-app-1 Waiting \n Container studyflow-verification-20261011-app-1 Healthy \n Container studyflow-verification-20261011-worker-1 Starting \n Container studyflow-verification-20261011-app-1 Healthy \n Container studyflow-verification-20261011-web-1 Starting \n Container studyflow-verification-20261011-worker-1 Started \n Container studyflow-verification-20261011-web-1 Started \n Container studyflow-verification-20261011-web-1 Waiting \n Container studyflow-verification-20261011-db-1 Waiting \n Container studyflow-verification-20261011-app-1 Waiting \n Container studyflow-verification-20261011-worker-1 Waiting \n Container studyflow-verification-20261011-worker-1 Healthy \n Container studyflow-verification-20261011-app-1 Healthy \n Container studyflow-verification-20261011-db-1 Healthy \n Container studyflow-verification-20261011-web-1 Healthy \n",
+  "containers": "{\"Command\":\"\\\"sh docker/entrypoin…\\\"\",\"CreatedAt\":\"2026-10-11 21:31:52 +0700 +07\",\"ExitCode\":0,\"Health\":\"healthy\",\"ID\":\"2b2e8d2180e0\",\"Image\":\"studyflow-verification-20261011-app\",\"Labels\":\"com.docker.compose.container-number=1,com.docker.compose.oneoff=False,com.docker.compose.replace=app-1,com.docker.compose.version=5.2.0,desktop.docker.io/ports/8000/tcp=127.0.0.1:8018,com.docker.compose.config-hash=2775dfc525f0bf6059ef2c20c90efedf5158687341be1649e7bb3f9d652525bd,com.docker.compose.depends_on=db:service_healthy:false,com.docker.compose.image=sha256:686dbd5a584e2460320b1a70a02e28863697b4711779f07ba139a20d98b6a254,com.docker.compose.project=studyflow-verification-20261011,com.docker.compose.project.config_files=D:\\\\Qoder-project\\\\AI studyflow\\\\compose.yaml,com.docker.compose.project.working_dir=D:\\\\Qoder-project\\\\AI studyflow,com.docker.compose.service=app,desktop.docker.io/ports.scheme=v2\",\"LocalVolumes\":\"0\",\"Mounts\":\"\",\"Name\":\"studyflow-verification-20261011-app-1\",\"Names\":\"studyflow-verification-20261011-app-1\",\"Networks\":\"studyflow-verification-20261011_default\",\"Ports\":\"127.0.0.1:8018-\\u003e8000/tcp\",\"Project\":\"studyflow-verification-20261011\",\"Publishers\":[{\"URL\":\"127.0.0.1\",\"TargetPort\":8000,\"PublishedPort\":8018,\"Protocol\":\"tcp\"}],\"RunningFor\":\"4 minutes ago\",\"Service\":\"app\",\"Size\":\"0B\",\"State\":\"running\",\"Status\":\"Up 12 seconds (healthy)\"}\n{\"Command\":\"\\\"docker-entrypoint.s…\\\"\",\"CreatedAt\":\"2026-10-11 20:48:06 +0700 +07\",\"ExitCode\":0,\"Health\":\"healthy\",\"ID\":\"0bb34963e509\",\"Image\":\"postgres:17\",\"Labels\":\"com.docker.compose.project.working_dir=D:\\\\Qoder-project\\\\AI studyflow,com.docker.compose.version=5.2.0,com.docker.compose.depends_on=,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=D:\\\\Qoder-project\\\\AI studyflow\\\\compose.yaml,com.docker.compose.service=db,desktop.docker.io/ports.scheme=v2,desktop.docker.io/ports/5432/tcp=127.0.0.1:55438,com.docker.compose.config-hash=fff3f59281d0492e8586ddd4bcd0ef11fc5f584af01d3c60fb6d1ac862836374,com.docker.compose.container-number=1,com.docker.compose.image=sha256:2d2b8998d31037bf721cfdf764d76ba74171b4fab3431b7f72c27c56ddbdf9e3,com.docker.compose.project=studyflow-verification-20261011\",\"LocalVolumes\":\"1\",\"Mounts\":\"studyflow-veri…\",\"Name\":\"studyflow-verification-20261011-db-1\",\"Names\":\"studyflow-verification-20261011-db-1\",\"Networks\":\"studyflow-verification-20261011_default\",\"Ports\":\"127.0.0.1:55438-\\u003e5432/tcp\",\"Project\":\"studyflow-verification-20261011\",\"Publishers\":[{\"URL\":\"127.0.0.1\",\"TargetPort\":5432,\"PublishedPort\":55438,\"Protocol\":\"tcp\"}],\"RunningFor\":\"47 minutes ago\",\"Service\":\"db\",\"Size\":\"0B\",\"State\":\"running\",\"Status\":\"Up 15 seconds (healthy)\"}\n{\"Command\":\"\\\"/docker-entrypoint.…\\\"\",\"CreatedAt\":\"2026-10-11 21:31:52 +0700 +07\",\"ExitCode\":0,\"Health\":\"healthy\",\"ID\":\"41b45ba4dd16\",\"Image\":\"studyflow-verification-20261011-web\",\"Labels\":\"com.docker.compose.oneoff=False,com.docker.compose.service=web,com.docker.compose.version=5.2.0,desktop.docker.io/ports.scheme=v2,desktop.docker.io/ports/80/tcp=127.0.0.1:8088,maintainer=NGINX Docker Maintainers \\u003cdocker-maint@nginx.com\\u003e,com.docker.compose.config-hash=47d02fffc4dc8068e0b4ecdb6f7971d3907637425dd958a3ad5d78ba1186fba4,com.docker.compose.container-number=1,com.docker.compose.depends_on=app:service_healthy:false,com.docker.compose.image=sha256:893f745c710c5a1b07af336ac8fdfce3a890294b8a161fa2da04cbbf58be1f05,com.docker.compose.project=studyflow-verification-20261011,com.docker.compose.project.config_files=D:\\\\Qoder-project\\\\AI studyflow\\\\compose.yaml,com.docker.compose.project.working_dir=D:\\\\Qoder-project\\\\AI studyflow,com.docker.compose.replace=web-1\",\"LocalVolumes\":\"0\",\"Mounts\":\"\",\"Name\":\"studyflow-verification-20261011-web-1\",\"Names\":\"studyflow-verification-20261011-web-1\",\"Networks\":\"studyflow-verification-20261011_default\",\"Ports\":\"127.0.0.1:8088-\\u003e80/tcp\",\"Project\":\"studyflow-verification-20261011\",\"Publishers\":[{\"URL\":\"127.0.0.1\",\"TargetPort\":80,\"PublishedPort\":8088,\"Protocol\":\"tcp\"}],\"RunningFor\":\"4 minutes ago\",\"Service\":\"web\",\"Size\":\"0B\",\"State\":\"running\",\"Status\":\"Up 7 seconds (healthy)\"}\n{\"Command\":\"\\\"python manage.py re…\\\"\",\"CreatedAt\":\"2026-10-11 21:31:52 +0700 +07\",\"ExitCode\":0,\"Health\":\"\",\"ID\":\"3e8e722ada87\",\"Image\":\"studyflow-verification-20261011-worker\",\"Labels\":\"com.docker.compose.depends_on=app:service_healthy:false,com.docker.compose.image=sha256:ca8999b8be81ee717d44a1f205ccf0549340054ea87a921edfa9cf5069529fe4,com.docker.compose.project=studyflow-verification-20261011,com.docker.compose.replace=worker-1,desktop.docker.io/ports.scheme=v2,com.docker.compose.config-hash=633251ff7fee69172bbc10c724ad5f8c93ce5b8685aff905edff7f141efb6619,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=D:\\\\Qoder-project\\\\AI studyflow\\\\compose.yaml,com.docker.compose.project.working_dir=D:\\\\Qoder-project\\\\AI studyflow,com.docker.compose.service=worker,com.docker.compose.version=5.2.0,com.docker.compose.container-number=1\",\"LocalVolumes\":\"0\",\"Mounts\":\"\",\"Name\":\"studyflow-verification-20261011-worker-1\",\"Names\":\"studyflow-verification-20261011-worker-1\",\"Networks\":\"studyflow-verification-20261011_default\",\"Ports\":\"8000/tcp\",\"Project\":\"studyflow-verification-20261011\",\"Publishers\":[{\"URL\":\"\",\"TargetPort\":8000,\"PublishedPort\":0,\"Protocol\":\"tcp\"}],\"RunningFor\":\"4 minutes ago\",\"Service\":\"worker\",\"Size\":\"0B\",\"State\":\"running\",\"Status\":\"Up 7 seconds\"}\n",
+  "volume": "studyflow-verification-20261011_django_data"
+}

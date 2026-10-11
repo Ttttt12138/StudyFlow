@@ -1,0 +1,13 @@
+{
+  "verified_at": "2026-10-11T15:49:51.113298+00:00",
+  "unique_samples_per_arm": 160,
+  "arms": 3,
+  "rounds_per_arm": 1,
+  "frozen_code_files_unchanged": 228,
+  "dataset_sha256": "114085329116862fd345af2a8e944f654359f6b38c76c037b8a4cdab1622c858",
+  "actual_live_attempts": 580,
+  "acceptance": false,
+  "command_exit_code": 1,
+  "exit_reason": "completed_benchmark_targets_not_met",
+  "labels_or_code_adjusted_after_first_run": false
+}

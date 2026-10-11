@@ -1,0 +1,19 @@
+{
+  "python": "3.13.5",
+  "host": "Windows-11-10.0.26200-SP0",
+  "packages": {
+    "Django": "5.2.17",
+    "djangorestframework": "3.18.1",
+    "pytest": "9.1.1",
+    "pydantic": "2.13.5",
+    "ruff": "0.16.10"
+  },
+  "node": "v25.5.0",
+  "npm": "11.8.0",
+  "docker": "29.6.1",
+  "compose": "5.2.0",
+  "postgres": "PostgreSQL 17.11 (Debian 17.11-1.pgdg13+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit",
+  "models": "mock",
+  "fx": "fixture",
+  "origin": "http://127.0.0.1:8088"
+}

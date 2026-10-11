@@ -1,0 +1,5582 @@
+openapi: 3.0.3
+info:
+  title: StudyFlow Backend
+  version: 2.0.0
+  description: 'StudyFlow demo: budgets, FX, funding, loans and policy-controlled
+    simulated execution. All settlements are simulated.'
+paths:
+  /api/auth/session/:
+    get:
+      operationId: get_api_auth_session
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentSession'
+          description: ''
+  /api/v2/affordability-profile/:
+    get:
+      operationId: get_api_v2_affordability_profile
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+    post:
+      operationId: post_api_v2_affordability_profile
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProfileInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProfileInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProfileInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/agent/pending-actions/{id}/confirm/:
+    post:
+      operationId: post_api_v2_agent_pending_actions_id_confirm
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      - in: header
+        name: X-Step-Up-Token
+        schema:
+          type: string
+        description: T2 step-up token from POST auth/step-up/ (docs/permissions.md);
+          T3 also needs an approved approval. Denials are 403 with detail and policy.
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/agent/pending-actions/{id}/reject/:
+    post:
+      operationId: post_api_v2_agent_pending_actions_id_reject
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/agent/sessions/:
+    get:
+      operationId: get_api_v2_agent_sessions
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+    post:
+      operationId: post_api_v2_agent_sessions
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SessionInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SessionInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SessionInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/agent/sessions/{id}/:
+    get:
+      operationId: get_api_v2_agent_sessions_id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/applications/:
+    get:
+      operationId: get_api_v2_applications
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+    post:
+      operationId: post_api_v2_applications
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApplicationInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ApplicationInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ApplicationInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/applications/{id}/:
+    get:
+      operationId: get_api_v2_applications_id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+  /api/v2/applications/{id}/action/:
+    post:
+      operationId: post_api_v2_applications_id_action
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApplicationAction'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ApplicationAction'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ApplicationAction'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/applications/{id}/c-context/:
+    get:
+      operationId: get_api_v2_applications_id_c_context
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/applications/{id}/decision/:
+    post:
+      operationId: post_api_v2_applications_id_decision
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DecisionInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/DecisionInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DecisionInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/applications/{id}/disburse/:
+    post:
+      operationId: post_api_v2_applications_id_disburse
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VersionInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/VersionInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/VersionInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/applications/{id}/explain/:
+    post:
+      operationId: post_api_v2_applications_id_explain
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExplanationInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ExplanationInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ExplanationInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/approvals/:
+    get:
+      operationId: get_api_v2_approvals
+      parameters:
+      - in: query
+        name: status
+        schema:
+          type: string
+          enum:
+          - APPROVED
+          - EXPIRED
+          - PENDING
+          - REJECTED
+          - USED
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+    post:
+      operationId: post_api_v2_approvals
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApprovalInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ApprovalInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ApprovalInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/approvals/{id}/:
+    get:
+      operationId: get_api_v2_approvals_id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/approvals/{id}/decide/:
+    post:
+      operationId: post_api_v2_approvals_id_decide
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApprovalDecisionInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ApprovalDecisionInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ApprovalDecisionInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/audit/:
+    get:
+      operationId: get_api_v2_audit
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+  /api/v2/auth/step-up/:
+    post:
+      operationId: post_api_v2_auth_step_up
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StepUpInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/StepUpInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/StepUpInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StepUpResponse'
+          description: ''
+  /api/v2/auth/token/:
+    post:
+      operationId: post_api_v2_auth_token
+      description: Exchange a username and password for an API token.
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthToken'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AuthToken'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AuthToken'
+        required: true
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+          description: ''
+  /api/v2/beneficiaries/:
+    get:
+      operationId: get_api_v2_beneficiaries
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+    post:
+      operationId: post_api_v2_beneficiaries
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BeneficiaryInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/BeneficiaryInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/BeneficiaryInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/beneficiaries/{id}/:
+    get:
+      operationId: get_api_v2_beneficiaries_id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+  /api/v2/beneficiaries/{id}/verify/:
+    post:
+      operationId: post_api_v2_beneficiaries_id_verify
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/VerifyInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/VerifyInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/conversions/:
+    get:
+      operationId: get_api_v2_conversions
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+    post:
+      operationId: post_api_v2_conversions
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      - in: header
+        name: X-Step-Up-Token
+        schema:
+          type: string
+        description: T2 step-up token from POST auth/step-up/ (docs/permissions.md);
+          T3 also needs an approved approval. Denials are 403 with detail and policy.
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConversionInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ConversionInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ConversionInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/conversions/{id}/:
+    get:
+      operationId: get_api_v2_conversions_id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+  /api/v2/corridors/:
+    get:
+      operationId: get_api_v2_corridors
+      parameters:
+      - in: query
+        name: source_currency
+        schema:
+          type: string
+      - in: query
+        name: target_currency
+        schema:
+          type: string
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/credit/profile/:
+    get:
+      operationId: get_api_v2_credit_profile
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/credit/snapshots/:
+    get:
+      operationId: get_api_v2_credit_snapshots
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+    post:
+      operationId: post_api_v2_credit_snapshots
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/credit/snapshots/{id}/:
+    get:
+      operationId: get_api_v2_credit_snapshots_id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+  /api/v2/credit/statements/:
+    post:
+      operationId: post_api_v2_credit_statements
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreditStatementInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CreditStatementInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreditStatementInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/credit/statements/verify/:
+    post:
+      operationId: post_api_v2_credit_statements_verify
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StatementVerifyInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/StatementVerifyInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/StatementVerifyInput'
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/demo/clock/:
+    post:
+      operationId: post_api_v2_demo_clock
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClockInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ClockInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ClockInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/demo/initialize/:
+    post:
+      operationId: post_api_v2_demo_initialize
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InitializeInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/InitializeInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/InitializeInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/demo/wallets/:
+    get:
+      operationId: get_api_v2_demo_wallets
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+  /api/v2/demo/wallets/balances/:
+    get:
+      operationId: get_api_v2_demo_wallets_balances
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/disbursements/:
+    get:
+      operationId: get_api_v2_disbursements
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+  /api/v2/disbursements/{id}/:
+    get:
+      operationId: get_api_v2_disbursements_id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+  /api/v2/forecasts/:
+    post:
+      operationId: post_api_v2_forecasts
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ForecastRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ForecastRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ForecastRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForecastResponse'
+          description: ''
+  /api/v2/forecasts/history/:
+    get:
+      operationId: get_api_v2_forecasts_history
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+  /api/v2/funding-plans/:
+    get:
+      operationId: get_api_v2_funding_plans
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+    post:
+      operationId: post_api_v2_funding_plans
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlanInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PlanInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PlanInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/funding-plans/{id}/:
+    get:
+      operationId: get_api_v2_funding_plans_id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+  /api/v2/funding-sources/:
+    get:
+      operationId: get_api_v2_funding_sources
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+    post:
+      operationId: post_api_v2_funding_sources
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SourceInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SourceInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SourceInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/funding-sources/{id}/:
+    get:
+      operationId: get_api_v2_funding_sources_id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+  /api/v2/funding-sources/{id}/receive/:
+    post:
+      operationId: post_api_v2_funding_sources_id_receive
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReceiveInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ReceiveInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ReceiveInput'
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/fx-quotes/:
+    get:
+      operationId: get_api_v2_fx_quotes
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+    post:
+      operationId: post_api_v2_fx_quotes
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FXInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FXInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FXInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/fx-quotes/{id}/:
+    get:
+      operationId: get_api_v2_fx_quotes_id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+  /api/v2/fx-quotes/live/:
+    post:
+      operationId: post_api_v2_fx_quotes_live
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LiveQuoteInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LiveQuoteInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LiveQuoteInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/fx-rates/:
+    get:
+      operationId: get_api_v2_fx_rates
+      parameters:
+      - in: query
+        name: base
+        schema:
+          type: string
+        required: true
+      - in: query
+        name: quote
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/ledger/:
+    get:
+      operationId: get_api_v2_ledger
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+  /api/v2/loan-accounts/:
+    get:
+      operationId: get_api_v2_loan_accounts
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+  /api/v2/loan-accounts/{id}/:
+    get:
+      operationId: get_api_v2_loan_accounts_id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+  /api/v2/loan-accounts/{id}/repay/:
+    post:
+      operationId: post_api_v2_loan_accounts_id_repay
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      - in: header
+        name: X-Step-Up-Token
+        schema:
+          type: string
+        description: T2 step-up token from POST auth/step-up/ (docs/permissions.md);
+          T3 also needs an approved approval. Denials are 403 with detail and policy.
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RepaymentInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RepaymentInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RepaymentInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/loans/:
+    get:
+      operationId: get_api_v2_loans
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+    post:
+      operationId: post_api_v2_loans
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoanInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LoanInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LoanInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/loans/{id}/:
+    get:
+      operationId: get_api_v2_loans_id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+  /api/v2/loans/compare/:
+    post:
+      operationId: post_api_v2_loans_compare
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompareInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CompareInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CompareInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/payments/:
+    get:
+      operationId: get_api_v2_payments
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+    post:
+      operationId: post_api_v2_payments
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PaymentInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PaymentInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/payments/{id}/:
+    get:
+      operationId: get_api_v2_payments_id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+  /api/v2/payments/{id}/adapter-event/:
+    post:
+      operationId: post_api_v2_payments_id_adapter_event
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentEventInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PaymentEventInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PaymentEventInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/payments/{id}/authorize/:
+    post:
+      operationId: post_api_v2_payments_id_authorize
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthorizationInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AuthorizationInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AuthorizationInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/payments/{id}/cancel/:
+    post:
+      operationId: post_api_v2_payments_id_cancel
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/payments/{id}/reconcile/:
+    post:
+      operationId: post_api_v2_payments_id_reconcile
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/payments/{id}/submit/:
+    post:
+      operationId: post_api_v2_payments_id_submit
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      - in: header
+        name: X-Step-Up-Token
+        schema:
+          type: string
+        description: T2 step-up token from POST auth/step-up/ (docs/permissions.md);
+          T3 also needs an approved approval. Denials are 403 with detail and policy.
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/policy/limits/:
+    get:
+      operationId: get_api_v2_policy_limits
+      description: 'T0: the student''s effective outflow limits (base x credit multiplier)
+        and usage.'
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/readiness/balance-confirmations/:
+    post:
+      operationId: post_api_v2_readiness_balance_confirmations
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BalanceInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/BalanceInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/BalanceInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/readiness/beneficiaries/{id}/update/:
+    post:
+      operationId: post_api_v2_readiness_beneficiaries_id_update
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BeneficiaryUpdateInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/BeneficiaryUpdateInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/BeneficiaryUpdateInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/readiness/briefing/:
+    get:
+      operationId: get_api_v2_readiness_briefing
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/readiness/budgets/:
+    get:
+      operationId: get_api_v2_readiness_budgets
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+    post:
+      operationId: post_api_v2_readiness_budgets
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Versions'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Versions'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Versions'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/readiness/calendar/:
+    get:
+      operationId: get_api_v2_readiness_calendar
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/readiness/calibrations/:
+    get:
+      operationId: get_api_v2_readiness_calibrations
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/readiness/checks/:
+    get:
+      operationId: get_api_v2_readiness_checks
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+    post:
+      operationId: post_api_v2_readiness_checks
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Versions'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Versions'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Versions'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/readiness/checks/{id}/:
+    get:
+      operationId: get_api_v2_readiness_checks_id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+  /api/v2/readiness/explanations/{trace_id}/:
+    get:
+      operationId: get_api_v2_readiness_explanations_trace_id
+      parameters:
+      - in: path
+        name: trace_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/readiness/forecasts/:
+    get:
+      operationId: get_api_v2_readiness_forecasts
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+    post:
+      operationId: post_api_v2_readiness_forecasts
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ForecastInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ForecastInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ForecastInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/readiness/funding-plans/:
+    get:
+      operationId: get_api_v2_readiness_funding_plans
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+    post:
+      operationId: post_api_v2_readiness_funding_plans
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FundingInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FundingInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FundingInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/readiness/funding-plans/recommend/:
+    get:
+      operationId: get_api_v2_readiness_funding_plans_recommend
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+    post:
+      operationId: post_api_v2_readiness_funding_plans_recommend
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FundingInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FundingInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FundingInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/readiness/imports/:
+    get:
+      operationId: get_api_v2_readiness_imports
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+    post:
+      operationId: post_api_v2_readiness_imports
+      tags:
+      - api
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UploadInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UploadInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/readiness/imports/{id}/:
+    get:
+      operationId: get_api_v2_readiness_imports_id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+    post:
+      operationId: post_api_v2_readiness_imports_id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UploadInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UploadInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/readiness/imports/{id}/authorize-ocr/:
+    post:
+      operationId: post_api_v2_readiness_imports_id_authorize_ocr
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OcrConsentInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OcrConsentInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OcrConsentInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/readiness/imports/{id}/confirm/:
+    post:
+      operationId: post_api_v2_readiness_imports_id_confirm
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfirmationInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ConfirmationInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ConfirmationInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/readiness/imports/{id}/discard-source/:
+    post:
+      operationId: post_api_v2_readiness_imports_id_discard_source
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Versions'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Versions'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Versions'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/readiness/imports/{id}/transcribe/:
+    post:
+      operationId: post_api_v2_readiness_imports_id_transcribe
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TranscriptionInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TranscriptionInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TranscriptionInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/readiness/imports/ocr-notice/:
+    get:
+      operationId: get_api_v2_readiness_imports_ocr_notice
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/readiness/notifications/:
+    get:
+      operationId: get_api_v2_readiness_notifications
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/readiness/notifications/{id}/read/:
+    post:
+      operationId: post_api_v2_readiness_notifications_id_read
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/readiness/recurring-expenses/:
+    get:
+      operationId: get_api_v2_readiness_recurring_expenses
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+  /api/v2/readiness/recurring-expenses/{id}/review/:
+    post:
+      operationId: post_api_v2_readiness_recurring_expenses_id_review
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecurringInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RecurringInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RecurringInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/readiness/risks/:
+    get:
+      operationId: get_api_v2_readiness_risks
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+  /api/v2/readiness/semesters/:
+    get:
+      operationId: get_api_v2_readiness_semesters
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+    post:
+      operationId: post_api_v2_readiness_semesters
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SemesterInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SemesterInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SemesterInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/readiness/semesters/{id}/:
+    get:
+      operationId: get_api_v2_readiness_semesters_id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+  /api/v2/readiness/semesters/revise/:
+    post:
+      operationId: post_api_v2_readiness_semesters_revise
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RevisionInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RevisionInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RevisionInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/readiness/state/:
+    get:
+      operationId: get_api_v2_readiness_state
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/readiness/templates/:
+    get:
+      operationId: get_api_v2_readiness_templates
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/readiness/templates/upgrade/:
+    post:
+      operationId: post_api_v2_readiness_templates_upgrade
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TemplateUpgradeInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TemplateUpgradeInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TemplateUpgradeInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/readiness/transaction-imports/:
+    get:
+      operationId: get_api_v2_readiness_transaction_imports
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+    post:
+      operationId: post_api_v2_readiness_transaction_imports
+      tags:
+      - api
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TransactionUploadInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TransactionUploadInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/readiness/transaction-imports/{id}/:
+    get:
+      operationId: get_api_v2_readiness_transaction_imports_id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+  /api/v2/readiness/transaction-imports/{id}/confirm/:
+    post:
+      operationId: post_api_v2_readiness_transaction_imports_id_confirm
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfirmInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ConfirmInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ConfirmInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/readiness/transactions/:
+    get:
+      operationId: get_api_v2_readiness_transactions
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+  /api/v2/readiness/transactions/{id}/revise/:
+    post:
+      operationId: post_api_v2_readiness_transactions_id_revise
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionRevisionInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TransactionRevisionInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TransactionRevisionInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/readiness/what-if/:
+    post:
+      operationId: post_api_v2_readiness_what_if
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SimulateInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SimulateInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SimulateInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/readiness/what-if/{id}/:
+    get:
+      operationId: get_api_v2_readiness_what_if_id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/readiness/what-if/{id}/apply/:
+    post:
+      operationId: post_api_v2_readiness_what_if_id_apply
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApplyInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ApplyInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ApplyInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/readiness/what-if/{id}/apply-preview/:
+    post:
+      operationId: post_api_v2_readiness_what_if_id_apply_preview
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PreviewInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PreviewInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PreviewInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/remittance-comparisons/:
+    post:
+      operationId: post_api_v2_remittance_comparisons
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ComparisonInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ComparisonInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ComparisonInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/remittance-orders/:
+    get:
+      operationId: get_api_v2_remittance_orders
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+    post:
+      operationId: post_api_v2_remittance_orders
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OrderInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OrderInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/remittance-orders/{id}/:
+    get:
+      operationId: get_api_v2_remittance_orders_id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/remittance-orders/{id}/adapter-event/:
+    post:
+      operationId: post_api_v2_remittance_orders_id_adapter_event
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderEventInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OrderEventInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OrderEventInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/remittance-orders/{id}/cancel/:
+    post:
+      operationId: post_api_v2_remittance_orders_id_cancel
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderVersionInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OrderVersionInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OrderVersionInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/remittance-orders/{id}/reconcile/:
+    post:
+      operationId: post_api_v2_remittance_orders_id_reconcile
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderVersionInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OrderVersionInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OrderVersionInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/remittance-orders/{id}/submit/:
+    post:
+      operationId: post_api_v2_remittance_orders_id_submit
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      - in: header
+        name: X-Step-Up-Token
+        schema:
+          type: string
+        description: T2 step-up token from POST auth/step-up/ (docs/permissions.md);
+          T3 also needs an approved approval. Denials are 403 with detail and policy.
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderVersionInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OrderVersionInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OrderVersionInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/review-queue/:
+    get:
+      operationId: get_api_v2_review_queue
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/review-queue/{id}/:
+    get:
+      operationId: get_api_v2_review_queue_id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/review-queue/{id}/actions/:
+    post:
+      operationId: post_api_v2_review_queue_id_actions
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReviewInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ReviewInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ReviewInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/scenarios/:
+    get:
+      operationId: get_api_v2_scenarios
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+    post:
+      operationId: post_api_v2_scenarios
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScenarioInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ScenarioInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ScenarioInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/scenarios/{id}/:
+    get:
+      operationId: get_api_v2_scenarios_id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+  /api/v2/scenarios/{id}/calendar/:
+    get:
+      operationId: get_api_v2_scenarios_id_calendar
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+  /api/v2/sources/:
+    get:
+      operationId: get_api_v2_sources
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedSourceList'
+          description: ''
+    post:
+      operationId: post_api_v2_sources
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Source'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Source'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Source'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Source'
+          description: ''
+  /api/v2/sponsor-confirmation/:
+    get:
+      operationId: get_api_v2_sponsor_confirmation
+      parameters:
+      - in: header
+        name: X-Sponsor-Token
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+    post:
+      operationId: post_api_v2_sponsor_confirmation
+      parameters:
+      - in: header
+        name: X-Sponsor-Token
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SponsorDecisionInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SponsorDecisionInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SponsorDecisionInput'
+        required: true
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/sponsor-requests/:
+    get:
+      operationId: get_api_v2_sponsor_requests
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+    post:
+      operationId: post_api_v2_sponsor_requests
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SponsorInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SponsorInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SponsorInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/sponsor-requests/{id}/:
+    get:
+      operationId: get_api_v2_sponsor_requests_id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/sponsor-requests/{id}/issue-link/:
+    post:
+      operationId: post_api_v2_sponsor_requests_id_issue_link
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TermsInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TermsInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TermsInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/sponsor-requests/{id}/revise/:
+    post:
+      operationId: post_api_v2_sponsor_requests_id_revise
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SponsorRevisionInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SponsorRevisionInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SponsorRevisionInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/state/:
+    get:
+      operationId: get_api_v2_state
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StateResponse'
+          description: ''
+    post:
+      operationId: post_api_v2_state
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StateWrite'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/StateWrite'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/StateWrite'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StateResponse'
+          description: ''
+  /api/v2/state/history/:
+    get:
+      operationId: get_api_v2_state_history
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+          description: ''
+  /health/:
+    get:
+      operationId: get_health
+      tags:
+      - health
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Health'
+          description: ''
+components:
+  schemas:
+    Allocation:
+      type: object
+      properties:
+        source_id:
+          type: string
+          format: uuid
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+        fx_quote_id:
+          type: string
+          format: uuid
+          nullable: true
+      required:
+      - amount
+      - source_id
+    ApplicationAction:
+      type: object
+      properties:
+        expected_version:
+          type: integer
+          minimum: 1
+        action:
+          $ref: '#/components/schemas/ApplicationActionActionEnum'
+      required:
+      - action
+      - expected_version
+    ApplicationActionActionEnum:
+      enum:
+      - submit
+      - cancel
+      type: string
+      description: |-
+        * `submit` - submit
+        * `cancel` - cancel
+    ApplicationInput:
+      type: object
+      properties:
+        quote_id:
+          type: string
+          format: uuid
+      required:
+      - quote_id
+    ApplyInput:
+      type: object
+      properties:
+        confirmation:
+          type: string
+          maxLength: 2000
+      required:
+      - confirmation
+    ApprovalDecisionInput:
+      type: object
+      properties:
+        decision:
+          $ref: '#/components/schemas/ApprovalDecisionInputDecisionEnum'
+        note:
+          type: string
+          default: ''
+          maxLength: 500
+        expected_version:
+          type: integer
+          minimum: 1
+      required:
+      - decision
+      - expected_version
+    ApprovalDecisionInputDecisionEnum:
+      enum:
+      - approve
+      - reject
+      type: string
+      description: |-
+        * `approve` - approve
+        * `reject` - reject
+    ApprovalInput:
+      type: object
+      properties:
+        action:
+          $ref: '#/components/schemas/PolicyActionEnum'
+        target_id:
+          type: string
+          format: uuid
+        amount:
+          type: string
+          format: decimal
+        currency:
+          $ref: '#/components/schemas/SupportedCurrencyEnum'
+        reason:
+          type: string
+          maxLength: 500
+      required:
+      - action
+      - amount
+      - currency
+      - reason
+      - target_id
+    AuthToken:
+      type: object
+      properties:
+        username:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+        token:
+          type: string
+          readOnly: true
+      required:
+      - password
+      - token
+      - username
+    AuthorizationInput:
+      type: object
+      properties:
+        state_version:
+          type: integer
+          minimum: 1
+        expires_in_seconds:
+          type: integer
+          maximum: 3600
+          minimum: 60
+          default: 900
+      required:
+      - state_version
+    BalanceInput:
+      type: object
+      properties:
+        state_version:
+          type: integer
+          minimum: 1
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+        as_of:
+          type: string
+          format: date
+      required:
+      - amount
+      - as_of
+      - state_version
+    BeneficiaryInput:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 150
+        destination_label:
+          type: string
+          maxLength: 150
+      required:
+      - destination_label
+      - name
+    BeneficiaryUpdateInput:
+      type: object
+      properties:
+        state_version:
+          type: integer
+          minimum: 1
+        name:
+          type: string
+          maxLength: 150
+        destination_label:
+          type: string
+          maxLength: 150
+      required:
+      - destination_label
+      - name
+      - state_version
+    CategoryEnum:
+      enum:
+      - Rent
+      - Food
+      - Transport
+      - Mobile
+      - Utilities
+      - Subscription
+      - Transfer
+      - Income
+      - Refund
+      - Other
+      type: string
+      description: |-
+        * `Rent` - Rent
+        * `Food` - Food
+        * `Transport` - Transport
+        * `Mobile` - Mobile
+        * `Utilities` - Utilities
+        * `Subscription` - Subscription
+        * `Transfer` - Transfer
+        * `Income` - Income
+        * `Refund` - Refund
+        * `Other` - Other
+    ClockInput:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+      required:
+      - date
+    CommandResponse:
+      type: object
+      properties:
+        data: {}
+      required:
+      - data
+    CompareInput:
+      type: object
+      properties:
+        loan_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+          maxItems: 10
+          minItems: 2
+      required:
+      - loan_ids
+    ComparisonInput:
+      type: object
+      properties:
+        quote_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+          maxItems: 10
+          minItems: 2
+        source_currency:
+          $ref: '#/components/schemas/ComparisonInputSourceCurrencyEnum'
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+        required_amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+        send_on:
+          type: string
+          format: date
+        deadline:
+          type: string
+          format: date
+      required:
+      - amount
+      - deadline
+      - quote_ids
+      - required_amount
+      - send_on
+      - source_currency
+    ComparisonInputSourceCurrencyEnum:
+      enum:
+      - USD
+      - EUR
+      - CNY
+      - GBP
+      - JPY
+      type: string
+      description: |-
+        * `USD` - USD
+        * `EUR` - EUR
+        * `CNY` - CNY
+        * `GBP` - GBP
+        * `JPY` - JPY
+    ConfirmInput:
+      type: object
+      properties:
+        selected_rows:
+          type: array
+          items:
+            type: string
+            maxLength: 40
+          maxItems: 10000
+          minItems: 1
+        keep_similar_rows:
+          type: array
+          items:
+            type: string
+            maxLength: 40
+        coverage:
+          type: array
+          items:
+            $ref: '#/components/schemas/CoverageInput'
+      required:
+      - coverage
+      - selected_rows
+    ConfirmationInput:
+      type: object
+      properties:
+        analysis_version:
+          type: integer
+          minimum: 0
+        state_version:
+          type: integer
+          minimum: 1
+        budget_version:
+          type: integer
+          minimum: 1
+        semester_id:
+          type: string
+          format: uuid
+        draft: {}
+        issuer:
+          type: string
+          maxLength: 200
+        selected_cost_ids:
+          type: array
+          items:
+            type: string
+            maxLength: 100
+        conflict_resolutions:
+          type: object
+          additionalProperties:
+            type: string
+            maxLength: 2000
+      required:
+      - budget_version
+      - draft
+      - issuer
+      - selected_cost_ids
+      - semester_id
+      - state_version
+    ConversionInput:
+      type: object
+      properties:
+        quote_id:
+          type: string
+          format: uuid
+        source_amount:
+          type: string
+          format: decimal
+        state_version:
+          type: integer
+          minimum: 1
+      required:
+      - quote_id
+      - source_amount
+      - state_version
+    CoverageInput:
+      type: object
+      properties:
+        account_id:
+          type: string
+          maxLength: 150
+        start:
+          type: string
+          format: date
+        end:
+          type: string
+          format: date
+        complete:
+          type: boolean
+          default: false
+      required:
+      - account_id
+      - end
+      - start
+    CreditStatementInput:
+      type: object
+      properties:
+        snapshot_id:
+          type: string
+          format: uuid
+      required:
+      - snapshot_id
+    DecisionInput:
+      type: object
+      properties:
+        expected_version:
+          type: integer
+          minimum: 1
+        reason:
+          type: string
+          maxLength: 500
+      required:
+      - expected_version
+      - reason
+    DomainActionEnum:
+      enum:
+      - confirm_material
+      - transcribe
+      - authorize_ocr
+      - decide_loan
+      - verify_beneficiary
+      - reconcile_payment
+      type: string
+      description: |-
+        * `confirm_material` - confirm_material
+        * `transcribe` - transcribe
+        * `authorize_ocr` - authorize_ocr
+        * `decide_loan` - decide_loan
+        * `verify_beneficiary` - verify_beneficiary
+        * `reconcile_payment` - reconcile_payment
+    Event:
+      type: object
+      properties:
+        id:
+          type: string
+          maxLength: 100
+        label:
+          type: string
+          maxLength: 200
+        kind:
+          $ref: '#/components/schemas/EventKindEnum'
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+          nullable: true
+        date:
+          type: string
+          format: date
+          nullable: true
+        certainty:
+          $ref: '#/components/schemas/EventCertaintyEnum'
+        source_id:
+          type: string
+          format: uuid
+          nullable: true
+        beneficiary_id:
+          type: string
+          format: uuid
+          nullable: true
+        settled_sequence:
+          type: integer
+          minimum: 1
+        evidence_note:
+          type: string
+          maxLength: 2000
+      required:
+      - amount
+      - certainty
+      - date
+      - id
+      - kind
+      - label
+    EventCertaintyEnum:
+      enum:
+      - confirmed
+      - estimated
+      - missing
+      type: string
+      description: |-
+        * `confirmed` - confirmed
+        * `estimated` - estimated
+        * `missing` - missing
+    EventKindEnum:
+      enum:
+      - expense
+      - income
+      type: string
+      description: |-
+        * `expense` - expense
+        * `income` - income
+    ExpenseOverride:
+      type: object
+      properties:
+        event_id:
+          type: string
+          maxLength: 100
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+          nullable: true
+        currency:
+          allOf:
+          - $ref: '#/components/schemas/SupportedCurrencyEnum'
+          default: THB
+        fx_quote_id:
+          type: string
+          format: uuid
+          nullable: true
+        certainty:
+          $ref: '#/components/schemas/EventCertaintyEnum'
+      required:
+      - amount
+      - certainty
+      - event_id
+    ExplanationInput:
+      type: object
+      properties:
+        scenario_id:
+          type: string
+          format: uuid
+      required:
+      - scenario_id
+    FXInput:
+      type: object
+      properties:
+        route_name:
+          type: string
+          default: Simulated route
+          maxLength: 100
+        settlement_min_days:
+          type: integer
+          maximum: 60
+          minimum: 0
+          default: 0
+        source_currency:
+          $ref: '#/components/schemas/SupportedCurrencyEnum'
+        target_currency:
+          allOf:
+          - $ref: '#/components/schemas/SupportedCurrencyEnum'
+          default: THB
+        corridor_id:
+          type: string
+          format: uuid
+          nullable: true
+        rate:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,10})?$
+        sender_fee:
+          type: string
+          format: decimal
+        receiver_fee:
+          type: string
+          format: decimal
+        settlement_days:
+          type: integer
+          maximum: 60
+          minimum: 0
+        expires_at:
+          type: string
+          format: date-time
+      required:
+      - expires_at
+      - rate
+      - receiver_fee
+      - sender_fee
+      - settlement_days
+      - source_currency
+    ForecastInput:
+      type: object
+      properties:
+        analysis_version:
+          type: integer
+          minimum: 0
+        state_version:
+          type: integer
+          minimum: 1
+        budget_version:
+          type: integer
+          minimum: 1
+        semester_id:
+          type: string
+          format: uuid
+        horizon:
+          allOf:
+          - $ref: '#/components/schemas/HorizonEnum'
+          default: 90
+        conditional:
+          type: boolean
+          default: false
+      required:
+      - budget_version
+      - semester_id
+      - state_version
+    ForecastRequest:
+      type: object
+      properties:
+        state_version:
+          type: integer
+          minimum: 1
+        end_date:
+          type: string
+          format: date
+        include_estimates:
+          type: boolean
+          default: false
+      required:
+      - end_date
+      - state_version
+    ForecastResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        state_version:
+          type: integer
+        engine_version:
+          type: string
+        result: {}
+      required:
+      - engine_version
+      - id
+      - result
+      - state_version
+    FundingCertaintyEnum:
+      enum:
+      - confirmed
+      - estimated
+      type: string
+      description: |-
+        * `confirmed` - confirmed
+        * `estimated` - estimated
+    FundingInput:
+      type: object
+      properties:
+        analysis_version:
+          type: integer
+          minimum: 0
+        state_version:
+          type: integer
+          minimum: 1
+        budget_version:
+          type: integer
+          minimum: 1
+        semester_id:
+          type: string
+          format: uuid
+        allocations:
+          type: array
+          items: {}
+          maxItems: 50
+        actions:
+          type: array
+          items: {}
+          maxItems: 20
+      required:
+      - budget_version
+      - semester_id
+      - state_version
+    Health:
+      type: object
+      properties:
+        status:
+          type: string
+        database:
+          type: string
+      required:
+      - database
+      - status
+    HistoryResponse:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type: string
+          format: uri
+          nullable: true
+        previous:
+          type: string
+          format: uri
+          nullable: true
+        results:
+          type: array
+          items: {}
+      required:
+      - count
+      - next
+      - previous
+      - results
+    HorizonEnum:
+      enum:
+      - 30
+      - 60
+      - 90
+      type: integer
+      description: |-
+        * `30` - 30
+        * `60` - 60
+        * `90` - 90
+    InitializeInput:
+      type: object
+      properties:
+        state_version:
+          type: integer
+          minimum: 1
+      required:
+      - state_version
+    LanguageEnum:
+      enum:
+      - en
+      - zh
+      - zh-en
+      type: string
+      description: |-
+        * `en` - en
+        * `zh` - zh
+        * `zh-en` - zh-en
+    LiveQuoteInput:
+      type: object
+      properties:
+        corridor_id:
+          type: string
+          format: uuid
+        send_amount:
+          type: string
+          format: decimal
+      required:
+      - corridor_id
+      - send_amount
+    LoanInput:
+      type: object
+      properties:
+        currency:
+          allOf:
+          - $ref: '#/components/schemas/SettlementCurrencyEnum'
+          default: THB
+        principal:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+        annual_rate:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,1}(?:\.\d{0,8})?$
+        fees:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+        months:
+          type: integer
+          maximum: 60
+          minimum: 1
+        first_due_date:
+          type: string
+          format: date
+      required:
+      - annual_rate
+      - fees
+      - first_due_date
+      - months
+      - principal
+    LocaleEnum:
+      enum:
+      - zh
+      - en
+      type: string
+      description: |-
+        * `zh` - zh
+        * `en` - en
+    MonthInput:
+      type: object
+      properties:
+        month:
+          type: string
+          pattern: ^\d{4}-(0[1-9]|1[0-2])$
+        income:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+          nullable: true
+        living_expenses:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+          nullable: true
+        existing_repayments:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+          nullable: true
+      required:
+      - month
+    OcrConsentInput:
+      type: object
+      properties:
+        analysis_version:
+          type: integer
+          minimum: 0
+        state_version:
+          type: integer
+          minimum: 1
+        budget_version:
+          type: integer
+          minimum: 1
+        semester_id:
+          type: string
+          format: uuid
+        ocr_consent:
+          type: boolean
+          default: false
+        ocr_notice_version:
+          type: string
+          maxLength: 50
+        language:
+          allOf:
+          - $ref: '#/components/schemas/LanguageEnum'
+          default: zh-en
+      required:
+      - budget_version
+      - semester_id
+      - state_version
+    OrderEventInput:
+      type: object
+      properties:
+        expected_version:
+          type: integer
+          minimum: 1
+        note:
+          type: string
+          maxLength: 500
+        outcome:
+          $ref: '#/components/schemas/OrderEventInputOutcomeEnum'
+      required:
+      - expected_version
+      - outcome
+    OrderEventInputOutcomeEnum:
+      enum:
+      - dispatched
+      - delivered
+      - failed
+      - unknown
+      type: string
+      description: |-
+        * `dispatched` - dispatched
+        * `delivered` - delivered
+        * `failed` - failed
+        * `unknown` - unknown
+    OrderInput:
+      type: object
+      properties:
+        quote_id:
+          type: string
+          format: uuid
+        recipient:
+          $ref: '#/components/schemas/RecipientEnum'
+        beneficiary_id:
+          type: string
+          format: uuid
+          nullable: true
+        purpose:
+          $ref: '#/components/schemas/PurposeEnum'
+        reference:
+          type: string
+          maxLength: 140
+        deadline:
+          type: string
+          format: date
+          nullable: true
+      required:
+      - purpose
+      - quote_id
+      - recipient
+    OrderVersionInput:
+      type: object
+      properties:
+        expected_version:
+          type: integer
+          minimum: 1
+        note:
+          type: string
+          maxLength: 500
+      required:
+      - expected_version
+    PaginatedSourceList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Source'
+    PaymentEventInput:
+      type: object
+      properties:
+        outcome:
+          $ref: '#/components/schemas/PaymentEventInputOutcomeEnum'
+      required:
+      - outcome
+    PaymentEventInputOutcomeEnum:
+      enum:
+      - settled
+      - failed
+      - unknown
+      type: string
+      description: |-
+        * `settled` - settled
+        * `failed` - failed
+        * `unknown` - unknown
+    PaymentInput:
+      type: object
+      properties:
+        plan_id:
+          type: string
+          format: uuid
+        readiness_plan_id:
+          type: string
+          format: uuid
+        beneficiary_id:
+          type: string
+          format: uuid
+        event_id:
+          type: string
+          maxLength: 100
+      required:
+      - beneficiary_id
+      - event_id
+    PlanInput:
+      type: object
+      properties:
+        scenario_id:
+          type: string
+          format: uuid
+        allocations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Allocation'
+      required:
+      - allocations
+      - scenario_id
+    PolicyActionEnum:
+      enum:
+      - payment.submit
+      - wallet.convert
+      - loan.repay
+      - remittance.submit
+      - agent.confirm
+      type: string
+      description: |-
+        * `payment.submit` - payment.submit
+        * `wallet.convert` - wallet.convert
+        * `loan.repay` - loan.repay
+        * `remittance.submit` - remittance.submit
+        * `agent.confirm` - agent.confirm
+    PreviewInput:
+      type: object
+      properties:
+        scenario_index:
+          type: integer
+          maximum: 2
+          minimum: 0
+      required:
+      - scenario_index
+    ProfileInput:
+      type: object
+      properties:
+        expected_version:
+          type: integer
+          minimum: 0
+        months:
+          type: array
+          items:
+            $ref: '#/components/schemas/MonthInput'
+      required:
+      - expected_version
+      - months
+    PurposeEnum:
+      enum:
+      - tuition
+      - living
+      - family_support
+      - other
+      type: string
+      description: |-
+        * `tuition` - tuition
+        * `living` - living
+        * `family_support` - family_support
+        * `other` - other
+    ReceiveInput:
+      type: object
+      properties:
+        fx_quote_id:
+          type: string
+          format: uuid
+          nullable: true
+        hold_in_source_currency:
+          type: boolean
+          default: false
+    RecipientEnum:
+      enum:
+      - SELF
+      - BENEFICIARY
+      type: string
+      description: |-
+        * `SELF` - SELF
+        * `BENEFICIARY` - BENEFICIARY
+    RecurringInput:
+      type: object
+      properties:
+        decision:
+          $ref: '#/components/schemas/RecurringInputDecisionEnum'
+        cost_id:
+          type: string
+          default: ''
+          maxLength: 100
+      required:
+      - decision
+    RecurringInputDecisionEnum:
+      enum:
+      - accepted
+      - ignored
+      type: string
+      description: |-
+        * `accepted` - accepted
+        * `ignored` - ignored
+    RepaymentInput:
+      type: object
+      properties:
+        expected_version:
+          type: integer
+          minimum: 0
+        installment_number:
+          type: integer
+          maximum: 384
+          minimum: 1
+      required:
+      - expected_version
+      - installment_number
+    ReviewInput:
+      type: object
+      properties:
+        expected_version:
+          type: integer
+          minimum: 1
+        action:
+          $ref: '#/components/schemas/ReviewInputActionEnum'
+        reason:
+          type: string
+          maxLength: 500
+        assignee_id:
+          type: integer
+        domain_action:
+          $ref: '#/components/schemas/DomainActionEnum'
+        payload: {}
+      required:
+      - action
+      - expected_version
+      - reason
+    ReviewInputActionEnum:
+      enum:
+      - assign
+      - request_information
+      - start
+      - reject
+      - recheck
+      - domain_action
+      type: string
+      description: |-
+        * `assign` - assign
+        * `request_information` - request_information
+        * `start` - start
+        * `reject` - reject
+        * `recheck` - recheck
+        * `domain_action` - domain_action
+    RevisionInput:
+      type: object
+      properties:
+        analysis_version:
+          type: integer
+          minimum: 0
+        state_version:
+          type: integer
+          minimum: 1
+        budget_version:
+          type: integer
+          minimum: 1
+        semester_id:
+          type: string
+          format: uuid
+        draft: {}
+      required:
+      - budget_version
+      - draft
+      - semester_id
+      - state_version
+    RoomEnum:
+      enum:
+      - shared
+      - single
+      type: string
+      description: |-
+        * `shared` - shared
+        * `single` - single
+    ScenarioInput:
+      type: object
+      properties:
+        state_version:
+          type: integer
+          minimum: 1
+        kind:
+          $ref: '#/components/schemas/ScenarioInputKindEnum'
+        end_date:
+          type: string
+          format: date
+        include_estimates:
+          type: boolean
+          default: false
+        overrides:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExpenseOverride'
+      required:
+      - end_date
+      - kind
+      - state_version
+    ScenarioInputKindEnum:
+      enum:
+      - essential
+      - expected
+      - higher_cost
+      type: string
+      description: |-
+        * `essential` - essential
+        * `expected` - expected
+        * `higher_cost` - higher_cost
+    SemesterInput:
+      type: object
+      properties:
+        template_key:
+          type: string
+          maxLength: 100
+        template_version:
+          type: integer
+          minimum: 1
+        room:
+          allOf:
+          - $ref: '#/components/schemas/RoomEnum'
+          default: shared
+        opening_balance:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+        as_of:
+          type: string
+          format: date
+        reserve:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+          nullable: true
+      required:
+      - reserve
+    SessionInput:
+      type: object
+      properties:
+        goal:
+          type: string
+          maxLength: 2000
+        locale:
+          $ref: '#/components/schemas/LocaleEnum'
+      required:
+      - goal
+    SettlementCurrencyEnum:
+      enum:
+      - THB
+      type: string
+      description: '* `THB` - THB'
+    SimulateInput:
+      type: object
+      properties:
+        analysis_version:
+          type: integer
+          minimum: 0
+        state_version:
+          type: integer
+          minimum: 1
+        budget_version:
+          type: integer
+          minimum: 1
+        semester_id:
+          type: string
+          format: uuid
+        scenarios:
+          type: array
+          items: {}
+          maxItems: 3
+          minItems: 1
+      required:
+      - analysis_version
+      - budget_version
+      - scenarios
+      - semester_id
+      - state_version
+    Snapshot:
+      type: object
+      properties:
+        currency:
+          $ref: '#/components/schemas/SettlementCurrencyEnum'
+        as_of:
+          type: string
+          format: date
+        opening_balance:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+        reserve:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
+      required:
+      - as_of
+      - currency
+      - events
+      - opening_balance
+      - reserve
+    Source:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        title:
+          type: string
+          maxLength: 200
+        kind:
+          $ref: '#/components/schemas/SourceKindEnum'
+        url:
+          oneOf:
+          - type: string
+            format: uri
+            maxLength: 200
+          - type: string
+            maxLength: 0
+        note:
+          type: string
+          maxLength: 4000
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - id
+      - kind
+      - title
+    SourceInput:
+      type: object
+      properties:
+        economic_key:
+          type: string
+          maxLength: 100
+        kind:
+          $ref: '#/components/schemas/SourceInputKindEnum'
+        currency:
+          $ref: '#/components/schemas/SupportedCurrencyEnum'
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+        available_on:
+          type: string
+          format: date
+        certainty:
+          $ref: '#/components/schemas/FundingCertaintyEnum'
+        already_in_opening:
+          type: boolean
+          default: false
+        loan_id:
+          type: string
+          format: uuid
+          nullable: true
+      required:
+      - amount
+      - available_on
+      - certainty
+      - currency
+      - economic_key
+      - kind
+    SourceInputKindEnum:
+      enum:
+      - family
+      - scholarship
+      - external_savings
+      - loan
+      type: string
+      description: |-
+        * `family` - family
+        * `scholarship` - scholarship
+        * `external_savings` - external_savings
+        * `loan` - loan
+    SourceKindEnum:
+      enum:
+      - upload
+      - official_url
+      - import
+      type: string
+      description: |-
+        * `upload` - Upload
+        * `official_url` - Official URL
+        * `import` - Import
+    SourceTypeEnum:
+      enum:
+      - synthetic
+      - user_uploaded
+      type: string
+      description: |-
+        * `synthetic` - synthetic
+        * `user_uploaded` - user_uploaded
+    SponsorDecisionInput:
+      type: object
+      properties:
+        terms_version:
+          type: integer
+          minimum: 1
+        decision:
+          $ref: '#/components/schemas/SponsorDecisionInputDecisionEnum'
+      required:
+      - decision
+      - terms_version
+    SponsorDecisionInputDecisionEnum:
+      enum:
+      - confirm
+      - reject
+      type: string
+      description: |-
+        * `confirm` - confirm
+        * `reject` - reject
+    SponsorInput:
+      type: object
+      properties:
+        economic_key:
+          type: string
+          maxLength: 100
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+        currency:
+          $ref: '#/components/schemas/SupportedCurrencyEnum'
+        available_on:
+          type: string
+          format: date
+        purpose:
+          type: string
+          maxLength: 500
+      required:
+      - amount
+      - available_on
+      - currency
+      - economic_key
+      - purpose
+    SponsorRevisionInput:
+      type: object
+      properties:
+        terms_version:
+          type: integer
+          minimum: 1
+        action:
+          $ref: '#/components/schemas/SponsorRevisionInputActionEnum'
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+        currency:
+          $ref: '#/components/schemas/SupportedCurrencyEnum'
+        available_on:
+          type: string
+          format: date
+        purpose:
+          type: string
+          maxLength: 500
+      required:
+      - action
+      - terms_version
+    SponsorRevisionInputActionEnum:
+      enum:
+      - revise
+      - revoke
+      type: string
+      description: |-
+        * `revise` - revise
+        * `revoke` - revoke
+    StateResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        version:
+          type: integer
+        snapshot:
+          $ref: '#/components/schemas/Snapshot'
+      required:
+      - id
+      - snapshot
+      - version
+    StateWrite:
+      type: object
+      properties:
+        expected_version:
+          type: integer
+          minimum: 0
+        snapshot:
+          $ref: '#/components/schemas/Snapshot'
+      required:
+      - expected_version
+      - snapshot
+    StatementVerifyInput:
+      type: object
+      properties:
+        statement:
+          type: string
+          nullable: true
+          default: ''
+    StepUpInput:
+      type: object
+      properties:
+        password:
+          type: string
+          maxLength: 128
+        action:
+          $ref: '#/components/schemas/PolicyActionEnum'
+        target_id:
+          type: string
+          format: uuid
+        amount:
+          type: string
+          format: decimal
+        currency:
+          $ref: '#/components/schemas/SupportedCurrencyEnum'
+      required:
+      - action
+      - amount
+      - currency
+      - password
+      - target_id
+    StepUpResponse:
+      type: object
+      properties:
+        token:
+          type: string
+        expires_in_seconds:
+          type: integer
+        action:
+          type: string
+        target_id:
+          type: string
+          format: uuid
+        amount:
+          type: string
+        currency:
+          type: string
+      required:
+      - action
+      - amount
+      - currency
+      - expires_in_seconds
+      - target_id
+      - token
+    StudentSession:
+      type: object
+      properties:
+        authenticated:
+          type: boolean
+        username:
+          type: string
+          nullable: true
+        csrf_token:
+          type: string
+      required:
+      - authenticated
+      - csrf_token
+      - username
+    SupportedCurrencyEnum:
+      enum:
+      - THB
+      - USD
+      - EUR
+      - CNY
+      - GBP
+      - JPY
+      type: string
+      description: |-
+        * `THB` - THB
+        * `USD` - USD
+        * `EUR` - EUR
+        * `CNY` - CNY
+        * `GBP` - GBP
+        * `JPY` - JPY
+    TemplateUpgradeInput:
+      type: object
+      properties:
+        analysis_version:
+          type: integer
+          minimum: 0
+        state_version:
+          type: integer
+          minimum: 1
+        budget_version:
+          type: integer
+          minimum: 1
+        semester_id:
+          type: string
+          format: uuid
+        template_key:
+          type: string
+          maxLength: 100
+        template_version:
+          type: integer
+          minimum: 1
+        confirm:
+          type: boolean
+          default: false
+      required:
+      - budget_version
+      - semester_id
+      - state_version
+      - template_key
+      - template_version
+    TermsInput:
+      type: object
+      properties:
+        terms_version:
+          type: integer
+          minimum: 1
+      required:
+      - terms_version
+    TokenResponse:
+      type: object
+      properties:
+        token:
+          type: string
+      required:
+      - token
+    TransactionRevisionInput:
+      type: object
+      properties:
+        category:
+          $ref: '#/components/schemas/CategoryEnum'
+        cost_id:
+          type: string
+          maxLength: 100
+        refund_of:
+          type: string
+          format: uuid
+          nullable: true
+        reason:
+          type: string
+          maxLength: 500
+      required:
+      - category
+      - reason
+    TransactionUploadInput:
+      type: object
+      properties:
+        file:
+          type: string
+          format: uri
+        source_type:
+          allOf:
+          - $ref: '#/components/schemas/SourceTypeEnum'
+          default: user_uploaded
+      required:
+      - file
+    TranscriptionInput:
+      type: object
+      properties:
+        analysis_version:
+          type: integer
+          minimum: 0
+        state_version:
+          type: integer
+          minimum: 1
+        budget_version:
+          type: integer
+          minimum: 1
+        semester_id:
+          type: string
+          format: uuid
+        text:
+          type: string
+          maxLength: 100000
+      required:
+      - budget_version
+      - semester_id
+      - state_version
+      - text
+    UploadInput:
+      type: object
+      properties:
+        analysis_version:
+          type: integer
+          minimum: 0
+        state_version:
+          type: integer
+          minimum: 1
+        budget_version:
+          type: integer
+          minimum: 1
+        semester_id:
+          type: string
+          format: uuid
+        ocr_consent:
+          type: boolean
+          default: false
+        ocr_notice_version:
+          type: string
+          maxLength: 50
+        language:
+          allOf:
+          - $ref: '#/components/schemas/LanguageEnum'
+          default: zh-en
+        kind:
+          $ref: '#/components/schemas/UploadInputKindEnum'
+        file:
+          type: string
+          format: uri
+      required:
+      - budget_version
+      - file
+      - kind
+      - semester_id
+      - state_version
+    UploadInputKindEnum:
+      enum:
+      - text
+      - pdf
+      - image
+      type: string
+      description: |-
+        * `text` - text
+        * `pdf` - pdf
+        * `image` - image
+    VerifyInput:
+      type: object
+      properties:
+        verified:
+          type: boolean
+      required:
+      - verified
+    VersionInput:
+      type: object
+      properties:
+        expected_version:
+          type: integer
+          minimum: 1
+      required:
+      - expected_version
+    Versions:
+      type: object
+      properties:
+        analysis_version:
+          type: integer
+          minimum: 0
+        state_version:
+          type: integer
+          minimum: 1
+        budget_version:
+          type: integer
+          minimum: 1
+        semester_id:
+          type: string
+          format: uuid
+      required:
+      - budget_version
+      - semester_id
+      - state_version
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"
