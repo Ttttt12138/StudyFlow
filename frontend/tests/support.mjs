@@ -10,7 +10,7 @@ export const python = process.env.PYTHON
   || `${root}.venv/${process.platform === 'win32' ? 'Scripts/python.exe' : 'bin/python'}`;
 // Without CHROMIUM_PATH, Playwright uses the browser from `npx playwright install`.
 export const executablePath = process.env.CHROMIUM_PATH || undefined;
-export const outputDir = `${root}output/frontend`;
+export const outputDir = process.env.STUDYFLOW_TEST_OUTPUT || `${root}output/frontend`;
 export const screenshot = name => {
   mkdirSync(outputDir, { recursive: true });
   return `${outputDir}/${name}`;

@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
 import { mkdirSync, writeFileSync } from 'node:fs';
-import { root, backend, python } from '../../support.mjs';
+import { root, outputDir, backend, python } from '../../support.mjs';
 
 const SNAPSHOT = { currency: 'THB', as_of: new Date().toISOString().slice(0, 10), opening_balance: '80000.00', reserve: '15000.00', events: [] };
 
@@ -52,7 +52,7 @@ test('real Django agent: plan, T2 proposal with step-up, T3 proposal through a s
     assert.equal(await cny(), '40000.00');
 
     // T2: the assistant prepares and proposes; nothing moves until the student re-enters the password.
-    await page.getByRole('heading', { name: 'AI finance assistant' }).waitFor();
+    await page.getByRole('heading', { name: 'Finance assistant' }).waitFor();
     await page.getByRole('button', { name: 'Send 5000 CNY to my THB wallet and compare the routes' }).click();
     await page.getByRole('button', { name: 'Ask the assistant' }).click();
     const first = page.getByRole('article', { name: 'Submit transfer' });
@@ -68,7 +68,7 @@ test('real Django agent: plan, T2 proposal with step-up, T3 proposal through a s
     await first.getByRole('button', { name: 'Confirm with password' }).click();
     await page.getByLabel('Password').fill('not-the-password');
     await page.getByRole('button', { name: 'Authorize and confirm' }).click();
-    await first.getByText('That password was not accepted.', { exact: false }).waitFor();
+    await page.getByRole('dialog', { name: 'Review and confirm' }).getByText('That password was not accepted.', { exact: false }).waitFor();
     assert.equal(await cny(), '40000.00');
     await page.getByLabel('Password').fill(passwords.student);
     await page.getByRole('button', { name: 'Authorize and confirm' }).click();
@@ -89,7 +89,7 @@ test('real Django agent: plan, T2 proposal with step-up, T3 proposal through a s
     await second.getByRole('button', { name: 'Confirm with password' }).click();
     await page.getByLabel('Password').fill(passwords.student);
     await page.getByRole('button', { name: 'Authorize and confirm' }).click();
-    await second.getByRole('heading', { name: 'Operator approval required' }).waitFor();
+    await page.getByRole('dialog', { name: 'Review and confirm' }).getByRole('heading', { name: 'Operator approval required' }).waitFor();
     assert.equal(await cny(), '35000.00');
     await page.getByLabel('Reason for the request').fill('Spring tuition');
     await page.getByRole('button', { name: 'Request operator approval' }).click();
@@ -104,8 +104,8 @@ test('real Django agent: plan, T2 proposal with step-up, T3 proposal through a s
     await page.getByRole('button', { name: 'Authorize and confirm' }).click();
     await page.getByText('Confirmed. Django executed the action', { exact: false }).waitFor();
     assert.equal(await cny(), '20000.00');
-    mkdirSync(`${root}output/frontend`, { recursive: true });
-    await page.screenshot({ path: `${root}output/frontend/agent-live-desktop.png`, fullPage: true });
+    mkdirSync(`${outputDir}`, { recursive: true });
+    await page.screenshot({ path: `${outputDir}/agent-live-desktop.png`, fullPage: true });
 
     // Rejection survives reload and never spends. Expiry uses this student's disposable row only.
     const rejectedGoal = 'Send 1000 CNY to THB and compare the routes';
@@ -143,10 +143,10 @@ test('real Django agent: plan, T2 proposal with step-up, T3 proposal through a s
     for (const width of [1440, 390]) {
       await page.setViewportSize({ width, height: 900 });
       assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
-      await page.screenshot({ path: `${root}output/frontend/trust-live-${width}.png`, fullPage: true });
+      await page.screenshot({ path: `${outputDir}/trust-live-${width}.png`, fullPage: true });
     }
     assert.deepEqual(errors, []);
-    writeFileSync(`${root}output/frontend/agent-integration.json`, JSON.stringify({
+    writeFileSync(`${outputDir}/agent-integration.json`, JSON.stringify({
       passed: true, tested_at: new Date().toISOString(), planner: 'mock (RuleAgentProvider)', fx: 'fixture',
       checks: ['T2 proposal does not move money', 'wrong password refused and audited', 'step-up confirm executes once', 'T3 proposal refused until a separate approver decides', 'approval consumed on confirm', 'limits and audit visible in trust center'],
       additional_checks: ['pending proposal restored from server after reload', 'fresh HTTP repeat confirmation does not debit twice', 'rejection persists after reload', 'expired proposal cannot execute and remains expired after reload'],

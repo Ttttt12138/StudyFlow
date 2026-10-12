@@ -14,7 +14,7 @@ test.describe("AI assistant preview", () => {
     page.on("pageerror", error => errors.push(error.message));
     await page.route("**/api/**", route => { apiCalls++; return route.abort(); });
     await page.goto(`${base}/?agent=preview`);
-    await page.getByRole("heading", { name: "AI finance assistant" }).waitFor();
+    await page.getByRole("heading", { name: "Finance assistant" }).waitFor();
     await page.getByRole("region", { name: "Simulation notice" }).getByText("SIMULATED", { exact: true }).waitFor();
     await page.getByText("Demo preview · read-only").waitFor();
     const proposal = page.getByRole("article", { name: "Submit transfer" });
@@ -31,15 +31,15 @@ test.describe("AI assistant preview", () => {
     await page.screenshot({ path: screenshot("agent-preview-mobile-en.png"), fullPage: true });
 
     await page.getByRole("button", { name: "中文" }).click();
-    await page.getByRole("heading", { name: "AI 理财助手" }).waitFor();
+    await page.getByRole("heading", { name: "资金子助手" }).waitFor();
     assert.equal(await page.evaluate(() => document.documentElement.lang), "zh-CN");
     await page.getByRole("article", { name: "提交汇款" }).getByText("等待你处理").waitFor();
     await page.getByText("帮我把5000元人民币汇到泰铢，比较一下渠道", { exact: true }).first().waitFor();
     await page.reload();
-    await page.getByRole("heading", { name: "AI 理财助手" }).waitFor();  // the choice is remembered
+    await page.getByRole("heading", { name: "资金子助手" }).waitFor();  // the choice is remembered
     await page.screenshot({ path: screenshot("agent-preview-mobile-zh.png"), fullPage: true });
     await page.getByRole("button", { name: "English" }).click();
-    await page.getByRole("heading", { name: "AI finance assistant" }).waitFor();
+    await page.getByRole("heading", { name: "Finance assistant" }).waitFor();
     assert.equal(apiCalls, 0);
     assert.deepEqual(errors, []);
   });
@@ -115,7 +115,7 @@ test.describe("AI assistant with mocked Django", () => {
     });
 
     await page.goto(`${base}/?agent=1`);
-    await page.getByRole("heading", { name: "AI finance assistant" }).waitFor();
+    await page.getByRole("heading", { name: "Finance assistant" }).waitFor();
     await page.getByText("No conversation selected yet.", { exact: false }).waitFor();
     await page.getByRole("button", { name: "Send 5000 CNY to my THB wallet and compare the routes" }).click();
     await page.getByRole("button", { name: "Ask the assistant" }).click();
@@ -128,7 +128,7 @@ test.describe("AI assistant with mocked Django", () => {
     await first.getByRole("button", { name: "Confirm with password" }).click();
     await page.getByLabel("Password").fill("wrong");
     await page.getByRole("button", { name: "Authorize and confirm" }).click();
-    await first.getByText("That password was not accepted.", { exact: false }).waitFor();
+    await page.getByRole("dialog").getByText("That password was not accepted.", { exact: false }).waitFor();
     assert.equal(calls.filter(c => c.path.endsWith("/confirm/")).length, 0);
     await page.getByLabel("Password").fill("right-password");
     await page.getByRole("button", { name: "Authorize and confirm" }).click();
@@ -148,7 +148,7 @@ test.describe("AI assistant with mocked Django", () => {
     await second.getByRole("button", { name: "Confirm with password" }).click();
     await page.getByLabel("Password").fill("right-password");
     await page.getByRole("button", { name: "Authorize and confirm" }).click();
-    await second.getByRole("heading", { name: "Operator approval required" }).waitFor();
+    await page.getByRole("dialog", { name: "Review and confirm" }).getByRole("heading", { name: "Operator approval required" }).waitFor();
     await page.getByLabel("Reason for the request").fill("Spring tuition");
     await page.getByRole("button", { name: "Request operator approval" }).click();
     await page.getByText("Approval requested.", { exact: false }).waitFor();

@@ -10,8 +10,7 @@ test('confirmation, expenses, complete budget inputs, unknown optional expense, 
   const confirmAdmission = async () => { await page.getByRole('checkbox').check(); await page.getByRole('button', { name: 'Continue to expenses' }).click(); await page.getByRole('heading', { name: 'Complete your expenses.' }).waitFor(); };
   const confirmExpenses = async () => { await page.getByRole('checkbox').check(); await page.getByRole('button', { name: 'Continue to budget' }).click(); await page.getByRole('heading', { name: 'Compare your budget.' }).waitFor(); };
   await page.route("**/api/auth/session/", route => route.fulfill({status: 200, contentType: "application/json", body: JSON.stringify({authenticated: false, username: null, csrf_token: "mock-csrf"})}));
-   await page.goto(process.env.TEST_URL || 'http://127.0.0.1:5173');
-   await page.getByRole('button', { name: 'Explore the original demo' }).click();
+   await page.goto(`${process.env.TEST_URL || 'http://127.0.0.1:5173'}/?legacy=1`);
    await page.getByRole('heading', { name: 'Start with the facts.' }).waitFor();
    assert.equal(await page.getByRole('navigation').getByRole('button').count(), 5);
    assert.equal(await nav('Budget').isDisabled(), true);
@@ -72,7 +71,8 @@ test('confirmation, expenses, complete budget inputs, unknown optional expense, 
    assert.equal(await nav('Budget').isDisabled(), true);
    await confirmExpenses();
    assert.match(await page.locator('.stale-banner').innerText(), /Recalculation is needed/);
-   await nav('Funding').click(); await page.getByRole('heading', { name: 'Placeholder · coming next' }).waitFor();
+   // A stale budget has no trustworthy gap, so funding stays closed until it matches again.
+   assert.equal(await nav('Funding').isDisabled(), true);
    await page.getByRole('button', { name: 'Back to expenses' }).click();
    await page.getByRole('button', { name: 'Back to confirmation' }).click();
    await page.locator('#tuition').fill('12345');

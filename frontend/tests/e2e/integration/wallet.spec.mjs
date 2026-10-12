@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
 import { mkdirSync, writeFileSync } from 'node:fs';
-import { root, backend, python } from '../../support.mjs';
+import { root, outputDir, backend, python } from '../../support.mjs';
 
 // Student, verifier and approver each sign in with their own browser context.
 test('real Django/PostgreSQL wallet, fixture quotes, T2/T3, expiry, permissions, safe retries and reload.', async ({ browser }, testInfo) => {
@@ -42,7 +42,7 @@ test('real Django/PostgreSQL wallet, fixture quotes, T2/T3, expiry, permissions,
    await page.getByLabel('Password',{exact:true}).fill(passwords.student);await button('Authorize and submit').click();await page.getByText(/response was lost or the server failed/).waitFor();assert.ok(dropped);await page.unroute(`**/api/v2/remittance-orders/${order.id}/submit/`);
    // Replay the identical committed command without the consumed step-up grant: idempotency is checked first.
    const replay=await post(`remittance-orders/${order.id}/submit/`,{expected_version:order.version},'student',submitKey);assert.equal(replay.status(),200);
-   await button('Refresh order status').click();await page.getByText('Submitted to the simulated processing route. Delivery is not confirmed.').waitFor();
+   await page.getByRole('dialog', { name: 'Review and confirm' }).getByRole('button', { name: 'Refresh order status' }).click();await page.getByText('Submitted to the simulated processing route. Delivery is not confirmed.').waitFor();
    await page.getByText('THB 197,000.00',{exact:true}).waitFor();
    order=await get(`remittance-orders/${order.id}/`);assert.equal(order.status,'SUBMITTED');assert.equal(order.history.filter(h=>h.to==='SUBMITTED').length,1);assert.equal((await get('demo/wallets/balances/')).balances.find(x=>x.currency==='THB').balance,'197000.00');
    denied=await post(`remittance-orders/${order.id}/adapter-event/`,{expected_version:order.version,outcome:'delivered'});assert.equal(denied.status(),403);
@@ -64,8 +64,8 @@ test('real Django/PostgreSQL wallet, fixture quotes, T2/T3, expiry, permissions,
    const q=await successful('fx-quotes/live/',{corridor_id:route.id,send_amount:'1000.00'}),prepared=await successful('remittance-orders/',{quote_id:q.id,recipient:'SELF',purpose:'living'});
    const conflict=await post(`remittance-orders/${prepared.id}/cancel/`,{expected_version:0+prepared.version+1});assert.equal(conflict.status(),409);assert.equal((await get(`remittance-orders/${prepared.id}/`)).status,'CREATED');
    await button('Refresh from Django').click();await page.getByRole('button',{name:/living .*EXPIRED/}).click();await page.getByText('The quote expired. Prepare a new transfer with a fresh quote.').waitFor();
-   mkdirSync(`${root}output/frontend`,{recursive:true});for(const width of [1440,390,320]){await page.setViewportSize({width,height:900});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);await page.screenshot({path:`${root}output/frontend/wallet-live-${width}.png`,fullPage:true});}
-   assert.deepEqual(errors,[]);writeFileSync(`${root}output/frontend/wallet-integration.json`,JSON.stringify({passed:true,tested_at:new Date().toISOString(),database:'PostgreSQL 17',fx:'fixture STUDYFLOW_FX_LIVE=false',worker:'not required for remittance',operator_assistance:['verify beneficiary','separate-operator T3 approval'],expiry:'controlled quote timestamp fixture followed by real HTTP',endpoints:[...endpoints].sort(),checks:['session/CSRF','backend pricing','unverified recipient disabled','prepare does not debit','failed/dropped create response exact-once','T2 step-up','dropped submit response idempotent replay','T3 approval with different verifier/approver','student operator endpoints denied','reload','expiry','actual HTTP 409','desktop/mobile'],liveFX:false},null,2));
+   mkdirSync(`${outputDir}`,{recursive:true});for(const width of [1440,390,320]){await page.setViewportSize({width,height:900});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);await page.screenshot({path:`${outputDir}/wallet-live-${width}.png`,fullPage:true});}
+   assert.deepEqual(errors,[]);writeFileSync(`${outputDir}/wallet-integration.json`,JSON.stringify({passed:true,tested_at:new Date().toISOString(),database:'PostgreSQL 17',fx:'fixture STUDYFLOW_FX_LIVE=false',worker:'not required for remittance',operator_assistance:['verify beneficiary','separate-operator T3 approval'],expiry:'controlled quote timestamp fixture followed by real HTTP',endpoints:[...endpoints].sort(),checks:['session/CSRF','backend pricing','unverified recipient disabled','prepare does not debit','failed/dropped create response exact-once','T2 step-up','dropped submit response idempotent replay','T3 approval with different verifier/approver','student operator endpoints denied','reload','expiry','actual HTTP 409','desktop/mobile'],liveFX:false},null,2));
   } catch (error) {
     if (pages.student) await testInfo.attach('student-page', { body: await pages.student.screenshot({ fullPage: true }), contentType: 'image/png' });
     throw error;

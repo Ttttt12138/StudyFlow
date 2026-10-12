@@ -18,7 +18,7 @@ test.describe("wallet preview", () => {
     await preview.reload();
     await preview.getByRole("heading", { name: "Wallet & transfers" }).waitFor();
     await preview.getByText("THB 52,500.00").waitFor();
-    assert.match(await preview.getByRole("main").innerText(), /Fixture-priced demo route/);
+    assert.match(await preview.locator(".tool-content[data-tool=wallet]").innerText(), /Fixture-priced demo route/);
     await preview.getByLabel("Preview a status").selectOption("refunded");
     await preview.getByText("The backend reports a failed transfer and a refund.").waitFor();
     await preview.getByLabel("Preview a status").selectOption("unknown");
@@ -50,7 +50,7 @@ test.describe("wallet with mocked Django", () => {
       { id: "route-two", code: "usd-thb-two", provider: "Mock route", tier: "express", source_currency: "USD", target_currency: "THB", min_amount: "10.00", max_amount: "1500.00", settlement_min_days: 0, settlement_days: 1, is_simulated: true },
     ];
     const beneficiaries = [{ id: "school-one", name: "Example University", destination_label: "Tuition", verified: true }, { id: "housing-one", name: "Housing", destination_label: "Housing", verified: false }];
-    let order = null, approval = null, quoteCalls = 0, createCalls = 0, submitCalls = 0, stepUpCalls = 0, approvalReadsSinceCreated = 0;
+    let order = null, approval = null, quoteCalls = 0, createCalls = 0, submitCalls = 0, stepUpCalls = 0, operatorApproved = false;
     const json = (route, status, body) => route.fulfill({ status, contentType: "application/json", body: JSON.stringify(body) });
     await page.route("**/api/v2/**", async route => {
       const request = route.request();
@@ -67,7 +67,7 @@ test.describe("wallet with mocked Django", () => {
       if (path === "beneficiaries/" && method === "GET") { const second = new URL(request.url()).searchParams.get("page") === "2"; return json(route, 200, { count: 2, results: second ? beneficiaries.slice(1) : beneficiaries.slice(0,1), next: second ? null : `${base}/api/v2/beneficiaries/?page=2` }); }
       if (path === "remittance-orders/" && method === "GET") return json(route, 200, { count: order ? 1 : 0, results: order ? [order] : [] });
       if (path === "approvals/" && method === "GET") {
-        if (approval && ++approvalReadsSinceCreated > 1) approval.status = "APPROVED";
+        if (approval && operatorApproved) approval.status = "APPROVED";
         return json(route, 200, { count: approval ? 1 : 0, results: approval ? [approval] : [] });
       }
       if (path.startsWith("remittance-orders/") && method === "GET") return json(route, 200, { data: order });
@@ -127,15 +127,16 @@ test.describe("wallet with mocked Django", () => {
     await page.getByText("A separate operator approval is required").waitFor();
     await page.getByRole("button", { name: "Request operator approval" }).click();
     await page.getByText("Approval requested").waitFor();
-    assert.match(await page.getByRole("main").innerText(), /Backend approval status: PENDING/);
+    assert.match(await page.locator(".wallet-approval-status").innerText(), /Operator approval: PENDING/);
+    operatorApproved = true;
     await page.getByRole("button", { name: "Refresh from Django" }).click();
-    await page.getByText("Backend approval status: APPROVED").waitFor();
+    await page.locator(".wallet-approval-status").getByText("APPROVED", { exact: true }).waitFor();
     await page.getByRole("button", { name: "Continue to password check" }).click();
     await page.getByLabel("Password").fill("never-logged");
     await page.getByRole("button", { name: "Authorize and submit" }).click();
     await page.getByText("The response was lost or the server failed.", { exact: false }).waitFor();
     assert.equal(await page.getByLabel("Password").inputValue(), "");
-    await page.getByRole("button", { name: "Refresh order status" }).click();
+    await page.getByRole("dialog", { name: "Review and confirm" }).getByRole("button", { name: "Refresh order status" }).click();
     await page.getByText("Submitted to the simulated processing route.", { exact: false }).waitFor();
     assert.equal(createCalls, 1);
     assert.equal(stepUpCalls, 1);
