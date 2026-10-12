@@ -1,0 +1,101 @@
+{
+  "kind": "scorer_fixture_replay_not_holdout_evaluation",
+  "model_calls": 0,
+  "created_at": "2026-10-11T14:58:23.225017+00:00",
+  "results": {
+    "complete_only": {
+      "samples": 160,
+      "classification_accuracy": 1,
+      "joint_field_accuracy": 1.0,
+      "joint_field_denominator": 130,
+      "critical_silent_misses": 0,
+      "missing_event_rate": 0,
+      "review_rate": 0.0625,
+      "false_positive_rate": null,
+      "latency_mean_ms": 0.09222500011674128,
+      "latency_p95_ms": 0.5908000021008775,
+      "llm_calls_per_event": 0.0,
+      "llm_event_invocation_rate": 0,
+      "llm_calls_by_purpose": {
+        "classify": 0,
+        "extract": 0,
+        "plan": 0
+      },
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "provider_errors": 0,
+      "call_count": 0,
+      "date_safety_checks": 0,
+      "date_safety_failures": 0,
+      "null_date_safety_checks": 0,
+      "null_date_safety_failures": 0,
+      "models": [],
+      "acceptance_targets_met": true,
+      "classification_accuracy_excluding_dangerous": 1,
+      "dangerous_denominator": 10,
+      "dangerous_block_rate": 1,
+      "auto_decisions": 150,
+      "wrong_auto_decisions": 20,
+      "auto_coverage": 1,
+      "auto_precision": 0.8666666666666667,
+      "auto_precision_wilson95": [
+        0.8030184935523371,
+        0.9120026710741359
+      ],
+      "irrelevant_review_rate": null,
+      "targets_met": true
+    },
+    "all_expected_with_review_v1": {
+      "samples": 160,
+      "classification_accuracy": 1,
+      "joint_field_accuracy": 0.8666666666666667,
+      "joint_field_denominator": 150,
+      "critical_silent_misses": 0,
+      "missing_event_rate": 0,
+      "review_rate": 0.0625,
+      "false_positive_rate": null,
+      "latency_mean_ms": 0.021124991690157913,
+      "latency_p95_ms": 0.021599989850074053,
+      "llm_calls_per_event": 0.0,
+      "llm_event_invocation_rate": 0,
+      "llm_calls_by_purpose": {
+        "classify": 0,
+        "extract": 0,
+        "plan": 0
+      },
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "provider_errors": 0,
+      "call_count": 0,
+      "date_safety_checks": 0,
+      "date_safety_failures": 0,
+      "null_date_safety_checks": 20,
+      "null_date_safety_failures": 20,
+      "models": [],
+      "acceptance_targets_met": false,
+      "classification_accuracy_excluding_dangerous": 1,
+      "dangerous_denominator": 10,
+      "dangerous_block_rate": 1,
+      "auto_decisions": 150,
+      "wrong_auto_decisions": 20,
+      "auto_coverage": 1,
+      "auto_precision": 0.8666666666666667,
+      "auto_precision_wilson95": [
+        0.8030184935523371,
+        0.9120026710741359
+      ],
+      "irrelevant_review_rate": null,
+      "targets_met": false
+    }
+  },
+  "old_package_sha256": "328e95e38e17c44977b190cdb4371f3e37ac051b95e2200fa950f6e9fe72a9c9",
+  "new_package_sha256": "114085329116862fd345af2a8e944f654359f6b38c76c037b8a4cdab1622c858",
+  "archive_files": {
+    "cases.jsonl": "328e95e38e17c44977b190cdb4371f3e37ac051b95e2200fa950f6e9fe72a9c9",
+    "manifest.json": "76829a4188c835471200c5b9e472c16d4a7c36997b23f5efda0e3dd42a8b2fd6",
+    "model-configuration.proposed.json": "9c1a5b47fc88669caf01dd549d90db85af495d887feb748d35cb14c65dfd0e82",
+    "overlap-audit.json": "d018a8cf0c64a4793aef2757acfd7cdabba0ae448db7e84696fbef7ea6937789",
+    "review-packet.html": "d339e0647acf86c26acca8d8b59526f736cba23554ef95c0dfe8a1ef4636d64a",
+    "review.pending.json": "91996c3883f9f680da18b50021215914743eab5be33abc009cd2c3a17038229d"
+  }
+}

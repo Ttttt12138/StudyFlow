@@ -1,0 +1,17 @@
+{
+  "approved": true,
+  "review_type": "human",
+  "reviewer": "用户（本会话明确确认）",
+  "reviewed_at": "2026-10-11T15:31:23.458284+00:00",
+  "reviewed_at_source": "conversation_confirmation_recorded_at",
+  "dataset_sha256": "114085329116862fd345af2a8e944f654359f6b38c76c037b8a4cdab1622c858",
+  "scoring_policy": "bijective_events_with_review_v2",
+  "draft_revision": 3,
+  "reviewed_cases": 160,
+  "reviewed_families": 16,
+  "approval_source": "explicit_user_conversation_confirmation",
+  "user_statement": "我已经确认并签名，标记为全部完成",
+  "signature_status": "user_reported_signed",
+  "signature_file_independently_verified": false,
+  "scope": "current revision 3 labels, family review and scoring policy"
+}

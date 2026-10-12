@@ -371,6 +371,34 @@
             "title": "Anomaly",
             "type": "number"
           },
+          "instruction_risk": {
+            "anyOf": [
+              {
+                "maximum": 1,
+                "minimum": 0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Instruction Risk"
+          },
+          "payment_conflict": {
+            "anyOf": [
+              {
+                "maximum": 1,
+                "minimum": 0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Payment Conflict"
+          },
           "needs_planning": {
             "maximum": 1,
             "minimum": 0,
@@ -924,6 +952,34 @@
             "minimum": 0,
             "title": "Anomaly",
             "type": "number"
+          },
+          "instruction_risk": {
+            "anyOf": [
+              {
+                "maximum": 1,
+                "minimum": 0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Instruction Risk"
+          },
+          "payment_conflict": {
+            "anyOf": [
+              {
+                "maximum": 1,
+                "minimum": 0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Payment Conflict"
           },
           "needs_planning": {
             "maximum": 1,
@@ -2018,6 +2074,34 @@
             "title": "Anomaly",
             "type": "number"
           },
+          "instruction_risk": {
+            "anyOf": [
+              {
+                "maximum": 1,
+                "minimum": 0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Instruction Risk"
+          },
+          "payment_conflict": {
+            "anyOf": [
+              {
+                "maximum": 1,
+                "minimum": 0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Payment Conflict"
+          },
           "needs_planning": {
             "maximum": 1,
             "minimum": 0,
@@ -2813,6 +2897,34 @@
             "minimum": 0,
             "title": "Anomaly",
             "type": "number"
+          },
+          "instruction_risk": {
+            "anyOf": [
+              {
+                "maximum": 1,
+                "minimum": 0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Instruction Risk"
+          },
+          "payment_conflict": {
+            "anyOf": [
+              {
+                "maximum": 1,
+                "minimum": 0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Payment Conflict"
           },
           "needs_planning": {
             "maximum": 1,

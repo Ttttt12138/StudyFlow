@@ -1,4 +1,33 @@
 name: studyflow-django
+# `docker compose up --build` starts the whole demo in mock mode: PostgreSQL, the API,
+# the readiness worker and the student app on http://localhost:8080. No API keys,
+# no external calls, all money simulated. For local development without the app
+# containers, `docker compose up -d db` still starts only the database.
+
+# Shared by the API and the worker: same image, same settings.
+x-django: &django
+  build:
+    context: .
+    dockerfile: backend/Dockerfile
+  environment:
+    # Local demo only. Set a real random secret (and DJANGO_SECURE=true behind HTTPS)
+    # for any shared deployment; see docs/permissions.md §7.
+    DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:-compose-local-demo-only-not-a-secret}
+    DJANGO_DEBUG: "False"
+    # The web container forwards the browser's Host; Django ignores the port here.
+    DJANGO_ALLOWED_HOSTS: 127.0.0.1,localhost
+    DB_NAME: studyflow
+    DB_USER: studyflow
+    DB_PASSWORD: ${POSTGRES_PASSWORD:-local-simulation-only}
+    DB_HOST: db
+    DB_PORT: "5432"
+    # Mock planners and fixed FX rates: runs offline with no credentials.
+    STUDYFLOW_MODE: ${STUDYFLOW_MODE:-mock}
+    STUDYFLOW_FX_LIVE: ${STUDYFLOW_FX_LIVE:-false}
+    STUDYFLOW_READINESS_ENABLED: "true"
+    STUDYFLOW_CONSUMPTION_ENABLED: "true"
+    STUDYFLOW_SEED_DEMO: "true"
+
 services:
   db:
     image: postgres:17
@@ -7,7 +36,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-local-simulation-only}
       POSTGRES_DB: studyflow
     ports:
-      - "127.0.0.1:55433:5432"
+      - "127.0.0.1:${STUDYFLOW_DB_PORT:-55433}:5432"
     volumes:
       - django_data:/var/lib/postgresql/data
     healthcheck:
@@ -15,5 +44,39 @@ services:
       interval: 2s
       timeout: 3s
       retries: 30
+
+  # Migrates, creates the cache table and seeds demo data, then serves gunicorn.
+  app:
+    <<: *django
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:${STUDYFLOW_API_PORT:-8000}:8000"
+
+  # Readiness jobs (backend/finance/management/commands/readiness_worker.py). Starts once
+  # the API is healthy, so migrations have run; skips the API entrypoint and healthcheck.
+  worker:
+    <<: *django
+    depends_on:
+      app:
+        condition: service_healthy
+    entrypoint: ["python", "manage.py"]
+    command: ["readiness_worker", "--mode", "${STUDYFLOW_MODE:-mock}"]
+    healthcheck:
+      disable: true
+
+  # Student app plus a same-origin reverse proxy to the API (frontend/docker/nginx.conf).
+  web:
+    build:
+      context: ./frontend
+      additional_contexts:
+        django: service:app
+    depends_on:
+      app:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:${STUDYFLOW_WEB_PORT:-8080}:80"
+
 volumes:
   django_data:

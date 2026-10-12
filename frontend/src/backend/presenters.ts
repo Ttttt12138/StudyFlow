@@ -1,3 +1,5 @@
+import { intlLocale, translate, type Lang } from "../i18n";
+
 /** Presentation only: preserve B's decimal strings and status codes unchanged. */
 export function formatAmount(value: unknown): string | null {
   if (typeof value !== "string" || !value.trim()) return null;
@@ -7,38 +9,32 @@ export function formatAmount(value: unknown): string | null {
   return `${match[1]}${match[2].replace(/\B(?=(\d{3})+(?!\d))/g, ",")}${match[3] ?? ""}`;
 }
 
-export function formatMoney(value: unknown, currency = "THB"): string {
+// `lang` defaults to English so pure callers (and the unit tests) keep the original wording;
+// components pass the interface language from useI18n().
+export function formatMoney(value: unknown, currency = "THB", lang: Lang = "en"): string {
   const amount = formatAmount(value);
-  return amount == null ? "Amount not supplied" : `${currency} ${amount}`;
+  return amount == null ? translate(lang, "fmt.noAmount") : `${currency} ${amount}`;
 }
 
-export function formatDate(value: unknown): string {
-  if (typeof value !== "string" || !value) return "Date not supplied";
+export function formatDate(value: unknown, lang: Lang = "en"): string {
+  if (typeof value !== "string" || !value) return translate(lang, "fmt.noDate");
   const parsed = new Date(`${value}T00:00:00Z`);
-  return Number.isNaN(parsed.getTime()) ? value : new Intl.DateTimeFormat("en", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" }).format(parsed);
+  return Number.isNaN(parsed.getTime()) ? value : new Intl.DateTimeFormat(intlLocale(lang), { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" }).format(parsed);
+}
+
+/** Day of a timestamp in the viewer's time zone; slicing the UTC string can show the previous day. */
+export function formatTimestampDate(value: unknown, lang: Lang = "en"): string {
+  if (typeof value !== "string" || !value) return translate(lang, "fmt.noDate");
+  const parsed = new Date(value);
+  return Number.isNaN(parsed.getTime()) ? value : new Intl.DateTimeFormat(intlLocale(lang), { day: "numeric", month: "short", year: "numeric" }).format(parsed);
 }
 
 const label = (value: string) => value.replaceAll("_", " ").replaceAll("-", " ").toLowerCase();
+const explained = ["MISSING", "MISSING_PROFILE", "CONFLICT", "RESERVE_NOT_CONFIRMED", "RECEIPT_UNCONFIRMED", "INSUFFICIENT_DATA", "CONDITIONAL", "INVALID", "VALID", "AFFORDABLE", "UNAFFORDABLE", "UNDER_REVIEW", "DRAFT", "APPROVED", "REJECTED"] as const;
 
-export function explainCode(code: string): string {
+export function explainCode(code: string, lang: Lang = "en"): string {
   const [kind, detail] = code.split(":", 2);
-  const item = detail ? label(detail) : "this item";
-  switch (kind) {
-    case "MISSING": return `${item} needs an amount or an explicit missing status.`;
-    case "MISSING_PROFILE": return `${item} is missing from the student profile.`;
-    case "CONFLICT": return `Review conflicting source values for ${item}.`;
-    case "RESERVE_NOT_CONFIRMED": return "Confirm the minimum reserve you want to keep.";
-    case "RECEIPT_UNCONFIRMED": return `Funding from ${item} has not been confirmed as received.`;
-    case "INSUFFICIENT_DATA": return "More information is needed before affordability can be assessed.";
-    case "CONDITIONAL": return "This plan has conditions that still need attention.";
-    case "INVALID": return "B could not validate this plan as submitted.";
-    case "VALID": return "B validated this plan under its current inputs.";
-    case "AFFORDABLE": return "B's assessment reports affordable repayments.";
-    case "UNAFFORDABLE": return "B's assessment reports that repayments are not affordable.";
-    case "UNDER_REVIEW": return "Your simulated application is under review.";
-    case "DRAFT": return "Your simulated application is still a draft.";
-    case "APPROVED": return "B reports this simulated application as approved. This does not mean money has arrived.";
-    case "REJECTED": return "B reports this simulated application as rejected.";
-    default: return label(code).replace(/^\w/, (letter) => letter.toUpperCase());
-  }
+  const item = detail ? label(detail) : translate(lang, "code.thisItem");
+  const known = explained.find((value) => value === kind);
+  return known ? translate(lang, `code.${known}`, { item }) : label(code).replace(/^\w/, (letter) => letter.toUpperCase());
 }

@@ -1,9 +1,12 @@
-import re
-
+from studyflow_ai.instruction_safety import (
+    blocks_extraction,
+    safe_payment_conflict,
+    untrusted_instructions,
+)
 from studyflow_ai.models import IngestContext, IngestResult, RouteContext, Source, Status
 from studyflow_ai.parsing import InputError, parse_csv, read_source
 from studyflow_ai.providers.base import ProviderFailure
-from studyflow_ai.providers.rules import SUSPICIOUS, financial_clues
+from studyflow_ai.providers.rules import financial_clues
 from studyflow_ai.routing import MIN_PROBABILITY, Router
 from studyflow_ai.validation import (
     build_candidate,
@@ -43,7 +46,7 @@ class Ingestor:
 
     def _document(self, source, data, result):
         text, context = data
-        suspicious = [issue("UNTRUSTED_INSTRUCTIONS")] if re.search(SUSPICIOUS, text, re.I) else []
+        suspicious = [issue("UNTRUSTED_INSTRUCTIONS")] if untrusted_instructions(text) else []
         route_context = RouteContext(
             text=text,
             source_refs=result.source_refs,
@@ -55,7 +58,7 @@ class Ingestor:
         result.calls.extend(result.routing.calls)
         if result.routing.action == "SKIP":
             return
-        if result.routing.classification and result.routing.classification.anomaly >= 0.5:
+        if result.routing.classification and blocks_extraction(result.routing.classification):
             result.routing.action = "REVIEW"
             suspicious.append(issue("POSSIBLE_ANOMALY"))
         if result.routing.action == "REVIEW":
@@ -75,6 +78,7 @@ class Ingestor:
             if raw.category != "irrelevant"
         ]
         mark_duplicates(result.candidates, candidate_key)
+        self._review_judgment(result)
         # Financial material bypasses the router's probability gate to force extraction,
         # so an unsure classification still has to send the candidates to review.
         judgment = result.routing.classification
@@ -82,6 +86,21 @@ class Ingestor:
             result.issues.append(issue("LOW_CLASSIFICATION_PROBABILITY"))
         if route_context.financial_clues and not result.candidates:
             result.issues.append(issue("FINANCIAL_CLUES_WITHOUT_CANDIDATE"))
+
+    @staticmethod
+    def _review_judgment(result):
+        judgment = result.routing.classification
+        categories = {candidate.category for candidate in result.candidates}
+        codes = []
+        if safe_payment_conflict(judgment):
+            codes.append("PAYMENT_CONFLICT")
+        if judgment and categories and judgment.category not in categories:
+            codes.append("CLASSIFICATION_EVENT_MISMATCH")
+        for code in codes:
+            result.issues.append(issue(code))
+            for candidate in result.candidates:
+                candidate.issues.append(issue(code))
+                candidate.status = Status.NEEDS_REVIEW
 
     @staticmethod
     def _finish(result):

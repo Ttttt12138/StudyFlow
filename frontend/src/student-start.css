@@ -1,0 +1,46 @@
+.student-start{max-width:1100px;margin:8px auto 0}
+.student-welcome{position:relative;overflow:hidden;border-radius:26px;padding:clamp(32px,6vw,72px);background:radial-gradient(circle at 90% 10%,color-mix(in srgb,var(--accent) 12%,transparent) 0,transparent 35%),linear-gradient(135deg,var(--surface-1),var(--surface-1) 65%,var(--surface-1));box-shadow:0 20px 52px rgba(0,0,0,0.25)}
+.student-welcome::after{content:"";position:absolute;width:220px;height:220px;border:1px solid var(--line);border-radius:50%;right:-65px;bottom:-100px;pointer-events:none}
+.student-welcome h1{max-width:660px;font-size:clamp(38px,5.4vw,70px);line-height:1.04;letter-spacing:-.055em;margin:20px 0}
+.student-welcome p{max-width:590px;font-size:clamp(16px,1.6vw,20px);line-height:1.55;color:var(--accent);margin:0 0 29px}
+.student-welcome-actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.student-welcome-actions button{min-height:48px;border-radius:12px;font-size:14px;padding:12px 19px;transition:transform .18s ease,box-shadow .18s ease,background-color .18s ease}
+.student-welcome-actions button:not(:disabled):hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.25)}
+.student-welcome-actions button:not(:disabled):active{transform:translateY(0)}
+.student-welcome small{display:block;margin-top:20px;color:var(--text-2);font-size:12px}
+.student-start-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:20px 0}
+.student-start-grid article{background:var(--surface-1);border:1px solid var(--line);border-radius:18px;padding:23px;box-shadow:0 5px 20px rgba(0,0,0,0.25);transition:transform .18s ease,box-shadow .18s ease}
+.student-start-grid article:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(0,0,0,0.25)}
+.student-start-grid article>span{display:inline-grid;place-items:center;width:34px;height:34px;background:var(--surface-1);border-radius:10px;color:var(--accent);font-size:12px;font-weight:750}
+.student-start-grid h2{font-size:18px;margin:17px 0 7px}.student-start-grid p{font-size:14px;color:var(--text-2);margin:0}
+.student-developer-tools{margin:30px 0 10px;padding:18px 20px;border:1px solid var(--line);border-radius:14px;background:var(--surface-1);color:var(--text-2);font-size:13px}
+.student-developer-tools summary{cursor:pointer;font-weight:650;color:var(--accent)}.student-developer-tools[open] summary{margin-bottom:17px}
+.student-developer-tools label{display:grid;gap:7px;max-width:420px;font-weight:600;margin:14px 0}.student-developer-tools input{min-height:44px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font:inherit}
+.student-tool-links{display:flex;flex-wrap:wrap;gap:9px;margin-top:15px}.student-developer-tools .primary{min-height:44px}
+.student-progress{margin:-8px 0 26px;padding:13px 17px;border-radius:13px;background:var(--surface-1);border:1px solid var(--line)}
+.student-progress>div:first-child{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:12px;color:var(--text-2)}.student-progress strong{color:var(--accent);font-size:13px}
+.student-progress-track{height:6px;background:var(--surface-2);border-radius:20px;margin-top:11px;overflow:hidden}.student-progress-track span{display:block;height:100%;background:color-mix(in srgb,var(--accent) 85%,transparent);border-radius:20px;transition:width .22s ease}
+@media(max-width:750px){.student-start-grid{grid-template-columns:1fr}.student-start-grid article{padding:19px}.student-start-grid h2{margin:9px 0 4px}}
+@media(max-width:650px){.student-welcome{padding:30px 23px;border-radius:20px}.student-welcome h1{font-size:40px}.student-welcome-actions{align-items:stretch;flex-direction:column}.student-welcome-actions button{justify-content:center;width:100%}.student-progress{margin-top:0}.student-progress>div:first-child{align-items:flex-start;flex-direction:column;gap:3px}}
+@media(prefers-reduced-motion:reduce){.student-welcome-actions button,.student-start-grid article,.student-progress-track span{transition:none}.student-welcome-actions button:not(:disabled):hover,.student-start-grid article:hover{transform:none}}
+
+/* Sprint 2: bring the task ahead of secondary navigation and form detail. */
+.student-more-menu{margin-top:16px;border:1px solid var(--line);border-radius:10px;padding:11px 13px;background:var(--surface-1);color:var(--accent);font-size:13px}
+.student-more-menu summary{cursor:pointer;font-weight:650;min-height:24px}.student-more-menu>div{display:grid;gap:8px;margin-top:14px}.student-more-menu button{margin:0!important;text-align:left}
+.expense-intro{display:grid;gap:5px;margin:16px 0 24px;padding:17px 19px;background:var(--surface-1);border-left:3px solid color-mix(in srgb,var(--accent) 45%,transparent);border-radius:10px;color:var(--accent);font-size:14px}.expense-intro span{color:var(--text-2);font-size:13px}
+.expense-review-card{border-radius:12px!important;background:var(--surface-1)}.expense-review-card .backend-row{align-items:center;border:0;padding:0 0 5px}.expense-review-card .backend-row>div{display:grid;gap:4px}.expense-review-card .backend-row strong{font-size:16px}.expense-review-card .status{font-size:11px;white-space:nowrap}
+.cost-details{margin-top:9px!important;border:0!important;background:transparent!important;padding:0!important}.cost-details summary{display:inline-flex;align-items:center;color:var(--accent)!important;padding:5px 0;font-size:13px!important}.cost-details[open] summary{margin-bottom:12px}.cost-details .backend-fields{padding-top:6px}
+@media(max-width:650px){.dashboard-app aside nav{display:none}.dashboard-app aside nav.steps-open{display:grid;margin-top:10px}.dashboard-app aside>.student-side-action{display:none}.connected aside:has(.student-more-menu) .journey-label{display:none}.expense-review-card .backend-row{flex-direction:row;align-items:flex-start}.expense-review-card .backend-row .status{white-space:normal}.student-more-menu{margin-top:10px}}
+
+/* Sprint 3: backend-authored result first, supporting comparisons on request. */
+.result-overview,.funding-comparison{background:linear-gradient(155deg,var(--surface-1) 55%,var(--surface-1))}
+.result-overview>h2,.funding-comparison>h2{font-size:clamp(22px,2.4vw,30px);letter-spacing:-.03em;margin:8px 0 10px}
+.result-overview>p,.funding-comparison>p{max-width:680px;font-size:14px;color:var(--text-2)}
+.result-highlights{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;margin:21px 0}
+.result-highlights>div{display:grid;align-content:start;gap:7px;min-width:0;padding:21px;border:1px solid var(--line);border-radius:14px;background:var(--surface-1)}
+.result-highlights span{color:var(--text-2);font-size:13px}.result-highlights strong{font-size:clamp(19px,2.2vw,27px);line-height:1.17;letter-spacing:-.03em;overflow-wrap:anywhere}.result-highlights small{font-size:12px;color:var(--text-2)}
+.result-attention{padding:16px 19px;margin:18px 0;border:1px solid color-mix(in srgb,var(--warn) 45%,transparent);border-radius:12px;background:var(--surface-1);font-size:14px}.result-attention ul{margin:8px 0 0;padding-left:20px}.result-attention li{margin:4px 0}
+.result-details{margin:12px 0!important;border:1px solid var(--line)!important;border-radius:10px;padding:14px 17px!important;background:var(--surface-1)!important}.result-details summary{cursor:pointer;color:var(--accent);font-weight:650}.result-details[open] summary{margin-bottom:15px}.result-details p,.result-details li{font-size:13px;color:var(--text-2)}
+.result-overview>.primary{margin-top:15px}.result-overview>small{margin-top:8px}
+.funding-highlights{margin-bottom:16px}.funding-comparison>.comparison-grid{margin-top:23px}
+@media(max-width:650px){.result-highlights{grid-template-columns:1fr}.result-highlights>div{padding:17px}.result-overview,.funding-comparison{padding:22px!important}}

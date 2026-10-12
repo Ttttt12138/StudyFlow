@@ -1,0 +1,21 @@
+
+> studyflow-frontend@0.1.0 test:unit
+> vitest run
+
+
+ RUN  v4.1.11 D:/Qoder-project/AI studyflow/frontend
+
+(node:46340) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2636) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:43448) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:44008) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+ Test Files  4 passed (4)
+      Tests  73 passed (73)
+   Start at  20:55:17
+   Duration  347ms (transform 367ms, setup 379ms, import 152ms, tests 45ms, environment 0ms)
+

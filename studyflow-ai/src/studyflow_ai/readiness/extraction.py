@@ -4,11 +4,11 @@ from decimal import Decimal, InvalidOperation
 
 from pydantic import ValidationError
 
+from studyflow_ai.instruction_safety import untrusted_instructions
 from studyflow_ai.models import Evidence, Status
 from studyflow_ai.normalization import date_in_quote
 from studyflow_ai.parsing import InputError
 from studyflow_ai.providers.base import ProviderFailure
-from studyflow_ai.providers.rules import SUSPICIOUS
 from studyflow_ai.readiness.completeness import issue
 from studyflow_ai.readiness.materials import read_material
 from studyflow_ai.readiness.models import CostItem, ExtractionResult, SemesterProfile
@@ -152,7 +152,7 @@ class SemesterExtractor:
             result.draft.provenance.append(provenance)
             if context.language not in ("en", "zh", "zh-CN", "zh-TW"):
                 result.issues.append(issue("LANGUAGE_NOT_EVALUATED"))
-            if re.search(SUSPICIOUS + r"|忽略.*指令|批准.*付款", text, re.I):
+            if untrusted_instructions(text) or re.search(r"忽略.*指令|批准.*付款", text):
                 result.route = "REVIEW"
                 result.issues.append(issue("UNTRUSTED_INSTRUCTIONS"))
             else:

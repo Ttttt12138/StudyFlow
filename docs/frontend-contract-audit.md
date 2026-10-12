@@ -1,5 +1,7 @@
 # Task A contract comparison (before integration)
 
+> Path note (updated 2026-10-11): the B module now lives in `backend/`. Django commands below run inside `backend/`, and paths such as `manage.py`, `finance/`, `auto_test/` and `openapi.yaml` are relative to it. Results are kept as recorded at the time.
+
 Inspected final backend HEAD e45d5d8 and uploaded ZIP (declared source ee577dc; ZIP has no Git metadata to independently verify the commit). No existing frontend package exists. Adapt connected UI into frontend/; keep Django finance and C workflows authoritative.
 
 | ZIP request/field | Current implementation | Integration decision |

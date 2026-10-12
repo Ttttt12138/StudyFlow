@@ -1,0 +1,14 @@
+{
+  "provenance": "Summary of tool results observed during this implementation; this is not a verbatim command log. Timestamped final checks are in commands.jsonl.",
+  "attempts": [
+    {"check": "initial semantic/date regression", "exit_code": 1, "result": "9 failed, 7 passed", "cause": "relative support, fresh food, sublet categories; indirect dates auto-verified; conflicting date selected"},
+    {"check": "pytest default temporary directory and ruff cache", "exit_code": 1, "result": "environment blocked", "cause": "Windows sandbox permissions", "resolution": "authorized local execution with workspace temporary directory"},
+    {"check": "frontend mocked first run", "exit_code": 1, "result": "11 passed, 1 failed", "cause": "Agent Proposals title matched two headings", "resolution": "exact heading locator; final 12 passed"},
+    {"check": "full gates early attempts", "exit_code": 1, "cause": "new date safety scoring red test, then import sorting", "resolution": "implemented scoring and sorted import; subsequent checks passed"},
+    {"check": "reference video first attempt", "exit_code": 1, "result": "3 other integration cases passed, 3 reference cases could not start", "cause": "Playwright FFmpeg binary absent", "resolution": "installed FFmpeg; later successful videos archived"},
+    {"check": "reference navigation debugging", "exit_code": 1, "cause": "exact Budget name excluded numbered navigation; then desktop navigation used at phone viewport", "resolution": "scoped Budget suffix and restore desktop viewport before subsequent navigation; stopped only the identified stalled test process tree"},
+    {"check": "readiness demo with consumption enabled", "exit_code": 1, "cause": "TRANSACTION_COVERAGE_INSUFFICIENT", "resolution": "confirmed explicit synthetic prior-month CSV coverage using existing HTTP APIs"},
+    {"check": "readiness demo with separate worker", "exit_code": 1, "cause": "Readiness model check did not finish", "resolution": "wait while the separate worker holds a running job lease; do not interpret no local claim as completion"},
+    {"check": "issue-date boundary regression", "exit_code": 1, "result": "3 failures reproduced", "cause": "issued-only date accepted as deadline, issue date chosen before explicit due date, repeated conflicting due dates accepted", "resolution": "prefer explicitly labelled due dates; issue-only dates null/review; repeated conflicting deadlines null/review"}
+  ]
+}

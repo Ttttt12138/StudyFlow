@@ -1,5 +1,7 @@
 # Readiness 首期验证记录
 
+> 路径说明（2026-10-11 更新）：B 模块已移入 `backend/`。下文 Django 命令在 `backend/` 下运行，`manage.py`、`finance/`、`auto_test/`、`openapi.yaml` 等路径均相对 `backend/`；测试结果保留当时的记录。
+
 日期：2026-10-05（Asia/Bangkok）。首期为 Django API、PostgreSQL 持久 worker 与 C 的集成，不包含前端或真实银行交易。
 
 ## 最终结果
@@ -11,7 +13,7 @@
 | C：在 `studyflow-ai` 内执行 `pytest auto_test` | 134 项通过 |
 | 新增 B 代码及 C 的 Ruff 检查 | 通过 |
 | `makemigrations --check --dry-run` | 无模型漂移 |
-| OpenAPI `--validate --fail-on-warn` | 通过，根 `openapi.yaml` 已更新 |
+| OpenAPI `--validate --fail-on-warn` | 通过，`backend/openapi.yaml`（当时位于仓库根目录）已更新 |
 | B／C 导出的 JSON Schema 与当前类型 | 一致 |
 | 真正 HTTP、Token、PostgreSQL、Jev＋LLM | 最终连续三轮通过 |
 

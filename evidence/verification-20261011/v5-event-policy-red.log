@@ -1,0 +1,21 @@
+.....F                                                                   [100%]
+================================== FAILURES ===================================
+_______ test_same_labels_cannot_reuse_approval_of_an_old_scoring_policy _______
+
+tmp_path = WindowsPath('D:/Qoder-project/AI studyflow/output/pytest-event-policy-red/test_same_labels_cannot_reuse_0')
+
+    def test_same_labels_cannot_reuse_approval_of_an_old_scoring_policy(tmp_path):
+        from studyflow_ai.copilot_evaluation import review_valid
+    
+        manifest = {"version": "copilot-holdout-v5", "sha256": "unchanged-labels", "scoring_policy": V5_SCORING_POLICY}
+        review = {"approved": True, "review_type": "human", "reviewer": "user", "reviewed_at": "2026-10-11",
+                  "dataset_sha256": manifest["sha256"], "scoring_policy": "all_expected_with_review_v1"}
+        path = tmp_path / "review.json"
+        path.write_text(json.dumps(review), encoding="utf-8")
+>       assert not review_valid(path, manifest)
+E       AssertionError: assert not True
+E        +  where True = <function review_valid at 0x0000028087F509A0>(WindowsPath('D:/Qoder-project/AI studyflow/output/pytest-event-policy-red/test_same_labels_cannot_reuse_0/review.json'), {'version': 'copilot-holdout-v5', 'sha256': 'unchanged-labels', 'scoring_policy': 'bijective_events_with_review_v2'})
+
+studyflow-ai\auto_test\test_holdout_v5_guard.py:61: AssertionError
+=========================== short test summary info ===========================
+FAILED studyflow-ai\auto_test\test_holdout_v5_guard.py::test_same_labels_cannot_reuse_approval_of_an_old_scoring_policy

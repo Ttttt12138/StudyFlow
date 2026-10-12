@@ -1,9 +1,16 @@
-import { useEffect, useRef, useState } from "react";
+import { useI18n, type MessageKey } from "../i18n";
+import { PreviewWalkthrough } from "./PreviewWalkthrough";
+import { PreviewConfirmation } from "./PreviewConfirmation";
+import { PreviewApplication } from "./PreviewApplication";
+import { LiveDashboard } from "../dashboard/LiveDashboard";
+import { DashboardPreview } from "../dashboard/DashboardPreview";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { ApiError, DjangoClient, getAll, type StudyFlowClient } from "./client";
 import { PaymentCalendar } from "./PaymentCalendar";
 import { FundingComparison } from "./FundingComparison";
-import { explainCode, formatMoney } from "./presenters";
-import { createPreviewClient, previewBudget, previewFunding, previewImport } from "./previewAdapter";
+import { explainCode, formatDate, formatMoney } from "./presenters";
+import { createPreviewClient, previewBudget, previewFunding, previewImport, type PreviewScenario } from "./previewAdapter";
+import { importTouched, rebaseOnSaved, templateId, uploadKind, versionsMatch } from "./logic";
 import type {
   Application,
   BackendState,
@@ -22,20 +29,8 @@ import type {
 } from "./contracts";
 import "../styles.css";
 
-const steps = [
-  "Confirm information",
-  "Complete expenses",
-  "Budget",
-  "Funding",
-  "Simulated application",
-];
-const stepHelp = [
-  "Check your admission details and the documents behind them.",
-  "Review school costs and add expenses you expect to pay.",
-  "Compare the budget results for your saved information.",
-  "Review possible funding and what is actually available.",
-  "Review a quote and follow your simulated application.",
-];
+// Step names and help are translated at render time (see ConnectedApp).
+const stepIndexes = [0, 1, 2, 3, 4] as const;
 const categories = [
   "tuition",
   "housing",
@@ -50,35 +45,34 @@ const categories = [
   "travel",
   "settlement",
 ];
-const money = (value: string | null | undefined, currency = "THB") => formatMoney(value, currency);
 function issueText(error: unknown) {
   if (error instanceof ApiError)
     return `${error.status ? `HTTP ${error.status}: ` : ""}${error.message}`;
   return error instanceof Error ? error.message : String(error);
 }
-function versionsMatch(
-  result: { state_version: number; budget_version: number; analysis_version?: number; semester?: string; semester_id?: string } | null,
-  state: BackendState | null,
-) {
-  return (
-    !!result &&
-    !!state &&
-    (!result.semester || result.semester === state.semester_id) &&
-    (!result.semester_id || result.semester_id === state.semester_id) &&
-    result.state_version === state.state_version &&
-    result.budget_version === state.budget_version &&
-    (state.analysis_version == null || result.analysis_version === state.analysis_version)
-  );
-}
-export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
-  const [session, setSession] = useState<{authenticated: boolean; username: string | null; csrf_token: string} | null>(null);
+/** Opens the read-only tour straight away at a step, optionally with the payment calendar expanded (from /intro links). */
+export type InitialPreview = { step: number; calendar: boolean };
+export function ConnectedApp({ onDemo, onWallet, onAgent, onTrust, initialPreview }: { onDemo: () => void; onWallet: (preview: boolean) => void; onAgent: (preview: boolean) => void; onTrust: (preview: boolean) => void; initialPreview?: InitialPreview | null }) {
+  const { lang, t } = useI18n();
+  const steps = stepIndexes.map((i) => t(`jr.step.${i}` as MessageKey));
+  const stepHelp = stepIndexes.map((i) => t(`jr.help.${i}` as MessageKey));
+  const previewStepHelp = stepIndexes.map((i) => t(`jr.previewHelp.${i}` as MessageKey));
+  const money = (value: string | null | undefined, currency = "THB") => formatMoney(value, currency, lang);
   const [client, setClient] = useState<StudyFlowClient | null>(null);
   const [preview, setPreview] = useState(false);
+  const [previewScenario,setPreviewScenario]=useState<PreviewScenario>("missing");
+  const [showConnect,setShowConnect]=useState(false);
+  const [expandedCosts,setExpandedCosts]=useState<Record<string,boolean>>({});
+  const focusCostRef=useRef<string|null>(null);
+  const connectInputRef=useRef<HTMLAnchorElement|null>(null);
+  const focusApplicationStatusRef=useRef(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [errorDetails, setErrorDetails] = useState<unknown>(null);
   const [notice, setNotice] = useState("");
   const [step, setStep] = useState(0);
+  const [dashboard, setDashboard] = useState(false);
+  const [dashboardPreview, setDashboardPreview] = useState(false);
   const [showSteps, setShowSteps] = useState(false);
   const [templates, setTemplates] = useState<Template[]>([]);
   const [selectedTemplate, setSelectedTemplate] = useState("");
@@ -121,6 +115,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
   const [profileVersion, setProfileVersion] = useState(0);
   const [profileMonths, setProfileMonths] = useState<
     Array<{
+      rowKey: string;
       month: string;
       income: string | null;
       living_expenses: string | null;
@@ -137,6 +132,31 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
   const initialized = useRef(false);
   const fileIdentities = useRef(new WeakMap<File, string>());
   const keys = useRef(new Map<string, string>());
+  const actionKeys = useRef<string[]>([]);
+  // Last saved draft seen from Django, to tell local edits apart from changes saved elsewhere.
+  const savedDraft = useRef<{ semesterId: string; draft: Draft } | null>(null);
+  useLayoutEffect(() => {
+    if (!client || dashboardPreview || dashboard) return;
+    const costId = focusCostRef.current;
+    focusCostRef.current = null;
+    const target = costId ? document.getElementById(`cost-${costId}`) : null;
+    if (target) target.scrollIntoView({ block: "center", behavior: "instant" });
+    else window.scrollTo({ top: 0, behavior: "instant" });
+    (target ?? document.getElementById("connected-step-title"))?.focus({ preventScroll: true });
+  }, [step, client, dashboardPreview, dashboard]);
+  useLayoutEffect(() => {
+    if (!focusApplicationStatusRef.current || step !== 4 || !application) return;
+    const status = document.querySelector<HTMLElement>(".application-live-status");
+    if (!status) return;
+    focusApplicationStatusRef.current = false;
+    status.scrollIntoView({ block: "center", behavior: "instant" });
+    status.focus({ preventScroll: true });
+  }, [application, step]);
+  useLayoutEffect(() => {
+    if (client || !showConnect || !connectInputRef.current) return;
+    connectInputRef.current.scrollIntoView({ block: "center", behavior: "instant" });
+    connectInputRef.current.focus({ preventScroll: true });
+  }, [client, showConnect]);
   const versions = (): Versions => ({
     semester_id: state!.semester_id,
     state_version: state!.state_version,
@@ -144,9 +164,16 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
     analysis_version: state!.analysis_version,
   });
   useEffect(() => {
-    setApplication(applications.find((item) => (item.loan ?? item.quote_id) === quoteId) ?? null);
-  }, [applications, quoteId]);
+    setApplication(preview ? applications[0] ?? null : applications.find((item) => (item.loan ?? item.quote_id) === quoteId) ?? null);
+  }, [applications, quoteId, preview]);
   const dirty = !!draft && !!semester && JSON.stringify(draft) !== JSON.stringify(semester.draft);
+  const reviewing = material?.status === "NEEDS_REVIEW" && !!material.result.proposed_draft;
+  // Review answers belong to one document; never carry them over to the next upload.
+  useEffect(() => {
+    setIssuer("");
+    setResolutions({});
+    setTranscription("");
+  }, [material?.id]);
   function resultFresh(result: Parameters<typeof versionsMatch>[0], current: BackendState | null) {
     return !dirty && versionsMatch(result, current);
   }
@@ -164,6 +191,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
     const payloadKey = `${identity}:${body instanceof FormData ? JSON.stringify([...body.entries()].map(([name, value]) => [name, value instanceof File ? fileKey(value) : value])) : JSON.stringify(body)}`;
     const key = keys.current.get(payloadKey) ?? crypto.randomUUID();
     keys.current.set(payloadKey, key);
+    actionKeys.current.push(payloadKey);
     try {
       const result = await api.post<T>(path, body, key);
       return result;
@@ -174,7 +202,8 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
       throw e;
     }
   }
-  async function refresh(api = client, stillCurrent = () => true) {
+  // keepEdits=false after saving, confirming or switching data sources: Django's draft replaces local edits.
+  async function refresh(api = client, stillCurrent = () => true, keepEdits = true) {
     if (!api) return;
     const next = await api.get<BackendState>("readiness/state/");
     const term = await api.get<Semester>(
@@ -202,15 +231,25 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
         api.get<Run<BudgetResult>[]>("readiness/budgets/"),
       ]);
     if (!stillCurrent()) return;
+    const previous = savedDraft.current;
+    savedDraft.current = { semesterId: term.id, draft: structuredClone(term.draft) };
     setState(next);
     setSemester(term);
-    setDraft(structuredClone(term.draft));
+    if (!keepEdits || !dirty || !draft || !previous || previous.semesterId !== term.id) setDraft(structuredClone(term.draft));
+    else if (JSON.stringify(previous.draft) !== JSON.stringify(term.draft)) {
+      // Saved elsewhere since these edits started: never send them on top of the newer draft unseen.
+      if (reviewing && material) setDraft(rebaseOnSaved(draft, term.draft, material.id));
+      else {
+        setUnsavedDraft(structuredClone(draft));
+        setDraft(structuredClone(term.draft));
+      }
+    }
     setSources(fundingSources);
     setQuotes(loanQuotes);
     setApplications(applications);
     if (!quoteId && applications[0]) setQuoteId(applications[0].loan ?? applications[0].quote_id ?? "");
     setProfileVersion(profile.version);
-    setProfileMonths(profile.months);
+    setProfileMonths(profile.months.map((row) => ({ ...row, rowKey: crypto.randomUUID() })));
     setForecast(forecasts[0] ?? null);
     setFunding(recommendations[0] ?? null);
     setSavedFunding(fundingPlans[0] ?? null);
@@ -222,21 +261,20 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
     setError("");
     setErrorDetails(null);
     setNotice("");
+    actionKeys.current = [];
     try {
       await action();
+      // Retries after a failed reload reuse their keys; a later deliberate repeat gets a new result.
+      for (const payloadKey of actionKeys.current) keys.current.delete(payloadKey);
     } catch (e) {
       setErrorDetails(e instanceof ApiError ? e.details : null);
       if (e instanceof ApiError && e.status === 409 && client) {
-        const edits = draft ? structuredClone(draft) : null;
+        // refresh() keeps unsaved edits that still apply and sets aside those overtaken by a newer save.
         try { await refresh(client); } catch (reloadError) {
-          setUnsavedDraft(edits);
-          setError(`Your information changed, but the latest data could not be loaded. Retry refreshing before saving. ${issueText(reloadError)}`);
+          setError(`${t("jr.err.reloadFailed")} ${issueText(reloadError)}`);
           return;
         }
-        setUnsavedDraft(edits);
-        setError(
-          "A newer state was saved. Review the latest data, then restore your unsaved edits if appropriate.",
-        );
+        setError(t("jr.err.newerState"));
       } else setError(issueText(e));
     } finally {
       setBusy(false);
@@ -245,11 +283,11 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
   async function connect() {
     const epoch = ++connectionEpoch.current;
     await act(async () => {
-      const response = await fetch("/api/auth/session/", { credentials: "same-origin" });
-      if (!response.ok) throw new ApiError(response.status, "Could not check your sign-in session.");
-      const identity = await response.json().catch(() => { throw new Error("The sign-in service returned an unexpected response. Please retry or contact support."); });
+      const response = await fetch("/api/auth/session/", { credentials: "same-origin" })
+        .catch(() => { throw new Error(t("common.err.unreachable")); });
+      if (!response.ok) throw new ApiError(response.status, t("jr.err.session"));
+      const identity = await response.json().catch(() => { throw new Error(t("jr.err.sessionResponse")); });
       if (epoch !== connectionEpoch.current) return;
-      setSession(identity);
       if (!identity.authenticated) return;
       const api = new DjangoClient(identity.csrf_token);
       const list = await api.get<Template[]>("readiness/templates/");
@@ -266,7 +304,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
       );
       if (epoch !== connectionEpoch.current) return;
       setTemplates(list);
-      setSelectedTemplate(list[0]?.key ?? "");
+      setSelectedTemplate(list[0] ? templateId(list[0]) : "");
       setClient(api);
       try {
         const restored = await refresh(api, () => epoch === connectionEpoch.current);
@@ -274,7 +312,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
         const imports = await api
           .get<ImportRecord[]>("readiness/imports/");
         const pending = imports.find((item) =>
-          (!item.semester || item.semester === restored?.semester_id) && ["QUEUED", "NEEDS_REVIEW", "NEEDS_MANUAL_INPUT"].includes(
+          (!item.semester_id || item.semester_id === restored?.semester_id) && ["QUEUED", "NEEDS_REVIEW", "NEEDS_MANUAL_INPUT"].includes(
             item.status,
           ),
         );
@@ -283,34 +321,55 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
             `readiness/imports/${pending.id}/`,
           );
           setMaterial(currentImport);
-          if (
-            currentImport.status === "NEEDS_REVIEW" &&
-            currentImport.result.proposed_draft
-          ) {
-            setDraft(structuredClone(currentImport.result.proposed_draft));
-            setSelectedIds(
-              currentImport.result.proposed_draft.costs
-                .filter((cost) => cost.source_refs?.includes(currentImport.id) || cost.conflict)
-                .map((cost) => cost.cost_id),
-            );
-          }
+          if (savedDraft.current) loadProposal(currentImport, savedDraft.current.draft);
         }
-        setNotice("Existing semester loaded.");
+        setNotice(t("jr.notice.semesterLoaded"));
       } catch (e) {
         if (e instanceof ApiError && e.status === 400 && JSON.stringify(e.details).includes("NO_ACTIVE_SEMESTER")) {
-          setNotice("No active semester. Create one below.");
+          setNotice(t("jr.notice.noSemester"));
         } else throw e;
       }
     });
   }
-  useEffect(() => { if (!initialized.current) { initialized.current = true; void connect(); } }, []);
+  useEffect(() => {
+    if (initialized.current) return;
+    initialized.current = true;
+    if (!initialPreview) { void connect(); return; }
+    void startPreview().then((started) => {
+      if (!started) return;
+      setStep(initialPreview.step);
+      if (initialPreview.calendar) openCalendarWhenReady();
+    });
+  }, []);
+  // The tour's calendar sits in a closed <details> on the budget step; open it once rendered.
+  function openCalendarWhenReady(tries = 60) {
+    const details = document.querySelector<HTMLDetailsElement>(".preview-calendar-details");
+    if (!details) { if (tries > 0) requestAnimationFrame(() => openCalendarWhenReady(tries - 1)); return; }
+    details.open = true;
+    details.scrollIntoView({ block: "start" });
+  }
+  function loadProposal(record: ImportRecord, base: Draft) {
+    const proposed = record.status === "NEEDS_REVIEW" ? record.result.proposed_draft : undefined;
+    if (!proposed) return;
+    const next = rebaseOnSaved(proposed, base, record.id);
+    setDraft(next);
+    setSelectedIds(next.costs.filter((cost) => importTouched(cost, record.id)).map((cost) => cost.cost_id));
+  }
   async function startPreview() {
-    ++connectionEpoch.current;
-    const api = createPreviewClient();
+    const epoch = ++connectionEpoch.current;
+    const api = createPreviewClient("missing");
+    setPreviewScenario("missing");
     setError("");
+    setDashboard(false);
     setPreview(true);
     setClient(api);
-    await refresh(api);
+    try {
+      await refresh(api, () => epoch === connectionEpoch.current, false);
+    } catch (reason) {
+      setError(issueText(reason));
+      return false;
+    }
+    if (epoch !== connectionEpoch.current) return false;
     setMaterial(structuredClone(previewImport));
     setSelectedIds(previewImport.result.proposed_draft?.costs
       .filter((cost) => cost.source_refs?.includes(previewImport.id))
@@ -318,11 +377,31 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
     setBudget(structuredClone(previewBudget));
     setFunding(structuredClone(previewFunding));
     setQuoteId("preview-quote");
-    setNotice("Synthetic preview loaded. No Django account or live financial data is connected.");
+    setNotice(t("jr.notice.previewLoaded"));
+    return true;
+  }
+  async function showPreviewScenario(scenario: PreviewScenario) {
+    if (!preview) return;
+    const api = createPreviewClient(scenario);
+    const epoch = connectionEpoch.current;
+    setBusy(true);
+    setError("");
+    try {
+      await refresh(api, () => epoch === connectionEpoch.current, false);
+      if (epoch !== connectionEpoch.current) return;
+      focusCostRef.current = "preview-food";
+      setClient(api);
+      setPreviewScenario(scenario);
+    } catch (reason) {
+      setError(issueText(reason));
+    } finally {
+      setBusy(false);
+    }
   }
   function leavePreview() {
     ++connectionEpoch.current;
     setPreview(false);
+    setShowConnect(true);
     setClient(null);
     setState(null);
     setSemester(null);
@@ -340,6 +419,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
     setSavedFunding(null);
     setQuoteId("");
     setUnsavedDraft(null);
+    savedDraft.current = null;
     keys.current.clear();
     setError("");
     setNotice("");
@@ -347,35 +427,33 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
   async function createSemester() {
     if (!client) return;
     await act(async () => {
-      const template = templates.find((x) => x.key === selectedTemplate);
+      const template = templates.find((x) => templateId(x) === selectedTemplate);
       const body = {
-        template_key: selectedTemplate,
+        template_key: template?.key,
         template_version: template?.version,
-        room: selectedTemplate.endsWith("single") ? "single" : "shared",
+        room: template?.key.endsWith("single") ? "single" : "shared",
         opening_balance: openingBalance,
         as_of: asOf,
         reserve: reserve || null,
       };
       await send(client, "readiness/semesters/", body);
-      await refresh();
+      await refresh(client, undefined, false);
       setUnsavedDraft(null);
-      setNotice("Semester created. Review its template and missing costs.");
+      setNotice(t("jr.notice.semesterCreated"));
     });
   }
   async function uploadMaterial() {
     if (!client || !state || !upload) return;
+    const kind = uploadKind(upload);
+    if (!kind) {
+      setError(t("jr.err.uploadKind"));
+      return;
+    }
     await act(async () => {
       const form = new FormData();
       for (const [key, value] of Object.entries(versions()))
         if (value !== undefined) form.append(key, String(value));
-      form.append(
-        "kind",
-        upload.type.startsWith("image/")
-          ? "image"
-          : upload.type === "application/pdf"
-            ? "pdf"
-            : "text",
-      );
+      form.append("kind", kind);
       form.append("language", ocrLanguage);
       if (ocrConsent && ocrNotice) {
         form.append("ocr_consent", "true");
@@ -389,9 +467,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
       );
       setMaterial(response);
       setOcrConsent(false);
-      setNotice(
-        "Upload queued. Refresh its status after the worker processes it.",
-      );
+      setNotice(t("jr.notice.uploadQueued"));
     });
   }
   async function refreshImport() {
@@ -401,14 +477,8 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
         `readiness/imports/${material.id}/`,
       );
       setMaterial(next);
-      if (next.status === "NEEDS_REVIEW" && next.result.proposed_draft) {
-        setDraft(structuredClone(next.result.proposed_draft));
-        setSelectedIds(
-          next.result.proposed_draft.costs
-            .filter((c) => c.source_refs?.includes(next.id) || c.conflict)
-            .map((c) => c.cost_id),
-        );
-      }
+      const base = draft ?? savedDraft.current?.draft;
+      if (base) loadProposal(next, base);
     });
   }
   async function transcribeMaterial() {
@@ -420,26 +490,32 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
         { ...versions(), text: transcription },
       );
       setMaterial(next);
-      setNotice("Manual transcription queued for extraction.");
+      setNotice(t("jr.notice.transcriptionQueued"));
     });
   }
   async function confirmImport() {
     if (!client || !material || !draft || !state) return;
     if (!issuer.trim() || selectedIds.length === 0) {
-      setError("Enter the issuer and select at least one extracted cost.");
+      setError(t("jr.err.issuer"));
       return;
     }
+    const relevant = new Set([...selectedIds, ...Object.keys(conflicts)]);
+    const conflictResolutions = Object.fromEntries(
+      Object.entries(resolutions)
+        .map(([id, reason]) => [id, reason.trim()])
+        .filter(([id, reason]) => relevant.has(id) && reason),
+    );
     await act(async () => {
       await send(client, `readiness/imports/${material.id}/confirm/`, {
         ...versions(),
         draft,
         issuer,
         selected_cost_ids: selectedIds,
-        conflict_resolutions: resolutions,
+        conflict_resolutions: conflictResolutions,
       });
-      await refresh();
+      await refresh(client, undefined, false);
       setMaterial(null);
-      setNotice("Your document review was saved.");
+      setNotice(t("jr.notice.reviewSaved"));
     });
   }
   async function saveDraft() {
@@ -449,9 +525,9 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
         ...versions(),
         draft,
       });
-      await refresh();
+      await refresh(client, undefined, false);
       setUnsavedDraft(null);
-      setNotice("Your expense changes were saved.");
+      setNotice(t("jr.notice.expensesSaved"));
     });
   }
   async function calculateBudget() {
@@ -463,7 +539,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
         versions(),
       );
       setBudget(result);
-      setNotice("Your budget results are ready.");
+      setNotice(t("jr.notice.budgetReady"));
     });
   }
   async function updateCalendar() {
@@ -475,7 +551,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
         { ...versions(), horizon: 90, conditional: false },
       );
       setForecast(result);
-      setNotice("Your payment calendar is ready.");
+      setNotice(t("jr.notice.calendarReady"));
     });
   }
   async function recommend() {
@@ -487,7 +563,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
         { ...versions(), allocations: [], actions: [] },
       );
       setFunding(result);
-      setNotice("Your funding options are ready.");
+      setNotice(t("jr.notice.fundingReady"));
     });
   }
   async function saveFundingPlan() {
@@ -503,7 +579,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
         },
       );
       setSavedFunding(result);
-      setNotice("Your funding choices were reviewed.");
+      setNotice(t("jr.notice.fundingReviewed"));
     });
   }
   async function addSource() {
@@ -522,7 +598,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
       });
       await refresh();
       sourceIdentity.current = {fingerprint: "", key: ""};
-      setNotice("Funding source recorded; it is not received money.");
+      setNotice(t("jr.notice.sourceRecorded"));
     });
   }
   async function addQuote() {
@@ -538,7 +614,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
       });
       setQuoteId(quote.id);
       await refresh();
-      setNotice("Your loan quote is ready. Review the repayment schedule before applying.");
+      setNotice(t("jr.notice.quoteReady"));
     });
   }
   async function createApplication() {
@@ -547,9 +623,10 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
       const result = await send<Application>(client, "applications/", {
         quote_id: quoteId,
       });
+      focusApplicationStatusRef.current = true;
       setApplication(result);
       await refresh();
-      setNotice("Simulated application draft created.");
+      setNotice(t("jr.notice.applicationCreated"));
     });
   }
   async function submitApplication() {
@@ -560,9 +637,10 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
         `applications/${application.id}/action/`,
         { expected_version: application.version, action: "submit" },
       );
+      focusApplicationStatusRef.current = true;
       setApplication(result);
       await refresh();
-      setNotice("Your application status was updated.");
+      setNotice(t("jr.notice.applicationUpdated"));
     });
   }
   async function saveProfile() {
@@ -570,16 +648,14 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
     await act(async () => {
       const result = await send<{
         version: number;
-        months: typeof profileMonths;
+        months: Array<Omit<(typeof profileMonths)[number], "rowKey">>;
       }>(client, "affordability-profile/", {
         expected_version: profileVersion,
-        months: profileMonths,
+        months: profileMonths.map(({ rowKey: _rowKey, ...row }) => row),
       });
       setProfileVersion(result.version);
       await refresh();
-      setNotice(
-        "Your monthly profile was saved for application review.",
-      );
+      setNotice(t("jr.notice.profileSaved"));
     });
   }
   async function reloadApplication() {
@@ -634,30 +710,38 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
       ],
     });
   }
-  const conflicts = { ...(material?.result.merge_conflicts ?? {}) };
-  if (material?.status === "NEEDS_REVIEW" && draft && semester) {
-    for (const cost of draft.costs) {
-      const saved = semester.draft.costs.find((row) => row.cost_id === cost.cost_id);
-      if (selectedIds.includes(cost.cost_id) && saved &&
-          ["amount", "currency", "beneficiary_id"].some((field) => saved[field] !== cost[field])) {
-        conflicts[cost.cost_id] ??= "Explain your reviewed correction to the saved document cost.";
-      }
-    }
-  }
+  const conflicts = material?.result.merge_conflicts ?? {};
   const formDraft = draft ?? semester?.draft;
+  const missingCostCount = formDraft?.costs.filter((cost) => cost.amount == null && cost.applicability !== "NOT_APPLICABLE").length ?? 0;
+  const budgetData = budget?.result ?? state?.budget ?? null;
+  const nextScheduledCost = resultFresh(forecast, state) ? forecast?.result.timeline.find((event) => event.kind === "expense") : null;
   const nextAction = !state
-    ? "Connect to a saved semester or open the synthetic preview."
+    ? t("jr.next.connect")
     : step === 0
-      ? material?.status === "NEEDS_REVIEW" ? "Review the document evidence and confirm your choices." : "Check admission details and upload a document when available."
+      ? material?.status === "NEEDS_REVIEW" ? t("jr.next.reviewEvidence") : t("jr.next.checkAdmission")
       : step === 1
-        ? formDraft?.costs.some((cost) => cost.applicability !== "NOT_APPLICABLE" && cost.amount == null)
-          ? "Review costs with missing amounts, then save your expense revisions."
-          : "Review the expense dates and save your revisions."
+        ? preview ? previewScenario === "missing" ? t("jr.next.previewFindFood") : t("jr.next.previewFoodEstimated") : formDraft?.costs.some((cost) => cost.applicability !== "NOT_APPLICABLE" && cost.amount == null)
+          ? t("jr.next.missingAmounts")
+          : t("jr.next.expenseDates")
         : step === 2
-          ? budget && !resultFresh(budget, state) ? "Update the budget after your latest changes." : "Review B’s issues and the payment calendar."
+          ? preview ? previewScenario === "missing" ? t("jr.next.previewBudgetFind") : t("jr.next.previewBudgetEstimated") : budget && !resultFresh(budget, state) ? t("jr.next.updateBudget") : t("jr.next.reviewBudget")
           : step === 3
-            ? !funding || !resultFresh(funding, state) ? "Request an updated funding recommendation." : "Review conditions and compare the loan quotes."
-            : application ? explainCode(application.status) : "Select a quote, then create a simulated application draft.";
+            ? !funding || !resultFresh(funding, state) ? t("jr.next.requestFunding") : t("jr.next.compareQuotes")
+            : application ? explainCode(application.status, lang) : t("jr.next.selectQuote");
+  const paymentCalendar = <PaymentCalendar
+    forecast={forecast}
+    current={resultFresh(forecast, state)}
+    costs={formDraft?.costs ?? []}
+    sources={sources}
+    busy={busy || preview || dirty}
+    preview={preview}
+    onUpdate={updateCalendar}
+  />;
+  if (dashboardPreview) return <DashboardPreview onExit={() => setDashboardPreview(false)} onJourney={(target) => {
+    setDashboardPreview(false);
+    if (!preview) void startPreview().then((started) => { if (started) setStep(target); });
+    else setStep(target);
+  }} />;
   return (
     <div className={`app connected ${preview ? "preview-mode" : ""}`}>
       <aside>
@@ -672,142 +756,155 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
           <span className="brand-icon">S</span>StudyFlow
           <span className="brand-dot">.</span>
         </a>
-        <div className="journey-label">YOUR STUDY PLAN</div>
+        {client && <div className="journey-label">{t("jr.journeyLabel")}</div>}
+        {client && <>
         <button className="mobile-step-toggle secondary" aria-expanded={showSteps} aria-controls="connected-steps" onClick={() => setShowSteps(!showSteps)}>
-          Step {step + 1} of 5 · {steps[step]} <span aria-hidden="true">{showSteps ? "−" : "+"}</span>
+          {dashboard ? t("jr.dashboard") : t("jr.stepOf", { n: step + 1, name: steps[step] })} <span aria-hidden="true">{showSteps ? "−" : "+"}</span>
         </button>
-        <nav id="connected-steps" className={showSteps ? "steps-open" : ""} aria-label="Study planning steps">
+        <nav id="connected-steps" className={showSteps ? "steps-open" : ""} aria-label={t("jr.stepsNav")}>
+          {!preview && <button className={dashboard ? "active" : ""} aria-current={dashboard ? "page" : undefined} onClick={()=>{setDashboard(true);setShowSteps(false);}}>{t("jr.dashboard")}</button>}
           {steps.map((name, i) => (
             <button
               key={name}
-              className={step === i ? "active" : ""}
-              aria-current={step === i ? "step" : undefined}
+              className={!dashboard && step === i ? "active" : ""}
+              aria-current={!dashboard && step === i ? "step" : undefined}
               disabled={!state && i > 0}
-              onClick={() => { setStep(i); setShowSteps(false); }}
+              onClick={() => { setDashboard(false); setStep(i); setShowSteps(false); }}
             >
               <span className="step-number">0{i + 1}</span>
               {name}
             </button>
           ))}
         </nav>
-        <div className="sidebar-note">
-          <strong>Your study plan</strong>
-          <p>Review each step at your own pace. Your saved information is available when you return.</p>
-        </div>
-        <button className="secondary" onClick={onDemo}>
-          View synthetic demo
-        </button>
-        {preview && <button className="secondary" onClick={leavePreview}>Connect to Django instead</button>}
+        </>}
+        {!client && <div className="sidebar-note"><strong>{t("jr.side.title")}</strong><p>{t("jr.side.text")}</p></div>}
+        {client && <details className="student-more-menu"><summary>{t("jr.more")}</summary><div>
+        {client && <button className="secondary student-side-action" onClick={onDemo}>
+          {t("jr.viewDemo")}
+        </button>}
+        {preview && <button className="secondary dashboard-entry student-side-action" onClick={() => setDashboardPreview(true)}>{t("jr.previewDashboard")}</button>}
+        {client && <button className="secondary dashboard-entry student-side-action" onClick={() => onWallet(preview)}>{preview ? t("jr.previewWallet") : t("wallet.title")}</button>}
+        {client && <button className="secondary dashboard-entry student-side-action" onClick={() => onAgent(preview)}>{t(preview ? "nav.agentPreview" : "nav.agent")}</button>}
+        {client && <button className="secondary dashboard-entry student-side-action" onClick={() => onTrust(preview)}>{t(preview ? "nav.trustPreview" : "nav.trust")}</button>}
+        {preview && <button className="secondary student-side-action" onClick={leavePreview}>{t("jr.connectInstead")}</button>}
+        </div></details>}
       </aside>
       <div className="workspace">
         <header>
-          <span>StudyFlow / {steps[step]}</span>
-          <span className="avatar" aria-label={session?.username ?? "Student"}>{session?.username?.slice(0, 2).toUpperCase() ?? "ST"}</span>
+          <span>StudyFlow / {dashboard ? t("jr.dashboard") : client ? steps[step] : t("jr.welcome")}</span>
+          <span className="avatar">ST</span>
         </header>
         <main>
-          <div className="section-heading">
+          {dashboard && client && !preview ? <LiveDashboard api={client as DjangoClient} dirty={dirty} onJourney={(index)=>{setDashboard(false);setStep(index);}}/> : <>
+          {client && <div className="section-heading">
             <div>
-              <span className="eyebrow">STEP 0{step + 1} / 05</span>
-              <h1>{steps[step]}</h1>
-              <p>{stepHelp[step]}</p>
+              <span className="eyebrow">{t("demo.stepOf", { n: `0${step + 1}` })}</span>
+              <h1 id="connected-step-title" tabIndex={-1}>{steps[step]}</h1>
+              <p>{preview ? previewStepHelp[step] : stepHelp[step]}</p>
             </div>
-          </div>
-          {preview && <div className="preview-banner" role="status"><strong>UI preview · synthetic data</strong><span>Explore all five connected screens without a token. Preview data cannot be saved, and calculation actions are disabled. Nothing is sent to Django.</span></div>}
+          </div>}
+          {client && <div className="student-progress" aria-label={t("jr.progressLabel", { n: step + 1, name: steps[step] })}><div><span>{preview ? t("jr.tourPosition") : t("jr.currentStep")}</span><strong>{t("jr.stepOf", { n: step + 1, name: steps[step] })}</strong></div><div className="student-progress-track" aria-hidden="true"><span style={{ width: `${(step + 1) * 20}%` }}/></div></div>}
+          {preview && <section className="preview-banner" aria-label={t("jr.tour.label")}><div><strong>{t("jr.tour.title")}</strong><p>{previewScenario === "estimated" ? t("jr.tour.estimated") : t("jr.tour.exploring")} {t("jr.tour.nothingSaved")}</p><p>{t(`jr.tour.connect.${step}` as MessageKey)}</p></div><button className="secondary" onClick={leavePreview}>{t("jr.useMine")}</button></section>}
           {error && (
             <div className="stale-banner" role="alert">
               {error}
-              {!!errorDetails && <details><summary>View backend response</summary><pre className="backend-json">{JSON.stringify(errorDetails, null, 2)}</pre></details>}
-              {unsavedDraft && (
-                <button
-                  className="secondary"
-                  onClick={() => {
-                    setDraft(unsavedDraft);
-                    setUnsavedDraft(null);
-                    setError(
-                      "Restored local edits on top of the latest version. Review every value before saving.",
-                    );
-                  }}
-                >
-                  Restore my unsaved edits
-                </button>
-              )}
+              {!!errorDetails && <details><summary>{t("jr.viewBackendResponse")}</summary><pre className="backend-json">{JSON.stringify(errorDetails,null,2)}</pre></details>}
             </div>
           )}
-          {notice && (
+          {unsavedDraft && (
+            <div className="stale-banner" role="status">
+              {t("jr.unsaved.text")}
+              <button
+                className="secondary"
+                onClick={() => {
+                  setDraft(unsavedDraft);
+                  setUnsavedDraft(null);
+                  setError("");
+                  setNotice(t("jr.unsaved.restored"));
+                }}
+              >
+                {t("jr.unsaved.restore")}
+              </button>
+              <button className="secondary" onClick={() => setUnsavedDraft(null)}>{t("jr.unsaved.keep")}</button>
+            </div>
+          )}
+          {notice && (!preview || notice !== t("jr.notice.previewLoaded")) && (
             <div className="demo" role="status">
               <span aria-hidden="true">✓</span> {notice}
             </div>
           )}
-          {client && <div className="next-action"><strong>What to do next</strong><span>{nextAction}</span></div>}
-          {busy && <div className="activity" role="status"><span className="activity-dot" aria-hidden="true"/> Working on your request…</div>}
+          {client && !preview && <div className="next-action"><strong>{t("jr.nextStep")}</strong><span>{nextAction}</span></div>}
+          {busy && <div className="activity" role="status"><span className="activity-dot" aria-hidden="true"/> {t("jr.working")}</div>}
           {!client ? (
-            <section className="card backend-section">
-              <h2>Start your study plan</h2>
-              <p>Connect your student account to review saved admission information, expenses, and results.</p>
-              <div className="setup-details">
-                <p>Sign in with your StudyFlow account to restore your saved progress.</p>
-                <a className="primary" href={`/api/auth/login/?next=${encodeURIComponent(window.location.origin + "/")}`}>Sign in to StudyFlow</a>
-                <button className="secondary" disabled={busy} onClick={connect}>Refresh sign-in session</button>
-              </div>
-              <div className="preview-prompt"><span>Just looking around?</span><button className="secondary" onClick={startPreview}>Preview connected pages</button><button className="secondary" onClick={onDemo}>Explore the original demo</button></div>
-            </section>
+            <div className="student-start">
+              <section className="student-welcome" aria-labelledby="welcome-title">
+                <span className="eyebrow">{t("jr.welcome.eyebrow")}</span>
+                <h1 id="welcome-title">{t("jr.welcome.title")}</h1>
+                <p>{t("jr.welcome.text")}</p>
+                <div className="student-welcome-actions"><button className="primary" onClick={() => setDashboardPreview(true)}>{t("jr.welcome.previewDashboard")} <span aria-hidden="true">→</span></button><button className="secondary" onClick={() => void startPreview()}>{t("jr.welcome.explore")}</button></div>
+                <small>{t("jr.welcome.sample")}</small>
+              </section>
+              <section className="student-start-grid" aria-label={t("jr.how.label")}>
+                <article><span aria-hidden="true">01</span><h2>{t("jr.how.1.title")}</h2><p>{t("jr.how.1.text")}</p></article>
+                <article><span aria-hidden="true">02</span><h2>{t("jr.how.2.title")}</h2><p>{t("jr.how.2.text")}</p></article>
+                <article><span aria-hidden="true">03</span><h2>{t("jr.how.3.title")}</h2><p>{t("jr.how.3.text")}</p></article>
+              </section>
+              <section className="student-developer-tools" id="student-sign-in"><h2>{t("jr.connect.title")}</h2><p>{t("jr.connect.text")}</p><a ref={connectInputRef} className="primary" href={`/api/auth/login/?next=${encodeURIComponent(window.location.origin+"/")}`}>{t("common.signIn")}</a><button className="secondary" disabled={busy} onClick={connect}>{t("jr.connect.refresh")}</button><div className="student-tool-links"><button className="secondary" onClick={()=>onWallet(true)}>{t("jr.previewWallet")}</button><button className="secondary" onClick={()=>onAgent(true)}>{t("nav.agentPreview")}</button><button className="secondary" onClick={()=>onTrust(true)}>{t("nav.trustPreview")}</button><button className="secondary" onClick={onDemo}>{t("jr.connect.originalDemo")}</button></div></section>
+            </div>
           ) : (
             <>
-              <div className="backend-toolbar">
+              {!preview && <div className="backend-toolbar">
                 <span>
                   {state
-                    ? `Saved semester · ${semester?.draft.profile.semester || state.semester_id}`
-                    : "No semester started yet"}
+                    ? t("jr.toolbar.saved", { name: String(semester?.draft.profile.semester || state.semester_id) })
+                    : t("jr.toolbar.none")}
                 </span>
-                {!preview && <a className="secondary" href={`/api/auth/login/?next=${encodeURIComponent(window.location.origin + "/")}`}>Account sign-in</a>}
                 <button
                   className="secondary"
                   disabled={preview || busy}
                   onClick={() => act(() => refresh())}
                 >
-                  Refresh saved information
+                  {t("jr.toolbar.refresh")}
                 </button>
-              </div>
+              </div>}
               {!state ? (
                 <section className="card backend-section">
-                  <h2>Create a semester</h2>
+                  <h2>{t("jr.create.title")}</h2>
                   <p>
-                    The template supplies school costs and required categories.
-                    Enter a real planning balance and reserve; blank reserve
-                    stays unknown.
+                    {t("jr.create.text")}
                   </p>
                   <label>
-                    Template
-                    <select disabled={preview}
+                    {t("jr.create.template")}
+                    <select
                       value={selectedTemplate}
                       onChange={(e) => setSelectedTemplate(e.target.value)}
                     >
                       {templates.map((t) => (
-                        <option key={t.key} value={t.key}>
+                        <option key={templateId(t)} value={templateId(t)}>
                           {t.key} · v{t.version}
                         </option>
                       ))}
                     </select>
                   </label>
                   <label>
-                    Opening balance (THB)
-                    <input disabled={preview}
+                    {t("jr.create.opening")}
+                    <input
                       value={openingBalance}
                       onChange={(e) => setOpeningBalance(e.target.value)}
                       inputMode="decimal"
                     />
                   </label>
                   <label>
-                    Balance as of
-                    <input disabled={preview}
+                    {t("jr.create.asOf")}
+                    <input
                       type="date"
                       value={asOf}
                       onChange={(e) => setAsOf(e.target.value)}
                     />
                   </label>
                   <label>
-                    Reserve (THB; optional until confirmed)
-                    <input disabled={preview}
+                    {t("jr.create.reserve")}
+                    <input
                       value={reserve}
                       onChange={(e) => setReserve(e.target.value)}
                       inputMode="decimal"
@@ -818,19 +915,19 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                     disabled={preview || busy || !openingBalance || !asOf}
                     onClick={createSemester}
                   >
-                    Create semester
+                    {t("jr.create.submit")}
                   </button>
                 </section>
               ) : (
                 <>
                   {step === 0 && (
-                    <>
+                    preview && formDraft ? <PreviewConfirmation draft={formDraft} material={material} onContinue={() => setStep(1)} /> : <fieldset className="preview-form-lock">
                       <section className="card backend-section">
-                        <h2>Admission information</h2>
+                        <h2>{t("jr.profile.title")}</h2>
                         <p>
-                          Current saved profile. Extracted evidence and
-                          conflicts appear after an upload.
+                          {t("jr.profile.text")}
                         </p>
+                        {material?.status === "NEEDS_REVIEW" && <div className="expense-intro"><strong>{t("jr.profile.readyTitle")}</strong><span>{t("jr.profile.readyText")}</span></div>}
                         <div className="backend-fields">{formDraft &&
                           [
                             "school",
@@ -843,8 +940,8 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                             "end_date",
                           ].map((field) => (
                             <label key={field}>
-                              {field.replaceAll("_", " ")}
-                              <input disabled={preview}
+                              {t(`jr.field.${field}` as MessageKey)}
+                              <input
                                 value={String(formDraft.profile[field] ?? "")}
                                 onChange={(e) =>
                                   editProfile(field, e.target.value)
@@ -854,21 +951,20 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                           ))}</div>
                         <button
                           className="secondary"
-                          disabled={preview || busy || material?.status === "NEEDS_REVIEW"}
+                          disabled={preview || busy}
                           onClick={saveDraft}
                         >
-                          Save profile corrections
+                          {t("jr.profile.save")}
                         </button>
                       </section>
                       <section className="card backend-section">
-                        <h2>Upload admission material</h2>
+                        <h2>{t("jr.upload.title")}</h2>
                         <p>
-                          Use UTF-8 text, a text PDF, or an image if OCR is
-                          enabled. Maximum 5 MiB. Processing is asynchronous.
+                          {t("jr.upload.text")}
                         </p>
-                        <input disabled={preview}
+                        <input
                           type="file"
-                          aria-label="Admission document"
+                          aria-label={t("jr.upload.document")}
                           accept=".txt,.pdf,.png,.jpg,.jpeg"
                           onChange={(e) => {
                             setUpload(e.target.files?.[0] ?? null);
@@ -881,41 +977,37 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                           ocrNotice && (
                             <div className="backend-review">
                               <p>
-                                OCR available:{" "}
-                                {String(
+                                {t("jr.upload.ocr", { available: String(
                                   ocrNotice.enabled &&
                                     ocrNotice.configured &&
                                     ocrNotice.policy_configured,
-                                )}
-                                . Text PDFs can use their text layer without
-                                OCR.
+                                ) })}
                               </p>
                               <p>{ocrNotice.text_en}</p>
                               <label>
-                                Language
-                                <select disabled={preview}
+                                {t("jr.upload.language")}
+                                <select
                                   value={ocrLanguage}
                                   onChange={(e) =>
                                     setOcrLanguage(e.target.value)
                                   }
                                 >
                                   <option value="zh-en">
-                                    Chinese and English
+                                    {t("jr.upload.zhEn")}
                                   </option>
-                                  <option value="en">English</option>
-                                  <option value="zh">Chinese</option>
+                                  <option value="en">{t("jr.upload.en")}</option>
+                                  <option value="zh">{t("jr.upload.zh")}</option>
                                 </select>
                               </label>
                               <label className="check">
-                                <input disabled={preview}
+                                <input
                                   type="checkbox"
                                   checked={ocrConsent}
                                   onChange={(e) =>
                                     setOcrConsent(e.target.checked)
                                   }
                                 />
-                                I agree to OCR for this file if its pages need
-                                transcription.
+                                {t("jr.upload.consent")}
                               </label>
                             </div>
                           )}
@@ -924,13 +1016,13 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                           disabled={preview || busy || !upload}
                           onClick={uploadMaterial}
                         >
-                          Upload for extraction
+                          {t("jr.upload.submit")}
                         </button>
                         {material && (
                           <div className="backend-review">
                             <p>
-                              <strong>Status: {material.status}</strong> · Job:{" "}
-                              {material.job_status ?? "not started"}
+                              <strong>{t("jr.upload.status", { status: material.status })}</strong> · {t("jr.upload.job")}{" "}
+                              {material.job_status ?? t("jr.upload.notStarted")}
                               {material.error_code &&
                                 ` · ${material.error_code}`}
                             </p>
@@ -939,28 +1031,28 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                               disabled={preview || busy}
                               onClick={refreshImport}
                             >
-                              Refresh processing status
+                              {t("jr.upload.refresh")}
                             </button>
-                            {material.result.issues?.map((i) => (
-                              <p key={i.code}>{explainCode(i.code)}</p>
+                            {material.result.issues?.map((i, n) => (
+                              <p key={`${i.code}-${n}`}>{explainCode(i.code, lang)}</p>
                             ))}
-                            {!!material.result.issues?.length && <details><summary>View extraction codes</summary>{material.result.issues.map((i) => <p key={i.code}>{i.code}</p>)}</details>}
+                            {!!material.result.issues?.length && <details><summary>{t("jr.upload.codes")}</summary>{material.result.issues.map((i, n) => <p key={`${i.code}-${n}`}>{i.code}</p>)}</details>}
                             {material.status === "NEEDS_MANUAL_INPUT" && (
                               <label>
-                                Manual transcription
-                                <textarea disabled={preview}
+                                {t("jr.upload.manual")}
+                                <textarea
                                   value={transcription}
                                   onChange={(e) =>
                                     setTranscription(e.target.value)
                                   }
-                                  placeholder="Enter the text you reviewed from the document"
+                                  placeholder={t("jr.upload.manualHint")}
                                 />
                                 <button
                                   className="secondary"
                                   disabled={preview || busy || !transcription.trim()}
                                   onClick={transcribeMaterial}
                                 >
-                                  Submit transcription
+                                  {t("jr.upload.manualSubmit")}
                                 </button>
                               </label>
                             )}
@@ -969,14 +1061,12 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                       </section>
                       {material?.status === "NEEDS_REVIEW" && (
                         <section className="card backend-section">
-                        <h2>Review information from your document</h2>
+                        <h2>{t("jr.review.title")}</h2>
                           <p>
-                            The original extraction stays on this import. The
-                            proposed draft below contains any student
-                            corrections.
+                            {t("jr.review.text")}
                           </p>
                           <details className="source-evidence">
-                            <summary>View original extracted values and sources</summary>
+                            <summary>{t("jr.review.original")}</summary>
                           {material.result.draft?.profile.evidence?.map(
                             (ev, i) => (
                               <blockquote key={`profile-${i}`}>
@@ -993,7 +1083,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                               <strong>{c.component ?? c.category}</strong>
                               <span>
                                 {money(c.amount, c.currency ?? "THB")} ·{" "}
-                                {c.due_date ?? "date missing"}
+                                {c.due_date ?? t("jr.dateMissing")}
                               </span>
                               <span>{c.confidence_type ?? "UNCONFIRMED"}</span>
                               {c.evidence?.map((ev, i) => (
@@ -1010,24 +1100,23 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                           </details>
                           {Object.entries(conflicts).map(([field, value]) => (
                             <label key={field}>
-                              Resolve conflict: {field}
-                              <small>{JSON.stringify(value)}</small>
-                              <input disabled={preview}
-                                value={resolutions[field] ?? ""}
+                              {t("jr.review.disagree", { field: field.replace(/^profile\./, "").replaceAll("_", " ") })}
+                              <small>{t("jr.review.values", { values: Array.isArray(value) ? value.join(" · ") : JSON.stringify(value) })}</small>
+                              <input
+                                aria-label={`Resolve conflict: ${field}`} value={resolutions[field] ?? ""}
                                 onChange={(e) =>
                                   setResolutions({
                                     ...resolutions,
                                     [field]: e.target.value,
                                   })
                                 }
-                                placeholder="Explain the selected value and source"
+                                placeholder={t("jr.review.explain")}
                               />
                             </label>
                           ))}
-                          <h3>Correct proposed values</h3>
+                          <h3>{t("jr.review.suggested")}</h3>
                           <p>
-                            These edits change the proposed draft only. The
-                            original extraction and evidence remain above.
+                            {t("jr.review.suggestedText")}
                           </p>
                           {formDraft?.costs
                             .filter(
@@ -1041,12 +1130,12 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                                 key={`proposed-${c.cost_id}`}
                               >
                                 <strong>
-                                  {c.component ?? c.category} · {c.cost_id}
+                                  {c.component ?? c.category}
                                 </strong>
                                 <div className="backend-fields">
                                   <label>
-                                    Proposed amount
-                                    <input disabled={preview}
+                                    {t("jr.review.proposedAmount")}
+                                    <input
                                       aria-label={`${c.cost_id} proposed amount`}
                                       value={c.amount ?? ""}
                                       onChange={(e) =>
@@ -1054,12 +1143,12 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                                           amount: e.target.value || null,
                                         })
                                       }
-                                      placeholder="Missing"
+                                      placeholder={t("jr.missing")}
                                     />
                                   </label>
                                   <label>
-                                    Currency
-                                    <input disabled={preview}
+                                    {t("jr.currency")}
+                                    <input
                                       value={c.currency ?? ""}
                                       onChange={(e) =>
                                         editCost(c.cost_id, {
@@ -1071,14 +1160,14 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                                     />
                                   </label>
                                   <label>
-                                    Payment status
+                                    {t("jr.paymentStatus")}
                                     <select disabled={preview} aria-label={`${c.cost_id} proposed payment status`} value={c.paid == null ? "" : String(c.paid)} onChange={(e) => editCost(c.cost_id, {paid: e.target.value === "" ? null : e.target.value === "true"})}>
-                                      <option value="">Unknown</option><option value="false">Unpaid</option><option value="true">Paid</option>
+                                      <option value="">{t("jr.paid.unknown")}</option><option value="false">{t("jr.paid.false")}</option><option value="true">{t("jr.paid.true")}</option>
                                     </select>
                                   </label>
                                   <label>
-                                    Due date
-                                    <input disabled={preview}
+                                    {t("jr.dueDate")}
+                                    <input aria-label={`${c.cost_id} proposed due date`}
                                       type="date"
                                       value={c.due_date ?? ""}
                                       onChange={(e) =>
@@ -1100,11 +1189,9 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                                 ))}
                               </div>
                             ))}
-                          <h3>Select merged costs to confirm</h3>
+                          <h3>{t("jr.review.choose")}</h3>
                           <p>
-                            Extraction candidate IDs may differ from saved
-                            semester cost IDs. Only costs in the merged draft
-                            can be confirmed.
+                            {t("jr.review.chooseText")}
                           </p>
                           {material.result.proposed_draft?.costs
                             .filter(
@@ -1114,7 +1201,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                             )
                             .map((c) => (
                               <label className="check" key={c.cost_id}>
-                                <input disabled={preview}
+                                <input
                                   type="checkbox"
                                   checked={selectedIds.includes(c.cost_id)}
                                   onChange={(e) =>
@@ -1127,31 +1214,30 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                                     )
                                   }
                                 />
-                                {c.component ?? c.category} · {c.cost_id}
+                                {c.component ?? c.category}
                               </label>
                             ))}
                           {material.result.proposed_draft?.costs
                             .filter((c) => selectedIds.includes(c.cost_id))
                             .map((c) => (
                               <label key={`reason-${c.cost_id}`}>
-                                Review reason for {c.component ?? c.category} (
-                                {c.cost_id})
-                                <input disabled={preview}
-                                  value={resolutions[c.cost_id] ?? ""}
+                                {t("jr.review.why", { name: String(c.component ?? c.category) })}
+                                <input
+                                  aria-label={c.conflict ? `Resolve conflict: ${c.cost_id}` : `review reason for ${c.cost_id}`} value={resolutions[c.cost_id] ?? ""}
                                   onChange={(e) =>
                                     setResolutions({
                                       ...resolutions,
                                       [c.cost_id]: e.target.value,
                                     })
                                   }
-                                  placeholder="Explain the selected cost and evidence"
+                                  placeholder={t("jr.review.whyHint")}
                                 />
                               </label>
                             ))}
                           <label>
-                            Document issuer
-                            <input disabled={preview}
-                              value={issuer}
+                            {t("jr.review.issuer")}
+                            <input
+                              aria-label={t("jr.review.issuerAria")} value={issuer}
                               onChange={(e) => setIssuer(e.target.value)}
                             />
                           </label>
@@ -1160,44 +1246,33 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                             disabled={preview || busy}
                             onClick={confirmImport}
                           >
-                            Confirm selected information
+                            {t("jr.review.confirm")}
                           </button>
                         </section>
                       )}
-                    </>
+                    </fieldset>
                   )}
                   {step === 1 && formDraft && (
                     <section className="card backend-section">
-                      <h2>Semester expenses</h2>
+                      <h2>{t("jr.exp.title")}</h2>
                       <p>
-                        Backend required categories:{" "}
-                        {formDraft.required_categories?.join(", ") ||
-                          "not supplied"}
-                        . Unknown amounts remain blank. Verified costs require a
-                        new import to change.
+                        {t("jr.exp.text")}
                       </p>
-                      <label>Reserve (THB)<input disabled={preview} aria-label="Saved reserve (THB)" inputMode="decimal" value={formDraft.reserve ?? ""} onChange={(e) => setDraft({...formDraft, reserve: e.target.value || null})}/></label>
-                      {formDraft.costs.map((c) => (
-                        <article className="backend-cost" key={c.cost_id}>
-                          <div className="backend-row">
-                            <strong>
-                              {c.component ?? c.category} · {c.cost_id}
-                            </strong>
-                            <span>
-                              {c.confidence_type ?? "UNCONFIRMED"} ·{" "}
-                              {c.source_refs?.length
-                                ? "document extraction"
-                                : c.synthetic
-                                  ? "template/demo"
-                                  : "student entry"}
-                            </span>
-                          </div>
+                      <label>{t("jr.exp.reserve")}<input disabled={preview} aria-label={t("jr.exp.reserveAria")} inputMode="decimal" value={formDraft.reserve ?? ""} onChange={(e) => setDraft({...formDraft, reserve: e.target.value || null})}/></label>
+                      <div className="expense-intro"><strong>{t(missingCostCount === 1 ? "jr.exp.missingOne" : "jr.exp.missingMany", { n: missingCostCount })}</strong><span>{t("jr.exp.required", { list: formDraft.required_categories?.map((x) => categories.includes(x) ? t(`jr.category.${x}` as MessageKey) : x).join(lang === "zh" ? "、" : ", ") || t("jr.notSupplied") })}</span></div>
+                      <h3>{t("jr.exp.review")}</h3>
+                      <p>{preview ? t("jr.exp.reviewPreview") : t("jr.exp.reviewLive")}</p>
+                      {[...formDraft.costs].sort((a, b) => Number(!!b.conflict || b.amount == null && b.applicability !== "NOT_APPLICABLE") - Number(!!a.conflict || a.amount == null && a.applicability !== "NOT_APPLICABLE")).map((c) => (
+                        <article className="backend-cost expense-review-card" key={c.cost_id} id={`cost-${c.cost_id}`} tabIndex={-1}>
+                          <div className="backend-row"><div><strong>{c.component ?? c.category}</strong><small>{c.source_refs?.length ? t("jr.cost.fromDocument") : c.synthetic && c.amount == null ? t("jr.cost.sampleUnknown") : c.synthetic ? t("jr.cost.sampleStart") : t("jr.cost.addedByYou")}</small></div><span className={`status ${c.amount == null && c.applicability !== "NOT_APPLICABLE" ? "missing" : (c.locked || c.confidence_type === "VERIFIED") ? "known" : "estimated"}`}>{c.conflict ? t("jr.cost.conflicting") : c.applicability === "NOT_APPLICABLE" ? t("jr.cost.notApplicable") : c.amount == null ? t("jr.cost.amountUnknown") : (c.locked || c.confidence_type === "VERIFIED") ? t("jr.cost.verified") : c.synthetic ? t("jr.cost.sampleAmount") : c.source_refs?.length ? t("jr.cost.documentValue") : t("jr.cost.addedByYou")}</span></div>
+                          {preview ? <div className="preview-cost-summary">{c.cost_id === "preview-food" && <div className="preview-cost-context"><span>{t("jr.cost.previewContext")}</span><button className="secondary" onClick={() => setStep(2)}>{t("jr.cost.backToBudget")}</button></div>}<strong>{c.amount == null ? t("jr.cost.amountUnknown") : `${money(c.amount, c.currency ?? "THB")} · ${c.period ? t(`jr.period.${c.period}` as MessageKey) : t("jr.cost.periodUnknown")}`}</strong>{c.cost_id === "preview-food" && <button className="primary" disabled={busy} onClick={() => void showPreviewScenario(previewScenario === "missing" ? "estimated" : "missing")}>{previewScenario === "missing" ? t("jr.cost.tryFood") : t("jr.cost.resetFood")}</button>}<small>{c.cost_id === "preview-food" ? t("jr.cost.foodNote") : c.source_refs?.length ? t("jr.cost.sampleDocument") : t("jr.cost.fixedSample")}</small></div> : <details className="cost-details" open={expandedCosts[c.cost_id] ?? (!!c.conflict || c.amount == null && c.applicability !== "NOT_APPLICABLE")} onToggle={(event) => { const open = event.currentTarget.open; setExpandedCosts((previous) => previous[c.cost_id] === open ? previous : { ...previous, [c.cost_id]: open }); }}>
+                            <summary>{c.amount == null ? t("jr.cost.reviewMissing") : t("jr.cost.viewDetails", { amount: money(c.amount, c.currency ?? "THB") })}</summary>
                           <div className="backend-fields">
                             <label>
-                              Category
+                              {t("jr.cost.category")}
                               <select
                                 value={c.category}
-                                disabled={preview || (c.locked || c.confidence_type === "VERIFIED")}
+                                disabled={(c.locked || c.confidence_type === "VERIFIED")}
                                 onChange={(e) =>
                                   editCost(c.cost_id, {
                                     category: e.target.value,
@@ -1205,16 +1280,16 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                                 }
                               >
                                 {categories.map((x) => (
-                                  <option key={x}>{x}</option>
+                                  <option key={x} value={x}>{t(`jr.category.${x}` as MessageKey)}</option>
                                 ))}
                               </select>
                             </label>
                             <label>
-                              Amount
+                              {t("jr.cost.amount")}
                               <input
                                 aria-label={`${c.cost_id} amount`}
                                 value={c.amount ?? ""}
-                                disabled={preview ||
+                                disabled={
                                   (c.locked || c.confidence_type === "VERIFIED") ||
                                   c.applicability === "NOT_APPLICABLE"
                                 }
@@ -1224,14 +1299,14 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                                   })
                                 }
                                 inputMode="decimal"
-                                placeholder="Missing"
+                                placeholder={t("jr.missing")}
                               />
                             </label>
                             <label>
-                              Currency
+                              {t("jr.currency")}
                               <input
                                 value={c.currency ?? ""}
-                                disabled={preview || (c.locked || c.confidence_type === "VERIFIED")}
+                                disabled={(c.locked || c.confidence_type === "VERIFIED")}
                                 onChange={(e) =>
                                   editCost(c.cost_id, {
                                     currency:
@@ -1240,31 +1315,32 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                                 }
                               />
                             </label>
+                            <label>{t("jr.paymentStatus")}<select aria-label={`${c.cost_id} payment status`} disabled={!!c.locked || c.confidence_type==="VERIFIED"} value={c.paid==null?"":String(c.paid)} onChange={e=>editCost(c.cost_id,{paid:e.target.value===""?null:e.target.value==="true"})}><option value="">{t("jr.paid.unknown")}</option><option value="false">{t("jr.paid.false")}</option><option value="true">{t("jr.paid.true")}</option></select></label>
                             <label>
-                              Period
+                              {t("jr.cost.period")}
                               <select
                                 value={c.period ?? ""}
-                                disabled={preview || (c.locked || c.confidence_type === "VERIFIED")}
+                                disabled={(c.locked || c.confidence_type === "VERIFIED")}
                                 onChange={(e) =>
                                   editCost(c.cost_id, {
                                     period: (e.target.value || null) as Cost["period"],
                                   })
                                 }
                               >
-                                <option value="">Unknown</option>
+                                <option value="">{t("jr.paid.unknown")}</option>
                                 {["once", "monthly", "semester", "yearly"].map(
                                   (x) => (
-                                    <option key={x}>{x}</option>
+                                    <option key={x} value={x}>{t(`jr.period.${x}` as MessageKey)}</option>
                                   ),
                                 )}
                               </select>
                             </label>
                             <label>
-                              Due date
+                              {t("jr.dueDate")}
                               <input
                                 type="date"
                                 value={c.due_date ?? ""}
-                                disabled={preview || (c.locked || c.confidence_type === "VERIFIED")}
+                                disabled={(c.locked || c.confidence_type === "VERIFIED")}
                                 onChange={(e) =>
                                   editCost(c.cost_id, {
                                     due_date: e.target.value || null,
@@ -1273,16 +1349,10 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                               />
                             </label>
                             <label>
-                              Payment status
-                              <select aria-label={`${c.cost_id} payment status`} disabled={preview || (c.locked || c.confidence_type === "VERIFIED")} value={c.paid == null ? "" : String(c.paid)} onChange={(e) => editCost(c.cost_id, {paid: e.target.value === "" ? null : e.target.value === "true"})}>
-                                <option value="">Unknown</option><option value="false">Unpaid</option><option value="true">Paid</option>
-                              </select>
-                            </label>
-                            <label>
-                              Applicability
+                              {t("jr.cost.applicability")}
                               <select
                                 value={c.applicability ?? "APPLICABLE"}
-                                disabled={preview || (c.locked || c.confidence_type === "VERIFIED")}
+                                disabled={(c.locked || c.confidence_type === "VERIFIED")}
                                 onChange={(e) =>
                                   editCost(c.cost_id, {
                                     applicability: e.target
@@ -1290,17 +1360,17 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                                   })
                                 }
                               >
-                                <option>APPLICABLE</option>
-                                <option>NOT_APPLICABLE</option>
+                                <option value="APPLICABLE">{t("jr.cost.applicable")}</option>
+                                <option value="NOT_APPLICABLE">{t("jr.cost.notApplicableOption")}</option>
                               </select>
                             </label>
                           </div>
                           {c.applicability === "NOT_APPLICABLE" && (
                             <label>
-                              Reason
+                              {t("jr.cost.notApplicableWhy")}
                               <input
                                 value={c.applicability_reason ?? ""}
-                                disabled={preview || (c.locked || c.confidence_type === "VERIFIED")}
+                                disabled={(c.locked || c.confidence_type === "VERIFIED")}
                                 onChange={(e) =>
                                   editCost(c.cost_id, {
                                     applicability_reason:
@@ -1312,150 +1382,101 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                           )}
                           {c.conflict && (
                             <p className="error">
-                              Conflicting source values need review.
+                              {t("jr.cost.conflictError")}
                             </p>
                           )}
                           {c.amount == null &&
                             c.applicability !== "NOT_APPLICABLE" && (
                               <p className="error">
-                                Amount missing; B will mark the budget
-                                incomplete.
+                                {t("jr.cost.unknownError")}
                               </p>
                             )}
+                          </details>}
                         </article>
                       ))}
-                      <button
+                      {!preview && <><button
                         className="secondary"
-                        disabled={preview || busy}
+                        disabled={busy}
                         onClick={addCost}
                       >
-                        Add expense
+                        {t("jr.exp.add")}
                       </button>
                       <button
                         className="primary"
-                        disabled={preview || busy}
+                        disabled={busy}
                         onClick={saveDraft}
                       >
-                        Save expense revisions
-                      </button>
+                        {t("jr.exp.save")}
+                      </button></>}
                     </section>
                   )}
                   {step === 2 && (
                     <>
-                      <section className="card backend-section">
-                        <h2>Your budget scenarios</h2>
-                        <p>
-                          These figures come from your saved budget result. Request a new result after changing your information.
-                        </p>
-                        <button
-                          className="primary"
-                          disabled={preview || busy || dirty}
-                          onClick={calculateBudget}
-                        >
-                          Update budget results
-                        </button>
+                      <section className="card backend-section result-overview" aria-labelledby="budget-overview-title">
+                        <span className="eyebrow">{t("jr.budget.eyebrow")}</span>
+                        {dirty && !preview && <div className="stale-banner" role="status"><h2>{t("jr.budget.updateNeeded")}</h2><p>{t("jr.budget.saveFirst")}</p></div>}
+                        <h2 id="budget-overview-title">{budgetData ? budget && !resultFresh(budget, state) ? t("jr.budget.titleUpdate") : budgetData.complete ? preview ? t("jr.budget.titlePreviewComplete") : t("jr.budget.titleReady") : t("jr.budget.titleIncomplete") : t("jr.budget.titleFirst")}</h2>
+                        <p>{preview ? t("jr.budget.textPreview") : budgetData ? budgetData.complete ? t("jr.budget.textComplete") : t("jr.budget.textIncomplete") : t("jr.budget.textFirst")}</p>
+                        {preview && budgetData?.complete && Object.keys(material?.result.merge_conflicts ?? {}).length > 0 && <div className="result-attention" role="note"><strong>{t("jr.budget.admissionTitle")}</strong><p>{t("jr.budget.admissionText")}</p></div>}
+                        {budget && !resultFresh(budget, state) && <div className="stale-banner" role="status">{t("jr.budget.changed")}</div>}
+                        {budgetData && <>
+                          <div className="result-highlights"><div><span>{t("jr.budget.gap")}</span><strong>{formatMoney(budgetData.gap, budgetData.currency, lang)}</strong><small>{preview ? budgetData.complete ? t("jr.budget.gapPreviewComplete") : t("jr.budget.gapPreviewIncomplete") : budgetData.complete ? t("jr.budget.gapComplete") : t("jr.budget.gapIncomplete")}</small></div><div><span>{t("jr.budget.nextCost")}</span><strong>{nextScheduledCost ? nextScheduledCost.label : t("jr.budget.checkCalendar")}</strong><small>{nextScheduledCost ? `${formatDate(nextScheduledCost.date, lang)} · ${formatMoney(nextScheduledCost.amount, forecast!.result.currency, lang)}` : t("jr.budget.calendarHint")}</small></div></div>
+                          <details className="result-details student-explainer"><summary>{t("jr.budget.gapQuestion")}</summary><p>{t("jr.budget.gapAnswer")}</p></details>
+                          {budgetData.issues.length > 0 && <div className="result-attention"><strong>{t("jr.budget.beforeRelying")}</strong><ul>{budgetData.issues.map((issue, n) => <li key={`${issue}-${n}`}>{explainCode(issue, lang)}</li>)}</ul></div>}
+                          <details className="result-details"><summary>{t("jr.budget.compare")}</summary><div className="backend-scenarios">{(["low", "base", "high"] as const).map((name) => <div key={name}><span>{t(`jr.scenario.${name}` as MessageKey)}</span><strong>{formatMoney(budgetData[name], budgetData.currency, lang)}</strong></div>)}</div><p>{t("jr.budget.remainingBase", { amount: formatMoney(budgetData.remaining_base, budgetData.currency, lang) })}</p></details>
+                          <details className="result-details"><summary>{t("jr.budget.assumptions")}</summary>{budgetData.assumptions.length ? <ul>{budgetData.assumptions.map((item, index) => <li key={index}>{item}</li>)}</ul> : <p>{t("jr.budget.noAssumptions")}</p>}<p>{t("jr.budget.information", { state: budgetData.complete ? t("jr.budget.complete") : t("jr.budget.incomplete"), gap: budgetData.sufficient ? t("jr.budget.noGap") : t("jr.budget.gapToReview") })}</p>{budgetData.issues.length > 0 && <details><summary>{t("jr.budget.issueCodes")}</summary><ul>{budgetData.issues.map((item) => <li key={item}>{item}</li>)}</ul></details>}</details>
+                        </>}
+                        {!preview && <button className="primary" disabled={busy || dirty} onClick={calculateBudget}>{t("jr.budget.update")}</button>}
                       </section>
-                      {(budget?.result ?? state.budget) && (
-                        <section className="card backend-section">
-                          <div className="backend-row">
-                            <h2>
-                              {dirty || (budget && !resultFresh(budget, state))
-                                ? "Update needed"
-                                : "Current budget"}
-                            </h2>
-                            <span>
-                              Currency:{" "}
-                              {(budget?.result ?? state.budget).currency}
-                            </span>
-                          </div>
-                          {(dirty || (budget && !resultFresh(budget, state))) && (
-                            <p className="error">
-                              Your information changed. Save your edits and update the budget before relying on these figures.
-                            </p>
-                          )}
-                          <div className="backend-scenarios">
-                            {(["low", "base", "high"] as const).map((name) => (
-                              <div key={name}>
-                                <span>{name}</span>
-                                <strong>
-                                  {money(
-                                    (budget?.result ?? state.budget)[name],
-                                  )}
-                                </strong>
-                              </div>
-                            ))}
-                          </div>
-                          <p>Planning funds: {money(state.assets.planning_balance, state.assets.currency)} · Basis: {state.assets.basis.replaceAll("_", " ")} · Reserve: {money(semester?.draft.reserve, state.assets.currency)}</p>
-                          <p>
-                            Remaining base:{" "}
-                            {money(
-                              (budget?.result ?? state.budget).remaining_base,
-                            )}{" "}
-                            · Funding gap:{" "}
-                            {money((budget?.result ?? state.budget).gap)}
-                          </p>
-                          <p>
-                            Information {((budget?.result ?? state.budget).complete) ? "complete" : "incomplete"} · {((budget?.result ?? state.budget).sufficient) ? "No gap reported" : "Review the funding gap and issues below"}
-                          </p>
-                          <h3>Assumptions</h3>
-                          <ul>{(budget?.result ?? state.budget).assumptions.map((item) => <li key={item}>{item}</li>)}</ul>
-                          <h3>Issues</h3>
-                          {(budget?.result ?? state.budget).issues.length ? (
-                            <ul>
-                              {(budget?.result ?? state.budget).issues.map(
-                                (x) => (
-                                  <li key={x}>{explainCode(x)}</li>
-                                ),
-                              )}
-                            </ul>
-                          ) : (
-                            <p>No issues reported for this budget.</p>
-                          )}
-                          {!!(budget?.result ?? state.budget).issues.length && <details><summary>View backend issue codes</summary><ul>{(budget?.result ?? state.budget).issues.map((x) => <li key={x}>{x}</li>)}</ul></details>}
-                        </section>
-                      )}
-                      <PaymentCalendar
-                        forecast={forecast}
-                        current={resultFresh(forecast, state)}
-                        costs={formDraft?.costs ?? []}
-                        sources={sources}
-                        busy={busy || preview || dirty}
-                        onUpdate={updateCalendar}
-                      />
+                      {preview && <PreviewWalkthrough scenario={previewScenario} onOpenExpenses={() => { focusCostRef.current = "preview-food"; setStep(1); setShowSteps(false); }} />}
+                      {preview ? <details className="preview-calendar-details"><summary>{t("jr.budget.exploreCalendar")}</summary>{paymentCalendar}</details> : paymentCalendar}
                     </>
                   )}
                   {step === 3 && (
                     <>
-                      <section className="card backend-section">
-                        <h2>Funding sources</h2>
+                      <FundingComparison
+                        preview={preview}
+                        recommendation={funding}
+                        homeCurrency={state?.assets.currency ?? budgetData?.currency}
+                        current={resultFresh(funding, state)}
+                        sources={sources}
+                        quotes={quotes}
+                        application={application}
+                        savedPlan={savedFunding}
+                        onValidatePlan={saveFundingPlan}
+                        validationDisabled={preview || busy || !resultFresh(funding, state)}
+                        onReviewQuote={(id) => { setQuoteId(id); setStep(4); }}
+                      />
+                      {!preview && <section className="card backend-section">
+                        <h2>{t("jr.fund.title")}</h2>
                         <p>
-                          Promised or estimated funding is separate from money you have received. Review each source and its conditions.
+                          {t("jr.fund.text")}
                         </p>
                         <details className="funding-add-source">
-                          <summary>Add a non-loan funding source</summary>
+                          <summary>{t("jr.fund.add")}</summary>
                         <div className="backend-fields">
                           <label>
-                            Kind
-                            <select disabled={preview}
+                            {t("jr.fund.kind")}
+                            <select
                               value={sourceKind}
                               onChange={(e) => setSourceKind(e.target.value)}
                             >
-                              <option>family</option>
-                              <option>scholarship</option>
-                              <option>external_savings</option>
+                              <option value="family">{t("jr.fund.kind.family")}</option>
+                              <option value="scholarship">{t("jr.fund.kind.scholarship")}</option>
+                              <option value="external_savings">{t("jr.fund.kind.external_savings")}</option>
                             </select>
                           </label>
                           <label>
-                            Amount THB
-                            <input disabled={preview}
+                            {t("jr.fund.amount")}
+                            <input
                               value={sourceAmount}
                               onChange={(e) => setSourceAmount(e.target.value)}
                               inputMode="decimal"
                             />
                           </label>
                           <label>
-                            Available on
-                            <input disabled={preview}
+                            {t("jr.fund.availableOn")}
+                            <input
                               type="date"
                               value={sourceDate}
                               onChange={(e) => setSourceDate(e.target.value)}
@@ -1467,48 +1488,37 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                           disabled={preview || busy || !sourceAmount || !sourceDate}
                           onClick={addSource}
                         >
-                          Save funding source
+                          {t("jr.fund.save")}
                         </button>
                         </details>
                         <button
                           className="primary"
-                          disabled={preview || busy || dirty}
+                          disabled={preview || busy}
                           onClick={recommend}
                         >
-                          Get funding recommendation
+                          {t("jr.fund.recommend")}
                         </button>
-                      </section>
-                      <FundingComparison
-                        recommendation={funding}
-                        current={resultFresh(funding, state)}
-                        sources={sources}
-                        quotes={quotes}
-                        application={application}
-                        savedPlan={savedFunding}
-                        savedPlanCurrent={resultFresh(savedFunding, state)}
-                        onValidatePlan={saveFundingPlan}
-                        validationDisabled={preview || busy || !resultFresh(funding, state)}
-                        onReviewQuote={(id) => { setQuoteId(id); setStep(4); }}
-                      />
+                      </section>}
                     </>
                   )}
                   {step === 4 && (
-                    <>
+                    preview ? <PreviewApplication application={application} quotes={quotes} selectedQuoteId={quoteId} onBack={() => setStep(3)} /> : <fieldset className="preview-form-lock">
                       <section className="card backend-section">
-                        <h2>Simulated loan application</h2>
+                        <h2>{application ? t("jr.app.titleExisting") : t("jr.app.titleNew")}</h2>
+                        {application && <div className="application-status application-live-status" role="status" tabIndex={-1}><strong>{explainCode(application.status, lang)}</strong><span>{t("jr.app.idLine", { id: application.id, version: application.version })}</span><span>{t("jr.app.assessment", { status: application.assessment?.status ? explainCode(application.assessment.status, lang) : t("jr.app.notAssessed") })}</span></div>}
                         <p>
-                          Create or select a quote, then submit a draft. You can follow its review status here. This is a simulation; no money moves.
+                          {t("jr.app.text")}
                         </p>
                         <details className="application-group">
-                        <summary>1. Monthly affordability profile</summary>
+                        <summary>{t("jr.app.profile")}</summary>
                         <p>
-                          Enter each repayment month. Leave unknown values blank and include other debts under existing repayments.
+                          {t("jr.app.profileText")}
                         </p>
                         {profileMonths.map((row, index) => (
-                          <div className="backend-fields" key={index}>
+                          <div className="backend-fields" key={row.rowKey}>
                             <label>
-                              Month
-                              <input disabled={preview}
+                              {t("jr.app.month")}
+                              <input
                                 type="month"
                                 value={row.month}
                                 onChange={(e) =>
@@ -1530,8 +1540,8 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                               ] as const
                             ).map((field) => (
                               <label key={field}>
-                                {field.replaceAll("_", " ")}
-                                <input disabled={preview}
+                                {t(`jr.app.field.${field}` as MessageKey)}
+                                <input
                                   value={row[field] ?? ""}
                                   onChange={(e) =>
                                     setProfileMonths(
@@ -1551,24 +1561,23 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                             ))}
                             <button
                               className="secondary"
-                              disabled={preview || busy}
                               onClick={() =>
                                 setProfileMonths(
                                   profileMonths.filter((_, i) => i !== index),
                                 )
                               }
                             >
-                              Remove month
+                              {t("jr.app.removeMonth")}
                             </button>
                           </div>
                         ))}
                         <button
                           className="secondary"
-                          disabled={preview || busy}
                           onClick={() =>
                             setProfileMonths([
                               ...profileMonths,
                               {
+                                rowKey: crypto.randomUUID(),
                                 month: "",
                                 income: null,
                                 living_expenses: null,
@@ -1577,45 +1586,45 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                             ])
                           }
                         >
-                          Add month
+                          {t("jr.app.addMonth")}
                         </button>
                         <button
                           className="secondary"
                           disabled={preview || busy || profileMonths.some((x) => !x.month)}
                           onClick={saveProfile}
                         >
-                          Save monthly profile
+                          {t("jr.app.saveProfile")}
                         </button>
                         </details>
                         <details className="application-group" open={!quotes.length}>
-                        <summary>2. Create a loan quote</summary>
+                        <summary>{t("jr.app.quote")}</summary>
                         <div className="backend-fields">
                           <label>
-                            Principal THB
-                            <input disabled={preview}
+                            {t("jr.app.principal")}
+                            <input
                               value={principal}
                               onChange={(e) => setPrincipal(e.target.value)}
                               inputMode="decimal"
                             />
                           </label>
                           <label>
-                            Annual rate as fraction
-                            <input disabled={preview}
+                            {t("jr.app.rate")}
+                            <input
                               value={rate}
                               onChange={(e) => setRate(e.target.value)}
                               placeholder="0.12"
                             />
                           </label>
                           <label>
-                            Fees THB
-                            <input disabled={preview}
+                            {t("jr.app.fees")}
+                            <input
                               value={fees}
                               onChange={(e) => setFees(e.target.value)}
                             />
                           </label>
                           <label>
-                            Months
-                            <input disabled={preview}
+                            {t("jr.app.months")}
+                            <input
                               type="number"
                               min="1"
                               max="60"
@@ -1624,8 +1633,8 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                             />
                           </label>
                           <label>
-                            First due date
-                            <input disabled={preview}
+                            {t("jr.app.firstDue")}
+                            <input
                               type="date"
                               value={firstDue}
                               onChange={(e) => setFirstDue(e.target.value)}
@@ -1634,20 +1643,20 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                         </div>
                         <button
                           className="secondary"
-                          disabled={preview || busy || !principal || !rate || !firstDue}
+                          disabled={preview || busy || !principal || !rate || !firstDue || !/^[1-9]\d*$/.test(months)}
                           onClick={addQuote}
                         >
-                          Create loan quote
+                          {t("jr.app.createQuote")}
                         </button>
                         </details>
-                        <h3>3. Review a quote and application</h3>
+                        <h3>{t("jr.app.review")}</h3>
                         <label>
-                          Select quote
-                          <select disabled={preview}
+                          {t("jr.app.selectQuote")}
+                          <select
                             value={quoteId}
                             onChange={(e) => setQuoteId(e.target.value)}
                           >
-                            <option value="">Select</option>
+                            <option value="">{t("jr.app.select")}</option>
                             {quotes.map((q) => (
                               <option value={q.id} key={q.id}>
                                 {q.id} · {money(q.inputs?.principal ?? null)}
@@ -1659,21 +1668,16 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                           .filter((quote) => quote.id === quoteId)
                           .map((quote) => (
                             <div className="backend-cost" key={quote.id}>
-                              <strong>Selected loan quote</strong>
+                              <strong>{t("jr.app.selected")}</strong>
                               <p>
-                                Principal: {money(quote.inputs?.principal)} ·
-                                Annual rate:{" "}
-                                {quote.inputs?.annual_rate ?? "unknown"} · Fees:{" "}
-                                {money(quote.inputs?.fees)} · Months:{" "}
-                                {quote.inputs?.months ?? "unknown"}
+                                {t("jr.app.terms", { principal: money(quote.inputs?.principal), rate: String(quote.inputs?.annual_rate ?? t("jr.unknown")), fees: money(quote.inputs?.fees), months: String(quote.inputs?.months ?? t("jr.unknown")) })}
                               </p>
                               <p>
-                                Net proceeds: {formatMoney(quote.result?.net_proceeds)}
-                                {" "}· Total repayment: {formatMoney(quote.result?.total_repayment)}
+                                {t("jr.app.proceeds", { net: formatMoney(quote.result?.net_proceeds, undefined, lang), total: formatMoney(quote.result?.total_repayment, undefined, lang) })}
                               </p>
                               {Array.isArray(quote.result?.repayments) && (
                                 <details>
-                                  <summary>View repayment schedule</summary>
+                                  <summary>{t("jr.app.schedule")}</summary>
                                   <ul>
                                     {(
                                       quote.result.repayments as Array<
@@ -1682,7 +1686,7 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                                     ).map((payment, index) => (
                                       <li key={index}>
                                         {String(payment.due_date ?? "")}:{" "}
-                                        {formatMoney(payment.amount ?? payment.payment)}
+                                        {formatMoney(payment.amount ?? payment.payment, undefined, lang)}
                                       </li>
                                     ))}
                                   </ul>
@@ -1695,18 +1699,13 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                           disabled={preview || busy || !quoteId || !!application}
                           onClick={createApplication}
                         >
-                          Create application draft
+                          {t("jr.app.createDraft")}
                         </button>
                         {application && (
                           <>
-                            <p className="application-status"><strong>{explainCode(application.status)}</strong><span>Application {application.id} · version {application.version}</span></p>
-                            <p>
-                              Assessment:{" "}
-                              {application.assessment?.status ? explainCode(application.assessment.status) : "Not yet assessed"}
-                            </p>
                             {application.assessment && (
                               <details>
-                                <summary>View B assessment</summary>
+                                <summary>{t("jr.app.viewAssessment")}</summary>
                                 <pre className="backend-json">
                                   {JSON.stringify(
                                     application.assessment,
@@ -1721,28 +1720,30 @@ export function ConnectedApp({ onDemo }: { onDemo: () => void }) {
                               disabled={preview || busy || application.status !== "DRAFT"}
                               onClick={submitApplication}
                             >
-                              Submit simulated application
+                              {t("jr.app.submit")}
                             </button>
                             <button
                               className="secondary"
                               disabled={preview || busy}
                               onClick={reloadApplication}
                             >
-                              Reload application state
+                              {t("jr.app.reload")}
                             </button>
                           </>
                         )}
                       </section>
-                    </>
+                    </fieldset>
                   )}
+                  {preview && step >= 1 && step < 4 && <div className="preview-next-step"><span>{t("jr.tour.noSave")}</span><button className="primary" onClick={() => { setStep(step + 1); setShowSteps(false); }}>{t("jr.tour.continue", { name: steps[step + 1] })} <span aria-hidden="true">→</span></button></div>}
                 </>
               )}
             </>
           )}
+        </>}
         </main>
         <footer>
-          StudyFlow · Student journey
-          <span>Backend controls calculations and decisions</span>
+          {t("jr.footer")}
+          <span>{t("jr.footerNote")}</span>
         </footer>
       </div>
     </div>

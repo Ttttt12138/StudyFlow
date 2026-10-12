@@ -2,7 +2,7 @@
 
 This is the concise endpoint reference for frontend and extraction-service
 integration. For detailed workflow explanations, see [guide.md](guide.md). The generated
-machine-readable contract is [openapi.yaml](../../openapi.yaml).
+machine-readable contract is [openapi.yaml](../../backend/openapi.yaml).
 
 ## Connection
 
@@ -26,19 +26,28 @@ The original POST state/ and POST forecasts/ APIs do not use Idempotency-Key.
 State writes instead use expected_version.
 
 Tokens can be obtained with `POST /api/v2/auth/token/` (`{"username", "password"}`,
-throttled). Money-moving commands (payments/{id}/submit/, conversions/,
-loan-accounts/{id}/repay/) additionally need `X-Step-Up-Token` from
-`POST /api/v2/auth/step-up/`, and above the per-currency limits an approved
-`approvals/` request decided by a second operator. See docs/permissions.md for tiers,
-limits, approval rules, denial bodies and rate limits (HTTP 429).
+throttled). Money-moving (T2) commands — payments/{id}/submit/, conversions/,
+loan-accounts/{id}/repay/, remittance-orders/{id}/submit/ and
+agent/pending-actions/{id}/confirm/ — additionally need `X-Step-Up-Token` from
+`POST /api/v2/auth/step-up/`, and above the per-currency limits (T3) an approved
+`approvals/` request decided by a second operator. See
+[Authentication, step-up and approvals](#authentication-step-up-and-approvals) below;
+docs/permissions.md has the design background.
+
+Optional on every request:
+
+    Accept-Language: zh-Hans   (or en; unsupported languages fall back to English)
+
+It selects the language of error `message` texts and of agent answers when no
+`locale` is given. All money in these APIs is simulated.
 
 ## Roles
 
 | Role | Permitted operations |
 |---|---|
-| Student | Own state, scenarios, plans, loans, application submission, authorization, reconciliation; T2 commands after step-up |
+| Student | Own state, scenarios, plans, loans, application submission, authorization, reconciliation; T2 commands after step-up; approval requests; agent sessions and confirming/rejecting own agent proposals; credit profile, snapshots and statements |
 | Demo operator | Mock review/decision, beneficiary verification, funding/disbursement/payment outcomes, approval decisions (not for payees they verified, nor their own requests) |
-| Anonymous | Health, auth/token/ and sponsor confirmation only |
+| Anonymous | Health, auth/token/, /api/auth/session/, credit/statements/verify/ and sponsor confirmation only |
 
 The operator is a controlled local simulator. AI extraction or planning components
 must use student-scoped access and must never receive operator credentials.
@@ -55,17 +64,30 @@ Paginated list:
 
 | Status | Meaning |
 |---|---|
-| 200 | Read success or identical idempotent replay |
+| 200 | Read success or identical idempotent replay; also `auth/step-up/`, `approvals/{id}/decide/` and `credit/statements/verify/` success |
 | 201 | New command completed |
 | 400 | Invalid field, business rule, transition, or idempotency conflict |
 | 401 | Missing or invalid authentication |
 | 403 | Authenticated user lacks the operator/staff role, or a policy denial (`STEP_UP_REQUIRED`, `STEP_UP_INVALID`, `APPROVAL_REQUIRED`, `AGENT_TIER_EXCEEDED`, `SEPARATION_OF_DUTIES`, `STEP_UP_FAILED`) |
 | 429 | Rate limit exceeded; retry after the `Retry-After` header |
 | 404 | Record absent or owned by another student |
-| 409 | Stale financial-state version |
+| 409 | Stale version (financial state, approval `expected_version`, ...), `APPROVAL_ALREADY_OPEN`, `APPROVAL_NOT_PENDING` |
 | 503 | Database unavailable or migrations pending |
 
 Unknown/read-only request fields are rejected instead of silently ignored.
+
+Error body. Every error with a single message carries three keys:
+
+    {"detail": "APPROVAL_REQUIRED", "code": "APPROVAL_REQUIRED", "message": "<localized text>", "policy": {...}}
+
+| Key | Meaning |
+|---|---|
+| detail | Original value. Policy denials (403) and 409 conflicts use a plain string. Business-rule 400s from service checks use a one-element list, e.g. `["PENDING_ACTION_CLOSED"]`. Older routes may put an English sentence here |
+| code | Machine-readable code: equal to the detail text when that is an UPPER_SNAKE code, otherwise the DRF category (`invalid`, `not_found`, `permission_denied`, `not_authenticated`, `stale_version`, `throttled`, ...). Match on this field |
+| message | Human-readable text in the negotiated language (`Content-Language` response header says which) |
+| policy | Only on policy denials; see [Policy denial body](#policy-denial-body) |
+
+Field validation errors keep the DRF shape `{"field": ["..."]}` without `code`/`message`.
 
 ## System and documentation
 
@@ -76,7 +98,240 @@ Unknown/read-only request fields are rejected instead of silently ignored.
 | GET | /api/docs/ | Student/operator | Swagger UI |
 | GET/POST | /api/auth/login/ | Session flow | Browser session login |
 | POST | /api/auth/logout/ | Session flow | Browser session logout |
+| GET | /api/auth/session/ | Public | `{"authenticated", "username", "csrf_token"}` for the current browser session (`username` is null when signed out); `Cache-Control: no-store` |
 | GET | /admin/ | Staff | Read-only finance administration |
+
+## Authentication, step-up and approvals
+
+### POST /api/v2/auth/token/
+
+Public. Throttled per IP (`auth`, default 10/min). No Idempotency-Key.
+
+    {"username": "student", "password": "..."}
+
+Response 200 (no `data` envelope):
+
+    {"token": "..."}
+
+Wrong credentials return 400. Send the token as `Authorization: Token <token>`.
+
+### POST /api/v2/auth/step-up/
+
+Re-authenticates the signed-in user and issues a single-use token for exactly one
+money-moving action. No Idempotency-Key. Throttled per user (`step_up`, default
+10/hour; failures count too), so request it only when the user is about to submit.
+
+Request:
+
+    {
+      "password": "the user's own password",
+      "action": "remittance.submit",
+      "target_id": "UUID",
+      "amount": "1000.00",
+      "currency": "CNY"
+    }
+
+| action | Protected route | target_id | amount and currency |
+|---|---|---|---|
+| payment.submit | POST payments/{id}/submit/ | payment id | the payment amount, THB |
+| wallet.convert | POST conversions/ | the body's `quote_id` | the body's `source_amount`, the quote's source currency |
+| loan.repay | POST loan-accounts/{id}/repay/ | loan account id | the amount of the installment being paid, THB |
+| remittance.submit | POST remittance-orders/{id}/submit/ | order id | the order's `send_amount` and `send_currency` |
+| (same as the proposal) | POST agent/pending-actions/{id}/confirm/ | the pending action's `target_id` | the pending action's `amount` and `currency`; `action` is the pending action's `action` (remittance.submit or wallet.convert) |
+
+`agent.confirm` appears in the schema's action enum but is refused with 400
+`ACTION_NOT_AVAILABLE`; always ask for the underlying action.
+
+Response 200 (no `data` envelope; `amount` always has two decimals):
+
+    {
+      "token": "...",
+      "expires_in_seconds": 300,
+      "action": "remittance.submit",
+      "target_id": "UUID",
+      "amount": "1000.00",
+      "currency": "CNY"
+    }
+
+| Error | Cause |
+|---|---|
+| 403 `STEP_UP_FAILED` | Wrong password, or the account has no usable password. No `policy` key. Audited as `auth.step_up_failed` |
+| 404 | Target does not exist or belongs to someone else |
+| 400 `POLICY_SUBJECT_MISMATCH` | Currency/amount do not match the target (payment: THB and the payment amount; repayment: THB and the amount of an unpaid installment of that account; conversion: the quote's source currency; remittance: the order's send amount and currency) |
+| 400 `ACTION_NOT_AVAILABLE` | `action` is `agent.confirm` |
+| 400 `CURRENCY_NOT_SUPPORTED`, `AMOUNT_PRECISION_INVALID`, `Amount must be positive.` | Invalid money value (JPY has no decimals) |
+| 429 | Step-up rate limit |
+
+The target's status is not checked here; the protected command checks it.
+
+Using the token: send it as the `X-Step-Up-Token` header on the protected POST
+(together with its usual Idempotency-Key). It is valid for 300 seconds, for one user,
+and only for the exact action, target_id, amount and currency it was issued for. A
+password change invalidates it. It is consumed in the same transaction as a
+successful command; if the command fails a business rule the transaction rolls back
+and the token stays usable until it expires. An identical idempotent replay (same
+key and body) returns the stored response without any policy check.
+
+### Policy denial body
+
+A protected command that is not cleared returns 403:
+
+    {
+      "detail": "STEP_UP_REQUIRED",
+      "code": "STEP_UP_REQUIRED",
+      "message": "<localized text>",
+      "policy": {
+        "action": "remittance.submit",
+        "tier": "T2",
+        "target_id": "UUID",
+        "amount": "1000.00",
+        "currency": "CNY",
+        "limits": {"per_transaction": "10000.00", "daily": "20000.00", "monthly": "60000.00"},
+        "usage": {"daily": "0.00", "monthly": "0.00"},
+        "requires": ["step_up"]
+      }
+    }
+
+| policy field | Meaning |
+|---|---|
+| action, target_id, amount, currency | The subject to request step-up (and approval) for. On an agent confirm this is the underlying action, never `agent.confirm` |
+| tier | `T2` (step-up only) or `T3` (step-up plus approval) |
+| limits | Effective limits for the currency (configured limit x credit `limit_multiplier`), or null when the currency has no enabled limit (then always T3) |
+| usage | Outflow already used today and this month in that currency, excluding this request |
+| requires | `["step_up"]` for T2, `["step_up", "approval"]` for T3 |
+
+`detail` values, in the order they are checked:
+
+1. `AGENT_TIER_EXCEEDED`: the request carried a non-empty `X-StudyFlow-Agent` header.
+   Calls made on behalf of an agent never pass a T2 route.
+2. `STEP_UP_INVALID`: a token was sent but is expired, forged, already used, issued
+   to another user, issued for a different subject, or predates a password change.
+3. `APPROVAL_REQUIRED`: tier T3 and there is no `APPROVED`, unexpired approval with
+   the same action, target_id, amount and currency.
+4. `STEP_UP_REQUIRED`: no token was sent.
+
+Tier rule: T2 when an enabled limit exists and amount <= per_transaction,
+usage.daily + amount <= daily and usage.monthly + amount <= monthly; otherwise T3.
+Days and months are Asia/Bangkok calendar periods in real time (not the demo clock).
+Default limits before the credit multiplier:
+
+| Currency | Per transaction | Daily | Monthly |
+|---|---|---|---|
+| THB | 50,000 | 100,000 | 300,000 |
+| CNY | 10,000 | 20,000 | 60,000 |
+| USD | 1,500 | 3,000 | 9,000 |
+| EUR | 1,400 | 2,800 | 8,400 |
+| GBP | 1,200 | 2,400 | 7,200 |
+| JPY | 200,000 | 400,000 | 1,200,000 |
+
+A call that would not move money (for example resubmitting an already submitted
+payment, or a target that does not exist) skips the policy check and gets the normal
+business answer. Every POST to a T2 route, including denied ones, counts against the
+per-user `money` rate limit (default 60/hour).
+
+### POST /api/v2/approvals/
+
+Student request for dual control of a T3 action. No Idempotency-Key.
+
+    {
+      "action": "remittance.submit",
+      "target_id": "UUID",
+      "amount": "12000.00",
+      "currency": "CNY",
+      "reason": "Spring tuition, above the single-transfer limit"
+    }
+
+Copy action, target_id, amount and currency from the `APPROVAL_REQUIRED` denial's
+`policy`. `reason` is required (max 500 characters). Validation and errors are the
+same as for step-up (404, `POLICY_SUBJECT_MISMATCH`, `ACTION_NOT_AVAILABLE`, ...).
+
+Response 201:
+
+    {
+      "data": {
+        "id": "UUID",
+        "type": "approvalrequest",
+        "created_at": "2026-10-11T02:00:00Z",
+        "action": "remittance.submit",
+        "target_id": "UUID",
+        "amount": "12000.00",
+        "currency": "CNY",
+        "reason": "Spring tuition, above the single-transfer limit",
+        "status": "PENDING",
+        "requested_by": 7,
+        "decided_by": null,
+        "decided_at": null,
+        "decision_note": "",
+        "expires_at": "2026-10-12T02:00:00Z",
+        "used_at": null,
+        "version": 1,
+        "owner": 7
+      }
+    }
+
+`owner`, `requested_by` and `decided_by` are integer user IDs. 409
+`APPROVAL_ALREADY_OPEN` when a `PENDING` or `APPROVED` request already exists for the
+same action and target_id (whatever its amount). Because there is no idempotency key,
+a retried POST also gets 409; find the existing request with
+`GET approvals/?status=PENDING`.
+
+Approval states:
+
+    PENDING -> APPROVED -> USED
+            \-> REJECTED
+    PENDING/APPROVED -> EXPIRED (24 hours after creation)
+
+Expiry is applied when approvals are read, requested or decided. After `EXPIRED` or
+`REJECTED` a new request can be made. `USED` is set (and `version` incremented) in
+the same transaction as the successful T3 command. A command that clears as T2 does
+not use an approval.
+
+### GET /api/v2/approvals/
+### GET /api/v2/approvals/{id}/
+
+Paginated list (newest first, optional `?status=PENDING|APPROVED|REJECTED|EXPIRED|USED`)
+or one `{"data": {...}}` record. Students see their own requests; staff see all.
+
+### POST /api/v2/approvals/{id}/decide/
+
+Staff only. No Idempotency-Key; `expected_version` protects against double decisions.
+
+    {"decision": "approve", "note": "Checked invoice", "expected_version": 1}
+
+`decision` is approve or reject; `note` is optional (max 500). Response 200
+`{"data": {...}}` with `status`, `decided_by`, `decided_at`, `decision_note` and
+`version` updated.
+
+| Error | Cause |
+|---|---|
+| 403 (`permission_denied`) | Caller is not staff |
+| 404 | No such approval |
+| 403 `SEPARATION_OF_DUTIES` | Decider is the requester or the owner, or (for `payment.submit`, and `remittance.submit` to a beneficiary) the staff member who last verified that beneficiary |
+| 409 (`stale_version`) | `expected_version` differs from the current version |
+| 409 `APPROVAL_NOT_PENDING` | Already decided, used or expired |
+
+These rules apply to approve and reject alike, so a demo needs two staff users: one
+verifies beneficiaries, the other decides approvals.
+
+### GET /api/v2/policy/limits/
+
+T0, signed-in student. The caller's own effective outflow limits and current usage, so a
+client can show why an action will be T2 or T3 before trying it. Response 200:
+
+    {"data": {"credit_level": "BUILDING", "limit_multiplier": "1.0",
+              "window_zone": "Asia/Bangkok", "is_simulated": true,
+              "limits": [{"currency": "CNY",
+                          "base": {"per_transaction": "10000.00", "daily": "20000.00", "monthly": "60000.00"},
+                          "effective": {"per_transaction": "10000.00", "daily": "20000.00", "monthly": "60000.00"},
+                          "usage": {"daily": "5000.00", "monthly": "5000.00"}}]}}
+
+`effective` is `base` × `limit_multiplier` (from the credit level, see
+[credit profile](#get-apiv2creditprofile)); amounts are two-decimal strings, as in the
+policy denial body. Only enabled `PolicyLimit` rows are listed; a currency missing from
+`limits` has no limit, so every T2 action in it is T3. `usage` counts the same outflows
+that enforcement counts, with days and months in `window_zone` real time (not the demo
+clock). The values are read at request time and can change before a command runs; the
+command's own policy check is authoritative.
 
 ## Source metadata
 
@@ -466,10 +721,336 @@ monotonic settlement sequence for reconstructing actual event order.
 
 ### GET /api/v2/audit/
 
-Returns owner-scoped action history with actor IDs and transition details.
+Returns owner-scoped action history with actor IDs and transition details:
+the events whose owner is the authenticated user, newest first, paginated (50 per
+page, `?page=N`). There is no detail route and no filter parameter. Events an
+operator causes on a student's objects belong to the student (the operator's ID is in
+`details.actor_id`); a staff user's own audit list contains only events it owns.
+
+    {
+      "count": 1, "next": null, "previous": null,
+      "results": [
+        {
+          "id": "UUID",
+          "type": "auditevent",
+          "created_at": "2026-10-11T02:00:00Z",
+          "action": "auth.step_up_granted",
+          "entity_id": "UUID",
+          "details": {"actor_id": 7, "action": "remittance.submit", "target_id": "UUID",
+                      "amount": "1000.00", "currency": "CNY"}
+        }
+      ]
+    }
+
+`details.actor_id` (integer user ID) is always present; the other keys depend on
+`action`. Actions written by the step-up, approval, agent and credit features:
+
+| action | entity_id | Extra details |
+|---|---|---|
+| auth.step_up_granted | step-up grant id | action, target_id, amount, currency (never the token) |
+| auth.step_up_failed | the requested target_id | action |
+| approval.requested | approval id | action, target_id, amount, currency |
+| approval.approved, approval.rejected | approval id | action, target_id; actor_id is the deciding staff user |
+| agent.action_confirmed, agent.action_rejected | pending action id | action |
+| credit.snapshot_created, credit.statement_issued | snapshot id | level |
+
+Other workflows write their own names (for example `state.confirmed`,
+`payment.authorized`, `remittance.created`, `wallet.conversion_settled`,
+`beneficiary.mock_verification`); treat unknown names as displayable text.
 
 FinancialState, AuditEvent, and DemoLedgerEntry are protected from UPDATE and DELETE
 by PostgreSQL triggers.
+
+## Finance agent
+
+The agent turns a one-sentence goal into tool calls on the student's own data. Read
+tools (T0) and non-money writes such as live quotes and CREATED remittance orders (T1)
+run directly. Money-moving tools (T2) only create a pending action; nothing leaves the
+wallet until the student confirms it with a step-up token. All funds are simulated.
+
+### POST /api/v2/agent/sessions/
+
+Headers: Idempotency-Key (1-100 characters). Optional Accept-Language.
+
+    {"goal": "Send 5000 CNY to my THB wallet using the cheapest route", "locale": "en"}
+
+`goal` is required (max 2000 characters). `locale` is `zh` or `en`; when omitted it
+is `zh` if the negotiated language starts with zh, otherwise `en`.
+
+The session runs synchronously to its end (at most 11 planner calls, which can take a
+while in live mode) and returns 201 `{"data": <session>}`. Repeating the same key
+with the same goal and locale returns 200 with the session's current record. The same
+key with a different goal or locale returns 400 `Idempotency key was used with a
+different request.`. POST is throttled by the per-user `agent` scope (default
+30/hour) in addition to the global user rate.
+
+Session:
+
+    {
+      "data": {
+        "id": "UUID",
+        "type": "agentsession",
+        "created_at": "2026-10-11T02:00:00Z",
+        "goal": "Send 5000 CNY to my THB wallet using the cheapest route",
+        "locale": "en",
+        "mode": "mock",
+        "status": "COMPLETED",
+        "final_answer": "...",
+        "error_code": "",
+        "write_count": 2,
+        "updated_at": "2026-10-11T02:00:04Z",
+        "steps": [ ... ],
+        "pending_actions": [ ... ],
+        "is_simulated": true
+      }
+    }
+
+| Field | Meaning |
+|---|---|
+| mode | Planner mode of the backend (`mock` or `live`) |
+| status | `COMPLETED`, `FAILED`, or `RUNNING` (only seen if a run was interrupted by a server error) |
+| final_answer | The answer to show. On `FAILED` it is a fixed fallback text in the session locale |
+| error_code | Empty unless `FAILED`: `INVALID_TOOL_CALL`, `STEP_BUDGET_EXHAUSTED`, or a provider error code in live mode |
+| write_count | T1 writes used (maximum 4) |
+| steps | All steps, ordered by `number` |
+| pending_actions | Proposals made in this session, newest first |
+
+Step:
+
+    {
+      "id": "UUID", "created_at": "...", "number": 5,
+      "tool": "submit_remittance_order", "tier": "T2",
+      "arguments": {"order_id": "UUID"},
+      "rationale": "Propose submitting the order for the student to confirm.",
+      "status": "PROPOSED",
+      "result": { ... },
+      "call": {"provider": "...", "purpose": "plan", "model": "...", "mode": "mock", ...}
+    }
+
+| status | result |
+|---|---|
+| OK | The tool output. Larger than 4000 characters: `{"truncated": true, "preview": "..."}` |
+| ERROR | `{"error": ...}`: a code string, a list of messages (e.g. `["QUOTE_EXPIRED"]`) or a field-to-messages object. Planner failures have empty `tool`/`tier` and `{"error": "<code>"}`, plus `refused_tool` for `INVALID_TOOL_CALL`/`STEP_BUDGET_EXHAUSTED` |
+| DENIED | `{"error": "WRITE_BUDGET_EXHAUSTED"}`: a fifth T1 write was refused |
+| PROPOSED | A T2 proposal, see below |
+| FINAL | `{"answer": "..."}`; `tool` and `tier` are empty |
+
+`call` is planner call metadata (provider, purpose, model, mode, prompt_version,
+duration_ms, input/output tokens, attempts, error_code, request_id) for diagnostics.
+
+PROPOSED result:
+
+    {
+      "pending_action_id": "UUID",
+      "action": "remittance.submit",
+      "target_id": "UUID",
+      "currency": "CNY",
+      "amount": "5000.00",
+      "expires_at": "...",
+      "details": {"order_id": "UUID", "recipient": "SELF", "receive_currency": "THB",
+                  "receive_amount": "..."},
+      "executed": false,
+      "requires": ["student_confirmation", "step_up"]
+    }
+
+For a remittance, `details` also contains `beneficiary` (`id`, `name`,
+`destination_label`) when the order pays a beneficiary. For a conversion, `details`
+is `{"quote_id", "source_amount"}`. `requires` does not show whether an approval will
+also be needed; that is only known when confirming (`APPROVAL_REQUIRED`).
+
+Pending action (in `pending_actions`, and the `data` of confirm/reject):
+
+    {
+      "id": "UUID",
+      "type": "agentpendingaction",
+      "created_at": "...",
+      "session": "UUID",
+      "step": "UUID",
+      "action": "remittance.submit",
+      "tool": "submit_remittance_order",
+      "arguments": { ...same as details... },
+      "target_id": "UUID",
+      "amount": "5000.00",
+      "currency": "CNY",
+      "status": "PENDING",
+      "expires_at": "...",
+      "decided_at": null,
+      "result": {},
+      "version": 1
+    }
+
+| action | target_id | amount, currency |
+|---|---|---|
+| remittance.submit | remittance order id | order send amount and currency |
+| wallet.convert | live FX quote id | source amount and the quote's source currency |
+
+`status`: `PENDING`, `CONFIRMED`, `REJECTED`, `EXPIRED` (`FAILED` exists in the
+schema but is not currently set). A proposal expires 900 seconds after it is made.
+After confirmation `result` holds the executed command's record: the remittance order
+(with its `status`) or the conversion. Only one PENDING proposal can exist per action
+and target; proposing the same target again yields an ERROR step `ALREADY_PROPOSED`.
+
+Tool catalog:
+
+| Tool | Tier | Arguments | Effect |
+|---|---|---|---|
+| get_balances | T0 | none | Wallet balances per currency |
+| get_fx_rate | T0 | base, quote | Reference rate with date and source |
+| list_corridors | T0 | source_currency?, target_currency? | Enabled corridors |
+| list_beneficiaries | T0 | none | Own beneficiaries with `verified` |
+| get_credit_profile | T0 | none | Credit profile without evidence |
+| list_remittance_orders | T0 | none | Latest 10 orders |
+| rank_quotes | T0 | quote_ids (2-6), deadline? | Ranked quotes and `recommended_quote_id` |
+| create_live_quote | T1 | corridor_id, send_amount | Same as POST fx-quotes/live/ (quote valid 10 minutes) |
+| create_remittance_order | T1 | quote_id, recipient, beneficiary_id?, purpose, reference?, deadline? | Same as POST remittance-orders/ (status CREATED) |
+| submit_remittance_order | T2 | order_id | Proposal only |
+| convert_balance | T2 | quote_id, source_amount | Proposal only |
+
+Loop limits: at most 10 tool calls and 4 T1 writes per session; the planner is told
+to finish after the same tool fails twice in a row or `rank_quotes` finds no on-time
+quote. Operator tools are never available to the agent.
+
+### GET /api/v2/agent/sessions/
+### GET /api/v2/agent/sessions/{id}/
+
+Paginated list of own sessions (newest first, each with steps and pending actions) or
+one `{"data": <session>}`. Another student's session returns 404. Re-read a session
+to refresh its pending action statuses.
+
+### POST /api/v2/agent/pending-actions/{id}/confirm/
+
+Headers: Idempotency-Key, `X-Step-Up-Token`. Body `{}`.
+
+The token must be issued for the pending action's `action`, `target_id`, `amount` and
+`currency` (not for `agent.confirm`). A T3 amount additionally needs an approved
+approval for the same subject. Denials use the [policy denial body](#policy-denial-body)
+with the underlying action in `policy`.
+
+| Situation | Result |
+|---|---|
+| PENDING, not expired, cleared | Runs the same service as POST remittance-orders/{id}/submit/ (at the order's current version) or POST conversions/ (at the current state version). 201 with `status: "CONFIRMED"`, `decided_at`, `result`, `version: 2`. Token (and approval) consumed; audited `agent.action_confirmed` |
+| Business rule fails (e.g. `INSUFFICIENT_BALANCE`, `RESERVE_REQUIRED`, `QUOTE_EXPIRED`, `QUOTE_CONSUMED`, `BENEFICIARY_NOT_VERIFIED`) | 400; everything rolls back, the action stays PENDING and the token is not consumed |
+| Expired (past `expires_at`) | No token needed. 201 with `status: "EXPIRED"`; nothing executed |
+| Already CONFIRMED | 201 (new key) or 200 (same key) with the CONFIRMED record; nothing runs twice |
+| REJECTED or EXPIRED | 400 `PENDING_ACTION_CLOSED` |
+| Another student's action | 404 |
+
+For a remittance whose order is no longer CREATED, or whose 10-minute quote has
+expired, nothing would be debited, so no token is demanded and the submit service
+answers: an expired quote turns the order `EXPIRED` and the pending action still
+becomes `CONFIRMED` with `result.status` = `EXPIRED`; a cancelled or expired order
+gives 400 `INVALID_TRANSITION`. Always check `result.status` after confirming.
+
+### POST /api/v2/agent/pending-actions/{id}/reject/
+
+Headers: Idempotency-Key. Body `{}`. No step-up.
+
+201 with `status: "REJECTED"` (repeating on a REJECTED action returns it again);
+CONFIRMED or EXPIRED returns 400 `PENDING_ACTION_CLOSED`. Audited
+`agent.action_rejected`. After rejection the agent may propose the same target again.
+
+## Credit building (simulated)
+
+An internal on-time record built from the student's own loan installments, settled
+payments, and delivered remittances to verified beneficiaries with a deadline. It is
+not a credit score and is never reported to or obtained from a bureau. Its level
+scales the T2 limits.
+
+### GET /api/v2/credit/profile/
+
+Computed live; nothing is stored.
+
+    {
+      "data": {
+        "level": "FAIR",
+        "on_time": 4, "late": 0, "overdue": 0,
+        "as_of": "2026-10-11",
+        "limit_multiplier": "1.2",
+        "factors": [{"code": "ON_TIME_RECORDS", "effect": "positive", "count": 4}],
+        "next_level": {"level": "GOOD", "on_time_needed": 2, "late_records_must_age_out": false},
+        "evidence": [
+          {"source": "loan_installment", "id": "UUID", "due_on": "2026-09-01",
+           "completed_on": "2026-08-30", "status": "ON_TIME"}
+        ],
+        "is_simulated": true,
+        "disclaimer": "Simulated on-time record inside StudyFlow. ..."
+      }
+    }
+
+| Level | Condition (first match wins) | limit_multiplier |
+|---|---|---|
+| AT_RISK | Any overdue item, or 2+ late | 0.5 |
+| GOOD | 6+ on time and 0 late | 1.5 |
+| FAIR | 3+ on time and at most 1 late | 1.2 |
+| BUILDING | Everything else, including no history | 1.0 |
+
+- `as_of` is today's real date; completed items count when completed within the last
+  365 days; unresolved overdue items always count. Overdue is judged against the
+  later of today and the demo clock.
+- `evidence[].source`: `loan_installment`, `payment`, `remittance_order`;
+  `status`: `ON_TIME`, `LATE`, `OVERDUE` (`completed_on` is null for overdue).
+- `factors[].code`: `ON_TIME_RECORDS` (positive), `LATE_RECORDS` (negative),
+  `OVERDUE_RECORDS` (negative), each only when its count is above 0; `THIN_HISTORY`
+  (neutral, `count` = on-time count) whenever on_time < 3.
+- `next_level`: GOOD → null; FAIR → `{"level": "GOOD", "on_time_needed",
+  "late_records_must_age_out"}`; BUILDING → `{"level": "FAIR", "on_time_needed"}`;
+  AT_RISK → `{"level": "BUILDING", "action"}` with `RESOLVE_OVERDUE` or
+  `WAIT_FOR_LATE_RECORDS_TO_AGE_OUT`.
+
+### POST /api/v2/credit/snapshots/
+
+Headers: Idempotency-Key. Body `{}`. Stores the current profile as an immutable
+snapshot. Response 201:
+
+    {
+      "data": {
+        "id": "UUID", "type": "creditsnapshot", "created_at": "...",
+        "level": "FAIR", "on_time": 4, "late": 0, "overdue": 0,
+        "factors": [...], "evidence": [...], "as_of": "2026-10-11",
+        "limit_multiplier": "1.2", "next_level": {...}, "disclaimer": "..."
+      }
+    }
+
+### GET /api/v2/credit/snapshots/
+### GET /api/v2/credit/snapshots/{id}/
+
+Paginated list or one `{"data": {...}}` of own snapshots. Stored records contain
+`id`, `type`, `created_at`, `level`, `on_time`, `late`, `overdue`, `factors`,
+`evidence` and `as_of` only.
+
+### POST /api/v2/credit/statements/
+
+Headers: Idempotency-Key.
+
+    {"snapshot_id": "UUID"}
+
+Response 201:
+
+    {"data": {"statement": "<signed string>", "expires_in_days": 90,
+              "snapshot_id": "UUID", "level": "FAIR", "is_simulated": true}}
+
+The snapshot must be the caller's own (otherwise 404). The signed statement contains
+the snapshot ID, holder username, level, the three counts, `as_of` and `issued_at`;
+no transaction details.
+
+### POST /api/v2/credit/statements/verify/
+
+Public: no authentication, no Idempotency-Key (anonymous rate limit applies).
+
+    {"statement": "<signed string>"}
+
+Always 200 for a string (or missing/null) `statement`:
+
+    {"data": {"valid": true, "snapshot_id": "UUID", "holder": "student", "level": "FAIR",
+              "on_time": 4, "late": 0, "overdue": 0, "as_of": "2026-10-11",
+              "issued_at": "...", "is_simulated": true, "disclaimer": "..."}}
+
+    {"data": {"valid": false, "reason": "INVALID_SIGNATURE"}}
+
+`reason`: `INVALID_SIGNATURE` (missing, empty, longer than 4000 characters, tampered
+or malformed), `EXPIRED` (issued more than 90 days ago), `SNAPSHOT_MISMATCH` (the
+snapshot no longer exists or differs). Unknown body fields, or a `statement` that is an
+object, array or boolean, are rejected with 400.
 
 ## Recommended integration sequence
 
@@ -485,4 +1066,4 @@ by PostgreSQL triggers.
       -> operator reports adapter outcome
       -> student reconciles receipt
 
-See examples/workflow.http for executable request examples using the seeded demo.
+See [backend/examples/workflow.http](../../backend/examples/workflow.http) for executable request examples using the seeded demo.

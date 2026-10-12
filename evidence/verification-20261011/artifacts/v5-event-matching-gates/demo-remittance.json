@@ -1,0 +1,318 @@
+{
+  "passed": true,
+  "runs": [
+    {
+      "run_id": "aa6f65c4ed3c48169a12b53c4b83b54d",
+      "reference_rate": {
+        "rate": "4.6000000000",
+        "rate_date": "2026-10-11",
+        "source": "fixture"
+      },
+      "routes": [
+        {
+          "route_name": "Demo Economy Wire (economy)",
+          "net_received": "22908.09",
+          "arrival_latest": "2026-10-07",
+          "feasible": true
+        },
+        {
+          "route_name": "Demo Standard Transfer (standard)",
+          "net_received": "22770.55",
+          "arrival_latest": "2026-10-04",
+          "feasible": true
+        },
+        {
+          "route_name": "Demo Express Remit (express)",
+          "net_received": "22610.52",
+          "arrival_latest": "2026-10-03",
+          "feasible": true
+        }
+      ],
+      "order": {
+        "send_amount": "5000.00",
+        "sender_fee": "7.50",
+        "fx_margin_cost": "12.48",
+        "total_cost": "19.98",
+        "receive_amount": "22908.09",
+        "status": "RECONCILED",
+        "on_time": true
+      },
+      "refund": {
+        "status": "REFUNDED",
+        "failure_reason": "Synthetic bank reject"
+      },
+      "large_order": {
+        "status": "SUBMITTED",
+        "send_amount": "12000.00"
+      },
+      "balances": [
+        {
+          "currency": "THB",
+          "balance": "80000.00",
+          "available_balance": "80000.00",
+          "is_home": true,
+          "indicative_home_value": "80000.00",
+          "valuation": null
+        },
+        {
+          "currency": "CNY",
+          "balance": "23000.00",
+          "available_balance": "23000.00",
+          "is_home": false,
+          "indicative_home_value": "105800.00",
+          "valuation": {
+            "rate": "4.6000000000",
+            "rate_date": "2026-10-11",
+            "source": "fixture",
+            "stale": false
+          }
+        }
+      ],
+      "credit": {
+        "level": "BUILDING",
+        "on_time": 1,
+        "limit_multiplier": "1.0"
+      },
+      "policy": [
+        {
+          "action": "remittance.submit",
+          "target_id": "0db32ba2-0bbf-44e7-b201-1dd85085d1c1",
+          "amount": "5000.00",
+          "currency": "CNY",
+          "tier": "T2",
+          "step_up": true
+        },
+        {
+          "action": "remittance.submit",
+          "target_id": "e521f5aa-12ed-42cb-972b-aaba193da783",
+          "amount": "1000.00",
+          "currency": "CNY",
+          "tier": "T2",
+          "step_up": true
+        },
+        {
+          "action": "remittance.submit",
+          "target_id": "9d26e4ac-549a-4733-8fea-2d52bf1aeb18",
+          "amount": "12000.00",
+          "currency": "CNY",
+          "tier": "T3",
+          "step_up": true
+        }
+      ],
+      "is_simulated": true
+    },
+    {
+      "run_id": "7115e8795b5343c0b18c7ed22b3353ae",
+      "reference_rate": {
+        "rate": "4.6000000000",
+        "rate_date": "2026-10-11",
+        "source": "fixture"
+      },
+      "routes": [
+        {
+          "route_name": "Demo Economy Wire (economy)",
+          "net_received": "22908.09",
+          "arrival_latest": "2026-10-07",
+          "feasible": true
+        },
+        {
+          "route_name": "Demo Standard Transfer (standard)",
+          "net_received": "22770.55",
+          "arrival_latest": "2026-10-04",
+          "feasible": true
+        },
+        {
+          "route_name": "Demo Express Remit (express)",
+          "net_received": "22610.52",
+          "arrival_latest": "2026-10-03",
+          "feasible": true
+        }
+      ],
+      "order": {
+        "send_amount": "5000.00",
+        "sender_fee": "7.50",
+        "fx_margin_cost": "12.48",
+        "total_cost": "19.98",
+        "receive_amount": "22908.09",
+        "status": "RECONCILED",
+        "on_time": true
+      },
+      "refund": {
+        "status": "REFUNDED",
+        "failure_reason": "Synthetic bank reject"
+      },
+      "large_order": {
+        "status": "SUBMITTED",
+        "send_amount": "12000.00"
+      },
+      "balances": [
+        {
+          "currency": "THB",
+          "balance": "80000.00",
+          "available_balance": "80000.00",
+          "is_home": true,
+          "indicative_home_value": "80000.00",
+          "valuation": null
+        },
+        {
+          "currency": "CNY",
+          "balance": "23000.00",
+          "available_balance": "23000.00",
+          "is_home": false,
+          "indicative_home_value": "105800.00",
+          "valuation": {
+            "rate": "4.6000000000",
+            "rate_date": "2026-10-11",
+            "source": "fixture",
+            "stale": false
+          }
+        }
+      ],
+      "credit": {
+        "level": "BUILDING",
+        "on_time": 1,
+        "limit_multiplier": "1.0"
+      },
+      "policy": [
+        {
+          "action": "remittance.submit",
+          "target_id": "ba877e0f-ff6d-4051-8239-0380fdc89eed",
+          "amount": "5000.00",
+          "currency": "CNY",
+          "tier": "T2",
+          "step_up": true
+        },
+        {
+          "action": "remittance.submit",
+          "target_id": "8666ccb9-8b92-446a-9237-cf774d29e25d",
+          "amount": "1000.00",
+          "currency": "CNY",
+          "tier": "T2",
+          "step_up": true
+        },
+        {
+          "action": "remittance.submit",
+          "target_id": "ac8f24e5-cdd8-4787-823e-e8ad3c64784c",
+          "amount": "12000.00",
+          "currency": "CNY",
+          "tier": "T3",
+          "step_up": true
+        }
+      ],
+      "is_simulated": true
+    },
+    {
+      "run_id": "0db1ccc3f1bd4985b65441be83d7c8f9",
+      "reference_rate": {
+        "rate": "4.6000000000",
+        "rate_date": "2026-10-11",
+        "source": "fixture"
+      },
+      "routes": [
+        {
+          "route_name": "Demo Economy Wire (economy)",
+          "net_received": "22908.09",
+          "arrival_latest": "2026-10-07",
+          "feasible": true
+        },
+        {
+          "route_name": "Demo Standard Transfer (standard)",
+          "net_received": "22770.55",
+          "arrival_latest": "2026-10-04",
+          "feasible": true
+        },
+        {
+          "route_name": "Demo Express Remit (express)",
+          "net_received": "22610.52",
+          "arrival_latest": "2026-10-03",
+          "feasible": true
+        }
+      ],
+      "order": {
+        "send_amount": "5000.00",
+        "sender_fee": "7.50",
+        "fx_margin_cost": "12.48",
+        "total_cost": "19.98",
+        "receive_amount": "22908.09",
+        "status": "RECONCILED",
+        "on_time": true
+      },
+      "refund": {
+        "status": "REFUNDED",
+        "failure_reason": "Synthetic bank reject"
+      },
+      "large_order": {
+        "status": "SUBMITTED",
+        "send_amount": "12000.00"
+      },
+      "balances": [
+        {
+          "currency": "THB",
+          "balance": "80000.00",
+          "available_balance": "80000.00",
+          "is_home": true,
+          "indicative_home_value": "80000.00",
+          "valuation": null
+        },
+        {
+          "currency": "CNY",
+          "balance": "23000.00",
+          "available_balance": "23000.00",
+          "is_home": false,
+          "indicative_home_value": "105800.00",
+          "valuation": {
+            "rate": "4.6000000000",
+            "rate_date": "2026-10-11",
+            "source": "fixture",
+            "stale": false
+          }
+        }
+      ],
+      "credit": {
+        "level": "BUILDING",
+        "on_time": 1,
+        "limit_multiplier": "1.0"
+      },
+      "policy": [
+        {
+          "action": "remittance.submit",
+          "target_id": "8600bf3d-d932-40a3-b548-18b065de9729",
+          "amount": "5000.00",
+          "currency": "CNY",
+          "tier": "T2",
+          "step_up": true
+        },
+        {
+          "action": "remittance.submit",
+          "target_id": "d8e02e68-b7c3-498c-b01b-b6cbf342616a",
+          "amount": "1000.00",
+          "currency": "CNY",
+          "tier": "T2",
+          "step_up": true
+        },
+        {
+          "action": "remittance.submit",
+          "target_id": "97aec0e4-0d9d-401b-980d-d122411f3d66",
+          "amount": "12000.00",
+          "currency": "CNY",
+          "tier": "T3",
+          "step_up": true
+        }
+      ],
+      "is_simulated": true
+    }
+  ],
+  "throttling": {
+    "rates": {
+      "user": "1000/hour",
+      "anon": "100/hour",
+      "auth": "10/min",
+      "step_up": "10/hour",
+      "money": "60/hour",
+      "sponsor": "20/hour",
+      "agent": "30/hour"
+    },
+    "raised": {},
+    "counters": "isolated per command invocation"
+  }
+}

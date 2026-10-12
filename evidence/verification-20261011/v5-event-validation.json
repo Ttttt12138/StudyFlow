@@ -1,0 +1,52 @@
+{
+  "kind": "observed_command_results_summary",
+  "model_calls": 0,
+  "holdout_predictions": 0,
+  "scoring_policy": "bijective_events_with_review_v2",
+  "checks": [
+    {
+      "log": "v5-event-matching-red.log",
+      "exit_code": 1,
+      "failed": 10,
+      "passed": 1
+    },
+    {
+      "log": "v5-event-policy-red.log",
+      "exit_code": 1,
+      "reason": "old scorer approval incorrectly accepted before fix"
+    },
+    {
+      "log": "v5-event-matching-green.log",
+      "exit_code": 0,
+      "passed": 27
+    },
+    {
+      "log": "v5-event-full-tests.log",
+      "exit_code": 0,
+      "passed": 351
+    },
+    {
+      "log": "gates-20261011-221404.log",
+      "exit_code": 0,
+      "gates_passed": 17,
+      "django_tests": 484,
+      "c_tests": 351
+    },
+    {
+      "evidence": "v5-review-browser-3.json",
+      "exit_code": 0,
+      "approval_exported": false
+    },
+    {
+      "evidence": "v5-event-counterexample.json",
+      "exit_code": 0
+    }
+  ],
+  "not_rerun": [
+    "Docker image build",
+    "unchanged frontend integration",
+    "real v5 model evaluation"
+  ],
+  "history_preserved": true,
+  "labels_changed": false
+}

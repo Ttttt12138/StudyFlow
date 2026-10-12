@@ -1,0 +1,14 @@
+{
+  "recorded_at": "2026-10-11T15:48:07.687524+00:00",
+  "review": "completed_user_confirmed",
+  "engineering": "passed",
+  "freeze": "completed",
+  "first_run": "completed",
+  "overall_acceptance": "not_passed",
+  "rounds_per_arm": 1,
+  "total_sample_runs": 480,
+  "live_request_attempts": 580,
+  "report": "../../../evidence/verification-20261011/copilot-v5-first-live.json",
+  "report_sha256": "20a5c7d91c0a9d7fca93522b6fd27c080da5dcbb0928e63e4c4589f8ae80c2e6",
+  "additional_rounds": 0
+}

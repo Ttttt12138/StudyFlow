@@ -3,12 +3,12 @@
   "dataset_version": "consumption-v1",
   "runs": [
     {
-      "run_id": "519f8136f25247c49b638a5094a26f29",
+      "run_id": "ee53e732bc42475bb0258bfa29e3b9e1",
       "transport": "real_loopback_http",
       "database": "postgresql",
       "synthetic": true,
       "model_mode": "mock",
-      "batch_id": "76f1b28c-9b51-4bce-afb6-f666661c2f9a",
+      "batch_id": "a5ad25ee-06ed-45b4-aa53-d4bbb9adc4b4",
       "before": {
         "status": "AT_RISK",
         "as_of": "2026-10-01",
@@ -110,12 +110,12 @@
               "sample_months": 3,
               "source_type": "inferred",
               "supporting_transaction_ids": [
-                "22ad6f46-34ef-4bf5-8304-13fd39e067fe",
-                "4ec9d99e-d462-43f7-ba12-b8109f3c3783",
-                "fbf4d5d7-a68f-4d52-9c1b-5a4cbb4480d1"
+                "7c96fb33-0366-492d-800a-c2a7056b88d9",
+                "4a3012cd-8331-4098-acc9-a1e8fffab13c",
+                "e34cf026-29c9-4024-ba5f-d10b1effdd3d"
               ],
               "source_refs": [
-                "76f1b28c-9b51-4bce-afb6-f666661c2f9a"
+                "a5ad25ee-06ed-45b4-aa53-d4bbb9adc4b4"
               ],
               "synthetic": true
             },
@@ -164,93 +164,93 @@
               "sample_months": 3,
               "source_type": "inferred",
               "supporting_transaction_ids": [
-                "50d903b6-0877-4208-9068-4fbb85f74e3b",
-                "1a897864-150d-4434-8fda-28f9a7c2875b",
-                "fb4afb47-06e9-4954-929e-74e1bedccdf4",
-                "6610623d-173a-4d2d-80ea-332a9011180e",
-                "5ea8e949-121a-4ffd-a8e9-0f18fcbac70b",
-                "1adb3203-8ce5-47bd-a59f-e8fe14302d9b",
-                "19fc69d8-46ae-468a-843f-c056d6c43ff3",
-                "60324619-217f-4501-9c35-233dcfb9de9f",
-                "cc1e5a0d-c091-4ba7-8152-878c7fa0eb62",
-                "a736d6ce-469f-4a93-9887-858779b67570",
-                "2dcb9916-b4a2-472c-8e43-58f916c2ed15",
-                "d4784d12-1c49-440e-be7f-616963de90c9",
-                "f9733e7d-dc3a-4b13-a20b-a434bc1794f0",
-                "c6c8dd89-1140-4c85-b132-e4e51a82b51f",
-                "9c4d2060-5889-423f-939b-0373649d58da",
-                "2174c8f8-382b-4b53-8c58-755259e5a9e4",
-                "a1b48c77-e5f8-4f82-af23-353411e1fc42",
-                "bece31ea-4a8f-4148-a177-aab475217042",
-                "4dcc1016-f978-422f-ae63-93d15993427c",
-                "aea4cc2a-8a43-41e9-809c-aa90cc897d72",
-                "3d825082-f73c-4d21-ad01-2fafa4c7c725",
-                "b0d8e198-733c-4412-95f4-c79829090298",
-                "b372f8ef-5f3a-44f5-9647-6949da2d2e9d",
-                "49ff380d-8059-4e9d-a6a4-ee41d7d81c17",
-                "d4e3edf6-1491-43f9-b213-cf84bddd1401",
-                "ebc9b929-6647-418e-a440-d23a967429df",
-                "01ac9170-2dab-4db6-9f3d-65deaeb9741d",
-                "b726531f-039a-4c8c-82bf-ea00fd757608",
-                "348c7f88-949f-4ecf-b6b4-51c617347874",
-                "883836c3-6687-42bb-bccf-3a494ba4d7c1",
-                "1ed5490d-8e09-4926-928c-573800dcf13e",
-                "9887adaf-f63f-4593-84bf-a7ef16056e42",
-                "4d5195bb-39b5-4bea-8af9-434eb810cf30",
-                "ac31fd66-c88a-48a9-8ca9-44e8c7780861",
-                "dc634b23-34ba-4767-9c38-b1a7ae4d1c15",
-                "c0b32c64-2624-4c80-bdf8-e3c78ac1fc71",
-                "220b67a0-f4f6-4152-a460-424fff9e2a9e",
-                "1ab36957-4490-4301-afa4-e86fb0b0d9d0",
-                "921ee733-5ada-4b05-acf9-e5b20a6fddbf",
-                "e3a1f940-e580-40df-8f04-8fbd420ce136",
-                "18d24fdf-a53c-450d-955e-b9c7a6790d3b",
-                "a98b7465-bc30-4b9e-b92b-5bb4adfa5ca6",
-                "c0cbdc93-9fea-4e43-8ad4-ca63e3c86e14",
-                "63d1db41-a691-4ba2-85db-0da86259a40c",
-                "d30c352f-8a0a-4888-bebd-7661e7623048",
-                "08778c66-3849-4d31-82bd-1adad8c00dad",
-                "3904d33b-21f2-4297-96ba-e9c2e8a82ed4",
-                "8f3b0932-3494-40ad-8714-a7c7abee2642",
-                "0dbc74a0-0272-421e-9c5f-0a5590c761a4",
-                "92c8d60a-3e2b-4a5b-a674-d359e61fce43",
-                "7b5b912a-1b00-42da-8155-ebc092090913",
-                "940e0521-1258-42c0-8e19-dd7b4181c0a5",
-                "c216b6eb-7c80-4405-870c-3c91734e7e5e",
-                "830f0b41-cda5-4db0-aa0b-718795c02a48",
-                "cd9cd565-360e-427a-9639-f92005bc078c",
-                "742f0555-8884-4b97-aee5-de933bd77a08",
-                "8c015645-2c77-47ae-b5a1-4b7a7a2e7eed",
-                "b7f8a3db-0d1b-4463-85ef-893ef473da47",
-                "5600c836-3fb1-47ee-ac86-aba27de16d97",
-                "5d0c3ad1-61bd-487e-ac70-c68866147515",
-                "22159902-7e30-410b-8498-9156dde6ee87",
-                "900ca46d-e361-40c3-9cb6-1f36b7c2e2cb",
-                "79b3db7d-16f2-4d28-a57d-707dd8473b49",
-                "38e4bd3d-19e8-4dee-9f54-b7ee5c5b30f9",
-                "117129fb-af57-49cd-9be9-69cc6e1c9e8d",
-                "b8f54d0e-adda-4880-9b99-884d150dfcb2",
-                "e7161bdd-1b91-4a87-b43d-b9113a7bf96e",
-                "76aa3720-5932-4105-afd4-8693094137ce",
-                "37755ba6-37d1-4d95-be1e-924ec7a8e9b2",
-                "5bb92280-ee22-49d2-b6dd-0e7b3da76c21",
-                "5b00555b-450b-4c0f-b068-95f37642d963",
-                "a1feb45e-8978-4775-8d76-b6881c27bb01",
-                "a9f1af33-e3d3-4336-b97b-560497f35165",
-                "3c984d2d-06c9-4970-9b28-15b85c930dee",
-                "b17a62e8-ce70-4519-9615-81cff24d6b42",
-                "e0e45110-64ab-402d-b645-bd5e2a6e7c0c",
-                "7f61c852-0af8-4e4f-9800-6aab7f7f2f9d",
-                "36324403-e3e4-456d-9826-9ccdf4b4dc6d",
-                "9d8daba0-842d-4089-bc28-b86bed85c740",
-                "5bcd49bb-dba8-4a90-9c20-7f59cac2a0c9",
-                "e3295148-9c9d-4a09-8535-11b919a42000",
-                "d2ff8ac5-8393-4930-8df4-3ee89f2d48f5",
-                "8fed1c2a-18db-4b4c-a0de-816171af6ac1",
-                "efe8d60e-d10c-4c26-89ce-ac137f64b03c"
+                "ee957bcc-fdc3-43b4-ae0b-7606e0e829b7",
+                "b07729f4-be8d-405d-be59-08c1533659dd",
+                "39009072-f787-4ecd-af3b-4fc830a56898",
+                "0dd2ba49-5dc7-4fc0-a792-e327cfde79d9",
+                "9a29158f-82f8-4c12-8330-5f052ec7209f",
+                "c7e45cd1-b0d6-4ecd-a503-5fc5a4c6f223",
+                "13411e3e-19a0-4561-ae99-e94ed11676bd",
+                "c2aa85b1-63d8-46c7-95ca-ec1547da9a08",
+                "53119cbd-3b08-46fc-b89d-67c65903fb42",
+                "4322f353-168f-41c7-bd30-5c93e2f102c1",
+                "6e4fb2d7-8985-4451-a151-adb47821e33a",
+                "12c6fd25-01a9-4ef0-abb6-2ceb34118d0b",
+                "f0482475-2f4c-402b-af2d-f8b4265b16e0",
+                "1c6ff353-3e25-49c6-a461-217ed8dfeda7",
+                "527e007c-d93c-4349-b653-fc16e0d3ff7e",
+                "f482b6dc-f19c-4781-b29b-27c9db9b7e4d",
+                "cd811495-6471-4ecc-b5e9-4c3df96b362a",
+                "dacfe655-773b-4171-bf1b-d5b9b704553b",
+                "233dff2d-be60-4e07-b575-f318b855b132",
+                "63b29c4f-c66f-41b1-93dc-a39f054f3b4e",
+                "742a2ee7-5c9d-4638-aab0-6b4ea5efaba5",
+                "5f0f32b6-4d5a-4e5a-aab1-54899582bd62",
+                "925147fa-78ce-4a4b-a820-82c9d4d1ed11",
+                "8faa75fd-a922-4d36-abd9-6948ff8427c4",
+                "4cba5079-9b94-423d-83f9-bbd43bf08226",
+                "08c69395-becb-4594-a5c7-07c1b917605d",
+                "ebcec934-8bbf-4322-8ca5-163eb5b5a571",
+                "5b67f39d-ef9f-4810-92d1-c7ebd387a8b8",
+                "5bc4fe38-d744-4354-bc2b-11b0b63b46cb",
+                "be0acd98-08ab-499b-97c8-713499f74307",
+                "501c0646-3cff-4e51-ab82-4fb008c143d0",
+                "3764e34d-e43a-4e5f-841f-c2544612e77c",
+                "45de4ac4-e3c4-433d-b33c-1a466136acdc",
+                "8adba3b6-d5ad-406a-bd72-e9d6277b1808",
+                "cab1d88d-11d3-4433-871d-ddd643bb73c8",
+                "af8c0dee-df97-4ea5-a967-bcf84e21c34c",
+                "97b30031-bc9b-4cc9-8d40-ba09b8860ba8",
+                "6a23cb45-232a-4ff5-865d-a71def9145eb",
+                "b86089a9-7503-4953-a7ed-93409a44bf75",
+                "86f0d254-dd94-4a50-a6c5-c6979f2aba92",
+                "77d531bb-494c-42e6-8f01-18089e988e52",
+                "da2d31b8-f277-4aca-9414-ea58c8676933",
+                "7cfa25f0-ab73-4fd8-9c69-3845520c0b37",
+                "a45ad201-2894-4250-b4e2-70cfeea88dce",
+                "39b92725-dc9f-498f-a646-a4077f0ebcf5",
+                "9ac8f794-a37b-4afa-8fa1-60b886f3d606",
+                "bed8d026-c735-4c1c-a7f4-d6c8c34273db",
+                "42803340-8f6f-4e2c-a509-506cab829001",
+                "fe6200d9-302b-4b14-a724-07c66fae186e",
+                "dff090e8-ae71-4c95-bd07-fcb2d9c34d00",
+                "b4fefdc5-5e26-48d1-a77a-e6c13cc91dbb",
+                "379ad5af-7da0-4860-aec5-162e12cee876",
+                "4ca4292b-c2e1-491e-8df0-570fedecdbab",
+                "7b79ed24-33b4-4d69-9058-2cb45380600c",
+                "7261c9f9-b28d-417f-8527-b34d278b817d",
+                "6fd84192-32f7-4b1c-9206-f9dec11532ba",
+                "788841cc-dd1d-4989-911a-c8d7842738da",
+                "083c588d-3246-41c7-9c96-a7c10276b47d",
+                "9afef48e-81fd-43d4-9eb1-d576f5e025b0",
+                "a8742022-c0da-4732-8cef-5c6f0938ecff",
+                "90cc4d91-f736-4b2e-b2e7-22b038d52768",
+                "c229cd4c-1fea-4def-9b7e-98aa55129a73",
+                "09d79eb8-6fa0-45d3-86b6-b4bf6321f7e4",
+                "83ae79a5-0ae8-4a50-8f80-a8c49ecc82f5",
+                "e0538f0c-8363-489c-8d51-4a666a2d384c",
+                "e05773f2-c623-4876-8392-1dd91b932798",
+                "2ce52d97-cb1d-45b1-a0fc-ba3e3151a019",
+                "6b5a1d4c-f29a-4838-93de-f560467c3719",
+                "4d2dee74-c1c8-42f3-96f3-56ac4083612a",
+                "25a78719-a29f-4bd8-a082-e2c55316120e",
+                "e3cebf96-b788-4090-a3b4-942aa0c8b8d0",
+                "c83718a6-7497-4da6-b908-42f87d132db5",
+                "b7913e4a-bfd9-4eb2-ad86-8cfd4778be5a",
+                "833a6028-e278-4075-a36a-0b165844e448",
+                "581d6285-2bd2-4631-9474-51a57a3a5f4a",
+                "71dd8af8-93ae-44fb-a0f6-d67d044e5ceb",
+                "59157049-f0b2-494a-b34b-fd3421a70685",
+                "004e1337-9bac-4df0-9555-4dd01f6a3142",
+                "754b8cb5-ed6e-43d2-bb00-4a72cc030923",
+                "b86a7e9f-9bde-496f-aa09-ddcff79b8fac",
+                "d36bc557-c28d-49ad-9764-68a6830a5c65",
+                "1cdb267a-f502-4763-b306-876b218ec4cc",
+                "dbc97dc6-e778-48be-a645-6803029de1e9",
+                "c153cafd-59cd-479f-b70d-ceb896d095cc"
               ],
               "source_refs": [
-                "76f1b28c-9b51-4bce-afb6-f666661c2f9a"
+                "a5ad25ee-06ed-45b4-aa53-d4bbb9adc4b4"
               ],
               "synthetic": true
             },
@@ -267,12 +267,12 @@
               "sample_months": 3,
               "source_type": "inferred",
               "supporting_transaction_ids": [
-                "b3e39818-49d7-44b9-93bb-837128173bb5",
-                "874305a1-0884-41a7-b930-dcccfb57338a",
-                "b11f4047-581b-431f-997f-c81b17e21799"
+                "bd93c2d8-94e5-4ec3-b1b0-03c47d4b109c",
+                "fb270cc5-f663-4cb1-9069-5fa417fa0121",
+                "b81e9aab-d228-4a68-8f57-0464682e8b90"
               ],
               "source_refs": [
-                "76f1b28c-9b51-4bce-afb6-f666661c2f9a"
+                "a5ad25ee-06ed-45b4-aa53-d4bbb9adc4b4"
               ],
               "synthetic": true
             },
@@ -289,12 +289,12 @@
               "sample_months": 3,
               "source_type": "inferred",
               "supporting_transaction_ids": [
-                "31c84ddb-3555-4f08-a0f0-232d552d40ef",
-                "d6c0c2dc-839d-41d9-b11e-ef19d904423d",
-                "8f7d8137-856d-4441-b4ee-1b9669aff834"
+                "6b15c0da-3d00-4859-8b90-bb83914b65ef",
+                "21a0ea94-bd71-4a75-b9bb-17355679ba25",
+                "9af38ce5-fad9-48c2-9d0a-f5d2b6341aaf"
               ],
               "source_refs": [
-                "76f1b28c-9b51-4bce-afb6-f666661c2f9a"
+                "a5ad25ee-06ed-45b4-aa53-d4bbb9adc4b4"
               ],
               "synthetic": true
             },
@@ -547,7 +547,7 @@
             "within_forecast": true
           },
           {
-            "id": "recurring:80d10c0f-891d-4fcb-b056-73571d4d1a00:2026-10-05",
+            "id": "recurring:4751f8bc-9426-43bf-a9d8-0403abcaa398:2026-10-05",
             "kind": "expense",
             "label": "Demo Music",
             "amount": "199.00",
@@ -1405,7 +1405,7 @@
             "within_forecast": true
           },
           {
-            "id": "recurring:80d10c0f-891d-4fcb-b056-73571d4d1a00:2026-11-05",
+            "id": "recurring:4751f8bc-9426-43bf-a9d8-0403abcaa398:2026-11-05",
             "kind": "expense",
             "label": "Demo Music",
             "amount": "199.00",
@@ -2224,7 +2224,7 @@
             "within_forecast": true
           },
           {
-            "id": "recurring:80d10c0f-891d-4fcb-b056-73571d4d1a00:2026-12-05",
+            "id": "recurring:4751f8bc-9426-43bf-a9d8-0403abcaa398:2026-12-05",
             "kind": "expense",
             "label": "Demo Music",
             "amount": "199.00",
@@ -2718,16 +2718,16 @@
         }
       },
       "support": {
-        "request_id": "8180b263-6606-4fa3-bc73-1e92da63809d",
+        "request_id": "f8f78d30-b57f-4531-ab18-05f1e79a4a0f",
         "confirmation": {
-          "request_id": "8180b263-6606-4fa3-bc73-1e92da63809d",
+          "request_id": "f8f78d30-b57f-4531-ab18-05f1e79a4a0f",
           "status": "CONFIRMED",
           "is_simulated": true
         },
         "comparison": {
           "routes": [
             {
-              "quote_id": "4a21c14b-3321-43bf-8176-ca778c806c6d",
+              "quote_id": "006186fa-c5a6-432d-b013-7f47abc93495",
               "quote_version": 1,
               "route_name": "Demo Standard",
               "source_currency": "USD",
@@ -2743,11 +2743,11 @@
               "deadline_risk": false,
               "shortfall": "0.00",
               "feasible": true,
-              "expires_at": "2026-10-07T15:31:16.314836+00:00",
+              "expires_at": "2026-10-07T16:35:33.752414+00:00",
               "is_simulated": true
             },
             {
-              "quote_id": "94d2029a-bdad-4515-b5b0-41edfd5a0fae",
+              "quote_id": "8ee7234f-6ebb-4359-9883-7b6985d7a5c2",
               "quote_version": 1,
               "route_name": "Demo Express",
               "source_currency": "USD",
@@ -2763,11 +2763,11 @@
               "deadline_risk": false,
               "shortfall": "0.00",
               "feasible": true,
-              "expires_at": "2026-10-07T15:31:16.291837+00:00",
+              "expires_at": "2026-10-07T16:35:33.709512+00:00",
               "is_simulated": true
             },
             {
-              "quote_id": "b1c1644e-835e-481e-bd3a-4329ce0c71b9",
+              "quote_id": "0ce7769b-5383-47c5-89f1-7f415ff46402",
               "quote_version": 1,
               "route_name": "Demo Economy",
               "source_currency": "USD",
@@ -2783,11 +2783,11 @@
               "deadline_risk": true,
               "shortfall": "0.00",
               "feasible": false,
-              "expires_at": "2026-10-07T15:31:16.336788+00:00",
+              "expires_at": "2026-10-07T16:35:33.771031+00:00",
               "is_simulated": true
             }
           ],
-          "recommended_quote_id": "4a21c14b-3321-43bf-8176-ca778c806c6d",
+          "recommended_quote_id": "006186fa-c5a6-432d-b013-7f47abc93495",
           "reason": "ON_TIME_AND_SUFFICIENT",
           "assumptions": [
             "Simulated quotes; calendar days; arrival is not guaranteed; sender fee is included in send amount."
@@ -2796,11 +2796,11 @@
         }
       },
       "payment": {
-        "id": "8de3d77f-3c71-41e6-a3d9-111b6fc5d4d0",
+        "id": "f12bddb6-672f-420b-a460-593eca134557",
         "type": "payment",
-        "created_at": "2026-10-07T14:31:20.232Z",
+        "created_at": "2026-10-07T15:35:37.374Z",
         "plan": null,
-        "readiness_plan": "8ddac22d-0689-453a-a02f-91b2ba58c3df",
+        "readiness_plan": "53a24286-a696-46f4-8cfd-1054080ecf2d",
         "execution_context": {
           "state_version": 4,
           "budget_version": 14,
@@ -2813,35 +2813,35 @@
           "due_date": "2026-10-10",
           "event_id": "cost:tuition:2026-10-10",
           "invoice_id": "DEMO-2026-1",
-          "identity_id": "fa1a9398-d82e-435b-9fee-b6e2fe456fd2",
-          "beneficiary_id": "bbae31ba-9343-4867-bec0-4ebea8e2deec"
+          "identity_id": "06dcdce5-f4ce-4b30-b70a-2a0bd1d5af16",
+          "beneficiary_id": "5bddb95c-7ccb-45d7-93fa-3f0d841d248e"
         },
-        "state": "ed0a65f5-b7e2-4725-9578-f48f3a63d4fd",
-        "beneficiary": "bbae31ba-9343-4867-bec0-4ebea8e2deec",
+        "state": "994e3b60-1087-4704-848d-741a5fa4fbcd",
+        "beneficiary": "5bddb95c-7ccb-45d7-93fa-3f0d841d248e",
         "event_id": "cost:tuition:2026-10-10",
         "amount": "30000.00",
         "due_on": "2026-10-10",
         "status": "reconciled",
-        "authorized_until": "2026-10-07T14:46:20.656Z",
-        "submitted_at": "2026-10-07T14:31:21.224Z",
+        "authorized_until": "2026-10-07T15:50:37.747Z",
+        "submitted_at": "2026-10-07T15:35:38.240Z",
         "receipt": {
           "amount": "30000.00",
           "issuer": "Synthetic University",
           "currency": "THB",
           "event_id": "cost:tuition:2026-10-10",
-          "reference": "mock:8de3d77f-3c71-41e6-a3d9-111b6fc5d4d0",
+          "reference": "mock:f12bddb6-672f-420b-a460-593eca134557",
           "invoice_id": "DEMO-2026-1",
           "settled_on": "2026-10-02",
           "is_simulated": true,
-          "operation_key": "8de3d77f-3c71-41e6-a3d9-111b6fc5d4d0",
-          "beneficiary_id": "bbae31ba-9343-4867-bec0-4ebea8e2deec"
+          "operation_key": "f12bddb6-672f-420b-a460-593eca134557",
+          "beneficiary_id": "5bddb95c-7ccb-45d7-93fa-3f0d841d248e"
         },
         "is_simulated": true
       },
       "policy": [
         {
           "action": "payment.submit",
-          "target_id": "8de3d77f-3c71-41e6-a3d9-111b6fc5d4d0",
+          "target_id": "f12bddb6-672f-420b-a460-593eca134557",
           "amount": "30000.00",
           "currency": "THB",
           "tier": "T2",
@@ -2872,7 +2872,7 @@
         "earliest_risk_date": "2026-10-27",
         "risks": {
           "repayment_liquidity": {
-            "installment_id": "7b946e15-385b-47f0-9e4b-cfa04a59a3f9",
+            "installment_id": "9c7e4d51-37f1-4fab-9536-a19d8348e3bd",
             "gap": "150851.51"
           },
           "cashflow_gap": {
@@ -2889,7 +2889,7 @@
           {
             "kind": "repayment_liquidity",
             "reason": {
-              "installment_id": "7b946e15-385b-47f0-9e4b-cfa04a59a3f9",
+              "installment_id": "9c7e4d51-37f1-4fab-9536-a19d8348e3bd",
               "gap": "150851.51"
             }
           },
@@ -2960,12 +2960,12 @@
               "sample_months": 3,
               "source_type": "inferred",
               "supporting_transaction_ids": [
-                "22ad6f46-34ef-4bf5-8304-13fd39e067fe",
-                "4ec9d99e-d462-43f7-ba12-b8109f3c3783",
-                "fbf4d5d7-a68f-4d52-9c1b-5a4cbb4480d1"
+                "7c96fb33-0366-492d-800a-c2a7056b88d9",
+                "4a3012cd-8331-4098-acc9-a1e8fffab13c",
+                "e34cf026-29c9-4024-ba5f-d10b1effdd3d"
               ],
               "source_refs": [
-                "76f1b28c-9b51-4bce-afb6-f666661c2f9a"
+                "a5ad25ee-06ed-45b4-aa53-d4bbb9adc4b4"
               ],
               "synthetic": true
             },
@@ -3014,97 +3014,97 @@
               "sample_months": 3,
               "source_type": "inferred",
               "supporting_transaction_ids": [
-                "ae4af4c0-c276-42ea-add5-8ffc8e563bf9",
-                "e4a34ca1-c940-411c-b178-a9b0f7a2e37e",
-                "efbed559-357a-439f-835b-8aa4ed8f131b",
-                "50d903b6-0877-4208-9068-4fbb85f74e3b",
-                "1a897864-150d-4434-8fda-28f9a7c2875b",
-                "fb4afb47-06e9-4954-929e-74e1bedccdf4",
-                "6610623d-173a-4d2d-80ea-332a9011180e",
-                "5ea8e949-121a-4ffd-a8e9-0f18fcbac70b",
-                "1adb3203-8ce5-47bd-a59f-e8fe14302d9b",
-                "19fc69d8-46ae-468a-843f-c056d6c43ff3",
-                "60324619-217f-4501-9c35-233dcfb9de9f",
-                "cc1e5a0d-c091-4ba7-8152-878c7fa0eb62",
-                "a736d6ce-469f-4a93-9887-858779b67570",
-                "2dcb9916-b4a2-472c-8e43-58f916c2ed15",
-                "d4784d12-1c49-440e-be7f-616963de90c9",
-                "f9733e7d-dc3a-4b13-a20b-a434bc1794f0",
-                "c6c8dd89-1140-4c85-b132-e4e51a82b51f",
-                "9c4d2060-5889-423f-939b-0373649d58da",
-                "2174c8f8-382b-4b53-8c58-755259e5a9e4",
-                "a1b48c77-e5f8-4f82-af23-353411e1fc42",
-                "bece31ea-4a8f-4148-a177-aab475217042",
-                "4dcc1016-f978-422f-ae63-93d15993427c",
-                "aea4cc2a-8a43-41e9-809c-aa90cc897d72",
-                "3d825082-f73c-4d21-ad01-2fafa4c7c725",
-                "b0d8e198-733c-4412-95f4-c79829090298",
-                "b372f8ef-5f3a-44f5-9647-6949da2d2e9d",
-                "49ff380d-8059-4e9d-a6a4-ee41d7d81c17",
-                "d4e3edf6-1491-43f9-b213-cf84bddd1401",
-                "ebc9b929-6647-418e-a440-d23a967429df",
-                "01ac9170-2dab-4db6-9f3d-65deaeb9741d",
-                "b726531f-039a-4c8c-82bf-ea00fd757608",
-                "348c7f88-949f-4ecf-b6b4-51c617347874",
-                "883836c3-6687-42bb-bccf-3a494ba4d7c1",
-                "1ed5490d-8e09-4926-928c-573800dcf13e",
-                "9887adaf-f63f-4593-84bf-a7ef16056e42",
-                "4d5195bb-39b5-4bea-8af9-434eb810cf30",
-                "ac31fd66-c88a-48a9-8ca9-44e8c7780861",
-                "dc634b23-34ba-4767-9c38-b1a7ae4d1c15",
-                "c0b32c64-2624-4c80-bdf8-e3c78ac1fc71",
-                "220b67a0-f4f6-4152-a460-424fff9e2a9e",
-                "1ab36957-4490-4301-afa4-e86fb0b0d9d0",
-                "921ee733-5ada-4b05-acf9-e5b20a6fddbf",
-                "e3a1f940-e580-40df-8f04-8fbd420ce136",
-                "18d24fdf-a53c-450d-955e-b9c7a6790d3b",
-                "a98b7465-bc30-4b9e-b92b-5bb4adfa5ca6",
-                "c0cbdc93-9fea-4e43-8ad4-ca63e3c86e14",
-                "63d1db41-a691-4ba2-85db-0da86259a40c",
-                "d30c352f-8a0a-4888-bebd-7661e7623048",
-                "08778c66-3849-4d31-82bd-1adad8c00dad",
-                "3904d33b-21f2-4297-96ba-e9c2e8a82ed4",
-                "8f3b0932-3494-40ad-8714-a7c7abee2642",
-                "0dbc74a0-0272-421e-9c5f-0a5590c761a4",
-                "92c8d60a-3e2b-4a5b-a674-d359e61fce43",
-                "7b5b912a-1b00-42da-8155-ebc092090913",
-                "940e0521-1258-42c0-8e19-dd7b4181c0a5",
-                "c216b6eb-7c80-4405-870c-3c91734e7e5e",
-                "830f0b41-cda5-4db0-aa0b-718795c02a48",
-                "cd9cd565-360e-427a-9639-f92005bc078c",
-                "742f0555-8884-4b97-aee5-de933bd77a08",
-                "8c015645-2c77-47ae-b5a1-4b7a7a2e7eed",
-                "b7f8a3db-0d1b-4463-85ef-893ef473da47",
-                "5600c836-3fb1-47ee-ac86-aba27de16d97",
-                "5d0c3ad1-61bd-487e-ac70-c68866147515",
-                "22159902-7e30-410b-8498-9156dde6ee87",
-                "900ca46d-e361-40c3-9cb6-1f36b7c2e2cb",
-                "79b3db7d-16f2-4d28-a57d-707dd8473b49",
-                "38e4bd3d-19e8-4dee-9f54-b7ee5c5b30f9",
-                "117129fb-af57-49cd-9be9-69cc6e1c9e8d",
-                "b8f54d0e-adda-4880-9b99-884d150dfcb2",
-                "e7161bdd-1b91-4a87-b43d-b9113a7bf96e",
-                "76aa3720-5932-4105-afd4-8693094137ce",
-                "37755ba6-37d1-4d95-be1e-924ec7a8e9b2",
-                "5bb92280-ee22-49d2-b6dd-0e7b3da76c21",
-                "5b00555b-450b-4c0f-b068-95f37642d963",
-                "a1feb45e-8978-4775-8d76-b6881c27bb01",
-                "a9f1af33-e3d3-4336-b97b-560497f35165",
-                "3c984d2d-06c9-4970-9b28-15b85c930dee",
-                "b17a62e8-ce70-4519-9615-81cff24d6b42",
-                "e0e45110-64ab-402d-b645-bd5e2a6e7c0c",
-                "7f61c852-0af8-4e4f-9800-6aab7f7f2f9d",
-                "36324403-e3e4-456d-9826-9ccdf4b4dc6d",
-                "9d8daba0-842d-4089-bc28-b86bed85c740",
-                "5bcd49bb-dba8-4a90-9c20-7f59cac2a0c9",
-                "e3295148-9c9d-4a09-8535-11b919a42000",
-                "d2ff8ac5-8393-4930-8df4-3ee89f2d48f5",
-                "8fed1c2a-18db-4b4c-a0de-816171af6ac1",
-                "efe8d60e-d10c-4c26-89ce-ac137f64b03c"
+                "8090ca05-b476-4e34-9bc5-398a04bf1b81",
+                "68614a61-7d2a-43bd-86ce-58f7a8ab280d",
+                "5ef66ce8-d762-4cee-9689-e83fe230df66",
+                "ee957bcc-fdc3-43b4-ae0b-7606e0e829b7",
+                "b07729f4-be8d-405d-be59-08c1533659dd",
+                "39009072-f787-4ecd-af3b-4fc830a56898",
+                "0dd2ba49-5dc7-4fc0-a792-e327cfde79d9",
+                "9a29158f-82f8-4c12-8330-5f052ec7209f",
+                "c7e45cd1-b0d6-4ecd-a503-5fc5a4c6f223",
+                "13411e3e-19a0-4561-ae99-e94ed11676bd",
+                "c2aa85b1-63d8-46c7-95ca-ec1547da9a08",
+                "53119cbd-3b08-46fc-b89d-67c65903fb42",
+                "4322f353-168f-41c7-bd30-5c93e2f102c1",
+                "6e4fb2d7-8985-4451-a151-adb47821e33a",
+                "12c6fd25-01a9-4ef0-abb6-2ceb34118d0b",
+                "f0482475-2f4c-402b-af2d-f8b4265b16e0",
+                "1c6ff353-3e25-49c6-a461-217ed8dfeda7",
+                "527e007c-d93c-4349-b653-fc16e0d3ff7e",
+                "f482b6dc-f19c-4781-b29b-27c9db9b7e4d",
+                "cd811495-6471-4ecc-b5e9-4c3df96b362a",
+                "dacfe655-773b-4171-bf1b-d5b9b704553b",
+                "233dff2d-be60-4e07-b575-f318b855b132",
+                "63b29c4f-c66f-41b1-93dc-a39f054f3b4e",
+                "742a2ee7-5c9d-4638-aab0-6b4ea5efaba5",
+                "5f0f32b6-4d5a-4e5a-aab1-54899582bd62",
+                "925147fa-78ce-4a4b-a820-82c9d4d1ed11",
+                "8faa75fd-a922-4d36-abd9-6948ff8427c4",
+                "4cba5079-9b94-423d-83f9-bbd43bf08226",
+                "08c69395-becb-4594-a5c7-07c1b917605d",
+                "ebcec934-8bbf-4322-8ca5-163eb5b5a571",
+                "5b67f39d-ef9f-4810-92d1-c7ebd387a8b8",
+                "5bc4fe38-d744-4354-bc2b-11b0b63b46cb",
+                "be0acd98-08ab-499b-97c8-713499f74307",
+                "501c0646-3cff-4e51-ab82-4fb008c143d0",
+                "3764e34d-e43a-4e5f-841f-c2544612e77c",
+                "45de4ac4-e3c4-433d-b33c-1a466136acdc",
+                "8adba3b6-d5ad-406a-bd72-e9d6277b1808",
+                "cab1d88d-11d3-4433-871d-ddd643bb73c8",
+                "af8c0dee-df97-4ea5-a967-bcf84e21c34c",
+                "97b30031-bc9b-4cc9-8d40-ba09b8860ba8",
+                "6a23cb45-232a-4ff5-865d-a71def9145eb",
+                "b86089a9-7503-4953-a7ed-93409a44bf75",
+                "86f0d254-dd94-4a50-a6c5-c6979f2aba92",
+                "77d531bb-494c-42e6-8f01-18089e988e52",
+                "da2d31b8-f277-4aca-9414-ea58c8676933",
+                "7cfa25f0-ab73-4fd8-9c69-3845520c0b37",
+                "a45ad201-2894-4250-b4e2-70cfeea88dce",
+                "39b92725-dc9f-498f-a646-a4077f0ebcf5",
+                "9ac8f794-a37b-4afa-8fa1-60b886f3d606",
+                "bed8d026-c735-4c1c-a7f4-d6c8c34273db",
+                "42803340-8f6f-4e2c-a509-506cab829001",
+                "fe6200d9-302b-4b14-a724-07c66fae186e",
+                "dff090e8-ae71-4c95-bd07-fcb2d9c34d00",
+                "b4fefdc5-5e26-48d1-a77a-e6c13cc91dbb",
+                "379ad5af-7da0-4860-aec5-162e12cee876",
+                "4ca4292b-c2e1-491e-8df0-570fedecdbab",
+                "7b79ed24-33b4-4d69-9058-2cb45380600c",
+                "7261c9f9-b28d-417f-8527-b34d278b817d",
+                "6fd84192-32f7-4b1c-9206-f9dec11532ba",
+                "788841cc-dd1d-4989-911a-c8d7842738da",
+                "083c588d-3246-41c7-9c96-a7c10276b47d",
+                "9afef48e-81fd-43d4-9eb1-d576f5e025b0",
+                "a8742022-c0da-4732-8cef-5c6f0938ecff",
+                "90cc4d91-f736-4b2e-b2e7-22b038d52768",
+                "c229cd4c-1fea-4def-9b7e-98aa55129a73",
+                "09d79eb8-6fa0-45d3-86b6-b4bf6321f7e4",
+                "83ae79a5-0ae8-4a50-8f80-a8c49ecc82f5",
+                "e0538f0c-8363-489c-8d51-4a666a2d384c",
+                "e05773f2-c623-4876-8392-1dd91b932798",
+                "2ce52d97-cb1d-45b1-a0fc-ba3e3151a019",
+                "6b5a1d4c-f29a-4838-93de-f560467c3719",
+                "4d2dee74-c1c8-42f3-96f3-56ac4083612a",
+                "25a78719-a29f-4bd8-a082-e2c55316120e",
+                "e3cebf96-b788-4090-a3b4-942aa0c8b8d0",
+                "c83718a6-7497-4da6-b908-42f87d132db5",
+                "b7913e4a-bfd9-4eb2-ad86-8cfd4778be5a",
+                "833a6028-e278-4075-a36a-0b165844e448",
+                "581d6285-2bd2-4631-9474-51a57a3a5f4a",
+                "71dd8af8-93ae-44fb-a0f6-d67d044e5ceb",
+                "59157049-f0b2-494a-b34b-fd3421a70685",
+                "004e1337-9bac-4df0-9555-4dd01f6a3142",
+                "754b8cb5-ed6e-43d2-bb00-4a72cc030923",
+                "b86a7e9f-9bde-496f-aa09-ddcff79b8fac",
+                "d36bc557-c28d-49ad-9764-68a6830a5c65",
+                "1cdb267a-f502-4763-b306-876b218ec4cc",
+                "dbc97dc6-e778-48be-a645-6803029de1e9",
+                "c153cafd-59cd-479f-b70d-ceb896d095cc"
               ],
               "source_refs": [
-                "2cad9e6a-c7a0-4f44-93e2-bd97dc40c8ef",
-                "76f1b28c-9b51-4bce-afb6-f666661c2f9a"
+                "a5ad25ee-06ed-45b4-aa53-d4bbb9adc4b4",
+                "f2619bac-85ed-44fa-a746-24a7ec45e013"
               ],
               "synthetic": true
             },
@@ -3121,12 +3121,12 @@
               "sample_months": 3,
               "source_type": "inferred",
               "supporting_transaction_ids": [
-                "b3e39818-49d7-44b9-93bb-837128173bb5",
-                "874305a1-0884-41a7-b930-dcccfb57338a",
-                "b11f4047-581b-431f-997f-c81b17e21799"
+                "bd93c2d8-94e5-4ec3-b1b0-03c47d4b109c",
+                "fb270cc5-f663-4cb1-9069-5fa417fa0121",
+                "b81e9aab-d228-4a68-8f57-0464682e8b90"
               ],
               "source_refs": [
-                "76f1b28c-9b51-4bce-afb6-f666661c2f9a"
+                "a5ad25ee-06ed-45b4-aa53-d4bbb9adc4b4"
               ],
               "synthetic": true
             },
@@ -3143,12 +3143,12 @@
               "sample_months": 3,
               "source_type": "inferred",
               "supporting_transaction_ids": [
-                "31c84ddb-3555-4f08-a0f0-232d552d40ef",
-                "d6c0c2dc-839d-41d9-b11e-ef19d904423d",
-                "8f7d8137-856d-4441-b4ee-1b9669aff834"
+                "6b15c0da-3d00-4859-8b90-bb83914b65ef",
+                "21a0ea94-bd71-4a75-b9bb-17355679ba25",
+                "9af38ce5-fad9-48c2-9d0a-f5d2b6341aaf"
               ],
               "source_refs": [
-                "76f1b28c-9b51-4bce-afb6-f666661c2f9a"
+                "a5ad25ee-06ed-45b4-aa53-d4bbb9adc4b4"
               ],
               "synthetic": true
             },
@@ -3329,7 +3329,7 @@
             "label": "tuition",
             "amount": "30000.00",
             "certainty": "confirmed",
-            "beneficiary_id": "bbae31ba-9343-4867-bec0-4ebea8e2deec",
+            "beneficiary_id": "5bddb95c-7ccb-45d7-93fa-3f0d841d248e",
             "settled_sequence": 2,
             "status": "paid",
             "source_type": "budget_or_invoice",
@@ -3440,7 +3440,7 @@
             "within_forecast": true
           },
           {
-            "id": "recurring:80d10c0f-891d-4fcb-b056-73571d4d1a00:2026-10-05",
+            "id": "recurring:4751f8bc-9426-43bf-a9d8-0403abcaa398:2026-10-05",
             "kind": "expense",
             "label": "Demo Music",
             "amount": "199.00",
@@ -4155,7 +4155,7 @@
             "within_forecast": true
           },
           {
-            "id": "repayment:5ca997ad-87e8-42f0-9048-2e09d35d9971:1",
+            "id": "repayment:80b80036-a8c6-4068-98f1-baf5fcb5c02a:1",
             "date": "2026-11-01",
             "kind": "expense",
             "label": "Simulated loan repayment",
@@ -4298,7 +4298,7 @@
             "within_forecast": true
           },
           {
-            "id": "recurring:80d10c0f-891d-4fcb-b056-73571d4d1a00:2026-11-05",
+            "id": "recurring:4751f8bc-9426-43bf-a9d8-0403abcaa398:2026-11-05",
             "kind": "expense",
             "label": "Demo Music",
             "amount": "199.00",
@@ -4987,7 +4987,7 @@
             "within_forecast": true
           },
           {
-            "id": "repayment:5ca997ad-87e8-42f0-9048-2e09d35d9971:2",
+            "id": "repayment:80b80036-a8c6-4068-98f1-baf5fcb5c02a:2",
             "date": "2026-12-01",
             "kind": "expense",
             "label": "Simulated loan repayment",
@@ -5130,7 +5130,7 @@
             "within_forecast": true
           },
           {
-            "id": "recurring:80d10c0f-891d-4fcb-b056-73571d4d1a00:2026-12-05",
+            "id": "recurring:4751f8bc-9426-43bf-a9d8-0403abcaa398:2026-12-05",
             "kind": "expense",
             "label": "Demo Music",
             "amount": "199.00",
@@ -5403,7 +5403,7 @@
             "within_forecast": true
           },
           {
-            "id": "repayment:5ca997ad-87e8-42f0-9048-2e09d35d9971:3",
+            "id": "repayment:80b80036-a8c6-4068-98f1-baf5fcb5c02a:3",
             "date": "2027-01-01",
             "kind": "expense",
             "label": "Simulated loan repayment",
@@ -5414,7 +5414,7 @@
             "within_forecast": false
           },
           {
-            "id": "repayment:5ca997ad-87e8-42f0-9048-2e09d35d9971:4",
+            "id": "repayment:80b80036-a8c6-4068-98f1-baf5fcb5c02a:4",
             "date": "2027-02-01",
             "kind": "expense",
             "label": "Simulated loan repayment",
@@ -5425,7 +5425,7 @@
             "within_forecast": false
           },
           {
-            "id": "repayment:5ca997ad-87e8-42f0-9048-2e09d35d9971:5",
+            "id": "repayment:80b80036-a8c6-4068-98f1-baf5fcb5c02a:5",
             "date": "2027-03-01",
             "kind": "expense",
             "label": "Simulated loan repayment",
@@ -5436,7 +5436,7 @@
             "within_forecast": false
           },
           {
-            "id": "repayment:5ca997ad-87e8-42f0-9048-2e09d35d9971:6",
+            "id": "repayment:80b80036-a8c6-4068-98f1-baf5fcb5c02a:6",
             "date": "2027-04-01",
             "kind": "expense",
             "label": "Simulated loan repayment",
@@ -5448,7 +5448,7 @@
           }
         ],
         "next_installment": {
-          "id": "7b946e15-385b-47f0-9e4b-cfa04a59a3f9",
+          "id": "9c7e4d51-37f1-4fab-9536-a19d8348e3bd",
           "date": "2026-11-01",
           "amount": "1725.48",
           "within_forecast": true
@@ -5458,7 +5458,7 @@
             "status": "Verified",
             "source_type": "controlled_confirmation",
             "source_refs": [
-              "07530dba-adff-40a8-8d32-ee872833f5ce"
+              "137d50f2-6fba-4d37-95cb-e28d87fc5336"
             ],
             "evidence": [
               {
@@ -5468,9 +5468,9 @@
                 "source_id": "https://sites.google.com/phuket.psu.ac.th/fispsuphuket/International-Students"
               }
             ],
-            "updated_at": "2026-10-07T14:31:18.430348+00:00",
-            "observed_at": "2026-10-07T14:31:18.430348+00:00",
-            "verified_at": "2026-10-07T14:31:18.430353+00:00",
+            "updated_at": "2026-10-07T15:35:35.673685+00:00",
+            "observed_at": "2026-10-07T15:35:35.673685+00:00",
+            "verified_at": "2026-10-07T15:35:35.673689+00:00",
             "conflict": false,
             "expired": false,
             "applicability": "APPLICABLE",
@@ -5676,12 +5676,12 @@
       }
     },
     {
-      "run_id": "d36968b778e14a0eb82f46cbcd0e2b08",
+      "run_id": "ec0c46d2e79f4fe09681f91b983b5471",
       "transport": "real_loopback_http",
       "database": "postgresql",
       "synthetic": true,
       "model_mode": "mock",
-      "batch_id": "d2e16b5a-381f-43d9-a21e-991b5f9de01e",
+      "batch_id": "f9d501ae-8a43-4aec-aa5a-74b27b98e4dc",
       "before": {
         "status": "AT_RISK",
         "as_of": "2026-10-01",
@@ -5783,12 +5783,12 @@
               "sample_months": 3,
               "source_type": "inferred",
               "supporting_transaction_ids": [
-                "bc379ce5-eff9-4ced-ab3a-9a435fff6e51",
-                "10ba4109-6c55-469b-bf23-957d58087fb7",
-                "553dec16-1dc6-44e3-9248-8d8daf713761"
+                "c6e3cb6b-abda-4a09-b49e-d7f376c1839f",
+                "d31dedd7-ac86-46e0-953e-fbda2deadaf8",
+                "c0bd0e34-00fc-4f55-b864-edcc451d0554"
               ],
               "source_refs": [
-                "d2e16b5a-381f-43d9-a21e-991b5f9de01e"
+                "f9d501ae-8a43-4aec-aa5a-74b27b98e4dc"
               ],
               "synthetic": true
             },
@@ -5837,93 +5837,93 @@
               "sample_months": 3,
               "source_type": "inferred",
               "supporting_transaction_ids": [
-                "2e2e4f3b-3364-41c8-b774-befcb03aac4e",
-                "33d8b446-38dd-44c3-a602-aebf19dbfe31",
-                "9928390a-1457-49f9-85ba-71a1c1d992ae",
-                "79f31d61-5462-4441-9646-801db566462a",
-                "9e33559e-bc7a-4c52-be85-ea990c3321e7",
-                "9ceac8bf-eccd-41eb-b1a4-10f413f64938",
-                "e8365da4-0028-4dec-a800-67de2d8c3aa3",
-                "db37b9d2-9c26-49dc-b100-97491318e6da",
-                "01777178-f78f-4378-8b82-90262c35b67e",
-                "72cf527b-a744-4d38-917e-c4c63fa78438",
-                "eb55b36d-a1cf-4bb4-a8f9-97fb976f2394",
-                "148a0e94-75e4-4122-96d5-95ab1bf4ac3a",
-                "90d2666e-87cd-4c09-b0e1-9a8dea84017a",
-                "4ae144b8-c2b9-4a27-9ed1-0360aaca25d0",
-                "f27d534d-2879-4ffd-abba-34d48f138205",
-                "1b72939a-5ba0-4a72-8806-8be5e3b627a0",
-                "20152bfe-b6ea-41f7-86ae-438229642bc5",
-                "ed229170-6712-4bba-bde8-354903e7af21",
-                "cde915de-f788-453c-a7fd-00a536ff5197",
-                "c9a35249-f642-4f21-89f1-1ef0987dd778",
-                "8afee68e-e29f-41d2-9cd4-90ed2597bac6",
-                "e87446f7-fce0-4d19-a24a-54d6e8eb7339",
-                "e82d1d3e-3c1d-40fa-b2a5-ba8d4937f39f",
-                "a8ddbc71-330a-4cf8-9f6e-8025b3823f4c",
-                "a4d10439-c887-486c-a8d4-ae7009c584b7",
-                "ad0b0155-4068-4abc-8157-daadbabc476b",
-                "1adeeec9-2e7f-4c0f-98c5-dde57e6c0e72",
-                "2fb42e86-1c3c-4fd0-90db-8d6648524f67",
-                "1ebf0259-461f-465e-a38c-1dced873ed78",
-                "3a1190e4-a1c6-4fc3-b52c-82641c6b5bd0",
-                "d8f60033-8f95-40ca-8dba-e401c92fea4f",
-                "8e5672ae-2ba1-4eb5-9415-e84bad2acece",
-                "7357e28e-5aec-4b6c-8727-8b6aa5053a8f",
-                "e9af511f-81ee-4065-b324-d99d9749b93c",
-                "2c029fc5-a392-449a-90b0-5411a73e8f50",
-                "de379fd5-4269-42b4-af0f-c0d2bd7d25e4",
-                "ffdb6ef0-ee09-497d-a766-7bb3ca8a7ff3",
-                "6873afb7-834a-446e-baae-b13db5d83c6f",
-                "eee8ad7f-3eb1-4f8c-94cd-711fc4d7d6bc",
-                "923dcc85-e033-4e7b-bcdc-d522c9142bef",
-                "493fe8d0-42b7-4be6-bd98-d2636747aef6",
-                "1ae7e54a-d6f7-4a24-aa32-d757b7772592",
-                "2ac34b11-81c2-4d37-ae75-c3bab665d8ce",
-                "e6ee8925-29ba-49c9-a63f-63a9427f7a8a",
-                "277552e0-7e1d-4b50-a89d-d9d7b04f647a",
-                "b42065d6-cc9e-41be-bb57-f6f9d85231be",
-                "5e22850b-e1a6-4a97-bf39-59e68d4e76a4",
-                "059da67c-865d-4064-8525-cea4a4a37150",
-                "6cf13e19-da7e-4402-94b6-7da3dc05da97",
-                "181a897b-bb04-4ef7-a0c1-1f5eff43384f",
-                "2f8a38e6-481c-419b-bab1-6dc496c4a20b",
-                "9f3554a1-24aa-4def-a893-d6d01aedac18",
-                "31e40a53-a596-4120-b692-1f853c212a82",
-                "7267eadf-f1bb-49ea-be64-6dcc36ad3bbd",
-                "471fa90b-d117-477d-a87a-d7590fdde2c3",
-                "7e84d227-ac5a-44aa-ae40-8d0cf7e1fa6c",
-                "b2c793c2-14ec-4f80-8f7e-36dd3d30666e",
-                "9bb5874a-8822-4539-b752-cc2b39bf09f1",
-                "fa5353a1-ca69-4f6c-8285-38a53a14c5c1",
-                "6af3254e-7c22-4faa-8b3b-971611c0af92",
-                "d6a235fb-b19a-480f-9d5f-080243e63132",
-                "9608e7e3-0f84-4b34-aba7-f001e2c73d4c",
-                "5a2939da-a62d-4a3e-8fa4-7bbee56a8ddb",
-                "319e7a3b-f88f-449b-aabb-14f4cd98c7a1",
-                "38721777-f8b9-48f7-b1df-e97628119d2f",
-                "4ebf8e87-96f3-4fab-bcd4-067c1dff6e3d",
-                "25aafe0c-0f33-4b1d-8c2e-58b65a26dc58",
-                "ba9412a6-f012-4538-83f0-838d5e5b48e1",
-                "aa827d90-b41a-48c8-8598-6335abd3e588",
-                "26ebe983-09af-40c0-b2d6-6d5cef55fccc",
-                "b04b7a0a-98ca-4eaa-a238-0d4488c397a7",
-                "7d78af89-9e3a-4385-9941-1f69c3ef607b",
-                "fbe11a83-04b4-4028-9864-c5263a811e28",
-                "bbda0944-a7b1-487a-9385-1f2b8b3a8c00",
-                "960299be-11dd-4f06-8983-c84b2b7d9ed1",
-                "36ba9f2d-f740-4d00-bbac-370e86ed42ec",
-                "51e8f2d7-7a57-486e-ac35-707fd11866d0",
-                "5db8d7b8-7c64-4b2e-b8d9-38482a4ed11c",
-                "727123f0-61f8-4733-9009-a9e03a021a37",
-                "75bab35b-3e88-4772-890f-bb7bd99c6a59",
-                "eb63227d-4b2e-4ddc-9d89-b13cf66b29e5",
-                "1de6aa92-90d8-4770-9927-d062686f1a62",
-                "58eefe50-a3fc-4a88-ba0c-cb8415a9d429",
-                "388e9de0-03aa-49c0-be6b-ad696542a823"
+                "bf554dfe-aaf3-4c22-8588-66b238373ba3",
+                "744f969c-52af-49f3-9cbc-44f747c3aa15",
+                "39034e27-cff8-45da-b1bf-0280ce6285c9",
+                "971b1b4a-46e9-4a8b-9a4f-b814365f0f72",
+                "ea3ddde4-c4d6-4c38-b865-7eabc12c33e8",
+                "451f2dfa-9e6f-42da-b81b-a7f4717530e8",
+                "e3836930-dfa1-483a-a731-c27ed1888207",
+                "0f7e0045-f3b1-40b2-b9d9-99b92d851e2f",
+                "aacab3ce-0ca3-4385-ba25-33d52e63ef06",
+                "b4157a73-fe97-459e-9004-0e8d21a95db2",
+                "2e1ddc42-484f-48bd-9e57-8eeca4bc2500",
+                "f3a049c3-da44-4b92-b9f4-6fd3168d441e",
+                "446427d6-1214-465e-b200-f4d14229da9c",
+                "30452e2b-0c89-4631-968c-e2edd706b8bd",
+                "1d5f7520-a067-4f8d-af91-185a3f5316c8",
+                "a21096d6-1907-46d4-9fb3-097e1ec333c9",
+                "c913afa7-1b08-485e-a3da-498305652c82",
+                "91b7370c-c104-4956-8cfc-399d87227ca7",
+                "4dadb10d-a3c5-45ad-9aec-91eb7aa79820",
+                "c95896c2-75b2-4920-b8de-e5ba0838c5ba",
+                "4b909e4f-245c-4e29-aa18-2338ab845d57",
+                "6ef58f27-a36c-4147-8f2d-3f424d30b8a2",
+                "b4719ca1-6d29-4805-a397-629da7d90c55",
+                "04cb429a-6396-43cc-befa-df5c087ebd96",
+                "4ddbad04-ecf5-433e-a8d4-5707ec269eea",
+                "4bbfeb18-a114-4779-b0e7-1683ae6f9b55",
+                "de7a94d3-b8ad-4173-ad53-d68d1472d148",
+                "9431c030-de30-4ca7-834d-9135f09072d5",
+                "89a5adb4-01cb-475d-b21d-e79122a2f703",
+                "58598a86-3c21-49a2-9147-c948f756c05b",
+                "0a944b40-b135-49c3-a8fb-cf60d16b59f1",
+                "744c830e-25b9-45be-aea3-5f34735b8197",
+                "e396e9b8-890b-4685-9a0d-675df0bb0f2a",
+                "4a586f79-d2c2-43e2-8f49-6d6259be56f8",
+                "d70ff4ca-f4cd-465e-a628-0dbad3fad542",
+                "5591b895-b72b-4d95-aaa4-b3fee77e411a",
+                "fa8043b0-85c0-44a1-a3ee-4a11674706d4",
+                "82d4233d-33b4-41af-a14e-4545cff4a1c0",
+                "dc5ffaa1-da6c-4805-9231-03d802ea7262",
+                "82e8573d-858e-46d8-b0dd-bb752ba23465",
+                "9ca49164-af25-4ef0-9c62-108600cd1660",
+                "8ce0d292-8236-41c0-b98c-fbe5893bb932",
+                "9f5c7d2d-d632-4bff-8064-e09d28f0ad34",
+                "1ba237a4-5d15-446b-ae46-981d537bfc8a",
+                "1230ad93-74e2-4c24-b5d1-d51632bb4f85",
+                "550859bf-d4fa-4000-a493-7e541cd059ea",
+                "3af4590a-5e4b-4778-9365-d8bdd20e02d7",
+                "d4c59236-efcc-4edb-825c-562326a5ad68",
+                "c659a9c7-cefc-4c59-a1b8-19a74c907dbd",
+                "cd2da43f-2f08-4069-9f07-14abbde1ca43",
+                "4e3237bd-8e9e-42fa-a91a-4c6eafabe33a",
+                "af7884a5-d0bd-4df2-afcb-f1aa3c38726a",
+                "fed3cea8-d016-4a00-b4a1-ea2188487320",
+                "05963b68-8a03-4535-ba77-d84f784abd90",
+                "d4d589bd-8d9a-4fb4-a186-61e9609bce94",
+                "60013def-1946-4626-8eb8-2dd3587ab44c",
+                "b298d7c5-69b5-400f-8b4d-b13d7c6af159",
+                "d55bd2c5-fd31-4890-826f-28e284935779",
+                "8d937a9f-6248-4804-bbe6-4421ea152465",
+                "7af4c09d-5b1a-4ad6-b8c1-832acf3ed31d",
+                "54145bb6-d705-4258-8072-4cab6ef4bc98",
+                "428bca80-fd43-4e8c-8e27-5ef99bbe5f3a",
+                "c98b7dba-91c4-4a0b-8ccb-914cbacfe3e8",
+                "3eff57c1-2322-4fc4-92da-5aaa0a7f49af",
+                "413ab39e-e488-4486-9e4d-cd6ff72fbcdc",
+                "b8811f47-bf73-482d-afa6-11f4ae0bc676",
+                "76e59ecc-cb1d-48eb-92fe-61ebfaadb1f8",
+                "0478b80a-01d3-4f3c-96c7-8fb0f3d3e40b",
+                "9b965a69-9a08-49a1-b91d-ec2689a03388",
+                "11f3cd79-e675-4727-8c22-a514a54d79ed",
+                "edfcee8d-c4fd-41db-874d-df2c332ed860",
+                "e2ff8e9e-7163-4c3c-8026-864a302cfa67",
+                "08b16c92-bf39-450a-81b3-c1b6f4431bed",
+                "a369afd5-02a3-4cf5-a2be-81904909949b",
+                "40ca26ee-fc92-449a-a2e5-431e0e48dbde",
+                "7ca67dc5-5c40-48ea-963c-af17f9fedcf5",
+                "7898ae03-d2bd-4681-9882-f3aadd86c43e",
+                "e647d3a2-ba91-45ed-be54-6fe7f40ae072",
+                "c68ed07a-031e-4519-8f8d-f2afd41f76d8",
+                "e13e15e7-cb5f-4185-af26-09ffc134cd16",
+                "7dc85502-2896-4786-9023-0461863dfffd",
+                "332f3c35-790a-4864-9b08-6aeac6838d14",
+                "4d2d2949-ab7e-4c74-8bb7-6a3b978972cb",
+                "f0c192e7-9355-4bdd-b18c-5452efcb65d7"
               ],
               "source_refs": [
-                "d2e16b5a-381f-43d9-a21e-991b5f9de01e"
+                "f9d501ae-8a43-4aec-aa5a-74b27b98e4dc"
               ],
               "synthetic": true
             },
@@ -5940,12 +5940,12 @@
               "sample_months": 3,
               "source_type": "inferred",
               "supporting_transaction_ids": [
-                "8398f35b-a18e-4bdf-80f5-644ce177fb1b",
-                "77415845-aa5d-4e93-9ab5-6c9ec08ca2e9",
-                "c127be34-73dd-436b-8b76-180929ec24d2"
+                "92e4793e-797a-4014-8476-e788d0d1fde6",
+                "6b926feb-adae-45d1-86cb-6e589aa1209d",
+                "f53273ac-8138-4ed8-9289-907ed035d2df"
               ],
               "source_refs": [
-                "d2e16b5a-381f-43d9-a21e-991b5f9de01e"
+                "f9d501ae-8a43-4aec-aa5a-74b27b98e4dc"
               ],
               "synthetic": true
             },
@@ -5962,12 +5962,12 @@
               "sample_months": 3,
               "source_type": "inferred",
               "supporting_transaction_ids": [
-                "74c5d63c-f4a2-4e9d-857c-8d7d4edede82",
-                "6c74210b-ad63-4634-84a7-6a53bc804e0a",
-                "e4897868-9c8f-4102-9dae-f671441a092e"
+                "87560db0-02f9-4c2e-8597-85dc00713e15",
+                "23fb7474-54a1-405f-a408-173a44bc018f",
+                "02f1600e-7312-48ac-b3cf-ed02cd1c1db7"
               ],
               "source_refs": [
-                "d2e16b5a-381f-43d9-a21e-991b5f9de01e"
+                "f9d501ae-8a43-4aec-aa5a-74b27b98e4dc"
               ],
               "synthetic": true
             },
@@ -6220,7 +6220,7 @@
             "within_forecast": true
           },
           {
-            "id": "recurring:2dfca939-04b2-4ef2-bb30-e3ce8bd5cd13:2026-10-05",
+            "id": "recurring:12d35dcc-1d9f-47e3-a286-dbd83d6e1774:2026-10-05",
             "kind": "expense",
             "label": "Demo Music",
             "amount": "199.00",
@@ -7078,7 +7078,7 @@
             "within_forecast": true
           },
           {
-            "id": "recurring:2dfca939-04b2-4ef2-bb30-e3ce8bd5cd13:2026-11-05",
+            "id": "recurring:12d35dcc-1d9f-47e3-a286-dbd83d6e1774:2026-11-05",
             "kind": "expense",
             "label": "Demo Music",
             "amount": "199.00",
@@ -7897,7 +7897,7 @@
             "within_forecast": true
           },
           {
-            "id": "recurring:2dfca939-04b2-4ef2-bb30-e3ce8bd5cd13:2026-12-05",
+            "id": "recurring:12d35dcc-1d9f-47e3-a286-dbd83d6e1774:2026-12-05",
             "kind": "expense",
             "label": "Demo Music",
             "amount": "199.00",
@@ -8391,16 +8391,16 @@
         }
       },
       "support": {
-        "request_id": "fc73c2cd-6f2b-4f79-ad4b-4999e835010a",
+        "request_id": "f4e376cf-cb55-4966-a9e2-0f0de74bbdc3",
         "confirmation": {
-          "request_id": "fc73c2cd-6f2b-4f79-ad4b-4999e835010a",
+          "request_id": "f4e376cf-cb55-4966-a9e2-0f0de74bbdc3",
           "status": "CONFIRMED",
           "is_simulated": true
         },
         "comparison": {
           "routes": [
             {
-              "quote_id": "ec5abed6-3f57-4fda-8aa7-48a7786a852a",
+              "quote_id": "cd451af3-a255-4428-8397-9936546ed1b6",
               "quote_version": 1,
               "route_name": "Demo Standard",
               "source_currency": "USD",
@@ -8416,11 +8416,11 @@
               "deadline_risk": false,
               "shortfall": "0.00",
               "feasible": true,
-              "expires_at": "2026-10-07T15:31:26.470924+00:00",
+              "expires_at": "2026-10-07T16:35:43.072046+00:00",
               "is_simulated": true
             },
             {
-              "quote_id": "a8e8f20a-5711-4a3d-aff4-aa2e8711b8bd",
+              "quote_id": "87116b7f-ddae-4294-829d-7bcc8fe72355",
               "quote_version": 1,
               "route_name": "Demo Express",
               "source_currency": "USD",
@@ -8436,11 +8436,11 @@
               "deadline_risk": false,
               "shortfall": "0.00",
               "feasible": true,
-              "expires_at": "2026-10-07T15:31:26.447587+00:00",
+              "expires_at": "2026-10-07T16:35:43.036428+00:00",
               "is_simulated": true
             },
             {
-              "quote_id": "505a351f-153d-4c72-8f0f-39a40b316a39",
+              "quote_id": "12b31208-82b2-4624-8808-e87bc920ca20",
               "quote_version": 1,
               "route_name": "Demo Economy",
               "source_currency": "USD",
@@ -8456,11 +8456,11 @@
               "deadline_risk": true,
               "shortfall": "0.00",
               "feasible": false,
-              "expires_at": "2026-10-07T15:31:26.492728+00:00",
+              "expires_at": "2026-10-07T16:35:43.117512+00:00",
               "is_simulated": true
             }
           ],
-          "recommended_quote_id": "ec5abed6-3f57-4fda-8aa7-48a7786a852a",
+          "recommended_quote_id": "cd451af3-a255-4428-8397-9936546ed1b6",
           "reason": "ON_TIME_AND_SUFFICIENT",
           "assumptions": [
             "Simulated quotes; calendar days; arrival is not guaranteed; sender fee is included in send amount."
@@ -8469,11 +8469,11 @@
         }
       },
       "payment": {
-        "id": "617b89da-1566-4ae0-aec3-d8373fd9015c",
+        "id": "a6454193-5138-45d5-b6a1-2cac96251144",
         "type": "payment",
-        "created_at": "2026-10-07T14:31:30.471Z",
+        "created_at": "2026-10-07T15:35:46.770Z",
         "plan": null,
-        "readiness_plan": "c5912eaf-085b-4040-b6ea-d7c4034a209a",
+        "readiness_plan": "71ec0265-1ddf-416c-97cb-c6b202e1415c",
         "execution_context": {
           "state_version": 4,
           "budget_version": 14,
@@ -8486,35 +8486,35 @@
           "due_date": "2026-10-10",
           "event_id": "cost:tuition:2026-10-10",
           "invoice_id": "DEMO-2026-1",
-          "identity_id": "2db079e1-dfc0-4647-bb57-494d3021f469",
-          "beneficiary_id": "2cc1d7fb-221a-4b56-9166-bd4f7fbd2953"
+          "identity_id": "a9244aff-2121-4502-a182-564c6d176764",
+          "beneficiary_id": "d0216687-92a2-4292-83e6-5e59f9c0cc5f"
         },
-        "state": "abe47bc5-58a7-4fcc-9b02-3ac6af437b20",
-        "beneficiary": "2cc1d7fb-221a-4b56-9166-bd4f7fbd2953",
+        "state": "7b924610-96e3-494d-9d09-3034220118b1",
+        "beneficiary": "d0216687-92a2-4292-83e6-5e59f9c0cc5f",
         "event_id": "cost:tuition:2026-10-10",
         "amount": "30000.00",
         "due_on": "2026-10-10",
         "status": "reconciled",
-        "authorized_until": "2026-10-07T14:46:30.875Z",
-        "submitted_at": "2026-10-07T14:31:31.445Z",
+        "authorized_until": "2026-10-07T15:50:47.153Z",
+        "submitted_at": "2026-10-07T15:35:47.645Z",
         "receipt": {
           "amount": "30000.00",
           "issuer": "Synthetic University",
           "currency": "THB",
           "event_id": "cost:tuition:2026-10-10",
-          "reference": "mock:617b89da-1566-4ae0-aec3-d8373fd9015c",
+          "reference": "mock:a6454193-5138-45d5-b6a1-2cac96251144",
           "invoice_id": "DEMO-2026-1",
           "settled_on": "2026-10-02",
           "is_simulated": true,
-          "operation_key": "617b89da-1566-4ae0-aec3-d8373fd9015c",
-          "beneficiary_id": "2cc1d7fb-221a-4b56-9166-bd4f7fbd2953"
+          "operation_key": "a6454193-5138-45d5-b6a1-2cac96251144",
+          "beneficiary_id": "d0216687-92a2-4292-83e6-5e59f9c0cc5f"
         },
         "is_simulated": true
       },
       "policy": [
         {
           "action": "payment.submit",
-          "target_id": "617b89da-1566-4ae0-aec3-d8373fd9015c",
+          "target_id": "a6454193-5138-45d5-b6a1-2cac96251144",
           "amount": "30000.00",
           "currency": "THB",
           "tier": "T2",
@@ -8545,7 +8545,7 @@
         "earliest_risk_date": "2026-10-27",
         "risks": {
           "repayment_liquidity": {
-            "installment_id": "cb2fe524-79d3-4bf8-8da6-f1daa04fdee3",
+            "installment_id": "a14004e2-5140-45a6-b124-5f8bbf5cdce5",
             "gap": "150851.51"
           },
           "cashflow_gap": {
@@ -8562,7 +8562,7 @@
           {
             "kind": "repayment_liquidity",
             "reason": {
-              "installment_id": "cb2fe524-79d3-4bf8-8da6-f1daa04fdee3",
+              "installment_id": "a14004e2-5140-45a6-b124-5f8bbf5cdce5",
               "gap": "150851.51"
             }
           },
@@ -8633,12 +8633,12 @@
               "sample_months": 3,
               "source_type": "inferred",
               "supporting_transaction_ids": [
-                "bc379ce5-eff9-4ced-ab3a-9a435fff6e51",
-                "10ba4109-6c55-469b-bf23-957d58087fb7",
-                "553dec16-1dc6-44e3-9248-8d8daf713761"
+                "c6e3cb6b-abda-4a09-b49e-d7f376c1839f",
+                "d31dedd7-ac86-46e0-953e-fbda2deadaf8",
+                "c0bd0e34-00fc-4f55-b864-edcc451d0554"
               ],
               "source_refs": [
-                "d2e16b5a-381f-43d9-a21e-991b5f9de01e"
+                "f9d501ae-8a43-4aec-aa5a-74b27b98e4dc"
               ],
               "synthetic": true
             },
@@ -8687,97 +8687,97 @@
               "sample_months": 3,
               "source_type": "inferred",
               "supporting_transaction_ids": [
-                "01394260-f59d-4fe1-909e-f233a37c7e65",
-                "e583de4e-893b-47b2-9112-1f0ac4e9b548",
-                "65840694-0c8b-4d4a-a06f-dc1c9ef01977",
-                "2e2e4f3b-3364-41c8-b774-befcb03aac4e",
-                "33d8b446-38dd-44c3-a602-aebf19dbfe31",
-                "9928390a-1457-49f9-85ba-71a1c1d992ae",
-                "79f31d61-5462-4441-9646-801db566462a",
-                "9e33559e-bc7a-4c52-be85-ea990c3321e7",
-                "9ceac8bf-eccd-41eb-b1a4-10f413f64938",
-                "e8365da4-0028-4dec-a800-67de2d8c3aa3",
-                "db37b9d2-9c26-49dc-b100-97491318e6da",
-                "01777178-f78f-4378-8b82-90262c35b67e",
-                "72cf527b-a744-4d38-917e-c4c63fa78438",
-                "eb55b36d-a1cf-4bb4-a8f9-97fb976f2394",
-                "148a0e94-75e4-4122-96d5-95ab1bf4ac3a",
-                "90d2666e-87cd-4c09-b0e1-9a8dea84017a",
-                "4ae144b8-c2b9-4a27-9ed1-0360aaca25d0",
-                "f27d534d-2879-4ffd-abba-34d48f138205",
-                "1b72939a-5ba0-4a72-8806-8be5e3b627a0",
-                "20152bfe-b6ea-41f7-86ae-438229642bc5",
-                "ed229170-6712-4bba-bde8-354903e7af21",
-                "cde915de-f788-453c-a7fd-00a536ff5197",
-                "c9a35249-f642-4f21-89f1-1ef0987dd778",
-                "8afee68e-e29f-41d2-9cd4-90ed2597bac6",
-                "e87446f7-fce0-4d19-a24a-54d6e8eb7339",
-                "e82d1d3e-3c1d-40fa-b2a5-ba8d4937f39f",
-                "a8ddbc71-330a-4cf8-9f6e-8025b3823f4c",
-                "a4d10439-c887-486c-a8d4-ae7009c584b7",
-                "ad0b0155-4068-4abc-8157-daadbabc476b",
-                "1adeeec9-2e7f-4c0f-98c5-dde57e6c0e72",
-                "2fb42e86-1c3c-4fd0-90db-8d6648524f67",
-                "1ebf0259-461f-465e-a38c-1dced873ed78",
-                "3a1190e4-a1c6-4fc3-b52c-82641c6b5bd0",
-                "d8f60033-8f95-40ca-8dba-e401c92fea4f",
-                "8e5672ae-2ba1-4eb5-9415-e84bad2acece",
-                "7357e28e-5aec-4b6c-8727-8b6aa5053a8f",
-                "e9af511f-81ee-4065-b324-d99d9749b93c",
-                "2c029fc5-a392-449a-90b0-5411a73e8f50",
-                "de379fd5-4269-42b4-af0f-c0d2bd7d25e4",
-                "ffdb6ef0-ee09-497d-a766-7bb3ca8a7ff3",
-                "6873afb7-834a-446e-baae-b13db5d83c6f",
-                "eee8ad7f-3eb1-4f8c-94cd-711fc4d7d6bc",
-                "923dcc85-e033-4e7b-bcdc-d522c9142bef",
-                "493fe8d0-42b7-4be6-bd98-d2636747aef6",
-                "1ae7e54a-d6f7-4a24-aa32-d757b7772592",
-                "2ac34b11-81c2-4d37-ae75-c3bab665d8ce",
-                "e6ee8925-29ba-49c9-a63f-63a9427f7a8a",
-                "277552e0-7e1d-4b50-a89d-d9d7b04f647a",
-                "b42065d6-cc9e-41be-bb57-f6f9d85231be",
-                "5e22850b-e1a6-4a97-bf39-59e68d4e76a4",
-                "059da67c-865d-4064-8525-cea4a4a37150",
-                "6cf13e19-da7e-4402-94b6-7da3dc05da97",
-                "181a897b-bb04-4ef7-a0c1-1f5eff43384f",
-                "2f8a38e6-481c-419b-bab1-6dc496c4a20b",
-                "9f3554a1-24aa-4def-a893-d6d01aedac18",
-                "31e40a53-a596-4120-b692-1f853c212a82",
-                "7267eadf-f1bb-49ea-be64-6dcc36ad3bbd",
-                "471fa90b-d117-477d-a87a-d7590fdde2c3",
-                "7e84d227-ac5a-44aa-ae40-8d0cf7e1fa6c",
-                "b2c793c2-14ec-4f80-8f7e-36dd3d30666e",
-                "9bb5874a-8822-4539-b752-cc2b39bf09f1",
-                "fa5353a1-ca69-4f6c-8285-38a53a14c5c1",
-                "6af3254e-7c22-4faa-8b3b-971611c0af92",
-                "d6a235fb-b19a-480f-9d5f-080243e63132",
-                "9608e7e3-0f84-4b34-aba7-f001e2c73d4c",
-                "5a2939da-a62d-4a3e-8fa4-7bbee56a8ddb",
-                "319e7a3b-f88f-449b-aabb-14f4cd98c7a1",
-                "38721777-f8b9-48f7-b1df-e97628119d2f",
-                "4ebf8e87-96f3-4fab-bcd4-067c1dff6e3d",
-                "25aafe0c-0f33-4b1d-8c2e-58b65a26dc58",
-                "ba9412a6-f012-4538-83f0-838d5e5b48e1",
-                "aa827d90-b41a-48c8-8598-6335abd3e588",
-                "26ebe983-09af-40c0-b2d6-6d5cef55fccc",
-                "b04b7a0a-98ca-4eaa-a238-0d4488c397a7",
-                "7d78af89-9e3a-4385-9941-1f69c3ef607b",
-                "fbe11a83-04b4-4028-9864-c5263a811e28",
-                "bbda0944-a7b1-487a-9385-1f2b8b3a8c00",
-                "960299be-11dd-4f06-8983-c84b2b7d9ed1",
-                "36ba9f2d-f740-4d00-bbac-370e86ed42ec",
-                "51e8f2d7-7a57-486e-ac35-707fd11866d0",
-                "5db8d7b8-7c64-4b2e-b8d9-38482a4ed11c",
-                "727123f0-61f8-4733-9009-a9e03a021a37",
-                "75bab35b-3e88-4772-890f-bb7bd99c6a59",
-                "eb63227d-4b2e-4ddc-9d89-b13cf66b29e5",
-                "1de6aa92-90d8-4770-9927-d062686f1a62",
-                "58eefe50-a3fc-4a88-ba0c-cb8415a9d429",
-                "388e9de0-03aa-49c0-be6b-ad696542a823"
+                "219b9bc8-9ed0-4862-8786-ef24c1eb9bcc",
+                "57f0e2c4-2c71-4c72-b290-97dbe47c74f3",
+                "b744f966-0347-4a09-993d-94a77ad2b2e5",
+                "bf554dfe-aaf3-4c22-8588-66b238373ba3",
+                "744f969c-52af-49f3-9cbc-44f747c3aa15",
+                "39034e27-cff8-45da-b1bf-0280ce6285c9",
+                "971b1b4a-46e9-4a8b-9a4f-b814365f0f72",
+                "ea3ddde4-c4d6-4c38-b865-7eabc12c33e8",
+                "451f2dfa-9e6f-42da-b81b-a7f4717530e8",
+                "e3836930-dfa1-483a-a731-c27ed1888207",
+                "0f7e0045-f3b1-40b2-b9d9-99b92d851e2f",
+                "aacab3ce-0ca3-4385-ba25-33d52e63ef06",
+                "b4157a73-fe97-459e-9004-0e8d21a95db2",
+                "2e1ddc42-484f-48bd-9e57-8eeca4bc2500",
+                "f3a049c3-da44-4b92-b9f4-6fd3168d441e",
+                "446427d6-1214-465e-b200-f4d14229da9c",
+                "30452e2b-0c89-4631-968c-e2edd706b8bd",
+                "1d5f7520-a067-4f8d-af91-185a3f5316c8",
+                "a21096d6-1907-46d4-9fb3-097e1ec333c9",
+                "c913afa7-1b08-485e-a3da-498305652c82",
+                "91b7370c-c104-4956-8cfc-399d87227ca7",
+                "4dadb10d-a3c5-45ad-9aec-91eb7aa79820",
+                "c95896c2-75b2-4920-b8de-e5ba0838c5ba",
+                "4b909e4f-245c-4e29-aa18-2338ab845d57",
+                "6ef58f27-a36c-4147-8f2d-3f424d30b8a2",
+                "b4719ca1-6d29-4805-a397-629da7d90c55",
+                "04cb429a-6396-43cc-befa-df5c087ebd96",
+                "4ddbad04-ecf5-433e-a8d4-5707ec269eea",
+                "4bbfeb18-a114-4779-b0e7-1683ae6f9b55",
+                "de7a94d3-b8ad-4173-ad53-d68d1472d148",
+                "9431c030-de30-4ca7-834d-9135f09072d5",
+                "89a5adb4-01cb-475d-b21d-e79122a2f703",
+                "58598a86-3c21-49a2-9147-c948f756c05b",
+                "0a944b40-b135-49c3-a8fb-cf60d16b59f1",
+                "744c830e-25b9-45be-aea3-5f34735b8197",
+                "e396e9b8-890b-4685-9a0d-675df0bb0f2a",
+                "4a586f79-d2c2-43e2-8f49-6d6259be56f8",
+                "d70ff4ca-f4cd-465e-a628-0dbad3fad542",
+                "5591b895-b72b-4d95-aaa4-b3fee77e411a",
+                "fa8043b0-85c0-44a1-a3ee-4a11674706d4",
+                "82d4233d-33b4-41af-a14e-4545cff4a1c0",
+                "dc5ffaa1-da6c-4805-9231-03d802ea7262",
+                "82e8573d-858e-46d8-b0dd-bb752ba23465",
+                "9ca49164-af25-4ef0-9c62-108600cd1660",
+                "8ce0d292-8236-41c0-b98c-fbe5893bb932",
+                "9f5c7d2d-d632-4bff-8064-e09d28f0ad34",
+                "1ba237a4-5d15-446b-ae46-981d537bfc8a",
+                "1230ad93-74e2-4c24-b5d1-d51632bb4f85",
+                "550859bf-d4fa-4000-a493-7e541cd059ea",
+                "3af4590a-5e4b-4778-9365-d8bdd20e02d7",
+                "d4c59236-efcc-4edb-825c-562326a5ad68",
+                "c659a9c7-cefc-4c59-a1b8-19a74c907dbd",
+                "cd2da43f-2f08-4069-9f07-14abbde1ca43",
+                "4e3237bd-8e9e-42fa-a91a-4c6eafabe33a",
+                "af7884a5-d0bd-4df2-afcb-f1aa3c38726a",
+                "fed3cea8-d016-4a00-b4a1-ea2188487320",
+                "05963b68-8a03-4535-ba77-d84f784abd90",
+                "d4d589bd-8d9a-4fb4-a186-61e9609bce94",
+                "60013def-1946-4626-8eb8-2dd3587ab44c",
+                "b298d7c5-69b5-400f-8b4d-b13d7c6af159",
+                "d55bd2c5-fd31-4890-826f-28e284935779",
+                "8d937a9f-6248-4804-bbe6-4421ea152465",
+                "7af4c09d-5b1a-4ad6-b8c1-832acf3ed31d",
+                "54145bb6-d705-4258-8072-4cab6ef4bc98",
+                "428bca80-fd43-4e8c-8e27-5ef99bbe5f3a",
+                "c98b7dba-91c4-4a0b-8ccb-914cbacfe3e8",
+                "3eff57c1-2322-4fc4-92da-5aaa0a7f49af",
+                "413ab39e-e488-4486-9e4d-cd6ff72fbcdc",
+                "b8811f47-bf73-482d-afa6-11f4ae0bc676",
+                "76e59ecc-cb1d-48eb-92fe-61ebfaadb1f8",
+                "0478b80a-01d3-4f3c-96c7-8fb0f3d3e40b",
+                "9b965a69-9a08-49a1-b91d-ec2689a03388",
+                "11f3cd79-e675-4727-8c22-a514a54d79ed",
+                "edfcee8d-c4fd-41db-874d-df2c332ed860",
+                "e2ff8e9e-7163-4c3c-8026-864a302cfa67",
+                "08b16c92-bf39-450a-81b3-c1b6f4431bed",
+                "a369afd5-02a3-4cf5-a2be-81904909949b",
+                "40ca26ee-fc92-449a-a2e5-431e0e48dbde",
+                "7ca67dc5-5c40-48ea-963c-af17f9fedcf5",
+                "7898ae03-d2bd-4681-9882-f3aadd86c43e",
+                "e647d3a2-ba91-45ed-be54-6fe7f40ae072",
+                "c68ed07a-031e-4519-8f8d-f2afd41f76d8",
+                "e13e15e7-cb5f-4185-af26-09ffc134cd16",
+                "7dc85502-2896-4786-9023-0461863dfffd",
+                "332f3c35-790a-4864-9b08-6aeac6838d14",
+                "4d2d2949-ab7e-4c74-8bb7-6a3b978972cb",
+                "f0c192e7-9355-4bdd-b18c-5452efcb65d7"
               ],
               "source_refs": [
-                "58d2235f-5fcb-45a6-ae2c-d1435a686f56",
-                "d2e16b5a-381f-43d9-a21e-991b5f9de01e"
+                "aca8509e-5b9d-4803-972e-91fa8e068bbb",
+                "f9d501ae-8a43-4aec-aa5a-74b27b98e4dc"
               ],
               "synthetic": true
             },
@@ -8794,12 +8794,12 @@
               "sample_months": 3,
               "source_type": "inferred",
               "supporting_transaction_ids": [
-                "8398f35b-a18e-4bdf-80f5-644ce177fb1b",
-                "77415845-aa5d-4e93-9ab5-6c9ec08ca2e9",
-                "c127be34-73dd-436b-8b76-180929ec24d2"
+                "92e4793e-797a-4014-8476-e788d0d1fde6",
+                "6b926feb-adae-45d1-86cb-6e589aa1209d",
+                "f53273ac-8138-4ed8-9289-907ed035d2df"
               ],
               "source_refs": [
-                "d2e16b5a-381f-43d9-a21e-991b5f9de01e"
+                "f9d501ae-8a43-4aec-aa5a-74b27b98e4dc"
               ],
               "synthetic": true
             },
@@ -8816,12 +8816,12 @@
               "sample_months": 3,
               "source_type": "inferred",
               "supporting_transaction_ids": [
-                "74c5d63c-f4a2-4e9d-857c-8d7d4edede82",
-                "6c74210b-ad63-4634-84a7-6a53bc804e0a",
-                "e4897868-9c8f-4102-9dae-f671441a092e"
+                "87560db0-02f9-4c2e-8597-85dc00713e15",
+                "23fb7474-54a1-405f-a408-173a44bc018f",
+                "02f1600e-7312-48ac-b3cf-ed02cd1c1db7"
               ],
               "source_refs": [
-                "d2e16b5a-381f-43d9-a21e-991b5f9de01e"
+                "f9d501ae-8a43-4aec-aa5a-74b27b98e4dc"
               ],
               "synthetic": true
             },
@@ -9002,7 +9002,7 @@
             "label": "tuition",
             "amount": "30000.00",
             "certainty": "confirmed",
-            "beneficiary_id": "2cc1d7fb-221a-4b56-9166-bd4f7fbd2953",
+            "beneficiary_id": "d0216687-92a2-4292-83e6-5e59f9c0cc5f",
             "settled_sequence": 2,
             "status": "paid",
             "source_type": "budget_or_invoice",
@@ -9113,7 +9113,7 @@
             "within_forecast": true
           },
           {
-            "id": "recurring:2dfca939-04b2-4ef2-bb30-e3ce8bd5cd13:2026-10-05",
+            "id": "recurring:12d35dcc-1d9f-47e3-a286-dbd83d6e1774:2026-10-05",
             "kind": "expense",
             "label": "Demo Music",
             "amount": "199.00",
@@ -9828,7 +9828,7 @@
             "within_forecast": true
           },
           {
-            "id": "repayment:c56d4395-6b37-4e29-b2c8-4f46a09eb0e2:1",
+            "id": "repayment:04e4cad6-8b46-4d39-b4a0-1bd5cbee8062:1",
             "date": "2026-11-01",
             "kind": "expense",
             "label": "Simulated loan repayment",
@@ -9971,7 +9971,7 @@
             "within_forecast": true
           },
           {
-            "id": "recurring:2dfca939-04b2-4ef2-bb30-e3ce8bd5cd13:2026-11-05",
+            "id": "recurring:12d35dcc-1d9f-47e3-a286-dbd83d6e1774:2026-11-05",
             "kind": "expense",
             "label": "Demo Music",
             "amount": "199.00",
@@ -10660,7 +10660,7 @@
             "within_forecast": true
           },
           {
-            "id": "repayment:c56d4395-6b37-4e29-b2c8-4f46a09eb0e2:2",
+            "id": "repayment:04e4cad6-8b46-4d39-b4a0-1bd5cbee8062:2",
             "date": "2026-12-01",
             "kind": "expense",
             "label": "Simulated loan repayment",
@@ -10803,7 +10803,7 @@
             "within_forecast": true
           },
           {
-            "id": "recurring:2dfca939-04b2-4ef2-bb30-e3ce8bd5cd13:2026-12-05",
+            "id": "recurring:12d35dcc-1d9f-47e3-a286-dbd83d6e1774:2026-12-05",
             "kind": "expense",
             "label": "Demo Music",
             "amount": "199.00",
@@ -11076,7 +11076,7 @@
             "within_forecast": true
           },
           {
-            "id": "repayment:c56d4395-6b37-4e29-b2c8-4f46a09eb0e2:3",
+            "id": "repayment:04e4cad6-8b46-4d39-b4a0-1bd5cbee8062:3",
             "date": "2027-01-01",
             "kind": "expense",
             "label": "Simulated loan repayment",
@@ -11087,7 +11087,7 @@
             "within_forecast": false
           },
           {
-            "id": "repayment:c56d4395-6b37-4e29-b2c8-4f46a09eb0e2:4",
+            "id": "repayment:04e4cad6-8b46-4d39-b4a0-1bd5cbee8062:4",
             "date": "2027-02-01",
             "kind": "expense",
             "label": "Simulated loan repayment",
@@ -11098,7 +11098,7 @@
             "within_forecast": false
           },
           {
-            "id": "repayment:c56d4395-6b37-4e29-b2c8-4f46a09eb0e2:5",
+            "id": "repayment:04e4cad6-8b46-4d39-b4a0-1bd5cbee8062:5",
             "date": "2027-03-01",
             "kind": "expense",
             "label": "Simulated loan repayment",
@@ -11109,7 +11109,7 @@
             "within_forecast": false
           },
           {
-            "id": "repayment:c56d4395-6b37-4e29-b2c8-4f46a09eb0e2:6",
+            "id": "repayment:04e4cad6-8b46-4d39-b4a0-1bd5cbee8062:6",
             "date": "2027-04-01",
             "kind": "expense",
             "label": "Simulated loan repayment",
@@ -11121,7 +11121,7 @@
           }
         ],
         "next_installment": {
-          "id": "cb2fe524-79d3-4bf8-8da6-f1daa04fdee3",
+          "id": "a14004e2-5140-45a6-b124-5f8bbf5cdce5",
           "date": "2026-11-01",
           "amount": "1725.48",
           "within_forecast": true
@@ -11131,7 +11131,7 @@
             "status": "Verified",
             "source_type": "controlled_confirmation",
             "source_refs": [
-              "aa7e0f91-30cd-4d5d-a330-57c749442b0e"
+              "e7d3875b-8902-4cc9-98bd-9dc23cb3233b"
             ],
             "evidence": [
               {
@@ -11141,9 +11141,9 @@
                 "source_id": "https://sites.google.com/phuket.psu.ac.th/fispsuphuket/International-Students"
               }
             ],
-            "updated_at": "2026-10-07T14:31:28.680396+00:00",
-            "observed_at": "2026-10-07T14:31:28.680396+00:00",
-            "verified_at": "2026-10-07T14:31:28.680402+00:00",
+            "updated_at": "2026-10-07T15:35:45.088533+00:00",
+            "observed_at": "2026-10-07T15:35:45.088533+00:00",
+            "verified_at": "2026-10-07T15:35:45.088539+00:00",
             "conflict": false,
             "expired": false,
             "applicability": "APPLICABLE",
@@ -11349,12 +11349,12 @@
       }
     },
     {
-      "run_id": "bf59f606685e42ae888d353c8ef9ca0b",
+      "run_id": "963ada616ccd43d19c46b7843e477704",
       "transport": "real_loopback_http",
       "database": "postgresql",
       "synthetic": true,
       "model_mode": "mock",
-      "batch_id": "352236e4-86e1-4490-b8c8-bd8307e83c57",
+      "batch_id": "e17dc215-b02f-4cd3-bd56-0923bfc1c0e2",
       "before": {
         "status": "AT_RISK",
         "as_of": "2026-10-01",
@@ -11456,12 +11456,12 @@
               "sample_months": 3,
               "source_type": "inferred",
               "supporting_transaction_ids": [
-                "9fe6b7e5-fc61-401a-804e-e6ae6137c653",
-                "56e78d6f-924c-44ad-a6f3-360c8607f5a0",
-                "86382b00-a0b4-438b-886e-8cc5b4dfa72e"
+                "8eeeb52b-688f-4425-9ef1-cfceb931f249",
+                "4e8f914b-1fe7-4edf-be0f-d63965488e73",
+                "c6c72378-cf02-4074-b996-26540aada4dd"
               ],
               "source_refs": [
-                "352236e4-86e1-4490-b8c8-bd8307e83c57"
+                "e17dc215-b02f-4cd3-bd56-0923bfc1c0e2"
               ],
               "synthetic": true
             },
@@ -11510,93 +11510,93 @@
               "sample_months": 3,
               "source_type": "inferred",
               "supporting_transaction_ids": [
-                "139e6047-b575-4f94-9973-47186eda5c2c",
-                "2df23f28-ca0c-454e-b3d1-299523f94e89",
-                "1343b0e9-3244-4c01-8373-1a2f4a01f122",
-                "4c413fcc-5667-4802-ade4-82adba13c1e7",
-                "7384d90c-c742-4435-8132-727b84259f97",
-                "c41e747c-c9c7-4fbe-9946-c69f790ae6f1",
-                "a88540dd-d9bf-4f8d-bf21-ae90c0caf0b7",
-                "09ea4684-2987-46b4-a89d-9b3cc07edc45",
-                "bea2bfb4-5181-4c84-9267-2a4ea1b682d2",
-                "1f6bea07-b9bd-4f4a-8e9c-cddc5ccbfeaf",
-                "ec3b2e34-8a57-4688-be7e-891b827bb099",
-                "7a66e61e-4dc3-421f-b274-af6f08875c54",
-                "e21505e6-515c-4204-baca-88e44dac5b1b",
-                "b344199f-f2b3-4003-ba46-c52d920c61f0",
-                "67e61fc6-3b4b-4c23-93b8-391dd90a2fc5",
-                "acbde689-f50c-4594-987a-df069edeee3f",
-                "7ea8910b-e47f-46bb-9bee-4c55101eef33",
-                "8c0d48e9-6126-44c5-b293-9bedcc8186f9",
-                "6429d06b-9aac-4b96-a16a-e42b1bc86b48",
-                "a983f824-91c9-4b0a-b69b-ac1f0187bac7",
-                "d43e660c-7ee0-4b5c-9761-779560dca81e",
-                "d8067481-fae6-4198-8fcc-c26f4a141603",
-                "2e05a122-e0f0-4b55-ba0d-55a17b7b3bb2",
-                "c06f8f3c-0aa6-408e-9f76-cb6020a7d53a",
-                "ac03df36-fa51-4df7-8231-e1ac9c447033",
-                "a8b548c2-7728-4f99-af36-a30e91cbe20f",
-                "5ac3b0c7-e1f3-46ce-aa12-e24817d46d46",
-                "fb807a50-f7a3-4798-ad0a-7d0c0ca96121",
-                "4b24056c-a292-4bc3-889b-f4e9c714036f",
-                "f3b5055e-53b7-401d-9dd6-3fa163d96740",
-                "4053b0d3-73c6-4218-8f55-9f32f3ffaf06",
-                "56820603-9de5-43f6-b0eb-0b0307bf4195",
-                "f86ec051-af96-4f7d-95ad-77a20db4afac",
-                "1ce6386d-5cea-48e8-807b-7b7a905a3261",
-                "bb2f92d3-a98d-4fbc-bb73-f468105e1a91",
-                "43ee2999-60e2-4125-868c-4563d9bebca8",
-                "196c82cc-2571-4f26-b602-9cd0f4f88f7d",
-                "cd771343-54d5-409e-be3d-bd61e74fea61",
-                "0b9db509-b873-47b5-981e-766ce8078931",
-                "cec59596-e58b-40ff-a2bc-d6667bad35b4",
-                "b6861dd1-d932-4514-9479-3c707a087e3d",
-                "8af8793e-e0a5-4ae0-a731-f9f63f38950e",
-                "e04521df-2021-4f0a-a7c4-76251f806bb8",
-                "e7829f13-8889-4e8e-a1d8-5b9531560249",
-                "e5132696-1541-42ea-936c-a69c1f87900d",
-                "a41142a1-2fae-4de4-8d10-192d9620f958",
-                "45f3a06e-e76a-4a9e-a676-0c33f17a069c",
-                "e242c697-d3a8-4c6a-9d5d-872df56d6db6",
-                "f027bf5b-4d7e-43ff-b97a-651edb6dcc3f",
-                "55ca41bf-0093-427a-adf0-5635a876fddc",
-                "33635d23-2318-483c-be6f-92f47017964a",
-                "d7683958-2e97-4d9a-b7f7-7cb5f24eb367",
-                "ff17f378-bf7f-4a9f-9689-755bca2f1120",
-                "dae6b1bd-b9e7-4147-97eb-23d5255deafb",
-                "9a0919de-2355-4957-a500-bf97965f5fac",
-                "1fa26216-0250-4360-9b51-ec708e26887a",
-                "a13a5817-d8eb-4601-83aa-79a858c02369",
-                "221b6f8d-5053-4e85-a4b6-67677283b808",
-                "4695120f-c7cc-412d-af46-152eadbcfa27",
-                "4ab6ec48-3ece-429b-9b7c-2c01871f4138",
-                "73f16c1a-37aa-4b68-92e5-c69f76bc3eb2",
-                "01929c73-9199-41b0-a6d5-dbb93d63e01d",
-                "b5d6e699-5af7-42cf-816e-57d4d1b10462",
-                "5f667ee0-dc79-4bf6-8c51-4d7af4d0751e",
-                "531210f0-3cf4-4289-9f82-f50d4d7c3703",
-                "acb85642-4173-4e66-8413-eb1c48d9ea9b",
-                "10daf988-248c-4025-8789-1e7de5eac2e7",
-                "c533eb17-ed00-4787-8f41-247538d2094d",
-                "48d0c016-ac9f-49c5-a894-517d16a85014",
-                "81b1014e-e611-4c52-ae66-a40400fe9b56",
-                "c44568bd-ac75-4cee-91e4-95de06396f89",
-                "630705c8-6891-4f4d-89f3-e84b2984782d",
-                "2d845865-be2b-49a8-97a6-e1ffaaeaa300",
-                "7a513444-7e06-440e-ab26-d84cffb3bbf4",
-                "e93518a3-588c-4184-ace1-62ca8a8aae18",
-                "94046795-3935-40d9-96a6-e8048a3ababc",
-                "f4a71247-ed44-4c9f-bbc5-11a6004b27ae",
-                "284009aa-e831-4c72-9ec9-611ef7fea21c",
-                "fac99acc-896b-4fe1-917c-6124af2c5162",
-                "3c98490b-8ca6-4f0d-824c-313644f49f23",
-                "8e3e66d6-38a3-4df8-a565-6b8756fb6311",
-                "9a7e7ed4-b53e-40a4-9879-56add3c17270",
-                "345c8980-0e2a-4b56-945f-c40c1080a3c3",
-                "b678c5bc-5a1d-43a4-9df4-b24c39c4d440"
+                "7a147605-ffa4-4aa6-bd0c-7e7a1a15541a",
+                "36881275-8bd9-49ba-9eb3-251110d660b0",
+                "c63ca69b-915d-4898-9b65-6ecc81fa8563",
+                "fb0dd15a-79ab-4266-b637-20badadedf6b",
+                "7281bae3-5d16-4a83-973e-183505884a98",
+                "89afc7a5-5008-4c35-8844-999236e69e86",
+                "ed247e96-c201-49be-b134-5f6b7206c922",
+                "544b890c-4b4e-4251-9f47-9470f17efc95",
+                "11075ca7-27f6-4998-a1c9-5cf99d51cb73",
+                "7fb374cb-088e-4a22-9f04-8d0f3f941c0b",
+                "762c981a-3804-48b7-8d73-ea19cfebbfaf",
+                "04a6f4f6-6d45-432e-8260-5fd2b5a72f5a",
+                "30136ad6-10aa-42ef-80cc-cf7dc2e49922",
+                "3cac7ed8-15f5-42e8-96f0-1cab4232efc5",
+                "56b1d2bd-3ed3-41d4-8f97-761353feba08",
+                "12b28ba7-3a2e-452e-b5d4-e6d9ce5e4ea5",
+                "2dc32f9d-04c5-4a04-86cd-8636dd8c9bb3",
+                "22bc3c91-5f34-49ef-a91a-0482e91591f8",
+                "a4f349bc-c4d7-40ee-8afb-38f5f1a29698",
+                "1e112eec-c953-4452-a3f1-f42d479126c9",
+                "bdb91cc4-bf23-47d9-8d0e-d9759b9610b0",
+                "ed957a6a-6e37-4b2a-a08c-a9d2e8d705c7",
+                "27146c31-2e5b-445a-81cd-5dc01208764f",
+                "3c45861f-b47b-4642-832a-8df3c84ab601",
+                "48c749a2-93d4-4c18-9f21-883f97e54e30",
+                "6d7bfff3-3541-4a60-97d6-bfae68709178",
+                "088755a7-3606-45ed-b021-0cbfb1754c5a",
+                "6f80f4d6-f005-4495-b412-c42767a21f51",
+                "6ad9d358-d995-43dd-b2c1-11be1f46fb25",
+                "afdab283-76c9-4510-99a8-e1f925fc8a41",
+                "9b31d4b9-51bb-4d1c-9dcf-835acd2e95e3",
+                "3908f414-3463-4e27-9f8a-3d39b9e461ba",
+                "849c473e-55d6-4ef0-8cb4-6f03aa9a7f56",
+                "f2544d34-f604-4a1b-9bb2-e16316aa36e2",
+                "1a5494c3-f01c-4f8b-a078-2af52e31104c",
+                "52e939b7-14a4-4067-bbb7-84ae0213bfef",
+                "4c4cc253-7614-4c07-ad82-4f11b493dc58",
+                "a669a272-833d-49b2-aa3b-6df2cf75678d",
+                "84d8178a-fef7-4901-9c6e-054e8c07926e",
+                "dafc8905-0465-4ec7-a200-717a7944083c",
+                "3ca1f45c-70a3-4789-b7c8-8ab4408d2f78",
+                "c8e07d08-beb1-485b-af5b-cd1c3cf46284",
+                "413d1f31-0ac1-45dc-99af-424e5a4ad653",
+                "367b393c-3ca5-4ae1-a627-d18acdb2c2a5",
+                "9b8c121f-0867-4c58-ad1e-2328ded33e13",
+                "33fff9a1-1486-456e-80bf-b848aadf8aa9",
+                "38605ce5-8185-4b1c-95c3-61891999f61e",
+                "94c1f617-7ace-4e51-8994-4f5dd867b75d",
+                "42e6695b-3263-4808-a4d4-41aafe8ad84c",
+                "0881d974-f12c-459b-adc5-53120df42ac5",
+                "a075154c-8a18-4bb3-a206-715bb4dd4c7a",
+                "225b5763-89ed-4dd2-b7d6-2ef5f9fc3683",
+                "73ded804-3566-43c8-83cd-936878a88c4e",
+                "a07340b7-0be3-4f44-bf9d-2374c7c89435",
+                "e3b89c68-acbc-4e67-aaa6-e15749d9a72a",
+                "6c7924a9-f223-44c8-b515-8b41a487be2e",
+                "3f1e4585-d0f5-4433-8773-aca83d77acc3",
+                "b472ecb8-08b9-4c47-bb21-49f34561ec20",
+                "32f72a39-3c60-4d2d-ad99-a720098171ea",
+                "14877dc7-cda3-447b-9320-86e5892b5afc",
+                "0dcb56b0-f1a1-46aa-9364-c0cd64871140",
+                "3a9aa27e-74d6-476b-b97a-3d70c132a4e5",
+                "65ca8c24-9040-46be-869f-0b85f6a44918",
+                "895cb856-6871-4868-b470-1657b89b7a3b",
+                "937b320e-01ff-4cdc-a6a2-956670626e74",
+                "2fa9b522-24a7-4576-bce0-f5816ae2ac26",
+                "19642825-b554-458a-a140-6f31185749de",
+                "7a344388-46ab-42ae-b314-cc79e013a453",
+                "31399390-5622-456f-a861-804de088d003",
+                "0f9b818e-52a7-4e6c-ba63-c887b9328f81",
+                "83582aa8-1408-4de3-9f20-bef632a61ae9",
+                "baaa7e95-c163-4ccf-b81e-fb2770bed19c",
+                "6ba5482b-aefb-4882-93da-ee6350012672",
+                "7d5edfeb-da9d-475f-a3fd-b62f8e491e50",
+                "53a0dcf9-559b-43af-a031-5f9fc736fe91",
+                "4a4215a8-44cf-43c2-95f6-32a5277aa598",
+                "89cabf08-5c26-44a9-92a3-ac57c5fba279",
+                "7d970457-5e13-49ad-8e99-9abfff81cbd7",
+                "e0be42cf-79cc-423d-9f2f-d0e2f5376862",
+                "04968be5-3eaf-4738-abe1-1b7ad199482a",
+                "9e4cdbe0-260b-4b0a-ad31-0c36bb9e7c7d",
+                "0e6fd3d3-4c1f-465b-b14d-1b22d4f38739",
+                "d05db243-af4f-4037-89e2-52c641ff74f8",
+                "b03c0da3-221d-4dfd-8fae-201d52e4b16f"
               ],
               "source_refs": [
-                "352236e4-86e1-4490-b8c8-bd8307e83c57"
+                "e17dc215-b02f-4cd3-bd56-0923bfc1c0e2"
               ],
               "synthetic": true
             },
@@ -11613,12 +11613,12 @@
               "sample_months": 3,
               "source_type": "inferred",
               "supporting_transaction_ids": [
-                "028d5045-ef07-479f-a932-cd76f7931e7f",
-                "16d2c675-7091-4d68-992a-f7d2b9cc4f2e",
-                "f09933b4-ea01-4a1c-bf0b-f0de75e142d7"
+                "cc7c1248-199a-4a5f-a0d9-11dae37afc98",
+                "3cf691a7-f1fb-433b-954c-3e77b4f42c77",
+                "7ee8b9c8-0cf6-4b00-a920-23cdf7fb0fc3"
               ],
               "source_refs": [
-                "352236e4-86e1-4490-b8c8-bd8307e83c57"
+                "e17dc215-b02f-4cd3-bd56-0923bfc1c0e2"
               ],
               "synthetic": true
             },
@@ -11635,12 +11635,12 @@
               "sample_months": 3,
               "source_type": "inferred",
               "supporting_transaction_ids": [
-                "45835143-edd9-4241-9847-5d20c3116cca",
-                "94b6bf4f-3ae6-416d-abbc-204882da7fd4",
-                "86475115-5ada-48c8-877e-263b7ab96fda"
+                "2437c260-8bee-431c-9c4b-87f7231a6c47",
+                "e64d9db6-50be-4559-8cf9-dd19ac4f8fd2",
+                "364d57a9-f192-441f-ac1d-340ea7106729"
               ],
               "source_refs": [
-                "352236e4-86e1-4490-b8c8-bd8307e83c57"
+                "e17dc215-b02f-4cd3-bd56-0923bfc1c0e2"
               ],
               "synthetic": true
             },
@@ -11893,7 +11893,7 @@
             "within_forecast": true
           },
           {
-            "id": "recurring:b6386f33-670f-4fab-b46b-d16cc6096d0e:2026-10-05",
+            "id": "recurring:e06a25d2-219e-48b7-82dc-f1a3fd2a919b:2026-10-05",
             "kind": "expense",
             "label": "Demo Music",
             "amount": "199.00",
@@ -12751,7 +12751,7 @@
             "within_forecast": true
           },
           {
-            "id": "recurring:b6386f33-670f-4fab-b46b-d16cc6096d0e:2026-11-05",
+            "id": "recurring:e06a25d2-219e-48b7-82dc-f1a3fd2a919b:2026-11-05",
             "kind": "expense",
             "label": "Demo Music",
             "amount": "199.00",
@@ -13570,7 +13570,7 @@
             "within_forecast": true
           },
           {
-            "id": "recurring:b6386f33-670f-4fab-b46b-d16cc6096d0e:2026-12-05",
+            "id": "recurring:e06a25d2-219e-48b7-82dc-f1a3fd2a919b:2026-12-05",
             "kind": "expense",
             "label": "Demo Music",
             "amount": "199.00",
@@ -14064,16 +14064,16 @@
         }
       },
       "support": {
-        "request_id": "7f8cf6e2-2de5-4ec3-9e0e-7f6ca4aac543",
+        "request_id": "3f325861-77cd-4fc4-951f-de84f8ac97af",
         "confirmation": {
-          "request_id": "7f8cf6e2-2de5-4ec3-9e0e-7f6ca4aac543",
+          "request_id": "3f325861-77cd-4fc4-951f-de84f8ac97af",
           "status": "CONFIRMED",
           "is_simulated": true
         },
         "comparison": {
           "routes": [
             {
-              "quote_id": "c57a1e89-6c25-4b58-8da1-068bd01f2bff",
+              "quote_id": "f6961b72-ef13-431a-981e-eb8c0d8bbd22",
               "quote_version": 1,
               "route_name": "Demo Standard",
               "source_currency": "USD",
@@ -14089,11 +14089,11 @@
               "deadline_risk": false,
               "shortfall": "0.00",
               "feasible": true,
-              "expires_at": "2026-10-07T15:31:36.531325+00:00",
+              "expires_at": "2026-10-07T16:35:52.527658+00:00",
               "is_simulated": true
             },
             {
-              "quote_id": "f587e50e-5e37-4c81-a6e3-e647418ee9cc",
+              "quote_id": "3ca1880a-680d-4c88-bf5d-c76251aa27b1",
               "quote_version": 1,
               "route_name": "Demo Express",
               "source_currency": "USD",
@@ -14109,11 +14109,11 @@
               "deadline_risk": false,
               "shortfall": "0.00",
               "feasible": true,
-              "expires_at": "2026-10-07T15:31:36.509272+00:00",
+              "expires_at": "2026-10-07T16:35:52.509062+00:00",
               "is_simulated": true
             },
             {
-              "quote_id": "16aafa5c-cb26-4726-8054-7dd933f4782d",
+              "quote_id": "83f90c15-aba8-4f41-9503-2f199d10c36a",
               "quote_version": 1,
               "route_name": "Demo Economy",
               "source_currency": "USD",
@@ -14129,11 +14129,11 @@
               "deadline_risk": true,
               "shortfall": "0.00",
               "feasible": false,
-              "expires_at": "2026-10-07T15:31:36.554777+00:00",
+              "expires_at": "2026-10-07T16:35:52.548692+00:00",
               "is_simulated": true
             }
           ],
-          "recommended_quote_id": "c57a1e89-6c25-4b58-8da1-068bd01f2bff",
+          "recommended_quote_id": "f6961b72-ef13-431a-981e-eb8c0d8bbd22",
           "reason": "ON_TIME_AND_SUFFICIENT",
           "assumptions": [
             "Simulated quotes; calendar days; arrival is not guaranteed; sender fee is included in send amount."
@@ -14142,11 +14142,11 @@
         }
       },
       "payment": {
-        "id": "0e5378b2-7162-4766-a777-33aeb4afc864",
+        "id": "48425eaa-5eec-470d-a0c0-a65aea4688d0",
         "type": "payment",
-        "created_at": "2026-10-07T14:31:40.674Z",
+        "created_at": "2026-10-07T15:35:56.246Z",
         "plan": null,
-        "readiness_plan": "07880cf5-1419-4b99-80c6-dea29fe7d3e7",
+        "readiness_plan": "36aa5f69-2b58-47be-955b-fb7872838e3a",
         "execution_context": {
           "state_version": 4,
           "budget_version": 14,
@@ -14159,35 +14159,35 @@
           "due_date": "2026-10-10",
           "event_id": "cost:tuition:2026-10-10",
           "invoice_id": "DEMO-2026-1",
-          "identity_id": "58ffeab1-b026-461f-9dab-1263556b075f",
-          "beneficiary_id": "c858a3c6-fcc7-4eb4-b149-f241b6ef6591"
+          "identity_id": "2597ea83-d682-40aa-a7b3-e1d1ca6c2524",
+          "beneficiary_id": "7b393500-dce2-404c-9382-9e6731a28175"
         },
-        "state": "5f08477e-9675-4c73-9479-0771ece22200",
-        "beneficiary": "c858a3c6-fcc7-4eb4-b149-f241b6ef6591",
+        "state": "17b2364f-0ccd-49bf-b06f-0d47d39b6285",
+        "beneficiary": "7b393500-dce2-404c-9382-9e6731a28175",
         "event_id": "cost:tuition:2026-10-10",
         "amount": "30000.00",
         "due_on": "2026-10-10",
         "status": "reconciled",
-        "authorized_until": "2026-10-07T14:46:41.116Z",
-        "submitted_at": "2026-10-07T14:31:41.652Z",
+        "authorized_until": "2026-10-07T15:50:56.632Z",
+        "submitted_at": "2026-10-07T15:35:57.098Z",
         "receipt": {
           "amount": "30000.00",
           "issuer": "Synthetic University",
           "currency": "THB",
           "event_id": "cost:tuition:2026-10-10",
-          "reference": "mock:0e5378b2-7162-4766-a777-33aeb4afc864",
+          "reference": "mock:48425eaa-5eec-470d-a0c0-a65aea4688d0",
           "invoice_id": "DEMO-2026-1",
           "settled_on": "2026-10-02",
           "is_simulated": true,
-          "operation_key": "0e5378b2-7162-4766-a777-33aeb4afc864",
-          "beneficiary_id": "c858a3c6-fcc7-4eb4-b149-f241b6ef6591"
+          "operation_key": "48425eaa-5eec-470d-a0c0-a65aea4688d0",
+          "beneficiary_id": "7b393500-dce2-404c-9382-9e6731a28175"
         },
         "is_simulated": true
       },
       "policy": [
         {
           "action": "payment.submit",
-          "target_id": "0e5378b2-7162-4766-a777-33aeb4afc864",
+          "target_id": "48425eaa-5eec-470d-a0c0-a65aea4688d0",
           "amount": "30000.00",
           "currency": "THB",
           "tier": "T2",
@@ -14218,7 +14218,7 @@
         "earliest_risk_date": "2026-10-27",
         "risks": {
           "repayment_liquidity": {
-            "installment_id": "8934b188-c10c-4ce6-aab9-39aa270335cc",
+            "installment_id": "8a21119d-1a5f-4c6c-a0f4-3529ba6de1d2",
             "gap": "150851.51"
           },
           "cashflow_gap": {
@@ -14235,7 +14235,7 @@
           {
             "kind": "repayment_liquidity",
             "reason": {
-              "installment_id": "8934b188-c10c-4ce6-aab9-39aa270335cc",
+              "installment_id": "8a21119d-1a5f-4c6c-a0f4-3529ba6de1d2",
               "gap": "150851.51"
             }
           },
@@ -14306,12 +14306,12 @@
               "sample_months": 3,
               "source_type": "inferred",
               "supporting_transaction_ids": [
-                "9fe6b7e5-fc61-401a-804e-e6ae6137c653",
-                "56e78d6f-924c-44ad-a6f3-360c8607f5a0",
-                "86382b00-a0b4-438b-886e-8cc5b4dfa72e"
+                "8eeeb52b-688f-4425-9ef1-cfceb931f249",
+                "4e8f914b-1fe7-4edf-be0f-d63965488e73",
+                "c6c72378-cf02-4074-b996-26540aada4dd"
               ],
               "source_refs": [
-                "352236e4-86e1-4490-b8c8-bd8307e83c57"
+                "e17dc215-b02f-4cd3-bd56-0923bfc1c0e2"
               ],
               "synthetic": true
             },
@@ -14360,97 +14360,97 @@
               "sample_months": 3,
               "source_type": "inferred",
               "supporting_transaction_ids": [
-                "eba1e54b-52f4-4d46-b6c5-be70a5e29172",
-                "7d02d670-ab5f-4f0e-9856-df801229b691",
-                "7d12157c-2727-4788-ab9c-55aa9baf3836",
-                "139e6047-b575-4f94-9973-47186eda5c2c",
-                "2df23f28-ca0c-454e-b3d1-299523f94e89",
-                "1343b0e9-3244-4c01-8373-1a2f4a01f122",
-                "4c413fcc-5667-4802-ade4-82adba13c1e7",
-                "7384d90c-c742-4435-8132-727b84259f97",
-                "c41e747c-c9c7-4fbe-9946-c69f790ae6f1",
-                "a88540dd-d9bf-4f8d-bf21-ae90c0caf0b7",
-                "09ea4684-2987-46b4-a89d-9b3cc07edc45",
-                "bea2bfb4-5181-4c84-9267-2a4ea1b682d2",
-                "1f6bea07-b9bd-4f4a-8e9c-cddc5ccbfeaf",
-                "ec3b2e34-8a57-4688-be7e-891b827bb099",
-                "7a66e61e-4dc3-421f-b274-af6f08875c54",
-                "e21505e6-515c-4204-baca-88e44dac5b1b",
-                "b344199f-f2b3-4003-ba46-c52d920c61f0",
-                "67e61fc6-3b4b-4c23-93b8-391dd90a2fc5",
-                "acbde689-f50c-4594-987a-df069edeee3f",
-                "7ea8910b-e47f-46bb-9bee-4c55101eef33",
-                "8c0d48e9-6126-44c5-b293-9bedcc8186f9",
-                "6429d06b-9aac-4b96-a16a-e42b1bc86b48",
-                "a983f824-91c9-4b0a-b69b-ac1f0187bac7",
-                "d43e660c-7ee0-4b5c-9761-779560dca81e",
-                "d8067481-fae6-4198-8fcc-c26f4a141603",
-                "2e05a122-e0f0-4b55-ba0d-55a17b7b3bb2",
-                "c06f8f3c-0aa6-408e-9f76-cb6020a7d53a",
-                "ac03df36-fa51-4df7-8231-e1ac9c447033",
-                "a8b548c2-7728-4f99-af36-a30e91cbe20f",
-                "5ac3b0c7-e1f3-46ce-aa12-e24817d46d46",
-                "fb807a50-f7a3-4798-ad0a-7d0c0ca96121",
-                "4b24056c-a292-4bc3-889b-f4e9c714036f",
-                "f3b5055e-53b7-401d-9dd6-3fa163d96740",
-                "4053b0d3-73c6-4218-8f55-9f32f3ffaf06",
-                "56820603-9de5-43f6-b0eb-0b0307bf4195",
-                "f86ec051-af96-4f7d-95ad-77a20db4afac",
-                "1ce6386d-5cea-48e8-807b-7b7a905a3261",
-                "bb2f92d3-a98d-4fbc-bb73-f468105e1a91",
-                "43ee2999-60e2-4125-868c-4563d9bebca8",
-                "196c82cc-2571-4f26-b602-9cd0f4f88f7d",
-                "cd771343-54d5-409e-be3d-bd61e74fea61",
-                "0b9db509-b873-47b5-981e-766ce8078931",
-                "cec59596-e58b-40ff-a2bc-d6667bad35b4",
-                "b6861dd1-d932-4514-9479-3c707a087e3d",
-                "8af8793e-e0a5-4ae0-a731-f9f63f38950e",
-                "e04521df-2021-4f0a-a7c4-76251f806bb8",
-                "e7829f13-8889-4e8e-a1d8-5b9531560249",
-                "e5132696-1541-42ea-936c-a69c1f87900d",
-                "a41142a1-2fae-4de4-8d10-192d9620f958",
-                "45f3a06e-e76a-4a9e-a676-0c33f17a069c",
-                "e242c697-d3a8-4c6a-9d5d-872df56d6db6",
-                "f027bf5b-4d7e-43ff-b97a-651edb6dcc3f",
-                "55ca41bf-0093-427a-adf0-5635a876fddc",
-                "33635d23-2318-483c-be6f-92f47017964a",
-                "d7683958-2e97-4d9a-b7f7-7cb5f24eb367",
-                "ff17f378-bf7f-4a9f-9689-755bca2f1120",
-                "dae6b1bd-b9e7-4147-97eb-23d5255deafb",
-                "9a0919de-2355-4957-a500-bf97965f5fac",
-                "1fa26216-0250-4360-9b51-ec708e26887a",
-                "a13a5817-d8eb-4601-83aa-79a858c02369",
-                "221b6f8d-5053-4e85-a4b6-67677283b808",
-                "4695120f-c7cc-412d-af46-152eadbcfa27",
-                "4ab6ec48-3ece-429b-9b7c-2c01871f4138",
-                "73f16c1a-37aa-4b68-92e5-c69f76bc3eb2",
-                "01929c73-9199-41b0-a6d5-dbb93d63e01d",
-                "b5d6e699-5af7-42cf-816e-57d4d1b10462",
-                "5f667ee0-dc79-4bf6-8c51-4d7af4d0751e",
-                "531210f0-3cf4-4289-9f82-f50d4d7c3703",
-                "acb85642-4173-4e66-8413-eb1c48d9ea9b",
-                "10daf988-248c-4025-8789-1e7de5eac2e7",
-                "c533eb17-ed00-4787-8f41-247538d2094d",
-                "48d0c016-ac9f-49c5-a894-517d16a85014",
-                "81b1014e-e611-4c52-ae66-a40400fe9b56",
-                "c44568bd-ac75-4cee-91e4-95de06396f89",
-                "630705c8-6891-4f4d-89f3-e84b2984782d",
-                "2d845865-be2b-49a8-97a6-e1ffaaeaa300",
-                "7a513444-7e06-440e-ab26-d84cffb3bbf4",
-                "e93518a3-588c-4184-ace1-62ca8a8aae18",
-                "94046795-3935-40d9-96a6-e8048a3ababc",
-                "f4a71247-ed44-4c9f-bbc5-11a6004b27ae",
-                "284009aa-e831-4c72-9ec9-611ef7fea21c",
-                "fac99acc-896b-4fe1-917c-6124af2c5162",
-                "3c98490b-8ca6-4f0d-824c-313644f49f23",
-                "8e3e66d6-38a3-4df8-a565-6b8756fb6311",
-                "9a7e7ed4-b53e-40a4-9879-56add3c17270",
-                "345c8980-0e2a-4b56-945f-c40c1080a3c3",
-                "b678c5bc-5a1d-43a4-9df4-b24c39c4d440"
+                "c69d7f7d-8310-43d8-9d7b-cf1d54b1829b",
+                "835f4ed4-17d6-48a9-ad35-d3a9a5982fd8",
+                "b4cfc738-8194-4ae2-bf53-652dbbfcb65e",
+                "7a147605-ffa4-4aa6-bd0c-7e7a1a15541a",
+                "36881275-8bd9-49ba-9eb3-251110d660b0",
+                "c63ca69b-915d-4898-9b65-6ecc81fa8563",
+                "fb0dd15a-79ab-4266-b637-20badadedf6b",
+                "7281bae3-5d16-4a83-973e-183505884a98",
+                "89afc7a5-5008-4c35-8844-999236e69e86",
+                "ed247e96-c201-49be-b134-5f6b7206c922",
+                "544b890c-4b4e-4251-9f47-9470f17efc95",
+                "11075ca7-27f6-4998-a1c9-5cf99d51cb73",
+                "7fb374cb-088e-4a22-9f04-8d0f3f941c0b",
+                "762c981a-3804-48b7-8d73-ea19cfebbfaf",
+                "04a6f4f6-6d45-432e-8260-5fd2b5a72f5a",
+                "30136ad6-10aa-42ef-80cc-cf7dc2e49922",
+                "3cac7ed8-15f5-42e8-96f0-1cab4232efc5",
+                "56b1d2bd-3ed3-41d4-8f97-761353feba08",
+                "12b28ba7-3a2e-452e-b5d4-e6d9ce5e4ea5",
+                "2dc32f9d-04c5-4a04-86cd-8636dd8c9bb3",
+                "22bc3c91-5f34-49ef-a91a-0482e91591f8",
+                "a4f349bc-c4d7-40ee-8afb-38f5f1a29698",
+                "1e112eec-c953-4452-a3f1-f42d479126c9",
+                "bdb91cc4-bf23-47d9-8d0e-d9759b9610b0",
+                "ed957a6a-6e37-4b2a-a08c-a9d2e8d705c7",
+                "27146c31-2e5b-445a-81cd-5dc01208764f",
+                "3c45861f-b47b-4642-832a-8df3c84ab601",
+                "48c749a2-93d4-4c18-9f21-883f97e54e30",
+                "6d7bfff3-3541-4a60-97d6-bfae68709178",
+                "088755a7-3606-45ed-b021-0cbfb1754c5a",
+                "6f80f4d6-f005-4495-b412-c42767a21f51",
+                "6ad9d358-d995-43dd-b2c1-11be1f46fb25",
+                "afdab283-76c9-4510-99a8-e1f925fc8a41",
+                "9b31d4b9-51bb-4d1c-9dcf-835acd2e95e3",
+                "3908f414-3463-4e27-9f8a-3d39b9e461ba",
+                "849c473e-55d6-4ef0-8cb4-6f03aa9a7f56",
+                "f2544d34-f604-4a1b-9bb2-e16316aa36e2",
+                "1a5494c3-f01c-4f8b-a078-2af52e31104c",
+                "52e939b7-14a4-4067-bbb7-84ae0213bfef",
+                "4c4cc253-7614-4c07-ad82-4f11b493dc58",
+                "a669a272-833d-49b2-aa3b-6df2cf75678d",
+                "84d8178a-fef7-4901-9c6e-054e8c07926e",
+                "dafc8905-0465-4ec7-a200-717a7944083c",
+                "3ca1f45c-70a3-4789-b7c8-8ab4408d2f78",
+                "c8e07d08-beb1-485b-af5b-cd1c3cf46284",
+                "413d1f31-0ac1-45dc-99af-424e5a4ad653",
+                "367b393c-3ca5-4ae1-a627-d18acdb2c2a5",
+                "9b8c121f-0867-4c58-ad1e-2328ded33e13",
+                "33fff9a1-1486-456e-80bf-b848aadf8aa9",
+                "38605ce5-8185-4b1c-95c3-61891999f61e",
+                "94c1f617-7ace-4e51-8994-4f5dd867b75d",
+                "42e6695b-3263-4808-a4d4-41aafe8ad84c",
+                "0881d974-f12c-459b-adc5-53120df42ac5",
+                "a075154c-8a18-4bb3-a206-715bb4dd4c7a",
+                "225b5763-89ed-4dd2-b7d6-2ef5f9fc3683",
+                "73ded804-3566-43c8-83cd-936878a88c4e",
+                "a07340b7-0be3-4f44-bf9d-2374c7c89435",
+                "e3b89c68-acbc-4e67-aaa6-e15749d9a72a",
+                "6c7924a9-f223-44c8-b515-8b41a487be2e",
+                "3f1e4585-d0f5-4433-8773-aca83d77acc3",
+                "b472ecb8-08b9-4c47-bb21-49f34561ec20",
+                "32f72a39-3c60-4d2d-ad99-a720098171ea",
+                "14877dc7-cda3-447b-9320-86e5892b5afc",
+                "0dcb56b0-f1a1-46aa-9364-c0cd64871140",
+                "3a9aa27e-74d6-476b-b97a-3d70c132a4e5",
+                "65ca8c24-9040-46be-869f-0b85f6a44918",
+                "895cb856-6871-4868-b470-1657b89b7a3b",
+                "937b320e-01ff-4cdc-a6a2-956670626e74",
+                "2fa9b522-24a7-4576-bce0-f5816ae2ac26",
+                "19642825-b554-458a-a140-6f31185749de",
+                "7a344388-46ab-42ae-b314-cc79e013a453",
+                "31399390-5622-456f-a861-804de088d003",
+                "0f9b818e-52a7-4e6c-ba63-c887b9328f81",
+                "83582aa8-1408-4de3-9f20-bef632a61ae9",
+                "baaa7e95-c163-4ccf-b81e-fb2770bed19c",
+                "6ba5482b-aefb-4882-93da-ee6350012672",
+                "7d5edfeb-da9d-475f-a3fd-b62f8e491e50",
+                "53a0dcf9-559b-43af-a031-5f9fc736fe91",
+                "4a4215a8-44cf-43c2-95f6-32a5277aa598",
+                "89cabf08-5c26-44a9-92a3-ac57c5fba279",
+                "7d970457-5e13-49ad-8e99-9abfff81cbd7",
+                "e0be42cf-79cc-423d-9f2f-d0e2f5376862",
+                "04968be5-3eaf-4738-abe1-1b7ad199482a",
+                "9e4cdbe0-260b-4b0a-ad31-0c36bb9e7c7d",
+                "0e6fd3d3-4c1f-465b-b14d-1b22d4f38739",
+                "d05db243-af4f-4037-89e2-52c641ff74f8",
+                "b03c0da3-221d-4dfd-8fae-201d52e4b16f"
               ],
               "source_refs": [
-                "12146f81-c459-4b87-997f-af0f86be7e60",
-                "352236e4-86e1-4490-b8c8-bd8307e83c57"
+                "4569d888-c6fe-4a26-af71-01cfe82ec10d",
+                "e17dc215-b02f-4cd3-bd56-0923bfc1c0e2"
               ],
               "synthetic": true
             },
@@ -14467,12 +14467,12 @@
               "sample_months": 3,
               "source_type": "inferred",
               "supporting_transaction_ids": [
-                "028d5045-ef07-479f-a932-cd76f7931e7f",
-                "16d2c675-7091-4d68-992a-f7d2b9cc4f2e",
-                "f09933b4-ea01-4a1c-bf0b-f0de75e142d7"
+                "cc7c1248-199a-4a5f-a0d9-11dae37afc98",
+                "3cf691a7-f1fb-433b-954c-3e77b4f42c77",
+                "7ee8b9c8-0cf6-4b00-a920-23cdf7fb0fc3"
               ],
               "source_refs": [
-                "352236e4-86e1-4490-b8c8-bd8307e83c57"
+                "e17dc215-b02f-4cd3-bd56-0923bfc1c0e2"
               ],
               "synthetic": true
             },
@@ -14489,12 +14489,12 @@
               "sample_months": 3,
               "source_type": "inferred",
               "supporting_transaction_ids": [
-                "45835143-edd9-4241-9847-5d20c3116cca",
-                "94b6bf4f-3ae6-416d-abbc-204882da7fd4",
-                "86475115-5ada-48c8-877e-263b7ab96fda"
+                "2437c260-8bee-431c-9c4b-87f7231a6c47",
+                "e64d9db6-50be-4559-8cf9-dd19ac4f8fd2",
+                "364d57a9-f192-441f-ac1d-340ea7106729"
               ],
               "source_refs": [
-                "352236e4-86e1-4490-b8c8-bd8307e83c57"
+                "e17dc215-b02f-4cd3-bd56-0923bfc1c0e2"
               ],
               "synthetic": true
             },
@@ -14675,7 +14675,7 @@
             "label": "tuition",
             "amount": "30000.00",
             "certainty": "confirmed",
-            "beneficiary_id": "c858a3c6-fcc7-4eb4-b149-f241b6ef6591",
+            "beneficiary_id": "7b393500-dce2-404c-9382-9e6731a28175",
             "settled_sequence": 2,
             "status": "paid",
             "source_type": "budget_or_invoice",
@@ -14786,7 +14786,7 @@
             "within_forecast": true
           },
           {
-            "id": "recurring:b6386f33-670f-4fab-b46b-d16cc6096d0e:2026-10-05",
+            "id": "recurring:e06a25d2-219e-48b7-82dc-f1a3fd2a919b:2026-10-05",
             "kind": "expense",
             "label": "Demo Music",
             "amount": "199.00",
@@ -15501,7 +15501,7 @@
             "within_forecast": true
           },
           {
-            "id": "repayment:62fece11-9136-4c7d-83be-3c9df1429c01:1",
+            "id": "repayment:d0bb205d-44d3-4f26-b512-43525447a8c7:1",
             "date": "2026-11-01",
             "kind": "expense",
             "label": "Simulated loan repayment",
@@ -15644,7 +15644,7 @@
             "within_forecast": true
           },
           {
-            "id": "recurring:b6386f33-670f-4fab-b46b-d16cc6096d0e:2026-11-05",
+            "id": "recurring:e06a25d2-219e-48b7-82dc-f1a3fd2a919b:2026-11-05",
             "kind": "expense",
             "label": "Demo Music",
             "amount": "199.00",
@@ -16333,7 +16333,7 @@
             "within_forecast": true
           },
           {
-            "id": "repayment:62fece11-9136-4c7d-83be-3c9df1429c01:2",
+            "id": "repayment:d0bb205d-44d3-4f26-b512-43525447a8c7:2",
             "date": "2026-12-01",
             "kind": "expense",
             "label": "Simulated loan repayment",
@@ -16476,7 +16476,7 @@
             "within_forecast": true
           },
           {
-            "id": "recurring:b6386f33-670f-4fab-b46b-d16cc6096d0e:2026-12-05",
+            "id": "recurring:e06a25d2-219e-48b7-82dc-f1a3fd2a919b:2026-12-05",
             "kind": "expense",
             "label": "Demo Music",
             "amount": "199.00",
@@ -16749,7 +16749,7 @@
             "within_forecast": true
           },
           {
-            "id": "repayment:62fece11-9136-4c7d-83be-3c9df1429c01:3",
+            "id": "repayment:d0bb205d-44d3-4f26-b512-43525447a8c7:3",
             "date": "2027-01-01",
             "kind": "expense",
             "label": "Simulated loan repayment",
@@ -16760,7 +16760,7 @@
             "within_forecast": false
           },
           {
-            "id": "repayment:62fece11-9136-4c7d-83be-3c9df1429c01:4",
+            "id": "repayment:d0bb205d-44d3-4f26-b512-43525447a8c7:4",
             "date": "2027-02-01",
             "kind": "expense",
             "label": "Simulated loan repayment",
@@ -16771,7 +16771,7 @@
             "within_forecast": false
           },
           {
-            "id": "repayment:62fece11-9136-4c7d-83be-3c9df1429c01:5",
+            "id": "repayment:d0bb205d-44d3-4f26-b512-43525447a8c7:5",
             "date": "2027-03-01",
             "kind": "expense",
             "label": "Simulated loan repayment",
@@ -16782,7 +16782,7 @@
             "within_forecast": false
           },
           {
-            "id": "repayment:62fece11-9136-4c7d-83be-3c9df1429c01:6",
+            "id": "repayment:d0bb205d-44d3-4f26-b512-43525447a8c7:6",
             "date": "2027-04-01",
             "kind": "expense",
             "label": "Simulated loan repayment",
@@ -16794,7 +16794,7 @@
           }
         ],
         "next_installment": {
-          "id": "8934b188-c10c-4ce6-aab9-39aa270335cc",
+          "id": "8a21119d-1a5f-4c6c-a0f4-3529ba6de1d2",
           "date": "2026-11-01",
           "amount": "1725.48",
           "within_forecast": true
@@ -16804,7 +16804,7 @@
             "status": "Verified",
             "source_type": "controlled_confirmation",
             "source_refs": [
-              "c960b869-28cc-4a1c-81a2-21b266056eaa"
+              "eac76bc2-9507-4d5e-9398-49b582e192d1"
             ],
             "evidence": [
               {
@@ -16814,9 +16814,9 @@
                 "source_id": "https://sites.google.com/phuket.psu.ac.th/fispsuphuket/International-Students"
               }
             ],
-            "updated_at": "2026-10-07T14:31:38.793702+00:00",
-            "observed_at": "2026-10-07T14:31:38.793702+00:00",
-            "verified_at": "2026-10-07T14:31:38.793708+00:00",
+            "updated_at": "2026-10-07T15:35:54.596342+00:00",
+            "observed_at": "2026-10-07T15:35:54.596342+00:00",
+            "verified_at": "2026-10-07T15:35:54.596348+00:00",
             "conflict": false,
             "expired": false,
             "applicability": "APPLICABLE",

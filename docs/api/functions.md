@@ -20,6 +20,14 @@ they enforce a system rule.
 | finance/serializers.py | Core financial input validation |
 | finance/workflow_serializers.py | Workflow request validation |
 | finance/workflow_models.py | Persistent workflow and execution records |
+| finance/policy.py, policy_api.py, policy_models.py | T2/T3 action catalog, limits, step-up tokens, approvals and policy denials |
+| finance/agent_api.py, agent_runner.py, agent_tools.py, agent_models.py | Agent sessions, tool catalog, planner loop, pending actions and their confirmation |
+| finance/credit.py, credit_api.py, credit_models.py | Simulated on-time record, snapshots, signed statements and limit multiplier |
+| finance/i18n.py | Error `code`/localized `message` exception handler |
+
+Endpoint contracts for the policy, agent and credit modules are in
+[reference.md](reference.md); background design notes are in docs/permissions.md,
+docs/agent.md and docs/credit.md.
 
 ## Deterministic calculation functions
 
@@ -174,14 +182,14 @@ Moves the demo date forward by at most 730 days. The date cannot move backward.
 
 ### B application and repayment services
 
-Application functions now live in `finance/lending_applications.py`:
+Application functions now live in `backend/finance/lending_applications.py`:
 
 - create_application: owned immutable B quote, one application, first due date in the future.
 - application_action: versioned submit/cancel; submit automatically evaluates monthly affordability.
 - application_decision: operator re-evaluation of UNDER_REVIEW, without an approval override.
 - disburse: rechecks current affordability; records cash/account/ledger atomically or returns to review.
 
-`finance/lending_ledger.py` creates loan accounts and installments and repays the earliest due installment using the shared Django wallet. Repayments respect payment holds, update state and audit atomically, and close the account after the last installment. `finance/c_adapter.py` exports authoritative records and creates C mock explanations from an owned scenario.
+`backend/finance/lending_ledger.py` creates loan accounts and installments and repays the earliest due installment using the shared Django wallet. Repayments respect payment holds, update state and audit atomically, and close the account after the last installment. `backend/finance/c_adapter.py` exports authoritative records and creates C mock explanations from an owned scenario.
 
 The former execution_services application/decision/disbursement_action implementation has been removed. See [the replacement API](guide.md) for payloads and states.
 

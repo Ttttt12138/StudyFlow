@@ -1,0 +1,6 @@
+PASS demo-readiness (12s)
+PASS demo-consumption (35s)
+PASS demo-copilot (11s)
+PASS demo-remittance (10s)
+PASS demo-agent (7s)
+PASS eval-agent (2s)

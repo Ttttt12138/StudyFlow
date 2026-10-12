@@ -9,10 +9,11 @@
 HTTP 服务与 worker 分别启动。worker 从 PostgreSQL 抢占任务，租约 5 分钟；重试间隔指数增长，最高 1 小时。每天曼谷时间 08:00 后安排一次当日检查，状态变化也会入队。无需 Redis，不在 Web worker 内运行定时器。
 
 ```powershell
+Set-Location backend  # Django commands run inside backend/
 $env:STUDYFLOW_READINESS_ENABLED='true'
-studyFlow/Scripts/python.exe manage.py runserver 127.0.0.1:8000 --noreload
+../studyFlow/Scripts/python.exe manage.py runserver 127.0.0.1:8000 --noreload
 # 在第二个终端使用相同数据库配置：
-studyFlow/Scripts/python.exe manage.py readiness_worker --mode live --env-file studyflow-ai/.env
+../studyFlow/Scripts/python.exe manage.py readiness_worker --mode live --env-file ../studyflow-ai/.env
 ```
 
 凭据仅由显式 `--env-file` 或进程环境注入；不输出密钥。mock/live 不自动切换。没有真实服务配置时可用 `--mode mock` 开发，但不能据此认定真实模型验收通过。`--once` 只处理一项任务，适合外部调度器调用。worker 停止时任务仍保存在数据库中。
@@ -65,11 +66,12 @@ studyFlow/Scripts/python.exe manage.py readiness_worker --mode live --env-file s
 ## 验证与排障
 
 ```powershell
-studyFlow/Scripts/python.exe manage.py demo_readiness --mode mock --runs 1 --output output/readiness-http-mock.json
-studyFlow/Scripts/python.exe manage.py demo_readiness --mode live --env-file studyflow-ai/.env --runs 3 --output output/readiness-http-live.json
-studyFlow/Scripts/python.exe manage.py test finance auto_test --noinput --keepdb
-studyFlow/Scripts/python.exe manage.py makemigrations --check --dry-run
-studyFlow/Scripts/python.exe manage.py spectacular --validate --fail-on-warn --file output/readiness-openapi.yaml
+Set-Location backend  # Django commands run inside backend/
+../studyFlow/Scripts/python.exe manage.py demo_readiness --mode mock --runs 1 --output output/readiness-http-mock.json
+../studyFlow/Scripts/python.exe manage.py demo_readiness --mode live --env-file ../studyflow-ai/.env --runs 3 --output output/readiness-http-live.json
+../studyFlow/Scripts/python.exe manage.py test finance auto_test --noinput --keepdb
+../studyFlow/Scripts/python.exe manage.py makemigrations --check --dry-run
+../studyFlow/Scripts/python.exe manage.py spectacular --validate --fail-on-warn --file output/readiness-openapi.yaml
 ```
 
 演示在随机本地端口启动真实 HTTP 服务，用新建模拟身份和真实 Token 访问 PostgreSQL；不使用 APIClient 代替 HTTP。检查完整提取、用户确认、预算、筹资、审批、幂等放款和一期还款后的预测。报告明确 Synthetic，并保留真实模型版本、调用错误、用量与耗时；不包含 Token。缺模型或网络失败时命令失败，报告 `passed=false`。

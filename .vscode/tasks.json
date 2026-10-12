@@ -9,7 +9,10 @@
         "manage.py",
         "check"
       ],
-      "problemMatcher": []
+      "problemMatcher": [],
+      "options": {
+        "cwd": "${workspaceFolder}/backend"
+      }
     },
     {
       "label": "Tests (isolated SQLite)",
@@ -21,7 +24,10 @@
         "--settings=config.test_settings"
       ],
       "problemMatcher": [],
-      "group": "test"
+      "group": "test",
+      "options": {
+        "cwd": "${workspaceFolder}/backend"
+      }
     }
   ]
 }

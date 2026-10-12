@@ -1,5 +1,7 @@
 # 消费学习与资金执行验证
 
+> 路径说明（2026-10-11 更新）：B 模块已移入 `backend/`。下文 Django 命令在 `backend/` 下运行，`manage.py`、`finance/`、`auto_test/`、`openapi.yaml` 等路径均相对 `backend/`；测试结果保留当时的记录。
+
 日期：2026-10-05（Asia/Bangkok）。验证对象是统一 Django 后端、PostgreSQL、C 本地包和真实 loopback HTTP；没有前端或真实银行资金执行。
 
 ## 结果
@@ -9,7 +11,7 @@
 | Django `finance auto_test` | 142 项通过，包含 PostgreSQL 并发、迁移与旧工作流回归 |
 | C 模块 pytest | 134 项通过；从 `studyflow-ai` 目录运行 |
 | 迁移漂移检查 | `makemigrations --check --dry-run` 无变化 |
-| API 契约 | OpenAPI `--validate --fail-on-warn` 通过，更新根 `openapi.yaml` |
+| API 契约 | OpenAPI `--validate --fail-on-warn` 通过，更新 `backend/openapi.yaml`（当时位于仓库根目录） |
 | 新增模块静态检查 | Ruff 通过；Python 编译检查通过 |
 | 完整模拟演示 | `demo_consumption --runs 3` 三轮通过，使用独立身份、真实 HTTP 和 PostgreSQL |
 

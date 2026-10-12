@@ -1,0 +1,22 @@
+
+Running 15 tests using 1 worker
+
+[1/15] [mocked] › tests\e2e\mocked\agent.spec.mjs:11:3 › AI assistant preview › shows tiers, steps and a read-only proposal without calling Django, in both languages
+[2/15] [mocked] › tests\e2e\mocked\agent.spec.mjs:51:3 › AI assistant with mocked Django › asks, confirms a T2 proposal with step-up, and routes a T3 proposal to operator approval
+[3/15] [mocked] › tests\e2e\mocked\connected-journey.spec.mjs:7:1 › connected contract flow, payment calendar with B forecast, missing cost, funding date, stale results, upload/review/conflict, persistence, retries, mobile overflow, no runtime errors.
+[4/15] [mocked] › tests\e2e\mocked\connected-preview.spec.mjs:7:1 › token-free connected preview, five screens, calendar, read-only boundary, mobile navigation, and zero Django requests.
+[5/15] [mocked] › tests\e2e\mocked\dashboard-connected.spec.mjs:6:1 › mocked dashboard partial failure/retry, envelopes, no semester, stale, auth, desktop/mobile.
+[6/15] [mocked] › tests\e2e\mocked\dashboard-preview.spec.mjs:7:1 › dashboard mock, attention/clear/empty/stale/error/signed-out states, journey link, mobile layout, zero Django requests.
+[7/15] [mocked] › tests\e2e\mocked\original-demo.spec.mjs:7:1 › confirmation, expenses, complete budget inputs, unknown optional expense, stale results after edits, invalid amount/date, back/forward persistence, desktop/mobile, no runtime errors.
+[8/15] [mocked] › tests\e2e\mocked\trust.spec.mjs:10:3 › permissions and activity preview › shows tiers, credit multiplier, limits, approvals and audit log read-only at phone width
+[9/15] [mocked] › tests\e2e\mocked\trust.spec.mjs:40:3 › permissions and activity with mocked Django › reads profile, limits, approvals and pages through the audit log; sections fail independently
+[10/15] [mocked] › tests\e2e\mocked\trust.spec.mjs:81:3 › permissions and activity with mocked Django › signed-out students are sent to Django sign-in
+[11/15] [mocked] › tests\e2e\mocked\wallet.spec.mjs:11:3 › wallet preview › shows every preview status read-only, without calling Django, at phone width
+[12/15] [mocked] › tests\e2e\mocked\wallet.spec.mjs:41:3 › wallet with mocked Django › session/CSRF quotes, stale quotes, beneficiary gate, approval, step-up, lost response and reload
+[13/15] [integration] › tests\e2e\integration\agent.spec.mjs:11:1 › real Django agent: plan, T2 proposal with step-up, T3 proposal through a separate approver, trust center and audit log.
+[14/15] [integration] › tests\e2e\integration\journey.spec.mjs:11:1 › real PostgreSQL/session/CSRF/C mock worker five-step browser integration.
+[integration] › tests\e2e\integration\journey.spec.mjs:11:1 › real PostgreSQL/session/CSRF/C mock worker five-step browser integration.
+
+
+[15/15] [integration] › tests\e2e\integration\wallet.spec.mjs:10:1 › real Django/PostgreSQL wallet, fixture quotes, T2/T3, expiry, permissions, safe retries and reload.
+  15 passed (1.1m)

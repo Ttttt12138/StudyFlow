@@ -1,8 +1,19 @@
 name: Student frontend integration
-on: [push, pull_request]
+# Pushes to the main branch and pull requests; a newer commit cancels the older run of the same ref.
+on:
+  push:
+    branches: [feature/bc-integration]
+  pull_request:
+  workflow_dispatch:
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: read
 jobs:
   frontend:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     services:
       postgres:
         image: postgres:17
@@ -25,43 +36,51 @@ jobs:
       STUDYFLOW_CONSUMPTION_ENABLED: "true"
       STUDYFLOW_MODE: mock
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
-          python-version: "3.12"
-      - uses: actions/setup-node@v4
+          python-version: "3.13"
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: "24"
           cache: npm
           cache-dependency-path: frontend/package-lock.json
-      - run: |
+      # The browser suites call the backend through the repository's .venv (frontend/tests/support.mjs).
+      - name: Prepare backend (B)
+        run: |
           python -m venv .venv
-          .venv/bin/python -m pip install -r requirements-dev.txt
-          .venv/bin/python manage.py migrate --noinput
-          .venv/bin/python manage.py createcachetable
-      - working-directory: frontend
+          cd backend
+          ../.venv/bin/python -m pip install -r requirements-dev.txt
+          ../.venv/bin/python manage.py migrate --noinput
+          ../.venv/bin/python manage.py createcachetable
+      - name: Build frontend (A)
+        working-directory: frontend
         run: |
           npm ci
           npm run build
           npx playwright install --with-deps chromium
-          echo "CHROMIUM_PATH=$(node --input-type=module -e 'import {chromium} from "playwright"; process.stdout.write(chromium.executablePath())')" >> "$GITHUB_ENV"
-      - name: Start development services and check readiness
+      - name: Start Django and the readiness worker
         run: |
           mkdir -p output/frontend
-          .venv/bin/python manage.py runserver 127.0.0.1:8000 --noreload > output/frontend/django.log 2>&1 &
-          .venv/bin/python manage.py readiness_worker --mode mock > output/frontend/worker.log 2>&1 &
-          npm --prefix frontend run dev -- --host 127.0.0.1 > output/frontend/vite.log 2>&1 &
+          (cd backend && exec ../.venv/bin/python manage.py runserver 127.0.0.1:8000 --noreload) > output/frontend/django.log 2>&1 &
+          echo $! > output/frontend/django.pid
+          (cd backend && exec ../.venv/bin/python manage.py readiness_worker --mode mock) > output/frontend/worker.log 2>&1 &
+          echo $! > output/frontend/worker.pid
           for attempt in $(seq 1 30); do
-            if curl --fail --silent http://127.0.0.1:8000/health/ && curl --fail --silent --output /dev/null http://127.0.0.1:5173; then exit 0; fi
+            if curl --fail --silent --output /dev/null http://127.0.0.1:8000/health/ \
+              && kill -0 "$(cat output/frontend/worker.pid)"; then exit 0; fi
             sleep 1
           done
+          tail -n 50 output/frontend/*.log
           exit 1
-      - working-directory: frontend
+      - name: Unit tests and browser suites (Playwright starts Vite)
+        working-directory: frontend
         run: |
           npm test
           npm run test:integration
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
         with:
           name: student-frontend-validation
           path: output/frontend/
+          retention-days: 14

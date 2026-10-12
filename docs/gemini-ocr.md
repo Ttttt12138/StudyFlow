@@ -6,7 +6,7 @@ Gemini 只转录，不计算金额、不核验收款人、不授权付款。转�
 
 ## 启用配置
 
-安装更新后的依赖并执行 `python manage.py migrate`。Gemini API 和 OCR 配置统一放在 **C 模块 `studyflow-ai/.env`**，模板见 `studyflow-ai/.env.example`。项目根目录 `.env` 仅保留 Django、数据库等后端配置，其中 `STUDYFLOW_READINESS_ENABLED=true` 用于开启后端接口。
+安装更新后的依赖并在 `backend/` 下执行 `python manage.py migrate`。Gemini API 和 OCR 配置统一放在 **C 模块 `studyflow-ai/.env`**，模板见 `studyflow-ai/.env.example`。`backend/.env` 仅保留 Django、数据库等后端配置，其中 `STUDYFLOW_READINESS_ENABLED=true` 用于开启后端接口。
 
 在 `studyflow-ai/.env` 配置：
 
@@ -101,14 +101,15 @@ file=<PNG/JPEG/PDF bytes>
 
 ## 可复现验收
 
-`examples/ocr/v1/` 包含中文、英文、中英混排的 3 个 PNG 及对应纯扫描 PDF，全部明确标注 Synthetic。
+`backend/examples/ocr/v1/` 包含中文、英文、中英混排的 3 个 PNG 及对应纯扫描 PDF，全部明确标注 Synthetic。
 `manifest.json` 含版本、文件校验值和金额/日期/发票号的预期文本。生成方式：
 
 ```powershell
-studyFlow/Scripts/python.exe scripts/build_ocr_fixtures.py --font C:/Windows/Fonts/msyh.ttc
+Set-Location backend
+../studyFlow/Scripts/python.exe scripts/build_ocr_fixtures.py --font C:/Windows/Fonts/msyh.ttc
 ```
 
-部署配置完成后，显式执行：
+部署配置完成后，在 `backend/` 下显式执行：
 
 ```text
 python manage.py verify_document_ocr --live --output output/ocr-live.json

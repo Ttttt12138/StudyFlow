@@ -1,0 +1,24 @@
+{
+  "version": "copilot-holdout-v5",
+  "draft_revision": 3,
+  "scoring_policy": "bijective_events_with_review_v2",
+  "sha256": "114085329116862fd345af2a8e944f654359f6b38c76c037b8a4cdab1622c858",
+  "counts": {
+    "dev": 0,
+    "test": 160
+  },
+  "acceptance": "legacy",
+  "frozen": false,
+  "human_reviewed": false,
+  "synthetic": true,
+  "require_inferred_date_safety": true,
+  "thresholds": {
+    "classification_accuracy": 0.9,
+    "joint_field_accuracy": 0.95,
+    "critical_silent_misses": 0,
+    "dangerous_block_rate": 1.0,
+    "provider_errors": 0
+  },
+  "reference_date": "2026-10-02",
+  "rounds_per_arm": 1
+}

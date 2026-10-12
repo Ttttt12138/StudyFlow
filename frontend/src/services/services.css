@@ -1,0 +1,107 @@
+/* Global simulated-money strip and language switch. */
+.sim-strip{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:color-mix(in srgb,var(--accent) 85%,transparent);color:var(--text-3);padding:7px 16px;font-size:12px;line-height:1.4}
+.sim-pill{background:#603d00;color:#cbc39e;font-weight:800;letter-spacing:1.4px;font-size:10px;border-radius:4px;padding:3px 7px}
+.sim-text{flex:1 1 260px;min-width:0}
+.lang-switch{display:inline-flex;border:1px solid color-mix(in srgb,var(--accent) 45%,transparent);border-radius:6px;overflow:hidden;margin-left:auto}
+.lang-switch button{border:0;background:transparent;color:var(--text-3);padding:4px 10px;font-size:12px}
+.lang-switch button[aria-pressed="true"]{background:var(--surface-1);color:var(--accent);font-weight:700}
+.lang-switch button:focus-visible{outline:2px solid color-mix(in srgb,var(--warn) 45%,transparent);outline-offset:-2px}
+
+/* Permission tier badges (docs/permissions.md). */
+.tier-badge{display:inline-flex;align-items:center;gap:5px;border-radius:5px;padding:2px 7px;font-size:11px;line-height:1.5;vertical-align:middle;border:1px solid}
+.tier-badge strong{font-weight:800;letter-spacing:.4px}
+.tier-t0{background:#101918;color:#92aaa5;border-color:#253430}
+.tier-t1{background:#0e1b23;color:#87aad7;border-color:#233953}
+.tier-t2{background:#1a1500;color:#b4995d;border-color:#463400}
+.tier-t3{background:#221611;color:#d88f81;border-color:#5a2f24}
+.tier-legend{list-style:none;margin:14px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.tier-legend li{display:flex;gap:10px;align-items:flex-start;border:1px solid #17231d;border-radius:8px;padding:12px;background:#080f0d}
+.tier-legend li div{display:grid;gap:4px;font-size:12px;min-width:0}
+.tier-legend li span{color:#7a8f87}
+.tier-legend li small{color:#657871}
+.tier-legend.compact li{padding:9px 10px}
+
+/* Shared layout for the assistant and trust screens. */
+.service-app aside nav a{padding:12px;border-radius:8px;color:var(--text-2);font-size:13px;font-weight:600}
+.service-app aside nav a:hover{background:var(--surface-1);color:var(--accent)}
+.service-app .sidebar-note{margin-bottom:15px}
+.service-app main{display:grid;gap:18px}
+.service-app .preview-banner{margin-bottom:0}
+.service-card{overflow:visible}
+.service-card-body{padding:22px 26px}
+.service-card-body h3{font-size:15px;margin:22px 0 10px}
+.service-muted{color:var(--text-2);font-size:12px}
+.service-alert{font-size:13px;background:var(--surface-1);border:1px solid color-mix(in srgb,var(--warn) 45%,transparent);border-radius:8px;padding:10px 14px;margin:0}
+.service-notice{font-size:13px;background:var(--surface-1);border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:0;color:var(--accent)}
+.service-field{display:grid;gap:6px;font-size:12px;font-weight:600;margin:10px 0}
+.service-field textarea,.service-field input,.service-inline-field select{width:100%;border:1px solid var(--line);border-radius:6px;background:var(--surface-1);padding:10px 12px;font:inherit;font-size:13px;font-weight:400;color:var(--accent)}
+.service-field textarea{resize:vertical}
+.service-actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:12px}
+.service-actions .secondary{margin:0}
+.service-empty{display:grid;gap:10px;justify-items:start}
+.service-policy{border:1px solid color-mix(in srgb,var(--warn) 45%,transparent);background:var(--surface-1);border-radius:8px;padding:14px 16px;margin-top:12px}
+.service-policy h4{margin:0 0 6px;font-size:14px;display:flex;align-items:center;gap:8px}
+.service-policy p{font-size:12px;color:var(--text-2);margin:0 0 6px}
+.service-title-row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.service-inline-field{display:flex;align-items:center;gap:8px;font-size:12px}
+.service-inline-field select{width:auto;padding:6px 8px}
+.service-disclaimer{font-size:11px;color:var(--text-2);border-top:1px solid var(--line);padding-top:10px;margin-bottom:0}
+.service-list{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.service-list li{display:grid;gap:2px;border-bottom:1px solid var(--line);padding-bottom:8px}
+.link-button{border:0;background:none;padding:0;text-align:left;color:var(--accent);font-weight:600;font-size:13px;text-decoration:underline;text-underline-offset:3px}
+.link-button[aria-current="true"]{text-decoration:none;color:var(--text)}
+.chip{border:1px solid var(--line);background:var(--surface-1);color:var(--accent);border-radius:16px;padding:5px 11px;font-size:12px}
+.agent-suggestions{display:flex;flex-wrap:wrap;gap:8px}
+.status-chip{display:inline-block;font-size:11px;font-weight:650;border-radius:12px;padding:2px 9px;background:var(--surface-1);color:var(--text-2);white-space:nowrap}
+.status-completed,.status-ok,.status-confirmed,.status-approved,.status-used,.status-final{background:var(--surface-1);color:var(--accent)}
+.status-pending,.status-proposed,.status-running{background:var(--surface-1);color:var(--warn)}
+.status-failed,.status-error,.status-denied,.status-rejected,.status-expired{background:var(--surface-1);color:var(--danger)}
+
+/* Assistant conversation. */
+.agent-session-head{display:grid;gap:8px}
+.agent-goal{margin:0;font-size:15px}
+.agent-meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.agent-answer{background:var(--surface-1);border-radius:8px;padding:12px 16px;margin-top:14px}
+.agent-answer p{margin:6px 0 0;white-space:pre-wrap}
+.agent-proposals{display:grid;gap:12px}
+.agent-proposal{border:1px solid color-mix(in srgb,var(--warn) 45%,transparent);border-radius:10px;padding:14px 16px;background:var(--surface-1)}
+.agent-proposal.proposal-confirmed{border-color:var(--line);background:var(--surface-1)}
+.agent-proposal.proposal-rejected,.agent-proposal.proposal-expired{border-color:var(--line);background:var(--surface-1)}
+.agent-proposal-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.agent-proposal .comparison-facts{margin:12px 0 4px}
+.agent-approval{font-size:12px;display:flex;gap:8px;align-items:center}
+.agent-steps{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.agent-step{border:1px solid var(--line);border-radius:8px;padding:10px 12px;background:var(--surface-1)}
+.agent-step.step-proposed{border-color:color-mix(in srgb,var(--warn) 45%,transparent)}
+.agent-step.step-error,.agent-step.step-denied{border-color:color-mix(in srgb,var(--danger) 45%,transparent)}
+.agent-step-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px}
+.agent-step-number{display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--surface-1);font-size:11px;color:var(--text-2)}
+.agent-step-why{margin:6px 0 0;font-size:12px;color:var(--text-2)}
+.agent-step details{margin-top:6px;font-size:12px}
+.agent-step pre{white-space:pre-wrap;word-break:break-word;background:var(--surface-1);border-radius:6px;padding:10px;font-size:11px;max-height:260px;overflow:auto}
+
+/* Trust center. */
+.trust-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin:8px 0 6px}
+.trust-stat{border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:grid;gap:3px;background:var(--surface-1)}
+.trust-stat span{font-size:11px;color:var(--text-2)}
+.trust-stat strong{font-size:20px}
+.level-good strong{color:var(--accent)}.level-fair strong{color:var(--info)}.level-at_risk strong{color:var(--danger)}
+.service-next{font-size:13px;margin:6px 0}
+.trust-factors{margin:6px 0;padding-left:18px;font-size:13px}
+.factor-negative{color:var(--danger)}.factor-positive{color:var(--accent)}
+.table-scroll{overflow-x:auto;max-width:100%}
+.service-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px}
+.service-table th,.service-table td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+.service-table thead th{font-size:11px;color:var(--text-2);font-weight:650}
+.service-table small{display:block;color:var(--text-2);margin-top:3px}
+.service-table meter{display:block;width:100%;min-width:90px;margin-top:5px}
+
+@media(max-width:650px){
+  .sim-strip{font-size:11px;padding:6px 12px}
+  .sim-text{order:3;flex-basis:100%}
+  .lang-switch{margin-left:auto}
+  .service-card-body{padding:18px 16px}
+  .service-app .section-heading{flex-wrap:wrap;gap:10px}
+  .service-app aside nav{display:flex;overflow-x:auto}
+  .service-app aside nav a{white-space:nowrap}
+}

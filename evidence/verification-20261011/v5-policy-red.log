@@ -1,0 +1,27 @@
+...FF                                                                    [100%]
+================================== FAILURES ===================================
+_______ test_v5_cannot_restore_incomplete_scoring_after_freeze[change0] _______
+
+tmp_path = WindowsPath('D:/Qoder-project/AI studyflow/output/pytest-v5-policy-red/test_v5_cannot_restore_incompl0')
+change = {'scoring_policy': 'complete_only'}
+
+    @pytest.mark.parametrize("change", [{"scoring_policy": "complete_only"}, {"thresholds": {}}])
+    def test_v5_cannot_restore_incomplete_scoring_after_freeze(tmp_path, change):
+>       from studyflow_ai.holdout_v5 import acceptance_configuration
+E       ImportError: cannot import name 'acceptance_configuration' from 'studyflow_ai.holdout_v5' (D:\Qoder-project\AI studyflow\studyflow-ai\src\studyflow_ai\holdout_v5.py)
+
+studyflow-ai\auto_test\test_holdout_v5_guard.py:38: ImportError
+_______ test_v5_cannot_restore_incomplete_scoring_after_freeze[change1] _______
+
+tmp_path = WindowsPath('D:/Qoder-project/AI studyflow/output/pytest-v5-policy-red/test_v5_cannot_restore_incompl1')
+change = {'thresholds': {}}
+
+    @pytest.mark.parametrize("change", [{"scoring_policy": "complete_only"}, {"thresholds": {}}])
+    def test_v5_cannot_restore_incomplete_scoring_after_freeze(tmp_path, change):
+>       from studyflow_ai.holdout_v5 import acceptance_configuration
+E       ImportError: cannot import name 'acceptance_configuration' from 'studyflow_ai.holdout_v5' (D:\Qoder-project\AI studyflow\studyflow-ai\src\studyflow_ai\holdout_v5.py)
+
+studyflow-ai\auto_test\test_holdout_v5_guard.py:38: ImportError
+=========================== short test summary info ===========================
+FAILED studyflow-ai\auto_test\test_holdout_v5_guard.py::test_v5_cannot_restore_incomplete_scoring_after_freeze[change0]
+FAILED studyflow-ai\auto_test\test_holdout_v5_guard.py::test_v5_cannot_restore_incomplete_scoring_after_freeze[change1]

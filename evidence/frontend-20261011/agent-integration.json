@@ -1,0 +1,48 @@
+{
+  "passed": true,
+  "tested_at": "2026-10-11T13:28:21.650Z",
+  "planner": "mock (RuleAgentProvider)",
+  "fx": "fixture",
+  "checks": [
+    "T2 proposal does not move money",
+    "wrong password refused and audited",
+    "step-up confirm executes once",
+    "T3 proposal refused until a separate approver decides",
+    "approval consumed on confirm",
+    "limits and audit visible in trust center"
+  ],
+  "cny_balances": [
+    "40000.00",
+    "35000.00",
+    "20000.00"
+  ],
+  "endpoints": [
+    "approver: GET /api/auth/login/",
+    "approver: GET /api/auth/session/",
+    "approver: GET /api/v2/readiness/imports/ocr-notice/",
+    "approver: GET /api/v2/readiness/state/",
+    "approver: GET /api/v2/readiness/templates/",
+    "approver: POST /api/auth/login/",
+    "operator: GET /api/auth/login/",
+    "operator: GET /api/auth/session/",
+    "operator: GET /api/v2/readiness/imports/ocr-notice/",
+    "operator: GET /api/v2/readiness/state/",
+    "operator: GET /api/v2/readiness/templates/",
+    "operator: POST /api/auth/login/",
+    "student: GET /api/auth/login/",
+    "student: GET /api/auth/session/",
+    "student: GET /api/v2/agent/sessions/",
+    "student: GET /api/v2/agent/sessions/027116bf-6067-4b45-823b-3ba0dd8e303b/",
+    "student: GET /api/v2/agent/sessions/5a4d7ebf-b417-49f2-8c76-c9365fdc9cbe/",
+    "student: GET /api/v2/approvals/",
+    "student: GET /api/v2/audit/",
+    "student: GET /api/v2/credit/profile/",
+    "student: GET /api/v2/policy/limits/",
+    "student: POST /api/auth/login/",
+    "student: POST /api/v2/agent/pending-actions/1d5b5dc8-759e-4bc4-ba78-35c1b88f537a/confirm/",
+    "student: POST /api/v2/agent/pending-actions/dd1959b3-b844-4269-9357-a06b9f8abe94/confirm/",
+    "student: POST /api/v2/agent/sessions/",
+    "student: POST /api/v2/approvals/",
+    "student: POST /api/v2/auth/step-up/"
+  ]
+}

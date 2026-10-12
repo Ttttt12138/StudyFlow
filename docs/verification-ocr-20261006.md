@@ -1,5 +1,7 @@
 # Gemini OCR implementation verification — 2026-10-06 (Asia/Bangkok)
 
+> Path note (updated 2026-10-11): the B module now lives in `backend/`. Django commands below run inside `backend/`, and paths such as `manage.py`, `finance/`, `auto_test/` and `openapi.yaml` are relative to it. Results are kept as recorded at the time.
+
 Follow-up: live requests have now been performed; the active model is `gemini-3.6-flash`. One of six synthetic fixtures passed; the remaining requests failed with availability/time-out errors, including a diagnosed HTTP 503. See [the subsequent live verification report](verification-independent-20261006.md). The implementation checks and earlier configuration state below are retained as historical evidence.
 
 ## Scope

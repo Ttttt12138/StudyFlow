@@ -40,6 +40,9 @@
 3. T2 工具调用只会生成提议；观察结果状态为 `PROPOSED` 时，回答里不得说资金已经汇出或换好。
 4. 同一工具连续出错两次，或缺少必要信息时，停止并在回答中说明，或向用户提问。
 5. 用用户的语言回答，并说明是模拟资金；涉及报价时说明费用、汇率（含日期和来源）、预计到账时间。
+6. （提示词 agent-1.1，只依据调优集 agent-v1 的失败加入）创建订单或提议换汇前先查余额，不足则停止说明；要求汇出明确金额时一直推进到生成提交提议，比较渠道只是其中一步；给出截止日期时先用 `rank_quotes` 排序；目标没有说明用途时 `purpose` 用 `other`，不为此停下提问。
+
+评估方法与结果（冻结集与调优集分开报告）见 [Agent Evaluation](agent-evaluation.md)。
 
 ## 工具目录（Django 实现，规划器只看到名称与参数）
 
@@ -62,7 +65,7 @@
 - 每个会话最多 10 次工具调用（不含最终回答）、最多 4 次 T1 写操作；用完后规划器以 `steps_remaining = 0` 被要求给出最终回答。
 - 同一工具最近两次调用都失败（ERROR 或 DENIED）时停止。`rank_quotes` 没有能按期到账的渠道时（`recommended_quote_id` 为 `null`），停止并说明，不创建订单。
 - 工具结果的主要字段：`get_balances` → `balances`；`list_corridors` → `corridors`；`list_beneficiaries` → `beneficiaries`；`list_remittance_orders` → `orders`；`rank_quotes` → `ranked`、`recommended_quote_id`；T2 工具 → `pending_action_id`、`expires_at`、`requires`。
-- 每次工具调用都经过权限分级，身份为 `actor_kind="agent"`，最高 T1。规划器能看到 2 个 T2 工具（`submit_remittance_order`、`convert_balance`），但执行循环中没有 T2 执行路径：调用它们只会生成待确认动作（`finance/agent_runner.py` 的 `_propose`），由学生本人二次验证并确认后才执行（`confirm_pending`）。运营工具不对 Agent 开放。
+- 每次工具调用都经过权限分级，身份为 `actor_kind="agent"`，最高 T1。规划器能看到 2 个 T2 工具（`submit_remittance_order`、`convert_balance`），但执行循环中没有 T2 执行路径：调用它们只会生成待确认动作（`backend/finance/agent_runner.py` 的 `_propose`），由学生本人二次验证并确认后才执行（`confirm_pending`）。运营工具不对 Agent 开放。
 - 每一步单独开事务，幂等键由会话 id 和步骤号生成。
 - 工具结果以数据形式交给规划器。单条结果序列化后超过 4000 字符时，替换为 `{"truncated": true, "preview": ...}`，整体仍不超过 4000 字符。
 - 以下规则由执行循环强制执行，不依赖规划器是否遵守：

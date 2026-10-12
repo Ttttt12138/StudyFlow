@@ -6,16 +6,16 @@
 
 | # | 缺口 | 状态 | 文档 | 主要实现 |
 |---|---|---|---|---|
-| 1 | 多币种核心 | 完成 | [多币种钱包](multi-currency.md) | `finance/wallets.py`、`finance/money.py`、迁移 0015 |
-| 2 | 汇款订单状态机 | 完成 | [汇款订单](remittance.md) | `finance/remittance_orders.py`、迁移 0017 |
-| 3 | 实时汇率接入 | 完成（参考汇率） | [汇率接入](fx-rates.md) | `finance/fx_rates.py` 调用 C 的 Frankfurter 适配器 |
-| 4 | 权限分级 T0–T3 | 完成 | [权限分级](permissions.md) | `finance/policy.py`、`finance/throttles.py`、迁移 0016 |
+| 1 | 多币种核心 | 完成 | [多币种钱包](multi-currency.md) | `backend/finance/wallets.py`、`backend/finance/money.py`、迁移 0015 |
+| 2 | 汇款订单状态机 | 完成 | [汇款订单](remittance.md) | `backend/finance/remittance_orders.py`、迁移 0017 |
+| 3 | 实时汇率接入 | 完成（参考汇率） | [汇率接入](fx-rates.md) | `backend/finance/fx_rates.py` 调用 C 的 Frankfurter 适配器 |
+| 4 | 权限分级 T0–T3 | 完成 | [权限分级](permissions.md) | `backend/finance/policy.py`、`backend/finance/throttles.py`、迁移 0016 |
 | 5 | 已知风险清单 | 完成，持续维护 | [已知风险](known-risks.md) | — |
-| 6 | 生产加固 | 完成（配置级） | [权限分级 §7](permissions.md) | `config/settings.py`（`DJANGO_SECURE`） |
+| 6 | 生产加固 | 完成（配置级） | [权限分级 §7](permissions.md) | `backend/config/settings.py`（`DJANGO_SECURE`） |
 | 7 | 前端 | 不在范围 | — | — |
-| 8 | 工具调用 Agent | 完成 | [Agent](agent.md) | C：`studyflow_ai.agent`；Django：`finance/agent_*.py`、迁移 0018 |
-| 9 | 多语言 | 完成（API 错误信息） | [多语言](i18n.md) | `finance/i18n.py`、`locale/` |
-| 10 | 信用建立 | 完成（模拟） | [信用建立](credit.md) | `finance/credit.py` |
+| 8 | 工具调用 Agent | 完成 | [Agent](agent.md) | C：`studyflow_ai.agent`；Django：`backend/finance/agent_*.py`、迁移 0018 |
+| 9 | 多语言 | 完成（API 错误信息） | [多语言](i18n.md) | `backend/finance/i18n.py`、`backend/locale/` |
+| 10 | 信用建立 | 完成（模拟） | [信用建立](credit.md) | `backend/finance/credit.py` |
 
 ## 逐项说明
 
@@ -34,8 +34,8 @@
 - 费用明细包括发送费、汇率点差成本和总成本；汇路的金额上下限会在提交时再次校验。
 - 联动：状态为已退回或状态不明的订单会进入复核队列；按期送达的订单计入信用记录。
 - 学费：没有独立的学费模块。学费通过两条现有资金流程支付，两者都要求收款方已核验：
-  - 汇款订单 `purpose=tuition`、`recipient=BENEFICIARY`，创建和提交时都校验受益人 `verified`（`finance/remittance_orders.py`）；
-  - readiness 付款 `POST payments/`，要求已确认发票和受控核验收款人，回执按发票对账（[消费与执行](consumption.md#模拟汇款与学费执行)、`finance/execution_services.py`）。
+  - 汇款订单 `purpose=tuition`、`recipient=BENEFICIARY`，创建和提交时都校验受益人 `verified`（`backend/finance/remittance_orders.py`）；
+  - readiness 付款 `POST payments/`，要求已确认发票和受控核验收款人，回执按发票对账（[消费与执行](consumption.md#模拟汇款与学费执行)、`backend/finance/execution_services.py`）。
 
 ### 3. 汇率接入
 - 通过 C 模块已有的 Frankfurter 适配器获取参考汇率（Frankfurter v2 汇总多家央行，含 ECB、泰国央行、中国外汇交易中心），并保存为快照，15 分钟内复用。2026-10-07 已用真实网络验证。
@@ -86,11 +86,12 @@
 | 项目 | 结果 |
 |---|---|
 | Django 测试（PostgreSQL） | 481 个，全部通过（基线 178；见 [门禁日志](../evidence/gates/django-tests.log)） |
-| C 模块测试 | 293 个，全部通过（基线 179；见 [门禁日志](../evidence/gates/c-tests.log)） |
+| C 模块测试 | 298 个，全部通过（基线 179；见 [门禁日志](../evidence/gates/c-tests.log)） |
 | 本地门禁 `scripts/run_gates.py` | 17 项全部通过（[汇总](../evidence/gates/summary.txt)）：冻结存档、check、翻译目录、迁移、测试、OpenAPI、ruff、迁移执行、缓存表、6 个 HTTP 演示、Agent 评估 |
 | HTTP 演示 | `demo_bc`、`demo_readiness`、`demo_consumption`、`demo_copilot`、`demo_remittance`、`demo_agent`，各 3 轮 |
 | Agent 评估（mock） | 20 个案例，完成率 100%，越权动作 0 |
-| Agent 评估（真实模型，2026-10-07） | 三轮完成率 30% → 45% → 65%，越权动作均为 0，照注入指令行事 0/3（见 [真实调用验证](verification-live-20261007.md)） |
+| Agent 评估（真实模型，冻结集 agent-v2 首次运行） | 18/24（75%），越权动作 0，照注入行事 1/4（未动资金）；调优集 agent-v1 六轮 30% → 75%，不作为成绩引用（见 [Agent Evaluation](agent-evaluation.md)） |
+| Agent 评估（真实模型，调优集历史，2026-10-07） | 前三轮完成率 30% → 45% → 65%，越权动作均为 0，照注入指令行事 0/3（见 [真实调用验证](verification-live-20261007.md)） |
 | Frankfurter 真实汇率 | 4 个货币对、12 份汇路报价，与公式手算一致 |
 
 工作方式：
@@ -108,6 +109,6 @@
 详见 [已知风险](known-risks.md)，最关键的几项：
 - 所有资金和通道都是模拟的；汇款送达由运营人员回调触发。
 - 二次验证只是重新输入密码，不是独立的第二因素；运营人员只有一种角色。
-- Agent 真实模型任务完成率为 65%，剩余失败多为合理的澄清；评估集由同一作者编写，第 3 轮不是冻结测试。
+- Agent 真实模型在冻结集 agent-v2 上首次运行完成率 75%（18/24），越权动作 0；1 个注入案例中 Agent 向名称含注入文本的收款人提议了付款（未动资金，仍需学生二次验证）；模型偶尔把内部推理当作回答输出；两个评估集都由同一 AI 编写、未经人工审核。
 - 参考汇率不是可成交价；加固配置未在真实 HTTPS 部署上验证。
 - 翻译未经母语人工审校；briefing、通知等拼接文本仍为英文。

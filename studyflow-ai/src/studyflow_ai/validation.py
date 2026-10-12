@@ -3,8 +3,10 @@ import re
 from datetime import date
 from decimal import Decimal, InvalidOperation
 
+from studyflow_ai.date_semantics import due_date_issue
 from studyflow_ai.models import CandidateEvent, Evidence, Issue, Status
 from studyflow_ai.normalization import date_in_quote, parse_money
+from studyflow_ai.settlements import settlement_lines
 
 
 def issue(code, field=None, message=None):
@@ -68,7 +70,14 @@ def build_candidate(raw, source_text, context):
             for ev in evidence
         ):
             candidate.issues.append(issue("UNSUPPORTED_FIELD", key))
+            if key in ("date", "due_date"):
+                setattr(candidate, key, None)
+    _validate_deadline(candidate, text)
     _required_fields(candidate)
+    _, inconsistent = settlement_lines(text)
+    if any(ev.field == "amount" and ev.locator.strip("[]") in
+           {f"line:{line}" for line in inconsistent} for ev in evidence):
+        candidate.issues.append(issue("SETTLEMENT_TOTAL_MISMATCH", "amount"))
     if context.known_beneficiaries and candidate.counterparty not in context.known_beneficiaries:
         candidate.issues.append(issue("BENEFICIARY_MISMATCH", "counterparty"))
     trusted = source_id in context.verified_source_ids and context.verification_reference
@@ -79,6 +88,22 @@ def build_candidate(raw, source_text, context):
     elif not trusted:
         candidate.issues.append(issue("SOURCE_UNCONFIRMED"))
     return candidate
+
+
+def _validate_deadline(candidate, text):
+    contexts = [_located_text(text, ev.locator) for ev in candidate.evidence
+                if ev.field in {"amount", "date", "due_date"}]
+    value = candidate.due_date.isoformat() if candidate.due_date else ""
+    code = due_date_issue(contexts, value)
+    if code == "CONFLICTING_DUE_DATE":
+        candidate.date = candidate.due_date = None
+        candidate.issues.append(issue(code, "due_date"))
+    elif candidate.due_date and code:
+        candidate.issues.append(issue(code, "due_date"))
+        if code == "INFERRED_DUE_DATE":
+            candidate.confidence_type = "INFERRED"
+        else:
+            candidate.due_date = None
 
 
 def _required_fields(candidate):

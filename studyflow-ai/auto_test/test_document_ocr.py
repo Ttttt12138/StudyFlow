@@ -181,7 +181,7 @@ def test_demo_fixtures_are_hashed_and_pdf_has_no_text_layer():
 
     from pypdf import PdfReader
 
-    directory = Path(__file__).resolve().parents[2] / "examples/ocr/v1"
+    directory = Path(__file__).resolve().parents[2] / "backend/examples/ocr/v1"
     manifest = json.loads((directory / "manifest.json").read_text(encoding="utf-8"))
     assert manifest["synthetic"] is True
     assert {r["language"] for r in manifest["files"]} == {"en", "zh", "zh-en"}

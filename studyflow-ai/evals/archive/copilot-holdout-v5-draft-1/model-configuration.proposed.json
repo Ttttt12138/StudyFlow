@@ -1,0 +1,16 @@
+{
+  "status": "proposed_not_frozen",
+  "settings": {
+    "mode": "live",
+    "openai_model": "openai/gpt-6-luna",
+    "jev_model": "jev-latest",
+    "openai_base_url": "https://ai.psu.blue/v1"
+  },
+  "prompt_version": "1.6",
+  "reference_date": "2026-10-02",
+  "sdk_retries": 0,
+  "openai_timeout_seconds": 30,
+  "jev_timeout_seconds": 10,
+  "rounds_per_arm": 1,
+  "note": "No model calls; actual response model identifiers and token usage will be recorded in the frozen first-run report."
+}

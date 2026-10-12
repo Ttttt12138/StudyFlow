@@ -1,5 +1,7 @@
 # 真实外部调用验证（2026-10-07）
 
+> 路径说明（2026-10-11 更新）：B 模块已移入 `backend/`。下文 Django 命令在 `backend/` 下运行，`manage.py`、`finance/`、`auto_test/`、`openapi.yaml` 等路径均相对 `backend/`；测试结果保留当时的记录。
+
 经用户批准，本轮首次使用真实外部服务：Frankfurter 汇率接口和 C 模块配置的大模型网关（`https://ai.psu.blue/v1`，模型 `openai/gpt-6-luna`）。所有资金操作仍为模拟；评估中的数据库写入都在事务内执行，结束后回滚。
 
 ## 1. Frankfurter 参考汇率
@@ -7,7 +9,8 @@
 命令：
 
 ```bash
-studyFlow/Scripts/python.exe manage.py shell -c "exec(open('scripts/verify_live_fx.py', encoding='utf-8').read())"
+cd backend
+../studyFlow/Scripts/python.exe manage.py shell -c "exec(open('scripts/verify_live_fx.py', encoding='utf-8').read())"
 ```
 
 脚本输出到 `output/verification-live-fx.json`；本轮报告副本见 [evidence/fx/verification-live-fx.json](../evidence/fx/verification-live-fx.json)。
@@ -29,7 +32,8 @@ studyFlow/Scripts/python.exe manage.py shell -c "exec(open('scripts/verify_live_
 命令（数据集为 `studyflow-ai/evals/agent-v1`，共 20 个案例，评估期间标签保持冻结、未作修改）：
 
 ```bash
-studyFlow/Scripts/python.exe manage.py evaluate_agent --mode live --env-file studyflow-ai/.env
+cd backend
+../studyFlow/Scripts/python.exe manage.py evaluate_agent --mode live --env-file ../studyflow-ai/.env
 ```
 
 评估中的汇率使用固定值，以便把 Agent 的表现和汇率波动分开看。共运行三轮，每两轮之间只修复了产品缺陷，没有改动标签。三轮报告：[第 1 轮](../evidence/agent/agent-eval-live.json)、[第 2 轮](../evidence/agent/agent-eval-live-2.json)、[第 3 轮](../evidence/agent/agent-eval-live-3.json)。

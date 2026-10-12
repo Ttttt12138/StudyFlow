@@ -82,6 +82,23 @@ studyflow-ai --mode live check --backend-factory your_backend.adapters:create_ba
 
 ## A 的显示规则
 
+### 分类风险信号（提示词 1.7）
+
+`routing.classification` 保留 `anomaly`，新增可空的 `instruction_risk` 和
+`payment_conflict`，范围均为 0～1。旧调用者可以省略新增字段；新版 OpenAI/Jev
+输出必须同时提供两个值，缺失或非法值记为模型输出错误。使用旧版严格解析器的
+调用者需要同步更新 `schemas-v1.json`。
+
+指令风险达到 0.5 或确定性指令检测命中时，材料进入审核且不抽取。只有明确的低
+指令风险和高付款冲突信号，才允许高 `anomaly` 材料继续抽取；未解释的高异常继续
+阻断。日期冲突保留候选，日期留空，候选和整体保持 `NEEDS_REVIEW`。来源可信不
+免除这项审核。
+
+新增问题码：`PAYMENT_CONFLICT`、`CLASSIFICATION_EVENT_MISMATCH`、
+`SETTLEMENT_TOTAL_MISMATCH`。前两者同时出现在整体和候选问题列表，最后一项位于
+候选金额字段。已有的源级问题处理规则仍适用：需要修正来源后重新导入，不通过
+普通候选确认自动清除源级问题。
+
 - 原文证据、可信度和处理状态分别展示；不要把 VERIFIED 解释成允许付款。
 - CONDITIONAL 和 PENDING 方案显示未满足条件；只有 B 校验通过后才能进入 B 的授权流程。
 - 保留风险，即使 Jev/OpenAI 超时也不能显示“没有风险”。

@@ -21,6 +21,14 @@ Create/action success: 201; identical idempotency replay: 200.
 409: stale financial-state version. 503: readiness failure.
 Every unsupported/read-only request field is rejected.
 
+Error bodies: {"detail": ..., "code": "STEP_UP_REQUIRED", "message": "localized text"}.
+Match on `code`. `detail` is kept for compatibility: a plain string for policy
+denials and 409 conflicts, a one-element list such as ["INSUFFICIENT_BALANCE"] for
+business-rule 400s. `message` follows Accept-Language (en or zh-Hans; others fall
+back to English; Content-Language says which). Field errors stay {"field": ["..."]}.
+403 can also be a policy denial with an extra `policy` object (see Step-up below).
+429: rate limit; wait for Retry-After.
+
 Existing state and forecast responses retain their original structure.
 POST state/ requires expected_version and a full validated snapshot.
 State versions start at 1. POST forecasts/ requires the current state_version.
@@ -179,6 +187,173 @@ After an inflow or payment settlement, fetch the new state version and recalcula
 Actual observed same-day events follow ledger sequence; future same-day expenses
 conservatively precede unobserved income. Ledger-backed events cannot be rewritten.
 Opening balance/currency/as_of are fixed after demo initialization.
+
+## Step-up and approvals (T2/T3)
+
+| Method | Route | Function |
+|---|---|---|
+| POST | auth/token/ | Public: username/password -> {"token"} (no data envelope) |
+| POST | auth/step-up/ | Password re-check -> single-use 5-minute token for one action/target/amount/currency |
+| GET/POST | approvals/ | List (?status=) / student request for a T3 action |
+| GET | approvals/{id}/ | Approval status and version |
+| POST | approvals/{id}/decide/ | Operator: approve/reject with expected_version |
+| GET | policy/limits/ | Own effective limits (base × credit multiplier) and daily/monthly usage per currency |
+
+T2 routes (money leaves the wallet) and the subject each one is cleared for:
+
+| Route | action | target_id | amount, currency |
+|---|---|---|---|
+| payments/{id}/submit/ | payment.submit | payment id | payment amount, THB |
+| conversions/ | wallet.convert | body quote_id | body source_amount, quote source currency |
+| loan-accounts/{id}/repay/ | loan.repay | account id | the installment's amount, THB |
+| remittance-orders/{id}/submit/ | remittance.submit | order id | send_amount, send_currency |
+| agent/pending-actions/{id}/confirm/ | the pending action's action | its target_id | its amount, currency |
+
+Step-up request (no Idempotency-Key; throttled 10/hour per user, failures included):
+
+    {"password":"...","action":"remittance.submit","target_id":"UUID","amount":"1000.00","currency":"CNY"}
+
+Response 200, not wrapped in data:
+
+    {"token":"...","expires_in_seconds":300,"action":"remittance.submit","target_id":"UUID","amount":"1000.00","currency":"CNY"}
+
+Send it as `X-Step-Up-Token` on the T2 POST. It works once, for this user, for this
+exact subject, for 300 seconds, and dies on a password change. A command that fails a
+business rule rolls back without consuming it. Wrong password: 403 STEP_UP_FAILED.
+Target missing/not owned: 404. Amount/currency not matching the target: 400
+POLICY_SUBJECT_MISMATCH. action=agent.confirm: 400 ACTION_NOT_AVAILABLE.
+
+An uncleared T2 call returns 403 with `policy`:
+
+    {"detail":"APPROVAL_REQUIRED","code":"APPROVAL_REQUIRED","message":"...",
+     "policy":{"action":"remittance.submit","tier":"T3","target_id":"UUID","amount":"12000.00",
+       "currency":"CNY","limits":{"per_transaction":"10000.00","daily":"20000.00","monthly":"60000.00"},
+       "usage":{"daily":"0.00","monthly":"0.00"},"requires":["step_up","approval"]}}
+
+Checked in this order: AGENT_TIER_EXCEEDED (X-StudyFlow-Agent header present),
+STEP_UP_INVALID (bad/used/expired/mismatched token), APPROVAL_REQUIRED (T3 without an
+approved approval), STEP_UP_REQUIRED (no token). T3 = amount above the effective
+per-transaction limit, or today's/this month's usage plus amount above the daily/monthly
+limit, or no enabled limit for the currency. Effective limit = configured limit x the
+credit limit_multiplier. Days/months are Asia/Bangkok real time, not the demo clock.
+Calls that would move no money (already submitted, unknown target) skip the policy
+and get the business answer. Idempotent replays skip it too.
+
+T3 flow:
+1. The T2 call returns 403 APPROVAL_REQUIRED; copy action/target_id/amount/currency
+   from `policy`.
+2. POST approvals/ with those four fields plus reason -> 201 PENDING, expires in 24 hours.
+   A second open request for the same action+target returns 409 APPROVAL_ALREADY_OPEN
+   (there is no idempotency key; look it up with GET approvals/?status=PENDING).
+3. A different staff user POSTs approvals/{id}/decide/
+   {"decision":"approve","note":"...","expected_version":1} -> 200.
+   Not staff: 403. Requester/owner, or (payments and beneficiary remittances) the staff
+   user who verified the beneficiary: 403 SEPARATION_OF_DUTIES. Wrong version: 409.
+   Not PENDING (incl. expired): 409 APPROVAL_NOT_PENDING.
+4. The student polls GET approvals/{id}/ until APPROVED, then steps up and retries the
+   T2 call with a NEW Idempotency-Key. Success marks the approval USED.
+
+Approval states: PENDING -> APPROVED -> USED; PENDING -> REJECTED;
+PENDING/APPROVED -> EXPIRED. Students see their own approvals; staff see all.
+
+## Finance agent
+
+| Method | Route | Function |
+|---|---|---|
+| GET/POST | agent/sessions/ | List / run a session from a goal (synchronous) |
+| GET | agent/sessions/{id}/ | Session with steps, final answer, pending actions |
+| POST | agent/pending-actions/{id}/confirm/ | Student: execute a proposal (T2, step-up) |
+| POST | agent/pending-actions/{id}/reject/ | Student: discard a proposal |
+
+The agent reads data (T0) and creates live quotes and CREATED remittance orders (T1,
+at most 4 per session) by itself. It can never move money: submit_remittance_order
+and convert_balance (T2) only create a pending action, valid for 15 minutes, which the
+student confirms with a step-up token for the underlying action. All funds are
+simulated; the final answer must not be read as "money sent" while a proposal is
+pending.
+
+End-to-end flow:
+
+1. Run the session (Idempotency-Key required; locale optional, defaults from
+   Accept-Language; throttled 30/hour):
+
+       POST agent/sessions/
+       {"goal":"Send 5000 CNY to my THB wallet using the cheapest route"}
+
+   201 {"data": {"status":"COMPLETED","final_answer":"...","steps":[...],"pending_actions":[...]}}.
+   Same key and body again: 200 with the current session.
+
+2. Show `final_answer` and the steps. A PROPOSED step's `result` and the matching
+   `pending_actions[]` entry carry what to confirm:
+
+       {"id":"PENDING_ID","action":"remittance.submit","target_id":"ORDER_ID",
+        "amount":"5000.00","currency":"CNY","status":"PENDING","expires_at":"...",
+        "arguments":{"order_id":"ORDER_ID","recipient":"SELF","receive_currency":"THB","receive_amount":"..."}}
+
+   Show amount, currency, recipient and receive_amount before asking to confirm.
+
+3. Step up for the UNDERLYING action, copying action/target_id/amount/currency from the
+   pending action (never action=agent.confirm):
+
+       POST auth/step-up/
+       {"password":"...","action":"remittance.submit","target_id":"ORDER_ID","amount":"5000.00","currency":"CNY"}
+
+4. Confirm:
+
+       POST agent/pending-actions/PENDING_ID/confirm/
+       Idempotency-Key: confirm-PENDING_ID
+       X-Step-Up-Token: <token>
+       {}
+
+   201 {"data": {"status":"CONFIRMED","result":{...order or conversion record...},"version":2}}.
+   Check result.status (a remittance whose quote expired is confirmed as an EXPIRED
+   order with nothing debited).
+
+5. If step 4 returns 403 APPROVAL_REQUIRED, follow the T3 flow above with the
+   `policy` subject, then repeat steps 3-4 with a new Idempotency-Key.
+
+Other outcomes of confirm: no/invalid token 403 STEP_UP_REQUIRED/STEP_UP_INVALID
+(policy.action is the underlying action); business failure (INSUFFICIENT_BALANCE,
+QUOTE_EXPIRED, RESERVE_REQUIRED, ...) 400 with the action still PENDING and the token
+unused; past expires_at 201 with status EXPIRED; already rejected/expired 400
+PENDING_ACTION_CLOSED. Reject: POST .../reject/ with {} and an Idempotency-Key -> 201
+REJECTED.
+
+A session ends COMPLETED or FAILED (error_code INVALID_TOOL_CALL,
+STEP_BUDGET_EXHAUSTED or a provider code; final_answer is then a fallback text).
+Limits: 10 tool calls, 4 T1 writes, tool results truncated above 4000 characters.
+Field-level details are in reference.md.
+
+## Credit building (simulated)
+
+| Method | Route | Function |
+|---|---|---|
+| GET | credit/profile/ | Live level, counts, factors, next_level, evidence, limit_multiplier |
+| GET/POST | credit/snapshots/ | List / store the current profile (POST body {}) |
+| GET | credit/snapshots/{id}/ | Stored snapshot |
+| POST | credit/statements/ | Signed statement for an owned snapshot_id (valid 90 days) |
+| POST | credit/statements/verify/ | Public: check a statement; always 200 with valid true/false |
+
+This is an internal on-time record (loan installments, settled payments, delivered
+remittances to verified beneficiaries with a deadline), not a bureau score.
+Levels: AT_RISK (overdue, or 2+ late; x0.5), GOOD (6+ on time, 0 late; x1.5), FAIR
+(3+ on time, at most 1 late; x1.2), BUILDING (otherwise; x1.0). The multiplier scales
+the T2/T3 limits immediately. Snapshot and statement POSTs need Idempotency-Key;
+verify needs neither authentication nor a key. Invalid reasons: INVALID_SIGNATURE,
+EXPIRED, SNAPSHOT_MISMATCH.
+
+## Audit log
+
+GET audit/ returns the caller's own append-only events, newest first, 50 per page:
+
+    {"id":"UUID","type":"auditevent","created_at":"...","action":"approval.approved",
+     "entity_id":"UUID","details":{"actor_id":9,"action":"remittance.submit","target_id":"UUID"}}
+
+details.actor_id identifies who acted (an operator's ID on operator actions against the
+student's objects). No filters or detail route. Action names include
+auth.step_up_granted, auth.step_up_failed, approval.requested/approved/rejected,
+agent.action_confirmed/rejected, credit.snapshot_created, credit.statement_issued and
+the workflow names (state.confirmed, payment.authorized, ...).
 
 ## Existing source integration
 
