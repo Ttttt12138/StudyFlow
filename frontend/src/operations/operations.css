@@ -44,3 +44,4 @@
 }
 @media(prefers-reduced-motion:reduce){.ops-app .ops-content{transition:none}}
 @media(max-width:760px){.ops-app .ops-sidebar nav button>svg{display:none}.ops-app .ops-sidebar nav button>span{white-space:nowrap}}
+.ops-app .ops-simulation{font-size:10px;color:#e7c47e;background:#29271b;border:1px solid #675731;border-radius:4px;padding:3px 7px;margin-right:auto}

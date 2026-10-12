@@ -96,7 +96,7 @@ function Root() {
   {(!service || !["ops", "sponsor", "verify"].includes(service.kind)) && <StudentWorkspace key={String(preview)} preview={preview} onExternal={(kind, mode) => kind === "home" ? toHome(mode) : open(kind, mode)} />}
   {service?.kind==="sponsor"&&<SponsorApp preview={service.preview} onExit={exit}/>}
   {service?.kind==="verify"&&<VerifyApp preview={service.preview} onExit={exit}/>}
-  {service?.kind==="ops"&&<OperationsApp preview={service.preview} onExit={exit}/>}
+  {service?.kind==="ops"&&<OperationsApp key={String(service.preview)} preview={service.preview} onExit={exit}/>}
   {tour !== null && <TourBar index={tour} onGo={goTour} onExtra={go} onExit={() => setTour(null)}/>}
  </ModuleNavContext.Provider>;
 }

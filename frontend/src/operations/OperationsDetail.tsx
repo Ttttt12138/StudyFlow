@@ -38,7 +38,7 @@ export function OperationsDetail(props: Props) {
     }
   };
   return <dialog ref={dialog} className="ops-detail" aria-labelledby="ops-detail-title" onKeyDown={trapFocus} onCancel={event => { event.preventDefault(); if (!props.busy) props.onClose(); }}>
-    <div className="ops-detail-head"><h2 id="ops-detail-title" tabIndex={-1}>{p.t("ops.w.detail")}</h2>
+    <div className="ops-detail-head"><h2 id="ops-detail-title" tabIndex={-1}>{p.t("ops.w.detail")}</h2><span className="ops-simulation">{p.t("common.simulatedMoney")}</span>
       <button className="ops-icon" aria-label={p.t("ops.w.close")} disabled={props.busy} onClick={props.onClose}><X size={20}/></button></div>
     <div className="ops-detail-body">
       <div className="ops-detail-meta"><span>{p.typeName(props.item)}</span><span>{p.status(props.item)}</span></div>

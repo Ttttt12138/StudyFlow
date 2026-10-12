@@ -57,7 +57,7 @@ test('real Django operations console: payee verification, separation of duties, 
     await login('payer', '/?payments=1');
     await ops.getByRole('heading', { name: 'Overview', exact: true }).waitFor();
     await ops.getByRole('navigation').getByRole('button', { name: /^Work queue/ }).click();
-    await ops.getByText(`Signed in as operator ${names.operator}.`).waitFor();
+    await ops.getByText(`Operator · ${names.operator}`).waitFor();
 
     // A student sees the staff-only message, not the queue.
     const denied = await call('student', 'operations/queue/');

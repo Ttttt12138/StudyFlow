@@ -43,6 +43,7 @@ for (const width of [1440, 390]) {
     await page.getByRole('navigation').getByRole('button', { name: '总览', exact: true }).click();
     await expect(page.getByRole('heading', { name: '总览', exact: true })).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await expect(page.locator(".ops-content")).toHaveAttribute("aria-busy", "false");
     await page.screenshot({ path: screenshot(`ops-overview-${width}-zh.png`), fullPage: true });
     expect(calls).toBe(0); expect(errors).toEqual([]);
   });
