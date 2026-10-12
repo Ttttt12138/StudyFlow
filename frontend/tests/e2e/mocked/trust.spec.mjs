@@ -78,12 +78,12 @@ test.describe("permissions and activity with mocked Django", () => {
     assert.deepEqual(errors, []);
   });
 
-  test("signed-out students are sent to Django sign-in", async ({ page }) => {
+  test("signed-out students are sent to the StudyFlow sign-in page", async ({ page }) => {
     await page.route("**/api/auth/session/", route => route.fulfill({ json: { authenticated: false } }));
     await page.route("**/api/v2/**", route => route.abort());
     await page.goto(`${base}/?trust=1`);
     const link = page.getByRole("link", { name: "Sign in to StudyFlow" });
     await link.waitFor();
-    assert.match(await link.getAttribute("href"), /^\/api\/auth\/login\/\?next=.*trust%3D1$/);
+    assert.match(await link.getAttribute("href"), /^\/auth\?next=.*trust%3D1$/);
   });
 });

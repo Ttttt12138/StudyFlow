@@ -47,8 +47,9 @@ function IntroCards({ current, selected, select }: { current: JourneyPhase; sele
   </button>)}</div>;
 }
 
-export function JourneyIntro({ account, phase, blocked, preview }: {
-  account: string; phase: JourneyPhase | undefined; blocked: boolean; preview: boolean;
+export function JourneyIntro({ account, phase, blocked, editing, preview, onEnter }: {
+  account: string; phase: JourneyPhase | undefined; blocked: boolean; editing: boolean; preview: boolean;
+  onEnter: (phase: JourneyPhase) => void;
 }) {
   const { t } = useI18n();
   const workspace = useWorkspace();
@@ -61,13 +62,18 @@ export function JourneyIntro({ account, phase, blocked, preview }: {
   useEffect(() => {
     if (phase === undefined) return;
     initial.current ??= phase;
-    if (open !== null || blocked || occupied || preview || !needsJourneyIntro(account, phase, seen)) return;
+    if (open !== null || blocked || editing || occupied || preview || !needsJourneyIntro(account, phase, seen)) return;
     if (workspace?.target && phase <= initial.current) return;
     show(phase);
-  }, [account, phase, seen, blocked, occupied, preview, workspace?.target, open]);
+  }, [account, phase, seen, blocked, editing, occupied, preview, workspace?.target, open]);
   const close = () => {
     if (open !== null && !preview) { rememberJourney(account, open); setSeen(value => Math.max(value, open)); }
     setOpen(null);
+  };
+  const enter = (value: JourneyPhase) => {
+    setSelected(value);
+    if (open === null || value > open) return;
+    close(); onEnter(value);
   };
   return <>
     <button type="button" className="status-chip" disabled={phase === undefined || blocked}
@@ -76,12 +82,12 @@ export function JourneyIntro({ account, phase, blocked, preview }: {
     </button>
     {open !== null && <FocusDialog title={t("plan.intro.title")} onClose={close} className="journey-intro" initialFocusSelector="[aria-current='step']">
       <AmbientParticles />
-      <div className="journey-intro-heading"><span className="journey-intro-eyebrow">STUDYFLOW · 0{open + 1} / 03</span>
-        <h2>{t("plan.intro.title")}</h2><p>{t(`plan.intro.reason.${open}`)}</p></div>
-      <IntroCards current={open} selected={selected} select={setSelected} />
+      <div className="journey-intro-heading"><span className="journey-intro-eyebrow">STUDYFLOW · 0{selected + 1} / 03</span>
+        <h2>{t("plan.intro.title")}</h2><p>{t(selected === open ? `plan.intro.reason.${open}` : `plan.intro.description.${selected}`)}</p></div>
+      <IntroCards current={open} selected={selected} select={enter} />
       <p className="journey-intro-note">{t("plan.intro.note")}</p>
       <div className="journey-intro-actions"><button className="secondary" onClick={close}>{t("plan.intro.skip")}</button>
-        <button className="primary" onClick={close}>{t(`plan.intro.start.${open}`)} <span aria-hidden="true">→</span></button></div>
+        <button className="primary" disabled={selected > open} onClick={() => enter(selected)}>{t(selected > open ? "plan.intro.locked" : `plan.intro.start.${selected}`)} <span aria-hidden="true">→</span></button></div>
     </FocusDialog>}
   </>;
 }

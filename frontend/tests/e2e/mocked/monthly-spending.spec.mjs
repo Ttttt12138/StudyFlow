@@ -50,9 +50,14 @@ test('monthly query opens details and full-month pie; pagination, close and hist
   await expect(panel.getByRole('img', { name: '支出分类占比' })).toBeVisible();
   await expect(panel.locator('.monthly-legend')).toContainText('75%');
   await expect(panel.locator('.monthly-legend')).toContainText('25%');
-  await expect(panel.locator('.monthly-entries li')).toHaveCount(50);
+  // Entries load 50 at a time and the panel shows them eight rows per page instead of a long scroll.
+  await panel.getByRole('tab', { name: /^明细/ }).click();
+  await expect(panel.locator('.monthly-entries li')).toHaveCount(8);
+  await expect(panel.getByRole('group', { name: '消费明细分页' })).toContainText('1 / 7');
+  await panel.getByRole('button', { name: '下一项' }).click();
+  await expect(panel.getByRole('group', { name: '消费明细分页' })).toContainText('2 / 7');
   await input.fill('下一条问题还没发送');
-  await panel.getByRole('button', { name: '下一页' }).click();
+  await panel.getByRole('button', { name: '下一批' }).click();
   await expect(panel.locator('.monthly-entries li')).toHaveCount(3);
   await expect(panel.locator('.monthly-entries')).toContainText('未换算，不计入合计和占比');
   await expect(panel.locator('.monthly-legend')).toContainText('75%');

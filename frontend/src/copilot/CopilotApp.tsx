@@ -15,7 +15,7 @@ import type { ApplyPreview, ApplyResult, Cost, CopilotSnapshot, DeltaKey, DiffEn
 import "../wallet/wallet.css";
 import "./copilot.css";
 
-const signInUrl = `/api/auth/login/?next=${encodeURIComponent(window.location.origin + "/?copilot=1")}`;
+const signInUrl = `/auth?next=${encodeURIComponent(window.location.origin + "/?copilot=1")}`;
 const initial: CopilotSnapshot = { state: null, reviews: [], notifications: [], errors: {} };
 const lost = (reason: unknown) => reason instanceof WalletApiError && (reason.status === 0 || reason.status >= 500);
 const KNOWN_COSTS = ["tuition", "housing", "food", "transport", "communications", "utilities", "insurance", "visa", "deposit", "enrollment", "study_materials", "travel", "dorm_card"];

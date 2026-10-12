@@ -38,6 +38,8 @@ export function useDockKeyboard(dock: RefObject<HTMLElement | null>, state: { ta
     if (state.targetKey === "null") return;
     const keydown = (event: KeyboardEvent) => {
       if (document.querySelector("dialog[open]") || state.menu) return;
+      // An open panel sheet handles its own Escape and closes before the tool does.
+      if (event.key === "Escape" && dock.current?.querySelector(".panel-sheet")) return;
       if (event.key === "Escape") { event.preventDefault(); close(); }
       if (event.key === "Tab" && state.modal && dock.current) trapFocus(event, dock.current);
     };

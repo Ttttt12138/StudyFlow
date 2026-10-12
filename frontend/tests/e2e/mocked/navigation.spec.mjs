@@ -35,7 +35,7 @@ test("guided demo walks eight stops, side trips switch role, public pages hide s
   // Operations is a separate role with its own address and no student module directory.
   await page.goto(`${base}/?wallet=preview`);
   await page.getByRole("group", { name: "View as" }).getByRole("button", { name: "Operations" }).click();
-  await page.getByRole("heading", { level: 1, name: "Operations console" }).waitFor();
+  await page.getByRole("heading", { level: 1, name: "Overview" }).waitFor();
   assert.equal(new URL(page.url()).pathname, "/ops");
   assert.equal(await page.getByRole("group", { name: "Modules" }).count(), 0);
   await page.getByRole("group", { name: "View as" }).getByRole("button", { name: "Student" }).click();

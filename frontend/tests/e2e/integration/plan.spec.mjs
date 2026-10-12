@@ -57,6 +57,7 @@ test('real Django planner: parent plans a school with a loan, enrolls three days
     await chat.locator('.plan-card-confirm').last().getByRole('button', { name: 'Confirm', exact: true }).click();
     await page.getByRole('dialog', { name: 'Review and confirm' }).getByRole('button', { name: 'Confirm', exact: true }).click();
     await page.locator('dialog.journey-intro').getByRole('button', { name: 'Start preparing' }).click();
+    await page.getByRole('button', { name: 'My plan', exact: true }).click();
     await page.getByText('Done. The plan is updated.').waitFor();
     await page.locator('#plan-summary').getByText('Confirmed').waitFor();
     await chat.getByText("Let's start preparing for enrollment.", { exact: false }).waitFor();
@@ -75,6 +76,13 @@ test('real Django planner: parent plans a school with a loan, enrolls three days
     await page.getByRole('dialog', { name: 'Review and confirm' }).getByRole('button', { name: 'Confirm', exact: true }).click();
     await page.locator('#plan-summary').getByText('Enrolled').waitFor();
     await page.locator('dialog.journey-intro').getByRole('button', { name: 'Meet your life assistant' }).click();
+    await page.getByRole('button', { name: 'View journey', exact: true }).click();
+    await page.locator('dialog.journey-intro [data-phase="1"]').click();
+    await page.locator('.journey-view-notice').getByText('Your actual stage remains Life assistant.', { exact: false }).waitFor();
+    await page.getByRole('button', { name: 'My plan', exact: true }).click();
+    await page.locator('#plan-summary').getByText('Enrolled').waitFor();
+    await page.getByRole('button', { name: 'Close tool', exact: true }).click();
+    await page.getByRole('button', { name: 'Return to current stage' }).click();
     await chat.getByText("let's settle into daily life", { exact: false }).waitFor();
     await page.locator('#plan-journey-guide').getByRole('button', { name: 'Campus life', exact: true }).click();
     await chat.locator('.workspace-card-summary').getByRole('heading', { name: 'Chulalongkorn University' }).last().waitFor();

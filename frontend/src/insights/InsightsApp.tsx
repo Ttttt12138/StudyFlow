@@ -12,7 +12,7 @@ import { CATEGORIES, type Category, type CheckJob, type InsightsSnapshot, type R
 import "../wallet/wallet.css";
 import "./insights.css";
 
-const signInUrl = `/api/auth/login/?next=${encodeURIComponent(window.location.origin + "/?insights=1")}`;
+const signInUrl = `/auth?next=${encodeURIComponent(window.location.origin + "/?insights=1")}`;
 const initial: InsightsSnapshot = { state: null, clock: null, imports: [], recurring: [], risks: [], checks: [], briefing: null, errors: {} };
 const KNOWN_COSTS = ["tuition", "housing", "food", "transport", "communications", "utilities", "insurance", "visa", "deposit", "enrollment", "study_materials", "travel", "dorm_card"];
 const KNOWN_TRIGGERS = ["manual", "consumption_changed", "daily", "budget_changed", "state_changed", "context_changed", "scenario_applied", "semester_created"];

@@ -13,25 +13,42 @@ test.describe("loans preview", () => {
     page.on("pageerror", error => errors.push(error.message));
     await page.route("**/api/**", route => { apiCalls++; return route.abort(); });
     await page.goto(`${base}/?loans=preview`);
-    await page.getByRole("heading", { name: "Your simulated applications" }).waitFor();
+    // The active loan opens on the repay step; installments and disbursements open over the card.
+    await page.getByRole("tab", { name: "Repay", selected: true }).waitFor();
+    const accounts = page.locator("#loans-accounts");
+    await accounts.getByText("Outstanding principal").waitFor();
+    assert.equal(await page.getByRole("button", { name: "Repay installment 2" }).isDisabled(), true);
+    await accounts.getByRole("button", { name: "All 6 installments" }).click();
+    const installments = page.locator("#loans-installments");
+    await installments.getByRole("row", { name: /^1 .*Paid/ }).waitFor();
+    await installments.getByRole("row", { name: /^2 .*Due/ }).waitFor();
+    await page.keyboard.press("Escape");
+    await accounts.getByRole("button", { name: /^Disbursement / }).click();
+    await page.locator("#loans-disbursements").getByText("Settled").waitFor();
+    await page.getByRole("button", { name: "Close", exact: true }).click();
+
+    await page.getByRole("tab", { name: "Apply" }).click();
     const apps = page.locator("#loans-applications");
     await apps.getByText("Under review", { exact: true }).waitFor();
-    await apps.getByText("Disbursed", { exact: true }).waitFor();
     await apps.getByText(/an operator reviews it/).waitFor();
-    await apps.getByRole("link", { name: "Complete the affordability profile" }).waitFor();
-    const accounts = page.locator("#loans-accounts");
-    await accounts.getByRole("row", { name: /^1 .*Paid/ }).waitFor();
-    await accounts.getByRole("row", { name: /^2 .*Due/ }).waitFor();
-    assert.equal(await accounts.getByRole("button", { name: "Repay installment 2" }).isDisabled(), true);
+    await apps.getByRole("button", { name: "Complete the affordability profile" }).click();
     await page.locator("#loans-profile").getByText(/missing months: 2027-04/).waitFor();
-    await page.locator("#loans-disbursements").getByText("Settled").waitFor();
+    await page.getByRole("button", { name: "Close", exact: true }).click();
+    await page.getByRole("button", { name: "Next", exact: true }).click();
+    await apps.getByText("Disbursed", { exact: true }).waitFor();
+
+    await page.getByRole("tab", { name: "Quote" }).click();
     assert.equal(await page.getByRole("button", { name: "Create loan quote" }).isDisabled(), true);
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
     await page.screenshot({ path: screenshot("loans-preview-mobile.png"), fullPage: true });
     await page.getByRole("button", { name: "中文" }).click();
-    await page.getByRole("heading", { name: "你的模拟申请" }).waitFor();
+    await page.getByRole("tab", { name: "还款" }).click();
+    await page.locator("#loans-accounts").getByText("剩余本金").waitFor();
+    await page.getByRole("button", { name: "全部 6 期" }).click();
+    await page.getByText("按顺序", { exact: false }).first().waitFor();
+    await page.getByRole("button", { name: "关闭", exact: true }).click();
+    await page.getByRole("button", { name: /^放款 / }).click();
     await page.getByRole("heading", { name: "放款记录" }).waitFor();
-    await page.locator("#loans-accounts").getByText("按顺序", { exact: false }).first().waitFor();
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
     await page.screenshot({ path: screenshot("loans-preview-mobile-zh.png"), fullPage: true });
     assert.equal(apiCalls, 0);
@@ -101,20 +118,26 @@ test.describe("loans with mocked Django", () => {
       return json(route, 404, { detail: path });
     });
     await page.goto(`${base}/?loans=1`);
+    // An active loan account opens the repay step first.
+    await page.getByRole("tab", { name: "Repay", selected: true }).waitFor();
+    // A failing disbursement list does not hide the other sections.
+    await page.locator("#loans-accounts").getByRole("button", { name: "Disbursements" }).click();
+    await page.locator("#loans-disbursements").getByText(/Injected disbursement failure/).waitFor();
+    await page.getByRole("button", { name: "Close", exact: true }).click();
+
+    await page.getByRole("tab", { name: "Apply" }).click();
     const apps = page.locator("#loans-applications");
     await apps.getByText("Draft", { exact: true }).waitFor();
-    // A failing disbursement list does not hide the other sections.
-    await page.locator("#loans-disbursements").getByText(/Injected disbursement failure/).waitFor();
-
-    const submit = apps.getByRole("button", { name: "Submit simulated application" });
+    const submit = page.getByRole("button", { name: "Submit simulated application" });
     assert.equal(await submit.isDisabled(), true);
     await apps.getByLabel(/I understand this is a simulated application/).check();
     await submit.click();
     await page.getByText("Application submitted. Status: Under review.").waitFor();
     await apps.getByText(/an operator reviews it/).waitFor();
 
+    await page.getByRole("tab", { name: "Repay" }).click();
     const accounts = page.locator("#loans-accounts");
-    const repay = accounts.getByRole("button", { name: "Repay installment 2" });
+    const repay = page.getByRole("button", { name: "Repay installment 2" });
     assert.equal(await repay.isDisabled(), true);
     await accounts.getByLabel(/I confirm repaying/).check();
     await repay.click();
@@ -125,15 +148,51 @@ test.describe("loans with mocked Django", () => {
 
     // Installment 3 is not due yet: the repay button explains why and the demo clock offers its due date.
     await accounts.getByText(/Not due yet on the demo clock/).waitFor();
-    const clock = page.locator("#loans-clock");
+    await page.getByRole("button", { name: /^Demo date / }).click();
+    const clock = page.getByRole("dialog", { name: "Demo clock" });
     const move = clock.getByRole("button", { name: /Move demo date to/ });
     assert.equal(await move.isDisabled(), true);
     await clock.getByLabel(/changes the simulated date/).check();
     await move.click();
     await page.getByText(/Demo date moved to/).waitFor();
-    await accounts.getByRole("button", { name: "Repay installment 3" }).waitFor();
+    await page.getByRole("button", { name: "Repay installment 3" }).waitFor();
 
     assert.deepEqual(posts, [`applications/${draft.id}/action/`, `loan-accounts/${accountId}/repay/`, "auth/step-up/", `loan-accounts/${accountId}/repay/`, "demo/clock/"]);
     assert.deepEqual(errors, []);
   });
+});
+
+test("the quote step starts from the study plan's loan and prefills adjusted terms", async ({ page }) => {
+  await page.setViewportSize({ width: 1360, height: 900 });
+  const errors = [];
+  page.on("pageerror", error => errors.push(error.message));
+  await page.route("**/api/auth/session/", route => route.fulfill({ json: { authenticated: true, username: "student", csrf_token: "t" } }));
+  const page_ = results => ({ count: results.length, next: null, previous: null, results });
+  const rows = [1, 2, 3].map(n => ({ number: n, due_date: `2026-${String(10 + n).padStart(2, "0")}-15`, principal: "15000.00", interest: "150.00", amount: "15150.00", remaining_principal: "0.00" }));
+  const planQuote = { id: "plan-quote", created_at: "2026-10-01T00:00:00Z", engine_version: "b-monthly-amortization-v1",
+    inputs: { currency: "THB", principal: "45000.00", annual_rate: "0.05", fees: "900.00", months: 3, first_due_date: rows[0].due_date },
+    result: { currency: "THB", principal: "45000.00", net_proceeds: "44100.00", fees: "900.00", total_interest: "450.00", total_repayment: "45450.00", repayments: rows, maximum_installment: "15150.00" } };
+  await page.route("**/api/v2/**", route => {
+    const path = new URL(route.request().url()).pathname.replace("/api/v2/", "");
+    const body = path === "loans/" ? page_([planQuote]) : path === "affordability-profile/" ? { data: { version: 0, months: [] } }
+      : path === "demo/wallets/" ? page_([{ id: "w1", clock: "2026-10-12", balance: "0.00" }])
+      : path === "planning/profile/" ? { data: { plan: { loan: { id: "plan-quote", currency: "THB", principal: "45000.00", months: 3, annual_rate: "0.05" } } } }
+      : ["applications/", "loan-accounts/", "disbursements/"].includes(path) ? page_([]) : null;
+    return body ? route.fulfill({ json: body }) : route.fulfill({ status: 404, json: { detail: path } });
+  });
+  await page.goto(`${base}/?loans=1`);
+  await page.getByRole("tab", { name: "Quote", selected: true }).waitFor();
+  const quote = page.locator("#loans-quote");
+  await quote.getByText("From your study plan").waitFor();
+  await quote.getByText("THB 15,150.00").first().waitFor();
+  await page.getByRole("button", { name: "Apply with this quote" }).waitFor();
+  await page.getByRole("button", { name: "Adjust terms" }).click();
+  const terms = page.getByRole("dialog", { name: "Quote terms" });
+  assert.equal(await terms.getByLabel("Principal THB").inputValue(), "45000.00");
+  assert.equal(await terms.getByLabel("Months", { exact: true }).inputValue(), "3");
+  assert.equal(await terms.getByLabel("Annual interest rate %").inputValue(), "5");
+  await page.keyboard.press("Escape");
+  assert.equal(await terms.count(), 0);
+  await page.getByRole("heading", { name: "Loans", exact: true }).waitFor();
+  assert.deepEqual(errors, []);
 });

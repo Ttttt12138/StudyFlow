@@ -28,7 +28,10 @@ test('introduction focuses each real transition after confirmation, never overla
   await page.goto('/');
   const intro = page.locator('dialog.journey-intro');
   await expect(intro.locator('[aria-current="step"]')).toHaveAttribute('data-phase', '0');
-  await intro.getByRole('button', { name: 'Start consultation' }).click();
+  await intro.locator('[data-phase="2"]').click();
+  await expect(intro.getByRole('button', { name: 'This stage is not reached yet' })).toBeDisabled();
+  await expect(intro.locator('[aria-current="step"]')).toHaveAttribute('data-phase', '0');
+  await intro.locator('[data-phase="0"]').click();
   await page.reload();
   await expect(page.locator('.plan-chat')).toBeVisible();
   await expect(intro).toHaveCount(0);
@@ -44,12 +47,28 @@ test('introduction focuses each real transition after confirmation, never overla
     await intro.getByRole('button', { name: 'Skip introduction' }).click();
   }
   expect(state.confirmations).toHaveLength(2);
+  await page.locator('.plan-composer textarea').fill('Keep my next question');
+  await page.getByRole('button', { name: 'View journey', exact: true }).click();
+  await intro.locator('[data-phase="1"]').click();
+  await expect(intro).toHaveCount(0);
+  await expect(page.locator('.plan-composer .agent-suggestions')).toContainText('Departure preparation');
+  await expect(page.locator('#plan-journey-guide')).not.toContainText('Registration completed');
+  await expect(page.locator('.journey-view-notice')).toContainText('Life assistant');
+  await expect(page.locator('.plan-composer textarea')).toHaveValue('Keep my next question');
+  await expect(page.locator('.plan-composer textarea')).toHaveAttribute('placeholder', 'e.g. What should I prepare before departure?');
+  await page.screenshot({ path: screenshot('return-to-preparation.png') });
   await page.getByRole('button', { name: 'View journey', exact: true }).click();
   await intro.locator('[data-phase="0"]').click();
+  await expect(intro).toHaveCount(0);
+  await expect(page.locator('.plan-composer .agent-suggestions')).toContainText('Which schools are there?');
+  await page.locator('.journey-view-notice').getByRole('button', { name: 'Return to current stage' }).click();
+  await expect(page.locator('.plan-composer .agent-suggestions')).toContainText('How much have I spent this month?');
+  await page.getByRole('button', { name: 'View journey', exact: true }).click();
   await expect(intro.locator('[aria-current="step"]')).toHaveAttribute('data-phase', '2');
   await page.keyboard.press('Escape');
   await expect(page.getByRole('button', { name: 'View journey', exact: true })).toBeFocused();
   expect(state.phase).toBe('ENROLLED');
+  expect(state.confirmations).toHaveLength(2);
 });
 
 test('cards fit three widths and languages with the actual stage in focus', async ({ page }) => {

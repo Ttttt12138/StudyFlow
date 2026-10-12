@@ -1,18 +1,26 @@
 import { CardSummary } from "./CardSummary";
+import { CardDetail } from "./CardDetail";
+import { ArrowUp } from "@phosphor-icons/react/dist/csr/ArrowUp";
+import { Sparkle } from "@phosphor-icons/react/dist/csr/Sparkle";
+import { JourneyRail } from "./JourneyRail";
+import { StatusRail } from "./StatusRail";
+import type { ToolTarget } from "../workspace/navigation";
+import "./workspaceStatus.css";
 import { JourneyGuide } from "./JourneyGuide";
 import { JourneyIntro } from "./JourneyIntro";
-import { journeyPhase } from "./journeyPhase";
+import { journeyPhase, type JourneyPhase } from "./journeyPhase";
 import { MonthlySpending } from "./MonthlySpending";
 import { asksForMonthlySpending } from "./monthly";
 import { ToolSlot, useWorkspace, useToolRefresh, useClearWhenHidden, useToolActive } from "../workspace/context";
 import { FocusDialog } from "../workspace/FocusDialog";
+import { PanelFacts, PanelHero, PanelPager, ToolPanel, usePage } from "../workspace/ToolPanel";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useI18n, type MessageKey } from "../i18n";
 import { ServiceShell } from "../services/ServiceShell";
 import { useModuleLink } from "../services/ModuleNav";
 import { SessionWalletClient, WalletApiError, type WalletClient } from "../wallet/client";
-import { Bills, CardView, LoanFacts, PlanFacts, SpendingFacts, type CardActions } from "./cards";
-import { money, pick } from "./format";
+import { CardView, type CardActions } from "./cards";
+import { day, money, pick } from "./format";
 import { createPlanPreview, type PreviewStage } from "./preview";
 import type { Bill, Conversation, ConversationSummary, FamilyLink, InSchool, Role, Turn } from "./types";
 import "./plan.css";
@@ -37,6 +45,14 @@ const SUGGESTIONS: Record<"en" | "zh", Record<Role | "none" | "preparing" | "enr
   },
 };
 
+/** Local day and time labels for the conversation timeline; missing or invalid timestamps show nothing. */
+function turnStamp(value: string | undefined, lang: string) {
+  const date = value ? new Date(value) : null;
+  if (!date || Number.isNaN(date.getTime())) return null;
+  return { day: date.toLocaleDateString(lang, { year: "numeric", month: "long", day: "numeric" }),
+    time: date.toLocaleTimeString(lang, { hour: "2-digit", minute: "2-digit", hour12: false }) };
+}
+
 function describe(error: unknown, t: (key: MessageKey) => string) {
   if (error instanceof WalletApiError) {
     if (error.status === 429) return t("plan.err.throttled");
@@ -49,13 +65,15 @@ export function PlanApp({ account = "", preview, initialStage = "plan", onExit }
   const { lang, t } = useI18n();
   const openModule = useModuleLink();
   const workspace = useWorkspace();
-  const signInUrl = `/api/auth/login/?next=${encodeURIComponent(window.location.href)}`;
+  const signInUrl = `/auth?next=${encodeURIComponent(window.location.href)}`;
   const [stage, setStage] = useState<PreviewStage>(initialStage);
   const client = useMemo<WalletClient>(() => preview ? createPlanPreview(lang, stage) : new SessionWalletClient(), [preview, lang, stage]);
   const [conversation, setConversation] = useState<Conversation | null>(null);
   const [inSchool, setInSchool] = useState<InSchool | null>(null);
   const [family, setFamily] = useState<FamilyLink[]>([]);
   const [view, setView] = useState<Role | null>(null);
+  const [journeyView, setJourneyView] = useState<JourneyPhase | null>(null);
+  const [statusOpen, setStatusOpen] = useState(false);
   const [draft, setDraft] = useState("");
   const [sending, setSending] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -158,8 +176,23 @@ export function PlanApp({ account = "", preview, initialStage = "plan", onExit }
   };
 
   const plan = conversation?.plan ?? null;
-  const enrolled = plan?.status === "ENROLLED";
-  const suggestions = SUGGESTIONS[lang][enrolled ? "enrolled" : plan?.status === "CONFIRMED" ? "preparing" : view ?? conversation?.profile.role ?? "none"];
+  const actualPhase = journeyPhase(plan?.status ?? null);
+  const visiblePhase = journeyView === null ? actualPhase : Math.min(journeyView, actualPhase) as JourneyPhase;
+  useEffect(() => { setJourneyView(null); }, [plan?.status]);
+  const enterJourney = (phase: JourneyPhase) => {
+    setJourneyView(phase); setStatusOpen(false);
+    if (workspace?.target) workspace.close();
+    requestAnimationFrame(() => {
+      document.getElementById("plan-journey-guide")?.scrollIntoView({ block: "nearest" });
+      document.querySelector<HTMLTextAreaElement>(".plan-composer textarea")?.focus({ preventScroll: true });
+    });
+  };
+  const openStatusTool = (target: ToolTarget) => {
+    if (!statusOpen) { workspace?.open(target); return; }
+    setStatusOpen(false);
+    requestAnimationFrame(() => workspace?.open(target));
+  };
+  const suggestions = SUGGESTIONS[lang][visiblePhase === 2 ? "enrolled" : visiblePhase === 1 ? "preparing" : view ?? conversation?.profile.role ?? "none"];
   const enrollment = conversation?.turns.flatMap(turn => turn.pending_actions).find(action =>
     action.action === "plan.enroll" && action.status === "PENDING" && new Date(action.expires_at).getTime() > Date.now());
   const stale = useToolRefresh(refresh);
@@ -167,16 +200,27 @@ export function PlanApp({ account = "", preview, initialStage = "plan", onExit }
     .find(item => item.id === workspace?.target?.cardId)?.card;
   const confirming = conversation?.turns.flatMap(turn => turn.cards).find(card => card.type === "confirmation" && card.pending_action_id === confirmId);
   const pendingCount = conversation?.turns.flatMap(turn => turn.pending_actions).filter(action => action.status === "PENDING" && new Date(action.expires_at).getTime() > Date.now()).length ?? 0;
-  return <div className="plan-app">
+  const journeyRail = <JourneyRail conversation={conversation} current={actualPhase} selected={visiblePhase}
+    onEnter={enterJourney} onPlan={() => openStatusTool({ kind: "plan" })} disabled={!conversation || busy || sending || !!confirmId} client={client} preview={preview} />;
+  const statusRail = <StatusRail plan={plan} data={inSchool} phase={visiblePhase} open={openStatusTool} />;
+  return <div className="plan-app orbital-workspace">
+    {!signedOut && <div className="workspace-left-rail">{journeyRail}</div>}
+    <div className="plan-center">
     <div className="workspace-plan-status">
       <strong>{plan ? pick(plan.school?.name, lang) || plan.school_key : t("ws.noSchool")}</strong>
       <JourneyIntro account={account} phase={conversation && !signedOut ? journeyPhase(plan?.status ?? null) : undefined}
-        blocked={busy || sending || !!confirmId || !!draft || signedOut} preview={preview} />
+        blocked={busy || sending || !!confirmId || signedOut || statusOpen} editing={!!draft} preview={preview} onEnter={enterJourney} />
       <span>{t("ws.pending", { n: pendingCount })}</span>
       <button className="chip" onClick={() => workspace?.open({ kind: "plan" })}>{t("ws.plan")}</button>
       <button className="chip" onClick={() => workspace?.open({ kind: "bills" })}>{t("ws.bills")}</button>
       <button className="chip" onClick={() => workspace?.open({ kind: "bills", section: "expense" })}>{t("ws.record")}</button>
+      <button type="button" className="chip status-overview-toggle" disabled={!conversation || signedOut || busy || sending || !!confirmId || !!workspace?.target}
+        onClick={() => setStatusOpen(true)}>{t("status.overview")}</button>
     </div>
+    {visiblePhase !== actualPhase && <p className="service-notice journey-view-notice" role="status">
+      {t("plan.intro.viewing", { view: t(`plan.intro.name.${visiblePhase}`), current: t(`plan.intro.name.${actualPhase}`) })}{" "}
+      <button type="button" className="chip" onClick={() => enterJourney(actualPhase)}>{t("plan.intro.return")}</button>
+    </p>}
     {stale}
     {preview && <div className="plan-stage-switch" role="group" aria-label={t("plan.preview.stage")}>
       {(["plan", "school"] as const).map((item) => <button key={item} type="button" aria-pressed={stage === item}
@@ -199,23 +243,29 @@ export function PlanApp({ account = "", preview, initialStage = "plan", onExit }
       <section className="card service-card plan-chat" id="plan-chat" aria-labelledby="plan-chat-title">
         <div className="service-card-body">
           <div className="plan-chat-head">
-            <h2 id="plan-chat-title">{t("plan.side.chat")}</h2>
+            <div><h2 id="plan-chat-title">{t(`plan.intro.name.${visiblePhase}`)}</h2>
+              <p className="workspace-chat-subtitle">{t(`status.subtitle.${visiblePhase}`)}</p></div>
             <div className="plan-view" role="group" aria-label={t("plan.view.label")} title={t("plan.view.hint")}>
               {(["parent", "student"] as const).map((role) => <button key={role} type="button" aria-pressed={view === role}
                 onClick={() => setView(role)}>{t(`plan.view.${role}`)}</button>)}
             </div>
           </div>
           {!conversation ? <p className="service-muted" role="status">{t("plan.loading")}</p> : <ol className="plan-messages" aria-live="polite" ref={listRef}>
-            {conversation.turns.map((turn) => <li key={turn.id} className="plan-turn">
-              {turn.goal && <div className="plan-bubble plan-bubble-user"><span className="plan-who">{t("plan.you")}</span><p>{turn.goal}</p></div>}
+            {conversation.turns.map((turn, index) => { const stamp = turnStamp(turn.created_at, lang);
+              const newDay = stamp && stamp.day !== turnStamp(conversation.turns[index - 1]?.created_at, lang)?.day;
+              return <li key={turn.id} className="plan-turn">
+              {newDay && <p className="plan-date"><time dateTime={turn.created_at}>{stamp.day}</time></p>}
+              {turn.goal && <div className="plan-bubble plan-bubble-user"><span className="plan-who">{t("plan.you")}</span><p>{turn.goal}</p>
+                {stamp && <time className="plan-time" dateTime={turn.created_at}>{stamp.time}</time>}</div>}
               {(turn.final_answer || turn.cards.length > 0) && <div className="plan-bubble plan-bubble-agent">
-                <span className="plan-who">{t("plan.assistant")}</span>
+                <span className="plan-who"><span className="plan-avatar" aria-hidden="true"><Sparkle size={20} weight="light" /></span> StudyFlow
+                  {stamp && <time className="plan-time" dateTime={turn.created_at}>{stamp.time}</time>}</span>
                 {turn.final_answer && <p>{turn.final_answer}</p>}
                 {turn.cards.map((card, index) => <CardSummary key={index} id={`${turn.id}:${index}`} card={card} actions={actions} />)}
               </div>}
               {turn.status === "RUNNING" && <div className="plan-bubble plan-bubble-agent plan-thinking" role="status">{t("plan.composer.sending")}</div>}
-            </li>)}
-            {plan && <JourneyGuide plan={plan} pending={enrollment} ask={text => void ask(text)}
+            </li>; })}
+            {plan && <JourneyGuide plan={plan} phase={visiblePhase} pending={enrollment} ask={text => void ask(text)}
               confirm={setConfirmId} disabled={preview || busy || sending} />}
           </ol>}
           <form className="plan-composer" onSubmit={(event) => { event.preventDefault(); void ask(draft); }}>
@@ -223,28 +273,33 @@ export function PlanApp({ account = "", preview, initialStage = "plan", onExit }
               {suggestions.map((text) => <button type="button" key={text} className="chip" disabled={sending || !conversation}
                 onClick={() => void ask(text)}>{text}</button>)}
             </div>
-            <label className="service-field"><span className="sr-only">{t("plan.composer.label")}</span>
-              <textarea value={draft} rows={2} maxLength={2000} placeholder={t(plan?.status === "CONFIRMED" ? "plan.journey.preparingPlaceholder" : plan?.status === "ENROLLED" ? "plan.journey.dailyPlaceholder" : "plan.composer.placeholder")} disabled={sending || preview}
+            <div className="plan-input-wrap"><label className="service-field"><span className="sr-only">{t("plan.composer.label")}</span>
+              <textarea value={draft} rows={2} maxLength={2000} placeholder={t(visiblePhase === 1 ? "plan.journey.preparingPlaceholder" : visiblePhase === 2 ? "plan.journey.dailyPlaceholder" : "plan.composer.placeholder")} disabled={sending || preview}
                 aria-label={t("plan.composer.label")} onChange={(event) => setDraft(event.target.value)}
                 onKeyDown={(event) => { if (event.key === "Enter" && !event.shiftKey && !event.nativeEvent.isComposing) { event.preventDefault(); void ask(draft); } }} />
             </label>
+              <button type="submit" className="primary" disabled={sending || preview || !draft.trim()}>{sending ? t("plan.composer.sending") : t("plan.composer.send")}<ArrowUp size={18} aria-hidden="true" /></button>
+            </div>
             <div className="service-actions">
-              <button type="submit" className="primary" disabled={sending || preview || !draft.trim()}>{sending ? t("plan.composer.sending") : t("plan.composer.send")}</button>
               <button type="button" className="secondary" disabled={sending || preview} onClick={() => void load(true)}>{t("plan.new")}</button>
             </div>
           </form>
         </div>
       </section>
     </div>}
+    </div>
+    {!signedOut && <div className="workspace-right-rail">{statusRail}</div>}
+    {statusOpen && !signedOut && !confirmId && !workspace?.target && <FocusDialog title={t("status.overview")} className="workspace-status-dialog" onClose={() => setStatusOpen(false)}>
+      <div className="workspace-status-dialog-heading"><h2>{t("status.overview")}</h2><button className="secondary" onClick={() => setStatusOpen(false)}>{t("status.close")}</button></div>
+      {journeyRail}{statusRail}
+    </FocusDialog>}
     <ToolSlot kind="plan"><PlanSummary plan={plan} onRefresh={refresh} /></ToolSlot>
     <ToolSlot kind="bills"><InSchoolPanel data={inSchool} client={client} preview={preview} onChange={loadSide} onError={fail} /></ToolSlot>
     <ToolSlot kind="spending"><MonthlySpending client={client} preview={preview} /></ToolSlot>
     <ToolSlot kind="family-links"><FamilyPanel links={family} role={conversation?.profile.role ?? null} client={client} preview={preview}
       onRefresh={loadSide}
       onLinked={async () => { setNotice(t("plan.family.linked")); await loadSide(); }} onError={fail} /></ToolSlot>
-    <ToolSlot kind="card"><p className="service-muted">{t("ws.snapshot")}</p>
-      {selectedCard ? <CardView card={selectedCard} actions={actions} /> : <p>{t("ws.missingCard")}</p>}
-    </ToolSlot>
+    <ToolSlot kind="card"><CardDetail key={workspace?.target?.cardId} card={selectedCard ?? null} actions={actions} /></ToolSlot>
     {confirmId && confirming && <FocusDialog title={t("ws.confirm")} onClose={() => setConfirmId(null)} busy={busy}>
       <CardView card={confirming} actions={{ ...actions, confirm: id => void decide(id, "confirm") }} />
       <button className="secondary" disabled={busy} onClick={() => setConfirmId(null)}>{t("common.cancel")}</button>
@@ -254,24 +309,39 @@ export function PlanApp({ account = "", preview, initialStage = "plan", onExit }
 }
 
 function PlanSummary({ plan, onRefresh }: { plan: Conversation["plan"]; onRefresh: () => Promise<void> }) {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
+  const workspace = useWorkspace();
   const stale = useToolRefresh(onRefresh);
-  return <section className="card service-card" id="plan-summary" aria-labelledby="plan-summary-title">
-    <div className="service-card-body">
-      <div className="plan-card-head"><h2 id="plan-summary-title">{t("plan.side.plan")}</h2>
+  const cur = plan?.currency ?? plan?.school?.currency ?? "";
+  const loan = plan?.loan;
+  return <section className="plan-tool" id="plan-summary" aria-labelledby="plan-summary-title">
+    <ToolPanel label={t("plan.side.plan")} notices={stale}
+      footer={plan && <><span className="panel-footer-note">{t("status.estimateNote")}</span>
+        <button type="button" className="secondary" onClick={() => workspace?.open({ kind: "loans" })}>{t("plan.school.loans")}</button></>}>
+      <div className="panel-card-head"><h3 id="plan-summary-title">{plan ? pick(plan.school?.name, lang) || plan.school_key : t("plan.side.plan")}</h3>
         {plan && <span className={`status-chip status-${plan.status.toLowerCase()}`}>{t(`plan.plan.status.${plan.status}`)}</span>}</div>
-      {stale}
       {plan ? <>
-        <PlanFacts plan={plan} />
-        {plan.loan && <><h3>{t("plan.loan.title")}</h3><LoanFacts plan={plan} /></>}
-      </> : <p className="service-muted">{t("plan.plan.none")}</p>}
-    </div>
+        <PanelHero label={t("plan.plan.total")} value={money(plan.total, cur, lang)}>
+          <span className="panel-muted">{t("plan.plan.years")} {plan.years} · {t("plan.plan.start")} {day(plan.start_date, lang)}</span></PanelHero>
+        <div className="panel-grid-2">
+          <div className="panel-tile"><span>{t("plan.plan.funds")}</span>
+            <strong>{plan.available_funds ? money(plan.available_funds, plan.funds_currency ?? "", lang) : t("plan.plan.noFunds")}</strong></div>
+          {plan.gap != null && <div className="panel-tile"><span>{t("plan.plan.gap")}</span>
+            <strong className={Number(plan.gap) > 0 ? "plan-gap" : ""}>{money(plan.gap, cur, lang)}</strong></div>}
+        </div>
+        {loan && <>
+          <h4 className="panel-muted">{t("plan.loan.title")}</h4>
+          <PanelFacts items={[[t("plan.loan.principal"), money(loan.principal, loan.currency, lang)], [t("plan.loan.months"), t("plan.loan.monthsValue", { months: loan.months })],
+            [t("plan.loan.monthly"), money(loan.monthly_payment, loan.currency, lang)], [t("plan.loan.total"), money(loan.total_repayment, loan.currency, lang)]]} />
+        </>}
+      </> : <div className="panel-empty"><p>{t("plan.plan.none")}</p></div>}
+    </ToolPanel>
   </section>;
 }
 
 function InSchoolPanel({ data, client, preview, onChange, onError }: { data: InSchool | null; client: WalletClient; preview: boolean;
   onChange: () => Promise<void>; onError: (err: unknown) => void }) {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const openModule = useModuleLink();
   const workspace = useWorkspace();
   const active = useToolActive();
@@ -308,47 +378,83 @@ function InSchoolPanel({ data, client, preview, onChange, onError }: { data: InS
     catch (err) { setPanelError(describe(err, t)); onError(err); } finally { setBusy(false); }
   }
 
-  return <section className="card service-card" id="plan-school" aria-labelledby="plan-school-title">
-    <div className="service-card-body">
-      <h2 id="plan-school-title">{t("plan.school.title")}</h2>
-      {stale}{panelError && <p role="alert" className="error">{panelError}</p>}
-      {panelNotice && <p role="status" className="service-notice">{panelNotice}</p>}
-      {!data?.enrolled ? <p className="service-muted">{t("plan.school.notYet")}</p> : <>
-        <h3>{t("plan.spending.title", { month: data.spending.month })}</h3>
-        <SpendingFacts spending={data.spending} />
-        <form ref={formRef} className="plan-expense" onSubmit={record}>
-          <h3>{t("plan.expense.title")}</h3>
-          <div className="plan-expense-row">
-            <label className="service-field">{t("plan.expense.amount")}<input inputMode="decimal" value={amount} disabled={preview || busy}
-              onChange={(event) => setAmount(event.target.value.replace(/[^\d.]/g, ""))} /></label>
-            <label className="service-field">{t("plan.expense.currency")}<input value={currency || data.spending.currency} maxLength={3}
-              disabled={preview || busy} onChange={(event) => setCurrency(event.target.value.toUpperCase())} /></label>
-            <label className="service-field">{t("plan.expense.category")}<select value={category} disabled={preview || busy}
-              onChange={(event) => setCategory(event.target.value)}>
-              <option value="">—</option>
-              {CATEGORIES.map((item) => <option key={item} value={item}>{t(`plan.cat.${item}`)}</option>)}
-            </select></label>
-          </div>
-          <label className="service-field">{t("plan.expense.note")}<input value={note} maxLength={200} disabled={preview || busy}
-            onChange={(event) => setNote(event.target.value)} /></label>
-          <button type="submit" className="primary" disabled={preview || busy || !Number(amount)}>{t("plan.expense.save")}</button>
-        </form>
-        {data.spending.recent && data.spending.recent.length > 0 && <><h3>{t("plan.spending.recent")}</h3>
-          <ul className="plan-categories">{data.spending.recent.map((item) => <li key={item.id}>
-            <span>{item.spent_on} · {item.note || t(`plan.cat.${item.category}` as MessageKey)}{item.via_agent && <small> · {t("plan.expense.viaAgent")}</small>}</span>
-            <span>{money(item.amount, item.currency)}</span>
-          </li>)}</ul></>}
-        <h3>{t("plan.bills.title")}</h3>
-        <Bills bills={data.upcoming_bills} today={data.today} busy={busy || preview} onPay={preview ? undefined : (bill) => void pay(bill)} />
-        <p className="service-muted">{t("plan.bills.payHint")}</p>
-        <h3>{t("plan.school.tools")}</h3>
-        <div className="plan-card-actions">
-          <button type="button" className="chip" onClick={() => openModule("wallet")}>{t("plan.school.wallet")}</button>
-          <button type="button" className="chip" onClick={() => openModule("payments")}>{t("plan.school.payments")}</button>
-          <button type="button" className="chip" onClick={() => openModule("loans")}>{t("plan.school.loans")}</button>
+  const [tab, setTab] = useState<"bills" | "spending" | "record">(workspace?.target?.section === "expense" ? "record" : "bills");
+  const [billPage, setBillPage] = useState(0);
+  useEffect(() => { if (active && workspace?.target?.section === "expense") setTab("record"); }, [active, workspace?.target?.section]);
+  const due = data?.enrolled ? data.upcoming_bills : [];
+  const page = usePage(due, 4, billPage);
+  const next = due.find(bill => bill.status === "DUE");
+  const spending = data?.enrolled ? data.spending : null;
+  const used = spending && Number(spending.budget) > 0 ? Math.min(100, Number(spending.spent) / Number(spending.budget) * 100) : 0;
+  const notices = (stale || panelError || panelNotice) && <>{stale}{panelError && <p role="alert" className="error">{panelError}</p>}
+    {panelNotice && <p role="status" className="service-notice">{panelNotice}</p>}</>;
+  const footer = !data?.enrolled ? null : tab === "record"
+    ? <button type="submit" form="plan-expense-form" className="primary" disabled={preview || busy || !Number(amount)}>{t("plan.expense.save")}</button>
+    : tab === "bills" ? <><span className="panel-footer-note">{t("plan.bills.payHint")}</span>
+      <button type="button" className="secondary" onClick={() => setTab("record")}>{t("ws.record")}</button></>
+    : <><button type="button" className="panel-link panel-footer-note" onClick={() => workspace?.open({ kind: "spending", month: data.spending.month })}>{t("plan.monthly.title")} →</button>
+      <button type="button" className="secondary" onClick={() => setTab("record")}>{t("ws.record")}</button></>;
+
+  return <section className="plan-tool" id="plan-school" aria-labelledby="plan-school-title">
+    <h2 id="plan-school-title" className="sr-only">{t("plan.school.title")}</h2>
+    <ToolPanel label={t("ws.bills")} numbered={false} active={tab} onSelect={setTab} notices={notices} footer={footer}
+      steps={data?.enrolled ? [{ key: "bills", label: t("plan.bills.title") }, { key: "spending", label: t("bp.tab.spending") }, { key: "record", label: t("plan.expense.title") }] : []}>
+      {!data?.enrolled ? <div className="panel-empty"><p>{t("plan.school.notYet")}</p></div> : <>
+        <div className="panel-view" hidden={tab !== "bills"}>
+          <div className="panel-card-head"><h3>{t("plan.bills.title")}</h3>
+            <PanelPager index={page.index} count={page.pages} onChange={setBillPage} label={t("plan.bills.title")} /></div>
+          {next && <div className="panel-timeline">
+            <time dateTime={next.due_date}><strong>{Number(next.due_date.slice(8, 10))}</strong>
+              <span>{new Date(`${next.due_date}T00:00:00`).toLocaleDateString(lang, { month: "short" })}</span></time>
+            <div><span className="panel-muted">{pick(next.label, lang)}</span><strong>{money(next.amount, next.currency, lang)}</strong>
+              <span className="panel-tag">{t(next.due_date < data.today ? "plan.bills.overdue" : "status.due")}</span></div>
+          </div>}
+          {!due.length ? <p className="panel-muted">{t("plan.bills.none")}</p> : <ul className="panel-rows plan-bills">{page.rows.map(bill => <li key={bill.id}>
+            <span><strong>{pick(bill.label, lang)}</strong><small>{day(bill.due_date, lang)}</small></span>
+            <span>{money(bill.amount, bill.currency, lang)}</span>
+            {bill.status === "PAID" ? <span className="status-chip status-confirmed">{t("plan.bills.paid")}</span>
+              : bill.due_date < data.today ? <span className="status-chip status-failed">{t("plan.bills.overdue")}</span> : null}
+            {!preview && bill.status === "DUE" && <button type="button" className="chip" disabled={busy} onClick={() => void pay(bill)}>{t("plan.bills.pay")}</button>}
+          </li>)}</ul>}
         </div>
+        <div className="panel-view" hidden={tab !== "spending"}>
+          <h3 className="panel-card-head">{t("plan.spending.title", { month: data.spending.month })}</h3>
+          <PanelHero label={t("plan.spending.spent")} value={money(data.spending.spent, data.spending.currency, lang)}>
+            <div className="panel-meter" role="meter" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(used)} aria-label={t("plan.spending.spent")}>
+              <span style={{ width: `${used}%` }} className={data.spending.over_budget ? "is-over" : ""} /></div></PanelHero>
+          <div className="panel-grid-2">
+            <div className="panel-tile"><span>{t("plan.spending.budget")}</span><strong>{money(data.spending.budget, data.spending.currency, lang)}</strong></div>
+            <div className="panel-tile"><span>{t("plan.spending.remaining")}</span><strong className={data.spending.over_budget ? "plan-gap" : ""}>{money(data.spending.remaining, data.spending.currency, lang)}</strong></div>
+          </div>
+          {data.spending.over_budget && <p className="panel-note is-warn">{t("plan.spending.over")}</p>}
+          {data.spending.recent && data.spending.recent.length > 0 && <><h4 className="panel-muted">{t("plan.spending.recent")}</h4>
+            <ul className="panel-rows plan-categories">{data.spending.recent.slice(0, 4).map((item) => <li key={item.id}>
+              <span><strong>{item.note || t(`plan.cat.${item.category}` as MessageKey)}</strong>
+                <small>{item.spent_on} · {t(`plan.cat.${item.category}` as MessageKey)}{item.via_agent && ` · ${t("plan.expense.viaAgent")}`}</small></span>
+              <span>{money(item.amount, item.currency, lang)}</span>
+            </li>)}</ul></>}
+          <div className="panel-row">
+            <button type="button" className="panel-link" onClick={() => openModule("wallet")}>{t("plan.school.wallet")} →</button>
+            <button type="button" className="panel-link" onClick={() => openModule("payments")}>{t("plan.school.payments")} →</button>
+            <button type="button" className="panel-link" onClick={() => openModule("loans")}>{t("plan.school.loans")} →</button>
+          </div>
+        </div>
+        <form ref={formRef} id="plan-expense-form" className="panel-view plan-expense" hidden={tab !== "record"} onSubmit={record}>
+          <h3 className="panel-card-head">{t("plan.expense.title")}</h3>
+          <label className="panel-amount">{t("plan.expense.amount")}
+            <span><input inputMode="decimal" value={amount} disabled={preview || busy} placeholder="0.00"
+              onChange={(event) => setAmount(event.target.value.replace(/[^\d.]/g, ""))} />
+              <input aria-label={t("plan.expense.currency")} value={currency || data.spending.currency} maxLength={3}
+                disabled={preview || busy} onChange={(event) => setCurrency(event.target.value.toUpperCase())} /></span></label>
+          <fieldset className="panel-fieldset"><legend>{t("plan.expense.category")}</legend>
+            <div className="panel-chips">{CATEGORIES.map((item) => <button type="button" key={item} aria-pressed={category === item} disabled={preview || busy}
+              onClick={() => setCategory(category === item ? "" : item)}>{t(`plan.cat.${item}`)}</button>)}</div></fieldset>
+          <label className="panel-form" style={{ gridTemplateColumns: "1fr" }}><span>{t("plan.expense.note")}</span>
+            <input value={note} maxLength={200} disabled={preview || busy} onChange={(event) => setNote(event.target.value)} /></label>
+          <p className="panel-muted">{t("bp.recordHint", { month: data.spending.month })}</p>
+        </form>
       </>}
-    </div>
+    </ToolPanel>
   </section>;
 }
 

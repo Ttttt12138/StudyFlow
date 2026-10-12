@@ -16,6 +16,7 @@ test("intro deep links open the planner preview at a stage, old journey links st
   await page.goto(`${base}/?plan=preview&stage=school`);
   assert.equal(await page.getByRole("button", { name: "In school", exact: true }).getAttribute("aria-pressed"), "true");
   await page.getByRole("button", { name: "Bills & spending", exact: true }).click();
+  await page.getByRole("tab", { name: "This month" }).click();
   await page.locator("#plan-school").getByRole("heading", { name: /^Spending in / }).waitFor();
 
   // Links shared before the planner replaced the five-step journey.

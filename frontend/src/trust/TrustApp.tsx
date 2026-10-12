@@ -12,7 +12,7 @@ import type { AuditEvent, AuditPage, CreditProfile, LimitsSummary, TrustApproval
 import "../services/services.css";
 import { CreditStatements } from "./CreditStatements";
 
-const signInUrl = `/api/auth/login/?next=${encodeURIComponent(window.location.origin + "/?trust=1")}`;
+const signInUrl = `/auth?next=${encodeURIComponent(window.location.origin + "/?trust=1")}`;
 // Audit action prefixes with their own filter; everything else is grouped under "other".
 const CATEGORIES = ["auth", "approval", "agent", "credit", "payment", "remittance", "wallet", "fx", "funding"] as const;
 const NAMED_EVENTS = ["auth.step_up_granted", "auth.step_up_failed", "approval.requested", "approval.approved",

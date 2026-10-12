@@ -17,7 +17,9 @@ const POLICY_CODES = ["STEP_UP_REQUIRED", "STEP_UP_INVALID", "APPROVAL_REQUIRED"
 const REQUOTE_CODES = ["QUOTE_EXPIRED", "QUOTE_CONSUMED", "QUOTE_IN_USE", "QUOTE_NOT_EXECUTABLE", "QUOTE_AMOUNT_MISMATCH", "CORRIDOR_DISABLED", "CORRIDOR_AMOUNT_OUT_OF_RANGE"];
 
 /** Currency conversion between wallet balances (T2) and the append-only ledger, below the transfer form. */
-export function WalletExtras({ client, preview, onChanged }: { client: WalletClient; preview: boolean; onChanged: () => void }) {
+export function WalletExtras({ client, preview, onChanged, view = "all" }: { client: WalletClient; preview: boolean; onChanged: () => void;
+  /** Which section is on screen; both stay mounted so a quote in progress survives switching views. */
+  view?: "all" | "convert" | "ledger" | "none" }) {
   const { lang, t } = useI18n();
   const active = useToolActive();
   const policy = usePolicyAction(client, preview);
@@ -184,8 +186,8 @@ export function WalletExtras({ client, preview, onChanged }: { client: WalletCli
   const originLabel = (row: LedgerEntry) => t(`walletx.origin.${ledgerOrigin(row)}` as MessageKey);
   const signed = (value: string, currency: string) => { const part = signedParts(value); return `${part.sign} ${money(part.abs, currency)}`; };
 
-  return <>{stale}
-    <section id="wallet-convert" className="card wallet-panel walletx">
+  return <>{view === "all" && stale}
+    <section id="wallet-convert" className="card wallet-panel walletx" hidden={view !== "all" && view !== "convert"}>
       <div className="wallet-heading"><div><span className="eyebrow">{t("walletx.convert.eyebrow")}</span><h2>{t("walletx.convert.title")}</h2></div><TierBadge tier="T2" withLabel /></div>
       <p>{t("walletx.convert.text")}</p>
       {(["corridors", "balances"] as const).map((key) => errors[key] && <p key={key} className="error" role="alert">{errors[key]}</p>)}
@@ -246,7 +248,7 @@ export function WalletExtras({ client, preview, onChanged }: { client: WalletCli
         <span>{t("walletx.recent.meta", { rate: item.rate, date: stamp(item.created_at) })}</span></li>)}</ul>
         : !errors.conversions && <p className="wallet-empty">{t("walletx.recent.none")}</p>}
     </section>
-    <section id="wallet-ledger" className="card wallet-panel walletx">
+    <section id="wallet-ledger" className="card wallet-panel walletx" hidden={view !== "all" && view !== "ledger"}>
       <div className="wallet-heading"><div><span className="eyebrow">{t("walletx.ledger.eyebrow")}</span><h2>{t("walletx.ledger.title")}</h2></div><span className="count">{t("walletx.ledger.count", { shown: ledger.length, total: ledgerCount })}</span></div>
       <p>{t("walletx.ledger.text")}</p>
       {errors.ledger && <p className="error" role="alert">{errors.ledger}</p>}

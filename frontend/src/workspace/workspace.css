@@ -62,3 +62,24 @@
 body:has(.student-workspace) .app-backdrop { opacity:.15; }
 
 .workspace-preview { flex:none; margin:0; padding:8px 16px; font-size:11px; color:var(--warn); border-bottom:1px solid var(--line); }
+
+/* Dock shell matches the orbital workspace: translucent forest glass, glowing edge, quiet header. */
+.student-workspace .workspace-dock { background:linear-gradient(170deg, #0b1d18e6, #050d0bf2); border-left:1px solid #9ff5dc26; box-shadow:-1px 0 0 #4ff2c60d, -30px 0 60px -40px #4ff2c633; backdrop-filter:blur(14px); }
+.student-workspace .workspace-dock-header { padding:16px 20px; border-bottom:1px solid #9ff5dc1a; gap:10px; }
+.student-workspace .workspace-dock-header h2 { font-size:19px; font-weight:600; letter-spacing:-.01em; }
+.student-workspace .workspace-dock-header button { display:grid; place-items:center; width:34px; height:34px; padding:0; border-radius:50%; background:none; border:1px solid #cfe9df40; color:var(--text); font-size:15px; }
+.student-workspace .workspace-dock-header button:hover { background:#4ff2c614; transform:none; }
+.student-workspace .workspace-preview { padding:8px 20px; border-bottom-color:#9ff5dc1a; }
+.student-workspace .tool-content { padding:18px 20px; scrollbar-width:thin; scrollbar-color:var(--line-2) transparent; }
+.student-workspace .tool-content .card, .student-workspace .tool-content .service-card { background:none; border:0; border-top:1px solid #9ff5dc1a; border-radius:0; box-shadow:none; }
+.student-workspace .tool-content .service-card-body { padding:16px 0; }
+.student-workspace .tool-content input:not([type=checkbox]):not([type=radio]), .student-workspace .tool-content select, .student-workspace .tool-content textarea { border-radius:10px; border:1px solid #7cf7d640; background:#06120fcc; color:var(--text); }
+.student-workspace .tool-content input:not([type=checkbox]):not([type=radio]):focus-visible, .student-workspace .tool-content select:focus-visible, .student-workspace .tool-content textarea:focus-visible { outline:none; border-color:#9ff5dccc; box-shadow:0 0 0 3px #4ff2c61f; }
+.student-workspace .tool-content .primary { border:0; border-radius:12px; background:linear-gradient(145deg, #6ff7d4, #3fdcb4); color:#04110d; font-weight:600; }
+.student-workspace .tool-content .primary:disabled { opacity:.45; color:#04110d; }
+.student-workspace .tool-content .secondary { border-radius:999px; background:none; border-color:#cfe9df55; }
+.student-workspace .tool-content[data-tool=wallet] .tier-badge { display:none; }
+@media (max-width:600px) { .student-workspace .workspace-dock-header { padding:12px 14px; } .student-workspace .tool-content { padding:12px 14px; } }
+.student-workspace .workspace-topbar > .workspace-signout { border-radius:999px; padding:7px 14px; font-size:12px; background:none; border-color:#cfe9df40; color:var(--text-2); }
+.student-workspace .workspace-topbar > .workspace-signout:hover { color:var(--text); border-color:#cfe9df88; transform:none; }
+@media (max-width:600px) { .student-workspace .workspace-topbar > .workspace-signout { padding:6px 10px; font-size:11px; } }

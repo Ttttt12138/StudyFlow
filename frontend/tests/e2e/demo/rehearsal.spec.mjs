@@ -1,3 +1,4 @@
+import { openOpsItem } from '../../operations-support.mjs';
 // Full demo rehearsal (docs/demo-script.md) on the compose demo stack: reset the database, then run every
 // section through the real UI as the student, payer, operator, approver and an anonymous family member.
 // Run three times in a row with `--repeat-each 3`; each run writes steps.json and per-role videos to
@@ -62,7 +63,8 @@ test('demo rehearsal: every section of the demo script on a freshly reset demo s
   const opsFor = async (role, student) => {
     const page = pages[role];
     await page.goto(`${origin}/?ops=1`);
-    await page.getByRole('heading', { name: 'Operations console' }).waitFor();
+    await page.getByRole('heading', { name: 'Overview', exact: true }).waitFor();
+    await page.getByRole('navigation').getByRole('button', { name: /^Work queue/ }).click();
     await page.getByLabel('Student', { exact: true }).fill(student);
     return page;
   };
@@ -74,7 +76,7 @@ test('demo rehearsal: every section of the demo script on a freshly reset demo s
       await open('student', '/?wallet=1');
       await open('operator', '/?ops=1');
       await open('approver', '/?ops=1');
-      await pages.operator.getByText(`Signed in as operator ${account('operator').username}.`).waitFor();
+      await pages.operator.getByText(`Operator · ${account('operator').username}`).waitFor();
     });
 
     // 1. Tuition: authorize, password (one wrong attempt), operator settlement, invoice reconciliation.
@@ -94,7 +96,7 @@ test('demo rehearsal: every section of the demo script on a freshly reset demo s
       await detail.getByRole('button', { name: 'Confirm and submit' }).click();
       await page.getByText('Payment submitted. Status: Submitted.').waitFor();
       const ops = await opsFor('operator', 'demo-payer');
-      await confirmIn(ops.getByRole('listitem', { name: /^demo-payer · cost:tuition:/ }), 'Settled');
+      await confirmIn(await openOpsItem(ops, 'payment'), 'Settled');
       await ops.getByText('Recorded the simulated adapter result: Settled.').waitFor();
       await page.getByRole('button', { name: 'Refresh' }).click();
       await detail.getByRole('button', { name: 'Reconcile with invoice' }).click();
@@ -126,13 +128,14 @@ test('demo rehearsal: every section of the demo script on a freshly reset demo s
       await page.getByText(/Approval requested/).waitFor();
 
       const ops = await opsFor('operator', 'demo-student');
-      const blocked = ops.getByRole('article').filter({ hasText: 'CNY 15,000.00' });
+      const blocked = await openOpsItem(ops, 'approval', 'CNY 15,000.00');
       await blocked.getByText('You verified this payee, so another operator must decide.').waitFor();
       assert.equal(await blocked.getByRole('button', { name: 'Approve' }).count(), 0);
       await ops.screenshot({ path: `${dir}/2-separation-of-duties.png`, fullPage: true });
+      await blocked.getByRole('button', { name: 'Close details' }).click();
 
       const approver = await opsFor('approver', 'demo-student');
-      const card = approver.getByRole('article').filter({ hasText: 'CNY 15,000.00' });
+      const card = await openOpsItem(approver, 'approval', 'CNY 15,000.00');
       await card.getByLabel('Decision note (shown to the student)').fill('Payee and purpose checked');
       await confirmIn(card, 'Approve');
       await approver.getByText('Approved. demo-student can now submit with their password.').waitFor();
@@ -144,7 +147,7 @@ test('demo rehearsal: every section of the demo script on a freshly reset demo s
       await page.getByText('Django reports: SUBMITTED.', { exact: true }).waitFor();
 
       await ops.getByRole('button', { name: 'Refresh' }).click();
-      const transfer = ops.getByRole('listitem', { name: 'demo-student · CNY → THB' });
+      const transfer = await openOpsItem(ops, 'order', 'CNY 15,000.00');
       await confirmIn(transfer, 'Dispatched');
       await ops.getByText('Recorded the simulated adapter result: Dispatched.').waitFor();
       await confirmIn(transfer, 'Delivered');
@@ -205,7 +208,7 @@ test('demo rehearsal: every section of the demo script on a freshly reset demo s
       await page.getByText(/Request created \(reference /).waitFor();
 
       const ops = await opsFor('operator', 'demo-student');
-      const request = ops.getByRole('listitem', { name: `demo-student · ${purpose}` });
+      let request = await openOpsItem(ops, 'sponsor', purpose);
       await confirmIn(request, 'Create confirmation link');
       const link = await request.getByLabel('Confirmation link').inputValue();
 
@@ -218,7 +221,9 @@ test('demo rehearsal: every section of the demo script on a freshly reset demo s
       await family.getByText(/your confirmation was recorded/).waitFor();
       await family.screenshot({ path: `${dir}/5-family-confirmed-mobile.png`, fullPage: true });
 
+      await request.getByRole('button', { name: 'Close details' }).click();
       await ops.getByRole('button', { name: 'Refresh' }).click();
+      request = await openOpsItem(ops, 'sponsor', purpose);
       await confirmIn(request, 'Record money received');
       await ops.getByText('THB 6,500.00 recorded as received.').waitFor();
       await page.reload();
@@ -231,12 +236,15 @@ test('demo rehearsal: every section of the demo script on a freshly reset demo s
       const clock = (await api('student', 'demo/wallets/')).results[0].clock;
       await page.goto(`${origin}/?loans=1`);
       await page.getByRole('heading', { name: 'Loans', exact: true }).waitFor();
-      await page.getByLabel('Principal THB').fill('12000');
-      await page.getByLabel('Annual interest rate %').fill('8');
-      await page.getByLabel('Fees THB').fill('0');
-      await page.getByLabel('Months', { exact: true }).fill('3');
-      await page.getByLabel('First due date').fill(plusMonth(clock));
-      await page.getByRole('button', { name: 'Create loan quote' }).click();
+      await page.getByRole('tab', { name: 'Quote' }).click();
+      await page.getByRole('button', { name: /^(Adjust terms|Create loan quote)$/ }).click();
+      const terms = page.getByRole('dialog', { name: 'Quote terms' });
+      await terms.getByLabel('Principal THB').fill('12000');
+      await terms.getByLabel('Annual interest rate %').fill('8');
+      await terms.getByLabel('Fees THB').fill('0');
+      await terms.getByLabel('Months', { exact: true }).fill('3');
+      await terms.getByLabel('First due date').fill(plusMonth(clock));
+      await terms.getByRole('button', { name: 'Create loan quote' }).click();
       await page.getByText('Loan quote created. Review it below, then apply with it.').waitFor();
       const quote = (await api('student', 'loans/')).results.find(row => row.inputs?.months === 3 && row.result?.principal === '12000.00');
       const months = [...new Set(quote.result.repayments.map(row => row.due_date.slice(0, 7)))]
@@ -251,11 +259,12 @@ test('demo rehearsal: every section of the demo script on a freshly reset demo s
       await page.getByText('Application submitted. Status: Approved.').waitFor();
 
       const ops = await opsFor('operator', 'demo-student');
-      await confirmIn(ops.getByRole('listitem', { name: 'demo-student · loan application' }), 'Disburse');
+      await confirmIn(await openOpsItem(ops, 'loan'), 'Disburse');
       await ops.getByText('Disbursed. The student now has an active loan account.').waitFor();
 
       await page.reload();
-      await page.getByLabel('I understand this changes the simulated date for my demo account only.').check();
+      await page.getByRole('button', { name: /^Demo date / }).click();
+    await page.getByLabel('I understand this changes the simulated date for my demo account only.').check();
       await page.getByRole('button', { name: /^Move demo date to / }).click();
       await page.getByLabel(/I confirm repaying /).check();
       await page.getByRole('button', { name: 'Repay installment 1' }).click();

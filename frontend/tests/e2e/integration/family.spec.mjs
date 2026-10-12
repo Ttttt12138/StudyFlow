@@ -1,3 +1,4 @@
+import { openOpsItem } from '../../operations-support.mjs';
 // Real Django/PostgreSQL: family support across three people. The student asks, the operator sends the
 // confirmation link from the console, the family member confirms anonymously, the operator records receipt.
 import { test } from '@playwright/test';
@@ -58,7 +59,7 @@ test('real Django family support: request, operator link, anonymous confirmation
     // Operator console: create the confirmation link (shown once).
     const ops = await login('operator', '/?ops=1');
     await ops.getByLabel('Student', { exact: true }).fill(names.student);
-    const request = ops.getByRole('listitem', { name: `${names.student} · ${purpose}` });
+    let request = await openOpsItem(ops, 'sponsor', purpose);
     await request.getByRole('button', { name: 'Create confirmation link' }).click();
     await request.getByRole('button', { name: 'Confirm' }).click();
     const link = await request.getByLabel('Confirmation link').inputValue();
@@ -79,7 +80,9 @@ test('real Django family support: request, operator link, anonymous confirmation
     await sponsor.screenshot({ path: screenshot('family-sponsor-confirmed-mobile.png'), fullPage: true });
 
     // Operator records the money; the student's wallet is credited.
+    await request.getByRole('button', { name: 'Close details' }).click();
     await ops.getByRole('button', { name: 'Refresh' }).click();
+    request = await openOpsItem(ops, 'sponsor', purpose);
     await request.getByText('Confirmed by family').waitFor();
     await request.getByRole('button', { name: 'Record money received' }).click();
     await request.getByRole('button', { name: 'Confirm' }).click();

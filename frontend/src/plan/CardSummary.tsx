@@ -1,3 +1,5 @@
+import { ArrowRight } from "@phosphor-icons/react/dist/csr/ArrowRight";
+import { Check } from "@phosphor-icons/react/dist/csr/Check";
 import { useI18n } from "../i18n";
 import { useWorkspace } from "../workspace/context";
 import { money, pick } from "./format";
@@ -21,9 +23,10 @@ export function CardSummary({ card, id, actions }: { card: Card; id: string; act
     case "spending": title = t("plan.spending.title", { month: card.month }); detail = money(card.spent, card.currency, lang); break;
   }
   return <article className="workspace-card-summary">
+    <span className="workspace-card-check" aria-hidden="true"><Check size={13} weight="bold" /></span>
     <h3>{title}</h3><p>{detail}</p>
     <span className="plan-badge">{t(["loan", "bills", "plan", "spending"].includes(card.type) ? "plan.simulated" : "plan.sample")}</span>{" "}
-    <button className="chip" onClick={() => workspace?.open({ kind: "card", cardId: id })}>{t("ws.details")}</button>
+    <button className="chip" onClick={() => workspace?.open({ kind: "card", cardId: id })}>{t("ws.details")}<ArrowRight size={14} aria-hidden="true" /></button>
     {card.type === "spending" && <button className="chip" onClick={() => workspace?.open({ kind: "spending", month: card.month })}>{t("plan.monthly.title")}</button>}
   </article>;
 }

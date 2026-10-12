@@ -1,3 +1,4 @@
+import { openOpsItem } from '../../operations-support.mjs';
 // Real Django/PostgreSQL: a simulated loan from quote to first repayment. The student quotes, applies and
 // repays on the loans page; the operator disburses in the console. Only the month-by-month affordability
 // figures are entered over the API (the page's editor has its own mocked spec).
@@ -46,12 +47,15 @@ test('real Django loan: quote, affordable application, operator disbursement, de
     await loans.getByRole('heading', { name: 'Loans', exact: true }).waitFor();
 
     // Quote in the UI: 12,000 THB at 8% over 3 months.
-    await loans.getByLabel('Principal THB').fill('12000');
-    await loans.getByLabel('Annual interest rate %').fill('8');
-    await loans.getByLabel('Fees THB').fill('0');
-    await loans.getByLabel('Months', { exact: true }).fill('3');
-    await loans.getByLabel('First due date').fill(NEXT_MONTH);
-    await loans.getByRole('button', { name: 'Create loan quote' }).click();
+    await loans.getByRole('tab', { name: 'Quote' }).click();
+    await loans.getByRole('button', { name: /^(Adjust terms|Create loan quote)$/ }).click();
+    const terms = loans.getByRole('dialog', { name: 'Quote terms' });
+    await terms.getByLabel('Principal THB').fill('12000');
+    await terms.getByLabel('Annual interest rate %').fill('8');
+    await terms.getByLabel('Fees THB').fill('0');
+    await terms.getByLabel('Months', { exact: true }).fill('3');
+    await terms.getByLabel('First due date').fill(NEXT_MONTH);
+    await terms.getByRole('button', { name: 'Create loan quote' }).click();
     await loans.getByText('Loan quote created. Review it below, then apply with it.').waitFor();
 
     // Affordability figures for every repayment month (over the API), then apply and submit in the UI.
@@ -70,7 +74,7 @@ test('real Django loan: quote, affordable application, operator disbursement, de
     // Operator disburses in the console.
     const ops = await login('operator', '/?ops=1');
     await ops.getByLabel('Student', { exact: true }).fill(names.student);
-    const application = ops.getByRole('listitem', { name: `${names.student} · loan application` });
+    const application = await openOpsItem(ops, 'loan');
     await application.getByRole('button', { name: 'Disburse' }).click();
     await application.getByRole('button', { name: 'Confirm' }).click();
     await ops.getByText('Disbursed. The student now has an active loan account.').waitFor();
@@ -78,6 +82,7 @@ test('real Django loan: quote, affordable application, operator disbursement, de
     // Student: move the demo date to the first due date and repay with the password (T2).
     await loans.reload();
     await loans.getByText(/Not due yet on the demo clock/).waitFor();
+    await loans.getByRole('button', { name: /^Demo date / }).click();
     await loans.getByLabel('I understand this changes the simulated date for my demo account only.').check();
     await loans.getByRole('button', { name: /^Move demo date to / }).click();
     await loans.getByLabel(/I confirm repaying /).check();

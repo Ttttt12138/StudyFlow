@@ -24,20 +24,21 @@ test('preview tools preserve chat and wallet drafts, history and all student too
   const messageCount = await conversation.locator('.plan-turn').count();
   await page.locator('.plan-messages').evaluate(element => element.scrollTo({ top: 100, behavior: 'instant' }));
   await openTool(page, 'Wallet & transfers');
-  await page.locator('#wallet-quote input').fill('1234');
+  await page.getByRole('tab', { name: 'Remit' }).click();
+  await page.locator('#wallet-quote input').first().fill('1234');
   await page.getByRole('button', { name: 'Expand tool' }).click();
   await expect(page.locator('.workspace-dock')).toHaveAttribute('aria-modal', 'true');
   await page.getByRole('button', { name: 'Restore width' }).click();
   await openTool(page, 'Finance assistant');
   await expect(page.locator('#agent-result')).toBeVisible();
   await page.getByRole('button', { name: 'Previous tool' }).click();
-  await expect(page.locator('#wallet-quote input')).toHaveValue('1234');
+  await expect(page.locator('#wallet-quote input').first()).toHaveValue('1234');
   await page.getByRole('button', { name: 'Close tool' }).click();
   await expect(conversation.locator('.plan-turn')).toHaveCount(messageCount);
   // Font metrics and scroll anchoring may round by a few pixels when restoring the column width.
   expect(await page.locator('.plan-messages').evaluate(element => Math.abs(element.scrollTop - 100))).toBeLessThanOrEqual(3);
   await page.goBack();
-  await expect(page.locator('#wallet-quote input')).toHaveValue('1234');
+  await expect(page.locator('#wallet-quote input').first()).toHaveValue('1234');
   for (const [label, selector] of [['Loans', '.loans-app'], ['Family support', '.family-app'], ['Spending insights', '.insights-app'], ['Payments', '.payments-app'], ['Compare plans', '.copilot-app'], ['Permissions & activity', '.trust-app']]) {
     await openTool(page, label);
     await expect(page.locator(`.tool-content:not([hidden]) ${selector}`)).toBeVisible();
@@ -174,6 +175,7 @@ test('reopened tools refresh records, preserve expense drafts, clear sponsor tok
   await page.goto('/');
   await expect(page.locator('.plan-composer textarea')).toBeEnabled();
   await openTool(page, 'Bills & spending');
+  await page.getByRole('tab', { name: 'Record spending' }).click();
   await page.locator('.plan-expense input').first().fill('222');
   await openTool(page, 'Family links');
   await page.locator('[data-sensitive]').fill('a'.repeat(64));
@@ -181,8 +183,30 @@ test('reopened tools refresh records, preserve expense drafts, clear sponsor tok
   await openTool(page, 'Bills & spending');
   await expect.poll(() => reads).toBeGreaterThan(before);
   await expect(page.locator('.plan-expense input').first()).toHaveValue('222');
-  await page.locator('.plan-expense button[type=submit]').click();
+  await page.getByRole('button', { name: 'Save', exact: true }).click();
   await expect(page.locator('#plan-school').getByRole('alert')).toHaveText('Expense service unavailable');
   await openTool(page, 'Family links');
   await expect(page.locator('[data-sensitive]')).toHaveValue('');
+});
+
+test('signed-in students can sign out from the workspace header', async ({ page }) => {
+  let signedIn = true;
+  const logouts = [];
+  await page.route('**/api/auth/session/', route => route.fulfill({ json: signedIn
+    ? { authenticated: true, username: 'demo-approver', csrf_token: 'csrf-1' } : { authenticated: false, csrf_token: 'csrf-2' } }));
+  await page.route('**/api/auth/logout/', route => {
+    logouts.push({ method: route.request().method(), token: route.request().headers()['x-csrftoken'] });
+    signedIn = false;
+    return route.fulfill({ status: 200, body: 'ok' });
+  });
+  await page.route('**/api/v2/**', route => route.fulfill({ status: 404, json: { detail: 'not mocked' } }));
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/');
+  await expect(page.locator('.workspace-account')).toHaveText('demo-approver');
+  await page.getByRole('button', { name: 'Sign out' }).click();
+  await expect.poll(() => logouts).toEqual([{ method: 'POST', token: 'csrf-1' }]);
+  // After the reload the session reads signed out, so the header offers no sign-out.
+  await expect(page.locator('.workspace-account')).not.toHaveText('demo-approver');
+  await expect(page.getByRole('button', { name: 'Sign out' })).toHaveCount(0);
+  await expect(page).toHaveURL(/127\.0\.0\.1:5173\/$|localhost:5173\/$/);
 });

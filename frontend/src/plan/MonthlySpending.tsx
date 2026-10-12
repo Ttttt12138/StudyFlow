@@ -2,7 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { useI18n, type MessageKey } from "../i18n";
 import type { WalletClient } from "../wallet/client";
 import { useToolActive, useWorkspace } from "../workspace/context";
-import { Bills, SpendingFacts } from "./cards";
+import { Bills } from "./cards";
+import { money } from "./format";
+import { PanelHero, PanelPager, ToolPanel, usePage } from "../workspace/ToolPanel";
 import { spendingSlices } from "./monthly";
 import type { InSchool, Spending, SpendingPage } from "./types";
 import "./monthly.css";
@@ -27,33 +29,37 @@ export function SpendingPie({ spending }: { spending: Spending }) {
   </figure>;
 }
 
-function ExpenseDetails({ page }: { page: SpendingPage }) {
+function ExpenseDetails({ page, view }: { page: SpendingPage; view: number }) {
   const { t, lang } = useI18n();
+  const rows = usePage(page.entries, ENTRY_PAGE, view).rows;
   return <section aria-label={t("plan.monthly.details")}>
-    <h3>{t("plan.monthly.details")} <small>({page.count})</small></h3>
     {!page.entries.length ? <p className="service-muted">{t("plan.monthly.noEntries")}</p> :
-      <ul className="monthly-entries">{page.entries.map(entry => <li key={entry.id}>
-        <div><strong>{entry.note || t(`plan.cat.${entry.category}` as MessageKey)}</strong>
+      <ul className="monthly-entries panel-rows">{rows.map(entry => <li key={entry.id}>
+        <span><strong>{entry.note || t(`plan.cat.${entry.category}` as MessageKey)}</strong>
           <small>{entry.spent_on} · {t(`plan.cat.${entry.category}` as MessageKey)}</small>
-          {page.unconverted?.includes(entry.id) && <small className="error">{t("plan.monthly.excluded")}</small>}</div>
+          {page.unconverted?.includes(entry.id) && <small className="error">{t("plan.monthly.excluded")}</small>}</span>
         <span>{amountLabel(entry.amount, entry.currency, lang)}</span>
       </li>)}</ul>}
   </section>;
 }
 
+const ENTRY_PAGE = 8;
+
 export function MonthlySpending({ client, preview }: { client: WalletClient; preview: boolean }) {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const workspace = useWorkspace();
   const active = useToolActive();
   const requestedMonth = workspace?.target?.kind === "spending" ? workspace.target.month : undefined;
   const [offset, setOffset] = useState(0);
+  const [view, setView] = useState(0);
+  const [tab, setTab] = useState<"overview" | "entries" | "due">("overview");
   const [revision, setRevision] = useState(0);
   const [result, setResult] = useState<{ page: SpendingPage; school: InSchool } | null>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const lastMonth = useRef(requestedMonth);
   useEffect(() => {
-    if (active && requestedMonth !== lastMonth.current) { setOffset(0); lastMonth.current = requestedMonth; }
+    if (active && requestedMonth !== lastMonth.current) { setOffset(0); setView(0); setTab("overview"); lastMonth.current = requestedMonth; }
   }, [requestedMonth, active]);
   useEffect(() => {
     if (!active) return;
@@ -75,24 +81,46 @@ export function MonthlySpending({ client, preview }: { client: WalletClient; pre
       .finally(() => { if (alive) setLoading(false); });
     return () => { alive = false; };
   }, [active, client, requestedMonth, offset, revision, t]);
+  const page = result?.page;
+  const due = result?.school.enrolled ? (result.school.bills ?? result.school.upcoming_bills)
+    .filter(bill => bill.status === "DUE" && page && bill.due_date.startsWith(page.month)) : [];
+  const views = page ? Math.max(1, Math.ceil(page.entries.length / ENTRY_PAGE)) : 1;
+  const used = page && Number(page.budget) > 0 ? Math.min(100, Number(page.spent) / Number(page.budget) * 100) : 0;
+  // Entries arrive 50 at a time; the panel pages through each batch eight rows at a time.
+  const batch = page && page.count > 50 && <nav className="monthly-pagination panel-row" aria-label={t("plan.monthly.pages")}>
+    <span className="panel-muted">{t("ms.batch", { from: offset + 1, to: offset + page.entries.length, total: page.count })}</span>
+    <span><button className="panel-link" disabled={offset === 0} onClick={() => { setOffset(Math.max(0, offset - 50)); setView(0); }}>{t("ms.earlier")}</button>{" "}
+      <button className="panel-link" disabled={page.next_offset === null} onClick={() => { setOffset(page.next_offset ?? 0); setView(0); }}>{t("ms.later")}</button></span>
+  </nav>;
   return <article className="monthly-report" aria-busy={loading}>
-    {loading ? <p role="status">{t("common.loading")}</p> : error ?
-      <p role="alert">{error} <button className="chip" onClick={() => setRevision(value => value + 1)}>{t("common.refresh")}</button></p> : result && <>
-        <header><h2>{t("plan.spending.title", { month: result.page.month })}</h2><span className="plan-badge">{t("plan.simulated")}</span></header>
-        <p className="service-muted">{t("plan.monthly.scope", { currency: result.page.currency })}</p>
-        {preview && <p className="service-muted">{t("plan.monthly.preview")}</p>}
-        <SpendingFacts spending={result.page} showCategories={false} />
-        <h3>{t("plan.monthly.shares")}</h3><SpendingPie spending={result.page} />
-        {!!result.page.unconverted?.length && <p role="status" className="error">{t("plan.monthly.unconverted", { n: result.page.unconverted.length })}</p>}
-        <ExpenseDetails page={result.page} />
-        <nav className="monthly-pagination" aria-label={t("plan.monthly.pages")}>
-          <button className="chip" disabled={offset === 0} onClick={() => setOffset(Math.max(0, offset - 50))}>{t("plan.monthly.previous")}</button>
-          <span>{Math.floor(offset / 50) + 1} / {Math.max(1, Math.ceil(result.page.count / 50))}</span>
-          <button className="chip" disabled={result.page.next_offset === null} onClick={() => setOffset(result.page.next_offset ?? 0)}>{t("plan.monthly.next")}</button>
-        </nav>
-        <h3>{t("plan.monthly.due")}</h3>
-        <Bills bills={result.school.enrolled ? (result.school.bills ?? result.school.upcoming_bills)
-          .filter(bill => bill.status === "DUE" && bill.due_date.startsWith(result.page.month)) : []} />
-      </>}
+    <ToolPanel label={t("plan.monthly.title")} numbered={false} active={tab} onSelect={setTab}
+      steps={page ? [{ key: "overview", label: t("ms.tab.overview") }, { key: "entries", label: `${t("ms.tab.entries")} ${page.count}` }, { key: "due", label: t("ms.tab.due") }] : []}>
+      {loading && !result ? <p role="status">{t("common.loading")}</p> : error ?
+        <p role="alert">{error} <button className="chip" onClick={() => setRevision(value => value + 1)}>{t("common.refresh")}</button></p> : page && result && <>
+          <div className="panel-view" hidden={tab !== "overview"}>
+            <div className="panel-card-head"><h2>{t("plan.spending.title", { month: page.month })}</h2><span className="panel-tag">{t("plan.simulated")}</span></div>
+            <PanelHero label={t("plan.spending.spent")} value={money(page.spent, page.currency, lang)}>
+              <div className="panel-meter" role="meter" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(used)} aria-label={t("plan.spending.spent")}>
+                <span style={{ width: `${used}%` }} className={page.over_budget ? "is-over" : ""} /></div></PanelHero>
+            <div className="panel-grid-2">
+              <div className="panel-tile"><span>{t("plan.spending.budget")}</span><strong>{money(page.budget, page.currency, lang)}</strong></div>
+              <div className="panel-tile"><span>{t("plan.spending.remaining")}</span><strong className={page.over_budget ? "plan-gap" : ""}>{money(page.remaining, page.currency, lang)}</strong></div>
+            </div>
+            <SpendingPie spending={page} />
+            {!!page.unconverted?.length && <p role="status" className="panel-note is-warn">{t("plan.monthly.unconverted", { n: page.unconverted.length })}</p>}
+            <p className="panel-muted">{t("plan.monthly.scope", { currency: page.currency })}{preview && ` ${t("plan.monthly.preview")}`}</p>
+          </div>
+          <div className="panel-view" hidden={tab !== "entries"}>
+            <div className="panel-card-head"><h3>{t("plan.monthly.details")} <small>({page.count})</small></h3>
+              <PanelPager index={Math.min(view, views - 1)} count={views} onChange={setView} label={t("plan.monthly.pages")} /></div>
+            <ExpenseDetails page={page} view={view} />
+            {batch}
+          </div>
+          <div className="panel-view" hidden={tab !== "due"}>
+            <h3 className="panel-card-head">{t("plan.monthly.due")}</h3>
+            <Bills bills={due} />
+          </div>
+        </>}
+    </ToolPanel>
   </article>;
 }

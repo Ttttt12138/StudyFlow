@@ -56,6 +56,17 @@ function WorkspaceBody({ username, preview, onExternal }: { username: string; pr
   const control = useWorkspaceNavigation(preview);
   const { route, stack, menu, setMenu, expanded, setExpanded, open, close, back } = control;
   const [host, setHost] = useState<HTMLDivElement | null>(null);
+  const [signingOut, setSigningOut] = useState(false);
+  // Django ends the session on a CSRF-checked POST; reloading the home page clears every in-memory draft.
+  async function signOut() {
+    setSigningOut(true);
+    try {
+      const session = await fetch("/api/auth/session/", { credentials: "same-origin" }).then(r => r.json()).catch(() => null);
+      const token = session?.csrf_token ?? "";
+      await fetch("/api/auth/logout/", { method: "POST", credentials: "same-origin", headers: { "X-CSRFToken": token,
+        "Content-Type": "application/x-www-form-urlencoded" }, body: new URLSearchParams({ csrfmiddlewaretoken: token }) });
+    } finally { window.location.assign("/"); }
+  }
   const dock = useRef<HTMLElement>(null);
   const frame = useRef<HTMLDivElement>(null);
   const small = useSmallScreen();
@@ -80,9 +91,10 @@ function WorkspaceBody({ username, preview, onExternal }: { username: string; pr
     setStage: control.setStage }}>
     <div ref={frame} className={`student-workspace${route.tool ? " has-tool" : ""}${expanded ? " tool-expanded" : ""}`}>
       <header className="workspace-topbar">
-        <a className="workspace-brand" href="/" onClick={event => { event.preventDefault(); close(); }}>StudyFlow<span>.</span></a>
+        <a className="workspace-brand" href="/" onClick={event => { event.preventDefault(); close(); }}><span className="workspace-mark" aria-hidden="true">S/</span>StudyFlow<span>.</span></a>
         <h1>{t("plan.title")}</h1>
         <span className="workspace-account">{username || t("ws.signedOut")}</span>
+        {username && !preview && <button type="button" className="secondary workspace-signout" disabled={signingOut} onClick={() => void signOut()}>{t(signingOut ? "ws.signingOut" : "ws.signOut")}</button>}
         <button className="secondary" aria-expanded={menu} aria-controls="workspace-tools" onClick={() => setMenu(!menu)}>{t("ws.tools")}</button>
         {menu && <nav id="workspace-tools" className="workspace-tools" aria-label={t("ws.tools")}>
           {groups.map(group => <div key={group.label}><strong>{t(group.label)}</strong>{group.tools.map(kind =>

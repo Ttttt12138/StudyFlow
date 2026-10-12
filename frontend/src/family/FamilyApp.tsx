@@ -11,7 +11,7 @@ import type { FamilySnapshot, SponsorRequest } from "./types";
 import "../wallet/wallet.css";
 import "./family.css";
 
-const signInUrl = `/api/auth/login/?next=${encodeURIComponent(window.location.origin + "/?family=1")}`;
+const signInUrl = `/auth?next=${encodeURIComponent(window.location.origin + "/?family=1")}`;
 const initial: FamilySnapshot = { requests: [], errors: {} };
 const lost = (reason: unknown) => reason instanceof WalletApiError && (reason.status === 0 || reason.status >= 500);
 type Terms = { amount: string; currency: string; available_on: string; purpose: string };

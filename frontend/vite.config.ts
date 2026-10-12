@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 export default defineConfig({
+  resolve: { dedupe: ['react', 'react-dom'] },
   server: {
     host: '127.0.0.1',
     // The browser suites and CI expect port 5173; fail instead of moving to another port.

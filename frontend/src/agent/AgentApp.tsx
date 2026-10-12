@@ -12,7 +12,7 @@ import { createAgentPreview } from "./previewAdapter";
 import type { AgentSession, AgentStep, Approval, Page, PendingAction } from "./types";
 import "../services/services.css";
 
-const signInUrl = `/api/auth/login/?next=${encodeURIComponent(window.location.origin + "/?agent=1")}`;
+const signInUrl = `/auth?next=${encodeURIComponent(window.location.origin + "/?agent=1")}`;
 const TOOLS = ["get_balances", "get_fx_rate", "list_corridors", "list_beneficiaries", "get_credit_profile",
   "list_remittance_orders", "rank_quotes", "create_live_quote", "create_remittance_order",
   "submit_remittance_order", "convert_balance"] as const;

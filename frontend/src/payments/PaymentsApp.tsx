@@ -16,7 +16,7 @@ import "../wallet/wallet.css";
 import "../services/services.css";
 import "./payments.css";
 
-const signInUrl = `/api/auth/login/?next=${encodeURIComponent(window.location.origin + "/?payments=1")}`;
+const signInUrl = `/auth?next=${encodeURIComponent(window.location.origin + "/?payments=1")}`;
 const initial: PaymentsSnapshot = { state: null, plans: [], beneficiaries: [], payments: [], approvals: [], ledger: [], audit: [], errors: {} };
 const KNOWN_EVENTS = ["payment.created", "payment.authorized", "payment.authorization_revoked", "payment.mock_submitted",
   "payment.mock_settled", "payment.mock_failed", "payment.mock_unknown", "payment.reconciled", "payment.invoice_mismatch",

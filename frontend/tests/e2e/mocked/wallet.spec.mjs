@@ -17,8 +17,12 @@ test.describe("wallet preview", () => {
     await preview.getByRole("heading", { name: "Wallet & transfers" }).waitFor();
     await preview.reload();
     await preview.getByRole("heading", { name: "Wallet & transfers" }).waitFor();
-    await preview.getByText("THB 52,500.00").waitFor();
+    await preview.getByText("THB 52,500.00").first().waitFor();
+    // Remittance routes and the current order live on the remit tab.
+    await preview.getByRole("tab", { name: "Remit" }).click();
     assert.match(await preview.locator(".tool-content[data-tool=wallet]").innerText(), /Fixture-priced demo route/);
+    assert.equal(await preview.getByRole("button", { name: "Get backend quotes" }).isDisabled(), true);
+    await preview.getByRole("button", { name: /^Current order/ }).click();
     await preview.getByLabel("Preview a status").selectOption("refunded");
     await preview.getByText("The backend reports a failed transfer and a refund.").waitFor();
     await preview.getByLabel("Preview a status").selectOption("unknown");
@@ -26,8 +30,8 @@ test.describe("wallet preview", () => {
     await preview.getByLabel("Preview a status").selectOption("expired");
     await preview.getByText("The quote expired. Prepare a new transfer with a fresh quote.").waitFor();
     await preview.getByLabel("Preview a status").selectOption("empty");
+    await preview.getByRole("tab", { name: "History" }).click();
     await preview.getByText("No simulated remittances have been created for this student.").waitFor();
-    assert.equal(await preview.getByRole("button", { name: "Get backend quotes" }).isDisabled(), true);
     assert.equal(await preview.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
     await preview.screenshot({ path: screenshot('wallet-preview-mobile.png'), fullPage: true });
     assert.equal(previewCalls, 0);
@@ -104,23 +108,28 @@ test.describe("wallet with mocked Django", () => {
     });
     await page.goto(`${base}/?wallet=1`);
     await page.getByText("USD 800.00", { exact: true }).waitFor();
+    await page.getByRole("tab", { name: "Remit" }).click();
     await page.getByLabel("Send amount USD").fill("200.00");
     await page.getByRole("button", { name: "Get backend quotes" }).click();
     await page.getByText("2 backend-priced routes returned").waitFor();
     assert.equal(quoteCalls, 2);
     // Quotes are priced for one amount: editing it discards them, so no order can use the old price.
     await page.getByLabel("Send amount USD").fill("250.00");
-    assert.equal(await page.getByRole("button", { name: "Create order for review" }).isDisabled(), true);
+    assert.equal(await page.getByRole("button", { name: "Recipient & purpose →" }).isDisabled(), true);
     await page.getByLabel("Send amount USD").fill("200.00");
     await page.getByRole("button", { name: "Get backend quotes" }).click();
     for (let attempt = 0; attempt < 50 && quoteCalls < 4; attempt++) await page.waitForTimeout(100);
     assert.equal(quoteCalls, 4);
-    await page.getByLabel("Recipient").selectOption("BENEFICIARY");
+    // Recipient and purpose open in a sheet over the quotes.
+    await page.getByRole("button", { name: "Recipient & purpose →" }).click();
+    const sheet = page.getByRole("dialog", { name: "Recipient & purpose" });
+    await sheet.getByLabel("Recipient", { exact: true }).selectOption("BENEFICIARY");
     await page.getByLabel("Beneficiary", { exact: true }).selectOption("school-one");
     assert.notEqual(await page.getByLabel("Beneficiary", { exact: true }).locator("option[value='housing-one']").getAttribute("disabled"), null);
     await page.getByLabel("Needed by").fill("2026-10-20");
-    await page.getByRole("button", { name: "Create order for review" }).click();
+    await sheet.getByRole("button", { name: "Create order for review" }).click();
     await page.getByText("Simulated order prepared").waitFor();
+    assert.equal(await sheet.count(), 0);
     assert.equal(createCalls, 1);
     await page.getByLabel("I reviewed this exact simulated transfer").check();
     await page.getByRole("button", { name: "Confirm submission" }).click();
@@ -129,7 +138,7 @@ test.describe("wallet with mocked Django", () => {
     await page.getByText("Approval requested").waitFor();
     assert.match(await page.locator(".wallet-approval-status").innerText(), /Operator approval: PENDING/);
     operatorApproved = true;
-    await page.getByRole("button", { name: "Refresh from Django" }).click();
+    await page.getByRole("button", { name: "Refresh order status" }).click();
     await page.locator(".wallet-approval-status").getByText("APPROVED", { exact: true }).waitFor();
     await page.getByRole("button", { name: "Continue to password check" }).click();
     await page.getByLabel("Password").fill("never-logged");
@@ -143,6 +152,8 @@ test.describe("wallet with mocked Django", () => {
     assert.equal(submitCalls, 2);
     assert.equal(calls.some((item) => item.path.includes("adapter-event") || item.path.includes("verify/") || item.path.includes("decide/")), false);
     await page.reload();
+    await page.getByRole("tab", { name: "Remit" }).click();
+    await page.getByRole("button", { name: /^Current order/ }).click();
     await page.getByText("Submitted to the simulated processing route.", { exact: false }).waitFor();
     await page.screenshot({ path: screenshot('wallet-live-mock-desktop.png'), fullPage: true });
     assert.deepEqual(errors, []);
