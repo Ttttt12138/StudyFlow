@@ -1,6 +1,7 @@
 // Real Django/PostgreSQL: the operations console. Student steps run over the API (their own pages have
 // their own specs); every operator step goes through the console UI.
 import { test } from '@playwright/test';
+import { openOpsItem } from '../../operations-support.mjs';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
@@ -54,7 +55,8 @@ test('real Django operations console: payee verification, separation of duties, 
     const ops = await login('operator', '/?ops=1');
     await login('student', '/?wallet=1');
     await login('payer', '/?payments=1');
-    await ops.getByRole('heading', { name: 'Operations console' }).waitFor();
+    await ops.getByRole('heading', { name: 'Overview', exact: true }).waitFor();
+    await ops.getByRole('navigation').getByRole('button', { name: /^Work queue/ }).click();
     await ops.getByText(`Signed in as operator ${names.operator}.`).waitFor();
 
     // A student sees the staff-only message, not the queue.
@@ -72,7 +74,7 @@ test('real Django operations console: payee verification, separation of duties, 
     // Operator UI: verify the payee.
     await ops.getByRole('button', { name: 'Refresh' }).click();
     await ops.getByLabel('Student', { exact: true }).fill(names.student);
-    const payeeRow = ops.getByRole('listitem', { name: `${names.student} · ${payeeName}` });
+    const payeeRow = await openOpsItem(ops, 'payee', payeeName);
     await payeeRow.getByRole('button', { name: 'Verify payee' }).click();
     await payeeRow.getByText(/You will then not be allowed to approve/).waitFor();
     await payeeRow.getByRole('button', { name: 'Confirm' }).click();
@@ -90,20 +92,22 @@ test('real Django operations console: payee verification, separation of duties, 
 
     // Operator UI: the verifier of this payee is blocked from deciding.
     await ops.getByRole('button', { name: 'Refresh' }).click();
-    const blocked = ops.getByRole('article').filter({ hasText: reason });
+    const blocked = await openOpsItem(ops, 'approval');
     await blocked.getByText('You verified this payee, so another operator must decide.').waitFor();
     await blocked.getByText('You', { exact: true }).waitFor();
     assert.equal(await blocked.getByRole('button', { name: 'Approve' }).count(), 0);
+    await blocked.getByRole('button', { name: 'Close details' }).click();
 
     // Approver UI: second person approves with a note.
     const approver = await login('approver', '/?ops=1');
     await approver.getByLabel('Student', { exact: true }).fill(names.student);
-    const card = approver.getByRole('article').filter({ hasText: reason });
+    const card = await openOpsItem(approver, 'approval');
     await card.getByText(/CNY 15,000\.00 → THB/).waitFor();
     await card.getByLabel('Decision note (shown to the student)').fill('Payee and purpose checked');
     await card.getByRole('button', { name: 'Approve' }).click();
     await card.getByRole('button', { name: 'Confirm' }).click();
     await approver.getByText(`Approved. ${names.student} can now submit with their password.`).waitFor();
+    await approver.getByRole('navigation').getByRole('button', { name: 'Recent records' }).click();
     const decided = approver.locator('#ops-decisions tbody tr').filter({ hasText: 'Payee and purpose checked' });
     await decided.getByText('Approved').waitFor();
     await decided.getByText(names.approver).waitFor();
@@ -123,7 +127,7 @@ test('real Django operations console: payee verification, separation of duties, 
 
     // Operator UI: adapter results for the transfer and the payment.
     await ops.getByRole('button', { name: 'Refresh' }).click();
-    const transfer = ops.getByRole('listitem', { name: `${names.student} · CNY → THB` });
+    const transfer = await openOpsItem(ops, 'order');
     await transfer.getByRole('button', { name: 'Dispatched' }).click();
     await transfer.getByRole('button', { name: 'Confirm' }).click();
     await ops.getByText('Recorded the simulated adapter result: Dispatched.').waitFor();
@@ -133,7 +137,7 @@ test('real Django operations console: payee verification, separation of duties, 
     await ops.getByText('Recorded the simulated adapter result: Delivered.').waitFor();
     await transfer.waitFor({ state: 'detached' });
     await ops.getByLabel('Student', { exact: true }).fill(names.payer);
-    const tuition = ops.getByRole('listitem', { name: `${names.payer} · ${ready.event_id}` });
+    const tuition = await openOpsItem(ops, 'payment');
     await tuition.getByRole('button', { name: 'Settled' }).click();
     await tuition.getByText(/Settled debits the student's wallet/).waitFor();
     await ops.screenshot({ path: screenshot('operations-confirm.png'), fullPage: true });

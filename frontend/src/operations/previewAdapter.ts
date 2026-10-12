@@ -1,4 +1,5 @@
 import { WalletApiError, type WalletClient } from "../wallet/client";
+import { previewWorkbench } from "./previewWorkbench";
 import type { OpsOrder, OpsPayment, OpsQueue } from "./types";
 
 // Fixed synthetic queue for the read-only preview; no Django request is made.
@@ -71,6 +72,8 @@ export function createOperationsPreview(): WalletClient {
   return {
     async get<T>(path: string): Promise<T> {
       if (path === "operations/queue/") return queue as T;
+      const url = new URL(path, "https://preview.invalid/");
+      if (url.pathname === "/operations/workbench/") return previewWorkbench(queue, url.searchParams) as T;
       throw new WalletApiError(404, { detail: "Not available in the preview." });
     },
     async post<T>(): Promise<T> {

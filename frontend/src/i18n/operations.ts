@@ -1,5 +1,7 @@
 // Operations console: second-person approvals, simulated adapter results, payee verification (src/operations/OperationsApp.tsx).
+import * as workbench from "./operationsWorkbench";
 export const en = {
+  ...workbench.en,
   "nav.ops": "Operations",
   "ops.title": "Operations console",
   "ops.eyebrow": "OPERATIONS · STAFF ONLY",
@@ -129,6 +131,7 @@ export const en = {
 };
 
 export const zh: Record<keyof typeof en, string> = {
+  ...workbench.zh,
   "nav.ops": "运营台",
   "ops.title": "运营台",
   "ops.eyebrow": "运营 · 仅限工作人员",

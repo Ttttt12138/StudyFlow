@@ -19,6 +19,7 @@ export type OpsApproval = Student & {
   status: string; version: number; created_at: string; expires_at: string; decided_at: string | null; decision_note: string;
   requested_by_username: string; decided_by_username: string | null;
   can_decide: boolean; blocked_reason: null | "OWN_REQUEST" | "VERIFIED_PAYEE";
+  activity_at?: string;
   target: (OpsPayment & { kind: "payment" }) | (OpsOrder & { kind: "remittance_order" }) | null;
 };
 
@@ -48,3 +49,17 @@ export type OpsQueue = {
   sponsor_requests: OpsSponsorRequest[];
   is_simulated: boolean;
 };
+
+export type OpsGroup = "approvals" | "transactions" | "payees" | "loans" | "sponsors";
+export type OpsAttention = "all" | "expiring" | "unknown";
+export type OpsNavigation = { view: "overview" | "tasks" | "history"; kind: OpsGroup | "all"; attention: OpsAttention };
+export type OpsFilters = { student: string; kind: OpsGroup | "all"; attention: OpsAttention; page: number };
+type OpsRecords = { approval: OpsApproval; payment: OpsPayment; order: OpsOrder; payee: OpsBeneficiary; loan: OpsApplication; sponsor: OpsSponsorRequest };
+export type OpsItem = { [K in keyof OpsRecords]: { kind: K; record: OpsRecords[K]; queued_at: string; attention: Exclude<OpsAttention, "all"> | null } }[keyof OpsRecords];
+export type OpsSummary = { total: number; expiring: number; unknown: number; unverified: number; by_kind: Record<OpsGroup, number> };
+export type OpsWorkbench = {
+  operator: OpsQueue["operator"]; summary: OpsSummary; items: OpsItem[]; recent_decisions: OpsApproval[];
+  pagination: { page: number; page_size: number; total: number; pages: number };
+  generated_at: string; is_simulated: boolean;
+};
+export type IssuedLink = { id: string; url: string; expires: string };
