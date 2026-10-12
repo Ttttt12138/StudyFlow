@@ -93,7 +93,7 @@
 
 首页就是规划助手，原来的五步旅程和仪表盘已移除（未入库的旧文件备份在 `output/removed-journey-20261012/`），`/?legacy=1` 的原始演示保留。详见 [frontend/README](../frontend/README.md#study-planner-home)。
 
-- 预览 `/?plan=preview`（`&stage=school` 为在校阶段）回放一段从真实 API 录制的对话（`src/plan/preview-data/`），不请求 Django。数据由 `python manage.py test auto_test.fixture_plan_preview` 重新生成。
+- 预览 `/?plan=preview`（`&stage=prepare` 为入学前准备阶段，`&stage=school` 为在校阶段）回放一段从真实 API 录制的对话（`src/plan/preview-data/`），不请求 Django。数据由 `python manage.py test auto_test.fixture_plan_preview` 重新生成。
 - 导览改为 8 站：规划、在校、家庭资助、贷款、钱包、付款、AI 资金助手、权限。
 - `JourneyGuide` 在对话末尾展示当前阶段入口；状态栏、建议问题和输入提示随服务端计划状态变化，历史消息保持原样。点击阶段标识可定位引导，日常工具继续在工作区面板中打开。
 
