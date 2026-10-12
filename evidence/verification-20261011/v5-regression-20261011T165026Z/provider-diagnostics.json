@@ -1,0 +1,2569 @@
+{
+  "rules": {
+    "errors": [],
+    "errors_by_provider_purpose_code": {},
+    "attempt_histogram": {},
+    "non_dangerous_failures": []
+  },
+  "llm_only": {
+    "errors": [],
+    "errors_by_provider_purpose_code": {},
+    "attempt_histogram": {
+      "1": 290
+    },
+    "non_dangerous_failures": []
+  },
+  "jev_llm": {
+    "errors": [
+      {
+        "case_id": "v5-03-01",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1043.959899994661,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-03-02",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1039.893299996038,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-03-06",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 4247.832400011248,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-03-07",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 4002.455599998939,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-03-08",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1570.1031000062358,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-03-09",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1032.8034999984084,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-03-10",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1035.5066000047373,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-04-01",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1031.012199993711,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-04-02",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1034.692500004894,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-04-03",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1032.8092000127072,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-04-04",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1033.2875000021886,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-04-05",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1037.90840000147,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-04-06",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1035.2528000075836,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-04-07",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1032.5617999915266,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-04-08",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1039.9407999939285,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-04-09",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1034.6852999937255,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-04-10",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1032.5844000035431,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-05-01",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1033.370899996953,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-05-02",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1028.218499996001,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-05-03",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1034.925200001453,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-05-04",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1041.0629999969387,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-05-05",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1033.7414999958128,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-05-06",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1034.8033000045689,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-05-07",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1034.648400003789,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-05-08",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1034.7442000056617,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-05-09",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1032.9691000079038,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-05-10",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1032.6196999958484,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-06-01",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1035.0290999922436,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-06-02",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1037.3531000077492,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-06-03",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1033.737799996743,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-06-04",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1033.8542999961646,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-06-05",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1034.2539999983273,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-06-06",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1030.744900010177,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-06-07",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1033.3035000076052,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-06-08",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1032.1527000050992,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-06-09",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1034.7575999912806,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-06-10",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1037.26579999784,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-07-01",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1030.778200001805,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-07-02",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1035.9376999986125,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-07-03",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1033.620099988184,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-07-04",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1032.4823999981163,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-07-05",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1301.6352000122424,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-07-06",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1143.0974999966566,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-07-07",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1035.2541000029305,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-07-08",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1033.7636999902315,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-07-09",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1034.4038999901386,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-07-10",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1032.216799998423,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-08-01",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1035.437099999399,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-08-02",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1035.0143999967258,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-08-03",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1033.4854000102496,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-08-04",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1038.2765999966068,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-08-05",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1036.5201999957208,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-08-06",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1034.5300000044517,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-08-07",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1036.1311999877216,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-08-08",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1035.3621000103885,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-08-09",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1036.0215999971842,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-08-10",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1035.828499996569,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-09-01",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1034.0787000022829,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-09-02",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1038.8245999929495,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-09-03",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1036.796799991862,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-09-04",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1034.3570999975782,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-09-05",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1032.7488000039011,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-09-06",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1032.382499994128,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-09-07",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1031.784199993126,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-09-08",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1034.04519999458,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-09-09",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1035.8342999970773,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-09-10",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1037.87729999749,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-10-01",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1036.383400001796,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-10-02",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1036.020899991854,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-10-03",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1036.6775000002235,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-10-04",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1033.456399993156,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-10-05",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1036.990100008552,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-10-06",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1311.2296999897808,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-10-07",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1035.8425000013085,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-10-08",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1040.2304000017466,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-10-09",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1042.1866999968188,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-10-10",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1036.3987000018824,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-11-01",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1037.0218000025488,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-11-02",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1034.3891000084113,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-11-03",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1039.4578999985242,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-11-04",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1034.799800007022,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-11-05",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1032.814899997902,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-11-06",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1034.1743999888422,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-11-07",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1048.1552999990527,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-11-08",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1038.9810000051511,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-11-09",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1047.1464000002015,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-11-10",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1040.8728999900632,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-12-01",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1038.7031999998726,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-12-02",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1312.4940999987302,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-12-03",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1038.0804000014905,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-12-04",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1038.7557000067318,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-12-05",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1034.2551000067033,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-12-06",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1034.9744999984978,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-12-07",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1034.5337000035215,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-12-08",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1032.9255999968154,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-12-09",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1035.904099990148,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-12-10",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1038.3373999939067,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-13-01",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1039.1719000035664,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-13-02",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1036.7992999963462,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-13-03",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1039.0182999981334,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      },
+      {
+        "case_id": "v5-13-04",
+        "calls": [
+          {
+            "provider": "openai",
+            "purpose": "extract",
+            "model": "openai/gpt-6-luna",
+            "mode": "live",
+            "prompt_version": "1.7",
+            "duration_ms": 1040.9070000023348,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "attempts": 3,
+            "error_code": "SERVICE_UNAVAILABLE",
+            "request_id": null
+          }
+        ]
+      }
+    ],
+    "errors_by_provider_purpose_code": {
+      "openai/extract/SERVICE_UNAVAILABLE": 101
+    },
+    "attempt_histogram": {
+      "1": 184,
+      "3": 104,
+      "2": 2
+    },
+    "non_dangerous_failures": [
+      {
+        "case_id": "v5-03-01",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-03-02",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-03-06",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-03-07",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-03-08",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-03-09",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-03-10",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-04-01",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-04-02",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-04-03",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-04-04",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-04-05",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-04-06",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-04-07",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-04-08",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-04-09",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-04-10",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-05-01",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-05-02",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-05-03",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-05-04",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-05-05",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-05-06",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-05-07",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-05-08",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-05-09",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-05-10",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-06-01",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "INFERRED_DATE_SAFETY_FAILED",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-06-02",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "INFERRED_DATE_SAFETY_FAILED",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-06-03",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "INFERRED_DATE_SAFETY_FAILED",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-06-04",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "INFERRED_DATE_SAFETY_FAILED",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-06-05",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "INFERRED_DATE_SAFETY_FAILED",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-06-06",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "INFERRED_DATE_SAFETY_FAILED",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-06-07",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "INFERRED_DATE_SAFETY_FAILED",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-06-08",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "INFERRED_DATE_SAFETY_FAILED",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-06-09",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "INFERRED_DATE_SAFETY_FAILED",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-06-10",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "INFERRED_DATE_SAFETY_FAILED",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-07-01",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-07-02",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-07-03",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-07-04",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-07-05",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-07-06",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-07-07",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-07-08",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-07-09",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-07-10",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-08-01",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-08-02",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-08-03",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-08-04",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-08-05",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-08-06",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-08-07",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-08-08",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-08-09",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-08-10",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-09-01",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-09-02",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-09-03",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-09-04",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-09-05",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-09-06",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-09-07",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-09-08",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-09-09",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-09-10",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-10-01",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-10-02",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-10-03",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-10-04",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-10-05",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-10-06",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-10-07",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-10-08",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-10-09",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-10-10",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-11-01",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-11-02",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-11-03",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-11-04",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-11-05",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-11-06",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-11-07",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-11-08",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-11-09",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-11-10",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-12-01",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-12-02",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-12-03",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-12-04",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-12-05",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-12-06",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-12-07",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-12-08",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-12-09",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-12-10",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-13-01",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "NULL_DATE_SAFETY_FAILED",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-13-02",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "NULL_DATE_SAFETY_FAILED",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-13-03",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "NULL_DATE_SAFETY_FAILED",
+          "PROVIDER_ERROR"
+        ]
+      },
+      {
+        "case_id": "v5-13-04",
+        "reasons": [
+          "JOINT_FIELDS_MISMATCH",
+          "NULL_DATE_SAFETY_FAILED",
+          "PROVIDER_ERROR"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,184 @@
+{
+  "kind": "local_saved_validated_candidate_replay",
+  "live_calls": 0,
+  "passed": 3,
+  "cases": [
+    {
+      "run": "v5-regression-20261011T161212Z",
+      "arm": "jev_llm",
+      "case_id": "v5-05-07",
+      "before_due_date": null,
+      "after": {
+        "candidate_id": "cc6ff0557605495aa3c6543152d86281",
+        "category": "family_support",
+        "amount": "3441.00",
+        "currency": "THB",
+        "date": null,
+        "due_date": "2026-11-16",
+        "counterparty": "personal sponsor",
+        "invoice_id": null,
+        "confidence_type": "UNCONFIRMED",
+        "verification_reference": null,
+        "status": "NEEDS_REVIEW",
+        "evidence": [
+          {
+            "source_id": "v5-05-07",
+            "field": "category",
+            "quote": "personal sponsor pledges THB 3441 to the student",
+            "locator": "line:1"
+          },
+          {
+            "source_id": "v5-05-07",
+            "field": "amount",
+            "quote": "THB 3441",
+            "locator": "line:1"
+          },
+          {
+            "source_id": "v5-05-07",
+            "field": "currency",
+            "quote": "THB 3441",
+            "locator": "line:1"
+          },
+          {
+            "source_id": "v5-05-07",
+            "field": "counterparty",
+            "quote": "personal sponsor",
+            "locator": "line:1"
+          },
+          {
+            "source_id": "v5-05-07",
+            "field": "due_date",
+            "quote": "Patron payroll mandate: personal sponsor pledges THB 3441 to the student on 2026-11-16",
+            "locator": "line:1"
+          }
+        ],
+        "issues": [
+          {
+            "code": "SOURCE_DATE_RECOVERED",
+            "field": "due_date",
+            "locator": "line:1",
+            "message": "Expected transfer date recovered from source; manual review required, not receipt confirmation"
+          }
+        ]
+      }
+    },
+    {
+      "run": "v5-regression-20261011T162521Z",
+      "arm": "llm_only",
+      "case_id": "v5-05-10",
+      "before_due_date": null,
+      "after": {
+        "candidate_id": "06fece24bdab4b5ab39f6fe984cc4e7e",
+        "category": "family_support",
+        "amount": "3858.00",
+        "currency": "THB",
+        "date": null,
+        "due_date": "2026-11-19",
+        "counterparty": "personal sponsor",
+        "invoice_id": null,
+        "confidence_type": "UNCONFIRMED",
+        "verification_reference": null,
+        "status": "NEEDS_REVIEW",
+        "evidence": [
+          {
+            "source_id": "v5-05-10",
+            "field": "category",
+            "quote": "personal sponsor pledges THB 3858 to the student",
+            "locator": "line:1"
+          },
+          {
+            "source_id": "v5-05-10",
+            "field": "amount",
+            "quote": "THB 3858",
+            "locator": "line:1"
+          },
+          {
+            "source_id": "v5-05-10",
+            "field": "currency",
+            "quote": "THB 3858",
+            "locator": "line:1"
+          },
+          {
+            "source_id": "v5-05-10",
+            "field": "counterparty",
+            "quote": "personal sponsor",
+            "locator": "line:1"
+          },
+          {
+            "source_id": "v5-05-10",
+            "field": "due_date",
+            "quote": "Patron payroll mandate: personal sponsor pledges THB 3858 to the student on 2026-11-19",
+            "locator": "line:1"
+          }
+        ],
+        "issues": [
+          {
+            "code": "SOURCE_DATE_RECOVERED",
+            "field": "due_date",
+            "locator": "line:1",
+            "message": "Expected transfer date recovered from source; manual review required, not receipt confirmation"
+          }
+        ]
+      }
+    },
+    {
+      "run": "v5-regression-20261011T162521Z",
+      "arm": "jev_llm",
+      "case_id": "v5-05-10",
+      "before_due_date": null,
+      "after": {
+        "candidate_id": "7e0e212ee0814ae1bb3b94f75b127027",
+        "category": "family_support",
+        "amount": "3858.00",
+        "currency": "THB",
+        "date": null,
+        "due_date": "2026-11-19",
+        "counterparty": "personal sponsor",
+        "invoice_id": null,
+        "confidence_type": "UNCONFIRMED",
+        "verification_reference": null,
+        "status": "NEEDS_REVIEW",
+        "evidence": [
+          {
+            "source_id": "v5-05-10",
+            "field": "category",
+            "quote": "personal sponsor pledges THB 3858 to the student",
+            "locator": "line:1"
+          },
+          {
+            "source_id": "v5-05-10",
+            "field": "amount",
+            "quote": "THB 3858",
+            "locator": "line:1"
+          },
+          {
+            "source_id": "v5-05-10",
+            "field": "currency",
+            "quote": "THB 3858",
+            "locator": "line:1"
+          },
+          {
+            "source_id": "v5-05-10",
+            "field": "counterparty",
+            "quote": "personal sponsor",
+            "locator": "line:1"
+          },
+          {
+            "source_id": "v5-05-10",
+            "field": "due_date",
+            "quote": "Patron payroll mandate: personal sponsor pledges THB 3858 to the student on 2026-11-19",
+            "locator": "line:1"
+          }
+        ],
+        "issues": [
+          {
+            "code": "SOURCE_DATE_RECOVERED",
+            "field": "due_date",
+            "locator": "line:1",
+            "message": "Expected transfer date recovered from source; manual review required, not receipt confirmation"
+          }
+        ]
+      }
+    }
+  ]
+}

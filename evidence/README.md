@@ -10,6 +10,7 @@ Run every command from the repository root. On Windows the interpreter is `study
 
 | Folder | What it proves | Mode | Date |
 |---|---|---|---|
+| [`demo-20261012/`](demo-20261012/) | Demo reset plus the full demo script (payment, two-person approval, conversion, CSV import and recalculation, family confirmation, loan, what-if, signed statement) run three times in a row on the compose demo stack, with screenshots, steps and run-1 recordings | mock / fixture FX | 2026-10-12 |
 | [`verification-20261011/`](verification-20261011/) | Final dirty-workspace verification: 17 gates; 73 frontend units, 12 mocked and 6 real nginx/Django browser cases; three 6,000/9,000 THB reference replays; restart persistence; old-set regressions. v5 remains pending human review | mock models / fixture FX | 2026-10-11 |
 | [`frontend-20261011/`](frontend-20261011/) | Browser suites: 12 mocked + 3 real-Django Playwright specs (journey, wallet, AI assistant T2/T3, trust center), 73 unit tests, screenshots in English and Chinese | mock | 2026-10-11 |
 | [`gates/`](gates/) | The full local gate suite (17 checks) passes on the submitted code | mock | 2026-10-07 |

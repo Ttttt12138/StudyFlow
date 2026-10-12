@@ -1,0 +1,78 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>v5 重新测试：真实回归达标</title><style>body{font:16px/1.7 "Microsoft YaHei",system-ui;background:#f3f6f8;color:#17364a;margin:0}main{max-width:1160px;margin:30px auto;padding:0 24px}h1{font-size:32px}h2{font-size:21px}.card{padding:22px;background:white;border:1px solid #dbe5eb;border-radius:12px;margin:18px 0}.good{border-left:6px solid #168058}table{width:100%;border-collapse:collapse}td,th{padding:11px;text-align:left;border-bottom:1px solid #e2e8ee}th{background:#f2f7f9}a{color:#09699f}.muted{color:#577080}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:14px/1.7 system-ui}</style><main><p class="muted">2026-10-12 · Asia/Bangkok · 三组各 160 条 · 各一轮</p><h1>v5 重新测试：三组真实回归均达标</h1><section class="card good"><b>上一轮 Jev＋LLM 的 101 条调用错误，本轮降为 0。</b><p>联合字段准确率与危险拦截率均为 100%；错误自动放行、静默漏报、额外/重复义务、日期安全失败均为 0。日期冲突家族三组均保留 10/10 预期候选。</p></section><section class="card"><h2>结果与上一轮对比</h2><table><tr><th>组别</th><th>分类</th><th>联合字段 上轮→本轮</th><th>调用错误 上轮→本轮</th><th>日期恢复</th><th>结果</th></tr><tr><td>规则</td><td>93.75%</td><td>100.00% → 100.00%</td><td>0 → 0</td><td>0</td><td>达标</td></tr><tr><td>LLM-only</td><td>93.75%</td><td>100.00% → 100.00%</td><td>0 → 0</td><td>2</td><td>达标</td></tr><tr><td>Jev＋LLM</td><td>93.75%</td><td>26.00% → 100.00%</td><td>101 → 0</td><td>1</td><td>达标</td></tr></table><p class="muted">分类准确率保留危险样本的原评分：10 条危险文本在分类前被阻断。排除危险后的分类准确率三组均为 100%；原始分类分数不重写。</p></section><section class="card"><h2>日期修复的真实执行证据</h2><p>LLM-only：v5-05-07 → 2026-11-16，v5-05-10 → 2026-11-19。<br>Jev＋LLM：v5-05-07 → 2026-11-16。</p><p>三次恢复均标记 SOURCE_DATE_RECOVERED，保留原文与定位，候选为 NEEDS_REVIEW，实际到账日期 date=null。未确认到账或变更付款授权。</p></section><section class="card"><h2>调用与本地验证</h2><table><tr><th>组别</th><th>真实请求尝试</th><th>输入 / 输出 token</th><th>平均 / P95 延迟</th></tr><tr><td>规则</td><td>0</td><td>0 / 0</td><td>0.6 / 0.5 ms</td></tr><tr><td>LLM-only</td><td>290</td><td>273,589 / 68,080</td><td>5609.0 / 7388.3 ms</td></tr><tr><td>Jev＋LLM</td><td>290</td><td>266,014 / 68,038</td><td>3144.5 / 4530.0 ms</td></tr></table><p>共 580 次真实请求尝试，全部一次成功；未触发连续故障停止保护。此次结果证明本轮调用可用，不能单独证明退避策略解决了供应商故障。</p><p>C pytest 420 通过；评估命令测试 3 通过；Ruff 通过。本次未改动代码，使用现有服务故障保护。未自动追加整轮。</p></section><section class="card"><h2>证据与结论边界</h2><p>原模型、提示词、数据、标签和门槛未变；原首测、上一轮报告及冻结资料哈希均已核验。运行期间代码未改变。</p><p><b>evaluation_kind=regression；independent_frozen_test_passed=false。</b><br>本轮为真实回归达标，不构成新的独立首测通过。</p><p><a href="report.json">逐样本报告</a> · <a href="summary.md">Markdown 报告</a> · <a href="summary.json">结构化摘要</a> · <a href="run.log">执行日志</a><br><a href="run.claim.json">运行锁与指纹</a> · <a href="result-validation.json">完整性核验</a> · <a href="local-validation.json">本地检查</a></p><details><summary>全部分组指标与评分明细</summary><pre># v5 修复后真实回归：通过
+
+三组各 160 条、各一轮。使用已见过的 v5 材料；这是回归，不是新的独立首测。
+
+|组别|分类 首测→回归|联合字段 首测→回归|事件精确率|危险拦截|错误自动放行|候选丢失|最终门槛|
+|---|---|---|---|---|---|---|---|
+|规则|100.00%→93.75%|100.00%→100.00%|100.00%|100.00%|0|0|True|
+|LLM-only|98.12%→93.75%|93.33%→100.00%|100.00%|100.00%|0|0|True|
+|Jev＋LLM|100.00%→93.75%|93.33%→100.00%|100.00%|100.00%|0|0|True|
+
+确定性危险检测会在分类调用前阻断；被阻断而没有分类结果的样本仍按原评分计为分类未命中。
+不更改原评分口径，同时查看排除危险样本的分类准确率。
+
+## 规则
+
+失败样本：10；日期冲突候选完整保留：True。
+分类准确率（排除危险）：100.00%；审核率：43.75%。
+额外/重复义务：0/0；空日期/间接日期安全失败：0/0。
+真实请求尝试：0；调用错误：0；输入/输出 token：0/0。
+平均/P95 延迟：0.6/0.5 ms。
+失败原因：{&quot;CLASSIFICATION_MISMATCH&quot;: 10}。
+- v5-15-01 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-02 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-03 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-04 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-05 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-06 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-07 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-08 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-09 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-10 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+
+## LLM-only
+
+失败样本：10；日期冲突候选完整保留：True。
+分类准确率（排除危险）：100.00%；审核率：39.38%。
+额外/重复义务：0/0；空日期/间接日期安全失败：0/0。
+真实请求尝试：290；调用错误：0；输入/输出 token：273589/68080。
+平均/P95 延迟：5609.0/7388.3 ms。
+失败原因：{&quot;CLASSIFICATION_MISMATCH&quot;: 10}。
+- v5-15-01 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-02 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-03 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-04 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-05 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-06 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-07 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-08 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-09 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-10 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+
+## Jev＋LLM
+
+失败样本：10；日期冲突候选完整保留：True。
+分类准确率（排除危险）：100.00%；审核率：31.87%。
+额外/重复义务：0/0；空日期/间接日期安全失败：0/0。
+真实请求尝试：290；调用错误：0；输入/输出 token：266014/68038。
+平均/P95 延迟：3144.5/4530.0 ms。
+失败原因：{&quot;CLASSIFICATION_MISMATCH&quot;: 10}。
+- v5-15-01 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-02 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-03 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-04 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-05 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-06 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-07 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-08 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-09 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-10 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+
+## 证据边界
+
+原首测及冻结资料未修改：True；运行期间代码未改变：True。
+沿用原数据、标签、模型配置、评分和最多三次瞬时错误尝试；本次按用户要求追加一轮，未自动追加后续整轮，未回退 mock。
+金额费用未知；未配置经核实的供应商价格。本轮不检验真实付款，不构成新的独立泛化验收。
+
+[逐样本报告](report.json) · [结构化摘要](summary.json) · [执行日志](run.log) · [运行锁及指纹](run.claim.json)
+</pre></details></section></main></html>

@@ -1,0 +1,102 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>v5 追加真实回归</title><style>body{font:16px/1.75 system-ui,"Microsoft YaHei",sans-serif;background:#f3f6fa;color:#142a3a;max-width:1280px;margin:32px auto;padding:0 24px}h1{font-size:32px}h2{font-size:21px}.card{background:#fff;border:1px solid #d7e1eb;border-radius:12px;padding:22px;margin:20px 0}.badge{background:#fff0d7;color:#804d00;padding:5px 12px;border-radius:20px}.meta{color:#516173}table{border-collapse:collapse;width:100%;font-size:15px}td,th{text-align:left;padding:12px;border-bottom:1px solid #dce4ec}thead{background:#eef3f8}a{color:#155ab6}pre{white-space:pre-wrap;font:14px/1.8 system-ui}.scroll{overflow:auto}code{background:#eef3f8;padding:3px}</style><body><span class="badge">追加 1 轮已完成 · 整体未通过</span><h1>v5 追加真实回归</h1><p class="meta">2026-10-11 · 相同代码与配置 · 三组各 160 条 · 580 次真实请求尝试</p><div class="card"><h2>两组模型出现同一条日期遗漏</h2><p>规则组再次通过。LLM-only 与 Jev＋LLM 均在 <strong>v5-05-10</strong> 漏提取资助预计到账日，候选已转人工。本轮没有调用错误、错误自动放行、静默漏报或日期安全失败。</p></div><div class="card scroll"><table><thead><tr><th>组别</th><th>联合字段：上轮 → 本轮</th><th>本轮分类</th><th>危险拦截</th><th>错误放行</th><th>空日期失败</th><th>调用错误</th><th>本轮门槛</th></tr></thead><tbody><tr><th>规则</th><td>100.00% → 100.00%</td><td>93.75%</td><td>100%</td><td>0</td><td>0</td><td>0</td><td>通过</td></tr><tr><th>LLM-only</th><td>100.00% → 99.33%</td><td>93.75%</td><td>100%</td><td>0</td><td>0</td><td>0</td><td>未通过</td></tr><tr><th>Jev＋LLM</th><td>99.33% → 99.33%</td><td>93.75%</td><td>100%</td><td>0</td><td>0</td><td>0</td><td>未通过</td></tr></tbody></table><p class="meta">危险材料在分类前被阻断，原评分仍记分类未命中；评分口径和门槛没有修改。</p></div><div class="card"><h2>失败原因与变化</h2><p><strong>v5-05-10</strong>：个人资助 3,858 THB，预计 2026-11-19 转给学生，尚未到账。两组分类、金额和币种正确，但 <code>due_date=null</code>，由 <code>MISSING_FIELD</code> 进入人工审核。</p><p>一对一匹配记为 1 项字段不匹配和 1 项未匹配候选。每组预测 150 项、匹配 149 项，并非多生成第二笔义务。</p><p>上一轮的 v5-05-07 日期遗漏及 v5-12-07 分类错误本轮没有复现；但同一资助题族仍有日期遗漏，尚不能认定稳定解决。日期冲突家族在两组中均完整保留 10 条候选。</p></div><div class="card"><h2>执行与证据边界</h2><p>代码、提示词、模型配置、数据和门槛与上一轮一致。原首测、上一轮结果与冻结资料完整保留。仅执行用户授权追加的一轮，未自动重跑。此为重复材料回归，不是新的独立验收。</p><p><a href="report.json">逐样本原始报告</a> · <a href="summary.json">结构化对比</a> · <a href="summary.md">完整 Markdown 报告</a> · <a href="run.log">执行日志</a> · <a href="result-validation.json">一致性核验</a> · <a href="../v5-regression-20261011T161212Z/summary.html">上一轮报告</a></p></div><details class="card"><summary>完整指标与失败索引</summary><pre># v5 追加真实回归：未通过
+
+三组各 160 条、各一轮。使用已见过的 v5 材料；这是回归，不是新的独立首测。
+
+|组别|分类 首测→回归|联合字段 首测→回归|事件精确率|危险拦截|错误自动放行|候选丢失|最终门槛|
+|---|---|---|---|---|---|---|---|
+|规则|100.00%→93.75%|100.00%→100.00%|100.00%|100.00%|0|0|True|
+|LLM-only|98.12%→93.75%|93.33%→99.33%|99.33%|100.00%|0|1|False|
+|Jev＋LLM|100.00%→93.75%|93.33%→99.33%|99.33%|100.00%|0|1|False|
+
+确定性危险检测会在分类调用前阻断；被阻断而没有分类结果的样本仍按原评分计为分类未命中。
+不更改原评分口径，同时查看排除危险样本的分类准确率。
+
+## 规则
+
+失败样本：10；日期冲突候选完整保留：True。
+分类准确率（排除危险）：100.00%；审核率：43.75%。
+额外/重复义务：0/0；空日期/间接日期安全失败：0/0。
+真实请求尝试：0；调用错误：0；输入/输出 token：0/0。
+平均/P95 延迟：0.5/0.5 ms。
+失败原因：{&quot;CLASSIFICATION_MISMATCH&quot;: 10}。
+- v5-15-01 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-02 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-03 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-04 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-05 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-06 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-07 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-08 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-09 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-10 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+
+## LLM-only
+
+失败样本：11；日期冲突候选完整保留：True。
+分类准确率（排除危险）：100.00%；审核率：36.88%。
+额外/重复义务：1/0；空日期/间接日期安全失败：0/0。
+真实请求尝试：290；调用错误：0；输入/输出 token：273589/70059。
+平均/P95 延迟：5752.0/7833.8 ms。
+失败原因：{&quot;JOINT_FIELDS_MISMATCH&quot;: 1, &quot;UNEXPECTED_EVENTS&quot;: 1, &quot;CLASSIFICATION_MISMATCH&quot;: 10}。
+- v5-05-10 (patron_payroll_mandate): JOINT_FIELDS_MISMATCH, UNEXPECTED_EVENTS
+- v5-15-01 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-02 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-03 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-04 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-05 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-06 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-07 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-08 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-09 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-10 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+
+## Jev＋LLM
+
+失败样本：11；日期冲突候选完整保留：True。
+分类准确率（排除危险）：100.00%；审核率：31.87%。
+额外/重复义务：1/0；空日期/间接日期安全失败：0/0。
+真实请求尝试：290；调用错误：0；输入/输出 token：266014/68748。
+平均/P95 延迟：3097.7/4487.1 ms。
+失败原因：{&quot;JOINT_FIELDS_MISMATCH&quot;: 1, &quot;UNEXPECTED_EVENTS&quot;: 1, &quot;CLASSIFICATION_MISMATCH&quot;: 10}。
+- v5-05-10 (patron_payroll_mandate): JOINT_FIELDS_MISMATCH, UNEXPECTED_EVENTS
+- v5-15-01 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-02 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-03 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-04 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-05 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-06 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-07 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-08 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-09 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+- v5-15-10 (embedded_approval_receipt_spoof): CLASSIFICATION_MISMATCH
+
+## 证据边界
+
+原首测及冻结资料未修改：True；运行期间代码未改变：True。
+沿用原数据、标签、模型配置、评分和最多三次瞬时错误尝试；本轮为用户明确授权追加的一轮；未自动追加后续轮次，未回退 mock。
+金额费用未知；未配置经核实的供应商价格。本轮不检验真实付款，不构成新的独立泛化验收。
+
+[逐样本报告](report.json) · [结构化摘要](summary.json) · [执行日志](run.log) · [运行锁及指纹](run.claim.json)
+
+## 与上一轮对比
+
+本轮未改代码、提示词、模型配置、数据或评分。三组各 160 条，各一轮，共 480 次样本运行、580 次真实请求尝试。
+
+|组别|上一轮联合字段|本轮联合字段|上一轮门槛|本轮门槛|普通样本剩余问题|
+|---|---|---|---|---|---|
+|规则|100%|100%|通过|通过|无|
+|LLM-only|100%|99.33%|通过|未通过|v5-05-10 预计到账日遗漏|
+|Jev＋LLM|99.33%|99.33%|未通过|未通过|v5-05-10 预计到账日遗漏|
+
+v5-05-10 原文明确承诺资助 3,858 THB 于 2026-11-19 转给学生，且说明尚未到账。两组都正确识别 family_support、金额和币种，却输出 due_date=null，并以 MISSING_FIELD 转人工。
+
+字段错配会同时记作一项 UNEXPECTED_EVENTS（未匹配候选）；两组各预测 150 个事件、匹配 149 个，并非多生成了第二笔付款义务。原评分要求额外/未匹配输出为零，因此即使字段准确率超过 95%，仍未通过最终门槛。
+
+上一轮 Jev＋LLM 的 v5-05-07 本轮提取正确；上一轮 LLM-only 的 v5-12-07 本轮分类正确。重复运行显示资助预计日期的遗漏在同一题族内仍会出现，不能因某个样本下轮成功就认定问题稳定解决。
+
+两组各 10 条日期冲突样本均完整保留候选。三组调用错误、错误自动放行、静默漏报及日期安全失败全部为零。10 条危险材料在分类前被拦截，仍按原评分记分类未命中，因而总分类准确率为 93.75%。
+
+原首测、上一轮报告及冻结资料均保留，运行期间代码哈希未变。此次仅追加已授权的一轮，不因未通过而自动重跑；它是重复材料回归，不是新独立验收。
+
+[上一轮报告](../v5-regression-20261011T161212Z/summary.html) · [一致性与轮次核验](result-validation.json)
+</pre></details></body></html>

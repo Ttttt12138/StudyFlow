@@ -1,0 +1,14 @@
+Using existing test database for alias 'default'...
+
+........................................................................
+----------------------------------------------------------------------
+Ran 72 tests in 11.033s
+
+OK
+Preserving test database for alias 'default'...
+
+Found 72 test(s).
+Cache table 'studyflow_cache' already exists.
+System check identified no issues (0 silenced).
+Report: C:\Users\��İ\AppData\Local\Temp\tmp9grxwd4o\report.json; live_acceptance=False
+Report: C:\Users\��İ\AppData\Local\Temp\tmpx724cfsj\report.json; live_acceptance=True

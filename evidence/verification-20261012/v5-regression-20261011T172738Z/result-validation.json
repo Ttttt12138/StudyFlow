@@ -1,0 +1,50 @@
+{
+  "evaluation_kind": "regression",
+  "live_acceptance": true,
+  "independent_frozen_test_passed": false,
+  "original_artifacts_unchanged": true,
+  "runtime_code_unchanged": true,
+  "previous_report_unchanged": true,
+  "model_configuration_unchanged": true,
+  "prompt_unchanged": true,
+  "report_sha256": "2225d6345163af3a12121aa91b917bfdf22135ebd47d711f3719d91235e30bfb",
+  "live_request_attempts": 580,
+  "input_tokens": 539603,
+  "output_tokens": 136118,
+  "provider_outage": null,
+  "rounds_per_arm": 1,
+  "automatic_additional_rounds": 0,
+  "arm_checks": {
+    "rules": {
+      "samples": 160,
+      "unique_samples": 160,
+      "conflict_candidates_retained": true,
+      "recovery_count": 0,
+      "recovery_remains_review": true,
+      "non_dangerous_failures": [],
+      "attempt_histogram": {}
+    },
+    "llm_only": {
+      "samples": 160,
+      "unique_samples": 160,
+      "conflict_candidates_retained": true,
+      "recovery_count": 2,
+      "recovery_remains_review": true,
+      "non_dangerous_failures": [],
+      "attempt_histogram": {
+        "1": 290
+      }
+    },
+    "jev_llm": {
+      "samples": 160,
+      "unique_samples": 160,
+      "conflict_candidates_retained": true,
+      "recovery_count": 1,
+      "recovery_remains_review": true,
+      "non_dangerous_failures": [],
+      "attempt_histogram": {
+        "1": 290
+      }
+    }
+  }
+}

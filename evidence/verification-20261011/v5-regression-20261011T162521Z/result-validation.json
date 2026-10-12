@@ -1,0 +1,29 @@
+{
+  "arms": {
+    "rules": {
+      "samples": 160,
+      "unique_samples": 160,
+      "conflict_cases_safe": 10,
+      "live_attempts": 0
+    },
+    "llm_only": {
+      "samples": 160,
+      "unique_samples": 160,
+      "conflict_cases_safe": 10,
+      "live_attempts": 290
+    },
+    "jev_llm": {
+      "samples": 160,
+      "unique_samples": 160,
+      "conflict_cases_safe": 10,
+      "live_attempts": 290
+    }
+  },
+  "report_sha256": "fac10a21b47011d95575f80e90d5a71fbe4130bc024e7e0ab78dedb159ea0951",
+  "previous_report_unchanged": true,
+  "original_artifacts_unchanged": true,
+  "runtime_code_unchanged": true,
+  "same_code_and_configuration_as_previous": true,
+  "authorized_additional_rounds": 1,
+  "automatic_additional_rounds": 0
+}

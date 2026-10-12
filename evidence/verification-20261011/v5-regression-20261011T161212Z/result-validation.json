@@ -1,0 +1,25 @@
+{
+  "arms": {
+    "rules": {
+      "samples": 160,
+      "unique_samples": 160,
+      "live_attempts": 0,
+      "conflict_cases_safe": 10
+    },
+    "llm_only": {
+      "samples": 160,
+      "unique_samples": 160,
+      "live_attempts": 290,
+      "conflict_cases_safe": 10
+    },
+    "jev_llm": {
+      "samples": 160,
+      "unique_samples": 160,
+      "live_attempts": 290,
+      "conflict_cases_safe": 10
+    }
+  },
+  "report_sha256": "906e8dcbb4c59056f739e12a0d8fa344d620c7b089b2d0792b792b84f386359c",
+  "additional_rounds": 0,
+  "overall_targets_met": false
+}

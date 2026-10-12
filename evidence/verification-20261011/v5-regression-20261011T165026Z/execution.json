@@ -1,0 +1,8 @@
+{
+  "completed_at": "2026-10-11T16:57:17.8472412Z",
+  "previous_run": "v5-regression-20261011T162521Z",
+  "exit_code": 1,
+  "rounds_per_arm": 1,
+  "purpose": "source-evidenced support date recovery verification",
+  "automatic_additional_rounds": 0
+}
