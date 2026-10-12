@@ -8,8 +8,8 @@ import { SessionWalletClient, WalletApiError, type WalletClient } from "../walle
 import { createTrustPreview } from "./previewAdapter";
 import type { AuditEvent, AuditPage, CreditProfile, LimitsSummary, TrustApproval } from "./types";
 import "../services/services.css";
+import { signInUrl } from "../auth/links";
 
-const signInUrl = `/api/auth/login/?next=${encodeURIComponent(window.location.origin + "/?trust=1")}`;
 // Audit action prefixes with their own filter; everything else is grouped under "other".
 const CATEGORIES = ["auth", "approval", "agent", "credit", "payment", "remittance", "wallet", "fx", "funding"] as const;
 const NAMED_EVENTS = ["auth.step_up_granted", "auth.step_up_failed", "approval.requested", "approval.approved",
@@ -133,7 +133,7 @@ export function TrustApp({ preview, onExit }: { preview: boolean; onExit: () => 
             <span>{preview ? t("trust.preview.text") : t("trust.banner.text")}</span>
           </div>
           {signedOut && !preview && <div className="card service-card"><div className="service-card-body service-empty">
-            <p>{t("trust.signedOut")}</p><a className="primary" href={signInUrl}>{t("common.signIn")}</a>
+            <p>{t("trust.signedOut")}</p><a className="primary" href={signInUrl(window.location.origin + "/?trust=1")}>{t("common.signIn")}</a>
           </div></div>}
 
           <section className="card service-card" id="trust-tiers" aria-labelledby="trust-tiers-title">

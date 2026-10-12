@@ -4,6 +4,7 @@ import type { BackendState } from '../backend/contracts';
 import { explainCode, formatDate, formatTimestampDate, formatMoney } from '../backend/presenters';
 import { useI18n } from '../i18n';
 import { computedFrom } from './freshness';
+import { signInUrl } from '../auth/links';
 import type { Briefing, Calendar, Notifications, Reviews, Versions } from './types';
 type Data = { state: BackendState; briefing: Briefing; calendar: Calendar; notifications: Notifications; reviews: Reviews['data'] };
 type Result<T> = {data?: T; error?: string; loading: boolean; auth?: boolean; noSemester?: boolean};
@@ -40,7 +41,7 @@ export function LiveDashboard({api,dirty,onJourney}: {api:DjangoClient;dirty:boo
  function link(kind:string) {const step=stepFor(kind);return step===null?<small>{t('dash.readOnlyStatus')}</small>:<button className="dashboard-link" onClick={()=>onJourney(step)}>{t('dash.reviewInPlan')}</button>;}
  function versions(row:Versions&{as_of:string}) {return <small>{t('dash.versions',{date:formatDate(row.as_of,lang),state:row.state_version,budget:row.budget_version,analysis:row.analysis_version??''})}</small>;}
  return <div className="dashboard-app"><div className="section-heading"><div><span className="eyebrow">{t('dash.eyebrowHome')}</span><h1>{t('dash.title')}</h1><p>{t('dash.live.subtitle')}</p></div><button className="secondary" onClick={refresh}>{t('dash.refreshDashboard')}</button></div>
- {Object.values(results).some(r=>r.auth)?<section className="card" role="alert"><h2>{t('dash.signInAgain')}</h2><p>{t('dash.notAuthenticated')}</p><a className="primary" href={`/api/auth/login/?next=${encodeURIComponent(window.location.origin+'/')}`}>{t('common.signIn')}</a></section>:<>
+ {Object.values(results).some(r=>r.auth)?<section className="card" role="alert"><h2>{t('dash.signInAgain')}</h2><p>{t('dash.notAuthenticated')}</p><a className="primary" href={signInUrl(window.location.origin+'/')}>{t('common.signIn')}</a></section>:<>
  {results.state.noSemester&&<section className="card" role="status"><h2>{t('dash.startSemester')}</h2><p>{t('dash.noActiveSemester')}</p><button className="primary" onClick={()=>onJourney(0)}>{t('dash.createSemester')}</button></section>}
  {stale&&<div className="stale-banner" role="status"><strong>{t('dash.updateNeeded')}</strong><span>{dirty?t('dash.unsavedEdits'):t('dash.olderVersions')}</span><button className="secondary" onClick={refresh}>{t('dash.refreshResults')}</button></div>}
  {!results.state.noSemester&&(!state||results.briefing.loading||results.calendar.loading)&&<p role="status">{t('dash.freshnessPending')}</p>}

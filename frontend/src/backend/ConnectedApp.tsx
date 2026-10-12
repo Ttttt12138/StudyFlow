@@ -2,12 +2,12 @@ import { useI18n, type MessageKey } from "../i18n";
 import { PreviewWalkthrough } from "./PreviewWalkthrough";
 import { PreviewConfirmation } from "./PreviewConfirmation";
 import { PreviewApplication } from "./PreviewApplication";
-import { LiveDashboard } from "../dashboard/LiveDashboard";
 import { DashboardPreview } from "../dashboard/DashboardPreview";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { ApiError, DjangoClient, getAll, type StudyFlowClient } from "./client";
 import { PaymentCalendar } from "./PaymentCalendar";
 import { FundingComparison } from "./FundingComparison";
+import { ModuleNav } from "../services/ModuleNav";
 import { explainCode, formatDate, formatMoney } from "./presenters";
 import { createPreviewClient, previewBudget, previewFunding, previewImport, type PreviewScenario } from "./previewAdapter";
 import { importTouched, rebaseOnSaved, templateId, uploadKind, versionsMatch } from "./logic";
@@ -52,7 +52,7 @@ function issueText(error: unknown) {
 }
 /** Opens the read-only tour straight away at a step, optionally with the payment calendar expanded (from /intro links). */
 export type InitialPreview = { step: number; calendar: boolean };
-export function ConnectedApp({ onDemo, onWallet, onAgent, onTrust, initialPreview }: { onDemo: () => void; onWallet: (preview: boolean) => void; onAgent: (preview: boolean) => void; onTrust: (preview: boolean) => void; initialPreview?: InitialPreview | null }) {
+export function ConnectedApp({ onDemo, initialPreview }: { onDemo: () => void; onWallet: (preview: boolean) => void; onAgent: (preview: boolean) => void; onTrust: (preview: boolean) => void; initialPreview?: InitialPreview | null }) {
   const { lang, t } = useI18n();
   const steps = stepIndexes.map((i) => t(`jr.step.${i}` as MessageKey));
   const stepHelp = stepIndexes.map((i) => t(`jr.help.${i}` as MessageKey));
@@ -61,18 +61,16 @@ export function ConnectedApp({ onDemo, onWallet, onAgent, onTrust, initialPrevie
   const [client, setClient] = useState<StudyFlowClient | null>(null);
   const [preview, setPreview] = useState(false);
   const [previewScenario,setPreviewScenario]=useState<PreviewScenario>("missing");
-  const [showConnect,setShowConnect]=useState(false);
   const [expandedCosts,setExpandedCosts]=useState<Record<string,boolean>>({});
   const focusCostRef=useRef<string|null>(null);
-  const connectInputRef=useRef<HTMLAnchorElement|null>(null);
   const focusApplicationStatusRef=useRef(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [errorDetails, setErrorDetails] = useState<unknown>(null);
   const [notice, setNotice] = useState("");
   const [step, setStep] = useState(0);
-  const [dashboard, setDashboard] = useState(false);
   const [dashboardPreview, setDashboardPreview] = useState(false);
+  const [showWelcome, setShowWelcome] = useState(true);
   const [showSteps, setShowSteps] = useState(false);
   const [templates, setTemplates] = useState<Template[]>([]);
   const [selectedTemplate, setSelectedTemplate] = useState("");
@@ -136,14 +134,14 @@ export function ConnectedApp({ onDemo, onWallet, onAgent, onTrust, initialPrevie
   // Last saved draft seen from Django, to tell local edits apart from changes saved elsewhere.
   const savedDraft = useRef<{ semesterId: string; draft: Draft } | null>(null);
   useLayoutEffect(() => {
-    if (!client || dashboardPreview || dashboard) return;
+    if (!client || dashboardPreview) return;
     const costId = focusCostRef.current;
     focusCostRef.current = null;
     const target = costId ? document.getElementById(`cost-${costId}`) : null;
     if (target) target.scrollIntoView({ block: "center", behavior: "instant" });
     else window.scrollTo({ top: 0, behavior: "instant" });
     (target ?? document.getElementById("connected-step-title"))?.focus({ preventScroll: true });
-  }, [step, client, dashboardPreview, dashboard]);
+  }, [step, client, dashboardPreview]);
   useLayoutEffect(() => {
     if (!focusApplicationStatusRef.current || step !== 4 || !application) return;
     const status = document.querySelector<HTMLElement>(".application-live-status");
@@ -152,11 +150,6 @@ export function ConnectedApp({ onDemo, onWallet, onAgent, onTrust, initialPrevie
     status.scrollIntoView({ block: "center", behavior: "instant" });
     status.focus({ preventScroll: true });
   }, [application, step]);
-  useLayoutEffect(() => {
-    if (client || !showConnect || !connectInputRef.current) return;
-    connectInputRef.current.scrollIntoView({ block: "center", behavior: "instant" });
-    connectInputRef.current.focus({ preventScroll: true });
-  }, [client, showConnect]);
   const versions = (): Versions => ({
     semester_id: state!.semester_id,
     state_version: state!.state_version,
@@ -337,6 +330,7 @@ export function ConnectedApp({ onDemo, onWallet, onAgent, onTrust, initialPrevie
     if (!initialPreview) { void connect(); return; }
     void startPreview().then((started) => {
       if (!started) return;
+      setShowWelcome(false);
       setStep(initialPreview.step);
       if (initialPreview.calendar) openCalendarWhenReady();
     });
@@ -360,7 +354,7 @@ export function ConnectedApp({ onDemo, onWallet, onAgent, onTrust, initialPrevie
     const api = createPreviewClient("missing");
     setPreviewScenario("missing");
     setError("");
-    setDashboard(false);
+    setShowWelcome(false);
     setPreview(true);
     setClient(api);
     try {
@@ -401,7 +395,6 @@ export function ConnectedApp({ onDemo, onWallet, onAgent, onTrust, initialPrevie
   function leavePreview() {
     ++connectionEpoch.current;
     setPreview(false);
-    setShowConnect(true);
     setClient(null);
     setState(null);
     setSemester(null);
@@ -423,6 +416,15 @@ export function ConnectedApp({ onDemo, onWallet, onAgent, onTrust, initialPrevie
     keys.current.clear();
     setError("");
     setNotice("");
+    setDashboardPreview(false);
+    setShowWelcome(true);
+  }
+  function openStudyStep(target: number) {
+    setShowWelcome(false);
+    setDashboardPreview(false);
+    setShowSteps(false);
+    if (!client) void startPreview().then((started) => { if (started) setStep(target); });
+    else setStep(target);
   }
   async function createSemester() {
     if (!client) return;
@@ -737,11 +739,6 @@ export function ConnectedApp({ onDemo, onWallet, onAgent, onTrust, initialPrevie
     preview={preview}
     onUpdate={updateCalendar}
   />;
-  if (dashboardPreview) return <DashboardPreview onExit={() => setDashboardPreview(false)} onJourney={(target) => {
-    setDashboardPreview(false);
-    if (!preview) void startPreview().then((started) => { if (started) setStep(target); });
-    else setStep(target);
-  }} />;
   return (
     <div className={`app connected ${preview ? "preview-mode" : ""}`}>
       <aside>
@@ -750,61 +747,54 @@ export function ConnectedApp({ onDemo, onWallet, onAgent, onTrust, initialPrevie
           href="#"
           onClick={(e) => {
             e.preventDefault();
-            setStep(0);
+            setDashboardPreview(false);
+            setShowWelcome(true);
           }}
         >
           <span className="brand-icon">S</span>StudyFlow
           <span className="brand-dot">.</span>
         </a>
-        {client && <div className="journey-label">{t("jr.journeyLabel")}</div>}
-        {client && <>
+        <ModuleNav />
+        <div className="journey-label">{t("jr.journeyLabel")}</div>
         <button className="mobile-step-toggle secondary" aria-expanded={showSteps} aria-controls="connected-steps" onClick={() => setShowSteps(!showSteps)}>
-          {dashboard ? t("jr.dashboard") : t("jr.stepOf", { n: step + 1, name: steps[step] })} <span aria-hidden="true">{showSteps ? "−" : "+"}</span>
+          {showWelcome ? t("jr.welcomeNav") : dashboardPreview ? t("jr.previewDashboard") : t("jr.stepOf", { n: step + 1, name: steps[step] })} <span aria-hidden="true">{showSteps ? "−" : "+"}</span>
         </button>
         <nav id="connected-steps" className={showSteps ? "steps-open" : ""} aria-label={t("jr.stepsNav")}>
-          {!preview && <button className={dashboard ? "active" : ""} aria-current={dashboard ? "page" : undefined} onClick={()=>{setDashboard(true);setShowSteps(false);}}>{t("jr.dashboard")}</button>}
+          <button className={showWelcome ? "active" : ""} aria-current={showWelcome ? "page" : undefined} onClick={() => { setShowWelcome(true); setDashboardPreview(false); setShowSteps(false); }}>{t("jr.welcomeNav")}</button>
+          <button className={dashboardPreview ? "active" : ""} aria-current={dashboardPreview ? "page" : undefined} onClick={() => { setShowWelcome(false); setDashboardPreview(true); setShowSteps(false); }}>{t("jr.previewDashboard")}</button>
           {steps.map((name, i) => (
             <button
               key={name}
-              className={!dashboard && step === i ? "active" : ""}
-              aria-current={!dashboard && step === i ? "step" : undefined}
-              disabled={!state && i > 0}
-              onClick={() => { setDashboard(false); setStep(i); setShowSteps(false); }}
+              className={!showWelcome && !dashboardPreview && step === i ? "active" : ""}
+              aria-current={!showWelcome && !dashboardPreview && step === i ? "step" : undefined}
+              onClick={() => openStudyStep(i)}
             >
               <span className="step-number">0{i + 1}</span>
               {name}
             </button>
           ))}
         </nav>
-        </>}
         {!client && <div className="sidebar-note"><strong>{t("jr.side.title")}</strong><p>{t("jr.side.text")}</p></div>}
-        {client && <details className="student-more-menu"><summary>{t("jr.more")}</summary><div>
         {client && <button className="secondary student-side-action" onClick={onDemo}>
           {t("jr.viewDemo")}
         </button>}
-        {preview && <button className="secondary dashboard-entry student-side-action" onClick={() => setDashboardPreview(true)}>{t("jr.previewDashboard")}</button>}
-        {client && <button className="secondary dashboard-entry student-side-action" onClick={() => onWallet(preview)}>{preview ? t("jr.previewWallet") : t("wallet.title")}</button>}
-        {client && <button className="secondary dashboard-entry student-side-action" onClick={() => onAgent(preview)}>{t(preview ? "nav.agentPreview" : "nav.agent")}</button>}
-        {client && <button className="secondary dashboard-entry student-side-action" onClick={() => onTrust(preview)}>{t(preview ? "nav.trustPreview" : "nav.trust")}</button>}
-        {preview && <button className="secondary student-side-action" onClick={leavePreview}>{t("jr.connectInstead")}</button>}
-        </div></details>}
       </aside>
       <div className="workspace">
         <header>
-          <span>StudyFlow / {dashboard ? t("jr.dashboard") : client ? steps[step] : t("jr.welcome")}</span>
+          <span>StudyFlow / {showWelcome ? t("jr.welcomeNav") : dashboardPreview ? t("jr.previewDashboard") : steps[step]}</span>
           <span className="avatar">ST</span>
         </header>
         <main>
-          {dashboard && client && !preview ? <LiveDashboard api={client as DjangoClient} dirty={dirty} onJourney={(index)=>{setDashboard(false);setStep(index);}}/> : <>
-          {client && <div className="section-heading">
+          {dashboardPreview ? <DashboardPreview embedded onExit={() => { setDashboardPreview(false); setShowWelcome(true); }} onJourney={openStudyStep} /> : <>
+          {client && !showWelcome && <div className="section-heading">
             <div>
               <span className="eyebrow">{t("demo.stepOf", { n: `0${step + 1}` })}</span>
               <h1 id="connected-step-title" tabIndex={-1}>{steps[step]}</h1>
               <p>{preview ? previewStepHelp[step] : stepHelp[step]}</p>
             </div>
           </div>}
-          {client && <div className="student-progress" aria-label={t("jr.progressLabel", { n: step + 1, name: steps[step] })}><div><span>{preview ? t("jr.tourPosition") : t("jr.currentStep")}</span><strong>{t("jr.stepOf", { n: step + 1, name: steps[step] })}</strong></div><div className="student-progress-track" aria-hidden="true"><span style={{ width: `${(step + 1) * 20}%` }}/></div></div>}
-          {preview && <section className="preview-banner" aria-label={t("jr.tour.label")}><div><strong>{t("jr.tour.title")}</strong><p>{previewScenario === "estimated" ? t("jr.tour.estimated") : t("jr.tour.exploring")} {t("jr.tour.nothingSaved")}</p><p>{t(`jr.tour.connect.${step}` as MessageKey)}</p></div><button className="secondary" onClick={leavePreview}>{t("jr.useMine")}</button></section>}
+          {client && !showWelcome && <div className="student-progress" aria-label={t("jr.progressLabel", { n: step + 1, name: steps[step] })}><div><span>{preview ? t("jr.tourPosition") : t("jr.currentStep")}</span><strong>{t("jr.stepOf", { n: step + 1, name: steps[step] })}</strong></div><div className="student-progress-track" aria-hidden="true"><span style={{ width: `${(step + 1) * 20}%` }}/></div></div>}
+          {preview && !showWelcome && <section className="preview-banner" aria-label={t("jr.tour.label")}><div><strong>{t("jr.tour.title")}</strong><p>{previewScenario === "estimated" ? t("jr.tour.estimated") : t("jr.tour.exploring")} {t("jr.tour.nothingSaved")}</p><p>{t(`jr.tour.connect.${step}` as MessageKey)}</p></div><button className="secondary" onClick={leavePreview}>{t("jr.useMine")}</button></section>}
           {error && (
             <div className="stale-banner" role="alert">
               {error}
@@ -833,15 +823,15 @@ export function ConnectedApp({ onDemo, onWallet, onAgent, onTrust, initialPrevie
               <span aria-hidden="true">✓</span> {notice}
             </div>
           )}
-          {client && !preview && <div className="next-action"><strong>{t("jr.nextStep")}</strong><span>{nextAction}</span></div>}
-          {busy && <div className="activity" role="status"><span className="activity-dot" aria-hidden="true"/> {t("jr.working")}</div>}
-          {!client ? (
+          {client && !preview && !showWelcome && <div className="next-action"><strong>{t("jr.nextStep")}</strong><span>{nextAction}</span></div>}
+          {busy && !showWelcome && <div className="activity" role="status"><span className="activity-dot" aria-hidden="true"/> {t("jr.working")}</div>}
+          {showWelcome || !client ? (
             <div className="student-start">
               <section className="student-welcome" aria-labelledby="welcome-title">
                 <span className="eyebrow">{t("jr.welcome.eyebrow")}</span>
                 <h1 id="welcome-title">{t("jr.welcome.title")}</h1>
                 <p>{t("jr.welcome.text")}</p>
-                <div className="student-welcome-actions"><button className="primary" onClick={() => setDashboardPreview(true)}>{t("jr.welcome.previewDashboard")} <span aria-hidden="true">→</span></button><button className="secondary" onClick={() => void startPreview()}>{t("jr.welcome.explore")}</button></div>
+                <div className="student-welcome-actions"><button className="primary" onClick={() => { setShowWelcome(false); setDashboardPreview(true); }}>{t("jr.welcome.previewDashboard")} <span aria-hidden="true">→</span></button><button className="secondary" onClick={() => void startPreview()}>{t("jr.welcome.explore")}</button></div>
                 <small>{t("jr.welcome.sample")}</small>
               </section>
               <section className="student-start-grid" aria-label={t("jr.how.label")}>
@@ -849,7 +839,6 @@ export function ConnectedApp({ onDemo, onWallet, onAgent, onTrust, initialPrevie
                 <article><span aria-hidden="true">02</span><h2>{t("jr.how.2.title")}</h2><p>{t("jr.how.2.text")}</p></article>
                 <article><span aria-hidden="true">03</span><h2>{t("jr.how.3.title")}</h2><p>{t("jr.how.3.text")}</p></article>
               </section>
-              <section className="student-developer-tools" id="student-sign-in"><h2>{t("jr.connect.title")}</h2><p>{t("jr.connect.text")}</p><a ref={connectInputRef} className="primary" href={`/api/auth/login/?next=${encodeURIComponent(window.location.origin+"/")}`}>{t("common.signIn")}</a><button className="secondary" disabled={busy} onClick={connect}>{t("jr.connect.refresh")}</button><div className="student-tool-links"><button className="secondary" onClick={()=>onWallet(true)}>{t("jr.previewWallet")}</button><button className="secondary" onClick={()=>onAgent(true)}>{t("nav.agentPreview")}</button><button className="secondary" onClick={()=>onTrust(true)}>{t("nav.trustPreview")}</button><button className="secondary" onClick={onDemo}>{t("jr.connect.originalDemo")}</button></div></section>
             </div>
           ) : (
             <>

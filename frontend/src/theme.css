@@ -116,7 +116,7 @@ aside nav button[aria-current="step"] .step-number { background: var(--accent); 
 }
 
 /* ---------- glass panels ---------- */
-.card, .scenario-card, .sidebar-note, .student-start-grid article, .student-progress, .student-more-menu, .source-dialog,
+.card, .scenario-card, .sidebar-note, .student-start-grid article, .student-progress, .source-dialog,
 main > .section-heading, .student-welcome, .preview-story-panel, .preview-application-status, .dashboard-panel, .dashboard-hero {
   position: relative; background: var(--glass); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--glass-shadow);
   backdrop-filter: blur(22px) saturate(150%); -webkit-backdrop-filter: blur(22px) saturate(150%);
@@ -245,7 +245,7 @@ details > summary { cursor: pointer; color: var(--text); }
 }
 .wallet-balance-grid strong .amount-code, .wallet-quote-grid strong .amount-code, .amount-code { display: inline; font: 500 0.42em var(--tech); letter-spacing: 0.1em; color: var(--text-3); vertical-align: 0.35em; margin-right: 0.15em; }
 /* Body copy, fields and disclosure titles that the colour migration tinted with the accent. */
-.student-welcome p, .expense-intro, .service-notice, .student-more-menu, .wallet-confirm, .known, .activity, .next-action, .scenario-currency { color: var(--text-2); }
+.student-welcome p, .expense-intro, .service-notice, .wallet-confirm, .known, .activity, .next-action, .scenario-currency { color: var(--text-2); }
 .demo-controls select, .field input, .expense-grid input, .expense-grid select, .service-field textarea, .service-field input, .service-inline-field select { color: var(--text); }
 .wallet-form-row label, .wallet-policy label { color: var(--text-2); }
 .setup-details summary, .cost-details summary, .result-details summary, .preview-calendar-details > summary, .student-developer-tools summary { color: var(--text); }

@@ -23,6 +23,7 @@ import '@fontsource/chakra-petch/500.css';
 import '@fontsource/chakra-petch/600.css';
 import '@fontsource/jetbrains-mono/400.css';
 import './theme.css';
+import { AuthApp } from './auth/AuthApp';
 
 const stepKeys = ['demo.step.confirm', 'demo.step.expenses', 'demo.step.budget', 'demo.step.funding', 'demo.step.application'] as const;
 function App() {
@@ -67,4 +68,5 @@ function Root() {
 // /intro is the product introduction; it loads as its own chunk so the app bundle stays unchanged.
 const IntroApp = lazy(() => import('./intro/IntroApp').then(module => ({ default: module.IntroApp })));
 const isIntro = /^\/intro\/?$/.test(window.location.pathname);
-createRoot(document.getElementById('root')!).render(<React.StrictMode>{isIntro ? <Suspense fallback={null}><IntroApp/></Suspense> : <Root/>}</React.StrictMode>);
+const isAuth = /^\/auth\/?$/.test(window.location.pathname);
+createRoot(document.getElementById('root')!).render(<React.StrictMode>{isIntro ? <Suspense fallback={null}><IntroApp/></Suspense> : isAuth ? <><AppBackdrop/><SimulatedStrip/><AuthApp/></> : <Root/>}</React.StrictMode>);

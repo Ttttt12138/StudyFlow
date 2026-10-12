@@ -8,8 +8,8 @@ import { SessionWalletClient, WalletApiError, type WalletClient } from "../walle
 import { createAgentPreview } from "./previewAdapter";
 import type { AgentSession, AgentStep, Approval, Page, PendingAction } from "./types";
 import "../services/services.css";
+import { signInUrl } from "../auth/links";
 
-const signInUrl = `/api/auth/login/?next=${encodeURIComponent(window.location.origin + "/?agent=1")}`;
 const TOOLS = ["get_balances", "get_fx_rate", "list_corridors", "list_beneficiaries", "get_credit_profile",
   "list_remittance_orders", "rank_quotes", "create_live_quote", "create_remittance_order",
   "submit_remittance_order", "convert_balance"] as const;
@@ -212,7 +212,7 @@ export function AgentApp({ preview, onExit }: { preview: boolean; onExit: () => 
               <h2 id="agent-ask-title">{t("agent.ask.title")}</h2>
               {signedOut && !preview ? <div className="service-empty">
                 <p>{t("agent.signedOut")}</p>
-                <a className="primary" href={signInUrl}>{t("common.signIn")}</a>
+                <a className="primary" href={signInUrl(window.location.origin + "/?agent=1")}>{t("common.signIn")}</a>
               </div> : <form onSubmit={(event) => { event.preventDefault(); void ask(goal); }}>
                 <label className="service-field">{t("agent.ask.label")}
                   <textarea value={goal} maxLength={2000} rows={3} disabled={preview || running}
