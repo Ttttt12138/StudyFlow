@@ -33,5 +33,5 @@ export function useWorkspaceNavigation(preview: boolean) {
     return () => window.removeEventListener("popstate", popped);
   }, []);
   return { route, stack, menu, setMenu, expanded, setExpanded, open, close, back,
-    setStage: (stage: "plan" | "school") => { setStack([]); navigate({ ...route, stage, tool: null }); } };
+    setStage: (stage: WorkspaceRoute["stage"]) => { setStack([]); navigate({ ...route, stage, tool: null }); } };
 }

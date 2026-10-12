@@ -3,13 +3,15 @@ import { translate } from "../i18n";
 import { WalletApiError, type WalletClient } from "../wallet/client";
 import type { Conversation, FamilyLink, InSchool } from "./types";
 
-export type PreviewStage = "plan" | "school";
+export type PreviewStage = "plan" | "prepare" | "school";
+export const previewStages: readonly PreviewStage[] = ["plan", "prepare", "school"];
 type Recording = { conversation: Conversation; in_school: InSchool; family: FamilyLink[] };
 
 // Recorded from the real API with the rule planner (backend/auto_test/fixture_plan_preview.py).
 // Loaded on demand so signed-in visitors never download them.
 const RECORDINGS: Record<PreviewStage, Record<Lang, () => Promise<{ default: unknown }>>> = {
   plan: { en: () => import("./preview-data/plan.en.json"), zh: () => import("./preview-data/plan.zh.json") },
+  prepare: { en: () => import("./preview-data/prepare.en.json"), zh: () => import("./preview-data/prepare.zh.json") },
   school: { en: () => import("./preview-data/school.en.json"), zh: () => import("./preview-data/school.zh.json") },
 };
 

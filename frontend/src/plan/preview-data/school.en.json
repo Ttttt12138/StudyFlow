@@ -1,15 +1,15 @@
 {
  "conversation": {
-  "id": "78a3b6f6-a592-407c-994f-5845d0a93171",
+  "id": "5a2a66b2-d113-4ed3-968b-1b7f0e1b2922",
   "locale": "en",
-  "created_at": "2026-10-12T11:34:45.744184+00:00",
-  "updated_at": "2026-10-12T11:34:46.241432+00:00",
+  "created_at": "2026-10-12T18:17:55.324976+00:00",
+  "updated_at": "2026-10-12T18:17:55.712906+00:00",
   "profile": {
    "role": "parent",
    "home_currency": "CNY"
   },
   "plan": {
-   "id": "9edf08a4-498e-4c0f-9c83-7c4550eba215",
+   "id": "10150a90-c040-4fa4-b917-fcbfb02cc3b3",
    "status": "ENROLLED",
    "school_key": "chulalongkorn",
    "years": 4,
@@ -17,8 +17,8 @@
    "version": 4,
    "available_funds": "200000.00",
    "funds_currency": "CNY",
-   "confirmed_at": "2026-10-12T11:34:45.731802+00:00",
-   "enrolled_at": "2026-10-12T11:34:45.809074+00:00",
+   "confirmed_at": "2026-10-12T18:17:54.956493+00:00",
+   "enrolled_at": "2026-10-12T18:17:55.380794+00:00",
    "is_simulated": true,
    "school": {
     "name": {
@@ -34,12 +34,12 @@
     "amount": "511163.04",
     "source": "fixture",
     "currency": "CNY",
-    "rate_date": "2026-10-12"
+    "rate_date": "2026-10-13"
    },
    "available": "920000.00",
    "gap": "1431350.00",
    "loan": {
-    "id": "eaef3bad-7053-40d8-b144-ae21c67e1be9",
+    "id": "b3390bd7-6ed3-4f5b-b1cd-b32d020019ef",
     "currency": "THB",
     "principal": "1431350.00",
     "months": 48,
@@ -50,25 +50,25 @@
   },
   "turns": [
    {
-    "id": "ee8e7ce3-4cf7-4c24-aacb-795f46c52f33",
+    "id": "0f3ad165-d8fc-46fa-8763-188940752048",
     "type": "agentsession",
-    "created_at": "2026-10-12T11:34:45.750Z",
+    "created_at": "2026-10-12T18:17:55.331Z",
     "goal": "",
     "locale": "en",
     "mode": "system",
     "status": "COMPLETED",
-    "final_answer": "Welcome back. Ask about tuition, living costs and the total, or compare schools.",
+    "final_answer": "Your study plan is saved. Let's start preparing for enrollment. A confirmed plan is not an admission offer: are you awaiting an offer, holding an offer, or preparing to travel? We can discuss housing, departure preparation or your first-month budget. School questions are still welcome.",
     "error_code": "",
     "write_count": 0,
-    "updated_at": "2026-10-12T11:34:45.750Z",
-    "conversation": "78a3b6f6-a592-407c-994f-5845d0a93171",
+    "updated_at": "2026-10-12T18:17:55.331Z",
+    "conversation": "5a2a66b2-d113-4ed3-968b-1b7f0e1b2922",
     "cards": [
      {
       "plan": {
-       "id": "9edf08a4-498e-4c0f-9c83-7c4550eba215",
+       "id": "10150a90-c040-4fa4-b917-fcbfb02cc3b3",
        "gap": "1431350.00",
        "loan": {
-        "id": "eaef3bad-7053-40d8-b144-ae21c67e1be9",
+        "id": "b3390bd7-6ed3-4f5b-b1cd-b32d020019ef",
         "months": 48,
         "currency": "THB",
         "principal": "1431350.00",
@@ -94,12 +94,12 @@
         "amount": "511163.04",
         "source": "fixture",
         "currency": "CNY",
-        "rate_date": "2026-10-12"
+        "rate_date": "2026-10-13"
        },
        "school_key": "chulalongkorn",
        "start_date": "2027-08-02",
        "enrolled_at": null,
-       "confirmed_at": "2026-10-12T11:34:45.731802+00:00",
+       "confirmed_at": "2026-10-12T18:17:54.956493+00:00",
        "is_simulated": true,
        "funds_currency": "CNY",
        "available_funds": "200000.00"
@@ -113,25 +113,25 @@
     "kind": "assistant"
    },
    {
-    "id": "1b23b2b2-af97-484d-bf56-91772a3399d4",
+    "id": "912d1961-7a99-447d-a90a-ed3d39374b56",
     "type": "agentsession",
-    "created_at": "2026-10-12T11:34:45.754Z",
+    "created_at": "2026-10-12T18:17:55.336Z",
     "goal": "",
     "locale": "en",
     "mode": "system",
     "status": "COMPLETED",
-    "final_answer": "Classes start in 2 day(s). Once the student is on campus, confirm enrollment to move into in-school mode: tuition and repayments go into the schedule and daily spending can be recorded.",
+    "final_answer": "Classes start in 2 day(s). Has the student completed registration, or are they still preparing? Confirm enrollment only after registration: planned simulated tuition and repayments become bills. Tell me if you are still preparing or the date has changed. The date alone never enrolls you.",
     "error_code": "",
     "write_count": 0,
-    "updated_at": "2026-10-12T11:34:45.764Z",
-    "conversation": "78a3b6f6-a592-407c-994f-5845d0a93171",
+    "updated_at": "2026-10-12T18:17:55.346Z",
+    "conversation": "5a2a66b2-d113-4ed3-968b-1b7f0e1b2922",
     "cards": [
      {
       "plan": {
-       "id": "9edf08a4-498e-4c0f-9c83-7c4550eba215",
+       "id": "10150a90-c040-4fa4-b917-fcbfb02cc3b3",
        "gap": "1431350.00",
        "loan": {
-        "id": "eaef3bad-7053-40d8-b144-ae21c67e1be9",
+        "id": "b3390bd7-6ed3-4f5b-b1cd-b32d020019ef",
         "months": 48,
         "currency": "THB",
         "principal": "1431350.00",
@@ -157,12 +157,12 @@
         "amount": "511163.04",
         "source": "fixture",
         "currency": "CNY",
-        "rate_date": "2026-10-12"
+        "rate_date": "2026-10-13"
        },
        "school_key": "chulalongkorn",
        "start_date": "2027-08-02",
        "enrolled_at": null,
-       "confirmed_at": "2026-10-12T11:34:45.731802+00:00",
+       "confirmed_at": "2026-10-12T18:17:54.956493+00:00",
        "is_simulated": true,
        "funds_currency": "CNY",
        "available_funds": "200000.00"
@@ -170,18 +170,18 @@
       "type": "confirmation",
       "action": "plan.enroll",
       "details": {
-       "plan_id": "9edf08a4-498e-4c0f-9c83-7c4550eba215",
+       "plan_id": "10150a90-c040-4fa4-b917-fcbfb02cc3b3",
        "school_key": "chulalongkorn",
        "start_date": "2027-08-02"
       },
-      "expires_at": "2026-10-12T11:49:45.758207+00:00",
-      "pending_action_id": "70ed5d85-8255-4802-8d23-d7c5a45b317b"
+      "expires_at": "2026-10-12T18:32:55.340641+00:00",
+      "pending_action_id": "0fa58544-0afd-4423-899d-7e998569976e"
      }
     ],
     "steps": [
      {
-      "id": "d06afc75-8b06-45aa-a4a2-a97ebec9a26c",
-      "created_at": "2026-10-12T11:34:45.758Z",
+      "id": "257485d4-150a-49b5-8b56-bb74a7602d12",
+      "created_at": "2026-10-12T18:17:55.340Z",
       "number": 1,
       "tool": "confirm_enrollment",
       "tier": "T2",
@@ -192,7 +192,7 @@
        "action": "plan.enroll",
        "amount": null,
        "details": {
-        "plan_id": "9edf08a4-498e-4c0f-9c83-7c4550eba215",
+        "plan_id": "10150a90-c040-4fa4-b917-fcbfb02cc3b3",
         "school_key": "chulalongkorn",
         "start_date": "2027-08-02"
        },
@@ -201,9 +201,9 @@
        "requires": [
         "user_confirmation"
        ],
-       "target_id": "9edf08a4-498e-4c0f-9c83-7c4550eba215",
-       "expires_at": "2026-10-12T11:49:45.758207+00:00",
-       "pending_action_id": "70ed5d85-8255-4802-8d23-d7c5a45b317b"
+       "target_id": "10150a90-c040-4fa4-b917-fcbfb02cc3b3",
+       "expires_at": "2026-10-12T18:32:55.340641+00:00",
+       "pending_action_id": "0fa58544-0afd-4423-899d-7e998569976e"
       },
       "call": {
        "purpose": "enrollment_due",
@@ -213,30 +213,30 @@
     ],
     "pending_actions": [
      {
-      "id": "70ed5d85-8255-4802-8d23-d7c5a45b317b",
+      "id": "0fa58544-0afd-4423-899d-7e998569976e",
       "type": "agentpendingaction",
-      "created_at": "2026-10-12T11:34:45.759Z",
-      "session": "1b23b2b2-af97-484d-bf56-91772a3399d4",
-      "step": "d06afc75-8b06-45aa-a4a2-a97ebec9a26c",
+      "created_at": "2026-10-12T18:17:55.341Z",
+      "session": "912d1961-7a99-447d-a90a-ed3d39374b56",
+      "step": "257485d4-150a-49b5-8b56-bb74a7602d12",
       "action": "plan.enroll",
       "tool": "confirm_enrollment",
       "arguments": {
-       "plan_id": "9edf08a4-498e-4c0f-9c83-7c4550eba215",
+       "plan_id": "10150a90-c040-4fa4-b917-fcbfb02cc3b3",
        "school_key": "chulalongkorn",
        "start_date": "2027-08-02"
       },
-      "target_id": "9edf08a4-498e-4c0f-9c83-7c4550eba215",
+      "target_id": "10150a90-c040-4fa4-b917-fcbfb02cc3b3",
       "amount": null,
       "currency": "",
       "status": "CONFIRMED",
-      "expires_at": "2026-10-12T11:49:45.758Z",
-      "decided_at": "2026-10-12T11:34:46.027Z",
+      "expires_at": "2026-10-12T18:32:55.340Z",
+      "decided_at": "2026-10-12T18:17:55.536Z",
       "result": {
        "plan": {
-        "id": "9edf08a4-498e-4c0f-9c83-7c4550eba215",
+        "id": "10150a90-c040-4fa4-b917-fcbfb02cc3b3",
         "gap": "1431350.00",
         "loan": {
-         "id": "eaef3bad-7053-40d8-b144-ae21c67e1be9",
+         "id": "b3390bd7-6ed3-4f5b-b1cd-b32d020019ef",
          "months": 48,
          "currency": "THB",
          "principal": "1431350.00",
@@ -262,12 +262,12 @@
          "amount": "511163.04",
          "source": "fixture",
          "currency": "CNY",
-         "rate_date": "2026-10-12"
+         "rate_date": "2026-10-13"
         },
         "school_key": "chulalongkorn",
         "start_date": "2027-08-02",
-        "enrolled_at": "2026-10-12T11:34:45.809074+00:00",
-        "confirmed_at": "2026-10-12T11:34:45.731802+00:00",
+        "enrolled_at": "2026-10-12T18:17:55.380794+00:00",
+        "confirmed_at": "2026-10-12T18:17:54.956493+00:00",
         "is_simulated": true,
         "funds_currency": "CNY",
         "available_funds": "200000.00"
@@ -280,9 +280,28 @@
     "kind": "assistant"
    },
    {
-    "id": "2ed63440-ef51-476d-ad29-e2fdb001cf07",
+    "id": "be24704e-7378-4e36-a716-be34bbf23187",
     "type": "agentsession",
-    "created_at": "2026-10-12T11:34:46.045Z",
+    "created_at": "2026-10-12T18:17:55.541Z",
+    "goal": "",
+    "locale": "en",
+    "mode": "system",
+    "status": "COMPLETED",
+    "final_answer": "Enrollment is confirmed: let's settle into daily life. Your planned simulated bills are ready. Start with this month's budget, record an expense, or explore campus life. What would help first? Confirming enrollment has not paid any bill; all funds remain simulated.",
+    "error_code": "",
+    "write_count": 0,
+    "updated_at": "2026-10-12T18:17:55.541Z",
+    "conversation": "5a2a66b2-d113-4ed3-968b-1b7f0e1b2922",
+    "cards": [],
+    "steps": [],
+    "pending_actions": [],
+    "is_simulated": true,
+    "kind": "assistant"
+   },
+   {
+    "id": "c53ea875-31fc-49de-b670-4257f7fc02b7",
+    "type": "agentsession",
+    "created_at": "2026-10-12T18:17:55.553Z",
     "goal": "I spent 120 THB on lunch today",
     "locale": "en",
     "mode": "mock",
@@ -290,8 +309,8 @@
     "final_answer": "Recorded: 2027-08-14 120 THB (food). 2027-08: spent 120 THB of a 24,300 THB monthly living budget; 24,180 THB left. All money and loans are simulated.",
     "error_code": "",
     "write_count": 1,
-    "updated_at": "2026-10-12T11:34:46.072Z",
-    "conversation": "78a3b6f6-a592-407c-994f-5845d0a93171",
+    "updated_at": "2026-10-12T18:17:55.576Z",
+    "conversation": "5a2a66b2-d113-4ed3-968b-1b7f0e1b2922",
     "cards": [
      {
       "type": "spending",
@@ -300,7 +319,7 @@
       "budget": "24300.00",
       "recent": [
        {
-        "id": "06cb773a-8d22-4aad-9637-afe25a8a162c",
+        "id": "86989d68-3d96-4a3e-af12-a0277fb47f93",
         "note": "I spent 120 THB on lunch today",
         "amount": "120.00",
         "category": "food",
@@ -310,7 +329,7 @@
        }
       ],
       "expense": {
-       "id": "06cb773a-8d22-4aad-9637-afe25a8a162c",
+       "id": "86989d68-3d96-4a3e-af12-a0277fb47f93",
        "note": "I spent 120 THB on lunch today",
        "amount": "120.00",
        "category": "food",
@@ -330,8 +349,8 @@
     ],
     "steps": [
      {
-      "id": "2b4b8b53-efbb-468f-b3de-0d0fd3a769fd",
-      "created_at": "2026-10-12T11:34:46.070Z",
+      "id": "548c96f9-6a96-4494-a0e2-90682effc4e3",
+      "created_at": "2026-10-12T18:17:55.574Z",
       "number": 1,
       "tool": "record_expense",
       "tier": "T1",
@@ -348,7 +367,7 @@
        "budget": "24300.00",
        "recent": [
         {
-         "id": "06cb773a-8d22-4aad-9637-afe25a8a162c",
+         "id": "86989d68-3d96-4a3e-af12-a0277fb47f93",
          "note": "I spent 120 THB on lunch today",
          "amount": "120.00",
          "category": "food",
@@ -358,7 +377,7 @@
         }
        ],
        "expense": {
-        "id": "06cb773a-8d22-4aad-9637-afe25a8a162c",
+        "id": "86989d68-3d96-4a3e-af12-a0277fb47f93",
         "note": "I spent 120 THB on lunch today",
         "amount": "120.00",
         "category": "food",
@@ -387,12 +406,12 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.0"
+       "prompt_version": "planning-1.1"
       }
      },
      {
-      "id": "b28ba712-f3e8-4fe2-b75f-eaa828ce0400",
-      "created_at": "2026-10-12T11:34:46.071Z",
+      "id": "2076729f-1c48-40ea-8e80-dac3d6f5acfb",
+      "created_at": "2026-10-12T18:17:55.575Z",
       "number": 2,
       "tool": "",
       "tier": "",
@@ -414,7 +433,7 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.0"
+       "prompt_version": "planning-1.1"
       }
      }
     ],
@@ -423,9 +442,9 @@
     "kind": "user"
    },
    {
-    "id": "730962e3-96ab-4773-821b-ae00dc8a2d8a",
+    "id": "085ac541-8310-4ca3-b00b-ea995745de14",
     "type": "agentsession",
-    "created_at": "2026-10-12T11:34:46.087Z",
+    "created_at": "2026-10-12T18:17:55.588Z",
     "goal": "Taxi, spent 85 THB",
     "locale": "en",
     "mode": "mock",
@@ -433,8 +452,8 @@
     "final_answer": "Recorded: 2027-08-14 85.00 THB (transport). 2027-08: spent 205 THB of a 24,300 THB monthly living budget; 24,095 THB left. All money and loans are simulated.",
     "error_code": "",
     "write_count": 1,
-    "updated_at": "2026-10-12T11:34:46.115Z",
-    "conversation": "78a3b6f6-a592-407c-994f-5845d0a93171",
+    "updated_at": "2026-10-12T18:17:55.612Z",
+    "conversation": "5a2a66b2-d113-4ed3-968b-1b7f0e1b2922",
     "cards": [
      {
       "type": "spending",
@@ -443,7 +462,7 @@
       "budget": "24300.00",
       "recent": [
        {
-        "id": "81c5f976-8789-4c40-9066-01f4d6279ae0",
+        "id": "4f8174f8-77b1-476f-82df-0dc6a20a8ed0",
         "note": "Taxi, spent 85 THB",
         "amount": "85.00",
         "category": "transport",
@@ -452,7 +471,7 @@
         "via_agent": true
        },
        {
-        "id": "06cb773a-8d22-4aad-9637-afe25a8a162c",
+        "id": "86989d68-3d96-4a3e-af12-a0277fb47f93",
         "note": "I spent 120 THB on lunch today",
         "amount": "120.00",
         "category": "food",
@@ -462,7 +481,7 @@
        }
       ],
       "expense": {
-       "id": "81c5f976-8789-4c40-9066-01f4d6279ae0",
+       "id": "4f8174f8-77b1-476f-82df-0dc6a20a8ed0",
        "note": "Taxi, spent 85 THB",
        "amount": "85.00",
        "category": "transport",
@@ -483,8 +502,8 @@
     ],
     "steps": [
      {
-      "id": "6966fd51-d28b-4053-ac6b-f1d28bec29e1",
-      "created_at": "2026-10-12T11:34:46.113Z",
+      "id": "bfaf1960-3f3d-4732-be04-a320f1d6b783",
+      "created_at": "2026-10-12T18:17:55.610Z",
       "number": 1,
       "tool": "record_expense",
       "tier": "T1",
@@ -501,7 +520,7 @@
        "budget": "24300.00",
        "recent": [
         {
-         "id": "81c5f976-8789-4c40-9066-01f4d6279ae0",
+         "id": "4f8174f8-77b1-476f-82df-0dc6a20a8ed0",
          "note": "Taxi, spent 85 THB",
          "amount": "85.00",
          "category": "transport",
@@ -510,7 +529,7 @@
          "via_agent": true
         },
         {
-         "id": "06cb773a-8d22-4aad-9637-afe25a8a162c",
+         "id": "86989d68-3d96-4a3e-af12-a0277fb47f93",
          "note": "I spent 120 THB on lunch today",
          "amount": "120.00",
          "category": "food",
@@ -520,7 +539,7 @@
         }
        ],
        "expense": {
-        "id": "81c5f976-8789-4c40-9066-01f4d6279ae0",
+        "id": "4f8174f8-77b1-476f-82df-0dc6a20a8ed0",
         "note": "Taxi, spent 85 THB",
         "amount": "85.00",
         "category": "transport",
@@ -550,12 +569,12 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.0"
+       "prompt_version": "planning-1.1"
       }
      },
      {
-      "id": "9ac223bd-87a9-4906-9906-0f0bfd3b87ff",
-      "created_at": "2026-10-12T11:34:46.114Z",
+      "id": "e9a58a60-dbca-41ad-9cdd-4f2c5b9c70da",
+      "created_at": "2026-10-12T18:17:55.611Z",
       "number": 2,
       "tool": "",
       "tier": "",
@@ -577,7 +596,7 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.0"
+       "prompt_version": "planning-1.1"
       }
      }
     ],
@@ -586,9 +605,9 @@
     "kind": "user"
    },
    {
-    "id": "bf05c704-116c-4ba7-909a-a664ef634914",
+    "id": "7c1ee38b-82bf-48c2-bea8-6d9ea1345011",
     "type": "agentsession",
-    "created_at": "2026-10-12T11:34:46.130Z",
+    "created_at": "2026-10-12T18:17:55.625Z",
     "goal": "How much have I spent this month?",
     "locale": "en",
     "mode": "mock",
@@ -596,8 +615,8 @@
     "final_answer": "2027-08: spent 205 THB of a 24,300 THB monthly living budget; 24,095 THB left. All money and loans are simulated.",
     "error_code": "",
     "write_count": 0,
-    "updated_at": "2026-10-12T11:34:46.151Z",
-    "conversation": "78a3b6f6-a592-407c-994f-5845d0a93171",
+    "updated_at": "2026-10-12T18:17:55.646Z",
+    "conversation": "5a2a66b2-d113-4ed3-968b-1b7f0e1b2922",
     "cards": [
      {
       "type": "spending",
@@ -606,7 +625,7 @@
       "budget": "24300.00",
       "recent": [
        {
-        "id": "81c5f976-8789-4c40-9066-01f4d6279ae0",
+        "id": "4f8174f8-77b1-476f-82df-0dc6a20a8ed0",
         "note": "Taxi, spent 85 THB",
         "amount": "85.00",
         "category": "transport",
@@ -615,7 +634,7 @@
         "via_agent": true
        },
        {
-        "id": "06cb773a-8d22-4aad-9637-afe25a8a162c",
+        "id": "86989d68-3d96-4a3e-af12-a0277fb47f93",
         "note": "I spent 120 THB on lunch today",
         "amount": "120.00",
         "category": "food",
@@ -637,8 +656,8 @@
     ],
     "steps": [
      {
-      "id": "494752a4-a4b4-44ea-b8ac-73f9643d12d9",
-      "created_at": "2026-10-12T11:34:46.150Z",
+      "id": "c5955863-71ad-4856-90e5-039302f26062",
+      "created_at": "2026-10-12T18:17:55.644Z",
       "number": 1,
       "tool": "get_spending",
       "tier": "T0",
@@ -651,7 +670,7 @@
        "budget": "24300.00",
        "recent": [
         {
-         "id": "81c5f976-8789-4c40-9066-01f4d6279ae0",
+         "id": "4f8174f8-77b1-476f-82df-0dc6a20a8ed0",
          "note": "Taxi, spent 85 THB",
          "amount": "85.00",
          "category": "transport",
@@ -660,7 +679,7 @@
          "via_agent": true
         },
         {
-         "id": "06cb773a-8d22-4aad-9637-afe25a8a162c",
+         "id": "86989d68-3d96-4a3e-af12-a0277fb47f93",
          "note": "I spent 120 THB on lunch today",
          "amount": "120.00",
          "category": "food",
@@ -691,12 +710,12 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.0"
+       "prompt_version": "planning-1.1"
       }
      },
      {
-      "id": "850d8c3f-50dd-4766-ac13-7fed4f9bf23b",
-      "created_at": "2026-10-12T11:34:46.151Z",
+      "id": "4337142e-b80e-43ba-81e7-eeffab0b1d54",
+      "created_at": "2026-10-12T18:17:55.645Z",
       "number": 2,
       "tool": "",
       "tier": "",
@@ -718,7 +737,7 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.0"
+       "prompt_version": "planning-1.1"
       }
      }
     ],
@@ -727,9 +746,9 @@
     "kind": "user"
    },
    {
-    "id": "e0f5fb3a-54ce-442e-874e-8e28380d3576",
+    "id": "8c06f964-96e1-4ade-90e8-1c38b79abfda",
     "type": "agentsession",
-    "created_at": "2026-10-12T11:34:46.167Z",
+    "created_at": "2026-10-12T18:17:55.658Z",
     "goal": "Which bills are due?",
     "locale": "en",
     "mode": "mock",
@@ -737,14 +756,14 @@
     "final_answer": "Upcoming bills: 2027-08-02 Student health insurance 10,000 THB; 2027-08-02 Preparation course (June-July before year 1) 41,400 THB; 2027-08-02 Year 1 summer session 46,650 THB; 2027-08-02 Tuition and fees per semester (includes 50,000 confirmation fee in year 1) 117,600 THB. All money and loans are simulated.",
     "error_code": "",
     "write_count": 0,
-    "updated_at": "2026-10-12T11:34:46.197Z",
-    "conversation": "78a3b6f6-a592-407c-994f-5845d0a93171",
+    "updated_at": "2026-10-12T18:17:55.679Z",
+    "conversation": "5a2a66b2-d113-4ed3-968b-1b7f0e1b2922",
     "cards": [
      {
       "type": "bills",
       "bills": [
        {
-        "id": "6df76450-788d-4323-8e45-c0f3fe9d0203",
+        "id": "b614a3ef-a5ef-4b31-b2c5-c2ce82bb97bd",
         "kind": "insurance",
         "label": {
          "en": "Student health insurance",
@@ -758,7 +777,7 @@
         "is_simulated": true
        },
        {
-        "id": "cd53f646-0fc8-405a-8c6a-28e521867d91",
+        "id": "b06bceb6-fe9a-4938-804a-3c3d4a7c43e8",
         "kind": "tuition",
         "label": {
          "en": "Preparation course (June-July before year 1)",
@@ -772,7 +791,7 @@
         "is_simulated": true
        },
        {
-        "id": "ca35f22c-587f-4a24-90d9-071274d89e11",
+        "id": "601b4b5e-a0c9-4d3e-b7da-e302efd55606",
         "kind": "tuition",
         "label": {
          "en": "Year 1 summer session",
@@ -786,7 +805,7 @@
         "is_simulated": true
        },
        {
-        "id": "61a137a3-4c76-45aa-a676-65d3f57a344b",
+        "id": "21adbb03-27fc-450c-8119-5da3f90e9bff",
         "kind": "tuition",
         "label": {
          "en": "Tuition and fees per semester (includes 50,000 confirmation fee in year 1)",
@@ -800,7 +819,7 @@
         "is_simulated": true
        },
        {
-        "id": "e6330090-b2ab-47a4-858a-e43eaca5f484",
+        "id": "f51af4d4-81dd-4322-97dc-faf95c77887e",
         "kind": "visa",
         "label": {
          "en": "Annual extension of stay",
@@ -814,7 +833,7 @@
         "is_simulated": true
        },
        {
-        "id": "187e4a64-1121-412a-bbe1-4760917827ef",
+        "id": "8ab74567-fbbf-4278-bd0f-147d9f16b130",
         "kind": "visa",
         "label": {
          "en": "Non-Immigrant ED visa, single entry",
@@ -828,7 +847,7 @@
         "is_simulated": true
        },
        {
-        "id": "c6c9120a-16a1-44d2-9d2e-7fc253309fd3",
+        "id": "e66b5f22-1345-410d-882f-ef7e14f49fed",
         "kind": "loan",
         "label": {
          "en": "Loan installment 1",
@@ -842,7 +861,7 @@
         "is_simulated": true
        },
        {
-        "id": "d31d4064-5e00-4a46-a32f-52f2b53a3d56",
+        "id": "de0373d9-3ccb-45a6-9531-46bb89c9ad83",
         "kind": "loan",
         "label": {
          "en": "Loan installment 2",
@@ -856,7 +875,7 @@
         "is_simulated": true
        },
        {
-        "id": "735d583b-c169-4ab7-8bdc-4c54a4583868",
+        "id": "35d4e432-596b-40e8-a3b9-5bc1a682ee2c",
         "kind": "loan",
         "label": {
          "en": "Loan installment 3",
@@ -870,7 +889,7 @@
         "is_simulated": true
        },
        {
-        "id": "7b417d58-aa6e-4b90-bfc5-954c78e8a692",
+        "id": "6d9fb1d9-08f5-470e-9243-570bb4eafa18",
         "kind": "loan",
         "label": {
          "en": "Loan installment 4",
@@ -884,7 +903,7 @@
         "is_simulated": true
        },
        {
-        "id": "a0a7b1dd-2e4f-4600-893c-1192216694e6",
+        "id": "aa736853-89da-417d-ab65-a832cb03c221",
         "kind": "loan",
         "label": {
          "en": "Loan installment 5",
@@ -898,7 +917,7 @@
         "is_simulated": true
        },
        {
-        "id": "fcb6a8ba-352b-437a-90fd-19cf7bad25e0",
+        "id": "3c61b63e-705f-4b0d-8389-81845b280fa8",
         "kind": "loan",
         "label": {
          "en": "Loan installment 6",
@@ -916,8 +935,8 @@
     ],
     "steps": [
      {
-      "id": "c2d0d3dc-b9a9-4765-97d8-10204948f49f",
-      "created_at": "2026-10-12T11:34:46.194Z",
+      "id": "cf3f6986-33ec-4f7b-b95f-c479103b46b7",
+      "created_at": "2026-10-12T18:17:55.677Z",
       "number": 1,
       "tool": "list_bills",
       "tier": "T0",
@@ -927,7 +946,7 @@
       "result": {
        "bills": [
         {
-         "id": "6df76450-788d-4323-8e45-c0f3fe9d0203",
+         "id": "b614a3ef-a5ef-4b31-b2c5-c2ce82bb97bd",
          "kind": "insurance",
          "label": {
           "en": "Student health insurance",
@@ -941,7 +960,7 @@
          "is_simulated": true
         },
         {
-         "id": "cd53f646-0fc8-405a-8c6a-28e521867d91",
+         "id": "b06bceb6-fe9a-4938-804a-3c3d4a7c43e8",
          "kind": "tuition",
          "label": {
           "en": "Preparation course (June-July before year 1)",
@@ -955,7 +974,7 @@
          "is_simulated": true
         },
         {
-         "id": "ca35f22c-587f-4a24-90d9-071274d89e11",
+         "id": "601b4b5e-a0c9-4d3e-b7da-e302efd55606",
          "kind": "tuition",
          "label": {
           "en": "Year 1 summer session",
@@ -969,7 +988,7 @@
          "is_simulated": true
         },
         {
-         "id": "61a137a3-4c76-45aa-a676-65d3f57a344b",
+         "id": "21adbb03-27fc-450c-8119-5da3f90e9bff",
          "kind": "tuition",
          "label": {
           "en": "Tuition and fees per semester (includes 50,000 confirmation fee in year 1)",
@@ -983,7 +1002,7 @@
          "is_simulated": true
         },
         {
-         "id": "e6330090-b2ab-47a4-858a-e43eaca5f484",
+         "id": "f51af4d4-81dd-4322-97dc-faf95c77887e",
          "kind": "visa",
          "label": {
           "en": "Annual extension of stay",
@@ -997,7 +1016,7 @@
          "is_simulated": true
         },
         {
-         "id": "187e4a64-1121-412a-bbe1-4760917827ef",
+         "id": "8ab74567-fbbf-4278-bd0f-147d9f16b130",
          "kind": "visa",
          "label": {
           "en": "Non-Immigrant ED visa, single entry",
@@ -1011,7 +1030,7 @@
          "is_simulated": true
         },
         {
-         "id": "c6c9120a-16a1-44d2-9d2e-7fc253309fd3",
+         "id": "e66b5f22-1345-410d-882f-ef7e14f49fed",
          "kind": "loan",
          "label": {
           "en": "Loan installment 1",
@@ -1025,7 +1044,7 @@
          "is_simulated": true
         },
         {
-         "id": "d31d4064-5e00-4a46-a32f-52f2b53a3d56",
+         "id": "de0373d9-3ccb-45a6-9531-46bb89c9ad83",
          "kind": "loan",
          "label": {
           "en": "Loan installment 2",
@@ -1039,7 +1058,7 @@
          "is_simulated": true
         },
         {
-         "id": "735d583b-c169-4ab7-8bdc-4c54a4583868",
+         "id": "35d4e432-596b-40e8-a3b9-5bc1a682ee2c",
          "kind": "loan",
          "label": {
           "en": "Loan installment 3",
@@ -1053,7 +1072,7 @@
          "is_simulated": true
         },
         {
-         "id": "7b417d58-aa6e-4b90-bfc5-954c78e8a692",
+         "id": "6d9fb1d9-08f5-470e-9243-570bb4eafa18",
          "kind": "loan",
          "label": {
           "en": "Loan installment 4",
@@ -1067,7 +1086,7 @@
          "is_simulated": true
         },
         {
-         "id": "a0a7b1dd-2e4f-4600-893c-1192216694e6",
+         "id": "aa736853-89da-417d-ab65-a832cb03c221",
          "kind": "loan",
          "label": {
           "en": "Loan installment 5",
@@ -1081,7 +1100,7 @@
          "is_simulated": true
         },
         {
-         "id": "fcb6a8ba-352b-437a-90fd-19cf7bad25e0",
+         "id": "3c61b63e-705f-4b0d-8389-81845b280fa8",
          "kind": "loan",
          "label": {
           "en": "Loan installment 6",
@@ -1108,12 +1127,12 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.0"
+       "prompt_version": "planning-1.1"
       }
      },
      {
-      "id": "693f41ae-0c49-440f-8aa4-3fd4f554d4d3",
-      "created_at": "2026-10-12T11:34:46.196Z",
+      "id": "7eadad85-737e-4cdf-9146-aed857c6f9a6",
+      "created_at": "2026-10-12T18:17:55.678Z",
       "number": 2,
       "tool": "",
       "tier": "",
@@ -1135,7 +1154,7 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.0"
+       "prompt_version": "planning-1.1"
       }
      }
     ],
@@ -1144,23 +1163,23 @@
     "kind": "user"
    },
    {
-    "id": "22653d14-d914-41d1-96f4-e5c78c42a25f",
+    "id": "517d2bb1-ce95-48c5-9a73-ebe7b8fb2452",
     "type": "agentsession",
-    "created_at": "2026-10-12T11:34:46.214Z",
+    "created_at": "2026-10-12T18:17:55.692Z",
     "goal": "What is the CNY to THB rate?",
     "locale": "en",
     "mode": "mock",
     "status": "COMPLETED",
-    "final_answer": "CNY/THB reference rate 4.6000000000 (fixture, 2026-10-12). All funds are simulated.",
+    "final_answer": "CNY/THB reference rate 4.6000000000 (fixture, 2026-10-13). All funds are simulated.",
     "error_code": "",
     "write_count": 0,
-    "updated_at": "2026-10-12T11:34:46.240Z",
-    "conversation": "78a3b6f6-a592-407c-994f-5845d0a93171",
+    "updated_at": "2026-10-12T18:17:55.711Z",
+    "conversation": "5a2a66b2-d113-4ed3-968b-1b7f0e1b2922",
     "cards": [],
     "steps": [
      {
-      "id": "069c0c95-0e86-44d4-ab94-39510bc337da",
-      "created_at": "2026-10-12T11:34:46.238Z",
+      "id": "99075d62-9161-4822-bec1-c48bbf25a97a",
+      "created_at": "2026-10-12T18:17:55.710Z",
       "number": 1,
       "tool": "get_fx_rate",
       "tier": "T0",
@@ -1178,8 +1197,8 @@
        "stale": false,
        "issues": [],
        "source": "fixture",
-       "rate_date": "2026-10-12",
-       "fetched_at": "2026-10-12T11:34:44.625932+00:00",
+       "rate_date": "2026-10-13",
+       "fetched_at": "2026-10-12T18:17:53.554103+00:00",
        "is_reference_rate": true
       },
       "call": {
@@ -1194,12 +1213,12 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.0"
+       "prompt_version": "planning-1.1"
       }
      },
      {
-      "id": "2a2049df-817c-4d34-87fb-e95396db8fa4",
-      "created_at": "2026-10-12T11:34:46.239Z",
+      "id": "b35fcd0e-f794-4e6d-8bf3-d8d9e6479923",
+      "created_at": "2026-10-12T18:17:55.711Z",
       "number": 2,
       "tool": "",
       "tier": "",
@@ -1207,7 +1226,7 @@
       "rationale": "",
       "status": "FINAL",
       "result": {
-       "answer": "CNY/THB reference rate 4.6000000000 (fixture, 2026-10-12). All funds are simulated."
+       "answer": "CNY/THB reference rate 4.6000000000 (fixture, 2026-10-13). All funds are simulated."
       },
       "call": {
        "mode": "mock",
@@ -1221,7 +1240,7 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.0"
+       "prompt_version": "planning-1.1"
       }
      }
     ],
@@ -1236,7 +1255,7 @@
   "enrolled": true,
   "today": "2027-08-14",
   "plan": {
-   "id": "9edf08a4-498e-4c0f-9c83-7c4550eba215",
+   "id": "10150a90-c040-4fa4-b917-fcbfb02cc3b3",
    "status": "ENROLLED",
    "school_key": "chulalongkorn",
    "years": 4,
@@ -1244,8 +1263,8 @@
    "version": 4,
    "available_funds": "200000.00",
    "funds_currency": "CNY",
-   "confirmed_at": "2026-10-12T11:34:45.731802+00:00",
-   "enrolled_at": "2026-10-12T11:34:45.809074+00:00",
+   "confirmed_at": "2026-10-12T18:17:54.956493+00:00",
+   "enrolled_at": "2026-10-12T18:17:55.380794+00:00",
    "is_simulated": true,
    "school": {
     "name": {
@@ -1261,12 +1280,12 @@
     "amount": "511163.04",
     "source": "fixture",
     "currency": "CNY",
-    "rate_date": "2026-10-12"
+    "rate_date": "2026-10-13"
    },
    "available": "920000.00",
    "gap": "1431350.00",
    "loan": {
-    "id": "eaef3bad-7053-40d8-b144-ae21c67e1be9",
+    "id": "b3390bd7-6ed3-4f5b-b1cd-b32d020019ef",
     "currency": "THB",
     "principal": "1431350.00",
     "months": 48,
@@ -1277,7 +1296,7 @@
   },
   "upcoming_bills": [
    {
-    "id": "6df76450-788d-4323-8e45-c0f3fe9d0203",
+    "id": "b614a3ef-a5ef-4b31-b2c5-c2ce82bb97bd",
     "kind": "insurance",
     "label": {
      "en": "Student health insurance",
@@ -1291,7 +1310,7 @@
     "is_simulated": true
    },
    {
-    "id": "cd53f646-0fc8-405a-8c6a-28e521867d91",
+    "id": "b06bceb6-fe9a-4938-804a-3c3d4a7c43e8",
     "kind": "tuition",
     "label": {
      "en": "Preparation course (June-July before year 1)",
@@ -1305,7 +1324,7 @@
     "is_simulated": true
    },
    {
-    "id": "ca35f22c-587f-4a24-90d9-071274d89e11",
+    "id": "601b4b5e-a0c9-4d3e-b7da-e302efd55606",
     "kind": "tuition",
     "label": {
      "en": "Year 1 summer session",
@@ -1319,7 +1338,7 @@
     "is_simulated": true
    },
    {
-    "id": "61a137a3-4c76-45aa-a676-65d3f57a344b",
+    "id": "21adbb03-27fc-450c-8119-5da3f90e9bff",
     "kind": "tuition",
     "label": {
      "en": "Tuition and fees per semester (includes 50,000 confirmation fee in year 1)",
@@ -1333,7 +1352,7 @@
     "is_simulated": true
    },
    {
-    "id": "e6330090-b2ab-47a4-858a-e43eaca5f484",
+    "id": "f51af4d4-81dd-4322-97dc-faf95c77887e",
     "kind": "visa",
     "label": {
      "en": "Annual extension of stay",
@@ -1347,7 +1366,7 @@
     "is_simulated": true
    },
    {
-    "id": "187e4a64-1121-412a-bbe1-4760917827ef",
+    "id": "8ab74567-fbbf-4278-bd0f-147d9f16b130",
     "kind": "visa",
     "label": {
      "en": "Non-Immigrant ED visa, single entry",
@@ -1361,7 +1380,7 @@
     "is_simulated": true
    },
    {
-    "id": "c6c9120a-16a1-44d2-9d2e-7fc253309fd3",
+    "id": "e66b5f22-1345-410d-882f-ef7e14f49fed",
     "kind": "loan",
     "label": {
      "en": "Loan installment 1",
@@ -1375,7 +1394,7 @@
     "is_simulated": true
    },
    {
-    "id": "d31d4064-5e00-4a46-a32f-52f2b53a3d56",
+    "id": "de0373d9-3ccb-45a6-9531-46bb89c9ad83",
     "kind": "loan",
     "label": {
      "en": "Loan installment 2",
@@ -1391,7 +1410,7 @@
   ],
   "overdue": [
    {
-    "id": "6df76450-788d-4323-8e45-c0f3fe9d0203",
+    "id": "b614a3ef-a5ef-4b31-b2c5-c2ce82bb97bd",
     "kind": "insurance",
     "label": {
      "en": "Student health insurance",
@@ -1405,7 +1424,7 @@
     "is_simulated": true
    },
    {
-    "id": "cd53f646-0fc8-405a-8c6a-28e521867d91",
+    "id": "b06bceb6-fe9a-4938-804a-3c3d4a7c43e8",
     "kind": "tuition",
     "label": {
      "en": "Preparation course (June-July before year 1)",
@@ -1419,7 +1438,7 @@
     "is_simulated": true
    },
    {
-    "id": "ca35f22c-587f-4a24-90d9-071274d89e11",
+    "id": "601b4b5e-a0c9-4d3e-b7da-e302efd55606",
     "kind": "tuition",
     "label": {
      "en": "Year 1 summer session",
@@ -1433,7 +1452,7 @@
     "is_simulated": true
    },
    {
-    "id": "61a137a3-4c76-45aa-a676-65d3f57a344b",
+    "id": "21adbb03-27fc-450c-8119-5da3f90e9bff",
     "kind": "tuition",
     "label": {
      "en": "Tuition and fees per semester (includes 50,000 confirmation fee in year 1)",
@@ -1447,7 +1466,7 @@
     "is_simulated": true
    },
    {
-    "id": "e6330090-b2ab-47a4-858a-e43eaca5f484",
+    "id": "f51af4d4-81dd-4322-97dc-faf95c77887e",
     "kind": "visa",
     "label": {
      "en": "Annual extension of stay",
@@ -1461,7 +1480,7 @@
     "is_simulated": true
    },
    {
-    "id": "187e4a64-1121-412a-bbe1-4760917827ef",
+    "id": "8ab74567-fbbf-4278-bd0f-147d9f16b130",
     "kind": "visa",
     "label": {
      "en": "Non-Immigrant ED visa, single entry",
@@ -1491,7 +1510,7 @@
    "is_simulated": true,
    "recent": [
     {
-     "id": "81c5f976-8789-4c40-9066-01f4d6279ae0",
+     "id": "4f8174f8-77b1-476f-82df-0dc6a20a8ed0",
      "spent_on": "2027-08-14",
      "category": "transport",
      "amount": "85.00",
@@ -1500,7 +1519,7 @@
      "via_agent": true
     },
     {
-     "id": "06cb773a-8d22-4aad-9637-afe25a8a162c",
+     "id": "86989d68-3d96-4a3e-af12-a0277fb47f93",
      "spent_on": "2027-08-14",
      "category": "food",
      "amount": "120.00",
@@ -1512,7 +1531,7 @@
   },
   "bills": [
    {
-    "id": "6df76450-788d-4323-8e45-c0f3fe9d0203",
+    "id": "b614a3ef-a5ef-4b31-b2c5-c2ce82bb97bd",
     "kind": "insurance",
     "label": {
      "en": "Student health insurance",
@@ -1526,7 +1545,7 @@
     "is_simulated": true
    },
    {
-    "id": "cd53f646-0fc8-405a-8c6a-28e521867d91",
+    "id": "b06bceb6-fe9a-4938-804a-3c3d4a7c43e8",
     "kind": "tuition",
     "label": {
      "en": "Preparation course (June-July before year 1)",
@@ -1540,7 +1559,7 @@
     "is_simulated": true
    },
    {
-    "id": "ca35f22c-587f-4a24-90d9-071274d89e11",
+    "id": "601b4b5e-a0c9-4d3e-b7da-e302efd55606",
     "kind": "tuition",
     "label": {
      "en": "Year 1 summer session",
@@ -1554,7 +1573,7 @@
     "is_simulated": true
    },
    {
-    "id": "61a137a3-4c76-45aa-a676-65d3f57a344b",
+    "id": "21adbb03-27fc-450c-8119-5da3f90e9bff",
     "kind": "tuition",
     "label": {
      "en": "Tuition and fees per semester (includes 50,000 confirmation fee in year 1)",
@@ -1568,7 +1587,7 @@
     "is_simulated": true
    },
    {
-    "id": "e6330090-b2ab-47a4-858a-e43eaca5f484",
+    "id": "f51af4d4-81dd-4322-97dc-faf95c77887e",
     "kind": "visa",
     "label": {
      "en": "Annual extension of stay",
@@ -1582,7 +1601,7 @@
     "is_simulated": true
    },
    {
-    "id": "187e4a64-1121-412a-bbe1-4760917827ef",
+    "id": "8ab74567-fbbf-4278-bd0f-147d9f16b130",
     "kind": "visa",
     "label": {
      "en": "Non-Immigrant ED visa, single entry",
@@ -1596,7 +1615,7 @@
     "is_simulated": true
    },
    {
-    "id": "c6c9120a-16a1-44d2-9d2e-7fc253309fd3",
+    "id": "e66b5f22-1345-410d-882f-ef7e14f49fed",
     "kind": "loan",
     "label": {
      "en": "Loan installment 1",
@@ -1610,7 +1629,7 @@
     "is_simulated": true
    },
    {
-    "id": "d31d4064-5e00-4a46-a32f-52f2b53a3d56",
+    "id": "de0373d9-3ccb-45a6-9531-46bb89c9ad83",
     "kind": "loan",
     "label": {
      "en": "Loan installment 2",
@@ -1624,7 +1643,7 @@
     "is_simulated": true
    },
    {
-    "id": "735d583b-c169-4ab7-8bdc-4c54a4583868",
+    "id": "35d4e432-596b-40e8-a3b9-5bc1a682ee2c",
     "kind": "loan",
     "label": {
      "en": "Loan installment 3",
@@ -1638,7 +1657,7 @@
     "is_simulated": true
    },
    {
-    "id": "7b417d58-aa6e-4b90-bfc5-954c78e8a692",
+    "id": "6d9fb1d9-08f5-470e-9243-570bb4eafa18",
     "kind": "loan",
     "label": {
      "en": "Loan installment 4",
@@ -1652,7 +1671,7 @@
     "is_simulated": true
    },
    {
-    "id": "a0a7b1dd-2e4f-4600-893c-1192216694e6",
+    "id": "aa736853-89da-417d-ab65-a832cb03c221",
     "kind": "loan",
     "label": {
      "en": "Loan installment 5",
@@ -1666,7 +1685,7 @@
     "is_simulated": true
    },
    {
-    "id": "fcb6a8ba-352b-437a-90fd-19cf7bad25e0",
+    "id": "3c61b63e-705f-4b0d-8389-81845b280fa8",
     "kind": "loan",
     "label": {
      "en": "Loan installment 6",
@@ -1680,7 +1699,7 @@
     "is_simulated": true
    },
    {
-    "id": "13379688-9822-4e24-9eb8-cd58e5e81a75",
+    "id": "883fc9f4-562a-43cd-bc22-761254e2a01c",
     "kind": "tuition",
     "label": {
      "en": "Tuition and fees per semester (includes 50,000 confirmation fee in year 1)",
@@ -1694,7 +1713,7 @@
     "is_simulated": true
    },
    {
-    "id": "67540a2e-5685-461b-aca3-249ef5b31fa8",
+    "id": "165de051-de0c-4fd6-88e7-9688e98b3654",
     "kind": "loan",
     "label": {
      "en": "Loan installment 7",
@@ -1708,7 +1727,7 @@
     "is_simulated": true
    },
    {
-    "id": "cf91436e-2673-4f93-8ded-e76a8731dcf7",
+    "id": "f9dfdc76-8c85-4969-85ba-ceba4db2e997",
     "kind": "loan",
     "label": {
      "en": "Loan installment 8",
@@ -1722,7 +1741,7 @@
     "is_simulated": true
    },
    {
-    "id": "0a526dc1-bffd-4f26-8dd0-6e47775a4980",
+    "id": "054e0650-ae61-4091-93f7-214ee931dcf0",
     "kind": "loan",
     "label": {
      "en": "Loan installment 9",
@@ -1736,7 +1755,7 @@
     "is_simulated": true
    },
    {
-    "id": "c5b60dd4-8861-49ad-949e-3d73f31e65a3",
+    "id": "8ef48391-7a43-49ac-9bcc-bbbad1d7c7e2",
     "kind": "loan",
     "label": {
      "en": "Loan installment 10",
@@ -1750,7 +1769,7 @@
     "is_simulated": true
    },
    {
-    "id": "911d78f8-3991-442c-a053-40e830f423d1",
+    "id": "e22c418e-5aac-4959-b0bc-4315eac431ef",
     "kind": "loan",
     "label": {
      "en": "Loan installment 11",
@@ -1764,7 +1783,7 @@
     "is_simulated": true
    },
    {
-    "id": "d1d9fc8e-86f9-48c9-8e39-26e672e851f8",
+    "id": "5ef637c1-9eca-4c74-a049-56c7f2df5e70",
     "kind": "loan",
     "label": {
      "en": "Loan installment 12",
@@ -1778,7 +1797,7 @@
     "is_simulated": true
    },
    {
-    "id": "109038ac-02b6-499a-ae25-72aaa8b84b2d",
+    "id": "923e94fc-cb89-4476-8ccc-0cb2e6c10c5f",
     "kind": "insurance",
     "label": {
      "en": "Student health insurance",
@@ -1792,7 +1811,7 @@
     "is_simulated": true
    },
    {
-    "id": "a2489294-51c0-4da1-bd13-87ed47ce09f1",
+    "id": "cb73998c-48e8-4c02-be03-a8e824e19827",
     "kind": "tuition",
     "label": {
      "en": "Tuition and fees per semester (includes 50,000 confirmation fee in year 1)",
@@ -1806,7 +1825,7 @@
     "is_simulated": true
    },
    {
-    "id": "d19021c6-cf53-4a7b-ab5c-4c0b6b27a004",
+    "id": "346215fa-312e-4caf-9317-8b5036dcba6d",
     "kind": "visa",
     "label": {
      "en": "Annual extension of stay",
@@ -1820,7 +1839,7 @@
     "is_simulated": true
    },
    {
-    "id": "c5dfc933-cd73-4a3d-b4ae-fd4ccee45189",
+    "id": "78171b01-6e49-4a04-b734-2bffa14fe91e",
     "kind": "loan",
     "label": {
      "en": "Loan installment 13",
@@ -1834,7 +1853,7 @@
     "is_simulated": true
    },
    {
-    "id": "64cc40a4-1d15-4f56-861e-c279b265137b",
+    "id": "6f6bd4aa-0844-47bc-8e32-538832f101a0",
     "kind": "loan",
     "label": {
      "en": "Loan installment 14",
@@ -1848,7 +1867,7 @@
     "is_simulated": true
    },
    {
-    "id": "a9d44b5c-3976-4928-bd9a-066550e9f98b",
+    "id": "259c5b4a-0f75-47af-8bdc-265301b3aec3",
     "kind": "loan",
     "label": {
      "en": "Loan installment 15",
@@ -1862,7 +1881,7 @@
     "is_simulated": true
    },
    {
-    "id": "dc027a44-1222-44e8-a35e-dfbe59f2d8db",
+    "id": "1a4cd08f-39ce-43f6-a7de-3c52d98f74a4",
     "kind": "loan",
     "label": {
      "en": "Loan installment 16",
@@ -1876,7 +1895,7 @@
     "is_simulated": true
    },
    {
-    "id": "840221dd-9020-48f6-a371-a24d7ed53fd6",
+    "id": "766dca2a-50be-4047-9fb0-19180460245c",
     "kind": "loan",
     "label": {
      "en": "Loan installment 17",
@@ -1890,7 +1909,7 @@
     "is_simulated": true
    },
    {
-    "id": "034c6c13-2ae8-4685-b17b-0709be2a7026",
+    "id": "00b972b3-5e55-4631-ad81-39a35bbdd70e",
     "kind": "loan",
     "label": {
      "en": "Loan installment 18",
@@ -1904,7 +1923,7 @@
     "is_simulated": true
    },
    {
-    "id": "ca0f2596-818d-425d-bebf-30720a317d06",
+    "id": "a028fb03-c0a5-46ce-bb43-644577c12de9",
     "kind": "tuition",
     "label": {
      "en": "Tuition and fees per semester (includes 50,000 confirmation fee in year 1)",
@@ -1918,7 +1937,7 @@
     "is_simulated": true
    },
    {
-    "id": "4407d8a9-8257-4d27-a111-d2720d6a5f41",
+    "id": "50c59573-30b8-4c24-a685-03437f696105",
     "kind": "loan",
     "label": {
      "en": "Loan installment 19",
@@ -1932,7 +1951,7 @@
     "is_simulated": true
    },
    {
-    "id": "96f3539f-65dc-4d5f-83c4-d0e77d40c501",
+    "id": "51335f8a-6f8c-41d4-8869-84cb221d1f52",
     "kind": "loan",
     "label": {
      "en": "Loan installment 20",
@@ -1946,7 +1965,7 @@
     "is_simulated": true
    },
    {
-    "id": "850fdcec-8855-4809-99e4-d9a05a3dfdd7",
+    "id": "71afde3a-2077-46a8-8c1e-1d854b49911b",
     "kind": "loan",
     "label": {
      "en": "Loan installment 21",
@@ -1960,7 +1979,7 @@
     "is_simulated": true
    },
    {
-    "id": "7480def2-05c0-4a5e-a02f-c549b9ccd7c3",
+    "id": "3f501ae5-ada7-4079-b86a-8290fcf7f9c8",
     "kind": "loan",
     "label": {
      "en": "Loan installment 22",
@@ -1974,7 +1993,7 @@
     "is_simulated": true
    },
    {
-    "id": "b4b3cd05-2d34-4794-baa7-b99f971658dc",
+    "id": "65173010-0ee1-458a-bbbc-1e3d0f2ae48f",
     "kind": "loan",
     "label": {
      "en": "Loan installment 23",
@@ -1988,7 +2007,7 @@
     "is_simulated": true
    },
    {
-    "id": "806220b1-469e-4691-ab93-ec98e68a0bff",
+    "id": "5f5029b5-219b-4825-a201-d63e4d292709",
     "kind": "loan",
     "label": {
      "en": "Loan installment 24",
@@ -2002,7 +2021,7 @@
     "is_simulated": true
    },
    {
-    "id": "4be46245-ec1d-4d74-9999-0be1ae922200",
+    "id": "369726af-0e15-44e3-af0b-f2f6db738211",
     "kind": "insurance",
     "label": {
      "en": "Student health insurance",
@@ -2016,7 +2035,7 @@
     "is_simulated": true
    },
    {
-    "id": "815b22c5-33cf-444f-b3ed-11151b14638d",
+    "id": "da5dbe6a-9519-429c-b7c0-101645043377",
     "kind": "tuition",
     "label": {
      "en": "Tuition and fees per semester (includes 50,000 confirmation fee in year 1)",
@@ -2030,7 +2049,7 @@
     "is_simulated": true
    },
    {
-    "id": "4e81c9ed-9ee7-4926-8e5f-ac0e5d4acd62",
+    "id": "3bb87143-fd68-4e6d-8e5d-50d57b68b33d",
     "kind": "visa",
     "label": {
      "en": "Annual extension of stay",
@@ -2044,7 +2063,7 @@
     "is_simulated": true
    },
    {
-    "id": "20bd1255-6226-4cf6-99fc-f927f38fcc57",
+    "id": "48899d7c-9b47-41d3-82a2-d67b62bfc2e4",
     "kind": "loan",
     "label": {
      "en": "Loan installment 25",
@@ -2058,7 +2077,7 @@
     "is_simulated": true
    },
    {
-    "id": "db16de1f-f93f-4f6b-a189-246da7b79e91",
+    "id": "df919c27-6952-4c87-938f-7f9178a72b32",
     "kind": "loan",
     "label": {
      "en": "Loan installment 26",
@@ -2072,7 +2091,7 @@
     "is_simulated": true
    },
    {
-    "id": "8b0f2dce-f122-476c-a77d-4f38a4d9d313",
+    "id": "eaefc4e5-f121-4b29-bdad-4c902e1f707d",
     "kind": "loan",
     "label": {
      "en": "Loan installment 27",
@@ -2086,7 +2105,7 @@
     "is_simulated": true
    },
    {
-    "id": "8f3f9c1c-a29b-46fb-8ad1-248477e531c2",
+    "id": "a814b3b2-f402-4cea-99f1-b0607cf06dc2",
     "kind": "loan",
     "label": {
      "en": "Loan installment 28",
@@ -2100,7 +2119,7 @@
     "is_simulated": true
    },
    {
-    "id": "3b4936a7-d632-446b-8be8-faeace3c0e50",
+    "id": "f465db71-ca5c-4ecc-8f25-8c4f305c0b3c",
     "kind": "loan",
     "label": {
      "en": "Loan installment 29",
@@ -2114,7 +2133,7 @@
     "is_simulated": true
    },
    {
-    "id": "fd16f86a-7f25-4847-9d3b-8c45af96f40a",
+    "id": "aef42bd3-76a0-4e75-bed6-aaed11310e80",
     "kind": "loan",
     "label": {
      "en": "Loan installment 30",
@@ -2128,7 +2147,7 @@
     "is_simulated": true
    },
    {
-    "id": "e4f577a2-8d68-4ff2-b846-d0ff0f70e122",
+    "id": "21336dbc-543e-4657-aee9-1c9c4122a56c",
     "kind": "tuition",
     "label": {
      "en": "Tuition and fees per semester (includes 50,000 confirmation fee in year 1)",
@@ -2142,7 +2161,7 @@
     "is_simulated": true
    },
    {
-    "id": "9ea94d0c-68aa-4c06-938b-c02ba9bcad70",
+    "id": "cc4dd8f2-0ea5-45a2-a061-71c84acf18a2",
     "kind": "loan",
     "label": {
      "en": "Loan installment 31",
@@ -2156,7 +2175,7 @@
     "is_simulated": true
    },
    {
-    "id": "f52f3511-559b-4aba-a04d-764b8893a1f1",
+    "id": "56f49821-dadf-49fc-9879-ec25a6db4444",
     "kind": "loan",
     "label": {
      "en": "Loan installment 32",
@@ -2170,7 +2189,7 @@
     "is_simulated": true
    },
    {
-    "id": "0d7600d2-4d4c-4c02-b5be-64f7faca424b",
+    "id": "931dcf6a-0f76-47aa-83b6-163f606c2eb9",
     "kind": "loan",
     "label": {
      "en": "Loan installment 33",
@@ -2184,7 +2203,7 @@
     "is_simulated": true
    },
    {
-    "id": "6a275ce0-e5a1-4cb7-adad-bbe4482d4f11",
+    "id": "6c35e4be-7e98-4cc0-9ff6-62f493b7d397",
     "kind": "loan",
     "label": {
      "en": "Loan installment 34",
@@ -2198,7 +2217,7 @@
     "is_simulated": true
    },
    {
-    "id": "1f15b49f-a497-433c-9291-4f9f10c575e2",
+    "id": "e978d71c-f636-415d-8dd6-4c267247bcb6",
     "kind": "loan",
     "label": {
      "en": "Loan installment 35",
@@ -2212,7 +2231,7 @@
     "is_simulated": true
    },
    {
-    "id": "ad76b663-c7f6-4941-a1e7-e595ff8af5e0",
+    "id": "45c3cff7-943f-4582-8a6a-59e19928b1b0",
     "kind": "loan",
     "label": {
      "en": "Loan installment 36",
@@ -2226,7 +2245,7 @@
     "is_simulated": true
    },
    {
-    "id": "53e6d99b-7f4f-4f35-b711-af9c61342a69",
+    "id": "46727ee0-7d93-42af-b39b-32c6453efd3e",
     "kind": "insurance",
     "label": {
      "en": "Student health insurance",
@@ -2240,7 +2259,7 @@
     "is_simulated": true
    },
    {
-    "id": "bbd80c61-bf6d-440c-aafc-40e5684a9775",
+    "id": "637ad9fe-c36c-4e7e-9a78-9dcdc891f758",
     "kind": "tuition",
     "label": {
      "en": "Tuition and fees per semester (includes 50,000 confirmation fee in year 1)",
@@ -2254,7 +2273,7 @@
     "is_simulated": true
    },
    {
-    "id": "f32da2fa-d53c-47f3-aca2-86bf387540ca",
+    "id": "4f61f489-7995-490a-9e72-6548daee5a1b",
     "kind": "visa",
     "label": {
      "en": "Annual extension of stay",
@@ -2268,7 +2287,7 @@
     "is_simulated": true
    },
    {
-    "id": "299866bf-08d0-4c8a-84e9-10e8821aa26b",
+    "id": "e9e6afd3-c7a5-49c1-b3a2-90a6986d4839",
     "kind": "loan",
     "label": {
      "en": "Loan installment 37",
@@ -2282,7 +2301,7 @@
     "is_simulated": true
    },
    {
-    "id": "f109a0de-7d00-496a-8116-2fe23465c3de",
+    "id": "aa357553-97af-4075-a153-11aeda293a9e",
     "kind": "loan",
     "label": {
      "en": "Loan installment 38",
@@ -2296,7 +2315,7 @@
     "is_simulated": true
    },
    {
-    "id": "40ede807-269a-45d7-bef9-56c5a9e9f661",
+    "id": "61c994f7-598b-4363-897f-4f2e7157f5b3",
     "kind": "loan",
     "label": {
      "en": "Loan installment 39",
@@ -2310,7 +2329,7 @@
     "is_simulated": true
    },
    {
-    "id": "963e46b6-f1d7-4d2b-9c0c-f661b74cf1ed",
+    "id": "eab34590-f53c-402b-b226-7251bdb61027",
     "kind": "loan",
     "label": {
      "en": "Loan installment 40",
@@ -2324,7 +2343,7 @@
     "is_simulated": true
    },
    {
-    "id": "1c652ddd-0a96-4e83-af08-8156b8b8bc6c",
+    "id": "46c079fd-3cd1-4e57-879f-532fa9b6a808",
     "kind": "loan",
     "label": {
      "en": "Loan installment 41",
@@ -2338,7 +2357,7 @@
     "is_simulated": true
    },
    {
-    "id": "e0aa8bf3-8520-4743-9bd8-3dc76f38d965",
+    "id": "82291f18-73f6-4854-ab7b-40bd8eef5d72",
     "kind": "loan",
     "label": {
      "en": "Loan installment 42",
@@ -2352,7 +2371,7 @@
     "is_simulated": true
    },
    {
-    "id": "6b75b200-e399-4a87-9de6-d4d1882271cb",
+    "id": "5dcb1b32-dc52-49d7-94bc-da45b741b411",
     "kind": "tuition",
     "label": {
      "en": "Tuition and fees per semester (includes 50,000 confirmation fee in year 1)",
@@ -2366,7 +2385,7 @@
     "is_simulated": true
    },
    {
-    "id": "c22c8622-31e4-4911-9112-8e2506e73d05",
+    "id": "f2143993-ac59-4873-acdc-9acb5c46a65a",
     "kind": "loan",
     "label": {
      "en": "Loan installment 43",
@@ -2380,7 +2399,7 @@
     "is_simulated": true
    },
    {
-    "id": "fd5f6b3c-13fc-474e-94b3-a6cc534ca09e",
+    "id": "d6dd3371-24fd-4efa-93b4-3ca1c8d9f7bc",
     "kind": "loan",
     "label": {
      "en": "Loan installment 44",
@@ -2394,7 +2413,7 @@
     "is_simulated": true
    },
    {
-    "id": "aed2ddfe-b551-46e7-a67a-dbfb442f666b",
+    "id": "951d682f-648f-43b2-8375-b66529fa3a3d",
     "kind": "loan",
     "label": {
      "en": "Loan installment 45",
@@ -2408,7 +2427,7 @@
     "is_simulated": true
    },
    {
-    "id": "0cc8f22f-1a41-4934-8d29-e2b9e86cf043",
+    "id": "6fab2e1b-9d9c-4eb8-92c5-f77d2293f969",
     "kind": "loan",
     "label": {
      "en": "Loan installment 46",
@@ -2422,7 +2441,7 @@
     "is_simulated": true
    },
    {
-    "id": "bd9cc63f-b232-46c5-9a34-84a356d9d50e",
+    "id": "d84079ed-0442-4670-b2a4-46b9170c1919",
     "kind": "loan",
     "label": {
      "en": "Loan installment 47",
@@ -2436,7 +2455,7 @@
     "is_simulated": true
    },
    {
-    "id": "b37b0b39-f9e5-42ea-a523-f0e9addbb8f8",
+    "id": "a2d12e8a-fb51-42b6-8f74-8f8838238f7f",
     "kind": "loan",
     "label": {
      "en": "Loan installment 48",

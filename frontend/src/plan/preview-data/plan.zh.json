@@ -1,15 +1,15 @@
 {
  "conversation": {
-  "id": "2e048482-b543-42a8-acfc-5ff788a7c2ed",
+  "id": "3d283a0e-5e33-4cf1-8a27-de6759b4c823",
   "locale": "zh",
-  "created_at": "2026-10-12T11:34:44.396409+00:00",
-  "updated_at": "2026-10-12T11:34:44.730024+00:00",
+  "created_at": "2026-10-12T18:17:53.363952+00:00",
+  "updated_at": "2026-10-12T18:17:53.644426+00:00",
   "profile": {
    "role": "parent",
    "home_currency": "CNY"
   },
   "plan": {
-   "id": "ad99dd9b-8c77-4c2e-9045-5c5aff191522",
+   "id": "174880ab-dff1-4297-9d23-f78d077923c4",
    "status": "DRAFT",
    "school_key": "chulalongkorn",
    "years": 4,
@@ -33,13 +33,13 @@
     "currency": "CNY",
     "amount": "511163.04",
     "rate": "0.2173913043",
-    "rate_date": "2026-10-12",
+    "rate_date": "2026-10-13",
     "source": "fixture"
    },
    "available": "920000.00",
    "gap": "1431350.00",
    "loan": {
-    "id": "88f6d707-0fdb-4827-a6e5-7c0045575644",
+    "id": "e90c9604-e1ef-44d8-9711-a7fd0eccda16",
     "currency": "THB",
     "principal": "1431350.00",
     "months": 48,
@@ -50,9 +50,9 @@
   },
   "turns": [
    {
-    "id": "613bc793-0c80-416b-a1ef-6bf67271ff11",
+    "id": "1947d053-f622-4722-baf2-47158e9abf82",
     "type": "agentsession",
-    "created_at": "2026-10-12T11:34:44.401Z",
+    "created_at": "2026-10-12T18:17:53.368Z",
     "goal": "",
     "locale": "zh",
     "mode": "system",
@@ -60,8 +60,8 @@
     "final_answer": "你好！我是 StudyFlow 留学规划助手。先问一句：你是家长，还是学生本人？",
     "error_code": "",
     "write_count": 0,
-    "updated_at": "2026-10-12T11:34:44.401Z",
-    "conversation": "2e048482-b543-42a8-acfc-5ff788a7c2ed",
+    "updated_at": "2026-10-12T18:17:53.368Z",
+    "conversation": "3d283a0e-5e33-4cf1-8a27-de6759b4c823",
     "cards": [],
     "steps": [],
     "pending_actions": [],
@@ -69,9 +69,9 @@
     "kind": "assistant"
    },
    {
-    "id": "958615c5-eaab-4c2c-863b-188d7afb7baa",
+    "id": "80237330-938d-466c-b569-e234a560e0b8",
     "type": "agentsession",
-    "created_at": "2026-10-12T11:34:44.420Z",
+    "created_at": "2026-10-12T18:17:53.384Z",
     "goal": "我是家长",
     "locale": "zh",
     "mode": "mock",
@@ -79,8 +79,8 @@
     "final_answer": "好的，按家长视角来：我会先把学费、生活费、必要开支和全部费用算清楚。目录里有 10 所学校：朱拉隆功大学（泰国，首年约 675,250 THB≈146,793 CNY）；玛希敦大学国际学院（MUIC）（泰国，首年约 622,200 THB≈135,261 CNY）；马来亚大学（商业与经济学院）（马来西亚，首年约 46,775 MYR≈75,246 CNY）；曼彻斯特大学（联盟曼彻斯特商学院）（英国，首年约 50,263 GBP≈458,923 CNY）；墨尔本大学（澳大利亚，首年约 103,310 AUD≈482,864 CNY）；新加坡国立大学（商学院）（新加坡，首年约 52,322 SGD≈284,361 CNY）；宋卡王子大学（合艾校区）（泰国，首年约 272,050 THB≈59,141 CNY）；宋卡王子大学（普吉校区）（泰国，首年约 316,100 THB≈68,717 CNY）；法政大学（泰国，首年约 597,750 THB≈129,946 CNY）；早稻田大学（政治经济学部）（日本，首年约 3,258,000 JPY≈155,817 CNY）。说出学校名，我把全部费用算给你。（示例数据，来自公开资料，付款前请向学校确认。）",
     "error_code": "",
     "write_count": 1,
-    "updated_at": "2026-10-12T11:34:44.479Z",
-    "conversation": "2e048482-b543-42a8-acfc-5ff788a7c2ed",
+    "updated_at": "2026-10-12T18:17:53.435Z",
+    "conversation": "3d283a0e-5e33-4cf1-8a27-de6759b4c823",
     "cards": [
      {
       "role": "parent",
@@ -122,7 +122,7 @@
          "amount": "146793.48",
          "source": "fixture",
          "currency": "CNY",
-         "rate_date": "2026-10-12"
+         "rate_date": "2026-10-13"
         }
        },
        {
@@ -156,7 +156,7 @@
          "amount": "135260.87",
          "source": "fixture",
          "currency": "CNY",
-         "rate_date": "2026-10-12"
+         "rate_date": "2026-10-13"
         }
        },
        {
@@ -190,7 +190,7 @@
          "amount": "75246.06",
          "source": "fixture",
          "currency": "CNY",
-         "rate_date": "2026-10-12"
+         "rate_date": "2026-10-13"
         }
        },
        {
@@ -224,7 +224,7 @@
          "amount": "458923.04",
          "source": "fixture",
          "currency": "CNY",
-         "rate_date": "2026-10-12"
+         "rate_date": "2026-10-13"
         }
        },
        {
@@ -258,7 +258,7 @@
          "amount": "482864.29",
          "source": "fixture",
          "currency": "CNY",
-         "rate_date": "2026-10-12"
+         "rate_date": "2026-10-13"
         }
        },
        {
@@ -292,7 +292,7 @@
          "amount": "284361.41",
          "source": "fixture",
          "currency": "CNY",
-         "rate_date": "2026-10-12"
+         "rate_date": "2026-10-13"
         }
        },
        {
@@ -326,7 +326,7 @@
          "amount": "59141.30",
          "source": "fixture",
          "currency": "CNY",
-         "rate_date": "2026-10-12"
+         "rate_date": "2026-10-13"
         }
        },
        {
@@ -360,7 +360,7 @@
          "amount": "68717.39",
          "source": "fixture",
          "currency": "CNY",
-         "rate_date": "2026-10-12"
+         "rate_date": "2026-10-13"
         }
        },
        {
@@ -394,7 +394,7 @@
          "amount": "129945.65",
          "source": "fixture",
          "currency": "CNY",
-         "rate_date": "2026-10-12"
+         "rate_date": "2026-10-13"
         }
        },
        {
@@ -428,7 +428,7 @@
          "amount": "155817.39",
          "source": "fixture",
          "currency": "CNY",
-         "rate_date": "2026-10-12"
+         "rate_date": "2026-10-13"
         }
        }
       ]
@@ -436,8 +436,8 @@
     ],
     "steps": [
      {
-      "id": "c2bd79b9-2889-4c7a-a095-b10e86f5da98",
-      "created_at": "2026-10-12T11:34:44.443Z",
+      "id": "4beb912d-eccc-4641-a492-6bda7f21b879",
+      "created_at": "2026-10-12T18:17:53.404Z",
       "number": 1,
       "tool": "set_role",
       "tier": "T1",
@@ -462,12 +462,12 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.0"
+       "prompt_version": "planning-1.1"
       }
      },
      {
-      "id": "d5818ead-a317-4950-8678-fc649414c32b",
-      "created_at": "2026-10-12T11:34:44.476Z",
+      "id": "8e7f5ebf-d761-408f-847f-456f83c5601a",
+      "created_at": "2026-10-12T18:17:53.433Z",
       "number": 2,
       "tool": "list_schools",
       "tier": "T0",
@@ -651,12 +651,12 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.0"
+       "prompt_version": "planning-1.1"
       }
      },
      {
-      "id": "a2760c5b-1d79-42a4-88a8-b9c269b55481",
-      "created_at": "2026-10-12T11:34:44.478Z",
+      "id": "caaf0d7e-5125-4627-a193-f394824a978d",
+      "created_at": "2026-10-12T18:17:53.434Z",
       "number": 3,
       "tool": "",
       "tier": "",
@@ -678,7 +678,7 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.0"
+       "prompt_version": "planning-1.1"
       }
      }
     ],
@@ -687,9 +687,9 @@
     "kind": "user"
    },
    {
-    "id": "e636e398-6461-45e9-9ab1-fe81b68df6f3",
+    "id": "787ffcb9-5599-47fb-866d-187f9f1a702c",
     "type": "agentsession",
-    "created_at": "2026-10-12T11:34:44.494Z",
+    "created_at": "2026-10-12T18:17:53.447Z",
     "goal": "朱拉隆功读4年全部费用多少？",
     "locale": "zh",
     "mode": "mock",
@@ -697,8 +697,8 @@
     "final_answer": "读 4 年预计全部费用约 2,351,350 THB（≈511,163 CNY）：学费 1,028,850 THB，生活费 1,166,400 THB，必要开支 156,100 THB；区间 2,118,650 THB–2,584,050 THB，约 29% 为估算。（示例数据，来自公开资料，付款前请向学校确认。）",
     "error_code": "",
     "write_count": 0,
-    "updated_at": "2026-10-12T11:34:44.516Z",
-    "conversation": "2e048482-b543-42a8-acfc-5ff788a7c2ed",
+    "updated_at": "2026-10-12T18:17:53.464Z",
+    "conversation": "3d283a0e-5e33-4cf1-8a27-de6759b4c823",
     "cards": [
      {
       "type": "cost",
@@ -1003,7 +1003,7 @@
         "amount": "511163.04",
         "source": "fixture",
         "currency": "CNY",
-        "rate_date": "2026-10-12"
+        "rate_date": "2026-10-13"
        },
        "total_low": "2118650.00",
        "first_year": "675250.00",
@@ -1016,8 +1016,8 @@
     ],
     "steps": [
      {
-      "id": "4636cfe4-7064-4608-9e55-784dce85df6d",
-      "created_at": "2026-10-12T11:34:44.514Z",
+      "id": "f3aad898-cae0-4e54-87e6-ea0ec9880405",
+      "created_at": "2026-10-12T18:17:53.462Z",
       "number": 1,
       "tool": "estimate_total_cost",
       "tier": "T0",
@@ -1042,7 +1042,7 @@
         "amount": "511163.04",
         "source": "fixture",
         "currency": "CNY",
-        "rate_date": "2026-10-12"
+        "rate_date": "2026-10-13"
        },
        "total_low": "2118650.00",
        "first_year": "675250.00",
@@ -1064,12 +1064,12 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.0"
+       "prompt_version": "planning-1.1"
       }
      },
      {
-      "id": "b82eee29-b68d-44da-8fc9-815550c0d4f4",
-      "created_at": "2026-10-12T11:34:44.515Z",
+      "id": "99670f46-779a-46f5-bb8c-eb0bf9456e17",
+      "created_at": "2026-10-12T18:17:53.463Z",
       "number": 2,
       "tool": "",
       "tier": "",
@@ -1091,7 +1091,7 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.0"
+       "prompt_version": "planning-1.1"
       }
      }
     ],
@@ -1100,9 +1100,9 @@
     "kind": "user"
    },
    {
-    "id": "9eae0f43-fcbd-4328-8def-2aabfcf30e2d",
+    "id": "96f43f4c-678d-47a4-8c4c-bfe9e120b1f9",
     "type": "agentsession",
-    "created_at": "2026-10-12T11:34:44.531Z",
+    "created_at": "2026-10-12T18:17:53.476Z",
     "goal": "比较曼彻斯特和墨尔本",
     "locale": "zh",
     "mode": "mock",
@@ -1110,8 +1110,8 @@
     "final_answer": "对比：曼彻斯特大学（联盟曼彻斯特商学院） 首年约 50,263 GBP（≈458,923 CNY）；墨尔本大学 首年约 103,310 AUD（≈482,864 CNY）。（示例数据，来自公开资料，付款前请向学校确认。）",
     "error_code": "",
     "write_count": 0,
-    "updated_at": "2026-10-12T11:34:44.552Z",
-    "conversation": "2e048482-b543-42a8-acfc-5ff788a7c2ed",
+    "updated_at": "2026-10-12T18:17:53.493Z",
+    "conversation": "3d283a0e-5e33-4cf1-8a27-de6759b4c823",
     "cards": [
      {
       "type": "comparison",
@@ -1148,7 +1148,7 @@
          "amount": "458923.04",
          "source": "fixture",
          "currency": "CNY",
-         "rate_date": "2026-10-12"
+         "rate_date": "2026-10-13"
         }
        },
        {
@@ -1182,7 +1182,7 @@
          "amount": "482864.29",
          "source": "fixture",
          "currency": "CNY",
-         "rate_date": "2026-10-12"
+         "rate_date": "2026-10-13"
         }
        }
       ],
@@ -1191,8 +1191,8 @@
     ],
     "steps": [
      {
-      "id": "f492d50d-18a6-4096-ab96-d03aac6a62ef",
-      "created_at": "2026-10-12T11:34:44.550Z",
+      "id": "796bd917-1dd6-47f5-ade5-cd838c738c47",
+      "created_at": "2026-10-12T18:17:53.491Z",
       "number": 1,
       "tool": "compare_schools",
       "tier": "T0",
@@ -1238,7 +1238,7 @@
           "amount": "458923.04",
           "source": "fixture",
           "currency": "CNY",
-          "rate_date": "2026-10-12"
+          "rate_date": "2026-10-13"
          }
         },
         {
@@ -1272,7 +1272,7 @@
           "amount": "482864.29",
           "source": "fixture",
           "currency": "CNY",
-          "rate_date": "2026-10-12"
+          "rate_date": "2026-10-13"
          }
         }
        ],
@@ -1290,12 +1290,12 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.0"
+       "prompt_version": "planning-1.1"
       }
      },
      {
-      "id": "2a5f44ef-41a6-410f-91e7-49fbb5b3cb46",
-      "created_at": "2026-10-12T11:34:44.551Z",
+      "id": "39f14c72-2de4-47d0-a4e4-36c4db906373",
+      "created_at": "2026-10-12T18:17:53.492Z",
       "number": 2,
       "tool": "",
       "tier": "",
@@ -1317,7 +1317,7 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.0"
+       "prompt_version": "planning-1.1"
       }
      }
     ],
@@ -1326,9 +1326,9 @@
     "kind": "user"
    },
    {
-    "id": "bf7a4460-40d4-4be9-aef6-e5e364a251a7",
+    "id": "c9a43d25-d7c6-48e0-9535-08ce1cfc147b",
     "type": "agentsession",
-    "created_at": "2026-10-12T11:34:44.565Z",
+    "created_at": "2026-10-12T18:17:53.504Z",
     "goal": "早稻田周边有什么好吃好玩的？",
     "locale": "zh",
     "mode": "mock",
@@ -1336,8 +1336,8 @@
     "final_answer": "早稻田大学（政治经济学部）在东京新宿区。校内有早稻田大学中央图书馆、大隈讲堂、3 号馆（政治经济学部）；附近可以吃大隈花园楼食堂（早大生协）、高田马场站周边餐馆、早稻田通学生餐馆；周末可以去大隈庭园、神田川赏樱步道（江户川公园）、六义园。（示例数据，来自公开资料，付款前请向学校确认。）",
     "error_code": "",
     "write_count": 0,
-    "updated_at": "2026-10-12T11:34:44.583Z",
-    "conversation": "2e048482-b543-42a8-acfc-5ff788a7c2ed",
+    "updated_at": "2026-10-12T18:17:53.520Z",
+    "conversation": "3d283a0e-5e33-4cf1-8a27-de6759b4c823",
     "cards": [
      {
       "type": "school",
@@ -1813,8 +1813,8 @@
     ],
     "steps": [
      {
-      "id": "6f6df0c3-229d-4b87-8f3e-7d6a11f4f23a",
-      "created_at": "2026-10-12T11:34:44.581Z",
+      "id": "0b1c8d91-f74f-47b7-8255-4cc70c9db9ec",
+      "created_at": "2026-10-12T18:17:53.518Z",
       "number": 1,
       "tool": "get_school_profile",
       "tier": "T0",
@@ -1987,12 +1987,12 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.0"
+       "prompt_version": "planning-1.1"
       }
      },
      {
-      "id": "7b11188e-9e87-45f7-a52e-f21e3fe43955",
-      "created_at": "2026-10-12T11:34:44.582Z",
+      "id": "460f815e-85e2-49e6-8051-c1b86074a0cc",
+      "created_at": "2026-10-12T18:17:53.520Z",
       "number": 2,
       "tool": "",
       "tier": "",
@@ -2014,7 +2014,7 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.0"
+       "prompt_version": "planning-1.1"
       }
      }
     ],
@@ -2023,9 +2023,9 @@
     "kind": "user"
    },
    {
-    "id": "0a37cead-8fea-4101-8789-1dca9a1b730e",
+    "id": "208c8747-920a-4682-808a-d7c2e641b091",
     "type": "agentsession",
-    "created_at": "2026-10-12T11:34:44.597Z",
+    "created_at": "2026-10-12T18:17:53.534Z",
     "goal": "我们有存款20万人民币，就选朱拉隆功",
     "locale": "zh",
     "mode": "mock",
@@ -2033,12 +2033,12 @@
     "final_answer": "计划：朱拉隆功大学，4 年，状态：草稿，全部费用约 2,351,350 THB。资金缺口约 1,431,350 THB，需要的话我可以帮你试算贷款。",
     "error_code": "",
     "write_count": 1,
-    "updated_at": "2026-10-12T11:34:44.629Z",
-    "conversation": "2e048482-b543-42a8-acfc-5ff788a7c2ed",
+    "updated_at": "2026-10-12T18:17:53.557Z",
+    "conversation": "3d283a0e-5e33-4cf1-8a27-de6759b4c823",
     "cards": [
      {
       "plan": {
-       "id": "ad99dd9b-8c77-4c2e-9045-5c5aff191522",
+       "id": "174880ab-dff1-4297-9d23-f78d077923c4",
        "gap": "1431350.00",
        "total": "2351350.00",
        "years": 4,
@@ -2058,7 +2058,7 @@
         "amount": "511163.04",
         "source": "fixture",
         "currency": "CNY",
-        "rate_date": "2026-10-12"
+        "rate_date": "2026-10-13"
        },
        "school_key": "chulalongkorn",
        "start_date": "2027-08-02",
@@ -2073,8 +2073,8 @@
     ],
     "steps": [
      {
-      "id": "87cb4c1c-a6a6-49f1-9b39-334947cff19f",
-      "created_at": "2026-10-12T11:34:44.628Z",
+      "id": "89680b9c-84f3-4b7f-b89f-452375f7ea21",
+      "created_at": "2026-10-12T18:17:53.556Z",
       "number": 1,
       "tool": "save_plan",
       "tier": "T1",
@@ -2087,7 +2087,7 @@
       "status": "OK",
       "result": {
        "plan": {
-        "id": "ad99dd9b-8c77-4c2e-9045-5c5aff191522",
+        "id": "174880ab-dff1-4297-9d23-f78d077923c4",
         "gap": "1431350.00",
         "total": "2351350.00",
         "years": 4,
@@ -2107,7 +2107,7 @@
          "amount": "511163.04",
          "source": "fixture",
          "currency": "CNY",
-         "rate_date": "2026-10-12"
+         "rate_date": "2026-10-13"
         },
         "school_key": "chulalongkorn",
         "start_date": "2027-08-02",
@@ -2130,12 +2130,12 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.0"
+       "prompt_version": "planning-1.1"
       }
      },
      {
-      "id": "88870689-183a-4521-98a5-aeec1f302667",
-      "created_at": "2026-10-12T11:34:44.629Z",
+      "id": "8d3cd3e0-7679-433a-9fc8-6d253d09c027",
+      "created_at": "2026-10-12T18:17:53.556Z",
       "number": 2,
       "tool": "",
       "tier": "",
@@ -2157,7 +2157,7 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.0"
+       "prompt_version": "planning-1.1"
       }
      }
     ],
@@ -2166,9 +2166,9 @@
     "kind": "user"
    },
    {
-    "id": "e97ad5b9-72f6-4d4e-a4cb-21adc3d9512f",
+    "id": "c995a87c-29b4-460d-8eb7-097a91eba849",
     "type": "agentsession",
-    "created_at": "2026-10-12T11:34:44.644Z",
+    "created_at": "2026-10-12T18:17:53.568Z",
     "goal": "帮我试算贷款，分48个月",
     "locale": "zh",
     "mode": "mock",
@@ -2176,16 +2176,16 @@
     "final_answer": "模拟贷款：本金 1,431,350 THB，48 个月，年利率 6.0%，每月最多约 33,615 THB。确认没问题就说“确认计划”。所有资金与贷款均为模拟。",
     "error_code": "",
     "write_count": 1,
-    "updated_at": "2026-10-12T11:34:44.681Z",
-    "conversation": "2e048482-b543-42a8-acfc-5ff788a7c2ed",
+    "updated_at": "2026-10-12T18:17:53.601Z",
+    "conversation": "3d283a0e-5e33-4cf1-8a27-de6759b4c823",
     "cards": [
      {
       "gap": "1431350.00",
       "plan": {
-       "id": "ad99dd9b-8c77-4c2e-9045-5c5aff191522",
+       "id": "174880ab-dff1-4297-9d23-f78d077923c4",
        "gap": "1431350.00",
        "loan": {
-        "id": "88f6d707-0fdb-4827-a6e5-7c0045575644",
+        "id": "e90c9604-e1ef-44d8-9711-a7fd0eccda16",
         "months": 48,
         "currency": "THB",
         "principal": "1431350.00",
@@ -2211,7 +2211,7 @@
         "amount": "511163.04",
         "source": "fixture",
         "currency": "CNY",
-        "rate_date": "2026-10-12"
+        "rate_date": "2026-10-13"
        },
        "school_key": "chulalongkorn",
        "start_date": "2027-08-02",
@@ -2234,8 +2234,8 @@
     ],
     "steps": [
      {
-      "id": "562a2887-a3e2-437d-9b9c-4ba6ca2cabe6",
-      "created_at": "2026-10-12T11:34:44.680Z",
+      "id": "26e2992d-7af0-4687-a47b-cfabb65ea608",
+      "created_at": "2026-10-12T18:17:53.600Z",
       "number": 1,
       "tool": "simulate_loan",
       "tier": "T1",
@@ -2247,10 +2247,10 @@
       "result": {
        "gap": "1431350.00",
        "plan": {
-        "id": "ad99dd9b-8c77-4c2e-9045-5c5aff191522",
+        "id": "174880ab-dff1-4297-9d23-f78d077923c4",
         "gap": "1431350.00",
         "loan": {
-         "id": "88f6d707-0fdb-4827-a6e5-7c0045575644",
+         "id": "e90c9604-e1ef-44d8-9711-a7fd0eccda16",
          "months": 48,
          "currency": "THB",
          "principal": "1431350.00",
@@ -2276,7 +2276,7 @@
          "amount": "511163.04",
          "source": "fixture",
          "currency": "CNY",
-         "rate_date": "2026-10-12"
+         "rate_date": "2026-10-13"
         },
         "school_key": "chulalongkorn",
         "start_date": "2027-08-02",
@@ -2307,12 +2307,12 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.0"
+       "prompt_version": "planning-1.1"
       }
      },
      {
-      "id": "6eb601af-c780-42dc-82ef-a617ee82b30b",
-      "created_at": "2026-10-12T11:34:44.681Z",
+      "id": "7afde6fe-703c-4d23-bf55-64fa59637fb4",
+      "created_at": "2026-10-12T18:17:53.601Z",
       "number": 2,
       "tool": "",
       "tier": "",
@@ -2334,7 +2334,7 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.0"
+       "prompt_version": "planning-1.1"
       }
      }
     ],
@@ -2343,9 +2343,9 @@
     "kind": "user"
    },
    {
-    "id": "2ed9feb5-90bd-406d-bb50-add3a81f24e0",
+    "id": "f4f8f321-7b1c-4b67-80c9-8a8a0e2b29e4",
     "type": "agentsession",
-    "created_at": "2026-10-12T11:34:44.693Z",
+    "created_at": "2026-10-12T18:17:53.613Z",
     "goal": "确认计划",
     "locale": "zh",
     "mode": "mock",
@@ -2353,15 +2353,15 @@
     "final_answer": "已生成计划确认请求，请在下方卡片上确认。",
     "error_code": "",
     "write_count": 0,
-    "updated_at": "2026-10-12T11:34:44.728Z",
-    "conversation": "2e048482-b543-42a8-acfc-5ff788a7c2ed",
+    "updated_at": "2026-10-12T18:17:53.643Z",
+    "conversation": "3d283a0e-5e33-4cf1-8a27-de6759b4c823",
     "cards": [
      {
       "plan": {
-       "id": "ad99dd9b-8c77-4c2e-9045-5c5aff191522",
+       "id": "174880ab-dff1-4297-9d23-f78d077923c4",
        "gap": "1431350.00",
        "loan": {
-        "id": "88f6d707-0fdb-4827-a6e5-7c0045575644",
+        "id": "e90c9604-e1ef-44d8-9711-a7fd0eccda16",
         "months": 48,
         "currency": "THB",
         "principal": "1431350.00",
@@ -2387,7 +2387,7 @@
         "amount": "511163.04",
         "source": "fixture",
         "currency": "CNY",
-        "rate_date": "2026-10-12"
+        "rate_date": "2026-10-13"
        },
        "school_key": "chulalongkorn",
        "start_date": "2027-08-02",
@@ -2403,18 +2403,18 @@
        "gap": "1431350.00",
        "total": "2351350.00",
        "years": 4,
-       "plan_id": "ad99dd9b-8c77-4c2e-9045-5c5aff191522",
+       "plan_id": "174880ab-dff1-4297-9d23-f78d077923c4",
        "currency": "THB",
        "school_key": "chulalongkorn"
       },
-      "expires_at": "2026-10-12T11:49:44.718554+00:00",
-      "pending_action_id": "e4f4ae55-81d6-4d7c-a1c5-2639b0eae316"
+      "expires_at": "2026-10-12T18:32:53.635765+00:00",
+      "pending_action_id": "ac977793-fa4e-4224-8bf2-bd6f09f8c9fd"
      }
     ],
     "steps": [
      {
-      "id": "45690bbb-cd29-441b-9688-834dd3cbce85",
-      "created_at": "2026-10-12T11:34:44.718Z",
+      "id": "283abcb1-83f5-4ac9-871f-a51978b13ad9",
+      "created_at": "2026-10-12T18:17:53.635Z",
       "number": 1,
       "tool": "confirm_plan",
       "tier": "T2",
@@ -2428,7 +2428,7 @@
         "gap": "1431350.00",
         "total": "2351350.00",
         "years": 4,
-        "plan_id": "ad99dd9b-8c77-4c2e-9045-5c5aff191522",
+        "plan_id": "174880ab-dff1-4297-9d23-f78d077923c4",
         "currency": "THB",
         "school_key": "chulalongkorn"
        },
@@ -2437,9 +2437,9 @@
        "requires": [
         "user_confirmation"
        ],
-       "target_id": "ad99dd9b-8c77-4c2e-9045-5c5aff191522",
-       "expires_at": "2026-10-12T11:49:44.718554+00:00",
-       "pending_action_id": "e4f4ae55-81d6-4d7c-a1c5-2639b0eae316"
+       "target_id": "174880ab-dff1-4297-9d23-f78d077923c4",
+       "expires_at": "2026-10-12T18:32:53.635765+00:00",
+       "pending_action_id": "ac977793-fa4e-4224-8bf2-bd6f09f8c9fd"
       },
       "call": {
        "mode": "mock",
@@ -2453,12 +2453,12 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.0"
+       "prompt_version": "planning-1.1"
       }
      },
      {
-      "id": "b8ac09f8-8eea-4b21-9e11-7371ee8c16f6",
-      "created_at": "2026-10-12T11:34:44.727Z",
+      "id": "944cf6ec-6baf-445a-b723-07ffb1890855",
+      "created_at": "2026-10-12T18:17:53.642Z",
       "number": 2,
       "tool": "",
       "tier": "",
@@ -2480,32 +2480,32 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.0"
+       "prompt_version": "planning-1.1"
       }
      }
     ],
     "pending_actions": [
      {
-      "id": "e4f4ae55-81d6-4d7c-a1c5-2639b0eae316",
+      "id": "ac977793-fa4e-4224-8bf2-bd6f09f8c9fd",
       "type": "agentpendingaction",
-      "created_at": "2026-10-12T11:34:44.719Z",
-      "session": "2ed9feb5-90bd-406d-bb50-add3a81f24e0",
-      "step": "45690bbb-cd29-441b-9688-834dd3cbce85",
+      "created_at": "2026-10-12T18:17:53.636Z",
+      "session": "f4f8f321-7b1c-4b67-80c9-8a8a0e2b29e4",
+      "step": "283abcb1-83f5-4ac9-871f-a51978b13ad9",
       "action": "plan.confirm",
       "tool": "confirm_plan",
       "arguments": {
        "gap": "1431350.00",
        "total": "2351350.00",
        "years": 4,
-       "plan_id": "ad99dd9b-8c77-4c2e-9045-5c5aff191522",
+       "plan_id": "174880ab-dff1-4297-9d23-f78d077923c4",
        "currency": "THB",
        "school_key": "chulalongkorn"
       },
-      "target_id": "ad99dd9b-8c77-4c2e-9045-5c5aff191522",
+      "target_id": "174880ab-dff1-4297-9d23-f78d077923c4",
       "amount": null,
       "currency": "",
       "status": "PENDING",
-      "expires_at": "2026-10-12T11:49:44.718Z",
+      "expires_at": "2026-10-12T18:32:53.635Z",
       "decided_at": null,
       "result": {},
       "version": 1

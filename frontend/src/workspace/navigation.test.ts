@@ -6,6 +6,12 @@ describe("workspace navigation", () => {
     expect(readWorkspaceRoute("http://localhost/?wallet=preview")).toEqual({ preview: true, stage: "plan", tool: { kind: "wallet" } });
     expect(readWorkspaceRoute("http://localhost/?plan=preview&stage=school&tool=bills")).toEqual({ preview: true, stage: "school", tool: { kind: "bills" } });
   });
+  it("round trips the preparing preview stage and ignores unknown stages", () => {
+    const route = { preview: true, stage: "prepare" as const, tool: null };
+    expect(workspaceUrl(route)).toBe("/?plan=preview&stage=prepare");
+    expect(readWorkspaceRoute(`http://localhost${workspaceUrl(route)}`)).toEqual(route);
+    expect(readWorkspaceRoute("http://localhost/?plan=preview&stage=moon").stage).toBe("plan");
+  });
   it("round trips the exact finance proposal, never a new goal", () => {
     const route = { preview: false, stage: "plan" as const, tool: { kind: "agent" as const, sessionId: "s-12", pendingId: "p-8" } };
     expect(readWorkspaceRoute(`http://localhost${workspaceUrl(route)}`)).toEqual(route);

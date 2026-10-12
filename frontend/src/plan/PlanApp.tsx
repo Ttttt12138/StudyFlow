@@ -21,7 +21,7 @@ import { useModuleLink } from "../services/ModuleNav";
 import { SessionWalletClient, WalletApiError, type WalletClient } from "../wallet/client";
 import { CardView, type CardActions } from "./cards";
 import { day, money, pick } from "./format";
-import { createPlanPreview, type PreviewStage } from "./preview";
+import { createPlanPreview, previewStages, type PreviewStage } from "./preview";
 import type { Bill, Conversation, ConversationSummary, FamilyLink, InSchool, Role, Turn } from "./types";
 import "./plan.css";
 
@@ -44,6 +44,7 @@ const SUGGESTIONS: Record<"en" | "zh", Record<Role | "none" | "preparing" | "enr
     enrolled: ["What food and fun is near my school?", "How much have I spent this month?", "Which bills are due?", "I spent 120 THB on lunch today"],
   },
 };
+const STAGE_LABELS: Record<PreviewStage, MessageKey> = { plan: "plan.preview.stage1", prepare: "plan.preview.stagePrepare", school: "plan.preview.stage2" };
 
 /** Local day and time labels for the conversation timeline; missing or invalid timestamps show nothing. */
 function turnStamp(value: string | undefined, lang: string) {
@@ -223,8 +224,8 @@ export function PlanApp({ account = "", preview, initialStage = "plan", onExit }
     </p>}
     {stale}
     {preview && <div className="plan-stage-switch" role="group" aria-label={t("plan.preview.stage")}>
-      {(["plan", "school"] as const).map((item) => <button key={item} type="button" aria-pressed={stage === item}
-        onClick={() => { setStage(item); workspace?.setStage(item); }}>{t(item === "plan" ? "plan.preview.stage1" : "plan.preview.stage2")}</button>)}
+      {previewStages.map((item) => <button key={item} type="button" aria-pressed={stage === item}
+        onClick={() => { setStage(item); workspace?.setStage(item); }}>{t(STAGE_LABELS[item])}</button>)}
     </div>}
     {error && <p className="error service-alert" role="alert">{error} <button className="chip" onClick={() => void (conversation ? refresh() : load()).catch(fail)}>{t("common.refresh")}</button></p>}
     {notice && <p className="service-notice" role="status">{notice}</p>}

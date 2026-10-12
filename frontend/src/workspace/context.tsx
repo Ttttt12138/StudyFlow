@@ -2,10 +2,11 @@ import { createContext, useContext, useEffect, useRef, useState, type ReactNode 
 import { createPortal } from "react-dom";
 import { useI18n } from "../i18n";
 import type { ToolKind, ToolTarget } from "./navigation";
+import type { PreviewStage } from "../plan/preview";
 
 export const WorkspaceContext = createContext<{
   target: ToolTarget | null; host: HTMLElement | null; open: (target: ToolTarget) => void;
-  close: () => void; setStage: (stage: "plan" | "school") => void;
+  close: () => void; setStage: (stage: PreviewStage) => void;
 } | null>(null);
 export const ToolContext = createContext({ embedded: false, active: true });
 export const useWorkspace = () => useContext(WorkspaceContext);

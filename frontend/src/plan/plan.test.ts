@@ -31,6 +31,17 @@ describe("planner preview client", () => {
     await expect(client.post(`agent/conversations/${summary.id}/messages/`, { text: "hi" })).rejects.toBeInstanceOf(WalletApiError);
   });
 
+  it("has a confirmed, not yet enrolled preparing stage in both languages", async () => {
+    for (const lang of ["en", "zh"] as const) {
+      const client = createPlanPreview(lang, "prepare");
+      const [summary] = await client.get<{ id: string }[]>("agent/conversations/");
+      const conversation = await client.get<Conversation>(`agent/conversations/${summary.id}/`);
+      expect(conversation.plan?.status).toBe("CONFIRMED");
+      expect(conversation.turns.some((turn) => turn.pending_actions.some((action) => action.action === "plan.enroll"))).toBe(false);
+      expect((await client.get<InSchool>("planning/in-school/")).enrolled).toBe(false);
+    }
+  });
+
   it("has an enrolled in-school stage in both languages", async () => {
     for (const lang of ["en", "zh"] as const) {
       const school = await createPlanPreview(lang, "school").get<InSchool>("planning/in-school/");
