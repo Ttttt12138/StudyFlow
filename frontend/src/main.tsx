@@ -4,7 +4,7 @@ import { SponsorApp } from "./family/SponsorApp";
 import { VerifyApp } from "./trust/VerifyApp";
 import { SimulatedStrip } from "./services/SimulatedStrip";
 import { AppBackdrop } from "./services/AppBackdrop";
-import { SignInDialog } from "./services/SignInDialog";
+import { AuthApp } from "./auth/AuthApp";
 import { ModuleNavContext, type Module } from "./services/ModuleNav";
 import { useI18n } from "./i18n";
 import { TourBar, tourStops, type TourTarget } from "./services/Tour";
@@ -92,7 +92,7 @@ function Root() {
     if (module === "home") toHome(asPreview); else open(module, asPreview);
   },
  };
- return <ModuleNavContext.Provider value={moduleNav}><AppBackdrop/><SignInDialog/><SimulatedStrip/>
+ return <ModuleNavContext.Provider value={moduleNav}>{service?.kind !== "ops" && <AppBackdrop/>}<SimulatedStrip/>
   {(!service || !["ops", "sponsor", "verify"].includes(service.kind)) && <StudentWorkspace key={String(preview)} preview={preview} onExternal={(kind, mode) => kind === "home" ? toHome(mode) : open(kind, mode)} />}
   {service?.kind==="sponsor"&&<SponsorApp preview={service.preview} onExit={exit}/>}
   {service?.kind==="verify"&&<VerifyApp preview={service.preview} onExit={exit}/>}
@@ -108,4 +108,6 @@ function Legacy() {
 // /intro is the product introduction; it loads as its own chunk so the app bundle stays unchanged.
 const IntroApp = lazy(() => import('./intro/IntroApp').then(module => ({ default: module.IntroApp })));
 const isIntro = /^\/intro\/?$/.test(window.location.pathname);
-createRoot(document.getElementById('root')!).render(<React.StrictMode>{isIntro ? <Suspense fallback={null}><IntroApp/></Suspense> : new URLSearchParams(window.location.search).has("legacy") ? <Legacy/> : <Root/>}</React.StrictMode>);
+// /auth is the sign-in page every "Sign in to StudyFlow" link opens.
+const isAuth = /^\/auth\/?$/.test(window.location.pathname);
+createRoot(document.getElementById('root')!).render(<React.StrictMode>{isIntro ? <Suspense fallback={null}><IntroApp/></Suspense> : isAuth ? <><AppBackdrop/><SimulatedStrip/><AuthApp/></> : new URLSearchParams(window.location.search).has("legacy") ? <Legacy/> : <Root/>}</React.StrictMode>);
