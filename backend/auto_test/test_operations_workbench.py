@@ -6,12 +6,12 @@ from django.contrib.auth import get_user_model
 from django.core.cache import cache
 from django.test import override_settings
 from django.utils import timezone
+from finance.policy_models import ApprovalRequest
+from finance.workflow_models import Beneficiary
 from rest_framework.test import APITestCase
 
 from auto_test.test_multicurrency import FX_SETTINGS
 from auto_test.test_policy import PolicyHarness
-from finance.policy_models import ApprovalRequest
-from finance.workflow_models import Beneficiary
 
 
 class WorkbenchTests(APITestCase):
