@@ -21,6 +21,8 @@ RATE_EXPONENT = Decimal("0.0000000001")
 FIXTURE_THB_PER_UNIT = {
     "THB": Decimal("1"), "USD": Decimal("33.00"), "EUR": Decimal("36.50"),
     "CNY": Decimal("4.60"), "GBP": Decimal("42.00"), "JPY": Decimal("0.2200"),
+    # Catalog schools in Australia, Singapore and Malaysia (finance/planning/catalog).
+    "AUD": Decimal("21.50"), "SGD": Decimal("25.00"), "MYR": Decimal("7.40"),
 }
 
 

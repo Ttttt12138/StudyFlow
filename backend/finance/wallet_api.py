@@ -1,7 +1,10 @@
+from decimal import Decimal, InvalidOperation
+
 from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from . import money
 from .execution_services import available
 from .fx_rates import get_rate
 from .wallets import balances, wallet
@@ -34,9 +37,23 @@ class FxRateView(APIView):
     @extend_schema(responses=CommandResponse, parameters=[
         OpenApiParameter("base", str, required=True),
         OpenApiParameter("quote", str, required=True),
+        OpenApiParameter("amount", str, required=False,
+                         description="Optional positive amount in base; adds amount and converted (in quote) at the reference rate."),
     ])
     def get(self, request):
         base = request.query_params.get("base", "").upper()
         quote = request.query_params.get("quote", "").upper()
         require(base and quote, "Query parameters base and quote are required.")
-        return Response({"data": get_rate(base, quote)})
+        data = get_rate(base, quote)
+        raw = request.query_params.get("amount")
+        if raw is not None:
+            # Indicative only: a planning aid at the reference rate, not an executable quote.
+            try:
+                amount = Decimal(raw)
+            except InvalidOperation:
+                amount = None
+            require(amount is not None and amount.is_finite() and amount > 0, "AMOUNT_INVALID")
+            amount = money.require_precision(amount, base)
+            data = {**data, "amount": money.fmt(amount, base),
+                    "converted": money.fmt(amount * Decimal(data["rate"]), quote)}
+        return Response({"data": data})

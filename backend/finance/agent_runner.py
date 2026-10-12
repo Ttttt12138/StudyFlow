@@ -1,5 +1,6 @@
 """Agent execution loop: plan one step, execute it, record it (docs/agent.md)."""
 import json
+import logging
 from datetime import timedelta
 from uuid import uuid4
 
@@ -15,10 +16,11 @@ from studyflow_ai.providers.base import ProviderFailure
 
 from . import money
 from .agent_models import AgentPendingAction, AgentStep
-from .agent_tools import TOOLS, Proposal
+from .agent_tools import CONVERSATION_TOOLS, TOOLS, Proposal
 from .services import json_value
 from .workflow_common import record, require
 
+logger = logging.getLogger(__name__)
 MAX_STEPS = 10
 MAX_WRITES = 4
 RESULT_CHARS = 4000
@@ -54,9 +56,13 @@ def _truncate(result):
         size -= 200
 
 
-def _arguments(step):
+def tools_for(session):
+    return CONVERSATION_TOOLS if session.conversation_id else TOOLS
+
+
+def _arguments(step, catalog=TOOLS):
     """The planner's arguments if they are a JSON object for a registered tool, else None."""
-    if step.tool not in TOOLS:
+    if step.tool not in catalog:
         return None
     try:
         arguments = json.loads(step.arguments_json)
@@ -82,11 +88,12 @@ def _propose(session, number, tool, arguments, step, call, outcome):
         "ALREADY_PROPOSED")
     pending_id = uuid4()
     expires = timezone.now() + timedelta(seconds=PENDING_SECONDS)
+    moves_money = outcome.amount is not None
     result = {"pending_action_id": str(pending_id), "action": outcome.action,
               "target_id": str(outcome.target_id), "currency": outcome.currency,
-              "amount": money.fmt(outcome.amount, outcome.currency), "expires_at": expires.isoformat(),
-              "details": outcome.arguments, "executed": False,
-              "requires": ["student_confirmation", "step_up"]}
+              "amount": money.fmt(outcome.amount, outcome.currency) if moves_money else None,
+              "expires_at": expires.isoformat(), "details": outcome.arguments, "executed": False,
+              "requires": ["student_confirmation", "step_up"] if moves_money else ["user_confirmation"]}
     saved = AgentStep.objects.create(
         owner=session.owner, session=session, number=number, tool=tool.name, tier=tool.tier,
         arguments=json_value(arguments), rationale=step.rationale, status="PROPOSED", result=result, call=call)
@@ -98,7 +105,7 @@ def _propose(session, number, tool, arguments, step, call, outcome):
 
 
 def _execute(session, number, step, call, arguments):
-    user, tool = session.owner, TOOLS[step.tool]
+    user, tool = session.owner, tools_for(session)[step.tool]
     if tool.tier == "T1" and session.write_count >= MAX_WRITES:
         status, result = "DENIED", {"error": "WRITE_BUDGET_EXHAUSTED"}
     else:
@@ -111,8 +118,10 @@ def _execute(session, number, step, call, arguments):
                 outcome = tool.handler(user, serializer.validated_data)
                 if isinstance(outcome, Proposal):
                     result = _propose(session, number, tool, arguments, step, call, outcome)
+                    _add_card(session, tool.name, arguments, result, "PROPOSED")
                     return Observation(tool=tool.name, arguments=arguments, status="PROPOSED", result=result)
                 status, result = "OK", json_value(outcome)
+                _add_card(session, tool.name, arguments, result, status)
                 if tool.tier == "T1":
                     session.write_count += 1
                     session.save(update_fields=["write_count", "updated_at"])
@@ -128,15 +137,32 @@ def _execute(session, number, step, call, arguments):
     return Observation(tool=tool.name, arguments=arguments, status=status, result=result)
 
 
-def run(session):
+def _add_card(session, tool, arguments, result, status):
+    """Cards are built from the full tool result, before it is truncated for the planner."""
+    if session.conversation_id is None:
+        return
+    from .planning.cards import build
+
+    try:
+        card = build(session.owner, tool, arguments, result, status)
+    except Exception:  # noqa: BLE001 - a card is a view; it must never undo the tool's effect
+        logger.exception("Card for %s could not be built", tool)
+        return
+    if card is not None:
+        session.cards = [*session.cards, json_value(card)]
+
+
+def run(session, history=None, memory=None):
     brain = planner()
-    specs = [ToolSpec(**tool.spec()) for tool in TOOLS.values()]
+    catalog = tools_for(session)
+    specs = [ToolSpec(**tool.spec()) for tool in catalog.values()]
     observations = []
     try:
         for number in range(1, MAX_STEPS + 2):
             remaining = 0 if _must_stop(observations) else max(MAX_STEPS - number + 1, 0)
             context = AgentContext(goal=session.goal, locale=session.locale, tools=specs,
-                                   observations=observations[-12:], steps_remaining=remaining)
+                                   observations=observations[-12:], steps_remaining=remaining,
+                                   history=history or [], memory=memory or {})
             try:
                 step, call_record = brain.next_step(context)
             except ProviderFailure as exc:
@@ -151,7 +177,7 @@ def run(session):
                                          result={"answer": step.answer}, call=call)
                 session.status, session.final_answer = "COMPLETED", step.answer
                 break
-            arguments = _arguments(step)
+            arguments = _arguments(step, catalog)
             if remaining == 0 or arguments is None:
                 # A tool call after the budget is spent, or one the catalog cannot run, ends the session.
                 code = "STEP_BUDGET_EXHAUSTED" if remaining == 0 else "INVALID_TOOL_CALL"
@@ -199,11 +225,21 @@ def confirm_pending(actor, data, pending):
     if pending.action == "remittance.submit":
         order = RemittanceOrder.objects.get(owner=actor, pk=pending.target_id)
         result = remittance_orders.submit(actor, {"expected_version": order.version}, order)
+    elif pending.action in ("plan.confirm", "plan.enroll"):
+        from .planning import services as planning
+        from .planning.models import StudyPlan
+
+        plan = StudyPlan.objects.select_for_update().get(owner=actor, pk=pending.target_id)
+        result = (planning.confirm_plan if pending.action == "plan.confirm" else planning.enroll)(actor, plan)
     else:
         result = wallets.convert_balance(actor, {
             "quote_id": pending.target_id, "source_amount": pending.amount,
             "state_version": current(actor).version}, None)
     _decide(pending, "CONFIRMED", result)
+    if pending.action in ("plan.confirm", "plan.enroll"):
+        from .planning.guidance import append_handoff
+
+        append_handoff(pending)
     audit(actor, actor, "agent.action_confirmed", pending, {"action": pending.action})
     return record(pending)
 

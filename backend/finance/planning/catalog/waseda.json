@@ -1,0 +1,186 @@
+{
+  "key": "waseda",
+  "version": 1,
+  "sample": true,
+  "observed_at": "2026-10-12",
+  "school": {
+    "name": {"en": "Waseda University (School of Political Science and Economics)", "zh": "早稻田大学（政治经济学部）"},
+    "country": {"en": "Japan", "zh": "日本"},
+    "country_code": "JP",
+    "city": {"en": "Shinjuku, Tokyo", "zh": "东京新宿区"},
+    "campus": "Waseda",
+    "currency": "JPY",
+    "program": {"en": "English-based Degree Program in Political Science and Economics (EDESSA)", "zh": "政治经济学部英语学位项目（EDESSA）"},
+    "language": "English",
+    "website": "https://www.waseda.jp/fpse/pse/en/",
+    "duration_years": 4
+  },
+  "calendar": {
+    "intake": "2027-09",
+    "start_date": "2027-09-21",
+    "end_date": "2028-02-02",
+    "semesters_per_year": 2,
+    "source_url": "https://www.waseda.jp/top/en/about/work/organizations/academic-affairs-division/academic-calendar"
+  },
+  "costs": [
+    {
+      "cost_id": "enrollment_fee",
+      "category": "tuition",
+      "label": {"en": "Enrollment fee (first year only)", "zh": "入学金（仅第一年）"},
+      "period": "once",
+      "amount": "200000.00",
+      "estimate": false,
+      "source_url": "https://www.waseda.jp/fpse/pse/en/applicants/tuition/",
+      "quote": "Enrollment Fee | 200,000"
+    },
+    {
+      "cost_id": "faculty_entrance_fee",
+      "category": "tuition",
+      "label": {"en": "Faculty entrance fee (first year only)", "zh": "学部入会费（仅第一年）"},
+      "period": "once",
+      "amount": "2000.00",
+      "estimate": false,
+      "source_url": "https://www.waseda.jp/fpse/pse/en/applicants/tuition/",
+      "quote": "Entrance Fee | 2,000"
+    },
+    {
+      "cost_id": "tuition_semester",
+      "category": "tuition",
+      "label": {"en": "Tuition, first year, per semester (from year 2: 640,500 per semester)", "zh": "第一年学费，每学期（第二年起每学期 640,500）"},
+      "period": "semester",
+      "amount": "540500.00",
+      "estimate": false,
+      "source_url": "https://www.waseda.jp/fpse/pse/en/applicants/tuition/",
+      "quote": "Tuition | 540,500 | 540,500 | 1,081,000"
+    },
+    {
+      "cost_id": "other_school_fees",
+      "category": "tuition",
+      "label": {"en": "Library, faculty and student health mutual-aid fees, per semester", "zh": "图书馆费、学部年费、学生健康互助会费（每学期）"},
+      "period": "semester",
+      "amount": "2500.00",
+      "estimate": false,
+      "source_url": "https://www.waseda.jp/fpse/pse/en/applicants/tuition/",
+      "quote": "Library Fee | 250 … Annual Fee | 750 … Membership Fee of Student Health Promotion Mutual Aid Association | 1,500"
+    },
+    {
+      "cost_id": "housing_month",
+      "category": "housing",
+      "label": {"en": "Dormitory or share house / small apartment in Tokyo", "zh": "东京宿舍、合租屋或小公寓"},
+      "period": "month",
+      "lower": "60000.00",
+      "upper": "100000.00",
+      "estimate": true
+    },
+    {
+      "cost_id": "housing_deposit",
+      "category": "deposit",
+      "label": {"en": "Move-in costs (deposit, key money, agent fee); lower for dorms", "zh": "入住初期费用（押金、礼金、中介费）；宿舍较低"},
+      "period": "once",
+      "lower": "30000.00",
+      "upper": "200000.00",
+      "estimate": true
+    },
+    {
+      "cost_id": "food_monthly",
+      "category": "food",
+      "label": {"en": "Groceries, co-op cafeterias and eating out", "zh": "日常伙食（超市、学生食堂与外食）"},
+      "period": "month",
+      "lower": "35000.00",
+      "upper": "55000.00",
+      "estimate": true
+    },
+    {
+      "cost_id": "transport_monthly",
+      "category": "transport",
+      "label": {"en": "Train/metro commuter pass", "zh": "电车/地铁通学定期票"},
+      "period": "month",
+      "lower": "5000.00",
+      "upper": "10000.00",
+      "estimate": true
+    },
+    {
+      "cost_id": "phone_internet",
+      "category": "communications",
+      "label": {"en": "Mobile plan (budget carrier)", "zh": "手机套餐（廉价运营商）"},
+      "period": "month",
+      "lower": "2000.00",
+      "upper": "5000.00",
+      "estimate": true
+    },
+    {
+      "cost_id": "nhi_month",
+      "category": "insurance",
+      "label": {"en": "National Health Insurance (compulsory for residents)", "zh": "国民健康保险（在日居民强制加入）"},
+      "period": "month",
+      "lower": "1500.00",
+      "upper": "2500.00",
+      "estimate": true
+    },
+    {
+      "cost_id": "student_visa",
+      "category": "visa",
+      "label": {"en": "Student visa issuance fee at a Japanese consulate (CoE itself is free)", "zh": "留学签证签发费（在留资格认定证明书免费）"},
+      "period": "once",
+      "lower": "3000.00",
+      "upper": "15000.00",
+      "estimate": true
+    },
+    {
+      "cost_id": "flights_home",
+      "category": "travel",
+      "label": {"en": "Return flight China-Tokyo, once a year", "zh": "中国往返东京机票（每年一次）"},
+      "period": "year",
+      "lower": "40000.00",
+      "upper": "120000.00",
+      "estimate": true
+    },
+    {
+      "cost_id": "settling_in",
+      "category": "settlement",
+      "label": {"en": "Furniture, bedding and household items", "zh": "家具、床品及生活用品"},
+      "period": "once",
+      "lower": "50000.00",
+      "upper": "100000.00",
+      "estimate": true
+    },
+    {
+      "cost_id": "books_supplies",
+      "category": "study_materials",
+      "label": {"en": "Textbooks and printing", "zh": "教材及打印"},
+      "period": "year",
+      "lower": "20000.00",
+      "upper": "50000.00",
+      "estimate": true
+    }
+  ],
+  "facilities": [
+    {"name": {"en": "Waseda University Central Library", "zh": "早稻田大学中央图书馆"}, "kind": "library", "note": {"en": "Main library near Okuma Auditorium.", "zh": "大隈讲堂旁的主图书馆。"}, "distance_km": 0.3},
+    {"name": {"en": "Okuma Auditorium", "zh": "大隈讲堂"}, "kind": "landmark", "note": {"en": "Campus symbol used for ceremonies and lectures.", "zh": "早大标志性建筑，用于典礼和讲座。"}, "distance_km": 0.2},
+    {"name": {"en": "Building 3 (School of Political Science and Economics)", "zh": "3 号馆（政治经济学部）"}, "kind": "faculty building", "note": {"en": "Home building of the school.", "zh": "政治经济学部所在教学楼。"}, "distance_km": 0},
+    {"name": {"en": "Waseda Arena (Toyama campus)", "zh": "早稻田体育馆（户山校区）"}, "kind": "sports", "note": {"en": "Gym and sports facilities.", "zh": "体育馆与运动设施。"}, "distance_km": 0.6},
+    {"name": {"en": "Tsubouchi Memorial Theatre Museum", "zh": "坪内博士纪念演剧博物馆"}, "kind": "museum", "note": {"en": "Theatre museum on campus; free.", "zh": "校内戏剧博物馆，免费。"}, "distance_km": 0.2}
+  ],
+  "food": [
+    {"name": {"en": "Okuma Garden House cafeteria (Waseda Co-op)", "zh": "大隈花园楼食堂（早大生协）"}, "kind": "canteen", "note": {"en": "Large student cafeteria on campus.", "zh": "校内大型学生食堂。"}, "distance_km": 0.2, "typical_cost": "550.00"},
+    {"name": {"en": "Takadanobaba station area eateries", "zh": "高田马场站周边餐馆"}, "kind": "district", "note": {"en": "Ramen, set meals and Asian food popular with students.", "zh": "拉面、定食与亚洲料理，学生常去。"}, "distance_km": 1.5, "typical_cost": "1000.00"},
+    {"name": {"en": "Waseda-dori student restaurants", "zh": "早稻田通学生餐馆"}, "kind": "street", "note": {"en": "Cheap curry, donburi and set-meal shops near campus.", "zh": "校园附近的咖喱、盖饭和定食小店。"}, "distance_km": 0.3, "typical_cost": "800.00"}
+  ],
+  "attractions": [
+    {"name": {"en": "Okuma Garden", "zh": "大隈庭园"}, "kind": "park", "note": {"en": "Japanese garden on campus; free.", "zh": "校内日式庭园，免费。"}, "distance_km": 0.2, "typical_cost": "0.00"},
+    {"name": {"en": "Kanda River cherry blossom walk (Edogawa Park)", "zh": "神田川赏樱步道（江户川公园）"}, "kind": "nature", "note": {"en": "Riverside walk, best in spring.", "zh": "河边步道，春季赏樱。"}, "distance_km": 1, "typical_cost": "0.00"},
+    {"name": {"en": "Rikugien Garden", "zh": "六义园"}, "kind": "park", "note": {"en": "Edo-period landscape garden (small entry fee).", "zh": "江户时代回游式庭园（少量门票）。"}, "distance_km": 4, "typical_cost": "300.00"},
+    {"name": {"en": "Shinjuku Gyoen National Garden", "zh": "新宿御苑"}, "kind": "park", "note": {"en": "Large national garden (entry fee).", "zh": "大型国家庭园（需门票）。"}, "distance_km": 4, "typical_cost": "500.00"},
+    {"name": {"en": "Meiji Jingu", "zh": "明治神宫"}, "kind": "shrine", "note": {"en": "Forest shrine near Harajuku; free.", "zh": "原宿旁的森林神社，免费。"}, "distance_km": 5, "typical_cost": "0.00"}
+  ],
+  "sources": [
+    {"url": "https://www.waseda.jp/fpse/pse/en/applicants/tuition/", "title": "Waseda SPSE - Tuition and Scholarships (based on 2025 figures)", "accessed": "2026-10-12"},
+    {"url": "https://www.waseda.jp/top/en/about/work/organizations/academic-affairs-division/academic-calendar", "title": "Waseda University - Academic calendar", "accessed": "2026-10-12"}
+  ],
+  "notes": [
+    {"en": "Sample data from public sources; confirm with the school before paying.", "zh": "示例数据，来自公开资料；付款前请向学校确认。"},
+    {"en": "Fees are 'based on 2025 figures' on the school page; year 1 totals 1,288,000 yen, year 2 onward 1,286,000 yen a year, plus 40,000 yen alumni fee in year 4.", "zh": "学部页面注明按 2025 年标准；第一年合计 1,288,000 日元，第二年起每年 1,286,000 日元，第四年另收校友会费 40,000 日元。"},
+    {"en": "Fall 2027 dates are projected from the 2026 calendar (Fall classes from 21 Sep to 2 Feb).", "zh": "2027 秋季日期按 2026 校历推算（秋学期 9 月 21 日至次年 2 月 2 日）。"},
+    {"en": "Housing, insurance, visa and living costs are estimates; Waseda's housing site blocked automated access. Japan has announced plans to raise visa fees, so check the consulate.", "zh": "住宿、保险、签证及生活费为估算；早大住宿网站拦截自动访问。日本已宣布计划上调签证费，请以领馆为准。"}
+  ]
+}

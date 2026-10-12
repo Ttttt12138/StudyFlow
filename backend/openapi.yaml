@@ -69,6 +69,137 @@ paths:
               schema:
                 $ref: '#/components/schemas/CommandResponse'
           description: ''
+  /api/v2/agent/conversations/:
+    get:
+      operationId: get_api_v2_agent_conversations
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+    post:
+      operationId: post_api_v2_agent_conversations
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConversationInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ConversationInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ConversationInput'
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/agent/conversations/{id}/:
+    get:
+      operationId: get_api_v2_agent_conversations_id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/agent/conversations/{id}/messages/:
+    post:
+      operationId: post_api_v2_agent_conversations_id_messages
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessageInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MessageInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MessageInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/agent/conversations/{id}/open/:
+    post:
+      operationId: post_api_v2_agent_conversations_id_open
+      description: Called when the app opens a conversation; the agent may speak first
+        (enrollment).
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
   /api/v2/agent/pending-actions/{id}/confirm/:
     post:
       operationId: post_api_v2_agent_pending_actions_id_confirm
@@ -1436,6 +1567,12 @@ paths:
       operationId: get_api_v2_fx_rates
       parameters:
       - in: query
+        name: amount
+        schema:
+          type: string
+        description: Optional positive amount in base; adds amount and converted (in
+          quote) at the reference rate.
+      - in: query
         name: base
         schema:
           type: string
@@ -1649,6 +1786,21 @@ paths:
             schema:
               $ref: '#/components/schemas/CompareInput'
         required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/operations/queue/:
+    get:
+      operationId: get_api_v2_operations_queue
+      tags:
+      - api
       security:
       - tokenAuth: []
       - cookieAuth: []
@@ -1887,6 +2039,219 @@ paths:
           type: string
           format: uuid
         required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/planning/bills/{id}/pay/:
+    post:
+      operationId: post_api_v2_planning_bills_id_pay
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/planning/expenses/:
+    get:
+      operationId: get_api_v2_planning_expenses
+      parameters:
+      - in: query
+        name: month
+        schema:
+          type: string
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/planning/expenses/record/:
+    post:
+      operationId: post_api_v2_planning_expenses_record
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExpenseInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ExpenseInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ExpenseInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/planning/family-links/:
+    get:
+      operationId: get_api_v2_planning_family_links
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+    post:
+      operationId: post_api_v2_planning_family_links
+      parameters:
+      - in: header
+        name: X-Sponsor-Token
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/planning/in-school/:
+    get:
+      operationId: get_api_v2_planning_in_school
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/planning/profile/:
+    get:
+      operationId: get_api_v2_planning_profile
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+    post:
+      operationId: post_api_v2_planning_profile
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlanningProfileInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PlanningProfileInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PlanningProfileInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/planning/schools/:
+    get:
+      operationId: get_api_v2_planning_schools
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/planning/schools/{key}/:
+    get:
+      operationId: get_api_v2_planning_schools_key
+      parameters:
+      - in: path
+        name: key
+        schema:
+          type: string
+        required: true
+      - in: query
+        name: years
+        schema:
+          type: integer
       tags:
       - api
       security:
@@ -4074,30 +4439,6 @@ components:
       - destination_label
       - name
       - state_version
-    CategoryEnum:
-      enum:
-      - Rent
-      - Food
-      - Transport
-      - Mobile
-      - Utilities
-      - Subscription
-      - Transfer
-      - Income
-      - Refund
-      - Other
-      type: string
-      description: |-
-        * `Rent` - Rent
-        * `Food` - Food
-        * `Transport` - Transport
-        * `Mobile` - Mobile
-        * `Utilities` - Utilities
-        * `Subscription` - Subscription
-        * `Transfer` - Transfer
-        * `Income` - Income
-        * `Refund` - Refund
-        * `Other` - Other
     ClockInput:
       type: object
       properties:
@@ -4164,6 +4505,9 @@ components:
       - CNY
       - GBP
       - JPY
+      - AUD
+      - SGD
+      - MYR
       type: string
       description: |-
         * `USD` - USD
@@ -4171,6 +4515,9 @@ components:
         * `CNY` - CNY
         * `GBP` - GBP
         * `JPY` - JPY
+        * `AUD` - AUD
+        * `SGD` - SGD
+        * `MYR` - MYR
     ConfirmInput:
       type: object
       properties:
@@ -4229,6 +4576,11 @@ components:
       - selected_cost_ids
       - semester_id
       - state_version
+    ConversationInput:
+      type: object
+      properties:
+        locale:
+          $ref: '#/components/schemas/LocaleEnum'
     ConversionInput:
       type: object
       properties:
@@ -4361,6 +4713,46 @@ components:
       description: |-
         * `expense` - expense
         * `income` - income
+    ExpenseInput:
+      type: object
+      properties:
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+        currency:
+          type: string
+          maxLength: 3
+        category:
+          $ref: '#/components/schemas/ExpenseInputCategoryEnum'
+        note:
+          type: string
+          maxLength: 200
+        spent_on:
+          type: string
+          format: date
+      required:
+      - amount
+    ExpenseInputCategoryEnum:
+      enum:
+      - food
+      - transport
+      - housing
+      - study
+      - shopping
+      - fun
+      - health
+      - other
+      type: string
+      description: |-
+        * `food` - food
+        * `transport` - transport
+        * `housing` - housing
+        * `study` - study
+        * `shopping` - shopping
+        * `fun` - fun
+        * `health` - health
+        * `other` - other
     ExpenseOverride:
       type: object
       properties:
@@ -4643,6 +5035,14 @@ components:
       description: |-
         * `zh` - zh
         * `en` - en
+    MessageInput:
+      type: object
+      properties:
+        text:
+          type: string
+          maxLength: 2000
+      required:
+      - text
     MonthInput:
       type: object
       properties:
@@ -4828,6 +5228,16 @@ components:
       required:
       - allocations
       - scenario_id
+    PlanningProfileInput:
+      type: object
+      properties:
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+        home_currency:
+          type: string
+          maxLength: 3
+      required:
+      - role
     PolicyActionEnum:
       enum:
       - payment.submit
@@ -4983,6 +5393,14 @@ components:
       - draft
       - semester_id
       - state_version
+    RoleEnum:
+      enum:
+      - parent
+      - student
+      type: string
+      description: |-
+        * `parent` - parent
+        * `student` - student
     RoomEnum:
       enum:
       - shared
@@ -5384,6 +5802,9 @@ components:
       - CNY
       - GBP
       - JPY
+      - AUD
+      - SGD
+      - MYR
       type: string
       description: |-
         * `THB` - THB
@@ -5392,6 +5813,9 @@ components:
         * `CNY` - CNY
         * `GBP` - GBP
         * `JPY` - JPY
+        * `AUD` - AUD
+        * `SGD` - SGD
+        * `MYR` - MYR
     TemplateUpgradeInput:
       type: object
       properties:
@@ -5441,7 +5865,7 @@ components:
       type: object
       properties:
         category:
-          $ref: '#/components/schemas/CategoryEnum'
+          $ref: '#/components/schemas/TransactionRevisionInputCategoryEnum'
         cost_id:
           type: string
           maxLength: 100
@@ -5455,6 +5879,30 @@ components:
       required:
       - category
       - reason
+    TransactionRevisionInputCategoryEnum:
+      enum:
+      - Rent
+      - Food
+      - Transport
+      - Mobile
+      - Utilities
+      - Subscription
+      - Transfer
+      - Income
+      - Refund
+      - Other
+      type: string
+      description: |-
+        * `Rent` - Rent
+        * `Food` - Food
+        * `Transport` - Transport
+        * `Mobile` - Mobile
+        * `Utilities` - Utilities
+        * `Subscription` - Subscription
+        * `Transfer` - Transfer
+        * `Income` - Income
+        * `Refund` - Refund
+        * `Other` - Other
     TransactionUploadInput:
       type: object
       properties:

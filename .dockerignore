@@ -3,6 +3,7 @@
 **/.demo-credentials.json
 .pg-password
 .postgres/
+.docker-data/
 **/*.sqlite3
 
 # Virtual environments, caches and run outputs.

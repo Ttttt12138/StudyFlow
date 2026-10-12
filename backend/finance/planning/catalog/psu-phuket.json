@@ -1,0 +1,436 @@
+{
+  "key": "psu-phuket",
+  "version": 1,
+  "sample": true,
+  "observed_at": "2026-10-12",
+  "school": {
+    "name": {
+      "en": "Prince of Songkla University, Phuket Campus",
+      "zh": "宋卡王子大学（普吉校区）"
+    },
+    "country": {
+      "en": "Thailand",
+      "zh": "泰国"
+    },
+    "country_code": "TH",
+    "city": {
+      "en": "Kathu, Phuket",
+      "zh": "普吉府卡图县"
+    },
+    "campus": "Phuket",
+    "currency": "THB",
+    "program": {
+      "en": "BBA in International Business (Faculty of International Studies)",
+      "zh": "国际商务工商管理学士（国际研究学院）"
+    },
+    "language": "English",
+    "website": "https://sites.google.com/phuket.psu.ac.th/fispsuphuket/International-Students",
+    "duration_years": 3
+  },
+  "calendar": {
+    "intake": "2027-08",
+    "start_date": "2027-08-09",
+    "end_date": "2027-12-14",
+    "source_url": "https://gao.psu.ac.th/admission/academic-calendar",
+    "semesters_per_year": 3
+  },
+  "costs": [
+    {
+      "cost_id": "tuition_semester",
+      "category": "tuition",
+      "label": {
+        "en": "Tuition per semester",
+        "zh": "每学期学费"
+      },
+      "period": "semester",
+      "amount": "41000.00",
+      "estimate": false,
+      "source_url": "https://sites.google.com/phuket.psu.ac.th/fispsuphuket/International-Students",
+      "quote": "Tuition per semester: 41,000"
+    },
+    {
+      "cost_id": "enrollment_fee",
+      "category": "tuition",
+      "label": {
+        "en": "Enrollment fee (one-time)",
+        "zh": "入学注册费（一次性）"
+      },
+      "period": "once",
+      "amount": "20000.00",
+      "estimate": false,
+      "source_url": "https://sites.google.com/phuket.psu.ac.th/fispsuphuket/International-Students",
+      "quote": "Enrollment Fee: 20,000"
+    },
+    {
+      "cost_id": "dorm_shared",
+      "category": "housing",
+      "label": {
+        "en": "On-campus air-conditioned dorm, 2 per room",
+        "zh": "校内空调宿舍（双人间）"
+      },
+      "period": "semester",
+      "amount": "11250.00",
+      "estimate": false,
+      "source_url": "https://sites.google.com/phuket.psu.ac.th/fispsuphuket/International-Students",
+      "quote": "Price/ Person : 11,250 THB"
+    },
+    {
+      "cost_id": "dorm_deposit",
+      "category": "deposit",
+      "label": {
+        "en": "Dorm deposit, charged once",
+        "zh": "宿舍押金（一次性）"
+      },
+      "period": "once",
+      "amount": "3000.00",
+      "estimate": false,
+      "source_url": "https://sites.google.com/phuket.psu.ac.th/fispsuphuket/International-Students",
+      "quote": "3,000 THB"
+    },
+    {
+      "cost_id": "food_monthly",
+      "category": "food",
+      "label": {
+        "en": "Food (canteen and local eateries)",
+        "zh": "餐饮（食堂及周边小吃店）"
+      },
+      "period": "month",
+      "lower": "4500.00",
+      "upper": "7500.00",
+      "estimate": true
+    },
+    {
+      "cost_id": "transport_monthly",
+      "category": "transport",
+      "label": {
+        "en": "Local transport (songthaew, Grab or scooter rental)",
+        "zh": "本地交通（双条车、Grab 或租摩托车）"
+      },
+      "period": "month",
+      "lower": "800.00",
+      "upper": "3000.00",
+      "estimate": true
+    },
+    {
+      "cost_id": "phone_internet",
+      "category": "communications",
+      "label": {
+        "en": "Mobile plan with data",
+        "zh": "手机套餐及流量"
+      },
+      "period": "month",
+      "lower": "300.00",
+      "upper": "600.00",
+      "estimate": true
+    },
+    {
+      "cost_id": "health_insurance",
+      "category": "insurance",
+      "label": {
+        "en": "Student health insurance",
+        "zh": "学生医疗保险"
+      },
+      "period": "year",
+      "lower": "4000.00",
+      "upper": "10000.00",
+      "estimate": true
+    },
+    {
+      "cost_id": "visa_non_immigrant",
+      "category": "visa",
+      "label": {
+        "en": "Non-Immigrant ED visa, single entry",
+        "zh": "非移民教育签证（单次入境）"
+      },
+      "period": "once",
+      "amount": "2000.00",
+      "estimate": false,
+      "source_url": "https://bangkok.immigration.go.th/en/fee_en/",
+      "quote": "2,000"
+    },
+    {
+      "cost_id": "visa_extension",
+      "category": "visa",
+      "label": {
+        "en": "Annual extension of stay",
+        "zh": "每年居留延期费"
+      },
+      "period": "year",
+      "amount": "1900.00",
+      "estimate": false,
+      "source_url": "https://bangkok.immigration.go.th/en/fee_en/",
+      "quote": "1,900"
+    },
+    {
+      "cost_id": "home_trip",
+      "category": "travel",
+      "label": {
+        "en": "Return trip home (economy flight)",
+        "zh": "回国往返机票（经济舱）"
+      },
+      "period": "year",
+      "lower": "6000.00",
+      "upper": "20000.00",
+      "estimate": true
+    },
+    {
+      "cost_id": "settling_in",
+      "category": "settlement",
+      "label": {
+        "en": "Settling in (bedding, SIM, household items)",
+        "zh": "安家费用（床品、电话卡、日用品）"
+      },
+      "period": "once",
+      "lower": "3000.00",
+      "upper": "8000.00",
+      "estimate": true
+    },
+    {
+      "cost_id": "books_supplies",
+      "category": "study_materials",
+      "label": {
+        "en": "Books, printing and supplies",
+        "zh": "教材、打印及文具"
+      },
+      "period": "semester",
+      "lower": "1500.00",
+      "upper": "3000.00",
+      "estimate": true
+    }
+  ],
+  "facilities": [
+    {
+      "name": {
+        "en": "Campus library",
+        "zh": "校园图书馆"
+      },
+      "kind": "library",
+      "note": {
+        "en": "Study space and English and Chinese collections for FIS students.",
+        "zh": "为国际研究学院学生提供自习空间及中英文馆藏。"
+      }
+    },
+    {
+      "name": {
+        "en": "On-campus dormitories",
+        "zh": "校内宿舍"
+      },
+      "kind": "dormitory",
+      "note": {
+        "en": "Air-conditioned single and twin rooms, booked per semester.",
+        "zh": "空调单人间和双人间，按学期预订。"
+      }
+    },
+    {
+      "name": {
+        "en": "Sports facilities",
+        "zh": "体育设施"
+      },
+      "kind": "sports",
+      "note": {
+        "en": "Gym, courts and fields for student use.",
+        "zh": "供学生使用的健身房、球场和运动场。"
+      }
+    },
+    {
+      "name": {
+        "en": "Campus health service",
+        "zh": "校园健康服务"
+      },
+      "kind": "clinic",
+      "note": {
+        "en": "First aid and basic care; hospitals are in Kathu and Phuket Town.",
+        "zh": "提供急救和基础医疗；医院位于卡图和普吉镇。"
+      }
+    },
+    {
+      "name": {
+        "en": "Student canteen",
+        "zh": "学生食堂"
+      },
+      "kind": "canteen",
+      "note": {
+        "en": "Thai dishes at student prices.",
+        "zh": "提供学生价泰式餐食。"
+      }
+    }
+  ],
+  "food": [
+    {
+      "name": {
+        "en": "Campus canteen",
+        "zh": "校园食堂"
+      },
+      "kind": "canteen",
+      "note": {
+        "en": "Rice and noodle dishes.",
+        "zh": "米饭和面条类餐食。"
+      },
+      "distance_km": 0.0,
+      "typical_cost": "50.00"
+    },
+    {
+      "name": {
+        "en": "Kathu local food stalls",
+        "zh": "卡图本地小吃摊"
+      },
+      "kind": "street food",
+      "note": {
+        "en": "Khao man gai, noodle soup and grilled skewers.",
+        "zh": "海南鸡饭、汤面和烤串。"
+      },
+      "distance_km": 2.0,
+      "typical_cost": "60.00"
+    },
+    {
+      "name": {
+        "en": "Phuket Weekend Market (Naka Market)",
+        "zh": "普吉周末市场（Naka 市场）"
+      },
+      "kind": "night market",
+      "note": {
+        "en": "Large weekend market with cheap street food.",
+        "zh": "大型周末市场，有便宜的街头小吃。"
+      },
+      "distance_km": 12.0,
+      "typical_cost": "80.00"
+    },
+    {
+      "name": {
+        "en": "Central Phuket food court",
+        "zh": "Central Phuket 美食广场"
+      },
+      "kind": "food court",
+      "note": {
+        "en": "Air-conditioned mall food court.",
+        "zh": "商场内空调美食广场。"
+      },
+      "distance_km": 10.0,
+      "typical_cost": "100.00"
+    },
+    {
+      "name": {
+        "en": "Phuket Town Sunday Walking Street (Lard Yai)",
+        "zh": "普吉镇周日步行街（Lard Yai）"
+      },
+      "kind": "night market",
+      "note": {
+        "en": "Sunday evening market in the old town.",
+        "zh": "老城区周日晚间市集。"
+      },
+      "distance_km": 12.0,
+      "typical_cost": "80.00"
+    }
+  ],
+  "attractions": [
+    {
+      "name": {
+        "en": "Kathu Waterfall",
+        "zh": "卡图瀑布"
+      },
+      "kind": "nature",
+      "note": {
+        "en": "Small forest waterfall close to campus.",
+        "zh": "离校园很近的小型森林瀑布。"
+      },
+      "distance_km": 4.0,
+      "typical_cost": "0.00"
+    },
+    {
+      "name": {
+        "en": "Patong Beach",
+        "zh": "芭东海滩"
+      },
+      "kind": "beach",
+      "note": {
+        "en": "Phuket's busiest beach, over the hill from Kathu.",
+        "zh": "普吉最热闹的海滩，翻过山即到。"
+      },
+      "distance_km": 8.0,
+      "typical_cost": "0.00"
+    },
+    {
+      "name": {
+        "en": "Phuket Old Town",
+        "zh": "普吉老镇"
+      },
+      "kind": "heritage",
+      "note": {
+        "en": "Sino-Portuguese shophouses, cafes and museums.",
+        "zh": "中葡风格骑楼、咖啡馆和博物馆。"
+      },
+      "distance_km": 12.0,
+      "typical_cost": "0.00"
+    },
+    {
+      "name": {
+        "en": "Big Buddha Phuket",
+        "zh": "普吉大佛"
+      },
+      "kind": "landmark",
+      "note": {
+        "en": "Hilltop statue with island views; donations welcome.",
+        "zh": "山顶大佛，可俯瞰全岛；欢迎随喜捐赠。"
+      },
+      "distance_km": 20.0,
+      "typical_cost": "0.00"
+    },
+    {
+      "name": {
+        "en": "Promthep Cape",
+        "zh": "神仙半岛（Promthep 角）"
+      },
+      "kind": "viewpoint",
+      "note": {
+        "en": "Popular sunset viewpoint at the island's southern tip.",
+        "zh": "位于岛南端的热门日落观景点。"
+      },
+      "distance_km": 25.0,
+      "typical_cost": "0.00"
+    }
+  ],
+  "sources": [
+    {
+      "url": "https://sites.google.com/phuket.psu.ac.th/fispsuphuket/International-Students",
+      "title": "FIS PSU Phuket - International Students (tuition, fees, dormitory)",
+      "accessed": "2026-10-12"
+    },
+    {
+      "url": "https://www.psu.ac.th/phuket/en/on-campus-accommodation-2/",
+      "title": "PSU Phuket - On-campus accommodation",
+      "accessed": "2026-10-12"
+    },
+    {
+      "url": "https://gao.psu.ac.th/admission/academic-calendar",
+      "title": "PSU Global Affairs Office - Academic Calendar 2026",
+      "accessed": "2026-10-12"
+    },
+    {
+      "url": "https://bangkok.immigration.go.th/en/fee_en/",
+      "title": "Immigration Division 1 - Fees",
+      "accessed": "2026-10-12"
+    }
+  ],
+  "notes": [
+    {
+      "en": "Sample data from public sources; confirm with the school before paying.",
+      "zh": "示例数据，来自公开资料；付款前请向学校确认。"
+    },
+    {
+      "en": "Fees are the 2026 intake rates; the 2027 rates may change.",
+      "zh": "费用为 2026 级标准，2027 级可能调整。"
+    },
+    {
+      "en": "The BBA runs 10 semesters over 3.5 years; estimates count 3 semesters a year for 3 years.",
+      "zh": "该 BBA 3.5 年共 10 个学期；估算按每年 3 个学期、共 3 年计算。"
+    },
+    {
+      "en": "2027 dates are projected from the 2026 Phuket calendar (10 Aug to 15 Dec 2026).",
+      "zh": "2027 年日期根据 2026 年普吉校区校历（2026 年 8 月 10 日至 12 月 15 日）推算。"
+    },
+    {
+      "en": "Food, transport, insurance, travel and supplies are estimates.",
+      "zh": "餐饮、交通、保险、旅行和学习用品为估算值。"
+    }
+  ]
+}

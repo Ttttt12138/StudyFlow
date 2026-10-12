@@ -1,0 +1,9 @@
+SYNTHETIC integration fixture; not a PSU invoice.
+School: Prince of Songkla University
+Campus: Phuket
+Country: Thailand
+Program: BBA International Business
+Student type: new international undergraduate
+Start date: 2026-08-10
+End date: 2026-12-15
+Tuition: THB 175000 per semester; year 2026; campus Phuket; unpaid; due 2026-08-10; invoice_id DEMO-175

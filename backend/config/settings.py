@@ -1,4 +1,5 @@
 import os
+import sys
 from pathlib import Path
 from dotenv import load_dotenv
 from babel.numbers import get_currency_precision
@@ -11,6 +12,15 @@ STUDYFLOW_AI_DIR = BASE_DIR.parent / "studyflow-ai"
 # Capture C configuration before loading B's .env so B cannot shadow C's API settings.
 _C_OCR = OcrSettings.from_env(STUDYFLOW_AI_DIR / ".env")
 load_dotenv(BASE_DIR / ".env")
+# The live agent planner (STUDYFLOW_MODE=live) reads its gateway settings from the environment;
+# take them from studyflow-ai/.env unless the process or backend/.env already set them.
+_C_LLM_KEYS = ("OPENAI_API_KEY", "OPENAI_BASE_URL", "OPENAI_MODEL", "TYPESAFE_API_KEY", "TYPESAFE_DEFAULT_MODEL")
+if (STUDYFLOW_AI_DIR / ".env").is_file():
+    from studyflow_ai.config import read_env_file
+
+    for _key, _value in read_env_file(STUDYFLOW_AI_DIR / ".env").items():
+        if _key in _C_LLM_KEYS and _value.strip():
+            os.environ.setdefault(_key, _value)
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "")
 if not SECRET_KEY:
     raise ImproperlyConfigured("Set DJANGO_SECRET_KEY in backend/.env.")
@@ -104,7 +114,7 @@ CACHES = {"default": {
 STUDYFLOW_HOME_CURRENCY = os.getenv("STUDYFLOW_HOME_CURRENCY", "THB").upper()
 STUDYFLOW_SUPPORTED_CURRENCIES = [
     x.strip().upper()
-    for x in os.getenv("STUDYFLOW_SUPPORTED_CURRENCIES", "THB,USD,EUR,CNY,GBP,JPY").split(",")
+    for x in os.getenv("STUDYFLOW_SUPPORTED_CURRENCIES", "THB,USD,EUR,CNY,GBP,JPY,AUD,SGD,MYR").split(",")
     if x.strip()
 ]
 # The B lending core and its C adapters are THB-only, so the home currency is pinned.
@@ -178,7 +188,13 @@ if DJANGO_SECURE:
 
 STUDYFLOW_READINESS_ENABLED = os.getenv("STUDYFLOW_READINESS_ENABLED", "false").lower() == "true"
 STUDYFLOW_AI_MODE = os.getenv("STUDYFLOW_MODE", "mock")
+# `manage.py test` stays offline and deterministic even when backend/.env selects live;
+# a test that needs live mode says so with override_settings.
+if len(sys.argv) > 1 and sys.argv[1] == "test":
+    STUDYFLOW_AI_MODE = "mock"
 STUDYFLOW_CONSUMPTION_ENABLED = os.getenv("STUDYFLOW_CONSUMPTION_ENABLED", "false").lower() == "true"
+# reset_demo wipes the whole database; only a dedicated demo deployment may turn this on.
+STUDYFLOW_ALLOW_DEMO_RESET = os.getenv("STUDYFLOW_ALLOW_DEMO_RESET", "false").lower() == "true"
 
 # Django consumes C's configuration; OCR API settings belong to studyflow-ai/.env.
 STUDYFLOW_OCR_ENABLED = _C_OCR.enabled

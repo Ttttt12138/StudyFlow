@@ -27,6 +27,9 @@ x-django: &django
     STUDYFLOW_READINESS_ENABLED: "true"
     STUDYFLOW_CONSUMPTION_ENABLED: "true"
     STUDYFLOW_SEED_DEMO: "true"
+    # `docker compose exec app python manage.py reset_demo --yes` wipes this stack's database and
+    # reseeds the demo accounts; off unless the demo deployment opts in.
+    STUDYFLOW_ALLOW_DEMO_RESET: ${STUDYFLOW_ALLOW_DEMO_RESET:-false}
 
 services:
   db:

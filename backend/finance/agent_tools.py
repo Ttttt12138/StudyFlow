@@ -206,3 +206,14 @@ TOOLS = {tool.name: tool for tool in [
     Tool("convert_balance", "T2", "Propose a conversion between own balances; the student must confirm.",
          ConvertInput, _convert),
 ]}
+
+# Planning conversations (finance/planning) see the finance tools plus the planning ones;
+# standalone agent sessions keep the catalog above.
+def _planning_tools():
+    from .planning import tools as planning
+
+    HINTS.update(planning.HINTS)
+    return {tool.name: tool for tool in planning.tools(Tool)}
+
+
+CONVERSATION_TOOLS = {**TOOLS, **_planning_tools()}

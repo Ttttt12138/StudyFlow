@@ -1,0 +1,472 @@
+{
+  "key": "chulalongkorn",
+  "version": 1,
+  "sample": true,
+  "observed_at": "2026-10-12",
+  "school": {
+    "name": {
+      "en": "Chulalongkorn University",
+      "zh": "朱拉隆功大学"
+    },
+    "country": {
+      "en": "Thailand",
+      "zh": "泰国"
+    },
+    "country_code": "TH",
+    "city": {
+      "en": "Bangkok",
+      "zh": "曼谷"
+    },
+    "campus": "Pathum Wan",
+    "currency": "THB",
+    "program": {
+      "en": "BBA International Program, Chulalongkorn Business School",
+      "zh": "工商管理学士国际课程（朱拉隆功商学院）"
+    },
+    "language": "English",
+    "website": "https://bba.acc.chula.ac.th/",
+    "duration_years": 4
+  },
+  "calendar": {
+    "intake": "2027-08",
+    "start_date": "2027-08-02",
+    "end_date": "2027-12-04",
+    "source_url": "https://bba.acc.chula.ac.th/academic-calendar"
+  },
+  "costs": [
+    {
+      "cost_id": "tuition_semester",
+      "category": "tuition",
+      "label": {
+        "en": "Tuition and fees per semester (includes 50,000 confirmation fee in year 1)",
+        "zh": "每学期学费及杂费（第一年含 50,000 确认费）"
+      },
+      "period": "semester",
+      "amount": "117600.00",
+      "estimate": false,
+      "source_url": "https://bba.acc.chula.ac.th/tuition-and-fees",
+      "quote": "117,600"
+    },
+    {
+      "cost_id": "preparation_course",
+      "category": "tuition",
+      "label": {
+        "en": "Preparation course (June-July before year 1)",
+        "zh": "入学预备课程（第一年前 6-7 月）"
+      },
+      "period": "once",
+      "amount": "41400.00",
+      "estimate": false,
+      "source_url": "https://bba.acc.chula.ac.th/tuition-and-fees",
+      "quote": "41,400"
+    },
+    {
+      "cost_id": "summer_session_year1",
+      "category": "tuition",
+      "label": {
+        "en": "Year 1 summer session",
+        "zh": "第一年暑期学期"
+      },
+      "period": "once",
+      "amount": "46650.00",
+      "estimate": false,
+      "source_url": "https://bba.acc.chula.ac.th/tuition-and-fees",
+      "quote": "46,650"
+    },
+    {
+      "cost_id": "ihouse_studio",
+      "category": "housing",
+      "label": {
+        "en": "CU iHouse studio, 6+ month contract (two sharers split it)",
+        "zh": "CU iHouse 单间公寓，6 个月以上合同（两人合住可分摊）"
+      },
+      "period": "month",
+      "amount": "13000.00",
+      "estimate": false,
+      "source_url": "https://www.inter.chula.ac.th/international-students/campus-life/accommodation/",
+      "quote": "13,000 THB"
+    },
+    {
+      "cost_id": "housing_deposit",
+      "category": "deposit",
+      "label": {
+        "en": "Room security deposit",
+        "zh": "住宿押金"
+      },
+      "period": "once",
+      "lower": "13000.00",
+      "upper": "26000.00",
+      "estimate": true
+    },
+    {
+      "cost_id": "utilities",
+      "category": "housing",
+      "label": {
+        "en": "Electricity and water (not included in rent)",
+        "zh": "水电费（不含在房租内）"
+      },
+      "period": "month",
+      "lower": "800.00",
+      "upper": "2000.00",
+      "estimate": true
+    },
+    {
+      "cost_id": "food_monthly",
+      "category": "food",
+      "label": {
+        "en": "Food (canteens, food courts, street food)",
+        "zh": "餐饮（食堂、美食广场、街头小吃）"
+      },
+      "period": "month",
+      "lower": "6000.00",
+      "upper": "10000.00",
+      "estimate": true
+    },
+    {
+      "cost_id": "transport_monthly",
+      "category": "transport",
+      "label": {
+        "en": "BTS/MRT, buses and taxis",
+        "zh": "轻轨/地铁、公交和出租车"
+      },
+      "period": "month",
+      "lower": "800.00",
+      "upper": "2000.00",
+      "estimate": true
+    },
+    {
+      "cost_id": "phone_internet",
+      "category": "communications",
+      "label": {
+        "en": "Mobile plan with data",
+        "zh": "手机套餐及流量"
+      },
+      "period": "month",
+      "lower": "300.00",
+      "upper": "700.00",
+      "estimate": true
+    },
+    {
+      "cost_id": "health_insurance",
+      "category": "insurance",
+      "label": {
+        "en": "Student health insurance",
+        "zh": "学生医疗保险"
+      },
+      "period": "year",
+      "lower": "5000.00",
+      "upper": "15000.00",
+      "estimate": true
+    },
+    {
+      "cost_id": "visa_non_immigrant",
+      "category": "visa",
+      "label": {
+        "en": "Non-Immigrant ED visa, single entry",
+        "zh": "非移民教育签证（单次入境）"
+      },
+      "period": "once",
+      "amount": "2000.00",
+      "estimate": false,
+      "source_url": "https://bangkok.immigration.go.th/en/fee_en/",
+      "quote": "2,000"
+    },
+    {
+      "cost_id": "visa_extension",
+      "category": "visa",
+      "label": {
+        "en": "Annual extension of stay",
+        "zh": "每年居留延期费"
+      },
+      "period": "year",
+      "amount": "1900.00",
+      "estimate": false,
+      "source_url": "https://bangkok.immigration.go.th/en/fee_en/",
+      "quote": "1,900"
+    },
+    {
+      "cost_id": "home_trip",
+      "category": "travel",
+      "label": {
+        "en": "Return trip home (economy flight)",
+        "zh": "回国往返机票（经济舱）"
+      },
+      "period": "year",
+      "lower": "6000.00",
+      "upper": "20000.00",
+      "estimate": true
+    },
+    {
+      "cost_id": "settling_in",
+      "category": "settlement",
+      "label": {
+        "en": "Settling in (bedding, SIM, household items)",
+        "zh": "安家费用（床品、电话卡、日用品）"
+      },
+      "period": "once",
+      "lower": "4000.00",
+      "upper": "10000.00",
+      "estimate": true
+    },
+    {
+      "cost_id": "books_supplies",
+      "category": "study_materials",
+      "label": {
+        "en": "Books, laptop software and supplies",
+        "zh": "教材、软件及文具"
+      },
+      "period": "semester",
+      "lower": "2000.00",
+      "upper": "5000.00",
+      "estimate": true
+    }
+  ],
+  "facilities": [
+    {
+      "name": {
+        "en": "Chulalongkorn University Central Library",
+        "zh": "朱拉隆功大学中央图书馆"
+      },
+      "kind": "library",
+      "note": {
+        "en": "Main library with long opening hours and study rooms.",
+        "zh": "主图书馆，开放时间长，设有自习室。"
+      }
+    },
+    {
+      "name": {
+        "en": "CU iHouse",
+        "zh": "CU iHouse 国际公寓"
+      },
+      "kind": "dormitory",
+      "note": {
+        "en": "26-storey on-campus residence for international students.",
+        "zh": "面向国际学生的 26 层校内公寓。"
+      }
+    },
+    {
+      "name": {
+        "en": "CU Sports Complex",
+        "zh": "朱拉隆功大学体育中心"
+      },
+      "kind": "sports",
+      "note": {
+        "en": "Pools, gym, courts and a stadium.",
+        "zh": "游泳池、健身房、球场和体育场。"
+      }
+    },
+    {
+      "name": {
+        "en": "CU Health Service Center",
+        "zh": "朱拉隆功大学健康服务中心"
+      },
+      "kind": "clinic",
+      "note": {
+        "en": "On-campus clinic for students.",
+        "zh": "面向学生的校内诊所。"
+      }
+    },
+    {
+      "name": {
+        "en": "Chula Student Wellness",
+        "zh": "朱拉学生身心健康中心"
+      },
+      "kind": "counseling",
+      "note": {
+        "en": "Counselling and mental health support.",
+        "zh": "提供心理咨询和支持。"
+      }
+    },
+    {
+      "name": {
+        "en": "Chulalongkorn Centenary Park",
+        "zh": "朱拉隆功百年纪念公园"
+      },
+      "kind": "park",
+      "note": {
+        "en": "Green park next to campus.",
+        "zh": "校园旁的绿地公园。"
+      }
+    }
+  ],
+  "food": [
+    {
+      "name": {
+        "en": "Faculty canteens",
+        "zh": "各学院食堂"
+      },
+      "kind": "canteen",
+      "note": {
+        "en": "Cheapest meals on campus.",
+        "zh": "校内最便宜的餐食。"
+      },
+      "distance_km": 0.0,
+      "typical_cost": "50.00"
+    },
+    {
+      "name": {
+        "en": "Samyan Mitrtown food court",
+        "zh": "Samyan Mitrtown 美食广场"
+      },
+      "kind": "food court",
+      "note": {
+        "en": "24-hour mall next to campus.",
+        "zh": "校园旁的 24 小时商场。"
+      },
+      "distance_km": 0.5,
+      "typical_cost": "90.00"
+    },
+    {
+      "name": {
+        "en": "Banthat Thong Road street food",
+        "zh": "班塔通路街头美食"
+      },
+      "kind": "street food",
+      "note": {
+        "en": "Well-known evening food street beside campus.",
+        "zh": "校园旁知名的夜间美食街。"
+      },
+      "distance_km": 0.8,
+      "typical_cost": "80.00"
+    },
+    {
+      "name": {
+        "en": "MBK Center food court",
+        "zh": "MBK 中心美食广场"
+      },
+      "kind": "food court",
+      "note": {
+        "en": "Budget mall food court near National Stadium BTS.",
+        "zh": "国家体育场站附近的平价商场美食广场。"
+      },
+      "distance_km": 1.5,
+      "typical_cost": "80.00"
+    },
+    {
+      "name": {
+        "en": "Siam Paragon Food Hall",
+        "zh": "暹罗百丽宫美食广场"
+      },
+      "kind": "food court",
+      "note": {
+        "en": "Wider choice, higher prices.",
+        "zh": "选择更多，价格偏高。"
+      },
+      "distance_km": 2.0,
+      "typical_cost": "150.00"
+    }
+  ],
+  "attractions": [
+    {
+      "name": {
+        "en": "Siam Square",
+        "zh": "暹罗广场"
+      },
+      "kind": "shopping",
+      "note": {
+        "en": "Shopping and youth hub next to campus.",
+        "zh": "校园旁的购物和年轻人聚集区。"
+      },
+      "distance_km": 1.0,
+      "typical_cost": "0.00"
+    },
+    {
+      "name": {
+        "en": "Lumphini Park",
+        "zh": "伦披尼公园"
+      },
+      "kind": "park",
+      "note": {
+        "en": "Large city park for running and outdoor exercise.",
+        "zh": "大型城市公园，适合跑步和户外运动。"
+      },
+      "distance_km": 2.0,
+      "typical_cost": "0.00"
+    },
+    {
+      "name": {
+        "en": "Jim Thompson House",
+        "zh": "金·汤普森之家"
+      },
+      "kind": "museum",
+      "note": {
+        "en": "Traditional Thai house museum; entry fee applies.",
+        "zh": "泰式传统建筑博物馆，需购票。"
+      },
+      "distance_km": 2.0
+    },
+    {
+      "name": {
+        "en": "Wat Pho",
+        "zh": "卧佛寺"
+      },
+      "kind": "temple",
+      "note": {
+        "en": "Reclining Buddha temple; entry fee for foreigners.",
+        "zh": "卧佛寺，外国游客需购票。"
+      },
+      "distance_km": 7.0
+    },
+    {
+      "name": {
+        "en": "Grand Palace",
+        "zh": "大皇宫"
+      },
+      "kind": "landmark",
+      "note": {
+        "en": "Royal palace and Wat Phra Kaew; entry fee for foreigners.",
+        "zh": "大皇宫和玉佛寺，外国游客需购票。"
+      },
+      "distance_km": 7.0
+    }
+  ],
+  "sources": [
+    {
+      "url": "https://bba.acc.chula.ac.th/tuition-and-fees",
+      "title": "BBA International, Chulalongkorn - Tuition & Fees",
+      "accessed": "2026-10-12"
+    },
+    {
+      "url": "https://bba.acc.chula.ac.th/international-students",
+      "title": "BBA International, Chulalongkorn - International Students (scholarships)",
+      "accessed": "2026-10-12"
+    },
+    {
+      "url": "https://bba.acc.chula.ac.th/academic-calendar",
+      "title": "BBA International, Chulalongkorn - Academic Calendar AY2026",
+      "accessed": "2026-10-12"
+    },
+    {
+      "url": "https://www.inter.chula.ac.th/international-students/campus-life/accommodation/",
+      "title": "Chulalongkorn OIA - Accommodation (CU iHouse)",
+      "accessed": "2026-10-12"
+    },
+    {
+      "url": "https://bangkok.immigration.go.th/en/fee_en/",
+      "title": "Immigration Division 1 - Fees",
+      "accessed": "2026-10-12"
+    }
+  ],
+  "notes": [
+    {
+      "en": "Sample data from public sources; confirm with the school before paying.",
+      "zh": "示例数据，来自公开资料；付款前请向学校确认。"
+    },
+    {
+      "en": "Fee table applies to students admitted from 2026 onward; the 50,000 enrollment confirmation is paid early and counted in year 1 semester 1.",
+      "zh": "费用表适用于 2026 年及以后入学者；50,000 入学确认费提前缴纳，计入第一年第一学期。"
+    },
+    {
+      "en": "2026 international admits received first-year scholarships; 2027 offers are not confirmed.",
+      "zh": "2026 级国际学生获得第一年奖学金；2027 级是否提供尚未确认。"
+    },
+    {
+      "en": "2027 dates are projected from the 2026 calendar (3 Aug to 5 Dec 2026).",
+      "zh": "2027 年日期根据 2026 年校历（2026 年 8 月 3 日至 12 月 5 日）推算。"
+    },
+    {
+      "en": "Food, transport, utilities, insurance, deposit, travel and supplies are estimates.",
+      "zh": "餐饮、交通、水电、保险、押金、旅行和学习用品为估算值。"
+    }
+  ]
+}

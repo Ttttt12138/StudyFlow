@@ -542,6 +542,17 @@ class MultiCurrencyApiTests(MultiCurrencyHarness, APITestCase):
         self.assertEqual(self.get("fx-rates", {"base": "CNY", "quote": HOME}).status_code, 200)
         self.assertEqual(snapshots.filter(base="CNY", quote=HOME).count(), 1)
 
+    def test_fx_rate_converts_an_optional_amount(self):
+        response = self.get("fx-rates", {"base": "CNY", "quote": HOME, "amount": "5000.00"})
+        self.assertEqual(response.status_code, 200, str(response.data))
+        data = response.data["data"]
+        self.assertEqual(data["amount"], "5000.00")
+        self.assertEqual(D(data["converted"]), (Decimal("5000.00") * FIXTURE["CNY"]).quantize(Decimal("0.01")))
+        self.assertIs(data["is_reference_rate"], True)
+        self.assertNotIn("converted", self.get("fx-rates", {"base": "CNY", "quote": HOME}).data["data"])
+        for bad in ("0", "-5", "abc", "1.234", "NaN"):
+            self.assertEqual(self.get("fx-rates", {"base": "CNY", "quote": HOME, "amount": bad}).status_code, 400, bad)
+
     def test_fx_rate_cross_rate_goes_through_home(self):
         response = self.get("fx-rates", {"base": "CNY", "quote": "USD"})
         self.assertEqual(response.status_code, 200, str(response.data))

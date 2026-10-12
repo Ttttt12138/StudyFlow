@@ -101,9 +101,11 @@ def normalize_draft(owner, draft, previous=None):
                 require(change["effective_on"] >= business_date(owner).isoformat()
                         or change in old.get("planned_overrides", []), "HISTORICAL_OVERRIDE_FORBIDDEN")
         if cost.get("confidence_type") == "VERIFIED":
+            # Compare canonical forms: stored timestamps may read "+00:00" where a dump writes "Z".
             require(
                 old.get("confidence_type") == "VERIFIED"
-                and cost == Cost.model_validate(old).model_dump(mode="json"),
+                and Cost.model_validate(cost).model_dump(mode="json")
+                == Cost.model_validate(old).model_dump(mode="json"),
                 "USE_IMPORT_CONFIRMATION_TO_VERIFY",
             )
         else:

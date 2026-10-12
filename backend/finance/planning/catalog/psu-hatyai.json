@@ -1,0 +1,477 @@
+{
+  "key": "psu-hatyai",
+  "version": 1,
+  "sample": true,
+  "observed_at": "2026-10-12",
+  "school": {
+    "name": {
+      "en": "Prince of Songkla University, Hat Yai Campus",
+      "zh": "宋卡王子大学（合艾校区）"
+    },
+    "country": {
+      "en": "Thailand",
+      "zh": "泰国"
+    },
+    "country_code": "TH",
+    "city": {
+      "en": "Hat Yai, Songkhla",
+      "zh": "宋卡府合艾"
+    },
+    "campus": "Hat Yai",
+    "currency": "THB",
+    "program": {
+      "en": "BBA in Management and Entrepreneurship (International Program), Faculty of Management Sciences",
+      "zh": "管理与创业工商管理学士（国际课程），管理科学学院"
+    },
+    "language": "English",
+    "website": "https://www.interbba.com/",
+    "duration_years": 4
+  },
+  "calendar": {
+    "intake": "2027-06",
+    "start_date": "2027-06-21",
+    "end_date": "2027-10-22",
+    "source_url": "https://gao.psu.ac.th/images/download/calendar/2026_Hatyai_Calendar.pdf"
+  },
+  "costs": [
+    {
+      "cost_id": "tuition_semester",
+      "category": "tuition",
+      "label": {
+        "en": "Tuition per semester (lump sum)",
+        "zh": "每学期学费（包干）"
+      },
+      "period": "semester",
+      "amount": "53000.00",
+      "estimate": false,
+      "source_url": "https://image.makewebcdn.com/makeweb/0/6Nt5hg8FW/Document/Estimated_cost_for_BBA_new_students_Year_2026.pdf",
+      "quote": "53,000 Baht"
+    },
+    {
+      "cost_id": "bba_intensive_course",
+      "category": "tuition",
+      "label": {
+        "en": "BBA Intensive Course before year 1 (6,000 with English score)",
+        "zh": "入学前 BBA 强化课程（有英语成绩者 6,000）"
+      },
+      "period": "once",
+      "amount": "8500.00",
+      "estimate": false,
+      "source_url": "https://image.makewebcdn.com/makeweb/0/6Nt5hg8FW/Document/Estimated_cost_for_BBA_new_students_Year_2026.pdf",
+      "quote": "8,500 Baht"
+    },
+    {
+      "cost_id": "program_deposit",
+      "category": "deposit",
+      "label": {
+        "en": "Programme deposit, refunded on graduation",
+        "zh": "课程押金（毕业时退还）"
+      },
+      "period": "once",
+      "amount": "5000.00",
+      "estimate": false,
+      "source_url": "https://image.makewebcdn.com/makeweb/0/6Nt5hg8FW/Document/Estimated_cost_for_BBA_new_students_Year_2026.pdf",
+      "quote": "Deposit fee 5,000 Baht"
+    },
+    {
+      "cost_id": "dorm_aircon_shared",
+      "category": "housing",
+      "label": {
+        "en": "University dorm, air-conditioned, 2 per room",
+        "zh": "大学宿舍（空调双人间）"
+      },
+      "period": "semester",
+      "amount": "12375.00",
+      "estimate": false,
+      "source_url": "https://www.eng.psu.ac.th/en-v2024/dormitory",
+      "quote": "12,375 (BHT)"
+    },
+    {
+      "cost_id": "food_monthly",
+      "category": "food",
+      "label": {
+        "en": "Food (canteen and local eateries)",
+        "zh": "餐饮（食堂及周边小吃店）"
+      },
+      "period": "month",
+      "lower": "4000.00",
+      "upper": "6500.00",
+      "estimate": true
+    },
+    {
+      "cost_id": "transport_monthly",
+      "category": "transport",
+      "label": {
+        "en": "Local transport (songthaew, Grab)",
+        "zh": "本地交通（双条车、Grab）"
+      },
+      "period": "month",
+      "lower": "300.00",
+      "upper": "1200.00",
+      "estimate": true
+    },
+    {
+      "cost_id": "phone_internet",
+      "category": "communications",
+      "label": {
+        "en": "Mobile plan with data",
+        "zh": "手机套餐及流量"
+      },
+      "period": "month",
+      "lower": "300.00",
+      "upper": "600.00",
+      "estimate": true
+    },
+    {
+      "cost_id": "health_insurance",
+      "category": "insurance",
+      "label": {
+        "en": "Student health insurance",
+        "zh": "学生医疗保险"
+      },
+      "period": "year",
+      "lower": "4000.00",
+      "upper": "10000.00",
+      "estimate": true
+    },
+    {
+      "cost_id": "visa_non_immigrant",
+      "category": "visa",
+      "label": {
+        "en": "Non-Immigrant ED visa, single entry",
+        "zh": "非移民教育签证（单次入境）"
+      },
+      "period": "once",
+      "amount": "2000.00",
+      "estimate": false,
+      "source_url": "https://bangkok.immigration.go.th/en/fee_en/",
+      "quote": "2,000"
+    },
+    {
+      "cost_id": "visa_extension",
+      "category": "visa",
+      "label": {
+        "en": "Annual extension of stay",
+        "zh": "每年居留延期费"
+      },
+      "period": "year",
+      "amount": "1900.00",
+      "estimate": false,
+      "source_url": "https://bangkok.immigration.go.th/en/fee_en/",
+      "quote": "1,900"
+    },
+    {
+      "cost_id": "study_trip",
+      "category": "travel",
+      "label": {
+        "en": "Programme study trip, student share",
+        "zh": "课程游学（学生自付部分）"
+      },
+      "period": "year",
+      "lower": "10000.00",
+      "upper": "20000.00",
+      "estimate": false,
+      "source_url": "https://image.makewebcdn.com/makeweb/0/6Nt5hg8FW/Document/Estimated_cost_for_BBA_new_students_Year_2026.pdf",
+      "quote": "10,000 - 20,000 baht per person"
+    },
+    {
+      "cost_id": "home_trip",
+      "category": "travel",
+      "label": {
+        "en": "Return trip home (economy flight)",
+        "zh": "回国往返机票（经济舱）"
+      },
+      "period": "year",
+      "lower": "6000.00",
+      "upper": "20000.00",
+      "estimate": true
+    },
+    {
+      "cost_id": "blazer",
+      "category": "settlement",
+      "label": {
+        "en": "Programme blazer",
+        "zh": "课程西装外套"
+      },
+      "period": "once",
+      "lower": "1500.00",
+      "upper": "2500.00",
+      "estimate": false,
+      "source_url": "https://image.makewebcdn.com/makeweb/0/6Nt5hg8FW/Document/Estimated_cost_for_BBA_new_students_Year_2026.pdf",
+      "quote": "2,500 Baht (approx.)"
+    },
+    {
+      "cost_id": "settling_in",
+      "category": "settlement",
+      "label": {
+        "en": "Settling in (bedding, SIM, household items)",
+        "zh": "安家费用（床品、电话卡、日用品）"
+      },
+      "period": "once",
+      "lower": "3000.00",
+      "upper": "7000.00",
+      "estimate": true
+    },
+    {
+      "cost_id": "books_supplies",
+      "category": "study_materials",
+      "label": {
+        "en": "Books, printing and supplies",
+        "zh": "教材、打印及文具"
+      },
+      "period": "semester",
+      "lower": "1500.00",
+      "upper": "3000.00",
+      "estimate": true
+    }
+  ],
+  "facilities": [
+    {
+      "name": {
+        "en": "Khunying Long Athakravi Sunthorn Learning Resources Center",
+        "zh": "坤颖·隆·阿塔卡拉威顺通学习资源中心（图书馆）"
+      },
+      "kind": "library",
+      "note": {
+        "en": "Main campus library with study rooms.",
+        "zh": "校园主图书馆，设有自习室。"
+      }
+    },
+    {
+      "name": {
+        "en": "Student dormitories",
+        "zh": "学生宿舍"
+      },
+      "kind": "dormitory",
+      "note": {
+        "en": "On-campus fan and air-conditioned twin rooms.",
+        "zh": "校内风扇房及空调双人间。"
+      }
+    },
+    {
+      "name": {
+        "en": "PSU Sports Complex",
+        "zh": "宋卡王子大学体育中心"
+      },
+      "kind": "sports",
+      "note": {
+        "en": "Stadium, swimming pool, gym and courts.",
+        "zh": "体育场、游泳池、健身房和球场。"
+      }
+    },
+    {
+      "name": {
+        "en": "Songklanagarind Hospital",
+        "zh": "宋卡纳卡琳医院"
+      },
+      "kind": "hospital",
+      "note": {
+        "en": "University teaching hospital on campus.",
+        "zh": "位于校内的大学附属教学医院。"
+      }
+    },
+    {
+      "name": {
+        "en": "Ang Kep Nam (campus reservoir)",
+        "zh": "校园水库（Ang Kep Nam）"
+      },
+      "kind": "park",
+      "note": {
+        "en": "Lakeside path for jogging and walks.",
+        "zh": "湖边步道，适合跑步和散步。"
+      }
+    }
+  ],
+  "food": [
+    {
+      "name": {
+        "en": "Campus canteens",
+        "zh": "校园食堂"
+      },
+      "kind": "canteen",
+      "note": {
+        "en": "Thai and halal dishes at student prices.",
+        "zh": "提供学生价泰式及清真餐食。"
+      },
+      "distance_km": 0.0,
+      "typical_cost": "45.00"
+    },
+    {
+      "name": {
+        "en": "Kim Yong Market",
+        "zh": "金荣市场"
+      },
+      "kind": "market",
+      "note": {
+        "en": "Downtown market with snacks and fried chicken.",
+        "zh": "市中心市场，有小吃和炸鸡。"
+      },
+      "distance_km": 4.0,
+      "typical_cost": "60.00"
+    },
+    {
+      "name": {
+        "en": "Greenway Night Market",
+        "zh": "Greenway 夜市"
+      },
+      "kind": "night market",
+      "note": {
+        "en": "Evening street food and stalls.",
+        "zh": "夜间街头小吃和摊位。"
+      },
+      "distance_km": 5.0,
+      "typical_cost": "70.00"
+    },
+    {
+      "name": {
+        "en": "Hat Yai dim sum breakfast shops",
+        "zh": "合艾点心早茶店"
+      },
+      "kind": "restaurant",
+      "note": {
+        "en": "Local Chinese-style dim sum breakfast.",
+        "zh": "当地中式点心早餐。"
+      },
+      "distance_km": 4.0,
+      "typical_cost": "100.00"
+    },
+    {
+      "name": {
+        "en": "Central Festival Hat Yai food court",
+        "zh": "Central Festival 合艾美食广场"
+      },
+      "kind": "food court",
+      "note": {
+        "en": "Air-conditioned mall food court.",
+        "zh": "商场内空调美食广场。"
+      },
+      "distance_km": 6.0,
+      "typical_cost": "90.00"
+    }
+  ],
+  "attractions": [
+    {
+      "name": {
+        "en": "Khlong Hae Floating Market",
+        "zh": "空艾水上市场"
+      },
+      "kind": "market",
+      "note": {
+        "en": "Weekend evening floating market.",
+        "zh": "周末傍晚的水上市场。"
+      },
+      "distance_km": 4.0,
+      "typical_cost": "0.00"
+    },
+    {
+      "name": {
+        "en": "Hat Yai Municipal Park",
+        "zh": "合艾市立公园"
+      },
+      "kind": "park",
+      "note": {
+        "en": "Hilltop park with a large Buddha statue and cable car.",
+        "zh": "山顶公园，有大佛和缆车。"
+      },
+      "distance_km": 8.0,
+      "typical_cost": "0.00"
+    },
+    {
+      "name": {
+        "en": "Songkhla Old Town",
+        "zh": "宋卡老城"
+      },
+      "kind": "heritage",
+      "note": {
+        "en": "Historic streets with murals and cafes.",
+        "zh": "有壁画和咖啡馆的历史街区。"
+      },
+      "distance_km": 30.0,
+      "typical_cost": "0.00"
+    },
+    {
+      "name": {
+        "en": "Samila Beach",
+        "zh": "沙敏拉海滩"
+      },
+      "kind": "beach",
+      "note": {
+        "en": "Songkhla beach with the golden mermaid statue.",
+        "zh": "宋卡海滩，有金色美人鱼雕像。"
+      },
+      "distance_km": 30.0,
+      "typical_cost": "0.00"
+    },
+    {
+      "name": {
+        "en": "Ton Nga Chang Waterfall",
+        "zh": "象牙瀑布"
+      },
+      "kind": "nature",
+      "note": {
+        "en": "National park waterfall; park entry fee applies.",
+        "zh": "国家公园瀑布，需付门票。"
+      },
+      "distance_km": 25.0
+    }
+  ],
+  "sources": [
+    {
+      "url": "https://image.makewebcdn.com/makeweb/0/6Nt5hg8FW/Document/Estimated_cost_for_BBA_new_students_Year_2026.pdf",
+      "title": "BBA69 FMS PSU - Estimated cost for BBA new students Academic Year 2026",
+      "accessed": "2026-10-12"
+    },
+    {
+      "url": "https://reg.psu.ac.th/en/tuition-fee-en/",
+      "title": "PSU Registrar - Undergraduate tuition fees",
+      "accessed": "2026-10-12"
+    },
+    {
+      "url": "https://admission.psu.ac.th/en/international-course-en/",
+      "title": "PSU Admission - International courses",
+      "accessed": "2026-10-12"
+    },
+    {
+      "url": "https://www.interbba.com/",
+      "title": "BBA International Program, Faculty of Management Sciences, PSU",
+      "accessed": "2026-10-12"
+    },
+    {
+      "url": "https://www.eng.psu.ac.th/en-v2024/dormitory",
+      "title": "PSU Faculty of Engineering - Dormitory (Hat Yai)",
+      "accessed": "2026-10-12"
+    },
+    {
+      "url": "https://gao.psu.ac.th/images/download/calendar/2026_Hatyai_Calendar.pdf",
+      "title": "Academic Calendar for Hat Yai Campus Students 2026",
+      "accessed": "2026-10-12"
+    },
+    {
+      "url": "https://bangkok.immigration.go.th/en/fee_en/",
+      "title": "Immigration Division 1 - Fees",
+      "accessed": "2026-10-12"
+    }
+  ],
+  "notes": [
+    {
+      "en": "Sample data from public sources; confirm with the school before paying.",
+      "zh": "示例数据，来自公开资料；付款前请向学校确认。"
+    },
+    {
+      "en": "PSU charges this programme the same 53,000 rate to international students (no 1.5x surcharge).",
+      "zh": "该课程对国际学生同样收取 53,000（不加收 1.5 倍）。"
+    },
+    {
+      "en": "Fees are the 2026 intake rates; the 2027 rates may change.",
+      "zh": "费用为 2026 级标准，2027 级可能调整。"
+    },
+    {
+      "en": "2027 dates are projected from the 2026 Hat Yai calendar (22 Jun to 23 Oct 2026); the BBA sheet says freshmen start about August, so confirm.",
+      "zh": "2027 年日期按 2026 年合艾校历（6 月 22 日至 10 月 23 日）推算；BBA 资料称新生约 8 月开课，请确认。"
+    },
+    {
+      "en": "Food, transport, insurance, home travel and supplies are estimates.",
+      "zh": "餐饮、交通、保险、回国旅费和学习用品为估算值。"
+    }
+  ]
+}

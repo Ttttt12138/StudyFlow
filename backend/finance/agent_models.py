@@ -19,6 +19,11 @@ class AgentSession(OwnedRecord):
     error_code = models.CharField(max_length=40, blank=True)
     write_count = models.PositiveSmallIntegerField(default=0)
     updated_at = models.DateTimeField(auto_now=True)
+    # Set when the session is one turn of a planning conversation (finance/planning/conversation.py).
+    conversation = models.ForeignKey("finance.AgentConversation", null=True, blank=True,
+                                     on_delete=models.PROTECT, related_name="turns")
+    # Structured cards built from tool results, never from model text.
+    cards = models.JSONField(default=list)
 
     class Meta:
         ordering = ["-created_at"]
@@ -56,8 +61,9 @@ class AgentPendingAction(OwnedRecord):
     tool = models.CharField(max_length=40)
     arguments = models.JSONField(default=dict)
     target_id = models.UUIDField()
-    amount = models.DecimalField(max_digits=18, decimal_places=2)
-    currency = models.CharField(max_length=3)
+    # Plan confirmations carry no money movement, so amount/currency may be empty.
+    amount = models.DecimalField(max_digits=18, decimal_places=2, null=True, blank=True)
+    currency = models.CharField(max_length=3, blank=True)
     status = models.CharField(max_length=20, default="PENDING",
                               choices=[(s, s.title()) for s in PENDING_STATUSES])
     expires_at = models.DateTimeField()
@@ -69,7 +75,8 @@ class AgentPendingAction(OwnedRecord):
         ordering = ["-created_at"]
         constraints = [
             models.CheckConstraint(condition=Q(status__in=PENDING_STATUSES), name="agent_pending_status_valid"),
-            models.CheckConstraint(condition=Q(amount__gt=0), name="agent_pending_positive_amount"),
+            models.CheckConstraint(condition=Q(amount__isnull=True) | Q(amount__gt=0),
+                                   name="agent_pending_positive_amount"),
             models.UniqueConstraint(fields=["owner", "action", "target_id"], condition=Q(status="PENDING"),
                                     name="agent_pending_one_open_per_target"),
         ]

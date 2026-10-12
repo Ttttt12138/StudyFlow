@@ -70,6 +70,13 @@ class Command(BaseCommand):
         self.stdout.write(
             f"Report: {output}; live_acceptance={report['live_acceptance']}"
         )
+        outage = report.get("provider_outage")
+        if outage:
+            raise CommandError(
+                f"Provider outage in {outage['arm']}: stopped after "
+                f"{outage['consecutive_case_limit']} consecutive failed cases; "
+                f"{outage['samples_skipped']} samples and arms {outage['arms_not_run']} not run"
+            )
         if (
             options["mode"] == "live"
             and options["split"] == "test"

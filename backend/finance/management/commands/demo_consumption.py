@@ -17,6 +17,7 @@ from finance.management.commands.demo_readiness import Demo, QuietHandler, requi
 from finance.policy_flow import scripted_throttling
 
 FIXTURES = Path(__file__).resolve().parents[3] / "examples" / "consumption" / "v1"
+TUITION_EVENT = "cost:tuition:2026-10-10"
 
 
 class ConsumptionDemo(Demo):
@@ -176,6 +177,27 @@ class ConsumptionDemo(Demo):
         }
 
     def tuition(self):
+        beneficiary, plan = self.tuition_plan()
+        payment = self.request(
+            "payments",
+            {
+                "readiness_plan_id": plan["id"],
+                "event_id": TUITION_EVENT,
+                "beneficiary_id": beneficiary["id"],
+            },
+        )
+        route = "payments/" + payment["id"]
+        self.request(
+            route + "/authorize", {"state_version": self.context()["state_version"]}
+        )
+        self.request(route + "/submit", {})
+        self.request(route + "/adapter-event", {"outcome": "settled"}, operator=True)
+        reconciled = self.request(route + "/reconcile", {})
+        require(reconciled["status"] == "reconciled", "Invoice reconciliation failed")
+        return reconciled
+
+    def tuition_plan(self):
+        """Verified payee, confirmed tuition invoice and a valid funding plan: ready to pay."""
         beneficiary = self.request(
             "beneficiaries",
             {"name": "Synthetic University", "destination_label": "DEMO-UNIVERSITY"},
@@ -227,23 +249,7 @@ class ConsumptionDemo(Demo):
             "Tuition plan incomplete: "
             + str(plan["result"]["forecast"].get("data_issues")),
         )
-        payment = self.request(
-            "payments",
-            {
-                "readiness_plan_id": plan["id"],
-                "event_id": "cost:tuition:2026-10-10",
-                "beneficiary_id": beneficiary["id"],
-            },
-        )
-        route = "payments/" + payment["id"]
-        self.request(
-            route + "/authorize", {"state_version": self.context()["state_version"]}
-        )
-        self.request(route + "/submit", {})
-        self.request(route + "/adapter-event", {"outcome": "settled"}, operator=True)
-        reconciled = self.request(route + "/reconcile", {})
-        require(reconciled["status"] == "reconciled", "Invoice reconciliation failed")
-        return reconciled
+        return beneficiary, plan
 
     def lending_risk(self):
         quote = self.request(
