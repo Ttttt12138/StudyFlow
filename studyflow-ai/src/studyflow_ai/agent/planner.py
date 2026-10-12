@@ -8,6 +8,7 @@ from pydantic import ValidationError
 
 from studyflow_ai.agent import prompts
 from studyflow_ai.agent.models import AgentContext, FinalStep, PlannerOutput, ToolCallStep
+from studyflow_ai.agent.planning_rules import PlanningRules
 from studyflow_ai.models import CallRecord
 from studyflow_ai.providers.base import ProviderFailure
 
@@ -79,12 +80,24 @@ class LiveAgentProvider:
     def __init__(self, openai_provider):
         self.provider = openai_provider
 
+    # Observed live (planning-1.0): the gateway intermittently returns an empty body. An empty
+    # reply carries no decision, so it is retried; malformed or prose replies are not.
+    EMPTY_RETRIES = 2
+
+    def _request(self, context, instruction):
+        for attempt in range(self.EMPTY_RETRIES + 1):
+            try:
+                return self.provider._request("plan", context.model_dump_json(), PlannerOutput, instruction)
+            except ProviderFailure as exc:
+                empty = exc.code == "INVALID_MODEL_OUTPUT" and not (getattr(exc, "raw_output", None) or "").strip()
+                if not empty or attempt == self.EMPTY_RETRIES:
+                    raise
+
     def _call(self, context, instruction):
         try:
-            output, record = self.provider._request(
-                "plan", context.model_dump_json(), PlannerOutput, instruction)
+            output, record = self._request(context, instruction)
         except ProviderFailure as exc:
-            exc.record.prompt_version = prompts.VERSION
+            exc.record.prompt_version = prompts.version(context)
             text = (getattr(exc, "raw_output", None) or "").strip()
             # Some gateways let the model answer in plain prose instead of the JSON envelope.
             # Prose cannot call a tool, so it is accepted as the final answer; malformed JSON is not.
@@ -96,14 +109,14 @@ class LiveAgentProvider:
                 exc.record.error_code = None
                 return step, exc.record
             raise
-        record.prompt_version = prompts.VERSION
+        record.prompt_version = prompts.version(context)
         return output.step, record
 
     def next_step(self, context):
-        return self._call(context, prompts.AGENT)
+        return self._call(context, prompts.instruction(context))
 
     def finish(self, context):
-        step, record = self._call(context, prompts.AGENT + "\nReturn kind=final now.")
+        step, record = self._call(context, prompts.instruction(context) + "\nReturn kind=final now.")
         if not isinstance(step, FinalStep):
             record.error_code = "INVALID_TOOL_CALL"
             raise ProviderFailure("INVALID_TOOL_CALL", record)
@@ -214,9 +227,9 @@ def _money(value):
 class RuleAgentProvider:
     """Deterministic scripted planner for CI and offline demos; never used in live mode."""
 
-    def _record(self):
+    def _record(self, context=None):
         return CallRecord(provider="rules", purpose="plan", model="agent-rules", mode="mock",
-                          prompt_version=prompts.VERSION)
+                          prompt_version=prompts.version(context) if context else prompts.VERSION)
 
     def _call(self, tool, rationale, **arguments):
         return ToolCallStep(tool=tool, arguments_json=json.dumps(arguments), rationale=rationale)
@@ -225,9 +238,13 @@ class RuleAgentProvider:
         return FinalStep(answer=zh if context.locale == "zh" else en)
 
     def finish(self, context):
+        if context.planning:
+            return PlanningRules().finish(context), self._record(context)
         return self._summary(context, Intent(context.goal)), self._record()
 
     def next_step(self, context):
+        if context.planning:
+            return PlanningRules().next_step(context), self._record(context)
         intent = Intent(context.goal)
         if self._failed_twice(context):
             return self._summary(context, intent, failed=True), self._record()

@@ -99,6 +99,19 @@ studyflow-ai --mode live check --backend-factory your_backend.adapters:create_ba
 候选金额字段。已有的源级问题处理规则仍适用：需要修正来源后重新导入，不通过
 普通候选确认自动清除源级问题。
 
+### 资助预计日期恢复
+
+当 `family_support` 的原始抽取结果中 `date` 和 `due_date` 都为空时，C 会在金额
+证据所指的行或页内查找唯一的资助承诺片段。仅当金额、币种匹配，预计转账日期
+以完整 ISO 年月日明确给出，且没有冲突、撤回或其他日期用途时，才补入 `due_date`。
+目前规则覆盖中英文及混合文本中的明确承诺、scheduled/on 和预计/于等表达；
+跨片段关系不明、缺少年份或不支持的日期表达继续留空。
+
+补全会追加原文引用及 locator，并在候选 `issues` 中记录 `SOURCE_DATE_RECOVERED`
+（field 为 `due_date`）。候选及整体仍为 `NEEDS_REVIEW`，`date` 保持为空，不升级
+为已到账或可用余额。该标记属于候选级审核项，可沿用已有的显式人工确认流程。
+模型已填出的日期或被校验清空的非法日期不会由此规则覆盖。
+
 - 原文证据、可信度和处理状态分别展示；不要把 VERIFIED 解释成允许付款。
 - CONDITIONAL 和 PENDING 方案显示未满足条件；只有 B 校验通过后才能进入 B 的授权流程。
 - 保留风险，即使 Jev/OpenAI 超时也不能显示“没有风险”。

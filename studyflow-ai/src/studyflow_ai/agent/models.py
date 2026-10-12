@@ -28,12 +28,25 @@ class Observation(Contract):
     result: dict[str, Any] = Field(default_factory=dict)
 
 
+class Turn(Contract):
+    """An earlier message in a planning conversation."""
+    role: Literal["user", "assistant"]
+    text: str = Field(min_length=1, max_length=2000)
+
+
 class AgentContext(Contract):
     goal: str = Field(min_length=1, max_length=2000)
     locale: Literal["zh", "en"] = "zh"
     tools: list[ToolSpec] = Field(min_length=1, max_length=30)
     observations: list[Observation] = Field(default_factory=list, max_length=12)
     steps_remaining: int = Field(ge=0, le=12)
+    # Planning conversations only: earlier turns, and server-side facts (role, plan, schools).
+    history: list[Turn] = Field(default_factory=list, max_length=12)
+    memory: dict[str, Any] = Field(default_factory=dict)
+
+    @property
+    def planning(self) -> bool:
+        return self.tool("list_schools") is not None
 
     def tool(self, name: str) -> ToolSpec | None:
         return next((t for t in self.tools if t.name == name), None)

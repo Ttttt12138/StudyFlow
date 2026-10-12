@@ -129,6 +129,7 @@ class CallRecord(Contract):
     attempts: int = 1
     error_code: str | None = None
     request_id: str | None = None
+    http_status: int | None = None
 
 
 class Classification(Contract):

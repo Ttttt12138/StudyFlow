@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+import threading
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 from pathlib import Path
@@ -20,6 +21,7 @@ from studyflow_ai.evaluation import (
 )
 from studyflow_ai.holdout_v5 import claim_run, review_policy_matches, validate_run
 from studyflow_ai.providers import prompts
+from studyflow_ai.providers.live import RETRYABLE
 from studyflow_ai.providers.rules import RuleProvider
 from studyflow_ai.regression_run import claim_regression
 
@@ -36,6 +38,40 @@ def review_valid(path, manifest):
         and review.get("review_type") in {"human", "user_delegated_ai"}
         and (manifest.get("version") != "copilot-holdout-v5" or review_policy_matches(review, manifest))
     )
+
+
+# A run of consecutive cases whose calls exhausted retries on transient provider errors
+# means the provider is down: stop the paid run instead of scoring an outage as failures.
+OUTAGE_CASE_LIMIT = 5
+
+
+def _outage_case(row):
+    return any(c["error_code"] in RETRYABLE for c in row["calls"])
+
+
+def _run_arm(run_case, cases, progress):
+    """Run cases in order; returns (rows, tripped). After the breaker trips, cases not yet
+    started are skipped and never reach a provider."""
+    stop, lock, streak = threading.Event(), threading.Lock(), [0]
+
+    def guarded(case):
+        if stop.is_set():
+            return None
+        row = run_case(case)
+        # Counted in completion order so the breaker sees failures as soon as workers do.
+        with lock:
+            streak[0] = streak[0] + 1 if _outage_case(row) else 0
+            if streak[0] >= OUTAGE_CASE_LIMIT:
+                stop.set()
+        return row
+
+    rows = []
+    with ThreadPoolExecutor(max_workers=3) as pool:
+        for row in pool.map(guarded, cases):
+            if row is not None:
+                rows.append(row)
+                progress(len(rows))
+    return rows, stop.is_set()
 
 
 def evaluate(
@@ -84,6 +120,7 @@ def evaluate(
         review=review_record,
         run_provenance=provenance,
         live_acceptance=False,
+        provider_outage=None,
         arms={},
         cost={"currency": None, "amount": None, "reason": "No verified provider tariff configured"},
     )
@@ -99,20 +136,31 @@ def evaluate(
                 row["language"] = case["language"]
                 return row
 
-            rows = []
-            with ThreadPoolExecutor(max_workers=3) as pool:
-                for row in pool.map(run_case, cases):
-                    rows.append(row)
-                    if progress:
-                        progress(name, len(rows), len(cases))
+            def report_progress(done, name=name):
+                if progress:
+                    progress(name, done, len(cases))
+
+            rows, outage = _run_arm(run_case, cases, report_progress)
             metrics = summarize(rows)
             metrics["role"] = ARM_ROLES[name]
             metrics["legacy_targets_met"] = legacy_targets_met(metrics)
             metrics["role_targets_met"] = role_targets_met(metrics, ARM_ROLES[name])
-            metrics["targets_met"] = arm_targets_met(metrics, manifest)
+            metrics["targets_met"] = arm_targets_met(metrics, manifest) and not outage
             report["arms"][name] = {"metrics": metrics, "cases": rows}
+            if outage:
+                pending = [a for a in configurations if a not in report["arms"] and (not arms or a in arms)]
+                report["provider_outage"] = {
+                    "arm": name,
+                    "consecutive_case_limit": OUTAGE_CASE_LIMIT,
+                    "samples_planned": len(cases),
+                    "samples_run": len(rows),
+                    "samples_skipped": len(cases) - len(rows),
+                    "arms_not_run": pending,
+                }
             if progress:
                 progress(name, len(rows), len(cases), report)
+            if outage:
+                break
     finally:
         for provider in {id(p): p for p in (classifier, llm)}.values():
             provider.close()

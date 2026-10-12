@@ -2,6 +2,7 @@
 
 import json
 import logging
+import random
 import time
 
 from pydantic import ValidationError
@@ -40,9 +41,25 @@ def _unparsed_text(exc):
     return None
 
 
+RETRYABLE = {"RATE_LIMIT", "TIMEOUT", "CONNECTION_ERROR", "SERVICE_UNAVAILABLE"}
+MAX_RETRY_DELAY_SECONDS = 20.0
+
+
+def retry_delay(exc: Exception, attempt: int) -> float:
+    """Honor a provider Retry-After hint; otherwise back off ~2s then ~8s so a short
+    upstream outage is not exhausted in under a second."""
+    headers = getattr(getattr(exc, "response", None), "headers", None) or {}
+    try:
+        hinted = float(headers.get("retry-after"))
+    except (TypeError, ValueError):
+        hinted = None
+    if hinted is not None and hinted >= 0:
+        return min(hinted, MAX_RETRY_DELAY_SECONDS)
+    return min(2.0 * 4 ** (attempt - 1), MAX_RETRY_DELAY_SECONDS) + random.uniform(0, 0.5)
+
+
 def invoke(call, record: CallRecord):
     started = time.perf_counter()
-    retryable = {"RATE_LIMIT", "TIMEOUT", "CONNECTION_ERROR", "SERVICE_UNAVAILABLE"}
     for attempt in range(1, 4):
         record.attempts = attempt
         try:
@@ -51,12 +68,16 @@ def invoke(call, record: CallRecord):
             raise
         except Exception as exc:
             code = error_code(exc)
-            if code not in retryable or attempt == 3:
+            if code not in RETRYABLE or attempt == 3:
                 record.error_code = code
+                status = getattr(exc, "status_code", None)
+                record.http_status = status if isinstance(status, int) else None
+                request_id = getattr(exc, "request_id", None)
+                record.request_id = request_id if isinstance(request_id, str) else None
                 failure = ProviderFailure(code, record)
                 failure.raw_output = _unparsed_text(exc)
                 raise failure from None
-            time.sleep(0.25 * 2 ** (attempt - 1))
+            time.sleep(retry_delay(exc, attempt))
         finally:
             record.duration_ms = (time.perf_counter() - started) * 1000
 

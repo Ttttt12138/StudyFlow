@@ -220,3 +220,30 @@ def test_manifest_selects_acceptance_protocol(tmp_path, acceptance):
     assert metrics["role"] == "selective"
     chosen = "role_targets_met" if acceptance else "legacy_targets_met"
     assert metrics["targets_met"] == metrics[chosen]
+
+def test_provider_outage_stops_arm_without_further_calls():
+    from studyflow_ai.copilot_evaluation import OUTAGE_CASE_LIMIT, _run_arm
+
+    started = []
+
+    def run_case(case):
+        started.append(case)
+        # The provider goes down from the fourth case onward and stays down.
+        return {"case": case, "calls": [{"error_code": "SERVICE_UNAVAILABLE" if case >= 3 else None}]}
+
+    rows, tripped = _run_arm(run_case, list(range(100)), lambda done: None)
+    assert tripped
+    assert [r["case"] for r in rows][:3] == [0, 1, 2]
+    # Only cases already in flight (three workers) may finish after the breaker trips.
+    assert len(started) <= 3 + OUTAGE_CASE_LIMIT + 3
+
+
+def test_scattered_or_permanent_errors_do_not_trip_breaker():
+    from studyflow_ai.copilot_evaluation import OUTAGE_CASE_LIMIT, _run_arm
+
+    def run_case(case):
+        transient = case % 10 == 0 and case < 10 * (OUTAGE_CASE_LIMIT - 1)
+        return {"calls": [{"error_code": "SERVICE_UNAVAILABLE" if transient else "INVALID_MODEL_OUTPUT"}]}
+
+    rows, tripped = _run_arm(run_case, list(range(40)), lambda done: None)
+    assert not tripped and len(rows) == 40

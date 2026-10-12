@@ -131,6 +131,40 @@ def test_retry_only_temporary_errors(monkeypatch):
     assert "SECRET" not in str(failure.value)
 
 
+def test_service_outage_backs_off_and_records_diagnostics(monkeypatch):
+    sleeps = []
+    monkeypatch.setattr("studyflow_ai.providers.live.time.sleep", sleeps.append)
+
+    class InternalServerError(Exception):
+        status_code = 503
+        request_id = "req_123"
+        response = SimpleNamespace(headers={})
+
+    def fail():
+        raise InternalServerError("SECRET")
+
+    record = CallRecord(provider="openai", purpose="extract", model="m", mode="live")
+    with pytest.raises(ProviderFailure) as failure:
+        invoke(fail, record)
+    assert failure.value.code == "SERVICE_UNAVAILABLE" and record.attempts == 3
+    # Retries span seconds, not the old 0.75s, so a brief upstream blip can recover.
+    assert len(sleeps) == 2 and 2 <= sleeps[0] <= 2.5 and 8 <= sleeps[1] <= 8.5
+    assert record.http_status == 503 and record.request_id == "req_123"
+
+
+def test_retry_after_hint_is_honored_and_capped():
+    from studyflow_ai.providers.live import MAX_RETRY_DELAY_SECONDS, retry_delay
+
+    def error(value):
+        exc = Exception()
+        exc.response = SimpleNamespace(headers={"retry-after": value})
+        return exc
+
+    assert retry_delay(error("3"), 1) == 3
+    assert retry_delay(error("600"), 1) == MAX_RETRY_DELAY_SECONDS
+    assert 2 <= retry_delay(error("soon"), 1) <= 2.5
+
+
 def test_auth_error_not_retried():
     class AuthenticationError(Exception):
         pass

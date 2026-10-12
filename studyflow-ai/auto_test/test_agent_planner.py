@@ -976,3 +976,38 @@ def test_full_run_is_reproducible():
     first = run("把 2万 人民币 汇给学校交学费，截止 2026-11-01")
     second = run("把 2万 人民币 汇给学校交学费，截止 2026-11-01")
     assert first.calls == second.calls and first.answer == second.answer
+
+
+class FlakyOpenAI(FakeOpenAI):
+    """Fails with the given replies first, then answers normally."""
+
+    def __init__(self, failures):
+        super().__init__()
+        self.failures = list(failures)
+
+    def _request(self, purpose, text, schema, instruction):
+        if self.failures:
+            self.calls.append((purpose, text, schema, instruction))
+            raise self.failures.pop(0)
+        return super()._request(purpose, text, schema, instruction)
+
+
+def test_live_empty_reply_is_retried_then_succeeds():
+    # Observed live (planning-1.0): the gateway intermittently returns an empty body.
+    fake = FlakyOpenAI([_unparsed(""), _unparsed("  ")])
+    step, record = AgentPlanner(LiveAgentProvider(fake)).next_step(ctx())
+    assert step.tool == "get_balances" and len(fake.calls) == 3
+
+
+def test_live_empty_reply_gives_up_after_the_retries():
+    fake = FlakyOpenAI([_unparsed("")] * 3)
+    with pytest.raises(ProviderFailure) as raised:
+        AgentPlanner(LiveAgentProvider(fake)).next_step(ctx())
+    assert raised.value.code == "INVALID_MODEL_OUTPUT" and len(fake.calls) == 3
+
+
+def test_live_malformed_reply_is_not_retried():
+    fake = FlakyOpenAI([_unparsed('{"step": ')])
+    with pytest.raises(ProviderFailure):
+        AgentPlanner(LiveAgentProvider(fake)).next_step(ctx())
+    assert len(fake.calls) == 1
