@@ -52,3 +52,4 @@ from .remittance_models import RemittanceOrder, RemittanceStatusEvent
 from .agent_models import AgentSession, AgentStep, AgentPendingAction
 from .planning.models import PlanningProfile, StudyPlan, FamilyLink, AgentConversation, PlanBill, ExpenseEntry
 from .copilot.models import WhatIfRun, PlanningPreference, ReviewItem, ReviewAction, ExplanationTrace
+from .auth_models import EmailOtpChallenge

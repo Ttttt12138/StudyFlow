@@ -26,6 +26,22 @@ if not SECRET_KEY:
     raise ImproperlyConfigured("Set DJANGO_SECRET_KEY in backend/.env.")
 DEBUG = os.getenv("DJANGO_DEBUG", "False").lower() == "true"
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
+# Email OTP. The console backend prints codes to the log, so outside DEBUG the OTP views refuse
+# to issue codes through it (or the file backend) unless STUDYFLOW_OTP_ALLOW_LOGGED_EMAIL=true.
+EMAIL_BACKEND = os.getenv("DJANGO_EMAIL_BACKEND", "django.core.mail.backends.console.EmailBackend")
+EMAIL_HOST = os.getenv("EMAIL_HOST", "localhost")
+EMAIL_PORT = int(os.getenv("EMAIL_PORT", "587"))
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
+EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "true").lower() == "true"
+DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "StudyFlow <no-reply@studyflow.local>")
+STUDYFLOW_OTP_ALLOW_LOGGED_EMAIL = os.getenv("STUDYFLOW_OTP_ALLOW_LOGGED_EMAIL", "false").lower() == "true"
+STUDYFLOW_OTP_TTL_SECONDS = int(os.getenv("STUDYFLOW_OTP_TTL_SECONDS", "600"))
+STUDYFLOW_OTP_RESEND_SECONDS = int(os.getenv("STUDYFLOW_OTP_RESEND_SECONDS", "60"))
+STUDYFLOW_OTP_MAX_ATTEMPTS = int(os.getenv("STUDYFLOW_OTP_MAX_ATTEMPTS", "5"))
+# Wrong codes per address across every challenge; reaching it locks OTP for that address.
+STUDYFLOW_OTP_MAX_FAILURES_PER_WINDOW = int(os.getenv("STUDYFLOW_OTP_MAX_FAILURES_PER_WINDOW", "20"))
+STUDYFLOW_OTP_LOCKOUT_WINDOW_SECONDS = int(os.getenv("STUDYFLOW_OTP_LOCKOUT_WINDOW_SECONDS", "86400"))
 INSTALLED_APPS = [
     "django.contrib.admin", "django.contrib.auth", "django.contrib.contenttypes",
     "django.contrib.sessions", "django.contrib.messages", "django.contrib.staticfiles",
@@ -138,6 +154,9 @@ SPECTACULAR_SETTINGS = {
         "EventCertaintyEnum": ["confirmed","estimated","missing"],
         "FundingCertaintyEnum": ["confirmed","estimated"],
         "PolicyActionEnum": "finance.policy_api.ACTION_CHOICES",
+        "EmailOtpPurposeEnum": "finance.auth_models.EmailOtpChallenge.Purpose",
+        # Keeps the remittance enum's published name now that another "purpose" field exists.
+        "PurposeEnum": "finance.remittance_models.PURPOSES",
     },
     "SERVE_PERMISSIONS": ["rest_framework.permissions.IsAuthenticated"],
 }
