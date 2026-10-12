@@ -7,7 +7,7 @@ StudyFlow 的预算、借款和学费结算使用本币 THB。钱包可以同时
 | 变量 | 默认 | 说明 |
 |---|---|---|
 | `STUDYFLOW_HOME_CURRENCY` | `THB` | 本币。FinancialState 快照、预算和借款都以本币计价。借款核心 B 只支持 THB，所以设为其他值时启动失败 |
-| `STUDYFLOW_SUPPORTED_CURRENCIES` | `THB,USD,EUR,CNY,GBP,JPY` | 钱包、报价和汇路可用的币种。必须包含本币；小数位超过 2 的币种（如 KWD）启动时拒绝 |
+| `STUDYFLOW_SUPPORTED_CURRENCIES` | `THB,USD,EUR,CNY,GBP,JPY,AUD,SGD,MYR` | 钱包、报价和汇路可用的币种。必须包含本币；小数位超过 2 的币种（如 KWD）启动时拒绝 |
 
 金额精度按 ISO 4217（Babel）：JPY 0 位小数，其余 2 位。超出精度的金额被拒绝（`AMOUNT_PRECISION_INVALID`），不做静默舍入；换汇结果按目标币种精度 ROUND_HALF_UP。
 

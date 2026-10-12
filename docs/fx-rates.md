@@ -28,6 +28,7 @@ Django 通过 C 模块已有的 Frankfurter 适配器（`studyflow_ai.readiness.
 {"data": {"base": "CNY", "quote": "THB", "rate": "4.6500000000", "rate_date": "2026-10-06",
   "fetched_at": "...", "source": "fixture", "stale": false, "issues": [], "is_reference_rate": true}}
 ```
+可选参数 `amount`（正数，精度符合 `base` 币种）：响应额外返回 `amount` 和 `converted`（按参考汇率换算为 `quote` 币种、按其精度四舍五入），例如 `?base=CNY&quote=THB&amount=5000.00` 返回 `"converted": "23000.00"`。仅供规划参考（前端创建学期时把外币期初余额折算为本币），不是可成交报价，不能用于换汇或汇款；非法金额返回 400 `AMOUNT_INVALID` / `AMOUNT_PRECISION_INVALID`。
 
 ### `POST fx-quotes/live/`
 请求头 `Idempotency-Key`。`{"corridor_id": "<uuid>", "send_amount": "1000.00"}`

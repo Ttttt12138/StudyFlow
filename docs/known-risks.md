@@ -46,7 +46,9 @@
 | D1 | 未配置 HTTPS 重定向、HSTS、安全 Cookie、CSRF 可信来源 | 中 | `DJANGO_SECURE=true` 启用 HTTPS 重定向、HSTS（默认 3600 秒、不 preload）、Secure Cookie、8 小时会话；始终启用 nosniff、Referrer-Policy、`X-Frame-Options: DENY`、`CSRF_TRUSTED_ORIGINS`；CI 运行 `check --deploy --fail-level WARNING`。剩余：未在真实 HTTPS 部署上验证；HSTS 时长需上线后人工调高；不 preload | 部分缓解 | `backend/config/settings.py`、`.github/workflows/django.yml` |
 | D2 | `backend/.env.example` 默认 `DJANGO_DEBUG=True` | 低 | 示例改为 `DJANGO_DEBUG=False`；已有本地 `.env` 不会被自动修改 | 已缓解 | `backend/.env.example` |
 | D3 | 未配置共享缓存；按进程计数的限流在多进程部署下失效 | 中 | `DatabaseCache`（表 `studyflow_cache`），所有进程共享；部署和 CI 执行 `createcachetable`，门禁脚本和启动脚本也会创建。剩余：每次请求增加几次数据库读写；缓存表缺失时所有请求报错 | 已缓解 | `backend/config/settings.py`、`scripts/run_gates.py` |
-| D4 | 浏览器验收已补齐，本地模拟环境不代表公网/真实支付验收 | 中 | 2026-10-11：12 个 mocked、6 个真实 Django 浏览器用例通过；独立 Compose nginx 同源入口，三账户参考节点 6,000/9,000 THB、刷新、录像；容器持久性另有报告 | 部分缓解 | `docs/verification-20261011.md`、`evidence/verification-20261011/` |
+| D4 | 浏览器验收已补齐，本地模拟环境不代表公网/真实支付验收 | 中 | 2026-10-11：12 个 mocked、6 个真实 Django 浏览器用例通过；独立 Compose nginx 同源入口，三账户参考节点 6,000/9,000 THB、刷新、录像；容器持久性另有报告。2026-10-12：演示脚本全流程在 compose 演示栈上连续演练（见 `evidence/demo-20261012/`） | 部分缓解 | `docs/verification-20261011.md`、`evidence/verification-20261011/`、`docs/demo-script.md` |
+| D5 | `reset_demo` 会清空整个数据库（TRUNCATE，绕过只追加的行级触发器） | 中 | 仅当部署设置 `STUDYFLOW_ALLOW_DEMO_RESET=true` 且命令带 `--yes` 才执行；compose 默认关闭；测试覆盖两道拒绝条件 | 已缓解（演示专用） | `backend/finance/management/commands/reset_demo.py`、`backend/auto_test/test_reset_demo.py` |
+| D6 | 没有公网演示环境 | 中 | 本地 compose 演示栈一键启动、可重置；公网部署需要托管账号与域名，未在本轮执行 | 开放 | `docs/demo-script.md` |
 
 ## AI 与评估
 
@@ -77,3 +79,7 @@
 | E1 | `readiness/notifications/` 同时由 copilot 和 readiness 注册，readiness 版本不可达 | 低 | copilot 版本为超集 | 开放 | `backend/finance/urls.py`、`backend/finance/copilot/api.py` |
 | E2 | CI 未运行 `demo_copilot` | 低 | CI 已加入 `demo_copilot`、`demo_remittance`、`demo_agent` 和 `evaluate_agent` | 已缓解 | `.github/workflows/django.yml` |
 | E3 | 信用记录只统计平台内模拟数据（分期、账单、按期汇款），不是征信评分，不能证明平台外的信用 | 中 | 明确标注模拟；签名证明只含汇总，可公开验证；限额系数上限 1.5 倍 | 部分缓解（设计范围） | `docs/credit.md` |
+| E4 | 部分列表接口缺少服务端筛选：`ledger/` 无币种参数，`readiness/transactions/` 无“待复核”参数；前端只能筛选已加载的分页 | 低 | 页面明确标注“仅筛选已加载的条目”，可继续加载更多 | 开放 | `frontend/src/wallet/WalletExtras.tsx`、`frontend/src/insights/InsightsApp.tsx` |
+| E5 | 交易与周期性支出记录只给出银行账户的内部 id，前端无法显示账户名；部分 CSV 文件级错误码没有后端翻译 | 低 | 导入预览中显示 CSV 原始 account_id；前端自行翻译这些错误码 | 开放 | `backend/finance/consumption/` |
+| E6 | 赞助申请记录中包含赞助人幂等键的哈希（`confirmation.key_hash`），学生端用不到；学生修改申请后旧链接返回 `INVALID_SPONSOR_TOKEN` 而不是“已撤回” | 低 | 只是哈希，不含令牌；赞助页文案说明“申请可能已被修改” | 开放 | `backend/finance/sponsorship.py` |
+| E7 | 运营队列每类最多返回 100 条，长期运行的演示库会积压测试数据 | 低 | 运营台可按学生筛选、默认显示最早 10 条；`reset_demo` 清理演示库 | 部分缓解 | `backend/finance/operations_api.py` |

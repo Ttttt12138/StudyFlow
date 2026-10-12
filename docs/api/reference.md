@@ -313,6 +313,30 @@ Staff only. No Idempotency-Key; `expected_version` protects against double decis
 These rules apply to approve and reject alike, so a demo needs two staff users: one
 verifies beneficiaries, the other decides approvals.
 
+### GET /api/v2/operations/queue/
+
+Staff only (403 for students). Read-only work queue across all students, used by the
+operations console (`/?ops=1`). Each list holds at most 100 items, oldest first.
+
+    {"data": {
+      "operator": {"id": 8, "username": "demo-approver"},
+      "approvals": [...],          // PENDING, with owner_username, requested_by_username,
+                                   // can_decide, blocked_reason (OWN_REQUEST | VERIFIED_PAYEE | null)
+                                   // and target: the payment or remittance order it would release
+                                   // (incl. payee_verified_by), or null
+      "recent_decisions": [...],   // last 20 decided approvals, with decided_by_username
+      "payments": [...],           // status pending | unknown: waiting for payments/{id}/adapter-event/
+      "remittance_orders": [...],  // SUBMITTED | IN_TRANSIT | UNKNOWN: remittance-orders/{id}/adapter-event/
+      "beneficiaries": [...],      // verified=false: beneficiaries/{id}/verify/
+      "applications": [...],       // UNDER_REVIEW | APPROVED, with a quote summary:
+                                   // applications/{id}/decision/ and applications/{id}/disburse/
+      "sponsor_requests": [...],   // PENDING (incl. computed EXPIRED) and CONFIRMED-not-received:
+                                   // sponsor-requests/{id}/issue-link/, funding-sources/{id}/receive/
+      "is_simulated": true}}
+
+`can_decide` mirrors the separation-of-duties rule so the console can explain it before
+an attempt; `approvals/{id}/decide/` still enforces it.
+
 ### GET /api/v2/policy/limits/
 
 T0, signed-in student. The caller's own effective outflow limits and current usage, so a
