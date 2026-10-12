@@ -1,4 +1,5 @@
 import type { FeatureId } from "../features";
+import { SCREENS_VERSION } from "./screens-version";
 
 export type CardContent = { id: FeatureId; index: number; title: string; tags: string; color: string; lang: "en" | "zh" };
 
@@ -18,7 +19,7 @@ export function loadScreen(id: FeatureId, lang: "en" | "zh"): Promise<HTMLImageE
       image.decoding = "async";
       image.onload = () => resolve(image);
       image.onerror = () => resolve(null);
-      image.src = `/intro-assets/screens/${key}.jpg`;
+      image.src = `/intro-assets/screens/${key}.jpg?v=${SCREENS_VERSION}`;
     });
     images.set(key, pending);
   }

@@ -64,9 +64,14 @@ export class DjangoClient {
       response = await send();
       payload = await response.json().catch(() => undefined);
     }
-    if (!response.ok) throw new ApiError(response.status, payload ?? null);
+    if (!response.ok) {
+      if (response.status === 401 && typeof window !== "undefined") window.dispatchEvent(new Event("studyflow:auth-lost"));
+      throw new ApiError(response.status, payload ?? null);
+    }
     if (payload === undefined && response.status !== 204)
       throw new ApiError(response.status, translate(getLang(), "common.err.notJson"));
+    if (typeof window !== "undefined" && method === "POST" && !path.startsWith("auth/") && !/^agent\/conversations\/(?:[^/]+\/open\/)?$/.test(path))
+      window.dispatchEvent(new CustomEvent("studyflow:write", { detail: { path } }));
     return !options.raw && payload && typeof payload === "object" && "data" in payload
       ? (payload as { data: T }).data
       : (payload as T);

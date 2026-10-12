@@ -1,0 +1,64 @@
+/* Persistent conversation and a single task surface. */
+.student-workspace { --accent: #4ff2c6; height: calc(100dvh - var(--strip-height, 42px) - var(--tour-height, 0px)); min-height: 440px; display: flex; flex-direction: column; color: var(--text); background: var(--bg, #080e16); }
+.workspace-topbar { display:flex; align-items:center; gap:16px; padding:12px 24px; border-bottom:1px solid var(--line); position:relative; z-index:30; flex:none; }
+.workspace-brand { font-size:20px; font-weight:700; text-decoration:none; color:var(--text); }
+.workspace-brand span { color:var(--accent); }
+.workspace-topbar h1 { font-size:14px; font-weight:500; color:var(--text-2); margin:0; }
+.workspace-account { margin-left:auto; font-size:12px; color:var(--text-3); }
+.workspace-tools { position:absolute; right:20px; top:100%; width:min(360px, calc(100vw - 24px)); max-height:75dvh; overflow:auto; padding:16px; background:#101a18; border:1px solid var(--line); border-radius:14px; box-shadow:0 20px 60px #0007; display:grid; gap:14px; }
+.workspace-tools strong { display:block; font-size:11px; color:var(--text-3); padding:4px 8px; }
+.workspace-tools button { display:block; width:100%; text-align:left; background:none; border:0; color:var(--text); font:inherit; padding:9px 8px; cursor:pointer; border-radius:8px; }
+.workspace-tools button:hover { background:var(--surface-2); }
+.workspace-body { display:flex; flex:1; min-height:0; position:relative; }
+.workspace-conversation { flex:1; min-width:0; min-height:0; height:100%; max-width:none; margin:0; align-self:stretch; padding:0; overflow:hidden; }
+.student-workspace .plan-app { height:100%; min-height:0; display:flex; flex-direction:column; max-width:920px; margin:auto; padding:12px 28px 18px; }
+.workspace-plan-status { display:flex; gap:8px; flex-wrap:wrap; align-items:center; padding:4px 0 12px; font-size:12px; }
+.workspace-plan-status .status-chip { margin-right:auto; }
+.workspace-plan-status button { padding:5px 9px; font-size:12px; }
+.student-workspace .plan-layout { display:flex; flex:1; min-height:0; }
+.student-workspace .plan-chat { flex:1; min-width:0; margin:0; background:none; border:0; box-shadow:none; }
+.student-workspace .plan-chat > .service-card-body { display:flex; flex-direction:column; height:100%; padding:0; }
+.student-workspace .plan-chat-head { flex:none; padding-bottom:4px; }
+.student-workspace .plan-chat-head h2 { font-size:13px; color:var(--text-3); font-weight:500; }
+.student-workspace .plan-messages { flex:1; min-height:0; max-height:none; align-content:start; overscroll-behavior:contain; margin:10px 0 0; padding-bottom:12px; }
+.student-workspace .plan-bubble-agent { border:0; background:transparent; padding:8px 0; }
+.student-workspace .plan-composer { flex:none; margin-top:0; padding-top:10px; background:var(--bg, #080e16); }
+.student-workspace .plan-composer textarea { min-height:64px; max-height:150px; resize:vertical; }
+.student-workspace .agent-suggestions { flex-wrap:nowrap; overflow-x:auto; padding-bottom:4px; max-width:100%; }
+.student-workspace .agent-suggestions button { flex-shrink:0; }
+.workspace-card-summary { margin:10px 0; padding:12px 14px; border:1px solid var(--line); border-radius:12px; background:var(--surface-1); }
+.workspace-card-summary h3 { font-size:14px; margin:0 0 5px; }
+.workspace-card-summary p { color:var(--text-2); font-size:13px; }
+.workspace-card-summary button { margin-top:10px; }
+.workspace-dock { flex:0 0 480px; width:480px; min-width:0; background:#101a18; border-left:1px solid var(--line); display:flex; flex-direction:column; z-index:11; }
+.workspace-dock[hidden], .tool-content[hidden] { display:none !important; }
+.workspace-dock-header { display:flex; gap:8px; padding:12px 16px; border-bottom:1px solid var(--line); align-items:center; flex:none; }
+.workspace-dock-header h2 { font-size:15px; margin:0 auto 0 0; }
+.workspace-tool-host { flex:1; min-height:0; position:relative; }
+.tool-content { position:absolute; inset:0; overflow:auto; overscroll-behavior:contain; padding:16px; overflow-wrap:anywhere; }
+.tool-content .embedded-module { display:block; min-width:0; }
+.tool-content .section-heading { margin:0 0 12px; }
+.tool-content .section-heading > div, .tool-content .preview-banner { display:none; }
+.tool-content .card, .tool-content .service-card { max-width:100%; margin:0 0 16px; }
+.tool-content .service-card-body { padding:16px; }
+.tool-content .service-card-body h2 { font-size:17px; }
+.tool-content .service-card-body h3 { font-size:15px; }
+.tool-content .service-grid, .tool-content .trust-stats, .tool-content .plan-expense-row { grid-template-columns:repeat(auto-fit, minmax(min(180px, 100%), 1fr)); }
+.tool-content table { display:block; max-width:100%; overflow:auto; }
+.tool-content input, .tool-content select, .tool-content textarea { max-width:100%; min-width:0; }
+.tool-content pre { white-space:pre-wrap; overflow-wrap:anywhere; }
+.tool-expanded .workspace-dock { position:absolute; inset:0; width:100%; }
+.workspace-confirm { background:#101a18; color:var(--text); border:1px solid var(--line); border-radius:16px; padding:24px; width:min(560px, calc(100vw - 32px)); max-height:85dvh; overflow:auto; box-shadow:0 24px 80px #0009; }
+.workspace-confirm::backdrop { background:#02080fc4; }
+.workspace-confirm .service-policy { margin:0; }
+.workspace-stale { color:var(--warn); font-size:13px; padding:10px; border:1px solid var(--line); border-radius:8px; }
+.finance-hint { font-size:12px; padding:0 4px 12px; }
+@media (max-width:1099px) { .workspace-dock { position:absolute; inset:0; width:100%; } .workspace-conversation:has(+ .workspace-dock:not([hidden])) { visibility:hidden; } }
+@media (max-width:600px) { .workspace-topbar { padding:10px 12px; gap:8px; } .workspace-topbar h1 { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); } .workspace-brand { font-size:17px; } .workspace-account { max-width:100px; overflow:hidden; text-overflow:ellipsis; } .student-workspace .plan-app { padding:10px 12px; } .student-workspace .plan-view button { padding:4px 8px; } .workspace-plan-status { gap:5px; } .tool-content { padding:10px; } .student-workspace .plan-bubble-user { max-width:92%; } }
+
+.student-workspace .plan-chat { min-height:0; height:100%; }
+.student-workspace .workspace-topbar { height:auto; min-height:60px; }
+
+body:has(.student-workspace) .app-backdrop { opacity:.15; }
+
+.workspace-preview { flex:none; margin:0; padding:8px 16px; font-size:11px; color:var(--warn); border-bottom:1px solid var(--line); }

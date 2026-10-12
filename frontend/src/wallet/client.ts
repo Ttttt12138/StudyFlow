@@ -34,7 +34,7 @@ export class SessionWalletClient implements WalletClient {
   async get<T>(path:string):Promise<T> {try{return await(await this.session()).get<T>(path);}catch(error){return this.convert(error);}}
   async post<T>(path:string,body:unknown,identity=path,extraHeaders:Record<string,string>={}):Promise<T> {
     // Password/step-up commands are never cached or fingerprinted in memory.
-    const sensitive=path==='auth/step-up/';
+    const sensitive=path==='auth/step-up/' || !!extraHeaders['X-Sponsor-Token'];
     const fingerprint=sensitive?'':`${identity}:${JSON.stringify(body)}`;
     const key=sensitive?crypto.randomUUID():this.retryKeys.get(fingerprint)??crypto.randomUUID();
     if(!sensitive)this.retryKeys.set(fingerprint,key);

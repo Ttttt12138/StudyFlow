@@ -1,0 +1,19 @@
+/* Operations console (src/operations/OperationsApp.tsx). */
+.ops-count{display:inline-grid;place-items:center;min-width:20px;height:18px;border-radius:9px;background:var(--surface-1);color:var(--warn);font-size:11px;margin-left:6px;padding:0 5px}
+.ops-cards{display:grid;gap:14px}
+.ops-card{border:1px solid color-mix(in srgb,var(--warn) 40%,transparent);border-radius:10px;padding:14px 16px;background:var(--surface-1)}
+.ops-card h3{margin:0;font-size:15px}
+.ops-card .comparison-facts{margin:10px 0}
+.ops-reason{margin:8px 0;padding:6px 12px;border-left:3px solid var(--line);font-size:13px;color:var(--text)}
+.ops-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.ops-list>li{border:1px solid var(--line);border-radius:8px;padding:12px 14px;background:var(--surface-1)}
+.ops-row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.ops-row>div{display:grid;gap:3px;min-width:0}
+.ops-row small{color:var(--text-2);font-size:12px;overflow-wrap:anywhere}
+.ops-confirm{border:1px dashed color-mix(in srgb,var(--warn) 55%,transparent);border-radius:8px;padding:10px 12px;margin-top:10px}
+.ops-confirm p{margin:0;font-size:13px}
+.ops-app .secondary.danger{color:var(--danger);border-color:color-mix(in srgb,var(--danger) 45%,transparent)}
+.ops-filter{justify-self:start}
+.ops-filter input{border:1px solid var(--line);border-radius:6px;background:var(--surface-1);padding:7px 10px;font:inherit;font-size:13px;color:var(--accent);min-width:220px}
+.ops-more{margin-top:4px}
+.ops-link{width:100%;margin:8px 0 0;border:1px solid var(--line);border-radius:6px;background:var(--surface-1);padding:8px 10px;font:12px/1.4 var(--mono, monospace);color:var(--accent)}

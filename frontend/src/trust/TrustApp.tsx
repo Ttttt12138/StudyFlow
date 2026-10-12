@@ -1,3 +1,5 @@
+import { useToolRefresh, useToolActive, useClearWhenHidden, useWorkspace } from "../workspace/context";
+import { ModulePresentation } from "../workspace/ModulePresentation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ModuleNav } from "../services/ModuleNav";
 import { formatDate, formatMoney } from "../backend/presenters";
@@ -8,6 +10,7 @@ import { SessionWalletClient, WalletApiError, type WalletClient } from "../walle
 import { createTrustPreview } from "./previewAdapter";
 import type { AuditEvent, AuditPage, CreditProfile, LimitsSummary, TrustApproval } from "./types";
 import "../services/services.css";
+import { CreditStatements } from "./CreditStatements";
 
 const signInUrl = `/api/auth/login/?next=${encodeURIComponent(window.location.origin + "/?trust=1")}`;
 // Audit action prefixes with their own filter; everything else is grouped under "other".
@@ -35,6 +38,7 @@ function percent(used: string, limit: string) {
 
 export function TrustApp({ preview, onExit }: { preview: boolean; onExit: () => void }) {
   const { lang, t } = useI18n();
+  const toolActive = useToolActive();
   const client = useMemo<WalletClient>(() => preview ? createTrustPreview() : new SessionWalletClient(), [preview]);
   const [credit, setCredit] = useState<Section<CreditProfile>>(empty);
   const [limits, setLimits] = useState<Section<LimitsSummary>>(empty);
@@ -68,6 +72,7 @@ export function TrustApp({ preview, onExit }: { preview: boolean; onExit: () => 
       setEvents(e.value.results); setNextPage(e.value.next); setTotal(e.value.count); setAuditError("");
     } else { setEvents([]); setNextPage(null); setAuditError(text(e.reason)); }
     setLoading(false);
+    return { errors: [c, l, a, e].some(result => result.status === "rejected") ? { refresh: "failed" } : {} };
   }, [client, text]);
 
   useEffect(() => { void load(); }, [load]);
@@ -102,25 +107,8 @@ export function TrustApp({ preview, onExit }: { preview: boolean; onExit: () => 
   }
 
   const profile = credit.data;
-  return (
-    <div className="app connected service-app trust-app">
-      <aside>
-        <a className="brand" href="#" onClick={(event) => { event.preventDefault(); onExit(); }}><span className="brand-icon">S</span>StudyFlow<span className="brand-dot">.</span></a>
-        <ModuleNav />
-        <div className="journey-label">{t("trust.side.label")}</div>
-        <nav aria-label={t("trust.side.nav")}>
-          <a href="#trust-tiers">{t("trust.tiers.title")}</a>
-          <a href="#trust-credit">{t("trust.credit.title")}</a>
-          <a href="#trust-limits">{t("trust.limits.title")}</a>
-          <a href="#trust-approvals">{t("trust.approvals.title")}</a>
-          <a href="#trust-audit">{t("trust.audit.title")}</a>
-        </nav>
-        <div className="sidebar-note"><strong>{t("trust.side.noteTitle")}</strong><p>{t("trust.side.noteText")}</p></div>
-        <button className="secondary" onClick={onExit}>{t("common.backToPlan")}</button>
-      </aside>
-      <div className="workspace">
-        <header><span>StudyFlow / {t("trust.title")}</span><span className="avatar">ST</span></header>
-        <main>
+  const staleStatus = useToolRefresh(() => load());
+  const content = <>{staleStatus}
           <div className="section-heading"><div>
             <span className="eyebrow">{t("trust.eyebrow")}</span>
             <h1>{t("trust.title")}</h1>
@@ -178,6 +166,8 @@ export function TrustApp({ preview, onExit }: { preview: boolean; onExit: () => 
               </>}
             </div>
           </section>
+
+          <CreditStatements client={client} preview={preview} />
 
           <section className="card service-card" id="trust-limits" aria-labelledby="trust-limits-title">
             <div className="service-card-body">
@@ -248,9 +238,26 @@ export function TrustApp({ preview, onExit }: { preview: boolean; onExit: () => 
               </div>
             </div>
           </section>
-        </main>
+        </>;
+  return <ModulePresentation className="trust-app" fullPage={(<div className="app connected service-app trust-app">
+      <aside>
+        <a className="brand" href="#" onClick={(event) => { event.preventDefault(); onExit(); }}><span className="brand-icon">S</span>StudyFlow<span className="brand-dot">.</span></a>
+        <ModuleNav />
+        <div className="journey-label">{t("trust.side.label")}</div>
+        <nav aria-label={t("trust.side.nav")}>
+          <a href="#trust-tiers">{t("trust.tiers.title")}</a>
+          <a href="#trust-credit">{t("trust.credit.title")}</a>
+          <a href="#trust-limits">{t("trust.limits.title")}</a>
+          <a href="#trust-approvals">{t("trust.approvals.title")}</a>
+          <a href="#trust-audit">{t("trust.audit.title")}</a>
+        </nav>
+        <div className="sidebar-note"><strong>{t("trust.side.noteTitle")}</strong><p>{t("trust.side.noteText")}</p></div>
+        <button className="secondary" onClick={onExit}>{t("common.backToPlan")}</button>
+      </aside>
+      <div className="workspace">
+        <header><span>StudyFlow / {t("trust.title")}</span><span className="avatar">ST</span></header>
+        <main>{content}</main>
         <footer>{t("common.footer")}<span>{t("common.simulatedFooter")}</span></footer>
       </div>
-    </div>
-  );
+    </div>)}>{content}</ModulePresentation>;
 }

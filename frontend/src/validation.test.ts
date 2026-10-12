@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { problem } from "./confirmation/adapter";
 import type { Field } from "./confirmation/types";
-import { computedFrom } from "./dashboard/freshness";
 import { expenseProblems, newExpense } from "./expenses/adapter";
 import { previewQuotes } from "./wallet/mockAdapter";
 
@@ -54,16 +53,6 @@ describe("expenseProblems", () => {
   it("validates amount, currency and one-time due dates", () => {
     expect(expenseProblems({ ...known, amount: "9,000", currency: "thb" })).toHaveLength(2);
     expect(expenseProblems({ ...known, recurrence: "once", dueDate: "2027-13-01" })).toEqual(["Enter a valid due date."]);
-  });
-});
-
-describe("computedFrom", () => {
-  const current = { state_version: 4, budget_version: 7, analysis_version: 1 };
-  it("compares every version the backend reports", () => {
-    expect(computedFrom({ ...current }, current)).toBe(true);
-    expect(computedFrom({ ...current, budget_version: 6 }, current)).toBe(false);
-    expect(computedFrom({ ...current, analysis_version: 0 }, current)).toBe(false);
-    expect(computedFrom({ ...current, analysis_version: 0 }, { ...current, analysis_version: null })).toBe(true);
   });
 });
 

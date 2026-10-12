@@ -9,8 +9,8 @@ export const features: readonly { id: FeatureId; href: string; color: string }[]
   { id: "tiers", href: "/?trust=preview", color: "#f2b98a" },
   { id: "credit", href: "/?trust=preview", color: "#b7e07e" },
   { id: "agent", href: "/?agent=preview", color: "#c6a6f6" },
-  { id: "budget", href: "/?journey=preview&step=budget", color: "#f3d77a" },
-  { id: "calendar", href: "/?journey=preview&step=calendar", color: "#7fd0f0" },
+  { id: "budget", href: "/?plan=preview", color: "#f3d77a" },
+  { id: "calendar", href: "/?plan=preview&stage=school", color: "#7fd0f0" },
 ];
 
 export const featureKey = (id: FeatureId, field: "title" | "tags" | "body") => `intro.feature.${id}.${field}` as MessageKey;

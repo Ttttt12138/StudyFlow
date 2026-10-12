@@ -1,3 +1,6 @@
+import { FocusDialog } from "../workspace/FocusDialog";
+import { useToolRefresh, useToolActive, useClearWhenHidden, useWorkspace } from "../workspace/context";
+import { ModulePresentation } from "../workspace/ModulePresentation";
 import { getAll } from "../backend/client";
 import { Amount } from "../services/Amount";
 import { ModuleNav } from "../services/ModuleNav";
@@ -7,6 +10,7 @@ import { loadWallet, SessionWalletClient, WalletApiError, type WalletClient } fr
 import { createWalletPreview, previewQuotes, type WalletPreviewScenario } from "./mockAdapter";
 import type { Approval, Order, Quote, WalletSnapshot } from "./types";
 import "./wallet.css";
+import { WalletExtras } from "./WalletExtras";
 import { TierBadge } from "../services/TierBadge";
 import { intlLocale, useI18n, type MessageKey } from "../i18n";
 
@@ -22,6 +26,7 @@ function orderApproval(order: Order, approvals: Approval[]) {
 
 export function WalletApp({ preview, onExit }: { preview: boolean; onExit: () => void }) {
   const { lang, t } = useI18n();
+  const toolActive = useToolActive();
   const describeStatus = (order: Order) => t(`wallet.status.${order.effective_status}` as MessageKey);
   const message = (error: unknown) => error instanceof Error ? error.message : t("wallet.err.generic");
   const money = (value: unknown, currency?: string) => formatMoney(value, currency, lang);
@@ -57,6 +62,7 @@ export function WalletApp({ preview, onExit }: { preview: boolean; onExit: () =>
   const approval = selectedOrder ? orderApproval(selectedOrder, snapshot.approvals) : null;
   const unauthenticated = !preview && /^HTTP (401|403):/.test(snapshot.errors.balances ?? "") && !snapshot.balances;
 
+  useClearWhenHidden(() => { if (passwordRef.current) passwordRef.current.value = ""; setPolicy(""); });
   async function refresh(api = client) {
     setLoading(true);
     const result = await loadWallet(api);
@@ -64,6 +70,7 @@ export function WalletApp({ preview, onExit }: { preview: boolean; onExit: () =>
     setSelectedOrderId((prior) => result.orders.some((item) => item.id === prior) ? prior : result.orders[0]?.id ?? "");
     setCorridorId((prior) => result.corridors.some((item) => item.id === prior) ? prior : result.corridors[0]?.id ?? "");
     setLoading(false);
+    return result;
   }
   useEffect(() => {
     let active = true;
@@ -79,8 +86,8 @@ export function WalletApp({ preview, onExit }: { preview: boolean; onExit: () =>
   }, [client, preview]);
   // The policy panel opens below the order; move focus there so keyboard and screen-reader users find it.
   useEffect(() => {
-    if (policy === "STEP_UP_REQUIRED") passwordRef.current?.focus();
-    else if (policy === "APPROVAL_REQUIRED") policyRef.current?.focus();
+    if (toolActive && policy === "STEP_UP_REQUIRED") passwordRef.current?.focus();
+    else if (toolActive && policy === "APPROVAL_REQUIRED") policyRef.current?.focus();
   }, [policy]);
   async function perform(action: () => Promise<void>) {
     setBusy(true); setError(""); setNotice("");
@@ -164,7 +171,7 @@ export function WalletApp({ preview, onExit }: { preview: boolean; onExit: () =>
     const order = selectedOrder;
     await perform(async () => {
       await client.post<Approval>("approvals/", { action: "remittance.submit", target_id: order.id, amount: order.send_amount, currency: order.send_currency, reason: approvalReason }, `approval:${order.id}`);
-      await refresh(); setNotice(t("wallet.notice.approvalRequested"));
+      setPolicy(""); await refresh(); setNotice(t("wallet.notice.approvalRequested"));
     });
   }
   async function stepUpAndSubmit() {
@@ -193,10 +200,11 @@ export function WalletApp({ preview, onExit }: { preview: boolean; onExit: () =>
     });
   }
 
-  return <div className="app connected wallet-app"><aside><a className="brand" href="#" onClick={(event) => { event.preventDefault(); onExit(); }}><span className="brand-icon">S</span>StudyFlow<span className="brand-dot">.</span></a><ModuleNav /><div className="journey-label">{t("wallet.side.label")}</div><nav aria-label={t("wallet.side.nav")}><a href="#wallet-balances">{t("wallet.side.balances")}</a><a href="#wallet-quote">{t("wallet.side.routes")}</a><a href="#wallet-order">{t("wallet.side.review")}</a><a href="#wallet-history">{t("wallet.side.history")}</a></nav><div className="sidebar-note"><strong>{t("wallet.side.noteTitle")}</strong><p>{t("wallet.side.noteText")}</p></div><button className="secondary" onClick={onExit}>{t("common.backToPlan")}</button></aside><div className="workspace"><header><span>{t("wallet.crumb")}</span><span className="avatar">ST</span></header><main><div className="section-heading"><div><span className="eyebrow">{t("wallet.side.label")}</span><h1>{t("wallet.title")}</h1><p>{t("wallet.intro")}</p></div></div><div className="preview-banner" role="status"><strong>{preview ? t("wallet.banner.preview") : t("common.simulatedMoney")}</strong><span>{preview ? t("wallet.banner.previewText") : t("wallet.banner.liveText")}</span></div>
+  const staleStatus = useToolRefresh(() => refresh());
+  const content = <>{staleStatus}<div className="section-heading"><div><span className="eyebrow">{t("wallet.side.label")}</span><h1>{t("wallet.title")}</h1><p>{t("wallet.intro")}</p></div></div><div className="preview-banner" role="status"><strong>{preview ? t("wallet.banner.preview") : t("common.simulatedMoney")}</strong><span>{preview ? t("wallet.banner.previewText") : t("wallet.banner.liveText")}</span></div>
     {preview && <div className="wallet-controls"><label htmlFor="wallet-scenario">{t("wallet.previewStatus")}</label><select id="wallet-scenario" value={scenario} onChange={(event) => setScenario(event.target.value as WalletPreviewScenario)}>{previewStates.map((value) => <option value={value} key={value}>{t(`wallet.preview.${value}`)}</option>)}</select></div>}
     {loading && <div className="activity" role="status"><span className="activity-dot" aria-hidden="true"/>{t("wallet.loading")}</div>}
-    {error && <div className="stale-banner" role="alert">{error}</div>}{notice && <div className="demo" role="status">{notice}</div>}
+    {error && !policy && <div className="stale-banner" role="alert">{error}</div>}{notice && <div className="demo" role="status">{notice}</div>}
     {unauthenticated && <section className="card wallet-panel" role="alert"><h2>{t("wallet.signIn.title")}</h2><p>{t("wallet.signIn.text")}</p><a className="primary" href={signInUrl}>{t("wallet.signIn.link")}</a></section>}
     <div className="wallet-toolbar"><button className="secondary" disabled={busy || loading} onClick={() => void refresh()}>{t("wallet.refreshFrom", { source: preview ? t("wallet.source.demo") : t("wallet.source.django") })}</button><span>{t("wallet.toolbarNote")}</span></div>
     <section id="wallet-balances" className="card wallet-panel"><div className="wallet-heading"><div><span className="eyebrow">{t("wallet.balances.eyebrow")}</span><h2>{t("wallet.balances.title")}</h2></div><span className="count">{snapshot.balances?.is_simulated ? t("wallet.balances.simulated") : t("wallet.balances.backendData")}</span></div>{snapshot.errors.balances && <p className="error" role="alert">{snapshot.errors.balances}</p>}{snapshot.balances?.balances.length ? <div className="wallet-balance-grid">{snapshot.balances.balances.map((row) => <article key={row.currency}><span>{row.currency}{row.is_home ? t("wallet.balances.home") : ""}</span><strong><Amount text={money(row.balance, row.currency)} /></strong><small>{t("wallet.balances.available", { amount: money(row.available_balance, row.currency) })}</small>{row.indicative_home_value && !row.is_home && <small>{t("wallet.balances.indicative", { amount: money(row.indicative_home_value, snapshot.balances!.home_currency) })}</small>}</article>)}</div> : !loading && <p>{t("wallet.balances.none")}</p>}</section>
@@ -205,9 +213,11 @@ export function WalletApp({ preview, onExit }: { preview: boolean; onExit: () =>
       {selectedOrder && <div className="wallet-review"><div className="wallet-heading"><div><span className="eyebrow">{t("wallet.order.authoritative")}</span><h3>{t("wallet.order.transfer", { id: selectedOrder.id.slice(0, 8) })}</h3></div><span className="calendar-pill">{selectedOrder.effective_status}</span></div><p>{describeStatus(selectedOrder)}</p>{approval && <p className="wallet-approval-status">{t("wallet.approval.label")} <strong>{approval.status}</strong>. {["PENDING", "APPROVED", "USED"].includes(approval.status) ? t(`wallet.approval.${approval.status}` as MessageKey) : t("wallet.approval.other")}{approval.status === "APPROVED" && selectedOrder.effective_status === "CREATED" && policy !== "STEP_UP_REQUIRED" && <> <button className="secondary" disabled={busy || preview} onClick={() => setPolicy("STEP_UP_REQUIRED")}>{t("wallet.approval.continue")}</button></>}</p>}<dl className="comparison-facts"><div><dt>{t("wallet.quote.send")}</dt><dd>{money(selectedOrder.send_amount, selectedOrder.send_currency)}</dd></div><div><dt>{t("wallet.order.recipient")}</dt><dd>{selectedOrder.recipient === "SELF" ? t("wallet.order.self") : snapshot.beneficiaries.find((item) => item.id === selectedOrder.beneficiary)?.name ?? t("wallet.order.beneficiary")}</dd></div><div><dt>{t("wallet.order.expectedReceipt")}</dt><dd>{money(selectedOrder.receive_amount, selectedOrder.receive_currency)}</dd></div><div><dt>{t("wallet.order.totalCost")}</dt><dd>{money(selectedOrder.total_cost, selectedOrder.send_currency)}</dd></div><div><dt>{t("wallet.order.arrival")}</dt><dd>{date(selectedOrder.expected_earliest)} – {date(selectedOrder.expected_latest)}</dd></div><div><dt>{t("wallet.order.deadline")}</dt><dd>{date(selectedOrder.deadline)}</dd></div></dl>{selectedOrder.failure_reason && <p className="error">{t("wallet.order.failure", { reason: selectedOrder.failure_reason })}</p>}
         <div className="wallet-actions"><button className="secondary" disabled={busy || preview} onClick={() => void loadOrder(selectedOrder.id)}>{t("wallet.order.refresh")}</button>{selectedOrder.effective_status === "CREATED" && <><label className="wallet-confirm"><input type="checkbox" checked={confirmed} onChange={(event) => setConfirmed(event.target.checked)}/>{t("wallet.order.confirmCheck")}</label><button className="primary" disabled={preview || busy || !confirmed} onClick={() => void submitOrder()}>{t("wallet.order.confirm")}</button></>}</div>
         {retrySubmit && selectedOrder.effective_status === "CREATED" && <div className="wallet-policy"><p>{t("wallet.order.retryText")}</p><button className="secondary" disabled={busy || preview} onClick={() => void submitOrder("", true)}>{t("wallet.order.retry")}</button></div>}
-        {policy === "APPROVAL_REQUIRED" && selectedOrder.effective_status === "CREATED" && <div className="wallet-policy" ref={policyRef} tabIndex={-1}><h4><TierBadge tier="T3"/> {t("wallet.policy.approvalTitle")}</h4><p>{t("wallet.policy.approvalText")}</p>{approval && <p>{t("wallet.policy.approvalStatus")} <strong>{approval.status}</strong> · {t("wallet.policy.expires", { date: stamp(approval.expires_at) })}</p>}{(!approval || ["REJECTED", "EXPIRED"].includes(approval.status)) && <><label>{t("wallet.policy.reason")}<input value={approvalReason} maxLength={500} onChange={(event) => setApprovalReason(event.target.value)}/></label><button className="secondary" disabled={busy || preview || !approvalReason.trim()} onClick={() => void requestApproval()}>{t("wallet.policy.request")}</button></>}</div>}
-        {policy === "STEP_UP_REQUIRED" && selectedOrder.effective_status === "CREATED" && <div className="wallet-policy"><h4><TierBadge tier="T2"/> {t("wallet.policy.stepUpTitle")}</h4><p>{t("wallet.policy.stepUpText")}</p><form onSubmit={(event) => { event.preventDefault(); void stepUpAndSubmit(); }}><label>{t("wallet.policy.password")}<input ref={passwordRef} type="password" autoComplete="current-password"/></label><button type="submit" className="primary" disabled={preview || busy}>{t("wallet.policy.submit")}</button></form></div>}
+        {policy === "APPROVAL_REQUIRED" && selectedOrder.effective_status === "CREATED" && <FocusDialog title={t("ws.confirm")} busy={busy} onClose={() => setPolicy("")}><p>{money(selectedOrder.send_amount, selectedOrder.send_currency)} · {selectedOrder.id.slice(0, 8)}</p>{error && <p role="alert" className="error">{error}</p>}<div className="wallet-policy" ref={policyRef} tabIndex={-1}><h4><TierBadge tier="T3"/> {t("wallet.policy.approvalTitle")}</h4><p>{t("wallet.policy.approvalText")}</p>{approval && <p>{t("wallet.policy.approvalStatus")} <strong>{approval.status}</strong> · {t("wallet.policy.expires", { date: stamp(approval.expires_at) })}</p>}{(!approval || ["REJECTED", "EXPIRED"].includes(approval.status)) && <><label>{t("wallet.policy.reason")}<input value={approvalReason} maxLength={500} onChange={(event) => setApprovalReason(event.target.value)}/></label><button className="secondary" disabled={busy || preview || !approvalReason.trim()} onClick={() => void requestApproval()}>{t("wallet.policy.request")}</button></>}</div>{retrySubmit && <button className="secondary" disabled={busy} onClick={() => void loadOrder(selectedOrder.id)}>{t("wallet.order.refresh")}</button>}<button className="secondary" disabled={busy} onClick={() => setPolicy("")}>{t("common.cancel")}</button></FocusDialog>}
+        {policy === "STEP_UP_REQUIRED" && selectedOrder.effective_status === "CREATED" && <FocusDialog title={t("ws.confirm")} busy={busy} onClose={() => setPolicy("")}><p>{money(selectedOrder.send_amount, selectedOrder.send_currency)} · {selectedOrder.id.slice(0, 8)}</p>{error && <p role="alert" className="error">{error}</p>}<div className="wallet-policy"><h4><TierBadge tier="T2"/> {t("wallet.policy.stepUpTitle")}</h4><p>{t("wallet.policy.stepUpText")}</p><form onSubmit={(event) => { event.preventDefault(); void stepUpAndSubmit(); }}><label>{t("wallet.policy.password")}<input ref={passwordRef} type="password" autoComplete="current-password"/></label><button type="submit" className="primary" disabled={preview || busy}>{t("wallet.policy.submit")}</button></form></div>{retrySubmit && <button className="secondary" disabled={busy} onClick={() => void loadOrder(selectedOrder.id)}>{t("wallet.order.refresh")}</button>}<button className="secondary" disabled={busy} onClick={() => setPolicy("")}>{t("common.cancel")}</button></FocusDialog>}
       </div>}</section>
+    <WalletExtras client={client} preview={preview} onChanged={() => void refresh()} />
     <section id="wallet-history" className="card wallet-panel"><span className="eyebrow">{t("wallet.history.eyebrow")}</span><h2>{t("wallet.history.title")}</h2>{snapshot.errors.orders && <p className="error" role="alert">{snapshot.errors.orders}</p>}{snapshot.orders.length ? <div className="wallet-history"><ul>{snapshot.orders.map((item) => <li key={item.id}><button className={selectedOrder?.id === item.id ? "selected" : ""} onClick={() => void loadOrder(item.id)} disabled={busy}>{purposeName(item.purpose)} · {money(item.send_amount, item.send_currency)}<span>{item.effective_status}</span></button></li>)}</ul>{selectedOrder && <div><h3>{t("wallet.history.timeline")}</h3><ol>{selectedOrder.history.map((event) => <li key={`${event.version}-${event.to}`}><strong>{event.to}</strong><span>{stamp(event.at)}</span>{event.note && <small>{event.note}</small>}</li>)}</ol></div>}</div> : <p>{t("wallet.history.none")}</p>}</section>
-  </main><footer>{t("wallet.footer")}<span>{preview ? t("wallet.footer.preview") : t("wallet.footer.live")}</span></footer></div></div>;
+  </>;
+  return <ModulePresentation className="wallet-app" fullPage={(<div className="app connected wallet-app"><aside><a className="brand" href="#" onClick={(event) => { event.preventDefault(); onExit(); }}><span className="brand-icon">S</span>StudyFlow<span className="brand-dot">.</span></a><ModuleNav /><div className="journey-label">{t("wallet.side.label")}</div><nav aria-label={t("wallet.side.nav")}><a href="#wallet-balances">{t("wallet.side.balances")}</a><a href="#wallet-quote">{t("wallet.side.routes")}</a><a href="#wallet-order">{t("wallet.side.review")}</a><a href="#wallet-history">{t("wallet.side.history")}</a></nav><div className="sidebar-note"><strong>{t("wallet.side.noteTitle")}</strong><p>{t("wallet.side.noteText")}</p></div><button className="secondary" onClick={onExit}>{t("common.backToPlan")}</button></aside><div className="workspace"><header><span>{t("wallet.crumb")}</span><span className="avatar">ST</span></header><main>{content}</main><footer>{t("wallet.footer")}<span>{preview ? t("wallet.footer.preview") : t("wallet.footer.live")}</span></footer></div></div>)}>{content}</ModulePresentation>;
 }

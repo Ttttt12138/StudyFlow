@@ -1,21 +1,19 @@
-import { WalletApp } from "./wallet/WalletApp";
-import { AgentApp } from "./agent/AgentApp";
-import { TrustApp } from "./trust/TrustApp";
+import { StudentWorkspace } from "./workspace/StudentWorkspace";
+import { OperationsApp } from "./operations/OperationsApp";
+import { SponsorApp } from "./family/SponsorApp";
+import { VerifyApp } from "./trust/VerifyApp";
 import { SimulatedStrip } from "./services/SimulatedStrip";
 import { AppBackdrop } from "./services/AppBackdrop";
+import { SignInDialog } from "./services/SignInDialog";
 import { ModuleNavContext, type Module } from "./services/ModuleNav";
 import { useI18n } from "./i18n";
+import { TourBar, tourStops, type TourTarget } from "./services/Tour";
+import { LegacyApp } from "./legacy/LegacyApp";
 import "./student-start.css";
 import "./sprint4.css";
-import React, { Suspense, lazy, useState } from 'react';
+import React, { Suspense, lazy, useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { Confirmation } from './confirmation/Confirmation';
-import { loadAdmission } from './confirmation/adapter';
-import type { Review, Scenario } from './confirmation/types';
-import { Expenses } from './expenses/Expenses';
-import { Budget } from './budget/Budget';
-import { ConnectedApp, type InitialPreview } from './backend/ConnectedApp';
-import type { ExpenseReview } from './expenses/types';
+import type { PreviewStage } from './plan/preview';
 import './styles.css';
 import '@fontsource-variable/space-grotesk';
 import '@fontsource/chakra-petch/400.css';
@@ -23,48 +21,91 @@ import '@fontsource/chakra-petch/500.css';
 import '@fontsource/chakra-petch/600.css';
 import '@fontsource/jetbrains-mono/400.css';
 import './theme.css';
+import './services/ia.css';
 
-const stepKeys = ['demo.step.confirm', 'demo.step.expenses', 'demo.step.budget', 'demo.step.funding', 'demo.step.application'] as const;
-function App() {
- const { lang, t } = useI18n();
- const steps = stepKeys.map(key => t(key));
- const [step, setStep] = useState(0);
- const [scenario, setScenario] = useState<Scenario>('complete');
- const [review, setReview] = useState<Review>({ corrections: {}, confirmed: false });
- const [expenseReview, setExpenseReview] = useState<ExpenseReview>({ expenses: [], confirmed: false });
- const admission = loadAdmission(scenario, lang);
- function changeConfirmation(next: Review) { setReview(next); setExpenseReview(previous => ({ ...previous, confirmed: false })); }
- function changeScenario(next: Scenario) { setScenario(next); setReview({ corrections: {}, confirmed: false }); setExpenseReview({ expenses: [], confirmed: false }); setStep(0); }
- return <div className="app"><aside><a className="brand" href="#" onClick={event => { event.preventDefault(); setStep(0); }}><span className="brand-icon">S</span>StudyFlow<span className="brand-dot">.</span></a><div className="journey-label">{t('demo.journeyLabel')}</div><nav aria-label={t('demo.stepsNav')}>{steps.map((name, i) => <button key={stepKeys[i]} aria-current={step === i ? 'step' : undefined} disabled={i > 0 && !review.confirmed || i > 1 && !expenseReview.confirmed} onClick={() => setStep(i)} className={step === i ? 'active' : ''}><span className="step-number">{i === 0 && review.confirmed || i === 1 && expenseReview.confirmed ? '✓' : `0${i + 1}`}</span><span>{name}</span></button>)}</nav><div className="sidebar-note"><span>○</span><strong>{t('demo.sidebarTitle')}</strong><p>{t('demo.sidebarText')}</p></div><div className="draft-label">{t('demo.draftLabel')}</div></aside><div className="workspace"><header><span>{t('demo.headerTitle')} <span className="header-slash">/</span> {steps[step]}</span><span className="avatar" aria-label={t('demo.studentProfile')}>ST</span></header><main><div className="demo-controls"><label htmlFor="scenario">{t('demo.scenario')}</label><select id="scenario" value={scenario} onChange={event => changeScenario(event.target.value as Scenario)}><option value="complete">{t('demo.scenario.complete')}</option><option value="missing">{t('demo.scenario.missing')}</option><option value="conflict">{t('demo.scenario.conflict')}</option></select><span>{t('demo.scenarioReset')}</span></div>{step === 0 ? <Confirmation key={scenario} admission={admission} review={review} onChange={changeConfirmation} onContinue={() => setStep(1)}/> : step === 1 ? <Expenses admission={admission} admissionReview={review} review={expenseReview} onChange={setExpenseReview} onBack={() => setStep(0)} onContinue={() => setStep(2)}/> : step === 2 ? <Budget admission={admission} admissionReview={review} expenseReview={expenseReview} onBack={() => setStep(1)}/> : <><span className="eyebrow">{t('demo.stepOf', { n: `0${step + 1}` })}</span><h1>{steps[step]}</h1><section className="card placeholder"><span className="placeholder-icon">◇</span><h2>{t('demo.placeholderTitle')}</h2><p>{t('demo.placeholderText')}</p><p>{t('demo.placeholderScope')}</p><button className="primary" onClick={() => setStep(1)}>{t('demo.backToExpensesPlain')}</button></section></>}</main><footer>{t('common.footer')}<span>{t('demo.footerNote')}</span></footer></div></div>;
-}
-type Service = "wallet" | "agent" | "trust";
-// ?wallet=1, ?agent=1, ?trust=1 open a signed-in service; =preview opens its read-only synthetic preview.
+type Service = Exclude<Module, "home">;
+const services = ["wallet", "payments", "agent", "trust", "ops", "loans", "insights", "family", "copilot", "sponsor", "verify"] as const;
+// ?wallet=1, ?payments=1, … open a signed-in service; =preview opens its read-only synthetic preview.
+// ?sponsor=1 (family member confirming support) and ?verify=1 (checking a credit statement) need no sign-in.
+// /ops is the operations console's own address, separate from the student pages.
 function serviceFromUrl(): { kind: Service; preview: boolean } | null {
+ if (/^\/ops\/?$/.test(window.location.pathname)) return { kind: "ops", preview: new URLSearchParams(window.location.search).get("ops") === "preview" };
  const query = new URLSearchParams(window.location.search);
- for (const kind of ["wallet", "agent", "trust"] as const) if (query.has(kind)) return { kind, preview: query.get(kind) === "preview" };
+ for (const kind of services) if (query.has(kind)) return { kind, preview: query.get(kind) === "preview" };
  return null;
 }
-// ?journey=preview&step=budget|funding|calendar opens the five-step tour read-only at that step (linked from /intro).
-const journeySteps: Record<string, InitialPreview> = { confirm: { step: 0, calendar: false }, expenses: { step: 1, calendar: false }, budget: { step: 2, calendar: false }, calendar: { step: 2, calendar: true }, funding: { step: 3, calendar: false }, application: { step: 4, calendar: false } };
-function journeyFromUrl(): InitialPreview | null {
+// The home page is the agent-first planner (src/plan). ?plan=preview[&stage=school] opens its recorded
+// preview; old ?journey=preview links land on the same preview.
+function homeFromUrl(): { preview: boolean; stage: PreviewStage } {
  const query = new URLSearchParams(window.location.search);
- if (query.get("journey") !== "preview") return null;
- return journeySteps[query.get("step") ?? ""] ?? journeySteps.confirm;
+ const preview = query.get("plan") === "preview" || query.get("journey") === "preview";
+ return { preview, stage: query.get("stage") === "school" ? "school" : "plan" };
+}
+const homeUrl = (preview: boolean, stage: PreviewStage) => preview ? `/?plan=preview${stage === "school" ? "&stage=school" : ""}` : "/";
+// ?tour=1 starts the guided demo at its first stop (or ?tour=N at stop N).
+function tourFromUrl(): number | null {
+ const value = new URLSearchParams(window.location.search).get("tour");
+ if (value === null) return null;
+ const index = Number(value) - 1;
+ return Number.isInteger(index) && index >= 0 && index < tourStops.length ? index : 0;
 }
 function Root() {
+ const [tour, setTour] = useState(tourFromUrl);
+ const [initial] = useState(() => {
+  const stop = tour === null ? null : tourStops[tour].target;
+  const home = stop?.kind === "home" ? { preview: true, stage: stop.stage } : homeFromUrl();
+  const service = stop && stop.kind !== "home" ? { kind: stop.kind, preview: true } : serviceFromUrl();
+  if (stop) history.replaceState(null, "", stop.kind === "home" ? homeUrl(true, stop.stage) : `/?${stop.kind}=preview`);
+  return { home, service };
+ });
+ const [home, setHome] = useState(initial.home);
+ const [service, setService] = useState<{ kind: Service; preview: boolean } | null>(initial.service);
+ useEffect(() => {
+  const sync = () => { setService(serviceFromUrl()); setHome(homeFromUrl()); };
+  window.addEventListener("popstate", sync);
+  return () => window.removeEventListener("popstate", sync);
+ }, []);
+
+ const open = (kind: Service, preview: boolean) => {
+  setService({ kind, preview });
+  history.replaceState(null, "", kind === "ops" ? `/ops${preview ? "?ops=preview" : ""}` : `/?${kind}=${preview ? "preview" : "1"}`);
+  window.dispatchEvent(new PopStateEvent("popstate"));
+  window.scrollTo(0, 0);
+ };
+ const toHome = (preview: boolean, stage: PreviewStage = "plan") => {
+  setHome({ preview, stage });
+  setService(null);
+  history.replaceState(null, "", homeUrl(preview, stage));
+  window.dispatchEvent(new PopStateEvent("popstate"));
+  window.scrollTo(0, 0);
+ };
+ const exit = () => toHome(service?.preview ?? home.preview);
+ const go = (target: TourTarget) => {
+  if (target.kind === "home") toHome(true, target.stage); else open(target.kind, true);
+ };
+ const goTour = (index: number) => { setTour(index); go(tourStops[index].target); };
+ const preview = service ? service.preview : home.preview;
+ const current: Module = service?.kind ?? "home";
+ const moduleNav = {
+  current, preview,
+  open: (module: Module, asPreview: boolean) => {
+    if (module === "home") toHome(asPreview); else open(module, asPreview);
+  },
+ };
+ return <ModuleNavContext.Provider value={moduleNav}><AppBackdrop/><SignInDialog/><SimulatedStrip/>
+  {(!service || !["ops", "sponsor", "verify"].includes(service.kind)) && <StudentWorkspace key={String(preview)} preview={preview} onExternal={(kind, mode) => kind === "home" ? toHome(mode) : open(kind, mode)} />}
+  {service?.kind==="sponsor"&&<SponsorApp preview={service.preview} onExit={exit}/>}
+  {service?.kind==="verify"&&<VerifyApp preview={service.preview} onExit={exit}/>}
+  {service?.kind==="ops"&&<OperationsApp preview={service.preview} onExit={exit}/>}
+  {tour !== null && <TourBar index={tour} onGo={goTour} onExtra={go} onExit={() => setTour(null)}/>}
+ </ModuleNavContext.Provider>;
+}
+// ?legacy=1 keeps the original client-side five-step demo, outside the main navigation.
+function Legacy() {
  const { t } = useI18n();
- const [connected,setConnected]=useState(true);
- const [initialPreview]=useState(()=>{const preview=journeyFromUrl();if(preview)history.replaceState(null,"",window.location.pathname);return preview;});
- const [service,setService]=useState(serviceFromUrl);
- const [journeyStarted,setJourneyStarted]=useState(()=>serviceFromUrl()===null);
- const open=(kind:Service)=>(preview:boolean)=>{setService({kind,preview});history.replaceState(null,"",`${window.location.pathname}?${kind}=${preview?"preview":"1"}`);};
- const exit=()=>{setJourneyStarted(true);setService(null);history.replaceState(null,"",window.location.pathname);};
- // Service pages switch between modules in place, keeping the session's preview or signed-in mode.
- const moduleNav={current:(service?.kind??"journey") as Module,preview:service?.preview??false,open:(module:Module,preview:boolean)=>{if(module==="journey")exit();else{open(module)(preview);window.scrollTo(0,0);}}};
- // Keep the saved journey mounted while visiting a service so local edits/retry identities survive.
- return <ModuleNavContext.Provider value={moduleNav}><AppBackdrop/><SimulatedStrip/><div hidden={service!==null}>{journeyStarted && (connected?<ConnectedApp initialPreview={initialPreview} onDemo={()=>setConnected(false)} onWallet={open("wallet")} onAgent={open("agent")} onTrust={open("trust")}/>:<><button className="backend-entry" onClick={()=>setConnected(true)}>{t("demo.useSavedPlan")}</button><App/></>)}</div>{service?.kind==="wallet"&&<WalletApp preview={service.preview} onExit={exit}/>}{service?.kind==="agent"&&<AgentApp preview={service.preview} onExit={exit}/>}{service?.kind==="trust"&&<TrustApp preview={service.preview} onExit={exit}/>}</ModuleNavContext.Provider>;
+ return <><AppBackdrop/><SimulatedStrip/><a className="backend-entry" href="/">{t("demo.useSavedPlan")}</a><LegacyApp/></>;
 }
 // /intro is the product introduction; it loads as its own chunk so the app bundle stays unchanged.
 const IntroApp = lazy(() => import('./intro/IntroApp').then(module => ({ default: module.IntroApp })));
 const isIntro = /^\/intro\/?$/.test(window.location.pathname);
-createRoot(document.getElementById('root')!).render(<React.StrictMode>{isIntro ? <Suspense fallback={null}><IntroApp/></Suspense> : <Root/>}</React.StrictMode>);
+createRoot(document.getElementById('root')!).render(<React.StrictMode>{isIntro ? <Suspense fallback={null}><IntroApp/></Suspense> : new URLSearchParams(window.location.search).has("legacy") ? <Legacy/> : <Root/>}</React.StrictMode>);

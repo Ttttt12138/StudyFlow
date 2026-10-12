@@ -1,3 +1,6 @@
+import { FocusDialog } from "../workspace/FocusDialog";
+import { useToolRefresh, useToolActive, useClearWhenHidden, useWorkspace } from "../workspace/context";
+import { ModulePresentation } from "../workspace/ModulePresentation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ModuleNav } from "../services/ModuleNav";
 import { formatMoney } from "../backend/presenters";
@@ -25,6 +28,7 @@ function errorCode(error: unknown) {
 
 export function AgentApp({ preview, onExit }: { preview: boolean; onExit: () => void }) {
   const { lang, t } = useI18n();
+  const toolActive = useToolActive();
   const client = useMemo<WalletClient>(() => preview ? createAgentPreview(lang) : new SessionWalletClient(), [preview, lang]);
   const [goal, setGoal] = useState("");
   const [session, setSession] = useState<AgentSession | null>(null);
@@ -41,6 +45,25 @@ export function AgentApp({ preview, onExit }: { preview: boolean; onExit: () => 
   const passwordRef = useRef<HTMLInputElement | null>(null);
   const resultRef = useRef<HTMLElement | null>(null);
 
+  const workspace = useWorkspace();
+  const targetSession = workspace?.target?.kind === "agent" ? workspace.target.sessionId : undefined;
+  const targetPending = workspace?.target?.kind === "agent" ? workspace.target.pendingId : undefined;
+  useClearWhenHidden(() => { setConfirming(null); setApprovalFor(null); if (passwordRef.current) passwordRef.current.value = ""; });
+  useEffect(() => {
+    if (!toolActive || !targetSession) return;
+    let alive = true;
+    setError(""); setSession(null);
+    client.get<AgentSession>(`agent/sessions/${targetSession}/`).then(value => {
+      if (alive) setSession(value);
+    }).catch(reason => { if (alive) setError(reason instanceof Error ? reason.message : String(reason)); });
+    return () => { alive = false; };
+  }, [toolActive, targetSession, targetPending, client]);
+  useEffect(() => {
+    if (toolActive && targetPending && session?.id === targetSession) {
+      const item = document.getElementById(`proposal-${targetPending}`);
+      item?.scrollIntoView({ block: "nearest" });
+    }
+  }, [session, targetPending, targetSession, toolActive]);
   const describe = useCallback((err: unknown) => {
     if (err instanceof WalletApiError) {
       const code = err.code;
@@ -55,7 +78,7 @@ export function AgentApp({ preview, onExit }: { preview: boolean; onExit: () => 
     return err instanceof Error ? err.message : t("agent.err.generic");
   }, [t]);
 
-  const loadSideData = useCallback(async () => {
+  const loadSideData = useCallback(async (strict = false) => {
     const [sessions, approvalRows] = await Promise.allSettled([
       client.get<Page<AgentSession>>("agent/sessions/"),
       getAll<Approval>(client, "approvals/"),
@@ -63,6 +86,7 @@ export function AgentApp({ preview, onExit }: { preview: boolean; onExit: () => 
     if (sessions.status === "fulfilled") setHistory(sessions.value.results);
     else if (sessions.reason instanceof WalletApiError && [401, 403].includes(sessions.reason.status)) setSignedOut(true);
     if (approvalRows.status === "fulfilled") setApprovals(approvalRows.value);
+    if (strict && (sessions.status === "rejected" || approvalRows.status === "rejected")) throw new Error("Session refresh failed");
     return sessions.status === "fulfilled" ? sessions.value.results : [];
   }, [client]);
 
@@ -89,7 +113,7 @@ export function AgentApp({ preview, onExit }: { preview: boolean; onExit: () => 
       setSession(created);
       setGoal("");
       await loadSideData();
-      requestAnimationFrame(() => resultRef.current?.focus());
+      requestAnimationFrame(() => { if (resultRef.current?.getClientRects().length) resultRef.current.focus(); });
     } catch (err) {
       if (err instanceof WalletApiError && [401, 403].includes(err.status) && !err.code) setSignedOut(true);
       setError(describe(err));
@@ -108,6 +132,7 @@ export function AgentApp({ preview, onExit }: { preview: boolean; onExit: () => 
       try {
         const decided = await client.post<PendingAction>(`agent/pending-actions/${action.id}/confirm/`, {},
           `agent-confirm:${action.id}`, { "X-Step-Up-Token": grant.token });
+        setSession(current => current && ({ ...current, pending_actions: current.pending_actions.map(item => item.id === decided.id ? decided : item) }));
         setConfirming(null);
         // Confirming a proposal whose quote has expired executes nothing; the order result says so.
         const outcome = String(decided.result?.effective_status ?? decided.result?.status ?? "");
@@ -170,23 +195,11 @@ export function AgentApp({ preview, onExit }: { preview: boolean; onExit: () => 
     return null;
   }
 
-  return (
-    <div className="app connected service-app agent-app">
-      <aside>
-        <a className="brand" href="#" onClick={(event) => { event.preventDefault(); onExit(); }}><span className="brand-icon">S</span>StudyFlow<span className="brand-dot">.</span></a>
-        <ModuleNav />
-        <div className="journey-label">{t("agent.side.label")}</div>
-        <nav aria-label={t("agent.side.nav")}>
-          <a href="#agent-ask">{t("agent.side.ask")}</a>
-          <a href="#agent-result">{t("agent.side.result")}</a>
-          <a href="#agent-history">{t("agent.side.history")}</a>
-        </nav>
-        <div className="sidebar-note"><strong>{t("agent.side.noteTitle")}</strong><p>{t("agent.side.noteText")}</p></div>
-        <button className="secondary" onClick={onExit}>{t("common.backToPlan")}</button>
-      </aside>
-      <div className="workspace">
-        <header><span>StudyFlow / {t("agent.title")}</span><span className="avatar">ST</span></header>
-        <main>
+  const staleStatus = useToolRefresh(async () => {
+    if (session) setSession(await client.get<AgentSession>(`agent/sessions/${session.id}/`));
+    await loadSideData(true);
+  });
+  const content = <>{staleStatus}
           <div className="section-heading"><div>
             <span className="eyebrow">{t("agent.eyebrow")}</span>
             <h1>{t("agent.title")}</h1>
@@ -251,7 +264,7 @@ export function AgentApp({ preview, onExit }: { preview: boolean; onExit: () => 
                     const approval = approvalOf(action);
                     const open = action.status === "PENDING" && new Date(action.expires_at).getTime() > Date.now();
                     const details = action.arguments ?? {};
-                    return <article key={action.id} className={`agent-proposal proposal-${action.status.toLowerCase()}`} aria-label={actionName(action.action)}>
+                    return <article id={`proposal-${action.id}`} key={action.id} className={`agent-proposal proposal-${action.status.toLowerCase()}`} aria-label={actionName(action.action)}>
                       <div className="agent-proposal-head">
                         <div><TierBadge tier={approval || approvalFor === action.id ? "T3" : "T2"} /> <strong>{actionName(action.action)}</strong></div>
                         <span className={`status-chip status-${action.status.toLowerCase()}`}>{t(`agent.pending.${action.status}` as MessageKey)}</span>
@@ -274,7 +287,7 @@ export function AgentApp({ preview, onExit }: { preview: boolean; onExit: () => 
                         <button className="secondary" disabled={busy || preview} onClick={() => void reject(action)}>{t("agent.proposals.reject")}</button>
                         <button className="secondary" disabled={busy} onClick={() => void loadSideData()}>{t("agent.approval.refresh")}</button>
                       </div>}
-                      {open && confirming === action.id && <form className="service-policy" onSubmit={(event) => { event.preventDefault(); void confirm(action); }}>
+                      {open && confirming === action.id && <FocusDialog title={t("ws.confirm")} busy={busy} onClose={() => setConfirming(null)}><p>{formatMoney(action.amount, action.currency)} · {action.target_id.slice(0, 8)}</p><form className="service-policy" onSubmit={(event) => { event.preventDefault(); void confirm(action); }}>
                         <h4><TierBadge tier="T2" /> {t("agent.stepUp.title")}</h4>
                         <p>{t("agent.stepUp.text", { amount: formatMoney(action.amount, action.currency) })}</p>
                         {error && <p className="error" role="alert">{error}</p>}
@@ -283,8 +296,8 @@ export function AgentApp({ preview, onExit }: { preview: boolean; onExit: () => 
                           <button type="submit" className="primary" disabled={busy || preview}>{t("agent.stepUp.submit")}</button>
                           <button type="button" className="secondary" disabled={busy} onClick={() => setConfirming(null)}>{t("common.cancel")}</button>
                         </div>
-                      </form>}
-                      {open && approvalFor === action.id && <form className="service-policy" onSubmit={(event) => { event.preventDefault(); void requestApproval(action); }}>
+                      </form></FocusDialog>}
+                      {open && approvalFor === action.id && <FocusDialog title={t("ws.confirm")} busy={busy} onClose={() => setApprovalFor(null)}><p>{formatMoney(action.amount, action.currency)} · {action.target_id.slice(0, 8)}</p><form className="service-policy" onSubmit={(event) => { event.preventDefault(); void requestApproval(action); }}>
                         <h4><TierBadge tier="T3" /> {t("agent.approval.title")}</h4>
                         <p>{t("agent.approval.text")}</p>
                         {error && <p className="error">{error}</p>}
@@ -293,7 +306,7 @@ export function AgentApp({ preview, onExit }: { preview: boolean; onExit: () => 
                           <button type="submit" className="primary" disabled={busy || preview || !reason.trim()}>{t("agent.approval.submit")}</button>
                           <button type="button" className="secondary" disabled={busy} onClick={() => setApprovalFor(null)}>{t("common.cancel")}</button>
                         </div>
-                      </form>}
+                      </form></FocusDialog>}
                     </article>;
                   })}
                 </div>}
@@ -329,9 +342,24 @@ export function AgentApp({ preview, onExit }: { preview: boolean; onExit: () => 
               </ul>}
             </div>
           </section>
-        </main>
+        </>;
+  return <ModulePresentation className="agent-app" fullPage={(<div className="app connected service-app agent-app">
+      <aside>
+        <a className="brand" href="#" onClick={(event) => { event.preventDefault(); onExit(); }}><span className="brand-icon">S</span>StudyFlow<span className="brand-dot">.</span></a>
+        <ModuleNav />
+        <div className="journey-label">{t("agent.side.label")}</div>
+        <nav aria-label={t("agent.side.nav")}>
+          <a href="#agent-ask">{t("agent.side.ask")}</a>
+          <a href="#agent-result">{t("agent.side.result")}</a>
+          <a href="#agent-history">{t("agent.side.history")}</a>
+        </nav>
+        <div className="sidebar-note"><strong>{t("agent.side.noteTitle")}</strong><p>{t("agent.side.noteText")}</p></div>
+        <button className="secondary" onClick={onExit}>{t("common.backToPlan")}</button>
+      </aside>
+      <div className="workspace">
+        <header><span>StudyFlow / {t("agent.title")}</span><span className="avatar">ST</span></header>
+        <main>{content}</main>
         <footer>{t("common.footer")}<span>{t("common.simulatedFooter")}</span></footer>
       </div>
-    </div>
-  );
+    </div>)}>{content}</ModulePresentation>;
 }

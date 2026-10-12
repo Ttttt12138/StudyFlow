@@ -1,0 +1,27 @@
+/* Spending insights (src/insights/InsightsApp.tsx). */
+.insights-upload{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0 14px;align-items:end}
+.insights-upload .service-field select{width:100%;border:1px solid var(--line);border-radius:6px;background:var(--surface-1);padding:10px 12px;font:inherit;font-size:13px;color:inherit}
+.insights-upload .service-field input[type=file]{padding:7px 8px;min-width:0}
+.insights-upload .service-actions{margin:10px 0}
+.insights-review{border-top:1px solid var(--line);margin-top:14px}
+.insights-check{display:inline-flex;align-items:center;gap:6px;font-size:12px;white-space:nowrap}
+.insights-flagged td{background:color-mix(in srgb,var(--warn) 7%,transparent)}
+.insights-amount{white-space:nowrap;font-variant-numeric:tabular-nums}
+.service-table td .status-chip + .insights-check{display:flex;margin-top:6px}
+.insights-issues ul{margin:6px 0 0;padding-left:18px}
+.insights-coverage{border:1px solid var(--line);border-radius:8px;padding:6px 14px 10px;margin:10px 0;min-width:0}
+.insights-coverage legend{font-size:12px;font-weight:650;padding:0 6px}
+.insights-dates{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0 14px}
+.insights-briefing{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:13px;margin:0 0 6px}
+.insights-filters{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px}
+.insights-small{padding:5px 10px;font-size:12px}
+.insights-decide{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.insights-decide select{border:1px solid var(--line);border-radius:6px;background:var(--surface-1);padding:5px 8px;font:inherit;font-size:12px;color:inherit;max-width:100%}
+.insights-risks{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.insights-risk{border:1px solid color-mix(in srgb,var(--danger) 40%,transparent);border-radius:8px;padding:12px 14px;background:var(--surface-1)}
+.insights-risk.risk-data_stale,.insights-risk.risk-sponsor_delayed{border-color:color-mix(in srgb,var(--warn) 45%,transparent)}
+.service-card-body .insights-risk h3{margin:0 0 6px;font-size:14px}
+.insights-risk p{margin:0 0 6px;font-size:13px}
+.insights-resolved{margin-top:12px;font-size:13px}
+.insights-resolved summary{cursor:pointer;color:var(--text-2)}
+.insights-app .service-alert .activity-dot{display:inline-block;margin-right:8px;vertical-align:middle}

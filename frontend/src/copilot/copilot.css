@@ -1,0 +1,31 @@
+.copilot-forms,.copilot-cards,.copilot-layers{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))}
+.copilot-form,.copilot-card,.copilot-layer,.copilot-plan,.copilot-applied{border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:0;background:var(--surface-1);min-width:0;display:grid;gap:8px;align-content:start}
+.copilot-form legend{font-weight:700;padding:0 4px}
+.copilot-form h3,.copilot-card h3,.copilot-layer h3,.copilot-plan h3,.copilot-applied h3{margin:4px 0 0;font-size:15px;overflow-wrap:anywhere}
+.copilot-app h4{margin:6px 0 0;font-size:13px}
+.copilot-field{display:grid;gap:4px;font-size:12px;font-weight:600;min-width:0}
+.copilot-field input,.copilot-field select{width:100%;min-width:0;max-width:100%;border:1px solid var(--line);border-radius:6px;background:var(--surface-1);padding:8px 10px;font:inherit;font-size:13px;color:var(--text)}
+.copilot-row{display:grid;gap:8px;border-top:1px dashed var(--line);padding-top:8px;grid-template-columns:repeat(auto-fit,minmax(min(100%,130px),1fr));align-items:end}
+.copilot-current{margin:0;font-size:12px;color:var(--text-2);grid-column:1/-1}
+.copilot-loan{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(min(100%,130px),1fr))}
+.copilot-problems{margin:0;padding-left:18px;font-size:13px}
+.copilot-delta{font-size:12px;font-weight:650}
+.copilot-better{color:var(--ok)}
+.copilot-worse{color:var(--danger)}
+.copilot-same{color:var(--text-2)}
+.copilot-table td,.copilot-table th{vertical-align:top}
+.copilot-stale{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.copilot-conditions,.copilot-checklist{margin:0;padding-left:18px;display:grid;gap:4px;font-size:13px}
+.copilot-bars{list-style:none;margin:0;padding:0;display:grid;gap:4px;font-size:12px}
+.copilot-bars li{display:grid;grid-template-columns:62px minmax(0,1fr) auto;gap:8px;align-items:center}
+.copilot-bar{height:10px;border-radius:5px;background:var(--surface-2);overflow:hidden}
+.copilot-bar span{display:block;height:100%;background:var(--accent)}
+.copilot-bar span.copilot-bar-negative{background:var(--danger)}
+.copilot-bar-value{font-variant-numeric:tabular-nums}
+.copilot-details summary{cursor:pointer;color:var(--accent);font-weight:600;font-size:13px}
+.copilot-details pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:11px;max-height:300px;overflow:auto}
+.copilot-recheck{display:grid;gap:8px;grid-template-columns:minmax(0,1fr) auto;align-items:end}
+.copilot-trace{grid-template-columns:minmax(0,1fr) auto;align-items:end}
+.copilot-unread strong{color:var(--text)}
+.copilot-app .service-title-row{flex-wrap:wrap}
+.copilot-app code{overflow-wrap:anywhere}

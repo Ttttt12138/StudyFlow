@@ -67,7 +67,7 @@ export function IntroApp() {
             <p className="intro-lede">{t("intro.hero.lede")}</p>
           </div>
           <div className="intro-hero-cta">
-            <a className="intro-pill" href="/">{t("intro.hero.start")}</a>
+            <a className="intro-pill" href="/?tour=1">{t("intro.hero.start")}</a>
             <a className="intro-pill intro-pill-ghost" href="#features">{t("intro.hero.explore")}</a>
           </div>
         </section>

@@ -1,0 +1,16 @@
+.family-stack{display:grid;gap:16px}
+.family-item{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:var(--surface-1);min-width:0}
+.family-item h3{margin:0;font-size:15px;overflow-wrap:anywhere}
+.family-item .comparison-facts{margin:10px 0}
+.family-item code,.family-app dd{overflow-wrap:anywhere}
+.family-form{grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr))}
+.family-form .family-wide{grid-column:1/-1}
+.family-form input,.family-form select,.family-paste input{width:100%;min-width:0}
+.family-paste{grid-template-columns:minmax(0,1fr) auto;align-items:end}
+.family-steps{list-style:none;display:flex;flex-wrap:wrap;gap:6px;padding:0;margin:8px 0;counter-reset:step}
+.family-steps li{counter-increment:step;font-size:12px;border:1px solid var(--line);border-radius:12px;padding:3px 10px;color:var(--text-2)}
+.family-steps li::before{content:counter(step) ". "}
+.family-steps li.done{color:var(--accent)}
+.family-steps li.current{color:var(--text);border-color:var(--accent);font-weight:650}
+.family-how{margin:8px 0;padding-left:20px;display:grid;gap:6px}
+@media (max-width:560px){.family-paste{grid-template-columns:minmax(0,1fr)}}

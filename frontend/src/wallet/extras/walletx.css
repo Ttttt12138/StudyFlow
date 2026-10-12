@@ -1,0 +1,13 @@
+.walletx .wallet-quote-grid{margin-bottom:14px}
+.walletx .wallet-review dl{margin:12px 0}
+.walletx .service-policy,.walletx .service-notice,.walletx .service-alert{margin:12px 0}
+.walletx-sub{margin-top:24px!important}
+.walletx-recent{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+.walletx-recent li{border:1px solid var(--line);border-radius:8px;background:var(--surface-1);padding:10px 14px;display:grid;gap:3px;font-size:13px;min-width:0;overflow-wrap:anywhere}
+.walletx-recent span{font-size:12px;color:var(--text-2)}
+.walletx-filter{max-width:320px;margin:12px 0}
+.walletx-ledger .num{text-align:right;white-space:nowrap}
+.walletx-ledger .walletx-debit{color:var(--text)}
+.walletx-ledger .walletx-credit{color:var(--accent)}
+.walletx-note{font-size:12px;color:var(--text-2);margin-top:12px}
+@media(max-width:650px){.walletx-filter{max-width:none}}

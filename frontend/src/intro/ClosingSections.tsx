@@ -118,7 +118,7 @@ function StartFinale() {
       <p className="intro-finale-lede">{t("intro.start.title")} {t("intro.start.lede")}</p>
       <div className="intro-finale-cta">
         <a className="intro-pill" href="/">{t("intro.start.plan")}</a>
-        <a className="intro-pill intro-pill-ghost" href="/?agent=preview">{t("intro.start.preview")}</a>
+        <a className="intro-pill intro-pill-ghost" href="/?tour=1">{t("intro.start.preview")}</a>
       </div>
       <ul className="intro-finale-links" aria-label={t("intro.start.links")}>
         {links.map((link) => <li key={link.key}><a href={link.href}>{t(link.key)}</a></li>)}
@@ -155,7 +155,7 @@ function StartPlain() {
       <p className="intro-lede">{t("intro.start.lede")}</p>
       <div className="intro-actions">
         <a className="intro-button" href="/">{t("intro.start.plan")}</a>
-        <a className="intro-button intro-button-ghost" href="/?agent=preview">{t("intro.start.preview")}</a>
+        <a className="intro-button intro-button-ghost" href="/?tour=1">{t("intro.start.preview")}</a>
       </div>
     </section>
   );

@@ -1,0 +1,17 @@
+.loans-stack{display:grid;gap:16px}
+.loans-item{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:var(--surface-1);min-width:0}
+.loans-item h3{margin:0;font-size:15px;overflow-wrap:anywhere}
+.loans-item .comparison-facts{margin:10px 0}
+.loans-item small{font-weight:400;color:var(--text-2)}
+.loans-schedule{margin:8px 0;font-size:13px}
+.loans-schedule summary{cursor:pointer;color:var(--accent);font-weight:600}
+.loans-form{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.loans-months{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr))}
+.loans-month{border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin:0;display:grid;gap:8px;min-width:0}
+.loans-month legend{font-weight:700;font-size:13px;padding:0 4px}
+.loans-month label{display:grid;gap:4px;font-size:12px;font-weight:600}
+.loans-month input{width:100%;min-width:0;border:1px solid var(--line);border-radius:6px;background:var(--surface-1);padding:8px 10px;font:inherit;font-size:13px;color:var(--text)}
+.loans-app .service-table caption{text-align:left;padding-bottom:6px}
+.loans-app .service-table tr[aria-current="true"] td{font-weight:700}
+.loans-app .service-inline-field{flex-wrap:wrap}
+.loans-app .service-inline-field select{max-width:100%}

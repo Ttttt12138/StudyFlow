@@ -1,7 +1,7 @@
 // Captures the app's read-only preview screens (English and Chinese) that the /intro feature
 // panels show, into public/intro-assets/screens/<feature>-<lang>.jpg.
 // Needs the dev server: npm run dev, then node scripts/capture-intro-screens.mjs
-import { mkdirSync } from 'node:fs';
+import { mkdirSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { chromium } from '@playwright/test';
 
@@ -64,4 +64,8 @@ await page.getByRole('region', { name: 'Payment calendar' }).evaluate(el => el.s
 await shoot('calendar', '[data-intro-shot]');
 
 await browser.close();
+// A new version string makes browsers fetch the fresh images instead of cached ones.
+writeFileSync(new URL('../src/intro/wall/screens-version.ts', import.meta.url), `// Written by scripts/capture-intro-screens.mjs; bumps the image URLs after each capture.
+export const SCREENS_VERSION = "${Date.now().toString(36)}";
+`);
 console.log('intro screens captured');
