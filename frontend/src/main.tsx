@@ -8,6 +8,7 @@ import { AuthApp } from "./auth/AuthApp";
 import { ModuleNavContext, type Module } from "./services/ModuleNav";
 import { useI18n } from "./i18n";
 import { TourBar, tourStops, type TourTarget } from "./services/Tour";
+import { previewStage, workspaceUrl } from "./workspace/navigation";
 import { LegacyApp } from "./legacy/LegacyApp";
 import "./student-start.css";
 import "./sprint4.css";
@@ -34,14 +35,18 @@ function serviceFromUrl(): { kind: Service; preview: boolean } | null {
  for (const kind of services) if (query.has(kind)) return { kind, preview: query.get(kind) === "preview" };
  return null;
 }
-// The home page is the agent-first planner (src/plan). ?plan=preview[&stage=school] opens its recorded
+// The home page is the agent-first planner (src/plan). ?plan=preview[&stage=prepare|school] opens its recorded
 // preview; old ?journey=preview links land on the same preview.
 function homeFromUrl(): { preview: boolean; stage: PreviewStage } {
  const query = new URLSearchParams(window.location.search);
  const preview = query.get("plan") === "preview" || query.get("journey") === "preview";
- return { preview, stage: query.get("stage") === "school" ? "school" : "plan" };
+ return { preview, stage: previewStage(query.get("stage")) };
 }
-const homeUrl = (preview: boolean, stage: PreviewStage) => preview ? `/?plan=preview${stage === "school" ? "&stage=school" : ""}` : "/";
+const homeUrl = (preview: boolean, stage: PreviewStage) => preview ? workspaceUrl({ preview, stage, tool: null }) : "/";
+// A tour stop's address: the planner preview (with its tool open) or a separate role page's preview.
+const tourUrl = (target: TourTarget) => target.kind === "home"
+ ? workspaceUrl({ preview: true, stage: target.stage, tool: target.tool ? { kind: target.tool } : null })
+ : target.kind === "ops" ? "/ops?ops=preview" : `/?${target.kind}=preview`;
 // ?tour=1 starts the guided demo at its first stop (or ?tour=N at stop N).
 function tourFromUrl(): number | null {
  const value = new URLSearchParams(window.location.search).get("tour");
@@ -55,7 +60,7 @@ function Root() {
   const stop = tour === null ? null : tourStops[tour].target;
   const home = stop?.kind === "home" ? { preview: true, stage: stop.stage } : homeFromUrl();
   const service = stop && stop.kind !== "home" ? { kind: stop.kind, preview: true } : serviceFromUrl();
-  if (stop) history.replaceState(null, "", stop.kind === "home" ? homeUrl(true, stop.stage) : `/?${stop.kind}=preview`);
+  if (stop) history.replaceState(null, "", tourUrl(stop));
   return { home, service };
  });
  const [home, setHome] = useState(initial.home);
@@ -81,7 +86,12 @@ function Root() {
  };
  const exit = () => toHome(service?.preview ?? home.preview);
  const go = (target: TourTarget) => {
-  if (target.kind === "home") toHome(true, target.stage); else open(target.kind, true);
+  if (target.kind !== "home") return open(target.kind, true);
+  setHome({ preview: true, stage: target.stage });
+  setService(null);
+  history.replaceState(null, "", tourUrl(target));
+  window.dispatchEvent(new PopStateEvent("popstate"));
+  window.scrollTo(0, 0);
  };
  const goTour = (index: number) => { setTour(index); go(tourStops[index].target); };
  const preview = service ? service.preview : home.preview;

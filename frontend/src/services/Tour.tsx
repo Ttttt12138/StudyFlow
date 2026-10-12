@@ -1,22 +1,26 @@
 import { useEffect, useRef } from "react";
 import { useI18n, type MessageKey } from "../i18n";
-import type { Module } from "./ModuleNav";
+import type { ToolKind } from "../workspace/navigation";
+import type { PreviewStage } from "../plan/preview";
 
-/** Where a tour stop lands: a stage of the planner preview, or a module preview. */
-export type TourTarget = { kind: "home"; stage: "plan" | "school" } | { kind: Exclude<Module, "home"> };
+/** Where a tour stop lands: the planner preview at a journey stage, optionally with one workspace tool
+ *  open beside the conversation, or one of the separate role pages (family member, operator, verifier). */
+export type TourTarget = { kind: "home"; stage: PreviewStage; tool?: ToolKind } | { kind: "sponsor" | "ops" | "verify" };
 type TourStop = { target: TourTarget; extra?: TourTarget };
 
-// Follows the student's timeline: plan before leaving, then manage money, then share the record.
-// Each stop may offer one side trip to the other person involved (family, operator, verifier).
+// Follows the planner's journey: consultation and funding, preparing before enrollment, then daily life
+// with the money tools, then sharing the record. Tool stops keep the conversation at the matching stage behind them.
+// Each stop may offer one side trip: another tool, or the other person involved.
 export const tourStops: TourStop[] = [
   { target: { kind: "home", stage: "plan" } },
-  { target: { kind: "home", stage: "school" } },
-  { target: { kind: "family" }, extra: { kind: "sponsor" } },
-  { target: { kind: "loans" }, extra: { kind: "copilot" } },
-  { target: { kind: "wallet" }, extra: { kind: "ops" } },
-  { target: { kind: "payments" } },
-  { target: { kind: "agent" } },
-  { target: { kind: "trust" }, extra: { kind: "verify" } },
+  { target: { kind: "home", stage: "plan", tool: "family" }, extra: { kind: "sponsor" } },
+  { target: { kind: "home", stage: "plan", tool: "loans" }, extra: { kind: "home", stage: "plan", tool: "copilot" } },
+  { target: { kind: "home", stage: "prepare" } },
+  { target: { kind: "home", stage: "school" }, extra: { kind: "home", stage: "school", tool: "spending" } },
+  { target: { kind: "home", stage: "school", tool: "wallet" }, extra: { kind: "ops" } },
+  { target: { kind: "home", stage: "school", tool: "payments" } },
+  { target: { kind: "home", stage: "school", tool: "agent" } },
+  { target: { kind: "home", stage: "school", tool: "trust" }, extra: { kind: "verify" } },
 ];
 
 /** Bottom bar for the guided demo: what this stop shows, a side trip, and back / next / exit. */

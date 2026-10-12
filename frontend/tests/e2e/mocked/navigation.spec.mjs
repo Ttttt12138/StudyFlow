@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 const base = process.env.TEST_URL || "http://127.0.0.1:5173";
 test.use({ viewport: { width: 1360, height: 900 } });
 
-test("guided demo walks eight stops, side trips switch role, public pages hide student navigation, assistant drawer opens", async ({ page }) => {
+test("guided demo walks nine stops, side trips switch role, public pages hide student navigation, assistant drawer opens", async ({ page }) => {
   const errors = [];
   let apiCalls = 0;
   page.on("pageerror", error => errors.push(error.message));
@@ -15,12 +15,27 @@ test("guided demo walks eight stops, side trips switch role, public pages hide s
   await page.goto(`${base}/`);
   await page.getByRole("link", { name: "Start the guided demo" }).click();
   const bar = page.getByRole("region", { name: "Guided demo" });
-  const headings = ["Study planner", "Study planner", "Family support", "Loans", "Wallet & transfers", "Payments", "Finance assistant", "Permissions & activity"];
-  for (const [index, heading] of headings.entries()) {
-    await bar.getByText(`Step ${index + 1} of 8`).waitFor();
-    await page.getByRole("heading", { level: index < 2 ? 1 : 2, name: heading, exact: true }).first().waitFor();
-    if (index === 1) assert.equal(await page.getByRole("button", { name: "In school", exact: true }).getAttribute("aria-pressed"), "true");
-    if (index < 7) await bar.getByRole("button", { name: "Next" }).click();
+  // Stops follow the journey: consultation and funding tools, then the life stage with its money tools.
+  // Tool stops open beside the conversation, which stays at the stop's stage.
+  const stops = [["Study planner", "plan"], ["Family support", "plan"], ["Loans", "plan"], ["Study planner", "prepare"],
+    ["Study planner", "school"], ["Wallet & transfers", "school"], ["Payments", "school"], ["Finance assistant", "school"],
+    ["Permissions & activity", "school"]];
+  for (const [index, [heading, stage]] of stops.entries()) {
+    await bar.getByText(`Step ${index + 1} of 9`).waitFor();
+    const tool = heading !== "Study planner";
+    await page.getByRole("heading", { level: tool ? 2 : 1, name: heading, exact: true }).first().waitFor();
+    assert.equal(await page.locator(".workspace-dock").isVisible(), tool);
+    assert.equal(new URL(page.url()).searchParams.get("stage") ?? "plan", stage);
+    if (index === 3) {
+      assert.equal(await page.getByRole("group", { name: "Preview stage" }).getByRole("button", { name: "Before enrollment", exact: true }).getAttribute("aria-pressed"), "true");
+      await page.getByText("Departure preparation", { exact: true }).first().waitFor();
+    }
+    if (index === 4) {
+      assert.equal(await page.getByRole("button", { name: "In school", exact: true }).getAttribute("aria-pressed"), "true");
+      await bar.getByRole("button", { name: /Open monthly spending/ }).click();
+      await page.locator("#workspace-tool-title").getByText("Monthly spending").waitFor();
+    }
+    if (index < 8) await bar.getByRole("button", { name: "Next" }).click();
   }
 
   // The last stop's side trip is the anonymous verification page: no modules, no role switch, no assistant.
