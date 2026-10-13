@@ -250,7 +250,12 @@ export function PlanApp({ preview, initialStage = "plan" }: { account?: string; 
   const fresh = !!conversation && !conversation.turns.some(turn => turn.goal) && phase === 0;
   const placeholder = t(phase === 1 ? "plan.journey.preparingPlaceholder" : phase === 2 ? "plan.journey.dailyPlaceholder" : "plan.composer.placeholder");
 
+  // Suggested questions sit above the input, so they read as the next step before typing.
   const composer = <form className={`plan-composer${fresh ? " is-hero" : ""}`} onSubmit={(event) => { event.preventDefault(); void ask(draft); }}>
+    <div className="agent-suggestions" aria-label={t("plan.composer.suggestions")}>
+      {suggestions.map((text) => <button type="button" key={text} className="chip" disabled={sending || !conversation}
+        onClick={() => void ask(text)}>{text}</button>)}
+    </div>
     <div className="plan-input-wrap"><label className="service-field"><span className="sr-only">{t("plan.composer.label")}</span>
       <textarea value={draft} rows={fresh ? 2 : 1} maxLength={2000} placeholder={placeholder} disabled={sending || preview}
         aria-label={t("plan.composer.label")} onChange={(event) => setDraft(event.target.value)}
@@ -261,10 +266,6 @@ export function PlanApp({ preview, initialStage = "plan" }: { account?: string; 
         <button type="submit" className="primary plan-send" aria-label={sending ? t("plan.composer.sending") : t("plan.composer.send")}
           disabled={sending || preview || !draft.trim()}><ArrowUp size={20} aria-hidden="true" /></button>
       </div>
-    </div>
-    <div className="agent-suggestions" aria-label={t("plan.composer.suggestions")}>
-      {suggestions.map((text) => <button type="button" key={text} className="chip" disabled={sending || !conversation}
-        onClick={() => void ask(text)}>{text}</button>)}
     </div>
   </form>;
 
