@@ -22,3 +22,12 @@ postgres-local.log
 output/
 deliverables/
 .claude/worktrees/
+
+# Build caches
+.vite/
+*.tsbuildinfo
+# Machine-specific preview servers
+.claude/launch.json
+# Playwright traces and per-run output inside verification evidence
+evidence/**/test-results/
+evidence/**/*pytest-tmp/
