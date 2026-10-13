@@ -1,11 +1,11 @@
 import { FocusDialog } from "../workspace/FocusDialog";
-import { useToolRefresh, useToolActive, useClearWhenHidden, useWorkspace } from "../workspace/context";
+import { useToolRefresh, useToolActive, useClearWhenHidden, useWorkspace, useEmbedded } from "../workspace/context";
 import { ModulePresentation } from "../workspace/ModulePresentation";
 import { getAll } from "../backend/client";
 import { Amount } from "../services/Amount";
 import { ModuleNav } from "../services/ModuleNav";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { formatDate, formatMoney } from "../backend/presenters";
+import { formatDate, formatMoney, formatRate } from "../backend/presenters";
 import { loadWallet, SessionWalletClient, WalletApiError, type WalletClient } from "./client";
 import { createWalletPreview, previewQuotes, type WalletPreviewScenario } from "./mockAdapter";
 import type { Approval, Order, Quote, WalletSnapshot } from "./types";
@@ -30,6 +30,7 @@ function orderApproval(order: Order, approvals: Approval[]) {
 export function WalletApp({ preview, onExit }: { preview: boolean; onExit: () => void }) {
   const { lang, t } = useI18n();
   const toolActive = useToolActive();
+  const embedded = useEmbedded();
   const workspace = useWorkspace();
   const describeStatus = (order: Order) => t(`wallet.status.${order.effective_status}` as MessageKey);
   const message = (error: unknown) => error instanceof Error ? error.message : t("wallet.err.generic");
@@ -294,7 +295,8 @@ export function WalletApp({ preview, onExit }: { preview: boolean; onExit: () =>
   const content = <ToolPanel label={t("wallet.title")} numbered={false} active={tab} onSelect={(key) => { setTab(key); if (key === "remit" && selectedOrder?.effective_status === "CREATED") setRemitView("order"); }}
     steps={[{ key: "balances", label: t("wp.tab.balances") }, { key: "convert", label: t("wp.tab.convert") }, { key: "remit", label: t("wp.tab.remit") }, { key: "history", label: t("wp.tab.history") }]}
     notices={notices} footer={footer} sheet={recipientSheet} tools={menu}>
-    <h1 className="sr-only">{t("wallet.title")}</h1>
+    {/* In the dock the header already names the tool; a second heading would duplicate it. */}
+    {!embedded && <h1 className="sr-only">{t("wallet.title")}</h1>}
     {unauthenticated && <section className="panel-note" role="alert"><h2>{t("wallet.signIn.title")}</h2><p>{t("wallet.signIn.text")}</p><a className="primary" href={signInUrl}>{t("wallet.signIn.link")}</a></section>}
     <section id="wallet-balances" className="panel-view" hidden={tab !== "balances"}>
       <div className="panel-card-head"><h2>{t("wallet.balances.title")}</h2><span className="panel-tag">{snapshot.balances?.is_simulated ? t("wallet.balances.simulated") : t("wallet.balances.backendData")}</span></div>
@@ -328,7 +330,7 @@ export function WalletApp({ preview, onExit }: { preview: boolean; onExit: () =>
         best: Number(quote.net_received) === Math.max(...quotes.map((item) => Number(item.net_received))) }))} />}
       {quotes.length ? <div className="wallet-quote-grid panel-carousel">{quotes.map((quote) => <article key={quote.id} className={selectedQuoteId === quote.id ? "selected" : ""}>
         <h3>{quote.route_name}</h3><p><strong><Amount text={money(quote.net_received, quote.target_currency)} /></strong><span>{t("wallet.quote.receipt")}</span></p>
-        <dl><div><dt>{t("wallet.quote.senderFee")}</dt><dd>{money(quote.sender_fee, quote.source_currency)}</dd></div><div><dt>{t("wallet.quote.rate")}</dt><dd title={quote.rate}>{Number(quote.rate).toLocaleString(intlLocale(lang), { maximumFractionDigits: 4 })}</dd></div>
+        <dl><div><dt>{t("wallet.quote.senderFee")}</dt><dd>{money(quote.sender_fee, quote.source_currency)}</dd></div><div><dt>{t("wallet.quote.rate")}</dt><dd title={quote.rate}>{formatRate(quote.rate)}</dd></div>
           <div><dt>{t("wallet.quote.settlement")}</dt><dd>{t("wallet.quote.days", { min: quote.settlement_min_days, max: quote.settlement_days })}</dd></div></dl>
         <small>{quote.is_mock ? t("wallet.quote.fixture") : t("wallet.quote.source", { source: quote.rate_source })} · {t("wallet.quote.expires")} {stamp(quote.expires_at)}</small>
         <button className="secondary" disabled={preview} onClick={() => setSelectedQuoteId(quote.id)}>{selectedQuoteId === quote.id ? t("wallet.quote.selected") : t("wallet.quote.select")}</button>

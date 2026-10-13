@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { explainCode, formatAmount, formatDate, formatMoney, formatTimestampDate } from "./presenters";
+import { explainCode, formatAmount, formatDate, formatMoney, formatRate, formatTimestampDate } from "./presenters";
 
 describe("formatAmount", () => {
   it.each([
@@ -69,5 +69,21 @@ describe("explainCode", () => {
 
   it("turns unknown codes into readable text", () => {
     expect(explainCode("NEXT_PAYMENT_DUE")).toBe("Next payment due");
+  });
+});
+
+describe("formatRate", () => {
+  it.each([
+    ["4.5816000000", "4.5816"],
+    ["33.0500000000", "33.0500"],
+    ["0.21739130434", "0.2174"],
+    [32.8, "32.8000"],
+  ])("shows four decimals: %s", (input, expected) => {
+    expect(formatRate(input)).toBe(expected);
+  });
+
+  it("keeps unparseable values and marks missing ones", () => {
+    expect(formatRate("n/a")).toBe("n/a");
+    expect(formatRate(null)).toBe("—");
   });
 });

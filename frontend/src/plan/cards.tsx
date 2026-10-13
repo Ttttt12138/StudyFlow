@@ -1,5 +1,6 @@
 import { useI18n, type MessageKey } from "../i18n";
 import { day, money, percent, pick } from "./format";
+import { formatRate } from "../backend/presenters";
 import type { Bill, Card, CatalogEntry, Estimate, Place, Plan, SchoolBrief, Spending } from "./types";
 
 export type CardActions = {
@@ -26,7 +27,7 @@ function Converted({ value }: { value?: { currency: string; amount: string; rate
   const { lang, t } = useI18n();
   if (!value || !value.rate_date) return null;
   return <p className="service-muted">{t("plan.cost.converted", { amount: money(value.amount, value.currency, lang),
-    rate: value.rate, source: value.source ?? "", date: value.rate_date })}</p>;
+    rate: formatRate(value.rate), source: value.source ?? "", date: value.rate_date })}</p>;
 }
 
 function SchoolList({ schools, actions, compare }: { schools: SchoolBrief[]; actions: CardActions; compare?: boolean }) {

@@ -16,6 +16,13 @@ export function formatMoney(value: unknown, currency = "THB", lang: Lang = "en")
   return amount == null ? translate(lang, "fmt.noAmount") : `${currency} ${amount}`;
 }
 
+/** Exchange rates are shown with four decimals; the backend's full-precision string stays the source of truth. */
+export function formatRate(value: unknown): string {
+  if (typeof value !== "string" && typeof value !== "number") return "—";
+  const rate = Number(value);
+  return Number.isFinite(rate) ? rate.toFixed(4) : String(value);
+}
+
 export function formatDate(value: unknown, lang: Lang = "en"): string {
   if (typeof value !== "string" || !value) return translate(lang, "fmt.noDate");
   const parsed = new Date(`${value}T00:00:00Z`);

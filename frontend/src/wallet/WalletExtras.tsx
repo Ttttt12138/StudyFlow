@@ -1,6 +1,6 @@
 import { useToolActive, useToolRefresh } from "../workspace/context";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { formatDate, formatMoney } from "../backend/presenters";
+import { formatDate, formatMoney, formatRate } from "../backend/presenters";
 import { intlLocale, useI18n, type MessageKey } from "../i18n";
 import { Amount } from "../services/Amount";
 import { TierBadge } from "../services/TierBadge";
@@ -237,7 +237,7 @@ export function WalletExtras({ client, preview, onChanged, view = "all", balance
           <h3>{quote.route_name}</h3>
           <p><strong><Amount text={money(quote.net_received, quote.target_currency)} /></strong><span>{t("walletx.quote.net")}</span></p>
           <dl><div><dt>{t("walletx.quote.debit")}</dt><dd>{money(quotedAmount(quote), quote.source_currency)}</dd></div>
-            <div><dt>{t("walletx.quote.rate")}</dt><dd>{quote.rate}</dd></div>
+            <div><dt>{t("walletx.quote.rate")}</dt><dd title={quote.rate}>{formatRate(quote.rate)}</dd></div>
             <div><dt>{t("walletx.quote.senderFee")}</dt><dd>{money(quote.sender_fee, quote.source_currency)}</dd></div>
             <div><dt>{t("walletx.quote.receiverFee")}</dt><dd>{money(quote.receiver_fee == null ? null : String(quote.receiver_fee), quote.target_currency)}</dd></div>
             <div><dt>{t("walletx.quote.expires")}</dt><dd>{left > 0 ? t("walletx.quote.left", { time: countdown(left) }) : <span className="status-chip status-expired">{t("walletx.quote.expired")}</span>}</dd></div></dl>
@@ -249,7 +249,7 @@ export function WalletExtras({ client, preview, onChanged, view = "all", balance
         <dl className="comparison-facts">
           <div><dt>{t("walletx.review.debit")}</dt><dd>{money(quotedAmount(selected), selected.source_currency)}</dd></div>
           <div><dt>{t("walletx.review.credit")}</dt><dd>{money(selected.net_received, selected.target_currency)}</dd></div>
-          <div><dt>{t("walletx.quote.rate")}</dt><dd>{selected.rate}</dd></div>
+          <div><dt>{t("walletx.quote.rate")}</dt><dd title={selected.rate}>{formatRate(selected.rate)}</dd></div>
           <div><dt>{t("walletx.quote.senderFee")}</dt><dd>{money(selected.sender_fee, selected.source_currency)}</dd></div>
         </dl>
         {selected.source_currency === home && <p className="service-alert">{t("walletx.review.reserve", { currency: home })}</p>}
@@ -266,18 +266,18 @@ export function WalletExtras({ client, preview, onChanged, view = "all", balance
         <dl className="comparison-facts">
           <div><dt>{t("walletx.result.debited")}</dt><dd>{money(result.source_amount, result.source_currency)}</dd></div>
           <div><dt>{t("walletx.result.credited")}</dt><dd>{money(result.target_amount, result.target_currency)}</dd></div>
-          <div><dt>{t("walletx.quote.rate")}</dt><dd>{result.rate}</dd></div>
+          <div><dt>{t("walletx.quote.rate")}</dt><dd title={result.rate}>{formatRate(result.rate)}</dd></div>
           <div><dt>{t("walletx.result.sequences")}</dt><dd>{result.debit_sequence != null ? `#${result.debit_sequence} / #${result.credit_sequence}` : "—"}</dd></div>
           <div><dt>{t("walletx.result.effective")}</dt><dd>{formatDate(result.effective_on, lang)}</dd></div>
         </dl>
       </div>}
       <h3 className="walletx-sub">{t("walletx.recent.title")}</h3>
-      {trend.length >= 2 && <div className="fx-figure"><div className="panel-section-title">{t("walletx.fx.trend", { pair: trendPair })}<span>{trend[trend.length - 1]}</span></div>
+      {trend.length >= 2 && <div className="fx-figure"><div className="panel-section-title">{t("walletx.fx.trend", { pair: trendPair })}<span>{formatRate(trend[trend.length - 1])}</span></div>
         <LineChart points={trend} label={t("walletx.fx.trend", { pair: trendPair })} height={64} /></div>}
       {errors.conversions && <p className="error" role="alert">{errors.conversions}</p>}
       {conversions.length ? <ul className="walletx-recent">{conversions.map((item) => <li key={item.id}>
         <strong>{money(item.source_amount, item.source_currency)} → {money(item.target_amount, item.target_currency)}</strong>
-        <span>{t("walletx.recent.meta", { rate: item.rate, date: stamp(item.created_at) })}</span></li>)}</ul>
+        <span>{t("walletx.recent.meta", { rate: formatRate(item.rate), date: stamp(item.created_at) })}</span></li>)}</ul>
         : !errors.conversions && <p className="wallet-empty">{t("walletx.recent.none")}</p>}
     </section>
     <section id="wallet-ledger" className="card wallet-panel walletx" hidden={view !== "all" && view !== "ledger"}>

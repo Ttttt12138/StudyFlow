@@ -82,27 +82,29 @@ test('demo rehearsal: every section of the demo script on a freshly reset demo s
     // 1. Tuition: authorize, password (one wrong attempt), operator settlement, invoice reconciliation.
     await step('1 tuition payment and reconciliation', async () => {
       const page = pages.payer, detail = page.locator('#pay-detail');
-      await page.getByRole('heading', { name: 'Pay a bill' }).waitFor();
-      await page.getByRole('row').filter({ hasText: 'Ready to pay' }).getByRole('radio').check();
+      const dialog = page.getByRole('dialog', { name: 'Review and confirm' });
+      await page.getByRole('heading', { name: 'Payments', exact: true }).waitFor();
+      await page.locator('#pay-bills li').filter({ hasText: 'Ready to pay' }).getByRole('radio').check();
       await page.getByRole('button', { name: 'Create payment' }).click();
       await detail.getByLabel('I checked the payee, the amount and the invoice.').check();
-      await detail.getByRole('button', { name: 'Authorize' }).click();
+      await page.getByRole('button', { name: 'Authorize', exact: true }).click();
       await page.getByText('Payment authorized for 15 minutes.').waitFor();
-      await detail.getByRole('button', { name: 'Submit payment' }).click();
-      await detail.getByLabel('Password').fill(`wrong-${randomUUID()}`);
-      await detail.getByRole('button', { name: 'Confirm and submit' }).click();
+      await page.getByRole('button', { name: 'Submit payment', exact: true }).click();
+      await page.getByLabel('Password').fill(`wrong-${randomUUID()}`);
+      await dialog.getByRole('button', { name: 'Confirm and submit' }).click();
       await page.getByRole('alert').filter({ hasNotText: 'needs your password' }).waitFor();
-      await detail.getByLabel('Password').fill(account('payer').password);
-      await detail.getByRole('button', { name: 'Confirm and submit' }).click();
+      await page.getByLabel('Password').fill(account('payer').password);
+      await dialog.getByRole('button', { name: 'Confirm and submit' }).click();
       await page.getByText('Payment submitted. Status: Submitted.').waitFor();
       const ops = await opsFor('operator', 'demo-payer');
       await confirmIn(await openOpsItem(ops, 'payment'), 'Settled');
       await ops.getByText('Recorded the simulated adapter result: Settled.').waitFor();
-      await page.getByRole('button', { name: 'Refresh' }).click();
-      await detail.getByRole('button', { name: 'Reconcile with invoice' }).click();
+      await page.getByRole('button', { name: 'Refresh', exact: true }).first().click();
+      await page.getByRole('button', { name: 'Reconcile with invoice' }).click();
       await page.getByText('Receipt matches the invoice. The payment is reconciled.').waitFor();
+      await detail.getByRole('button', { name: /^Audit trail/ }).click();
       for (const name of ['Password re-check failed', 'Password re-check passed', 'Settled (sandbox)', 'Reconciled with invoice'])
-        await detail.locator('.pay-audit').getByText(name, { exact: true }).waitFor();
+        await page.locator('.panel-sheet .pay-audit').getByText(name, { exact: true }).waitFor();
       await page.screenshot({ path: `${dir}/1-payment-reconciled.png`, fullPage: true });
     });
 
@@ -112,11 +114,13 @@ test('demo rehearsal: every section of the demo script on a freshly reset demo s
       await page.getByRole('heading', { name: 'Wallet & transfers', exact: true }).waitFor();
       const corridor = (await api('student', 'corridors/')).find(row => row.source_currency === 'CNY' && row.target_currency === 'THB');
       const payee = (await api('student', 'beneficiaries/')).results.find(row => row.verified);
+      await page.getByRole('tab', { name: 'Remit' }).click();
       await page.getByLabel('Currency route').selectOption(corridor.id);
       await page.getByLabel('Send amount').fill('15000.00');
       await button('Get backend quotes').click();
       await page.getByText(/backend-priced routes? returned/).waitFor();
       await page.locator('.wallet-quote-grid').getByRole('button', { name: 'Select quote' }).first().click();
+      await button('Recipient & purpose →').click();
       await page.getByLabel('Recipient', { exact: true }).selectOption('BENEFICIARY');
       await page.getByLabel('Beneficiary', { exact: true }).selectOption(payee.id);
       await button('Create order for review').click();
@@ -140,7 +144,7 @@ test('demo rehearsal: every section of the demo script on a freshly reset demo s
       await confirmIn(card, 'Approve');
       await approver.getByText('Approved. demo-student can now submit with their password.').waitFor();
 
-      await button('Refresh from Django').click();
+      await page.getByRole('button', { name: 'Refresh', exact: true }).first().click();
       await button('Continue to password check').click();
       await page.getByLabel('Password', { exact: true }).fill(account('student').password);
       await button('Authorize and submit').click();
@@ -158,6 +162,7 @@ test('demo rehearsal: every section of the demo script on a freshly reset demo s
     await step('3 currency conversion and ledger', async () => {
       const page = pages.student;
       await page.goto(`${origin}/?wallet=1`);
+      await page.getByRole('tab', { name: 'Exchange' }).click();
       const section = page.locator('section').filter({ has: page.getByRole('heading', { name: 'Convert between currencies' }) });
       await section.getByLabel('Convert from').selectOption('CNY');
       await section.getByLabel('Convert to').selectOption('THB');
@@ -167,8 +172,9 @@ test('demo rehearsal: every section of the demo script on a freshly reset demo s
       await section.getByRole('button', { name: 'Use this quote' }).first().click();
       await section.getByLabel(/I reviewed these exact amounts/).check();
       await section.getByRole('button', { name: 'Convert now' }).click();
-      await section.getByLabel('Password', { exact: true }).fill(account('student').password);
-      await section.getByRole('button', { name: 'Confirm', exact: true }).click();
+      const stepUp = page.getByRole('dialog', { name: 'Review and confirm' });
+      await stepUp.getByLabel('Password', { exact: true }).fill(account('student').password);
+      await stepUp.getByRole('button', { name: 'Confirm', exact: true }).click();
       await page.getByText('Conversion recorded. Balances and the ledger were refreshed.').waitFor();
       const legs = (await api('student', 'ledger/')).results.filter(row => row.conversion);
       assert.deepEqual(legs.map(row => row.currency).sort(), ['CNY', 'THB']);
@@ -180,13 +186,14 @@ test('demo rehearsal: every section of the demo script on a freshly reset demo s
       const page = pages.payer;
       const before = (await api('payer', 'readiness/state/')).assets.wallet_balance;
       await page.goto(`${origin}/?insights=1`);
-      await page.getByRole('heading', { name: 'Spending insights', level: 1 }).waitFor();
+      await page.getByRole('heading', { name: 'Spending insights', level: 2 }).waitFor();
+      await page.getByRole('button', { name: 'Import CSV' }).click();
       await page.getByLabel('Where the file comes from').selectOption('synthetic');
       await page.getByLabel('CSV file').setInputFiles(`${root}backend/examples/consumption/v1/rising-costs.csv`);
       await page.getByRole('button', { name: 'Upload and preview' }).click();
       const review = page.locator('.insights-review');
       await review.getByLabel('Select all rows').check();
-      await review.getByRole('button', { name: 'Confirm import' }).click();
+      await page.getByRole('button', { name: 'Confirm import' }).click();
       await page.getByText(/^Import confirmed: \d+ rows? added\.$/).waitFor();
       await page.getByText(/^(Forecast recalculated\.|The recalculation is taking longer than a minute\..*)$/).waitFor({ timeout: 90_000 });
       assert.equal((await api('payer', 'readiness/state/')).assets.wallet_balance, before);
@@ -199,7 +206,8 @@ test('demo rehearsal: every section of the demo script on a freshly reset demo s
       const clock = (await api('student', 'demo/wallets/')).results[0].clock;
       const purpose = `Demo rent help ${run}`;
       await page.goto(`${origin}/?family=1`);
-      await page.getByRole('heading', { name: 'Family support requests' }).waitFor();
+      await page.getByRole('heading', { name: 'Family support' }).waitFor();
+      await page.getByRole('tab', { name: 'Ask family' }).click();
       await page.getByLabel('Amount', { exact: true }).fill('6500');
       await page.getByLabel('Currency').selectOption('THB');
       await page.getByLabel('Available on', { exact: true }).fill(clock);
@@ -227,6 +235,7 @@ test('demo rehearsal: every section of the demo script on a freshly reset demo s
       await confirmIn(request, 'Record money received');
       await ops.getByText('THB 6,500.00 recorded as received.').waitFor();
       await page.reload();
+      await page.getByRole('tab', { name: 'Supported' }).click();
       await page.getByText('Received — an operator recorded the money.').waitFor();
     });
 
@@ -264,7 +273,7 @@ test('demo rehearsal: every section of the demo script on a freshly reset demo s
 
       await page.reload();
       await page.getByRole('button', { name: /^Demo date / }).click();
-    await page.getByLabel('I understand this changes the simulated date for my demo account only.').check();
+      await page.getByLabel('I understand this changes the simulated date for my demo account only.').check();
       await page.getByRole('button', { name: /^Move demo date to / }).click();
       await page.getByLabel(/I confirm repaying /).check();
       await page.getByRole('button', { name: 'Repay installment 1' }).click();
@@ -288,15 +297,15 @@ test('demo rehearsal: every section of the demo script on a freshly reset demo s
       await form.getByRole('combobox', { name: /^Cost/ }).selectOption('food');
       await form.getByLabel('New amount (THB)').fill('2500');
       await form.getByLabel('Effective from').fill(clock);
-      await page.getByRole('button', { name: 'Compare' }).click();
+      await page.getByRole('button', { name: 'Compare', exact: true }).click();
       await page.getByText('Comparison ready. Nothing in your plan has changed.').waitFor();
       const results = page.locator('#copilot-results');
       await results.getByRole('columnheader', { name: 'Cook at home' }).waitFor();
       await page.screenshot({ path: `${dir}/7-what-if-compared.png`, fullPage: true });
-      await results.getByRole('button', { name: 'Preview applying' }).click();
+      await page.getByRole('button', { name: 'Preview applying' }).click();
       const apply = page.locator('#copilot-apply');
       await apply.getByLabel('I confirm applying exactly these changes to my plan.').check();
-      await apply.getByRole('button', { name: 'Apply to my plan' }).click();
+      await page.getByRole('button', { name: 'Apply to my plan' }).click();
       await page.getByText('Scenario applied to your plan. No money moved.').waitFor();
       assert.equal((await api('payer', 'readiness/state/')).assets.wallet_balance, before);
     });
@@ -306,7 +315,8 @@ test('demo rehearsal: every section of the demo script on a freshly reset demo s
       const page = pages.student;
       await page.goto(`${origin}/?trust=1`);
       await page.getByRole('heading', { name: 'Permissions & activity' }).waitFor();
-      const section = page.locator('#trust-statements');
+      await page.getByRole('button', { name: 'Share my record' }).click();
+      const section = page.getByRole('dialog', { name: 'Share your on-time record' });
       await section.getByRole('button', { name: 'Take a snapshot now' }).click();
       await section.getByText(/Snapshot taken \(level /).waitFor();
       await section.getByRole('button', { name: /Issue signed statement for the snapshot/ }).first().click();
