@@ -17,12 +17,14 @@ test.describe("AI assistant preview", () => {
     await page.getByRole("heading", { name: "Finance assistant" }).waitFor();
     await page.getByRole("region", { name: "Simulation notice" }).getByText("SIMULATED", { exact: true }).waitFor();
     await page.getByText("Demo preview · read-only").waitFor();
+    assert.equal(await page.getByRole("button", { name: "Ask the assistant" }).isDisabled(), true);
+    await page.getByRole("tab", { name: "To confirm" }).click();
     const proposal = page.getByRole("article", { name: "Submit transfer" });
     await proposal.getByText("CNY 5,000.00").waitFor();
     await proposal.getByText("Not executed.", { exact: false }).waitFor();
     assert.equal(await proposal.getByRole("button", { name: "Confirm with password" }).isDisabled(), true);
     assert.equal(await proposal.getByRole("button", { name: "Reject" }).isDisabled(), true);
-    assert.equal(await page.getByRole("button", { name: "Ask the assistant" }).isDisabled(), true);
+    await page.getByRole("tab", { name: "Steps" }).click();
     const steps = await page.locator(".agent-step").allInnerTexts();
     assert.equal(steps.length, 8);
     assert.match(steps[2], /T1[\s\S]*Price a route/);
@@ -33,7 +35,9 @@ test.describe("AI assistant preview", () => {
     await page.getByRole("button", { name: "中文" }).click();
     await page.getByRole("heading", { name: "资金子助手" }).waitFor();
     assert.equal(await page.evaluate(() => document.documentElement.lang), "zh-CN");
+    await page.getByRole("tab", { name: "待确认" }).click();
     await page.getByRole("article", { name: "提交汇款" }).getByText("等待你处理").waitFor();
+    await page.getByRole("tab", { name: "对话" }).click();
     await page.getByText("帮我把5000元人民币汇到泰铢，比较一下渠道", { exact: true }).first().waitFor();
     await page.reload();
     await page.getByRole("heading", { name: "资金子助手" }).waitFor();  // the choice is remembered
@@ -119,6 +123,8 @@ test.describe("AI assistant with mocked Django", () => {
     await page.getByText("No conversation selected yet.", { exact: false }).waitFor();
     await page.getByRole("button", { name: "Send 5000 CNY to my THB wallet and compare the routes" }).click();
     await page.getByRole("button", { name: "Ask the assistant" }).click();
+    await page.getByText("Waiting for your confirmation").waitFor();
+    await page.getByRole("tab", { name: "To confirm" }).click();
     const first = page.getByRole("article", { name: "Submit transfer" });
     await first.getByText("Waiting for you").waitFor();
     const created = calls.find(c => c.path === "agent/sessions/" && c.method === "POST");
@@ -140,8 +146,10 @@ test.describe("AI assistant with mocked Django", () => {
     assert.equal(await page.getByLabel("Password").count(), 0);
 
     // Over the limit: the confirm is refused with APPROVAL_REQUIRED and the student requests approval.
+    await page.getByRole("tab", { name: "Ask" }).click();
     await page.getByLabel("Your request").fill("Send 15000 CNY to THB");
     await page.getByRole("button", { name: "Ask the assistant" }).click();
+    await page.getByRole("button", { name: "Review" }).click();
     await page.getByRole("heading", { name: "Waiting for your decision" }).waitFor();
     const second = page.getByRole("article", { name: "Submit transfer" });
     await second.getByText("CNY 15,000.00").waitFor();
@@ -161,7 +169,10 @@ test.describe("AI assistant with mocked Django", () => {
     await page.screenshot({ path: screenshot("agent-connected-desktop.png"), fullPage: true });
 
     // Recent conversations reopen an earlier session.
+    await page.getByRole("button", { name: "Recent conversations" }).click();
     await page.locator("#agent-history").getByRole("button", { name: "Send 5000 CNY to my THB wallet and compare the routes" }).click();
+    // Reopening a conversation keeps the panel where it was (no remount back to Ask).
+    await page.getByRole("tab", { name: "To confirm", selected: true }).waitFor();
     await page.getByRole("heading", { name: "Proposals", exact: true }).waitFor();
     // Passwords never reach the URL or browser storage.
     const stored = await page.evaluate(() => JSON.stringify({ ...localStorage }) + JSON.stringify({ ...sessionStorage }) + location.href);

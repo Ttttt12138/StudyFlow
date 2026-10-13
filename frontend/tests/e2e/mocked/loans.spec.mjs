@@ -16,7 +16,7 @@ test.describe("loans preview", () => {
     // The active loan opens on the repay step; installments and disbursements open over the card.
     await page.getByRole("tab", { name: "Repay", selected: true }).waitFor();
     const accounts = page.locator("#loans-accounts");
-    await accounts.getByText("Outstanding principal").waitFor();
+    await accounts.getByText("Outstanding principal", { exact: true }).waitFor();
     assert.equal(await page.getByRole("button", { name: "Repay installment 2" }).isDisabled(), true);
     await accounts.getByRole("button", { name: "All 6 installments" }).click();
     const installments = page.locator("#loans-installments");
@@ -43,7 +43,7 @@ test.describe("loans preview", () => {
     await page.screenshot({ path: screenshot("loans-preview-mobile.png"), fullPage: true });
     await page.getByRole("button", { name: "中文" }).click();
     await page.getByRole("tab", { name: "还款" }).click();
-    await page.locator("#loans-accounts").getByText("剩余本金").waitFor();
+    await page.locator("#loans-accounts").getByText("剩余本金", { exact: true }).waitFor();
     await page.getByRole("button", { name: "全部 6 期" }).click();
     await page.getByText("按顺序", { exact: false }).first().waitFor();
     await page.getByRole("button", { name: "关闭", exact: true }).click();

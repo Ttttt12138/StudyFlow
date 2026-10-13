@@ -58,23 +58,28 @@ test('real Django what-if: compare, apply with confirmation, explain.', async ({
     await form.getByText('Current: THB 7,000.00 / month').waitFor();
     await form.getByLabel('New amount (THB)').fill('4000');
     await form.getByLabel('Effective from').fill(TODAY);
-    await page.getByRole('button', { name: 'Compare' }).click();
+    await page.getByRole('button', { name: 'Compare', exact: true }).click();
     await page.getByText('Comparison ready. Nothing in your plan has changed.').waitFor();
     const results = page.locator('#copilot-results');
     await results.getByRole('columnheader', { name: 'Cheaper housing' }).waitFor();
-    await results.getByRole('row', { name: /Remaining expenses/ }).locator('.copilot-better').waitFor();
+    await results.locator('.copilot-better').first().waitFor();
+    await results.getByRole('button', { name: /All measures/ }).click();
+    await page.getByRole('dialog').getByRole('row', { name: /Remaining expenses/ }).locator('.copilot-better').waitFor();
+    await page.keyboard.press('Escape');
 
-    await results.getByRole('button', { name: 'Preview applying' }).click();
+    await page.getByRole('button', { name: 'Preview applying' }).click();
     const apply = page.locator('#copilot-apply');
     await apply.getByText(/Housing is revised to THB 4,000.00/).waitFor();
     await apply.getByLabel('I confirm applying exactly these changes to my plan.').check();
-    await apply.getByRole('button', { name: 'Apply to my plan' }).click();
+    await page.getByRole('button', { name: 'Apply to my plan' }).click();
     await page.getByText('Scenario applied to your plan. No money moved.').waitFor();
     await apply.getByText(/Plan state version \d+ → \d+/).waitFor();
     // Applying changed the plan, so the comparison is now stale.
+    await page.getByRole('tab', { name: 'Compare' }).click();
     await results.getByText(/these figures are out of date/).waitFor();
 
-    await results.getByRole('button', { name: /Explain this comparison/ }).click();
+    // "Why these results?" opens the explanation with this comparison's reference filled in.
+    await page.getByRole('button', { name: /Why these results/ }).click();
     const why = page.locator('#copilot-why');
     await why.getByRole('heading', { name: 'Calculation engine' }).waitFor();
     await why.locator('article', { has: page.getByRole('heading', { name: 'Calculation engine' }) }).getByText('Ran', { exact: true }).waitFor();

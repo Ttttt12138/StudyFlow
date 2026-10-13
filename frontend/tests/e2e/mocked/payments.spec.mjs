@@ -14,21 +14,38 @@ test.describe("payments preview", () => {
     await page.route("**/api/**", route => { apiCalls++; return route.abort(); });
     await page.goto(`${base}/?payments=preview`);
     await page.getByRole("heading", { name: "Payments" }).waitFor();
-    await page.getByRole("row", { name: /Tuition · term 2.*Ready to pay/ }).waitFor();
-    assert.equal(await page.getByRole("button", { name: "Create payment" }).isDisabled(), true);
     const detail = page.locator("#pay-detail");
+    // A draft payment is in flight, so the panel opens on the Pay step.
     await detail.getByRole("heading", { name: /Authorize this payment/ }).waitFor();
-    assert.equal(await detail.getByRole("button", { name: "Authorize" }).isDisabled(), true);
-    await page.getByLabel("Show payment as").selectOption("authorized");
-    await detail.getByRole("button", { name: "Submit payment" }).waitFor();
-    await page.getByLabel("Show payment as").selectOption("pending");
+    assert.equal(await page.getByRole("button", { name: "Authorize", exact: true }).isDisabled(), true);
+    await page.getByRole("tab", { name: "Due" }).click();
+    await page.locator("#pay-bills li", { hasText: /Tuition · term 2.*Ready to pay/ }).waitFor();
+    assert.equal(await page.getByRole("button", { name: "Create payment" }).isDisabled(), true);
+    const scenario = async (value) => {
+      if (!(await page.getByLabel("Show payment as").isVisible())) await page.getByRole("button", { name: "More options" }).click();
+      await page.getByLabel("Show payment as").selectOption(value);
+    };
+    await scenario("authorized");
+    await page.getByRole("button", { name: "Submit payment" }).waitFor();
+    await scenario("pending");
     await detail.getByText(/Waiting for the simulated adapter result/).waitFor();
-    await page.getByLabel("Show payment as").selectOption("reconciliation_exception");
+    await scenario("reconciliation_exception");
+    // An exception needs review elsewhere, so the panel opens on Due; the payment is one step over.
+    await page.locator("#pay-bills").waitFor();
+    await page.getByRole("tab", { name: "Pay" }).click();
     await detail.getByText("Does not match").waitFor();
-    assert.equal(await detail.locator(".pay-step-stopped").count(), 1);
-    await page.getByLabel("Show payment as").selectOption("reconciled");
+    assert.equal(await detail.locator(".chart-steps .is-failed").count(), 1);
+    await scenario("reconciled");
+    // Nothing is in flight any more and term 2 is ready, so the panel goes back to Due.
+    await page.locator("#pay-bills").waitFor();
+    await page.getByRole("tab", { name: "Pay" }).click();
     await detail.getByText("Matched", { exact: true }).waitFor();
-    await detail.locator(".pay-audit").getByText("Reconciled with invoice").waitFor();
+    await detail.getByRole("button", { name: /Audit trail/ }).click();
+    await page.getByRole("dialog", { name: "Audit trail" }).locator(".pay-audit").getByText("Reconciled with invoice").waitFor();
+    await page.keyboard.press("Escape");
+    await page.getByRole("tab", { name: "History" }).click();
+    await page.locator("#pay-history").getByText("Settled 1").waitFor();
+    await page.getByRole("tab", { name: "Pay" }).click();
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
     await page.screenshot({ path: screenshot("payments-preview-mobile.png"), fullPage: true });
     await page.getByRole("button", { name: "中文" }).click();
@@ -95,15 +112,21 @@ test.describe("payments with mocked Django", () => {
     });
     await page.goto(`${base}/?payments=1`);
     const detail = page.locator("#pay-detail");
-    await page.getByRole("row", { name: /Tuition.*Payment in progress/ }).waitFor();
+    // An authorized payment is in flight, so the panel opens on the Pay step.
+    await detail.getByRole("heading", { name: /Submit to the sandbox adapter/ }).waitFor();
+    await page.getByRole("tab", { name: "Due" }).click();
+    await page.locator("#pay-bills li", { hasText: /Tuition.*Payment in progress/ }).waitFor();
+    await page.getByRole("tab", { name: "Pay" }).click();
     // The audit read failing does not hide the payment.
-    await detail.getByText(/Injected audit failure/).waitFor();
-    await detail.getByRole("button", { name: "Submit payment" }).click();
+    await detail.getByRole("button", { name: /Audit trail/ }).click();
+    await page.getByRole("dialog", { name: "Audit trail" }).getByText(/Injected audit failure/).waitFor();
+    await page.getByRole("dialog", { name: "Audit trail" }).getByRole("button", { name: "Close" }).click();
+    await page.getByRole("button", { name: "Submit payment" }).click();
     await page.getByRole("dialog", { name: "Review and confirm" }).getByRole("heading", { name: /Operator approval needed/ }).waitFor();
     await page.getByRole("dialog", { name: "Review and confirm" }).getByRole("button", { name: "Request approval" }).click();
     await page.getByText(/Approval requested\. A second operator must decide/).waitFor();
     await detail.getByText("Approved", { exact: true }).waitFor();
-    await detail.getByRole("button", { name: "Submit payment" }).click();
+    await page.getByRole("button", { name: "Submit payment" }).click();
     await page.getByLabel("Password").fill("correct horse");
     await page.getByRole("dialog", { name: "Review and confirm" }).getByRole("button", { name: "Confirm and submit" }).click();
     await page.getByText("Payment submitted. Status: Submitted.").waitFor();

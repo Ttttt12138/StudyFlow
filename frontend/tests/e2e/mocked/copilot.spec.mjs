@@ -13,26 +13,50 @@ test.describe("what-if planner preview", () => {
     page.on("pageerror", error => errors.push(error.message));
     await page.route("**/api/**", route => { apiCalls++; return route.abort(); });
     await page.goto(`${base}/?copilot=preview`);
-    await page.getByRole("heading", { name: "Build scenarios" }).waitFor();
+    // The sample comparison opens on the Compare tab with the two scenarios side by side.
+    await page.getByRole("tab", { name: "Compare", selected: true }).waitFor();
     const results = page.locator("#copilot-results");
     await results.getByRole("columnheader", { name: "Parents add THB 20,000; tuition instalment" }).waitFor();
     await results.getByRole("columnheader", { name: "Borrow THB 30,000 over 12 months" }).waitFor();
     await results.getByText(/vs current \(better\)/).first().waitFor();
-    await results.getByText(/Tuition is verified or locked/).waitFor();
     await results.getByText("Not enough data").waitFor();
+    assert.ok(await results.locator("td.is-weaker").count() > 0);
+    assert.equal(await page.getByRole("button", { name: "Preview applying" }).isDisabled(), true);
+    await results.getByRole("button", { name: /^All measures/ }).click();
+    await page.getByRole("dialog", { name: "All measures" }).getByRole("rowheader", { name: "Gap still not covered" }).waitFor();
+    await page.keyboard.press("Escape");
+
+    await page.getByRole("tab", { name: "Detail" }).click();
+    const detail = page.locator("#copilot-detail");
+    await detail.getByText(/Tuition is verified or locked/).waitFor();
+    await detail.getByRole("img", { name: "Ending and lowest balance per month" }).waitFor();
+    await page.getByRole("button", { name: "Next", exact: true }).click();
+    await detail.getByText("Not enough data").waitFor();
+    await detail.getByRole("button", { name: /^Loan details/ }).click();
+    await page.getByText(/Missing income and expense data for 2027-07, 2027-08/).waitFor();
+    await page.getByRole("button", { name: "Close", exact: true }).click();
+
+    await page.getByRole("tab", { name: "Apply" }).click();
     const apply = page.locator("#copilot-apply");
     await apply.getByText("Cannot be applied yet").waitFor();
-    await apply.getByRole("link", { name: "See your review items" }).waitFor();
+    await apply.getByRole("link", { name: "See your review items" }).click();
     await page.locator("#copilot-review").getByRole("heading", { name: "Protected cost change" }).waitFor();
+    await page.getByRole("button", { name: /^Notifications/ }).click();
     await page.locator("#copilot-notifications").getByText("Unread: 1.").waitFor();
+    await page.getByRole("button", { name: "Why?" }).click();
     await page.locator("#copilot-why").getByText("Blocked", { exact: true }).waitFor();
+    await page.keyboard.press("Escape");
+    await page.getByRole("tab", { name: "Build" }).click();
+    await page.getByRole("heading", { name: "Build scenarios" }).waitFor();
     assert.equal(await page.getByRole("button", { name: "Compare", exact: true }).isDisabled(), true);
-    assert.equal(await results.getByRole("button", { name: "Preview applying" }).first().isDisabled(), true);
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
     await page.screenshot({ path: screenshot("copilot-preview-mobile.png"), fullPage: true });
     await page.getByRole("button", { name: "中文" }).click();
     await page.getByRole("heading", { name: "构建方案" }).waitFor();
+    await page.getByRole("tab", { name: /^跟进/ }).click();
+    await page.getByRole("button", { name: /^复核事项/ }).click();
     await page.getByRole("heading", { name: "你的复核事项" }).waitFor();
+    await page.getByRole("tab", { name: "应用" }).click();
     await page.locator("#copilot-apply").getByText("暂时无法应用").waitFor();
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
     await page.screenshot({ path: screenshot("copilot-preview-mobile-zh.png"), fullPage: true });
@@ -139,6 +163,8 @@ test.describe("what-if planner with mocked Django", () => {
     await first.getByText("Current: THB 7,000.00 / month").waitFor();
     await first.getByLabel("New amount (THB)").fill("4000");
     await first.getByLabel("Effective from").fill("2026-11-01");
+    // Each scenario shows one part at a time: costs, family support or borrowing.
+    await first.getByRole("button", { name: /^Family support/ }).click();
     await first.getByRole("button", { name: "Add family support" }).click();
     await first.getByRole("button", { name: "Add family support" }).click();
     const support = first.getByRole("group", { name: /Family support/ });
@@ -151,6 +177,7 @@ test.describe("what-if planner with mocked Django", () => {
     await page.getByRole("button", { name: "Add scenario" }).click();
     const second = page.locator("fieldset.copilot-form").nth(1);
     await second.getByLabel("Scenario name").fill("Loan");
+    await second.getByRole("button", { name: "Borrowing" }).click();
     await second.getByLabel("Principal (THB)").fill("30000");
     await page.getByRole("button", { name: "Compare", exact: true }).click();
     // Loan terms are all-or-nothing: the partial loan is caught before any request.
@@ -173,11 +200,14 @@ test.describe("what-if planner with mocked Django", () => {
     await results.locator(".copilot-better").first().waitFor();
     await results.getByText("Affordable", { exact: true }).waitFor();
 
-    await results.getByRole("button", { name: "Preview applying" }).first().click();
+    // The Detail tab pages through the plans and opens on the first scenario.
+    await page.getByRole("tab", { name: "Detail" }).click();
+    await page.locator("#copilot-detail").getByRole("heading", { name: "Cheaper housing" }).waitFor();
+    await page.getByRole("button", { name: "Preview applying" }).click();
     const apply = page.locator("#copilot-apply");
     await apply.getByText(/is created as PENDING. No link is sent to anyone/).waitFor();
     await apply.getByText("No money moves and no payment is made.").waitFor();
-    const confirm = apply.getByRole("button", { name: "Apply to my plan" });
+    const confirm = page.getByRole("button", { name: "Apply to my plan" });
     assert.equal(await confirm.isDisabled(), true);
     await apply.getByLabel("I confirm applying exactly these changes to my plan.").check();
     await confirm.click();
@@ -185,11 +215,13 @@ test.describe("what-if planner with mocked Django", () => {
     await apply.getByText("Plan state version 9 → 10; budget version 5 → 6.").waitFor();
     assert.equal(await apply.getByRole("link", { name: "Open Family support" }).getAttribute("href"), "?family=1");
 
+    await page.getByRole("tab", { name: /^Follow-up/ }).click();
     const reviewCard = page.locator("#copilot-review");
     await reviewCard.getByLabel("Reason for recheck").fill("Landlord letter confirmed");
-    await reviewCard.getByRole("button", { name: "Ask for a recheck" }).click();
+    await page.getByRole("button", { name: "Ask for a recheck" }).click();
     await page.getByText("Recheck done. Status: Resolved.").waitFor();
 
+    await page.getByRole("button", { name: /^Notifications/ }).click();
     const notifications = page.locator("#copilot-notifications");
     await notifications.getByText("Unread: 1.").waitFor();
     await notifications.getByRole("button", { name: "Mark as read" }).click();

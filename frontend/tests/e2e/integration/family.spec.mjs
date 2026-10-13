@@ -48,6 +48,8 @@ test('real Django family support: request, operator link, anonymous confirmation
     const purpose = `UAT rent help ${randomUUID().slice(0, 6)}`;
     await family.reload();
     await family.getByRole('heading', { name: 'Family support' }).waitFor();
+    // The request form is the "Ask family" tab; after creating, the panel shows the request.
+    await family.getByRole('tab', { name: 'Ask family' }).click();
     await family.getByLabel('Amount', { exact: true }).fill('6500');
     await family.getByLabel('Currency').selectOption('THB');
     await family.getByLabel('Available on', { exact: true }).fill(TODAY);
@@ -90,6 +92,7 @@ test('real Django family support: request, operator link, anonymous confirmation
     assert.equal(Number(await thb()) - Number(before), 6500);
 
     await family.reload();
+    await family.getByRole('tab', { name: 'Supported' }).click();
     await family.getByText('Received — an operator recorded the money.').waitFor();
     await family.screenshot({ path: screenshot('family-received.png'), fullPage: true });
     assert.deepEqual(errors, []);

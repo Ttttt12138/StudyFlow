@@ -17,8 +17,10 @@ test.describe("permissions and activity preview", () => {
     for (const tier of ["T0", "T1", "T2", "T3"]) await page.locator(`.tier-legend .tier-${tier.toLowerCase()}`).waitFor();
     await page.getByText("×1.2").waitFor();
     await page.getByText("Your T2 limits are the base limits × 1.2, set by this level.").waitFor();
-    await page.getByRole("row", { name: /CNY 12,000\.00/ }).waitFor();
-    await page.getByRole("row", { name: /Submit transfer.*CNY 15,000\.00.*Waiting for an operator/ }).waitFor();
+    await page.getByRole("tab", { name: "Limits" }).click();
+    await page.locator("#trust-limits .panel-hero", { hasText: "CNY 12,000.00" }).waitFor();
+    await page.locator("#trust-approvals li", { hasText: /Submit transfer.*CNY 15,000\.00.*Waiting for an operator/ }).waitFor();
+    await page.getByRole("tab", { name: "Activity" }).click();
     await page.getByRole("cell", { name: /Password re-check passed/ }).waitFor();
     await page.getByLabel("Show").selectOption("approval");
     assert.equal(await page.locator("#trust-audit tbody tr").count(), 1);
@@ -64,9 +66,11 @@ test.describe("permissions and activity with mocked Django", () => {
     await page.goto(`${base}/?trust=1`);
     await page.getByRole("heading", { name: "Permissions & activity" }).waitFor();
     await page.locator("#trust-credit").getByText("Injected profile failure", { exact: false }).waitFor();
-    await page.getByRole("row", { name: /THB 75,000\.00.*base THB 50,000\.00/ }).waitFor();
+    await page.getByRole("tab", { name: "Limits" }).click();
+    await page.locator("#trust-limits .panel-hero", { hasText: /THB 75,000\.00.*base THB 50,000\.00/ }).waitFor();
     await page.getByText("Effective limit = base limit × 1.5.", { exact: false }).waitFor();
     await page.getByText("No approval requests.").waitFor();
+    await page.getByRole("tab", { name: "Activity" }).click();
     await page.getByText("Showing 2 of 3").waitFor();
     await page.getByRole("cell", { name: /Submit payment · THB 9,000\.00 · by user #7/ }).waitFor();
     await page.getByRole("button", { name: "Load older events" }).click();

@@ -89,15 +89,19 @@ test('real Django planner: parent plans a school with a loan, enrolls three days
     await page.getByRole('button', { name: 'Bills & spending', exact: true }).click();
     const school = page.locator('#plan-school');
     await school.getByRole('heading', { name: 'Upcoming bills' }).waitFor();
-    await school.getByText('Loan installment 1').waitFor();
+    // Bills page four at a time; step through the pages until the first loan installment shows.
+    for (let n = 0; n < 6 && !(await school.getByText('Loan installment 1').count()); n++) await school.getByRole('button', { name: 'Next', exact: true }).click();
+    await school.getByText('Loan installment 1').first().waitFor();
     await say('I spent 120 THB on lunch today', 'Recorded:');
+    await school.getByRole('tab', { name: 'This month' }).click();
     await school.getByText('120 THB').first().waitFor();
     await page.screenshot({ path: screenshot('plan-integration-in-school.png'), fullPage: true });
     await say('How much have I spent this month?', '120');
     const monthly = page.locator('.monthly-report');
     await monthly.getByRole('img', { name: 'Spending by category' }).waitFor();
-    await monthly.locator('.monthly-entries').getByText('120.00 THB').waitFor();
     await monthly.locator('.monthly-legend').getByText('100%', { exact: true }).waitFor();
+    await monthly.getByRole('tab', { name: /^Entries/ }).click();
+    await monthly.locator('.monthly-entries').getByText('120.00 THB').waitFor();
     await page.screenshot({ path: screenshot('plan-integration-monthly.png'), fullPage: true });
 
     // The student asks for support; the operator issues the link; the parent confirms it, then links accounts.

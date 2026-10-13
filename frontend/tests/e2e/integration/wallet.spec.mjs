@@ -26,10 +26,11 @@ test('real Django/PostgreSQL wallet, fixture quotes, T2/T3, expiry, permissions,
    const unverified=await successful('beneficiaries/',{name:'Unverified UAT',destination_label:'SIMULATED-UNVERIFIED'});
    let denied=await post(`beneficiaries/${payee.id}/verify/`,{verified:true});assert.equal(denied.status(),403);
    await successful(`beneficiaries/${payee.id}/verify/`,{verified:true},'verifier');
-   await button('Refresh from Django').click();await page.getByText('THB 200,000.00',{exact:true}).waitFor();
+   const refresh=()=>page.getByRole('button',{name:'Refresh',exact:true}).first().click();await refresh();await page.getByText('THB 200,000.00',{exact:true}).first().waitFor();
    const routes=await get('corridors/'),route=routes.find(r=>r.source_currency==='THB'&&r.target_currency==='CNY');assert.ok(route);
-   await page.getByLabel('Currency route').selectOption(route.id);await page.getByLabel('Send amount').fill('3000.00');await button('Get backend quotes').click();await page.getByText(/3 backend-priced routes returned/).waitFor();
+   await page.getByRole('tab',{name:'Remit'}).click();await page.getByLabel('Currency route').selectOption(route.id);await page.getByLabel('Send amount').fill('3000.00');await button('Get backend quotes').click();await page.getByText(/3 backend-priced routes returned/).waitFor();
    const select=page.locator('.wallet-quote-grid').getByRole('button',{name:'Select quote'});await select.first().click();
+   await button('Recipient & purpose →').click();
    await page.getByLabel('Recipient',{exact:true}).selectOption('BENEFICIARY');await page.getByLabel('Beneficiary',{exact:true}).waitFor();assert.equal(await page.getByLabel('Beneficiary',{exact:true}).locator(`option[value="${unverified.id}"]`).evaluate(option=>option.disabled),true);await page.getByLabel('Beneficiary',{exact:true}).selectOption(payee.id);
    // Failed-before-commit then dropped-after-commit creation uses one body/key and one record.
    let createAttempt=0,createKey,createBody;
@@ -43,17 +44,17 @@ test('real Django/PostgreSQL wallet, fixture quotes, T2/T3, expiry, permissions,
    // Replay the identical committed command without the consumed step-up grant: idempotency is checked first.
    const replay=await post(`remittance-orders/${order.id}/submit/`,{expected_version:order.version},'student',submitKey);assert.equal(replay.status(),200);
    await page.getByRole('dialog', { name: 'Review and confirm' }).getByRole('button', { name: 'Refresh order status' }).click();await page.getByText('Submitted to the simulated processing route. Delivery is not confirmed.').waitFor();
-   await page.getByText('THB 197,000.00',{exact:true}).waitFor();
+   await page.getByRole('tab',{name:'Balances'}).click();await page.getByText('THB 197,000.00',{exact:true}).first().waitFor();await page.getByRole('tab',{name:'Remit'}).click();await button('New remittance').click();
    order=await get(`remittance-orders/${order.id}/`);assert.equal(order.status,'SUBMITTED');assert.equal(order.history.filter(h=>h.to==='SUBMITTED').length,1);assert.equal((await get('demo/wallets/balances/')).balances.find(x=>x.currency==='THB').balance,'197000.00');
    denied=await post(`remittance-orders/${order.id}/adapter-event/`,{expected_version:order.version,outcome:'delivered'});assert.equal(denied.status(),403);
    // Student denial plus different verifier/approver identities remain real HTTP policy checks.
-   await page.getByLabel('Send amount').fill('60000.00');await button('Get backend quotes').click();await page.getByText(/3 backend-priced routes returned/).waitFor();await select.first().click();await button('Create order for review').click();await page.getByText('Simulated order prepared. Review its backend-priced details before submitting.').waitFor();
+   await page.getByLabel('Send amount').fill('60000.00');await button('Get backend quotes').click();await page.getByText(/3 backend-priced routes returned/).waitFor();await select.first().click();await button('Recipient & purpose →').click();await button('Create order for review').click();await page.getByText('Simulated order prepared. Review its backend-priced details before submitting.').waitFor();
    await page.getByRole('checkbox',{name:/I reviewed this exact simulated transfer/}).check();await button('Confirm submission').click();await page.getByRole('heading',{name:'Operator approval required'}).waitFor();await button('Request operator approval').click();await page.getByText(/Approval requested/).waitFor();
    const approval=(await get('approvals/')).results[0];denied=await post(`approvals/${approval.id}/decide/`,{expected_version:approval.version,decision:'approve'});assert.equal(denied.status(),403);
    denied=await post(`approvals/${approval.id}/decide/`,{expected_version:approval.version,decision:'approve'},'verifier');assert.equal(denied.status(),403);
    await successful(`approvals/${approval.id}/decide/`,{expected_version:approval.version,decision:'approve'},'approver');
-   await button('Refresh from Django').click();await button('Continue to password check').click();await page.getByLabel('Password',{exact:true}).fill(passwords.student);await button('Authorize and submit').click();await page.getByText('Django reports: SUBMITTED.',{exact:true}).waitFor();
-   await page.reload();await page.getByText('Submitted to the simulated processing route. Delivery is not confirmed.').waitFor();orders=await get('remittance-orders/');assert.equal(orders.count,2);assert.ok(orders.results.every(o=>o.status==='SUBMITTED'));
+   await refresh();await button('Continue to password check').click();await page.getByLabel('Password',{exact:true}).fill(passwords.student);await button('Authorize and submit').click();await page.getByText('Django reports: SUBMITTED.',{exact:true}).waitFor();
+   await page.reload();await page.getByRole('tab',{name:'Remit'}).click();await page.getByRole('button',{name:/^Current order/}).click();await page.getByText('Submitted to the simulated processing route. Delivery is not confirmed.').waitFor();orders=await get('remittance-orders/');assert.equal(orders.count,2);assert.ok(orders.results.every(o=>o.status==='SUBMITTED'));
    // Controlled backend fixture expiry, then real reads/commands; no long blocking wait.
    const expiryQuote=await successful('fx-quotes/live/',{corridor_id:route.id,send_amount:'1000.00'});
    const expiryOrder=await successful('remittance-orders/',{quote_id:expiryQuote.id,recipient:'SELF',purpose:'living'});
@@ -63,7 +64,7 @@ test('real Django/PostgreSQL wallet, fixture quotes, T2/T3, expiry, permissions,
    // Real version conflict on a prepared order; no backend security settings disabled.
    const q=await successful('fx-quotes/live/',{corridor_id:route.id,send_amount:'1000.00'}),prepared=await successful('remittance-orders/',{quote_id:q.id,recipient:'SELF',purpose:'living'});
    const conflict=await post(`remittance-orders/${prepared.id}/cancel/`,{expected_version:0+prepared.version+1});assert.equal(conflict.status(),409);assert.equal((await get(`remittance-orders/${prepared.id}/`)).status,'CREATED');
-   await button('Refresh from Django').click();await page.getByRole('button',{name:/living .*EXPIRED/}).click();await page.getByText('The quote expired. Prepare a new transfer with a fresh quote.').waitFor();
+   await refresh();await page.getByRole('tab',{name:'History'}).click();await page.locator('#wallet-history li').filter({hasText:/living/i}).filter({hasText:'EXPIRED'}).getByRole('button',{name:'View details'}).click();await page.getByText('The quote expired. Prepare a new transfer with a fresh quote.').waitFor();
    mkdirSync(`${outputDir}`,{recursive:true});for(const width of [1440,390,320]){await page.setViewportSize({width,height:900});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);await page.screenshot({path:`${outputDir}/wallet-live-${width}.png`,fullPage:true});}
    assert.deepEqual(errors,[]);writeFileSync(`${outputDir}/wallet-integration.json`,JSON.stringify({passed:true,tested_at:new Date().toISOString(),database:'PostgreSQL 17',fx:'fixture STUDYFLOW_FX_LIVE=false',worker:'not required for remittance',operator_assistance:['verify beneficiary','separate-operator T3 approval'],expiry:'controlled quote timestamp fixture followed by real HTTP',endpoints:[...endpoints].sort(),checks:['session/CSRF','backend pricing','unverified recipient disabled','prepare does not debit','failed/dropped create response exact-once','T2 step-up','dropped submit response idempotent replay','T3 approval with different verifier/approver','student operator endpoints denied','reload','expiry','actual HTTP 409','desktop/mobile'],liveFX:false},null,2));
   } catch (error) {

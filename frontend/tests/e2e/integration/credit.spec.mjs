@@ -21,7 +21,9 @@ test('real Django credit statement: snapshot, issue, anonymous verify, tamper de
     await page.getByLabel('Username').fill(username);
     await page.getByLabel('Password').fill(password);
     await page.getByRole('button', { name: 'Log in', exact: true }).click();
-    const section = page.locator('#trust-statements');
+    // Statements are issued from the "Share my record" sheet of the Levels tab.
+    await page.getByRole('button', { name: 'Share my record' }).click();
+    const section = page.getByRole('dialog', { name: 'Share your on-time record' });
     await section.getByText('No snapshots yet. Take one to issue a statement.').waitFor();
     await section.getByRole('button', { name: 'Take a snapshot now' }).click();
     await section.getByText(/Snapshot taken \(level Building\)\./).waitFor();

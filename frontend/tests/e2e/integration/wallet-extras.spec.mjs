@@ -47,6 +47,8 @@ test('real Django conversion: quotes for every tier, password step-up, balances 
     const thbBefore = Number(await balance('THB'));
 
     await wallet.reload();
+    // Currency exchange is its own tab in the wallet panel.
+    await wallet.getByRole('tab', { name: 'Exchange' }).click();
     const section = wallet.locator('section').filter({ has: wallet.getByRole('heading', { name: 'Convert between currencies' }) });
     await section.getByLabel('Convert from').selectOption('CNY');
     await section.getByLabel('Convert to').selectOption('THB');

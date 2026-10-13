@@ -17,7 +17,7 @@ test.describe("wallet conversion and ledger preview", () => {
     await page.getByRole("tab", { name: "Exchange" }).click();
     const convert = page.locator("#wallet-convert");
     await convert.getByRole("heading", { name: "Convert between currencies" }).waitFor();
-    await convert.getByText("Example route (standard)").waitFor();
+    await convert.locator("article").getByText("Example route (standard)").waitFor();
     await convert.getByText(/\d:\d\d left/).first().waitFor();
     await convert.getByRole("heading", { name: "Review the conversion" }).waitFor();
     assert.equal(await convert.getByRole("button", { name: "Get conversion quotes" }).isDisabled(), true);

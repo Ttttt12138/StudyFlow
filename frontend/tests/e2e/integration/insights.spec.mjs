@@ -47,10 +47,14 @@ test('real Django spending insights: CSV upload, review, complete coverage, conf
     const state = await call('readiness/state/');
     await call('readiness/semesters/revise/', { semester_id: state.semester_id, state_version: state.state_version, budget_version: state.budget_version, analysis_version: state.analysis_version, draft });
 
-    await page.getByRole('button', { name: 'Refresh' }).click();
-    await page.getByRole('heading', { name: 'Forecast changes from your transactions' }).waitFor();
+    // The dock header's refresh reloads the open tool; panels are tabs and the import opens in a sheet.
+    const tab = name => page.getByRole('tab', { name }).click();
+    await page.getByRole('button', { name: 'Refresh', exact: true }).first().click();
+    await tab('Forecast');
+    await page.locator('#insights-forecast').waitFor();
 
     // Upload the synthetic three-month history.
+    await page.getByRole('button', { name: 'Import CSV' }).click();
     await page.getByLabel('Where the file comes from').selectOption('synthetic');
     await page.getByLabel('CSV file').setInputFiles(`${root}backend/examples/consumption/v1/history.csv`);
     await page.getByRole('button', { name: 'Upload and preview' }).click();
@@ -58,23 +62,35 @@ test('real Django spending insights: CSV upload, review, complete coverage, conf
     const review = page.locator('.insights-review');
     await review.getByLabel('Select all rows').check();
     await review.getByText('99 of 99 rows selected.').waitFor();
+    await review.getByRole('button', { name: 'Coverage per account' }).click();
     await review.getByLabel('From', { exact: true }).fill('2026-07-01');
     await review.getByLabel('To', { exact: true }).fill('2026-09-30');
     await review.getByLabel('This file is complete for this period').check();
     await page.screenshot({ path: screenshot('insights-review.png'), fullPage: true });
-    await review.getByRole('button', { name: 'Confirm import' }).click();
+    await page.getByRole('button', { name: 'Confirm import' }).click();
     await page.getByText('Import confirmed: 99 rows added.').waitFor();
 
     // The confirm queues a readiness check; the page follows it (worker container) and reloads the briefing.
     await page.getByText(/Recalculating your forecast…|Forecast recalculated\./).waitFor();
     await page.getByText(/^(Forecast recalculated\.|The recalculation is taking longer than a minute\..*)$/).waitFor({ timeout: 90_000 });
     const recalculated = await page.getByText('Forecast recalculated.').count();
-    const applied = page.getByRole('row').filter({ hasText: 'Applied' }).filter({ hasText: 'Median of complete months' });
+    await tab('Forecast');
+    const costs = page.locator('#insights-forecast li');
+    await costs.filter({ hasText: 'Housing' }).filter({ hasText: 'Not changed: contract or locked cost' }).waitFor();
+    // Costs page four at a time: step through until an applied median shows.
+    const applied = costs.filter({ hasText: 'Applied' }).filter({ hasText: 'Median of complete months' });
+    const nextCost = page.locator('#insights-forecast').getByRole('button', { name: 'Next', exact: true });
+    for (let n = 0; n < 6 && !(await applied.count()) && await nextCost.isEnabled(); n++) await nextCost.click();
     await applied.first().waitFor();
     assert.ok(await applied.count() >= 1);
-    await page.getByRole('row', { name: /Housing.*Not changed: contract or locked cost/ }).waitFor();
+    await tab('Overview');
+    await page.getByRole('button', { name: 'Check history' }).click();
     await page.locator('#insights-checks').getByText('Transactions changed').first().waitFor();
-    await page.locator('.service-list').getByText('Imported', { exact: true }).waitFor();
+    await page.keyboard.press('Escape');
+    await page.getByRole('button', { name: 'Import CSV' }).click();
+    await page.getByRole('dialog').getByText('Imported', { exact: true }).first().waitFor();
+    await page.keyboard.press('Escape');
+    await tab('Transactions');
     await page.locator('#insights-transactions').getByText('Showing 50 of 99.').waitFor();
     await page.screenshot({ path: screenshot('insights-recalculated.png'), fullPage: true });
 

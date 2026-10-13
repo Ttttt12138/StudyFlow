@@ -23,6 +23,8 @@ test.describe("wallet preview", () => {
     assert.match(await preview.locator(".tool-content[data-tool=wallet]").innerText(), /Fixture-priced demo route/);
     assert.equal(await preview.getByRole("button", { name: "Get backend quotes" }).isDisabled(), true);
     await preview.getByRole("button", { name: /^Current order/ }).click();
+    // Preview scenarios live in the panel's "more" menu.
+    await preview.getByRole("button", { name: "More options" }).click();
     await preview.getByLabel("Preview a status").selectOption("refunded");
     await preview.getByText("The backend reports a failed transfer and a refund.").waitFor();
     await preview.getByLabel("Preview a status").selectOption("unknown");
@@ -107,7 +109,7 @@ test.describe("wallet with mocked Django", () => {
       return json(route, 404, { detail: `Unexpected ${method} ${path}` });
     });
     await page.goto(`${base}/?wallet=1`);
-    await page.getByText("USD 800.00", { exact: true }).waitFor();
+    await page.getByText("USD 800.00", { exact: true }).first().waitFor();
     await page.getByRole("tab", { name: "Remit" }).click();
     await page.getByLabel("Send amount USD").fill("200.00");
     await page.getByRole("button", { name: "Get backend quotes" }).click();

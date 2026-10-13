@@ -15,28 +15,44 @@ test.describe("insights preview", () => {
     await page.goto(`${base}/?insights=preview`);
     await page.getByRole("heading", { name: "Spending insights", level: 2 }).waitFor();
     await page.locator(".workspace-preview").getByText("Demo preview · read-only").waitFor();
+    const tab = name => page.getByRole("tab", { name }).click();
+    // The pending import is announced on the overview and reviewed in a sheet.
+    await page.getByRole("button", { name: "Review now" }).click();
     const review = page.locator(".insights-review");
-    await review.getByRole("heading", { name: /Review import from/ }).waitFor();
+    await page.getByRole("dialog").getByRole("heading", { name: /Review import from/ }).waitFor();
     await review.getByText("Already imported", { exact: true }).waitFor();
     await review.getByText("Suspected duplicate", { exact: true }).waitFor();
     await review.getByText("Invalid rows (not imported)").waitFor();
     await review.getByText("5 of 7 rows selected.").waitFor();
-    assert.equal(await review.getByRole("button", { name: "Confirm import" }).isDisabled(), true);
+    assert.equal(await page.getByRole("button", { name: "Confirm import" }).isDisabled(), true);
+    await page.keyboard.press("Escape");
+    await page.getByRole("button", { name: "Import CSV" }).click();
     assert.equal(await page.getByRole("button", { name: "Upload and preview" }).isDisabled(), true);
-    await page.getByRole("row", { name: /Food.*THB 3,000\.00 → THB 4,310\.00.*Applied/ }).waitFor();
-    await page.getByRole("row", { name: /Housing.*contract or locked cost/ }).waitFor();
+    await page.keyboard.press("Escape");
+    await tab("Forecast");
+    const costs = page.locator("#insights-forecast li");
+    await costs.filter({ hasText: "Food" }).filter({ hasText: "THB 3,000.00 → THB 4,310.00" }).filter({ hasText: "Applied" }).waitFor();
+    await costs.filter({ hasText: "Housing" }).filter({ hasText: "contract or locked cost" }).waitFor();
+    await tab("Transactions");
     await page.locator("#insights-transactions").getByText("Campus Print").waitFor();
+    await tab("Categories");
+    await page.locator("#insights-categories").getByRole("img", { name: "Spending by category" }).waitFor();
     await page.locator("#insights-recurring").getByText("Demo Condo").waitFor();
+    await tab("Overview");
     await page.locator("#insights-risks").getByRole("heading", { name: "Spending is higher than planned" }).waitFor();
     await page.locator("#insights-risks").getByText("Resolved (1)").waitFor();
-    await page.locator("#insights-checks").getByText("Will retry").waitFor();
     assert.equal(await page.getByRole("button", { name: "Run a readiness check now" }).isDisabled(), true);
+    await page.getByRole("button", { name: "Check history" }).click();
+    await page.locator("#insights-checks").getByText("Will retry").waitFor();
+    await page.keyboard.press("Escape");
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
     await page.screenshot({ path: screenshot("insights-preview-mobile.png"), fullPage: true });
     await page.getByRole("button", { name: "中文" }).click();
     await page.getByRole("heading", { name: "消费洞察", level: 2 }).waitFor();
-    await page.getByRole("heading", { name: "导入银行交易" }).waitFor();
     await page.getByRole("heading", { name: "支出高于计划" }).waitFor();
+    await page.getByRole("button", { name: "导入 CSV" }).click();
+    await page.getByRole("heading", { name: "导入银行交易" }).waitFor();
+    await page.keyboard.press("Escape");
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
     await page.screenshot({ path: screenshot("insights-preview-mobile-zh.png"), fullPage: true });
     await page.getByRole("button", { name: "English" }).click().catch(() => {});
@@ -118,7 +134,10 @@ test.describe("insights with mocked Django", () => {
 
     await page.goto(`${base}/?insights=1`);
     await page.getByRole("heading", { name: "Spending insights", level: 2 }).waitFor();
+    const tab = name => page.getByRole("tab", { name }).click();
+    await tab("Forecast");
     await page.getByText("No forecast changes yet.", { exact: false }).waitFor();
+    await page.getByRole("button", { name: "Import CSV" }).click();
     await page.getByLabel("Where the file comes from").selectOption("synthetic");
 
     // A file-level error is explained in plain words.
@@ -134,28 +153,35 @@ test.describe("insights with mocked Django", () => {
     assert.equal(await review.getByLabel("Import row:3").isChecked(), false);
     await review.getByLabel("Keep row:3 even though it looks like a duplicate").check();
     await review.getByText("3 of 3 rows selected.").waitFor();
+    await review.getByRole("button", { name: "Coverage per account" }).click();
     // Defaults come from the selected rows; widen them to the whole month and declare it complete.
     assert.equal(await review.getByLabel("From", { exact: true }).inputValue(), "2026-09-02");
     assert.equal(await review.getByLabel("To", { exact: true }).inputValue(), "2026-09-10");
     await review.getByLabel("From", { exact: true }).fill("2026-09-01");
     await review.getByLabel("To", { exact: true }).fill("2026-09-30");
     await review.getByLabel("This file is complete for this period").check();
-    await review.getByRole("button", { name: "Confirm import" }).click();
+    await page.getByRole("button", { name: "Confirm import" }).click();
     await page.getByText("Import confirmed: 3 rows added.").waitFor();
     await page.getByText("Recalculating your forecast…").waitFor();
     await page.getByText("Forecast recalculated.").waitFor({ timeout: 15_000 });
-    await page.getByRole("row", { name: /Food.*THB 3,000\.00 → THB 900\.00.*Applied.*Median of complete months/ }).waitFor();
-    await page.getByRole("row", { name: /Housing.*Not changed: contract or locked cost/ }).waitFor();
+    const costs = page.locator("#insights-forecast li");
+    await costs.filter({ hasText: "Food" }).filter({ hasText: "THB 3,000.00 → THB 900.00" }).filter({ hasText: "Applied" }).filter({ hasText: "Median of complete months" }).waitFor();
+    await costs.filter({ hasText: "Housing" }).filter({ hasText: "Not changed: contract or locked cost" }).waitFor();
+    await tab("Overview");
+    await page.getByRole("button", { name: "Check history" }).click();
     await page.locator("#insights-checks").getByText("Transactions changed").waitFor();
+    await page.keyboard.press("Escape");
 
     // Fix the category of a transaction that needs review.
+    await tab("Transactions");
     const txs = page.locator("#insights-transactions");
     await txs.getByLabel("Only those needing review").check();
     await txs.getByRole("button", { name: /Change category of Campus Print/ }).click();
-    await txs.locator("form").getByLabel(/^Category/).selectOption("Food");
-    await txs.getByLabel("Count it towards cost (optional)").selectOption("food");
-    await txs.getByLabel("Why (kept in the audit trail)").fill("Lunch, not printing");
-    await txs.getByRole("button", { name: "Save category" }).click();
+    const sheet = page.getByRole("dialog", { name: "Change category" });
+    await sheet.locator("form").getByLabel(/^Category/).selectOption("Food");
+    await sheet.getByLabel("Count it towards cost (optional)").selectOption("food");
+    await sheet.getByLabel("Why (kept in the audit trail)").fill("Lunch, not printing");
+    await sheet.getByRole("button", { name: "Save category" }).click();
     await page.getByText("Category saved. The forecast will be recalculated.").waitFor();
     await txs.getByText("No transactions match.").waitFor();
 

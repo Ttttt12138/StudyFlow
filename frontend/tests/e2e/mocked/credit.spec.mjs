@@ -17,9 +17,10 @@ test.describe("credit statement previews", () => {
     page.on("pageerror", error => errors.push(error.message));
     await page.route("**/api/**", route => { apiCalls++; return route.abort(); });
     await page.goto(`${base}/?trust=preview`);
-    const section = page.locator("#trust-statements");
+    await page.getByRole("button", { name: "Share my record" }).click();
+    const section = page.getByRole("dialog", { name: "Share your on-time record" });
     await page.getByRole("heading", { name: "Share your on-time record" }).waitFor();
-    await section.getByRole("row", { name: /Fair.*4 on time · 0 late · 0 overdue/ }).waitFor();
+    await section.locator("#trust-statements li", { hasText: /Fair.*4 on time · 0 late · 0 overdue/ }).waitFor();
     assert.equal(await section.getByRole("button", { name: "Take a snapshot now" }).isDisabled(), true);
     assert.equal(await section.getByRole("button", { name: /Issue signed statement/ }).first().isDisabled(), true);
     assert.match(await section.getByRole("textbox", { name: "Signed statement" }).inputValue(), /EXAMPLE-not-a-real-signature/);
@@ -87,11 +88,12 @@ test.describe("credit statements with mocked Django", () => {
       return json(route, 404, { detail: "unexpected" });
     });
     await page.goto(`${base}/?trust=1`);
-    const section = page.locator("#trust-statements");
+    await page.getByRole("button", { name: "Share my record" }).click();
+    const section = page.getByRole("dialog", { name: "Share your on-time record" });
     await section.getByText("No snapshots yet. Take one to issue a statement.").waitFor();
     await section.getByRole("button", { name: "Take a snapshot now" }).click();
     await section.getByText("Snapshot taken (level Good).").waitFor();
-    await section.getByRole("row", { name: /Good.*7 on time · 0 late · 0 overdue/ }).waitFor();
+    await section.locator("#trust-statements li", { hasText: /Good.*7 on time · 0 late · 0 overdue/ }).waitFor();
     await section.getByRole("button", { name: /Issue signed statement for the snapshot/ }).click();
     await section.getByText("Signed statement issued. It expires in 90 days.").waitFor();
     assert.equal(await section.getByRole("textbox", { name: "Signed statement" }).inputValue(), STATEMENT);

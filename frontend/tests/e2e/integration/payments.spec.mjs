@@ -30,25 +30,26 @@ test('real Django payment: create, authorize, password step-up, sandbox settleme
 
     // Bill → draft payment (T1).
     await page.getByText(/Funding plan checked .* and still current/).waitFor();
-    const bill = page.getByRole('row').filter({ has: page.getByRole('radio') }).filter({ hasText: 'Ready to pay' });
-    await bill.getByText('Invoice DEMO-2026-1').waitFor();
+    // Bills are rows of a list on the Due step; actions sit in the panel's footer.
+    const bill = page.locator('#pay-bills li').filter({ has: page.getByRole('radio') }).filter({ hasText: 'Ready to pay' });
+    await bill.getByText(/Invoice DEMO-2026-1/).waitFor();
     await bill.getByRole('radio').check();
     await page.getByRole('button', { name: 'Create payment' }).click();
     await page.getByText('Payment created as a draft.').waitFor();
-    await detail.getByText('Draft', { exact: true }).waitFor();
+    await detail.locator('.status-chip').getByText('Draft', { exact: true }).first().waitFor();
 
     // Authorize against the current state version (T1).
     await detail.getByLabel('I checked the payee, the amount and the invoice.').check();
-    await detail.getByRole('button', { name: 'Authorize' }).click();
+    await page.getByRole('button', { name: 'Authorize', exact: true }).click();
     await page.getByText('Payment authorized for 15 minutes.').waitFor();
 
     // Submit is T2: Django asks for the password; a wrong one is refused and audited.
-    await detail.getByRole('button', { name: 'Submit payment' }).click();
+    await page.getByRole('button', { name: 'Submit payment', exact: true }).click();
     await page.getByRole('alert').filter({ hasText: 'Submitting a payment needs your password again.' }).waitFor();
     await page.getByLabel('Password').fill(`wrong-${randomUUID()}`);
     await page.getByRole('dialog', { name: 'Review and confirm' }).getByRole('button', { name: 'Confirm and submit' }).click();
     await page.getByRole('alert').filter({ hasNotText: 'needs your password' }).waitFor();
-    await detail.getByText('Authorized', { exact: true }).waitFor();
+    await detail.locator('.status-chip').getByText('Authorized', { exact: true }).first().waitFor();
     await page.getByLabel('Password').fill(ready.student.password);
     await page.getByRole('dialog', { name: 'Review and confirm' }).getByRole('button', { name: 'Confirm and submit' }).click();
     await page.getByText('Payment submitted. Status: Submitted.').waitFor();
@@ -60,21 +61,27 @@ test('real Django payment: create, authorize, password step-up, sandbox settleme
     assert.equal(settled.status(), 201, await settled.text());
 
     // Settled → reconcile against the invoice in the UI; the receipt and ledger entry are shown.
-    await page.getByRole('button', { name: 'Refresh' }).click();
-    await detail.getByText('Settled', { exact: true }).waitFor();
-    await detail.getByRole('heading', { name: 'Settlement receipt' }).waitFor();
-    await detail.getByRole('button', { name: 'Reconcile with invoice' }).click();
+    await page.getByRole('button', { name: 'Refresh', exact: true }).first().click();
+    await detail.locator('.status-chip').getByText('Settled', { exact: true }).first().waitFor();
+    await page.getByRole('button', { name: 'Reconcile with invoice' }).click();
     await page.getByText('Receipt matches the invoice. The payment is reconciled.').waitFor();
-    await detail.getByText('Reconciled', { exact: true }).first().waitFor();
-    await detail.getByText('Matched', { exact: true }).waitFor();
-    await detail.getByText(/^#\d+ · THB -?30,000\.00$|^#\d+ · -THB 30,000\.00$/).waitFor();
+    await detail.locator('.status-chip').getByText('Reconciled', { exact: true }).first().waitFor();
+    // Receipt and ledger entry live in the details sheet; the audit trail has its own sheet.
+    await detail.getByRole('button', { name: /Receipt and details/ }).click();
+    const details = page.getByRole('dialog').filter({ has: page.getByRole('heading', { name: 'Settlement receipt' }) });
+    await details.getByText('Matched', { exact: true }).waitFor();
+    await details.getByText(/^#\d+ · THB -?30,000\.00$|^#\d+ · -THB 30,000\.00$/).waitFor();
+    await page.keyboard.press('Escape');
+    await detail.getByRole('button', { name: /^Audit trail/ }).click();
     for (const name of ['Payment created', 'Payment authorized', 'Password re-check failed', 'Password re-check passed',
       'Submitted to sandbox adapter', 'Settled (sandbox)', 'Reconciled with invoice'])
-      await detail.locator('.pay-audit').getByText(name, { exact: true }).waitFor();
+      await page.locator('.panel-sheet .pay-audit').getByText(name, { exact: true }).waitFor();
+    await page.keyboard.press('Escape');
     await page.screenshot({ path: screenshot('payments-reconciled.png'), fullPage: true });
 
     // The server is the source of truth: a reload shows the same reconciled payment.
     await page.reload();
+    await page.getByRole('tab', { name: 'Pay' }).click();
     await detail.getByText('Paid and reconciled.').waitFor();
     const stored = (await (await context.request.get(`${origin}/api/v2/payments/${payment.id}/`)).json()).data;
     assert.equal(stored.status, 'reconciled');
