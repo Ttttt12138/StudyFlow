@@ -37,16 +37,14 @@ test('real Django planner: parent plans a school with a loan, enrolls three days
 
   try {
     const page = await login('parent');
-    await page.locator('dialog.journey-intro').getByRole('button', { name: 'Start consultation' }).click();
     const chat = page.locator('#plan-chat');
     const say = async (text, expect) => {
       await chat.getByLabel('Message the assistant').fill(text);
       await chat.getByLabel('Message the assistant').press('Enter');
       await chat.getByText(expect, { exact: false }).last().waitFor();
     };
-    await chat.getByText('are you a parent, or the student?', { exact: false }).waitFor();
-    await chat.getByRole('button', { name: "I'm a parent" }).click();
-    await chat.getByRole('heading', { name: 'Schools in the catalog' }).waitFor();
+    // The first screen leads with the price question; nobody is asked whether they are a parent or the student.
+    await chat.getByRole('heading', { name: 'Know what studying abroad costs before you go' }).waitFor();
     await say('What does 4 years at Chulalongkorn cost in total?', '4 year(s) total about');
     await say('We have savings of 200000 CNY, choose Chulalongkorn', 'Funding gap about');
     await page.getByRole('button', { name: 'My plan', exact: true }).click();
@@ -56,7 +54,6 @@ test('real Django planner: parent plans a school with a loan, enrolls three days
     await say('Confirm the plan', 'A plan confirmation is ready');
     await chat.locator('.plan-card-confirm').last().getByRole('button', { name: 'Confirm', exact: true }).click();
     await page.getByRole('dialog', { name: 'Review and confirm' }).getByRole('button', { name: 'Confirm', exact: true }).click();
-    await page.locator('dialog.journey-intro').getByRole('button', { name: 'Start preparing' }).click();
     await page.getByRole('button', { name: 'My plan', exact: true }).click();
     await page.getByText('Done. The plan is updated.').waitFor();
     await page.locator('#plan-summary').getByText('Confirmed').waitFor();
@@ -67,7 +64,7 @@ test('real Django planner: parent plans a school with a loan, enrolls three days
     // Three days before classes the assistant speaks first and proposes enrollment.
     shell('import os; from datetime import date, timedelta; from finance.planning.models import StudyPlan; p=StudyPlan.objects.get(owner__username=os.environ["UAT_PARENT"]); p.start_date=date.today()+timedelta(days=3); p.save(update_fields=["start_date"])',
       { UAT_PARENT: names.parent });
-    await chat.getByRole('button', { name: 'New conversation' }).click();
+    await page.getByRole('navigation', { name: 'Tools' }).getByRole('button', { name: 'New price question' }).click();
     await chat.getByText('Classes start in 3 day(s).', { exact: false }).waitFor();
     await page.locator('#plan-journey-guide').getByRole('button', { name: 'Still preparing' }).click();
     await chat.getByText('I will not confirm enrollment', { exact: false }).waitFor();
@@ -75,18 +72,13 @@ test('real Django planner: parent plans a school with a loan, enrolls three days
     await page.locator('#plan-journey-guide').getByRole('button', { name: 'Registration completed' }).click();
     await page.getByRole('dialog', { name: 'Review and confirm' }).getByRole('button', { name: 'Confirm', exact: true }).click();
     await page.locator('#plan-summary').getByText('Enrolled').waitFor();
-    await page.locator('dialog.journey-intro').getByRole('button', { name: 'Meet your life assistant' }).click();
-    await page.getByRole('button', { name: 'View journey', exact: true }).click();
-    await page.locator('dialog.journey-intro [data-phase="1"]').click();
-    await page.locator('.journey-view-notice').getByText('Your actual stage remains Life assistant.', { exact: false }).waitFor();
-    await page.getByRole('button', { name: 'My plan', exact: true }).click();
-    await page.locator('#plan-summary').getByText('Enrolled').waitFor();
-    await page.getByRole('button', { name: 'Close tool', exact: true }).click();
-    await page.getByRole('button', { name: 'Return to current stage' }).click();
+    // Enrolled: the sidebar gains the life tools.
+    await page.locator('.workspace-stage').getByText('Enrolled').waitFor();
+    await page.getByRole('navigation', { name: 'Tools' }).getByRole('button', { name: 'Wallet & payments' }).waitFor();
     await chat.getByText("let's settle into daily life", { exact: false }).waitFor();
     await page.locator('#plan-journey-guide').getByRole('button', { name: 'Campus life', exact: true }).click();
     await chat.locator('.workspace-card-summary').getByRole('heading', { name: 'Chulalongkorn University' }).last().waitFor();
-    await page.getByRole('button', { name: 'Bills & spending', exact: true }).click();
+    await page.getByRole('navigation', { name: 'Tools' }).getByRole('button', { name: 'Bills & expenses', exact: true }).click();
     const school = page.locator('#plan-school');
     await school.getByRole('heading', { name: 'Upcoming bills' }).waitFor();
     // Bills page four at a time; step through the pages until the first loan installment shows.
@@ -114,8 +106,8 @@ test('real Django planner: parent plans a school with a loan, enrolls three days
       data: { decision: 'confirm', terms_version: request.terms_version },
       headers: { 'X-Sponsor-Token': link.token, 'Idempotency-Key': randomUUID() } });
     assert.equal(confirmed.status(), 200, await confirmed.text());
-    await page.getByRole('button', { name: 'Tools', exact: true }).click();
-    await page.locator('#workspace-tools').getByRole('button', { name: 'Family links', exact: true }).click();
+    await page.getByRole('navigation', { name: 'Tools' }).getByRole('button', { name: 'Settings' }).click();
+    await page.locator('#side-settings').getByRole('button', { name: 'Link a family account' }).click();
     const family = page.locator('#plan-family');
     await family.getByLabel('Sponsor link token').fill(link.token);
     await family.getByRole('button', { name: 'Link accounts' }).click();

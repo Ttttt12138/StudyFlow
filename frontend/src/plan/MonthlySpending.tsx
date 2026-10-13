@@ -107,6 +107,8 @@ export function MonthlySpending({ client, preview }: { client: WalletClient; pre
   </nav>;
   return <article className="monthly-report" aria-busy={loading}>
     <ToolPanel label={t("plan.monthly.title")} numbered={false} active={tab} onSelect={setTab}
+      footer={result?.school.enrolled && <button type="button" className="secondary" disabled={preview}
+        onClick={() => workspace?.open({ kind: "bills", section: "expense" })}>{t("ws.record")}</button>}
       aside={page && tab === "overview" && page.entries.length > 0 ? <><h3 className="panel-section-title">{t("plan.monthly.details")} <span>{page.count}</span></h3>
         <ul className="panel-rows">{page.entries.map(entry => <li key={entry.id}><span><strong>{entry.note || t(`plan.cat.${entry.category}` as MessageKey)}</strong><small>{entry.spent_on}</small></span>
           <span>{amountLabel(entry.amount, entry.currency, lang)}</span></li>)}</ul></> : undefined}

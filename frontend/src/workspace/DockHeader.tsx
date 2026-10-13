@@ -15,14 +15,16 @@ import { Scales } from "@phosphor-icons/react/dist/csr/Scales";
 import { ShieldCheck } from "@phosphor-icons/react/dist/csr/ShieldCheck";
 import { UsersThree } from "@phosphor-icons/react/dist/csr/UsersThree";
 import { Wallet } from "@phosphor-icons/react/dist/csr/Wallet";
+import { Coins } from "@phosphor-icons/react/dist/csr/Coins";
 import { X } from "@phosphor-icons/react/dist/csr/X";
 import { useState, type ComponentType } from "react";
 import { useI18n, type MessageKey } from "../i18n";
 import type { ToolKind } from "./navigation";
 
 const ICONS: Record<ToolKind, ComponentType<{ size?: number; weight?: "light" | "regular"; "aria-hidden"?: boolean | "true" }>> = {
+  life: Notebook,
   wallet: Wallet, payments: CreditCard, agent: Robot, trust: ShieldCheck, loans: Bank, insights: ChartLineUp, family: UsersThree,
-  copilot: Scales, plan: Notebook, bills: Receipt, spending: ChartPie, "family-links": LinkSimple, card: ChatCircleText,
+  copilot: Scales, compare: Scales, funding: Coins, plan: Notebook, bills: Receipt, spending: ChartPie, "family-links": LinkSimple, card: ChatCircleText,
 };
 
 /**

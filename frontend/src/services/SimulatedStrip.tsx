@@ -8,7 +8,7 @@ export function SimulatedStrip() {
   return (
     <section className="sim-strip" aria-label={t("sim.label")}>
       <span className="sim-pill">{t("sim.pill")}</span>
-      <span className="sim-text">{t("sim.text")}</span>
+      <span className="sim-text"><span className="sim-text-full">{t("sim.text")}</span><span className="sim-text-short">{t("sim.short")}</span></span>
       <a className="sim-intro" href="/intro">{t("sim.intro")} <span aria-hidden="true">↗</span></a>
       <RoleSwitch />
       <div className="lang-switch" role="group" aria-label={t("lang.label")}>

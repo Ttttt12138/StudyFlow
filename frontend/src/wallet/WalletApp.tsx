@@ -27,7 +27,12 @@ function orderApproval(order: Order, approvals: Approval[]) {
   return approvals.find((item) => item.action === "remittance.submit" && item.target_id === order.id) ?? null;
 }
 
-export function WalletApp({ preview, onExit }: { preview: boolean; onExit: () => void }) {
+export type WalletTab = "balances" | "convert" | "remit" | "history";
+
+/** Balances, exchange, transfers and their records. Inside the money tool (MoneyHub) the hub owns the tabs: `bare` hides this panel's own tab bar. */
+export function WalletApp({ preview, onExit, tab: shownTab, onTab, historyView: shownHistory, bare = false }: {
+  preview: boolean; onExit: () => void; tab?: WalletTab; onTab?: (tab: WalletTab) => void; historyView?: "orders" | "ledger"; bare?: boolean;
+}) {
   const { lang, t } = useI18n();
   const toolActive = useToolActive();
   const embedded = useEmbedded();
@@ -68,9 +73,12 @@ export function WalletApp({ preview, onExit }: { preview: boolean; onExit: () =>
   const unauthenticated = !preview && /^HTTP (401|403):/.test(snapshot.errors.balances ?? "") && !snapshot.balances;
 
   const requested = workspace?.target?.kind === "wallet" ? workspace.target.section : undefined;
-  const [tab, setTab] = useState<"balances" | "convert" | "remit" | "history">(requested === "convert" ? "convert" : requested === "quote" ? "remit" : "balances");
+  const [ownTab, setOwnTab] = useState<WalletTab>(requested === "convert" ? "convert" : requested === "quote" ? "remit" : "balances");
+  const tab = shownTab ?? ownTab;
+  const setTab = onTab ?? setOwnTab;
   const [remitView, setRemitView] = useState<"quote" | "order">("quote");
-  const [historyView, setHistoryView] = useState<"orders" | "ledger">("orders");
+  const [ownHistory, setHistoryView] = useState<"orders" | "ledger">("orders");
+  const historyView = shownHistory ?? ownHistory;
   const [orderPage, setOrderPage] = useState(0);
   const [recipientOpen, setRecipientOpen] = useState(false);
   useEffect(() => {
@@ -222,7 +230,7 @@ export function WalletApp({ preview, onExit }: { preview: boolean; onExit: () =>
   const homeRow = balances.find((row) => row.is_home) ?? balances[0];
   const orders = usePage(snapshot.orders, 5, orderPage);
   // Home-currency terms come from the backend's indicative values; rows without one are left out, not estimated.
-  const PALETTE = ["#4ff2c6", "#f2c879", "#7fb8ff", "#c6a6f6", "#ff9c8a"];
+  const PALETTE = ["#1677ff", "#ff8a3d", "#91caff", "#722ed1", "#13a8a8"];
   const composition = balances.map((row, n) => ({ key: row.currency, label: row.currency, color: PALETTE[n % PALETTE.length],
     value: row.is_home ? Number(row.balance) : Number(row.indicative_home_value ?? 0), display: money(row.balance, row.currency) }));
   const missingIndicative = balances.filter((row) => !row.is_home && Number(row.balance) > 0 && row.indicative_home_value == null);
@@ -293,7 +301,7 @@ export function WalletApp({ preview, onExit }: { preview: boolean; onExit: () =>
     {error && !policy && <p className="error" role="alert">{error}</p>}
   </PanelSheet>;
   const content = <ToolPanel label={t("wallet.title")} numbered={false} active={tab} onSelect={(key) => { setTab(key); if (key === "remit" && selectedOrder?.effective_status === "CREATED") setRemitView("order"); }}
-    steps={[{ key: "balances", label: t("wp.tab.balances") }, { key: "convert", label: t("wp.tab.convert") }, { key: "remit", label: t("wp.tab.remit") }, { key: "history", label: t("wp.tab.history") }]}
+    steps={bare ? [] : [{ key: "balances", label: t("wp.tab.balances") }, { key: "convert", label: t("wp.tab.convert") }, { key: "remit", label: t("wp.tab.remit") }, { key: "history", label: t("wp.tab.history") }]}
     notices={notices} footer={footer} sheet={recipientSheet} tools={menu}>
     {/* In the dock the header already names the tool; a second heading would duplicate it. */}
     {!embedded && <h1 className="sr-only">{t("wallet.title")}</h1>}
@@ -341,9 +349,9 @@ export function WalletApp({ preview, onExit }: { preview: boolean; onExit: () =>
     <section className="panel-view" hidden={tab !== "remit" || !showOrder}>{orderReview}</section>
     <WalletExtras client={client} preview={preview} balances={snapshot.balances} onChanged={() => void refresh()} view={tab === "convert" ? "convert" : tab === "history" && historyView === "ledger" ? "ledger" : "none"} />
     <section id="wallet-history" className="panel-view" hidden={tab !== "history"}>
-      <div className="panel-card-head"><div className="panel-chips" role="group" aria-label={t("wp.tab.history")}>
+      <div className="panel-card-head">{bare ? <span /> : <div className="panel-chips" role="group" aria-label={t("wp.tab.history")}>
         <button type="button" aria-pressed={historyView === "orders"} onClick={() => setHistoryView("orders")}>{t("wp.orders")}</button>
-        <button type="button" aria-pressed={historyView === "ledger"} onClick={() => setHistoryView("ledger")}>{t("wp.ledger")}</button></div>
+        <button type="button" aria-pressed={historyView === "ledger"} onClick={() => setHistoryView("ledger")}>{t("wp.ledger")}</button></div>}
         {historyView === "orders" && <PanelPager index={orders.index} count={orders.pages} onChange={setOrderPage} label={t("wp.orders")} />}</div>
       {historyView === "orders" && <>
         <h2 className="sr-only">{t("wallet.history.title")}</h2>

@@ -1,6 +1,7 @@
 import { test } from "@playwright/test";
 import assert from "node:assert/strict";
 import { screenshot } from "../../support.mjs";
+import { enrolledPlanner } from "../plannerMock.mjs";
 
 const base = process.env.TEST_URL || "http://127.0.0.1:5173";
 const json = (route, status, body) => route.fulfill({ status, contentType: "application/json", body: JSON.stringify(body) });
@@ -87,6 +88,7 @@ test.describe("credit statements with mocked Django", () => {
       if (path === "approvals/" || path === "audit/") return json(route, 200, { count: 0, next: null, previous: null, results: [] });
       return json(route, 404, { detail: "unexpected" });
     });
+    await enrolledPlanner(page);
     await page.goto(`${base}/?trust=1`);
     await page.getByRole("button", { name: "Share my record" }).click();
     const section = page.getByRole("dialog", { name: "Share your on-time record" });
@@ -112,14 +114,19 @@ test.describe("credit statements with mocked Django", () => {
     assert.deepEqual(errors, []);
   });
 
-  test("hides the section when signed out (TrustApp shows the sign-in card)", async ({ page }) => {
+  test("hides the statement section when signed out (the enrollment gate keeps the credit tool closed)", async ({ page }) => {
+    // Signed out, the planner cannot load, so the student counts as not enrolled and the credit tool
+    // (with its statement section) never opens; no statement endpoint is called.
+    const reads = [];
     await page.route("**/api/auth/session/", route => route.fulfill({ json: { authenticated: false } }));
-    await page.route("**/api/v2/**", route => json(route, 403, { detail: "Authentication credentials were not provided." }));
+    await page.route("**/api/v2/**", route => { reads.push(new URL(route.request().url()).pathname); return json(route, 403, { detail: "Authentication credentials were not provided." }); });
     await page.goto(`${base}/?trust=1`);
-    await page.getByRole("heading", { name: "Permissions & activity" }).waitFor();
-    await page.locator("#trust-tiers").waitFor();
+    await page.getByRole("status").filter({ hasText: "That tool opens once enrollment is confirmed." }).waitFor();
+    await page.getByRole("link", { name: "Sign in to StudyFlow" }).waitFor();
     await page.waitForLoadState("networkidle");
+    assert.equal(await page.locator("#trust-tiers").count(), 0);
     assert.equal(await page.locator("#trust-statements").count(), 0);
+    assert.equal(reads.some(path => path.includes("credit") || path.includes("statement")), false);
   });
 });
 

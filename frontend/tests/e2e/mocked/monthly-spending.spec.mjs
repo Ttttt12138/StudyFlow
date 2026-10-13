@@ -1,9 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import { screenshot } from '../../support.mjs';
-test.beforeEach(async ({ page }) => {
-  await page.addInitScript(() => localStorage.setItem('studyflow.journey.v1:student', '2'));
-});
 
 async function monthlyFixture(page, { empty = false, fail = false } = {}) {
   const data = JSON.parse(readFileSync(new URL('../../../src/plan/preview-data/school.en.json', import.meta.url), 'utf8'));

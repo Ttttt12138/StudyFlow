@@ -1,6 +1,7 @@
 import { test } from "@playwright/test";
 import assert from "node:assert/strict";
 import { screenshot } from "../../support.mjs";
+import { enrolledPlanner } from "../plannerMock.mjs";
 
 const base = process.env.TEST_URL || "http://127.0.0.1:5173";
 const inMinutes = (minutes) => new Date(Date.now() + minutes * 60_000).toISOString();
@@ -124,6 +125,7 @@ test.describe("wallet conversion with mocked Django", () => {
     const mock = mockDjango(page, { conversionReply: (headers) => headers["x-step-up-token"]
       ? { status: 201 } : { status: 403, body: { detail: "STEP_UP_REQUIRED", code: "STEP_UP_REQUIRED", message: "Confirm with your password.", policy: { tier: "T2", requires: ["step_up"] } } } });
     await page.route("**/api/v2/**", mock.route);
+    await enrolledPlanner(page);
     await page.goto(`${base}/?wallet=1`);
     const convert = page.locator("#wallet-convert");
     const ledger = page.locator("#wallet-ledger");
@@ -195,6 +197,7 @@ test.describe("wallet conversion with mocked Django", () => {
       ? { status: 409, body: { detail: "State version changed. Refresh and retry.", code: "stale_version", message: "State version changed. Refresh and retry." } }
       : { status: 400, body: { detail: "RESERVE_REQUIRED", code: "RESERVE_REQUIRED", message: "The home-currency reserve must stay in the wallet." } } });
     await page.route("**/api/v2/**", mock.route);
+    await enrolledPlanner(page);
     await page.goto(`${base}/?wallet=1`);
     await page.getByRole("tab", { name: "Exchange" }).click();
     const convert = page.locator("#wallet-convert");

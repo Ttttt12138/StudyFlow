@@ -4,9 +4,15 @@ import { useI18n } from "../i18n";
 import type { ToolKind, ToolTarget } from "./navigation";
 import type { PreviewStage } from "../plan/preview";
 
+/** What the planner tells the workspace shell: the plan's stage decides which tools exist. */
+export type PlanState = { status: "DRAFT" | "CONFIRMED" | "ENROLLED" | null; gap: boolean };
+
 export const WorkspaceContext = createContext<{
   target: ToolTarget | null; host: HTMLElement | null; open: (target: ToolTarget) => void;
+  /** Top-bar slot the reminder bell renders into. */
+  bellHost?: HTMLElement | null;
   close: () => void; setStage: (stage: PreviewStage) => void; account?: string;
+  reportPlan?: (state: PlanState) => void;
 } | null>(null);
 export const ToolContext = createContext({ embedded: false, active: true });
 export const useWorkspace = () => useContext(WorkspaceContext);

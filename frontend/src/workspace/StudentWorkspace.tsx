@@ -1,35 +1,40 @@
 import { useWorkspaceNavigation } from "./useWorkspaceNavigation";
 import { useStripHeight, useSmallScreen, useDockKeyboard } from "./useDockLayout";
-import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
+import { List } from "@phosphor-icons/react/dist/csr/List";
 import { PlanApp } from "../plan/PlanApp";
 import { ModuleNavContext, type Module } from "../services/ModuleNav";
 import { useI18n, type MessageKey } from "../i18n";
-import { ToolSlot, WorkspaceContext } from "./context";
+import { ToolSlot, WorkspaceContext, type PlanState } from "./context";
 import { DockHeader } from "./DockHeader";
+import { ToolSidebar } from "./ToolSidebar";
 import { signOut as endSession } from "./session";
-import { studentTools, type StudentTool, type ToolTarget } from "./navigation";
+import { studentTools, toolAvailable, type StudentTool, type ToolTarget } from "./navigation";
 import "./workspace.css";
 import "./panel-system.css";
+import "./mobile.css";
 
-const components = {
-  wallet: lazy(() => import("../wallet/WalletApp").then(m => ({ default: m.WalletApp }))),
-  payments: lazy(() => import("../payments/PaymentsApp").then(m => ({ default: m.PaymentsApp }))),
-  agent: lazy(() => import("../agent/AgentApp").then(m => ({ default: m.AgentApp }))),
+// The finance sub-assistant and the comparison copilot are merged into the planner conversation, and spending
+// insights into the monthly spending panel; navigation.ts sends their old links there.
+const components: Partial<Record<StudentTool, ReturnType<typeof lazy>>> = {
+  // Wallet, exchange, transfers and payments are one money tool; ?payments= links open its Pay tab.
+  wallet: lazy(() => import("../wallet/MoneyHub").then(m => ({ default: m.MoneyHub }))),
   trust: lazy(() => import("../trust/TrustApp").then(m => ({ default: m.TrustApp }))),
   loans: lazy(() => import("../loans/LoansApp").then(m => ({ default: m.LoansApp }))),
-  insights: lazy(() => import("../insights/InsightsApp").then(m => ({ default: m.InsightsApp }))),
   family: lazy(() => import("../family/FamilyApp").then(m => ({ default: m.FamilyApp }))),
-  copilot: lazy(() => import("../copilot/CopilotApp").then(m => ({ default: m.CopilotApp }))),
 };
 const labels: Record<ToolTarget["kind"], MessageKey> = {
-  plan: "ws.plan", bills: "ws.bills", spending: "plan.monthly.title", "family-links": "ws.family", card: "ws.history", agent: "ws.finance",
-  wallet: "wallet.title", payments: "nav.payments", trust: "nav.trust", loans: "nav.loans", insights: "nav.insights", family: "nav.family", copilot: "nav.copilot",
+  life: "life.title",
+  plan: "ws.plan", compare: "simple.compare", funding: "simple.plan", bills: "ws.record", spending: "plan.monthly.title",
+  "family-links": "side.familyLinks", card: "ws.history", agent: "ws.finance", wallet: "money.title", payments: "money.title",
+  trust: "side.trust", loans: "simple.loans", insights: "nav.insights", family: "side.family", copilot: "side.copilot",
 };
-const groups: { label: MessageKey; tools: ToolTarget["kind"][] }[] = [
-  { label: "ws.planTools", tools: ["plan", "spending", "bills", "copilot"] },
-  { label: "ws.moneyTools", tools: ["wallet", "payments", "loans", "insights", "agent"] },
-  { label: "ws.accountTools", tools: ["family-links", "family", "trust"] },
-];
+const STAGE: Record<string, MessageKey> = { DRAFT: "side.stage.plan", CONFIRMED: "side.stage.prepare", ENROLLED: "side.stage.school" };
+const COLLAPSED = "studyflow.sidebar.collapsed";
+
+function readCollapsed() {
+  try { return localStorage.getItem(COLLAPSED) === "1"; } catch { return false; }
+}
 
 export function StudentWorkspace({ preview, onExternal }: { preview: boolean; onExternal: (kind: Module, preview: boolean) => void }) {
   const [identity, setIdentity] = useState<string | null>(preview ? "" : null);
@@ -59,54 +64,89 @@ function WorkspaceBody({ username, preview, onExternal }: { username: string; pr
   const control = useWorkspaceNavigation(preview);
   const { route, stack, menu, setMenu, expanded, setExpanded, open, close, back } = control;
   const [host, setHost] = useState<HTMLDivElement | null>(null);
+  const [bellHost, setBellHost] = useState<HTMLDivElement | null>(null);
   const [signingOut, setSigningOut] = useState(false);
+  const [plan, setPlan] = useState<PlanState | null>(null);
+  const [collapsed, setCollapsed] = useState(readCollapsed);
+  const [notice, setNotice] = useState("");
   async function signOut() { setSigningOut(true); await endSession(); }
   const dock = useRef<HTMLElement>(null);
   const frame = useRef<HTMLDivElement>(null);
   const small = useSmallScreen();
+  const enrolled = plan ? plan.status === "ENROLLED" : null;
+  // A money tool asked for before enrollment (an old link, another module's button) waits for the plan, then is refused.
+  const blocked = !!route.tool && !toolAvailable(route.tool.kind, enrolled);
+  const tool = blocked ? null : route.tool;
   useStripHeight(frame);
-  useDockKeyboard(dock, { targetKey: JSON.stringify(route.tool), modal: small || expanded, menu }, close);
+  useDockKeyboard(dock, { targetKey: JSON.stringify(tool), modal: small || expanded, menu }, close);
+  useEffect(() => {
+    if (!blocked || enrolled === null) return;
+    close(); setNotice(t("side.lockedNotice"));
+  }, [blocked, enrolled, close, t]);
+  useEffect(() => { if (tool) setNotice(""); }, [tool]);
+  useEffect(() => {
+    if (route.tool?.kind === "payments" && enrolled) open({ kind: "wallet", section: "pay" });
+  }, [route.tool?.kind, enrolled]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    if (route.tool?.kind !== "agent") return;
+    close(); setNotice(t("side.agentMerged"));
+    requestAnimationFrame(() => document.querySelector<HTMLTextAreaElement>(".plan-composer textarea")?.focus());
+  }, [route.tool?.kind, close, t]);
   useEffect(() => {
     if (!menu) return;
     const closeMenu = (event: KeyboardEvent) => { if (event.key === "Escape") { event.preventDefault(); setMenu(false); } };
-    const outside = (event: PointerEvent) => { if (!(event.target as Element).closest(".workspace-topbar")) setMenu(false); };
+    const outside = (event: PointerEvent) => { if (!(event.target as Element).closest(".tool-sidebar, .workspace-menu-button")) setMenu(false); };
     document.addEventListener("keydown", closeMenu); document.addEventListener("pointerdown", outside);
     return () => { document.removeEventListener("keydown", closeMenu); document.removeEventListener("pointerdown", outside); };
   }, [menu, setMenu]);
+  const toggleCollapsed = () => setCollapsed(value => {
+    try { localStorage.setItem(COLLAPSED, value ? "0" : "1"); } catch { /* the choice still holds for this page */ }
+    return !value;
+  });
+  const reportPlan = useCallback((state: PlanState) => setPlan(state), []);
 
   const nav = { current: "home" as Module, preview: route.preview,
     open: (kind: Module, asPreview: boolean) => {
       if (kind === "home") { close(); return; }
       if (studentTools.includes(kind as StudentTool) && asPreview === route.preview) open({ kind: kind as StudentTool });
       else onExternal(kind, asPreview);
-    }, openAssistant: () => open({ kind: "agent" }),
+    }, openAssistant: () => { close(); requestAnimationFrame(() => document.querySelector<HTMLTextAreaElement>(".plan-composer textarea")?.focus()); },
   };
-  return <ModuleNavContext.Provider value={nav}><WorkspaceContext.Provider value={{ target: route.tool, host, open, close,
-    setStage: control.setStage, account: username }}>
-    <div ref={frame} className={`student-workspace${route.tool ? " has-tool" : ""}${expanded ? " tool-expanded" : ""}`}>
-      <header className="workspace-topbar">
-        <a className="workspace-brand" href="/" onClick={event => { event.preventDefault(); close(); }}><span className="workspace-mark" aria-hidden="true">S/</span>StudyFlow<span>.</span></a>
-        <h1>{t("plan.title")}</h1>
-        <span className="workspace-account">{username || t("ws.signedOut")}</span>
-        {username && !preview && <button type="button" className="secondary workspace-signout" disabled={signingOut} onClick={() => void signOut()}>{t(signingOut ? "ws.signingOut" : "ws.signOut")}</button>}
-        <button className="secondary" aria-expanded={menu} aria-controls="workspace-tools" onClick={() => setMenu(!menu)}>{t("ws.tools")}</button>
-        {menu && <nav id="workspace-tools" className="workspace-tools" aria-label={t("ws.tools")}>
-          {groups.map(group => <div key={group.label}><strong>{t(group.label)}</strong>{group.tools.map(kind =>
-            <button key={kind} onClick={() => open({ kind })}>{t(labels[kind])}</button>)}</div>)}
-        </nav>}
-      </header>
-      <div className="workspace-body">
-        <main className="workspace-conversation" inert={!!route.tool && (small || expanded)}>
+  const sidebar = (drawer: boolean) => <ToolSidebar active={tool} status={plan?.status ?? null} gap={!!plan?.gap} drawer={drawer}
+    compact={!drawer && (collapsed || !!tool)} preview={route.preview} stage={route.stage} account={username} signingOut={signingOut}
+    onOpen={open} onClose={close} onToggle={drawer ? () => setMenu(false) : toggleCollapsed}
+    onNewChat={() => { setMenu(false); close(); window.dispatchEvent(new Event("studyflow:new-conversation")); }}
+    onStage={stage => { setMenu(false); control.setStage(stage); }} onSignOut={() => void signOut()} />;
+  return <ModuleNavContext.Provider value={nav}><WorkspaceContext.Provider value={{ target: tool, host, bellHost, open, close,
+    setStage: control.setStage, account: username, reportPlan }}>
+    <div ref={frame} className={`student-workspace${tool ? " has-tool" : ""}${expanded ? " tool-expanded" : ""}`}>
+      {!small && sidebar(false)}
+      {small && menu && <><div className="side-overlay" aria-hidden="true" />{sidebar(true)}</>}
+      <div className="workspace-main" inert={!!tool && (small || expanded)}>
+        <header className="workspace-topbar">
+          {small && <button type="button" className="workspace-menu-button" aria-expanded={menu} aria-label={t("ws.tools")}
+            onClick={() => setMenu(!menu)}><List size={22} aria-hidden="true" /></button>}
+          {small && <span className="workspace-brand" aria-hidden="true">StudyFlow</span>}
+          <h1 className="sr-only">{t("plan.title")}</h1>
+          <span className="workspace-stage"><span aria-hidden="true" />{t(STAGE[plan?.status ?? "DRAFT"])}</span>
+          {notice && <p className="workspace-notice" role="status">{notice}</p>}
+          <div className="workspace-top-end">
+            {username ? <span className="workspace-account">{username}</span>
+              : <a className="workspace-signin" href={`/auth?next=${encodeURIComponent(window.location.origin + "/")}`}>{t("ws.signIn")}</a>}
+            <div className="workspace-bell" ref={setBellHost} />
+          </div>
+        </header>
+        <main className="workspace-conversation">
           <PlanApp key={`${route.preview}:${route.stage}`} account={username} preview={route.preview} initialStage={route.stage} onExit={close} />
         </main>
-        <section ref={dock} className="workspace-dock" hidden={!route.tool} role={small || expanded ? "dialog" : "region"}
-          aria-modal={small || expanded ? true : undefined} aria-labelledby="workspace-tool-title">
-          <DockHeader kind={route.tool?.kind ?? null} title={route.tool ? t(labels[route.tool.kind]) : ""} preview={route.preview}
-            canBack={stack.length > 1} onBack={back} small={small} expanded={expanded} onExpand={() => setExpanded(!expanded)} onClose={close} />
-          <div className="workspace-tool-host" ref={setHost} />
-        </section>
       </div>
-      {studentTools.map(kind => { const Component = components[kind]; return <ToolSlot key={kind} kind={kind}>
+      <section ref={dock} className="workspace-dock" hidden={!tool} role={small || expanded ? "dialog" : "region"}
+        aria-modal={small || expanded ? true : undefined} aria-labelledby="workspace-tool-title">
+        <DockHeader kind={tool?.kind ?? null} title={tool ? t(labels[tool.kind]) : ""} preview={route.preview}
+          canBack={stack.length > 1} onBack={back} small={small} expanded={expanded} onExpand={() => setExpanded(!expanded)} onClose={close} />
+        <div className="workspace-tool-host" ref={setHost} />
+      </section>
+      {studentTools.map(kind => { const Component = components[kind]; return Component && <ToolSlot key={kind} kind={kind}>
         <Suspense fallback={<p role="status">{t("common.loading")}</p>}>
           <Component preview={route.preview} onExit={close} />
         </Suspense>

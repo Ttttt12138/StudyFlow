@@ -10,6 +10,8 @@ import { formatDate, formatMoney } from "../backend/presenters";
 import { intlLocale, useI18n, type MessageKey } from "../i18n";
 import { SessionWalletClient, WalletApiError, type WalletClient } from "../wallet/client";
 import { loadLoans } from "./client";
+import { LoanProductNotice, LoanProductSelect } from "./LoanProductSelect";
+import { COMMERCIAL_STUDY_TERMS, type LoanProduct } from "./products";
 import { canCancel, defaultFirstDue, FINAL_STATUSES, effectiveAnnualRate, fractionToPercent, MONEY_PATTERN, nextDueDate, nextInstallment, percentToFraction,
   profileCoverage, repayEligibility, repaymentMonths, statusTone } from "./logic";
 import { createLoansPreview } from "./previewAdapter";
@@ -43,7 +45,7 @@ export function LoansApp({ preview, onExit }: { preview: boolean; onExit: () => 
   const [cancelId, setCancelId] = useState("");
   const [quoteId, setQuoteId] = useState("");
   const [coverId, setCoverId] = useState("");
-  const [form, setForm] = useState({ principal: "60000.00", rate: "6", fees: "1200.00", months: "6", firstDue: "" });
+  const [form, setForm] = useState({ product: "custom" as LoanProduct, principal: "60000.00", rate: "6", fees: "1200.00", months: "6", firstDue: "" });
   const [rows, setRows] = useState<Row[]>([]);
   const [repayCheck, setRepayCheck] = useState("");
   const [repayAccount, setRepayAccount] = useState("");
@@ -54,6 +56,11 @@ export function LoansApp({ preview, onExit }: { preview: boolean; onExit: () => 
   const [appIndex, setAppIndex] = useState(0);
   const [accountIndex, setAccountIndex] = useState(0);
   const [planLoan, setPlanLoan] = useState<Plan["loan"] | null>(null);
+  const linkedAccount = workspace?.target?.kind === "loans" ? workspace.target.section : undefined;
+  const linkedIndex = snapshot.accounts.findIndex(account => account.id === linkedAccount);
+  useEffect(() => {
+    if (linkedIndex >= 0) { setAccountIndex(linkedIndex); setTab("repay"); }
+  }, [linkedAccount, linkedIndex]);
 
   const money = (value: unknown) => formatMoney(value, "THB", lang);
   const date = (value: unknown) => formatDate(value, lang);
@@ -121,7 +128,7 @@ export function LoansApp({ preview, onExit }: { preview: boolean; onExit: () => 
     if (!annual_rate || !MONEY_PATTERN.test(form.principal) || !MONEY_PATTERN.test(form.fees) || !/^\d+$/.test(form.months) || !form.firstDue) {
       setError(t("loans.err.quoteForm")); return;
     }
-    const body = { currency: "THB", principal: form.principal, annual_rate, fees: form.fees, months: Number(form.months), first_due_date: form.firstDue };
+    const body = { product: form.product, currency: "THB", principal: form.principal, annual_rate, fees: form.fees, months: Number(form.months), first_due_date: form.firstDue };
     await perform(async () => {
       let created: LoanQuote;
       try { created = await client.post<LoanQuote>("loans/", body, "loan-quote"); }
@@ -130,7 +137,8 @@ export function LoansApp({ preview, onExit }: { preview: boolean; onExit: () => 
         if (lost(reason)) {
           const result = await refresh();
           const match = result.quotes.find((q) => Number(q.inputs.principal) === Number(body.principal) && Number(q.inputs.annual_rate) === Number(annual_rate)
-            && Number(q.inputs.fees) === Number(body.fees) && q.inputs.months === body.months && q.inputs.first_due_date === body.first_due_date);
+            && Number(q.inputs.fees) === Number(body.fees) && q.inputs.months === body.months && q.inputs.first_due_date === body.first_due_date
+            && (q.inputs.product ?? "custom") === body.product);
           if (match) { setQuoteId(match.id); setNotice(t("loans.notice.quoted")); return; }
         }
         throw reason;
@@ -240,8 +248,8 @@ export function LoansApp({ preview, onExit }: { preview: boolean; onExit: () => 
   ];
   const openTerms = () => {
     // Prefill from the quote on screen, else from the plan's loan, keeping the user's due date.
-    const source = shownQuote?.inputs ?? (planLoan ? { principal: planLoan.principal, annual_rate: planLoan.annual_rate, months: planLoan.months, fees: form.fees } : null);
-    if (source) setForm((prior) => ({ ...prior, principal: Number(source.principal).toFixed(2), rate: fractionToPercent(source.annual_rate).replace("%", ""),
+    const source = shownQuote?.inputs ?? (planLoan ? { product: "custom" as const, principal: planLoan.principal, annual_rate: planLoan.annual_rate, months: planLoan.months, fees: form.fees } : null);
+    if (source) setForm((prior) => ({ ...prior, product: source.product ?? "custom", principal: Number(source.principal).toFixed(2), rate: fractionToPercent(source.annual_rate).replace("%", ""),
       fees: Number(source.fees).toFixed(2), months: String(source.months) }));
     setSheet("terms");
   };
@@ -254,6 +262,7 @@ export function LoansApp({ preview, onExit }: { preview: boolean; onExit: () => 
         <div className="panel-card-head"><h3 id="loans-quote-title">{t("loans.quote.unused")}</h3>
           <PanelPager index={index} count={unused.length} onChange={(n) => setQuoteId(unused[n].id)} label={t("lp.quote.pager")} /></div>
         {shownQuote.id === planLoan?.id && <div className="panel-row"><span className="panel-tag">{t("lp.quote.fromPlan")}</span></div>}
+        <LoanProductNotice product={shownQuote.inputs.product} />
         <PanelHero label={t("lp.quote.monthly")} value={money(monthly(shownQuote))} />
         {chart(shownQuote)}
         {quoteFacts(shownQuote)}
@@ -279,6 +288,7 @@ export function LoansApp({ preview, onExit }: { preview: boolean; onExit: () => 
         <div className="panel-card-head"><h3 id={`app-${application.id}`}>{t("loans.apps.item", { id: application.id.slice(0, 8), date: when(application.created_at) })}</h3>
           <PanelPager index={applications.indexOf(application)} count={applications.length} onChange={setAppIndex} label={t("lp.apply.pager")} /></div>
         <div className="panel-row">{chip(application.status)}</div>
+        <LoanProductNotice product={quote?.inputs.product} />
         {quote ? <PanelHero label={t("lp.quote.monthly")} value={money(monthly(quote))}>
           <span>{t("lp.apply.terms", { principal: money(quote.result.principal), months: quote.result.repayments.length, monthly: money(monthly(quote)) })}</span></PanelHero>
           : <p className="panel-muted">{snapshot.errors.quotes ?? t("loans.apps.noQuote")}</p>}
@@ -359,6 +369,9 @@ export function LoansApp({ preview, onExit }: { preview: boolean; onExit: () => 
     terms: () => <PanelSheet title={t("lp.terms.title")} onClose={close} footer={<button type="submit" form="loans-terms" className="primary" disabled={preview || busy}>{t("loans.form.create")}</button>}>
       <p className="panel-muted">{t(shownQuote ? "lp.terms.fromQuote" : planLoan ? "lp.terms.fromPlan" : "loans.quote.text")}</p>
       <form id="loans-terms" className="panel-form" onSubmit={(event) => { event.preventDefault(); void createQuote(); }}>
+        <LoanProductSelect value={form.product} disabled={preview || busy} onChange={product => setForm(prior => ({ ...prior, product,
+          ...(product === "commercial_student_demo" ? { rate: fractionToPercent(COMMERCIAL_STUDY_TERMS.annual_rate).replace("%", ""),
+            fees: COMMERCIAL_STUDY_TERMS.fees, months: String(COMMERCIAL_STUDY_TERMS.periods[0]) } : {}) }))} />
         <label>{t("loans.form.principal")}<input inputMode="decimal" value={form.principal} disabled={preview} onChange={(e) => setForm({ ...form, principal: e.target.value })} /></label>
         <label>{t("loans.form.months")}<input type="number" min={1} max={60} value={form.months} disabled={preview} onChange={(e) => setForm({ ...form, months: e.target.value })} /></label>
         <label>{t("loans.form.rate")}<input inputMode="decimal" value={form.rate} disabled={preview} onChange={(e) => setForm({ ...form, rate: e.target.value })} /></label>

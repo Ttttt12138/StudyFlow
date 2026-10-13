@@ -1,0 +1,17 @@
+{
+ "today": "2027-07-26",
+ "is_simulated": true,
+ "in_app_only": true,
+ "items": [],
+ "upcoming": [],
+ "attention_count": 0,
+ "unread_count": 0,
+ "funding": {
+  "current": false,
+  "as_of": null,
+  "end_date": null,
+  "gap": null,
+  "first_gap_date": null
+ },
+ "budget": null
+}

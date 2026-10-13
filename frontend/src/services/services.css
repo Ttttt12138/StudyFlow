@@ -1,7 +1,8 @@
 /* Global simulated-money strip and language switch. */
 .sim-strip{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:color-mix(in srgb,var(--accent) 85%,transparent);color:var(--text-3);padding:7px 16px;font-size:12px;line-height:1.4}
-.sim-pill{background:#603d00;color:#cbc39e;font-weight:800;letter-spacing:1.4px;font-size:10px;border-radius:4px;padding:3px 7px}
+.sim-pill{background:#fff1e6;color:#ff8a3d;font-weight:800;letter-spacing:1.4px;font-size:10px;border-radius:4px;padding:3px 7px}
 .sim-text{flex:1 1 260px;min-width:0}
+.sim-text-short{display:none}
 .lang-switch{display:inline-flex;border:1px solid color-mix(in srgb,var(--accent) 45%,transparent);border-radius:6px;overflow:hidden;margin-left:auto}
 .lang-switch button{border:0;background:transparent;color:var(--text-3);padding:4px 10px;font-size:12px}
 .lang-switch button[aria-pressed="true"]{background:var(--surface-1);color:var(--accent);font-weight:700}
@@ -10,15 +11,15 @@
 /* Permission tier badges (docs/permissions.md). */
 .tier-badge{display:inline-flex;align-items:center;gap:5px;border-radius:5px;padding:2px 7px;font-size:11px;line-height:1.5;vertical-align:middle;border:1px solid}
 .tier-badge strong{font-weight:800;letter-spacing:.4px}
-.tier-t0{background:#101918;color:#92aaa5;border-color:#253430}
-.tier-t1{background:#0e1b23;color:#87aad7;border-color:#233953}
-.tier-t2{background:#1a1500;color:#b4995d;border-color:#463400}
-.tier-t3{background:#221611;color:#d88f81;border-color:#5a2f24}
+.tier-t0{background:#ffffff;color:#8f959e;border-color:#ffffff}
+.tier-t1{background:#ffffff;color:#1677ff;border-color:#0958d9}
+.tier-t2{background:#ffffff;color:#ff8a3d;border-color:#fff1e6}
+.tier-t3{background:#ffffff;color:#f53f3f;border-color:#fff0f0}
 .tier-legend{list-style:none;margin:14px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
-.tier-legend li{display:flex;gap:10px;align-items:flex-start;border:1px solid #17231d;border-radius:8px;padding:12px;background:#080f0d}
+.tier-legend li{display:flex;gap:10px;align-items:flex-start;border:1px solid #ffffff;border-radius:8px;padding:12px;background:#ffffff}
 .tier-legend li div{display:grid;gap:4px;font-size:12px;min-width:0}
-.tier-legend li span{color:#7a8f87}
-.tier-legend li small{color:#657871}
+.tier-legend li span{color:#8f959e}
+.tier-legend li small{color:#8f959e}
 .tier-legend.compact li{padding:9px 10px}
 
 /* Shared layout for the assistant and trust screens. */

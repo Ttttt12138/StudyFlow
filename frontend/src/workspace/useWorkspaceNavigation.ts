@@ -19,7 +19,7 @@ export function useWorkspaceNavigation(preview: boolean) {
   const close = useCallback(() => {
     navigate({ ...current.current, tool: null }); setStack([]); setExpanded(false); setMenu(false);
     requestAnimationFrame(() => {
-      const target = opener.current?.isConnected ? opener.current : document.querySelector<HTMLElement>('[aria-controls="workspace-tools"]');
+      const target = opener.current?.isConnected ? opener.current : document.querySelector<HTMLElement>(".plan-composer textarea:not(:disabled), .workspace-menu-button");
       target?.focus();
     });
   }, [navigate]);

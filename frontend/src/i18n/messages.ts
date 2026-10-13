@@ -1,3 +1,5 @@
+import * as life from "./life";
+import * as assessment from "./assessment";
 import * as status from "./status";
 import * as workspace from "./workspace";
 import * as agent from "./agent";
@@ -24,11 +26,12 @@ import * as trust from "./trust";
 import * as wallet from "./wallet";
 import * as nav from "./nav";
 import * as plan from "./plan";
+import * as price from "./price";
 
 // Each feature keeps its own dictionary; the zh side is typed against en, so a missing
 // translation fails `tsc`.
-const en = { ...status.en, ...common.en, ...auth.en, ...presenters.en, ...journey.en, ...funding.en, ...dashboard.en, ...wallet.en, ...demo.en, ...agent.en, ...trust.en, ...payments.en, ...operations.en, ...shell.en, ...copilot.en, ...flow.en,...credit.en, ...family.en, ...insights.en, ...loans.en, ...panel.en, ...walletx.en, ...intro.en, ...nav.en, ...plan.en, ...workspace.en };
+const en = { ...status.en, ...common.en, ...auth.en, ...presenters.en, ...journey.en, ...funding.en, ...dashboard.en, ...wallet.en, ...demo.en, ...agent.en, ...trust.en, ...payments.en, ...operations.en, ...shell.en, ...copilot.en, ...flow.en,...credit.en, ...family.en, ...insights.en, ...loans.en, ...panel.en, ...walletx.en, ...intro.en, ...nav.en, ...plan.en, ...workspace.en, ...price.en, ...assessment.en, ...life.en };
 export type MessageKey = keyof typeof en;
-const zh: Record<MessageKey, string> = { ...status.zh, ...common.zh, ...auth.zh, ...presenters.zh, ...journey.zh, ...funding.zh, ...dashboard.zh, ...wallet.zh, ...demo.zh, ...agent.zh, ...trust.zh, ...payments.zh, ...operations.zh, ...shell.zh, ...copilot.zh, ...flow.zh,...credit.zh, ...family.zh, ...insights.zh, ...loans.zh, ...panel.zh, ...walletx.zh, ...intro.zh, ...nav.zh, ...plan.zh, ...workspace.zh };
+const zh: Record<MessageKey, string> = { ...status.zh, ...common.zh, ...auth.zh, ...presenters.zh, ...journey.zh, ...funding.zh, ...dashboard.zh, ...wallet.zh, ...demo.zh, ...agent.zh, ...trust.zh, ...payments.zh, ...operations.zh, ...shell.zh, ...copilot.zh, ...flow.zh,...credit.zh, ...family.zh, ...insights.zh, ...loans.zh, ...panel.zh, ...walletx.zh, ...intro.zh, ...nav.zh, ...plan.zh, ...workspace.zh, ...price.zh, ...assessment.zh, ...life.zh };
 
 export const messages: Record<"en" | "zh", Record<MessageKey, string>> = { en, zh };

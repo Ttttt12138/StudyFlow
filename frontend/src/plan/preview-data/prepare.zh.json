@@ -1,23 +1,23 @@
 {
  "conversation": {
-  "id": "3d283a0e-5e33-4cf1-8a27-de6759b4c823",
+  "id": "a2636160-9d24-4879-b3b9-8d7808922425",
   "locale": "zh",
-  "created_at": "2026-10-12T18:17:53.363952+00:00",
-  "updated_at": "2026-10-12T18:17:53.811596+00:00",
+  "created_at": "2026-10-13T11:21:31.936297+00:00",
+  "updated_at": "2026-10-13T11:21:32.315892+00:00",
   "profile": {
-   "role": "parent",
-   "home_currency": "CNY"
+   "role": null,
+   "home_currency": "THB"
   },
   "plan": {
-   "id": "174880ab-dff1-4297-9d23-f78d077923c4",
+   "id": "80fd67b4-d800-47ed-990a-8dfa074c30dc",
    "status": "CONFIRMED",
    "school_key": "chulalongkorn",
    "years": 4,
    "start_date": "2027-08-02",
    "version": 3,
-   "available_funds": "200000.00",
-   "funds_currency": "CNY",
-   "confirmed_at": "2026-10-12T18:17:53.703766+00:00",
+   "available_funds": "1500000.00",
+   "funds_currency": "THB",
+   "confirmed_at": "2026-10-13T11:21:32.213424+00:00",
    "enrolled_at": null,
    "is_simulated": true,
    "school": {
@@ -29,39 +29,33 @@
    },
    "total": "2351350.00",
    "currency": "THB",
-   "converted": {
-    "rate": "0.2173913043",
-    "amount": "511163.04",
-    "source": "fixture",
-    "currency": "CNY",
-    "rate_date": "2026-10-13"
-   },
-   "available": "920000.00",
-   "gap": "1431350.00",
+   "converted": null,
+   "available": "1500000.00",
+   "gap": "851350.00",
    "loan": {
-    "id": "e90c9604-e1ef-44d8-9711-a7fd0eccda16",
+    "id": "2f3e18a3-b913-48e4-b3ea-e58573bf48b8",
     "currency": "THB",
-    "principal": "1431350.00",
+    "principal": "851350.00",
     "months": 48,
     "annual_rate": "0.06",
-    "monthly_payment": "33615.30",
-    "total_repayment": "1613534.22"
+    "monthly_payment": "19993.98",
+    "total_repayment": "959711.01"
    }
   },
   "turns": [
    {
-    "id": "1947d053-f622-4722-baf2-47158e9abf82",
+    "id": "bba79df4-e2c3-486f-85c1-6de722d23b76",
     "type": "agentsession",
-    "created_at": "2026-10-12T18:17:53.368Z",
+    "created_at": "2026-10-13T11:21:31.940Z",
     "goal": "",
     "locale": "zh",
     "mode": "system",
     "status": "COMPLETED",
-    "final_answer": "你好！我是 StudyFlow 留学规划助手。先问一句：你是家长，还是学生本人？",
+    "final_answer": "你好！我是 StudyFlow。告诉我想去的学校，我来算学费、住宿和生活费的全程总价，也可以帮你比较几所学校差多少。",
     "error_code": "",
     "write_count": 0,
-    "updated_at": "2026-10-12T18:17:53.368Z",
-    "conversation": "3d283a0e-5e33-4cf1-8a27-de6759b4c823",
+    "updated_at": "2026-10-13T11:21:31.940Z",
+    "conversation": "a2636160-9d24-4879-b3b9-8d7808922425",
     "cards": [],
     "steps": [],
     "pending_actions": [],
@@ -69,636 +63,18 @@
     "kind": "assistant"
    },
    {
-    "id": "80237330-938d-466c-b569-e234a560e0b8",
+    "id": "bf4793e1-c0e0-448c-bde3-42d3c9f3dd30",
     "type": "agentsession",
-    "created_at": "2026-10-12T18:17:53.384Z",
-    "goal": "我是家长",
+    "created_at": "2026-10-13T11:21:31.959Z",
+    "goal": "朱拉隆功读4年一共多少钱？",
     "locale": "zh",
     "mode": "mock",
     "status": "COMPLETED",
-    "final_answer": "好的，按家长视角来：我会先把学费、生活费、必要开支和全部费用算清楚。目录里有 10 所学校：朱拉隆功大学（泰国，首年约 675,250 THB≈146,793 CNY）；玛希敦大学国际学院（MUIC）（泰国，首年约 622,200 THB≈135,261 CNY）；马来亚大学（商业与经济学院）（马来西亚，首年约 46,775 MYR≈75,246 CNY）；曼彻斯特大学（联盟曼彻斯特商学院）（英国，首年约 50,263 GBP≈458,923 CNY）；墨尔本大学（澳大利亚，首年约 103,310 AUD≈482,864 CNY）；新加坡国立大学（商学院）（新加坡，首年约 52,322 SGD≈284,361 CNY）；宋卡王子大学（合艾校区）（泰国，首年约 272,050 THB≈59,141 CNY）；宋卡王子大学（普吉校区）（泰国，首年约 316,100 THB≈68,717 CNY）；法政大学（泰国，首年约 597,750 THB≈129,946 CNY）；早稻田大学（政治经济学部）（日本，首年约 3,258,000 JPY≈155,817 CNY）。说出学校名，我把全部费用算给你。（示例数据，来自公开资料，付款前请向学校确认。）",
-    "error_code": "",
-    "write_count": 1,
-    "updated_at": "2026-10-12T18:17:53.435Z",
-    "conversation": "3d283a0e-5e33-4cf1-8a27-de6759b4c823",
-    "cards": [
-     {
-      "role": "parent",
-      "type": "role",
-      "home_currency": "CNY"
-     },
-     {
-      "type": "school_list",
-      "sample": true,
-      "schools": [
-       {
-        "key": "chulalongkorn",
-        "city": {
-         "en": "Bangkok",
-         "zh": "曼谷"
-        },
-        "name": {
-         "en": "Chulalongkorn University",
-         "zh": "朱拉隆功大学"
-        },
-        "intake": "2027-08",
-        "sample": true,
-        "country": {
-         "en": "Thailand",
-         "zh": "泰国"
-        },
-        "program": {
-         "en": "BBA International Program, Chulalongkorn Business School",
-         "zh": "工商管理学士国际课程（朱拉隆功商学院）"
-        },
-        "currency": "THB",
-        "start_date": "2027-08-02",
-        "duration_years": 4,
-        "living_per_year": "291600.00",
-        "first_year_total": "675250.00",
-        "tuition_per_year": "235200.00",
-        "first_year_converted": {
-         "rate": "0.2173913043",
-         "amount": "146793.48",
-         "source": "fixture",
-         "currency": "CNY",
-         "rate_date": "2026-10-13"
-        }
-       },
-       {
-        "key": "mahidol",
-        "city": {
-         "en": "Salaya, Nakhon Pathom (west of Bangkok)",
-         "zh": "佛统府沙拉亚（曼谷西郊）"
-        },
-        "name": {
-         "en": "Mahidol University International College (MUIC)",
-         "zh": "玛希敦大学国际学院（MUIC）"
-        },
-        "intake": "2027-09",
-        "sample": true,
-        "country": {
-         "en": "Thailand",
-         "zh": "泰国"
-        },
-        "program": {
-         "en": "BBA in International Business (trimester system)",
-         "zh": "国际商务工商管理学士（三学期制）"
-        },
-        "currency": "THB",
-        "start_date": "2027-09-06",
-        "duration_years": 4,
-        "living_per_year": "241800.00",
-        "first_year_total": "622200.00",
-        "tuition_per_year": "314250.00",
-        "first_year_converted": {
-         "rate": "0.2173913043",
-         "amount": "135260.87",
-         "source": "fixture",
-         "currency": "CNY",
-         "rate_date": "2026-10-13"
-        }
-       },
-       {
-        "key": "malaya",
-        "city": {
-         "en": "Kuala Lumpur",
-         "zh": "吉隆坡"
-        },
-        "name": {
-         "en": "Universiti Malaya (Faculty of Business and Economics)",
-         "zh": "马来亚大学（商业与经济学院）"
-        },
-        "intake": "2027-10",
-        "sample": true,
-        "country": {
-         "en": "Malaysia",
-         "zh": "马来西亚"
-        },
-        "program": {
-         "en": "Bachelor of Business Administration (3.5 years, 7 semesters)",
-         "zh": "工商管理学士（3.5 年，共 7 个学期）"
-        },
-        "currency": "MYR",
-        "start_date": "2027-10-04",
-        "duration_years": 4,
-        "living_per_year": "14215.00",
-        "first_year_total": "46774.58",
-        "tuition_per_year": "22028.58",
-        "first_year_converted": {
-         "rate": "1.6086956522",
-         "amount": "75246.06",
-         "source": "fixture",
-         "currency": "CNY",
-         "rate_date": "2026-10-13"
-        }
-       },
-       {
-        "key": "manchester",
-        "city": {
-         "en": "Manchester, England",
-         "zh": "英格兰曼彻斯特"
-        },
-        "name": {
-         "en": "The University of Manchester (Alliance Manchester Business School)",
-         "zh": "曼彻斯特大学（联盟曼彻斯特商学院）"
-        },
-        "intake": "2027-09",
-        "sample": true,
-        "country": {
-         "en": "United Kingdom",
-         "zh": "英国"
-        },
-        "program": {
-         "en": "BSc (Hons) Management (International Business Economics)",
-         "zh": "管理学（国际商务经济方向）荣誉理学士"
-        },
-        "currency": "GBP",
-        "start_date": "2027-09-27",
-        "duration_years": 3,
-        "living_per_year": "12014.00",
-        "first_year_total": "50263.00",
-        "tuition_per_year": "35300.00",
-        "first_year_converted": {
-         "rate": "9.1304347826",
-         "amount": "458923.04",
-         "source": "fixture",
-         "currency": "CNY",
-         "rate_date": "2026-10-13"
-        }
-       },
-       {
-        "key": "melbourne",
-        "city": {
-         "en": "Melbourne, Victoria",
-         "zh": "维多利亚州墨尔本"
-        },
-        "name": {
-         "en": "The University of Melbourne",
-         "zh": "墨尔本大学"
-        },
-        "intake": "2027-02",
-        "sample": true,
-        "country": {
-         "en": "Australia",
-         "zh": "澳大利亚"
-        },
-        "program": {
-         "en": "Bachelor of Commerce (B-COM)",
-         "zh": "商学学士（B-COM）"
-        },
-        "currency": "AUD",
-        "start_date": "2027-03-01",
-        "duration_years": 3,
-        "living_per_year": "37128.00",
-        "first_year_total": "103310.50",
-        "tuition_per_year": "59832.50",
-        "first_year_converted": {
-         "rate": "4.6739130435",
-         "amount": "482864.29",
-         "source": "fixture",
-         "currency": "CNY",
-         "rate_date": "2026-10-13"
-        }
-       },
-       {
-        "key": "nus",
-        "city": {
-         "en": "Singapore (Kent Ridge)",
-         "zh": "新加坡（肯特岗）"
-        },
-        "name": {
-         "en": "National University of Singapore (NUS Business School)",
-         "zh": "新加坡国立大学（商学院）"
-        },
-        "intake": "2027-08",
-        "sample": true,
-        "country": {
-         "en": "Singapore",
-         "zh": "新加坡"
-        },
-        "program": {
-         "en": "Bachelor of Business Administration (BBA)",
-         "zh": "工商管理学士（BBA）"
-        },
-        "currency": "SGD",
-        "start_date": "2027-08-09",
-        "duration_years": 4,
-        "living_per_year": "16620.00",
-        "first_year_total": "52322.50",
-        "tuition_per_year": "34050.00",
-        "first_year_converted": {
-         "rate": "5.4347826087",
-         "amount": "284361.41",
-         "source": "fixture",
-         "currency": "CNY",
-         "rate_date": "2026-10-13"
-        }
-       },
-       {
-        "key": "psu-hatyai",
-        "city": {
-         "en": "Hat Yai, Songkhla",
-         "zh": "宋卡府合艾"
-        },
-        "name": {
-         "en": "Prince of Songkla University, Hat Yai Campus",
-         "zh": "宋卡王子大学（合艾校区）"
-        },
-        "intake": "2027-06",
-        "sample": true,
-        "country": {
-         "en": "Thailand",
-         "zh": "泰国"
-        },
-        "program": {
-         "en": "BBA in Management and Entrepreneurship (International Program), Faculty of Management Sciences",
-         "zh": "管理与创业工商管理学士（国际课程），管理科学学院"
-        },
-        "currency": "THB",
-        "start_date": "2027-06-21",
-        "duration_years": 4,
-        "living_per_year": "102150.00",
-        "first_year_total": "272050.00",
-        "tuition_per_year": "106000.00",
-        "first_year_converted": {
-         "rate": "0.2173913043",
-         "amount": "59141.30",
-         "source": "fixture",
-         "currency": "CNY",
-         "rate_date": "2026-10-13"
-        }
-       },
-       {
-        "key": "psu-phuket",
-        "city": {
-         "en": "Kathu, Phuket",
-         "zh": "普吉府卡图县"
-        },
-        "name": {
-         "en": "Prince of Songkla University, Phuket Campus",
-         "zh": "宋卡王子大学（普吉校区）"
-        },
-        "intake": "2027-08",
-        "sample": true,
-        "country": {
-         "en": "Thailand",
-         "zh": "泰国"
-        },
-        "program": {
-         "en": "BBA in International Business (Faculty of International Studies)",
-         "zh": "国际商务工商管理学士（国际研究学院）"
-        },
-        "currency": "THB",
-        "start_date": "2027-08-09",
-        "duration_years": 3,
-        "living_per_year": "133950.00",
-        "first_year_total": "316100.00",
-        "tuition_per_year": "123000.00",
-        "first_year_converted": {
-         "rate": "0.2173913043",
-         "amount": "68717.39",
-         "source": "fixture",
-         "currency": "CNY",
-         "rate_date": "2026-10-13"
-        }
-       },
-       {
-        "key": "thammasat",
-        "city": {
-         "en": "Bangkok",
-         "zh": "曼谷"
-        },
-        "name": {
-         "en": "Thammasat University",
-         "zh": "法政大学"
-        },
-        "intake": "2027-08",
-        "sample": true,
-        "country": {
-         "en": "Thailand",
-         "zh": "泰国"
-        },
-        "program": {
-         "en": "BBA International Program, Thammasat Business School (Accounting, Finance or Marketing)",
-         "zh": "法政商学院工商管理学士国际课程（会计、金融或市场营销）"
-        },
-        "currency": "THB",
-        "start_date": "2027-08-09",
-        "duration_years": 4,
-        "living_per_year": "260400.00",
-        "first_year_total": "597750.00",
-        "tuition_per_year": "274950.00",
-        "first_year_converted": {
-         "rate": "0.2173913043",
-         "amount": "129945.65",
-         "source": "fixture",
-         "currency": "CNY",
-         "rate_date": "2026-10-13"
-        }
-       },
-       {
-        "key": "waseda",
-        "city": {
-         "en": "Shinjuku, Tokyo",
-         "zh": "东京新宿区"
-        },
-        "name": {
-         "en": "Waseda University (School of Political Science and Economics)",
-         "zh": "早稻田大学（政治经济学部）"
-        },
-        "intake": "2027-09",
-        "sample": true,
-        "country": {
-         "en": "Japan",
-         "zh": "日本"
-        },
-        "program": {
-         "en": "English-based Degree Program in Political Science and Economics (EDESSA)",
-         "zh": "政治经济学部英语学位项目（EDESSA）"
-        },
-        "currency": "JPY",
-        "start_date": "2027-09-21",
-        "duration_years": 4,
-        "living_per_year": "1632000.00",
-        "first_year_total": "3258000.00",
-        "tuition_per_year": "1086000.00",
-        "first_year_converted": {
-         "rate": "0.0478260870",
-         "amount": "155817.39",
-         "source": "fixture",
-         "currency": "CNY",
-         "rate_date": "2026-10-13"
-        }
-       }
-      ]
-     }
-    ],
-    "steps": [
-     {
-      "id": "4beb912d-eccc-4641-a492-6bda7f21b879",
-      "created_at": "2026-10-12T18:17:53.404Z",
-      "number": 1,
-      "tool": "set_role",
-      "tier": "T1",
-      "arguments": {
-       "role": "parent"
-      },
-      "rationale": "Record who is planning",
-      "status": "OK",
-      "result": {
-       "role": "parent",
-       "home_currency": "CNY"
-      },
-      "call": {
-       "mode": "mock",
-       "model": "agent-rules",
-       "purpose": "plan",
-       "attempts": 1,
-       "provider": "rules",
-       "error_code": null,
-       "request_id": null,
-       "duration_ms": 0.0,
-       "http_status": null,
-       "input_tokens": 0,
-       "output_tokens": 0,
-       "prompt_version": "planning-1.1"
-      }
-     },
-     {
-      "id": "8e7f5ebf-d761-408f-847f-456f83c5601a",
-      "created_at": "2026-10-12T18:17:53.433Z",
-      "number": 2,
-      "tool": "list_schools",
-      "tier": "T0",
-      "arguments": {},
-      "rationale": "Show the catalog",
-      "status": "OK",
-      "result": {
-       "sample": true,
-       "schools": [
-        {
-         "key": "chulalongkorn",
-         "name": {
-          "en": "Chulalongkorn University",
-          "zh": "朱拉隆功大学"
-         },
-         "country": {
-          "en": "Thailand",
-          "zh": "泰国"
-         },
-         "currency": "THB",
-         "home_currency": "CNY",
-         "duration_years": 4,
-         "first_year_home": "146793.48",
-         "first_year_total": "675250.00"
-        },
-        {
-         "key": "mahidol",
-         "name": {
-          "en": "Mahidol University International College (MUIC)",
-          "zh": "玛希敦大学国际学院（MUIC）"
-         },
-         "country": {
-          "en": "Thailand",
-          "zh": "泰国"
-         },
-         "currency": "THB",
-         "home_currency": "CNY",
-         "duration_years": 4,
-         "first_year_home": "135260.87",
-         "first_year_total": "622200.00"
-        },
-        {
-         "key": "malaya",
-         "name": {
-          "en": "Universiti Malaya (Faculty of Business and Economics)",
-          "zh": "马来亚大学（商业与经济学院）"
-         },
-         "country": {
-          "en": "Malaysia",
-          "zh": "马来西亚"
-         },
-         "currency": "MYR",
-         "home_currency": "CNY",
-         "duration_years": 4,
-         "first_year_home": "75246.06",
-         "first_year_total": "46774.58"
-        },
-        {
-         "key": "manchester",
-         "name": {
-          "en": "The University of Manchester (Alliance Manchester Business School)",
-          "zh": "曼彻斯特大学（联盟曼彻斯特商学院）"
-         },
-         "country": {
-          "en": "United Kingdom",
-          "zh": "英国"
-         },
-         "currency": "GBP",
-         "home_currency": "CNY",
-         "duration_years": 3,
-         "first_year_home": "458923.04",
-         "first_year_total": "50263.00"
-        },
-        {
-         "key": "melbourne",
-         "name": {
-          "en": "The University of Melbourne",
-          "zh": "墨尔本大学"
-         },
-         "country": {
-          "en": "Australia",
-          "zh": "澳大利亚"
-         },
-         "currency": "AUD",
-         "home_currency": "CNY",
-         "duration_years": 3,
-         "first_year_home": "482864.29",
-         "first_year_total": "103310.50"
-        },
-        {
-         "key": "nus",
-         "name": {
-          "en": "National University of Singapore (NUS Business School)",
-          "zh": "新加坡国立大学（商学院）"
-         },
-         "country": {
-          "en": "Singapore",
-          "zh": "新加坡"
-         },
-         "currency": "SGD",
-         "home_currency": "CNY",
-         "duration_years": 4,
-         "first_year_home": "284361.41",
-         "first_year_total": "52322.50"
-        },
-        {
-         "key": "psu-hatyai",
-         "name": {
-          "en": "Prince of Songkla University, Hat Yai Campus",
-          "zh": "宋卡王子大学（合艾校区）"
-         },
-         "country": {
-          "en": "Thailand",
-          "zh": "泰国"
-         },
-         "currency": "THB",
-         "home_currency": "CNY",
-         "duration_years": 4,
-         "first_year_home": "59141.30",
-         "first_year_total": "272050.00"
-        },
-        {
-         "key": "psu-phuket",
-         "name": {
-          "en": "Prince of Songkla University, Phuket Campus",
-          "zh": "宋卡王子大学（普吉校区）"
-         },
-         "country": {
-          "en": "Thailand",
-          "zh": "泰国"
-         },
-         "currency": "THB",
-         "home_currency": "CNY",
-         "duration_years": 3,
-         "first_year_home": "68717.39",
-         "first_year_total": "316100.00"
-        },
-        {
-         "key": "thammasat",
-         "name": {
-          "en": "Thammasat University",
-          "zh": "法政大学"
-         },
-         "country": {
-          "en": "Thailand",
-          "zh": "泰国"
-         },
-         "currency": "THB",
-         "home_currency": "CNY",
-         "duration_years": 4,
-         "first_year_home": "129945.65",
-         "first_year_total": "597750.00"
-        },
-        {
-         "key": "waseda",
-         "name": {
-          "en": "Waseda University (School of Political Science and Economics)",
-          "zh": "早稻田大学（政治经济学部）"
-         },
-         "country": {
-          "en": "Japan",
-          "zh": "日本"
-         },
-         "currency": "JPY",
-         "home_currency": "CNY",
-         "duration_years": 4,
-         "first_year_home": "155817.39",
-         "first_year_total": "3258000.00"
-        }
-       ]
-      },
-      "call": {
-       "mode": "mock",
-       "model": "agent-rules",
-       "purpose": "plan",
-       "attempts": 1,
-       "provider": "rules",
-       "error_code": null,
-       "request_id": null,
-       "duration_ms": 0.0,
-       "http_status": null,
-       "input_tokens": 0,
-       "output_tokens": 0,
-       "prompt_version": "planning-1.1"
-      }
-     },
-     {
-      "id": "caaf0d7e-5125-4627-a193-f394824a978d",
-      "created_at": "2026-10-12T18:17:53.434Z",
-      "number": 3,
-      "tool": "",
-      "tier": "",
-      "arguments": {},
-      "rationale": "",
-      "status": "FINAL",
-      "result": {
-       "answer": "好的，按家长视角来：我会先把学费、生活费、必要开支和全部费用算清楚。目录里有 10 所学校：朱拉隆功大学（泰国，首年约 675,250 THB≈146,793 CNY）；玛希敦大学国际学院（MUIC）（泰国，首年约 622,200 THB≈135,261 CNY）；马来亚大学（商业与经济学院）（马来西亚，首年约 46,775 MYR≈75,246 CNY）；曼彻斯特大学（联盟曼彻斯特商学院）（英国，首年约 50,263 GBP≈458,923 CNY）；墨尔本大学（澳大利亚，首年约 103,310 AUD≈482,864 CNY）；新加坡国立大学（商学院）（新加坡，首年约 52,322 SGD≈284,361 CNY）；宋卡王子大学（合艾校区）（泰国，首年约 272,050 THB≈59,141 CNY）；宋卡王子大学（普吉校区）（泰国，首年约 316,100 THB≈68,717 CNY）；法政大学（泰国，首年约 597,750 THB≈129,946 CNY）；早稻田大学（政治经济学部）（日本，首年约 3,258,000 JPY≈155,817 CNY）。说出学校名，我把全部费用算给你。（示例数据，来自公开资料，付款前请向学校确认。）"
-      },
-      "call": {
-       "mode": "mock",
-       "model": "agent-rules",
-       "purpose": "plan",
-       "attempts": 1,
-       "provider": "rules",
-       "error_code": null,
-       "request_id": null,
-       "duration_ms": 0.0,
-       "http_status": null,
-       "input_tokens": 0,
-       "output_tokens": 0,
-       "prompt_version": "planning-1.1"
-      }
-     }
-    ],
-    "pending_actions": [],
-    "is_simulated": true,
-    "kind": "user"
-   },
-   {
-    "id": "787ffcb9-5599-47fb-866d-187f9f1a702c",
-    "type": "agentsession",
-    "created_at": "2026-10-12T18:17:53.447Z",
-    "goal": "朱拉隆功读4年全部费用多少？",
-    "locale": "zh",
-    "mode": "mock",
-    "status": "COMPLETED",
-    "final_answer": "读 4 年预计全部费用约 2,351,350 THB（≈511,163 CNY）：学费 1,028,850 THB，生活费 1,166,400 THB，必要开支 156,100 THB；区间 2,118,650 THB–2,584,050 THB，约 29% 为估算。（示例数据，来自公开资料，付款前请向学校确认。）",
+    "final_answer": "读 4 年预计全部费用约 2,351,350 THB：学费 1,028,850 THB，生活费 1,166,400 THB，必要开支 156,100 THB；区间 2,118,650 THB–2,584,050 THB，约 29% 为估算。（示例数据，来自公开资料，付款前请向学校确认。）",
     "error_code": "",
     "write_count": 0,
-    "updated_at": "2026-10-12T18:17:53.464Z",
-    "conversation": "3d283a0e-5e33-4cf1-8a27-de6759b4c823",
+    "updated_at": "2026-10-13T11:21:31.982Z",
+    "conversation": "a2636160-9d24-4879-b3b9-8d7808922425",
     "cards": [
      {
       "type": "cost",
@@ -998,13 +374,6 @@
        },
        "sample": true,
        "currency": "THB",
-       "converted": {
-        "rate": "0.2173913043",
-        "amount": "511163.04",
-        "source": "fixture",
-        "currency": "CNY",
-        "rate_date": "2026-10-13"
-       },
        "total_low": "2118650.00",
        "first_year": "675250.00",
        "school_key": "chulalongkorn",
@@ -1016,8 +385,8 @@
     ],
     "steps": [
      {
-      "id": "f3aad898-cae0-4e54-87e6-ea0ec9880405",
-      "created_at": "2026-10-12T18:17:53.462Z",
+      "id": "5d56fd9c-8333-4290-8089-710a99431b79",
+      "created_at": "2026-10-13T11:21:31.980Z",
       "number": 1,
       "tool": "estimate_total_cost",
       "tier": "T0",
@@ -1037,13 +406,6 @@
        },
        "sample": true,
        "currency": "THB",
-       "converted": {
-        "rate": "0.2173913043",
-        "amount": "511163.04",
-        "source": "fixture",
-        "currency": "CNY",
-        "rate_date": "2026-10-13"
-       },
        "total_low": "2118650.00",
        "first_year": "675250.00",
        "line_count": 15,
@@ -1064,12 +426,12 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.1"
+       "prompt_version": "planning-1.2"
       }
      },
      {
-      "id": "99670f46-779a-46f5-bb8c-eb0bf9456e17",
-      "created_at": "2026-10-12T18:17:53.463Z",
+      "id": "445ea68f-bc8d-4b07-96b8-b70a8b6c9200",
+      "created_at": "2026-10-13T11:21:31.981Z",
       "number": 2,
       "tool": "",
       "tier": "",
@@ -1077,7 +439,7 @@
       "rationale": "",
       "status": "FINAL",
       "result": {
-       "answer": "读 4 年预计全部费用约 2,351,350 THB（≈511,163 CNY）：学费 1,028,850 THB，生活费 1,166,400 THB，必要开支 156,100 THB；区间 2,118,650 THB–2,584,050 THB，约 29% 为估算。（示例数据，来自公开资料，付款前请向学校确认。）"
+       "answer": "读 4 年预计全部费用约 2,351,350 THB：学费 1,028,850 THB，生活费 1,166,400 THB，必要开支 156,100 THB；区间 2,118,650 THB–2,584,050 THB，约 29% 为估算。（示例数据，来自公开资料，付款前请向学校确认。）"
       },
       "call": {
        "mode": "mock",
@@ -1091,7 +453,7 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.1"
+       "prompt_version": "planning-1.2"
       }
      }
     ],
@@ -1100,18 +462,18 @@
     "kind": "user"
    },
    {
-    "id": "96f43f4c-678d-47a4-8c4c-bfe9e120b1f9",
+    "id": "edc64f5d-9668-4049-80c7-6c32c36ad07d",
     "type": "agentsession",
-    "created_at": "2026-10-12T18:17:53.476Z",
+    "created_at": "2026-10-13T11:21:31.996Z",
     "goal": "比较曼彻斯特和墨尔本",
     "locale": "zh",
     "mode": "mock",
     "status": "COMPLETED",
-    "final_answer": "对比：曼彻斯特大学（联盟曼彻斯特商学院） 首年约 50,263 GBP（≈458,923 CNY）；墨尔本大学 首年约 103,310 AUD（≈482,864 CNY）。（示例数据，来自公开资料，付款前请向学校确认。）",
+    "final_answer": "对比：曼彻斯特大学（联盟曼彻斯特商学院） 读 3 年总价约 148,643 GBP（≈6,243,006 THB）；墨尔本大学 读 3 年总价约 303,082 AUD（≈6,516,252 THB）。全程总价最低的是曼彻斯特大学（联盟曼彻斯特商学院），比最贵的一所少约 273,246 THB。（示例数据，来自公开资料，付款前请向学校确认。）",
     "error_code": "",
     "write_count": 0,
-    "updated_at": "2026-10-12T18:17:53.493Z",
-    "conversation": "3d283a0e-5e33-4cf1-8a27-de6759b4c823",
+    "updated_at": "2026-10-13T11:21:32.017Z",
+    "conversation": "a2636160-9d24-4879-b3b9-8d7808922425",
     "cards": [
      {
       "type": "comparison",
@@ -1127,6 +489,8 @@
          "en": "The University of Manchester (Alliance Manchester Business School)",
          "zh": "曼彻斯特大学（联盟曼彻斯特商学院）"
         },
+        "total": "148643.00",
+        "years": 3,
         "intake": "2027-09",
         "sample": true,
         "country": {
@@ -1138,16 +502,25 @@
          "zh": "管理学（国际商务经济方向）荣誉理学士"
         },
         "currency": "GBP",
+        "total_low": "134522.00",
         "start_date": "2027-09-27",
+        "total_high": "162764.00",
         "duration_years": 3,
         "living_per_year": "12014.00",
+        "total_converted": {
+         "rate": "42.0000000000",
+         "amount": "6243006.00",
+         "source": "fixture",
+         "currency": "THB",
+         "rate_date": "2026-10-13"
+        },
         "first_year_total": "50263.00",
         "tuition_per_year": "35300.00",
         "first_year_converted": {
-         "rate": "9.1304347826",
-         "amount": "458923.04",
+         "rate": "42.0000000000",
+         "amount": "2111046.00",
          "source": "fixture",
-         "currency": "CNY",
+         "currency": "THB",
          "rate_date": "2026-10-13"
         }
        },
@@ -1161,6 +534,8 @@
          "en": "The University of Melbourne",
          "zh": "墨尔本大学"
         },
+        "total": "303081.50",
+        "years": 3,
         "intake": "2027-02",
         "sample": true,
         "country": {
@@ -1172,27 +547,37 @@
          "zh": "商学学士（B-COM）"
         },
         "currency": "AUD",
+        "total_low": "268387.00",
         "start_date": "2027-03-01",
+        "total_high": "337776.00",
         "duration_years": 3,
         "living_per_year": "37128.00",
+        "total_converted": {
+         "rate": "21.5000000000",
+         "amount": "6516252.25",
+         "source": "fixture",
+         "currency": "THB",
+         "rate_date": "2026-10-13"
+        },
         "first_year_total": "103310.50",
         "tuition_per_year": "59832.50",
         "first_year_converted": {
-         "rate": "4.6739130435",
-         "amount": "482864.29",
+         "rate": "21.5000000000",
+         "amount": "2221175.75",
          "source": "fixture",
-         "currency": "CNY",
+         "currency": "THB",
          "rate_date": "2026-10-13"
         }
        }
       ],
-      "home_currency": "CNY"
+      "cheapest": "manchester",
+      "home_currency": "THB"
      }
     ],
     "steps": [
      {
-      "id": "796bd917-1dd6-47f5-ade5-cd838c738c47",
-      "created_at": "2026-10-12T18:17:53.491Z",
+      "id": "5124dac8-0c61-4e7d-8070-7e3230b52999",
+      "created_at": "2026-10-13T11:21:32.015Z",
       "number": 1,
       "tool": "compare_schools",
       "tier": "T0",
@@ -1217,6 +602,8 @@
           "en": "The University of Manchester (Alliance Manchester Business School)",
           "zh": "曼彻斯特大学（联盟曼彻斯特商学院）"
          },
+         "total": "148643.00",
+         "years": 3,
          "intake": "2027-09",
          "sample": true,
          "country": {
@@ -1228,16 +615,25 @@
           "zh": "管理学（国际商务经济方向）荣誉理学士"
          },
          "currency": "GBP",
+         "total_low": "134522.00",
          "start_date": "2027-09-27",
+         "total_high": "162764.00",
          "duration_years": 3,
          "living_per_year": "12014.00",
+         "total_converted": {
+          "rate": "42.0000000000",
+          "amount": "6243006.00",
+          "source": "fixture",
+          "currency": "THB",
+          "rate_date": "2026-10-13"
+         },
          "first_year_total": "50263.00",
          "tuition_per_year": "35300.00",
          "first_year_converted": {
-          "rate": "9.1304347826",
-          "amount": "458923.04",
+          "rate": "42.0000000000",
+          "amount": "2111046.00",
           "source": "fixture",
-          "currency": "CNY",
+          "currency": "THB",
           "rate_date": "2026-10-13"
          }
         },
@@ -1251,6 +647,8 @@
           "en": "The University of Melbourne",
           "zh": "墨尔本大学"
          },
+         "total": "303081.50",
+         "years": 3,
          "intake": "2027-02",
          "sample": true,
          "country": {
@@ -1262,21 +660,31 @@
           "zh": "商学学士（B-COM）"
          },
          "currency": "AUD",
+         "total_low": "268387.00",
          "start_date": "2027-03-01",
+         "total_high": "337776.00",
          "duration_years": 3,
          "living_per_year": "37128.00",
+         "total_converted": {
+          "rate": "21.5000000000",
+          "amount": "6516252.25",
+          "source": "fixture",
+          "currency": "THB",
+          "rate_date": "2026-10-13"
+         },
          "first_year_total": "103310.50",
          "tuition_per_year": "59832.50",
          "first_year_converted": {
-          "rate": "4.6739130435",
-          "amount": "482864.29",
+          "rate": "21.5000000000",
+          "amount": "2221175.75",
           "source": "fixture",
-          "currency": "CNY",
+          "currency": "THB",
           "rate_date": "2026-10-13"
          }
         }
        ],
-       "home_currency": "CNY"
+       "cheapest": "manchester",
+       "home_currency": "THB"
       },
       "call": {
        "mode": "mock",
@@ -1290,12 +698,12 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.1"
+       "prompt_version": "planning-1.2"
       }
      },
      {
-      "id": "39f14c72-2de4-47d0-a4e4-36c4db906373",
-      "created_at": "2026-10-12T18:17:53.492Z",
+      "id": "1804e8ae-fc98-492e-a1eb-1f83b7f2a859",
+      "created_at": "2026-10-13T11:21:32.016Z",
       "number": 2,
       "tool": "",
       "tier": "",
@@ -1303,7 +711,7 @@
       "rationale": "",
       "status": "FINAL",
       "result": {
-       "answer": "对比：曼彻斯特大学（联盟曼彻斯特商学院） 首年约 50,263 GBP（≈458,923 CNY）；墨尔本大学 首年约 103,310 AUD（≈482,864 CNY）。（示例数据，来自公开资料，付款前请向学校确认。）"
+       "answer": "对比：曼彻斯特大学（联盟曼彻斯特商学院） 读 3 年总价约 148,643 GBP（≈6,243,006 THB）；墨尔本大学 读 3 年总价约 303,082 AUD（≈6,516,252 THB）。全程总价最低的是曼彻斯特大学（联盟曼彻斯特商学院），比最贵的一所少约 273,246 THB。（示例数据，来自公开资料，付款前请向学校确认。）"
       },
       "call": {
        "mode": "mock",
@@ -1317,7 +725,7 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.1"
+       "prompt_version": "planning-1.2"
       }
      }
     ],
@@ -1326,9 +734,9 @@
     "kind": "user"
    },
    {
-    "id": "c9a43d25-d7c6-48e0-9535-08ce1cfc147b",
+    "id": "b32fb0c9-358e-4d33-a31e-05a9d91e9bcd",
     "type": "agentsession",
-    "created_at": "2026-10-12T18:17:53.504Z",
+    "created_at": "2026-10-13T11:21:32.029Z",
     "goal": "早稻田周边有什么好吃好玩的？",
     "locale": "zh",
     "mode": "mock",
@@ -1336,8 +744,8 @@
     "final_answer": "早稻田大学（政治经济学部）在东京新宿区。校内有早稻田大学中央图书馆、大隈讲堂、3 号馆（政治经济学部）；附近可以吃大隈花园楼食堂（早大生协）、高田马场站周边餐馆、早稻田通学生餐馆；周末可以去大隈庭园、神田川赏樱步道（江户川公园）、六义园。（示例数据，来自公开资料，付款前请向学校确认。）",
     "error_code": "",
     "write_count": 0,
-    "updated_at": "2026-10-12T18:17:53.520Z",
-    "conversation": "3d283a0e-5e33-4cf1-8a27-de6759b4c823",
+    "updated_at": "2026-10-13T11:21:32.044Z",
+    "conversation": "a2636160-9d24-4879-b3b9-8d7808922425",
     "cards": [
      {
       "type": "school",
@@ -1813,8 +1221,8 @@
     ],
     "steps": [
      {
-      "id": "0b1c8d91-f74f-47b7-8255-4cc70c9db9ec",
-      "created_at": "2026-10-12T18:17:53.518Z",
+      "id": "25cf6afb-f196-496f-b95e-bc8f8a12b1ed",
+      "created_at": "2026-10-13T11:21:32.042Z",
       "number": 1,
       "tool": "get_school_profile",
       "tier": "T0",
@@ -1862,6 +1270,8 @@
         "en": "Waseda University (School of Political Science and Economics)",
         "zh": "早稻田大学（政治经济学部）"
        },
+       "total": "11829000.00",
+       "years": 4,
        "intake": "2027-09",
        "sample": true,
        "country": {
@@ -1875,6 +1285,7 @@
        "website": "https://www.waseda.jp/fpse/pse/en/",
        "currency": "JPY",
        "language": "English",
+       "total_low": "9837000.00",
        "facilities": [
         {
          "kind": "library",
@@ -1923,6 +1334,7 @@
         }
        ],
        "start_date": "2027-09-21",
+       "total_high": "13821000.00",
        "attractions": [
         {
          "kind": "park",
@@ -1987,12 +1399,12 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.1"
+       "prompt_version": "planning-1.2"
       }
      },
      {
-      "id": "460f815e-85e2-49e6-8051-c1b86074a0cc",
-      "created_at": "2026-10-12T18:17:53.520Z",
+      "id": "600952dc-f252-4d73-989c-c3130b344539",
+      "created_at": "2026-10-13T11:21:32.044Z",
       "number": 2,
       "tool": "",
       "tier": "",
@@ -2014,7 +1426,7 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.1"
+       "prompt_version": "planning-1.2"
       }
      }
     ],
@@ -2023,23 +1435,23 @@
     "kind": "user"
    },
    {
-    "id": "208c8747-920a-4682-808a-d7c2e641b091",
+    "id": "24ca7e17-0fd5-4818-99f2-a25db7526c08",
     "type": "agentsession",
-    "created_at": "2026-10-12T18:17:53.534Z",
-    "goal": "我们有存款20万人民币，就选朱拉隆功",
+    "created_at": "2026-10-13T11:21:32.058Z",
+    "goal": "我们有存款150万泰铢，就选朱拉隆功",
     "locale": "zh",
     "mode": "mock",
     "status": "COMPLETED",
-    "final_answer": "计划：朱拉隆功大学，4 年，状态：草稿，全部费用约 2,351,350 THB。资金缺口约 1,431,350 THB，需要的话我可以帮你试算贷款。",
+    "final_answer": "计划：朱拉隆功大学，4 年，状态：草稿，全部费用约 2,351,350 THB。资金缺口约 851,350 THB，需要的话我可以帮你试算贷款。",
     "error_code": "",
     "write_count": 1,
-    "updated_at": "2026-10-12T18:17:53.557Z",
-    "conversation": "3d283a0e-5e33-4cf1-8a27-de6759b4c823",
+    "updated_at": "2026-10-13T11:21:32.078Z",
+    "conversation": "a2636160-9d24-4879-b3b9-8d7808922425",
     "cards": [
      {
       "plan": {
-       "id": "174880ab-dff1-4297-9d23-f78d077923c4",
-       "gap": "1431350.00",
+       "id": "80fd67b4-d800-47ed-990a-8dfa074c30dc",
+       "gap": "851350.00",
        "total": "2351350.00",
        "years": 4,
        "school": {
@@ -2052,43 +1464,37 @@
        "status": "DRAFT",
        "version": 1,
        "currency": "THB",
-       "available": "920000.00",
-       "converted": {
-        "rate": "0.2173913043",
-        "amount": "511163.04",
-        "source": "fixture",
-        "currency": "CNY",
-        "rate_date": "2026-10-13"
-       },
+       "available": "1500000.00",
+       "converted": null,
        "school_key": "chulalongkorn",
        "start_date": "2027-08-02",
        "enrolled_at": null,
        "confirmed_at": null,
        "is_simulated": true,
-       "funds_currency": "CNY",
-       "available_funds": "200000.00"
+       "funds_currency": "THB",
+       "available_funds": "1500000.00"
       },
       "type": "plan"
      }
     ],
     "steps": [
      {
-      "id": "89680b9c-84f3-4b7f-b89f-452375f7ea21",
-      "created_at": "2026-10-12T18:17:53.556Z",
+      "id": "ce70f342-f5b0-4f2d-a9a7-37eacee12ef9",
+      "created_at": "2026-10-13T11:21:32.076Z",
       "number": 1,
       "tool": "save_plan",
       "tier": "T1",
       "arguments": {
        "school_key": "chulalongkorn",
-       "funds_currency": "CNY",
-       "available_funds": "200000.00"
+       "funds_currency": "THB",
+       "available_funds": "1500000.00"
       },
       "rationale": "Save the chosen school",
       "status": "OK",
       "result": {
        "plan": {
-        "id": "174880ab-dff1-4297-9d23-f78d077923c4",
-        "gap": "1431350.00",
+        "id": "80fd67b4-d800-47ed-990a-8dfa074c30dc",
+        "gap": "851350.00",
         "total": "2351350.00",
         "years": 4,
         "school": {
@@ -2101,21 +1507,15 @@
         "status": "DRAFT",
         "version": 1,
         "currency": "THB",
-        "available": "920000.00",
-        "converted": {
-         "rate": "0.2173913043",
-         "amount": "511163.04",
-         "source": "fixture",
-         "currency": "CNY",
-         "rate_date": "2026-10-13"
-        },
+        "available": "1500000.00",
+        "converted": null,
         "school_key": "chulalongkorn",
         "start_date": "2027-08-02",
         "enrolled_at": null,
         "confirmed_at": null,
         "is_simulated": true,
-        "funds_currency": "CNY",
-        "available_funds": "200000.00"
+        "funds_currency": "THB",
+        "available_funds": "1500000.00"
        }
       },
       "call": {
@@ -2130,12 +1530,12 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.1"
+       "prompt_version": "planning-1.2"
       }
      },
      {
-      "id": "8d3cd3e0-7679-433a-9fc8-6d253d09c027",
-      "created_at": "2026-10-12T18:17:53.556Z",
+      "id": "43335dd2-d502-4098-af1e-041dec1b13fd",
+      "created_at": "2026-10-13T11:21:32.077Z",
       "number": 2,
       "tool": "",
       "tier": "",
@@ -2143,7 +1543,7 @@
       "rationale": "",
       "status": "FINAL",
       "result": {
-       "answer": "计划：朱拉隆功大学，4 年，状态：草稿，全部费用约 2,351,350 THB。资金缺口约 1,431,350 THB，需要的话我可以帮你试算贷款。"
+       "answer": "计划：朱拉隆功大学，4 年，状态：草稿，全部费用约 2,351,350 THB。资金缺口约 851,350 THB，需要的话我可以帮你试算贷款。"
       },
       "call": {
        "mode": "mock",
@@ -2157,7 +1557,7 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.1"
+       "prompt_version": "planning-1.2"
       }
      }
     ],
@@ -2166,32 +1566,32 @@
     "kind": "user"
    },
    {
-    "id": "c995a87c-29b4-460d-8eb7-097a91eba849",
+    "id": "ad897eca-a2ca-4e76-96a6-c0f6141246a1",
     "type": "agentsession",
-    "created_at": "2026-10-12T18:17:53.568Z",
+    "created_at": "2026-10-13T11:21:32.090Z",
     "goal": "帮我试算贷款，分48个月",
     "locale": "zh",
     "mode": "mock",
     "status": "COMPLETED",
-    "final_answer": "模拟贷款：本金 1,431,350 THB，48 个月，年利率 6.0%，每月最多约 33,615 THB。确认没问题就说“确认计划”。所有资金与贷款均为模拟。",
+    "final_answer": "模拟贷款：本金 851,350 THB，48 个月，年利率 6.0%，每月最多约 19,994 THB。确认没问题就说“确认计划”。所有资金与贷款均为模拟。",
     "error_code": "",
     "write_count": 1,
-    "updated_at": "2026-10-12T18:17:53.601Z",
-    "conversation": "3d283a0e-5e33-4cf1-8a27-de6759b4c823",
+    "updated_at": "2026-10-13T11:21:32.119Z",
+    "conversation": "a2636160-9d24-4879-b3b9-8d7808922425",
     "cards": [
      {
-      "gap": "1431350.00",
+      "gap": "851350.00",
       "plan": {
-       "id": "174880ab-dff1-4297-9d23-f78d077923c4",
-       "gap": "1431350.00",
+       "id": "80fd67b4-d800-47ed-990a-8dfa074c30dc",
+       "gap": "851350.00",
        "loan": {
-        "id": "e90c9604-e1ef-44d8-9711-a7fd0eccda16",
+        "id": "2f3e18a3-b913-48e4-b3ea-e58573bf48b8",
         "months": 48,
         "currency": "THB",
-        "principal": "1431350.00",
+        "principal": "851350.00",
         "annual_rate": "0.06",
-        "monthly_payment": "33615.30",
-        "total_repayment": "1613534.22"
+        "monthly_payment": "19993.98",
+        "total_repayment": "959711.01"
        },
        "total": "2351350.00",
        "years": 4,
@@ -2205,27 +1605,21 @@
        "status": "DRAFT",
        "version": 2,
        "currency": "THB",
-       "available": "920000.00",
-       "converted": {
-        "rate": "0.2173913043",
-        "amount": "511163.04",
-        "source": "fixture",
-        "currency": "CNY",
-        "rate_date": "2026-10-13"
-       },
+       "available": "1500000.00",
+       "converted": null,
        "school_key": "chulalongkorn",
        "start_date": "2027-08-02",
        "enrolled_at": null,
        "confirmed_at": null,
        "is_simulated": true,
-       "funds_currency": "CNY",
-       "available_funds": "200000.00"
+       "funds_currency": "THB",
+       "available_funds": "1500000.00"
       },
       "type": "loan",
       "gap_currency": "THB",
       "principal_fx": {
        "rate": "1",
-       "amount": "1431350.00",
+       "amount": "851350.00",
        "source": null,
        "currency": "THB",
        "rate_date": null
@@ -2234,8 +1628,8 @@
     ],
     "steps": [
      {
-      "id": "26e2992d-7af0-4687-a47b-cfabb65ea608",
-      "created_at": "2026-10-12T18:17:53.600Z",
+      "id": "75041e42-2826-4ad2-9710-81834cd6bdfd",
+      "created_at": "2026-10-13T11:21:32.117Z",
       "number": 1,
       "tool": "simulate_loan",
       "tier": "T1",
@@ -2245,18 +1639,18 @@
       "rationale": "Simulate a loan for the gap",
       "status": "OK",
       "result": {
-       "gap": "1431350.00",
+       "gap": "851350.00",
        "plan": {
-        "id": "174880ab-dff1-4297-9d23-f78d077923c4",
-        "gap": "1431350.00",
+        "id": "80fd67b4-d800-47ed-990a-8dfa074c30dc",
+        "gap": "851350.00",
         "loan": {
-         "id": "e90c9604-e1ef-44d8-9711-a7fd0eccda16",
+         "id": "2f3e18a3-b913-48e4-b3ea-e58573bf48b8",
          "months": 48,
          "currency": "THB",
-         "principal": "1431350.00",
+         "principal": "851350.00",
          "annual_rate": "0.06",
-         "monthly_payment": "33615.30",
-         "total_repayment": "1613534.22"
+         "monthly_payment": "19993.98",
+         "total_repayment": "959711.01"
         },
         "total": "2351350.00",
         "years": 4,
@@ -2270,26 +1664,20 @@
         "status": "DRAFT",
         "version": 2,
         "currency": "THB",
-        "available": "920000.00",
-        "converted": {
-         "rate": "0.2173913043",
-         "amount": "511163.04",
-         "source": "fixture",
-         "currency": "CNY",
-         "rate_date": "2026-10-13"
-        },
+        "available": "1500000.00",
+        "converted": null,
         "school_key": "chulalongkorn",
         "start_date": "2027-08-02",
         "enrolled_at": null,
         "confirmed_at": null,
         "is_simulated": true,
-        "funds_currency": "CNY",
-        "available_funds": "200000.00"
+        "funds_currency": "THB",
+        "available_funds": "1500000.00"
        },
        "gap_currency": "THB",
        "principal_fx": {
         "rate": "1",
-        "amount": "1431350.00",
+        "amount": "851350.00",
         "source": null,
         "currency": "THB",
         "rate_date": null
@@ -2307,12 +1695,12 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.1"
+       "prompt_version": "planning-1.2"
       }
      },
      {
-      "id": "7afde6fe-703c-4d23-bf55-64fa59637fb4",
-      "created_at": "2026-10-12T18:17:53.601Z",
+      "id": "c5247fad-6cbf-4d65-af46-d0d717b4e491",
+      "created_at": "2026-10-13T11:21:32.118Z",
       "number": 2,
       "tool": "",
       "tier": "",
@@ -2320,7 +1708,7 @@
       "rationale": "",
       "status": "FINAL",
       "result": {
-       "answer": "模拟贷款：本金 1,431,350 THB，48 个月，年利率 6.0%，每月最多约 33,615 THB。确认没问题就说“确认计划”。所有资金与贷款均为模拟。"
+       "answer": "模拟贷款：本金 851,350 THB，48 个月，年利率 6.0%，每月最多约 19,994 THB。确认没问题就说“确认计划”。所有资金与贷款均为模拟。"
       },
       "call": {
        "mode": "mock",
@@ -2334,7 +1722,7 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.1"
+       "prompt_version": "planning-1.2"
       }
      }
     ],
@@ -2343,9 +1731,9 @@
     "kind": "user"
    },
    {
-    "id": "f4f8f321-7b1c-4b67-80c9-8a8a0e2b29e4",
+    "id": "d6372677-4f94-4af5-ae3e-00ac3c12d29c",
     "type": "agentsession",
-    "created_at": "2026-10-12T18:17:53.613Z",
+    "created_at": "2026-10-13T11:21:32.131Z",
     "goal": "确认计划",
     "locale": "zh",
     "mode": "mock",
@@ -2353,21 +1741,21 @@
     "final_answer": "已生成计划确认请求，请在下方卡片上确认。",
     "error_code": "",
     "write_count": 0,
-    "updated_at": "2026-10-12T18:17:53.643Z",
-    "conversation": "3d283a0e-5e33-4cf1-8a27-de6759b4c823",
+    "updated_at": "2026-10-13T11:21:32.158Z",
+    "conversation": "a2636160-9d24-4879-b3b9-8d7808922425",
     "cards": [
      {
       "plan": {
-       "id": "174880ab-dff1-4297-9d23-f78d077923c4",
-       "gap": "1431350.00",
+       "id": "80fd67b4-d800-47ed-990a-8dfa074c30dc",
+       "gap": "851350.00",
        "loan": {
-        "id": "e90c9604-e1ef-44d8-9711-a7fd0eccda16",
+        "id": "2f3e18a3-b913-48e4-b3ea-e58573bf48b8",
         "months": 48,
         "currency": "THB",
-        "principal": "1431350.00",
+        "principal": "851350.00",
         "annual_rate": "0.06",
-        "monthly_payment": "33615.30",
-        "total_repayment": "1613534.22"
+        "monthly_payment": "19993.98",
+        "total_repayment": "959711.01"
        },
        "total": "2351350.00",
        "years": 4,
@@ -2381,40 +1769,34 @@
        "status": "DRAFT",
        "version": 2,
        "currency": "THB",
-       "available": "920000.00",
-       "converted": {
-        "rate": "0.2173913043",
-        "amount": "511163.04",
-        "source": "fixture",
-        "currency": "CNY",
-        "rate_date": "2026-10-13"
-       },
+       "available": "1500000.00",
+       "converted": null,
        "school_key": "chulalongkorn",
        "start_date": "2027-08-02",
        "enrolled_at": null,
        "confirmed_at": null,
        "is_simulated": true,
-       "funds_currency": "CNY",
-       "available_funds": "200000.00"
+       "funds_currency": "THB",
+       "available_funds": "1500000.00"
       },
       "type": "confirmation",
       "action": "plan.confirm",
       "details": {
-       "gap": "1431350.00",
+       "gap": "851350.00",
        "total": "2351350.00",
        "years": 4,
-       "plan_id": "174880ab-dff1-4297-9d23-f78d077923c4",
+       "plan_id": "80fd67b4-d800-47ed-990a-8dfa074c30dc",
        "currency": "THB",
        "school_key": "chulalongkorn"
       },
-      "expires_at": "2026-10-12T18:32:53.635765+00:00",
-      "pending_action_id": "ac977793-fa4e-4224-8bf2-bd6f09f8c9fd"
+      "expires_at": "2026-10-13T11:36:32.152037+00:00",
+      "pending_action_id": "e13f990c-3b80-4c25-a8d7-da6932c4172c"
      }
     ],
     "steps": [
      {
-      "id": "283abcb1-83f5-4ac9-871f-a51978b13ad9",
-      "created_at": "2026-10-12T18:17:53.635Z",
+      "id": "d59af764-5464-45c4-a1b4-dd5c8df2a00a",
+      "created_at": "2026-10-13T11:21:32.152Z",
       "number": 1,
       "tool": "confirm_plan",
       "tier": "T2",
@@ -2425,10 +1807,10 @@
        "action": "plan.confirm",
        "amount": null,
        "details": {
-        "gap": "1431350.00",
+        "gap": "851350.00",
         "total": "2351350.00",
         "years": 4,
-        "plan_id": "174880ab-dff1-4297-9d23-f78d077923c4",
+        "plan_id": "80fd67b4-d800-47ed-990a-8dfa074c30dc",
         "currency": "THB",
         "school_key": "chulalongkorn"
        },
@@ -2437,9 +1819,9 @@
        "requires": [
         "user_confirmation"
        ],
-       "target_id": "174880ab-dff1-4297-9d23-f78d077923c4",
-       "expires_at": "2026-10-12T18:32:53.635765+00:00",
-       "pending_action_id": "ac977793-fa4e-4224-8bf2-bd6f09f8c9fd"
+       "target_id": "80fd67b4-d800-47ed-990a-8dfa074c30dc",
+       "expires_at": "2026-10-13T11:36:32.152037+00:00",
+       "pending_action_id": "e13f990c-3b80-4c25-a8d7-da6932c4172c"
       },
       "call": {
        "mode": "mock",
@@ -2453,12 +1835,12 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.1"
+       "prompt_version": "planning-1.2"
       }
      },
      {
-      "id": "944cf6ec-6baf-445a-b723-07ffb1890855",
-      "created_at": "2026-10-12T18:17:53.642Z",
+      "id": "ad69da47-d1a2-40aa-b10e-e2ff10c8716d",
+      "created_at": "2026-10-13T11:21:32.157Z",
       "number": 2,
       "tool": "",
       "tier": "",
@@ -2480,45 +1862,45 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.1"
+       "prompt_version": "planning-1.2"
       }
      }
     ],
     "pending_actions": [
      {
-      "id": "ac977793-fa4e-4224-8bf2-bd6f09f8c9fd",
+      "id": "e13f990c-3b80-4c25-a8d7-da6932c4172c",
       "type": "agentpendingaction",
-      "created_at": "2026-10-12T18:17:53.636Z",
-      "session": "f4f8f321-7b1c-4b67-80c9-8a8a0e2b29e4",
-      "step": "283abcb1-83f5-4ac9-871f-a51978b13ad9",
+      "created_at": "2026-10-13T11:21:32.152Z",
+      "session": "d6372677-4f94-4af5-ae3e-00ac3c12d29c",
+      "step": "d59af764-5464-45c4-a1b4-dd5c8df2a00a",
       "action": "plan.confirm",
       "tool": "confirm_plan",
       "arguments": {
-       "gap": "1431350.00",
+       "gap": "851350.00",
        "total": "2351350.00",
        "years": 4,
-       "plan_id": "174880ab-dff1-4297-9d23-f78d077923c4",
+       "plan_id": "80fd67b4-d800-47ed-990a-8dfa074c30dc",
        "currency": "THB",
        "school_key": "chulalongkorn"
       },
-      "target_id": "174880ab-dff1-4297-9d23-f78d077923c4",
+      "target_id": "80fd67b4-d800-47ed-990a-8dfa074c30dc",
       "amount": null,
       "currency": "",
       "status": "CONFIRMED",
-      "expires_at": "2026-10-12T18:32:53.635Z",
-      "decided_at": "2026-10-12T18:17:53.707Z",
+      "expires_at": "2026-10-13T11:36:32.152Z",
+      "decided_at": "2026-10-13T11:21:32.216Z",
       "result": {
        "plan": {
-        "id": "174880ab-dff1-4297-9d23-f78d077923c4",
-        "gap": "1431350.00",
+        "id": "80fd67b4-d800-47ed-990a-8dfa074c30dc",
+        "gap": "851350.00",
         "loan": {
-         "id": "e90c9604-e1ef-44d8-9711-a7fd0eccda16",
+         "id": "2f3e18a3-b913-48e4-b3ea-e58573bf48b8",
          "months": 48,
          "currency": "THB",
-         "principal": "1431350.00",
+         "principal": "851350.00",
          "annual_rate": "0.06",
-         "monthly_payment": "33615.30",
-         "total_repayment": "1613534.22"
+         "monthly_payment": "19993.98",
+         "total_repayment": "959711.01"
         },
         "total": "2351350.00",
         "years": 4,
@@ -2532,21 +1914,15 @@
         "status": "CONFIRMED",
         "version": 3,
         "currency": "THB",
-        "available": "920000.00",
-        "converted": {
-         "rate": "0.2173913043",
-         "amount": "511163.04",
-         "source": "fixture",
-         "currency": "CNY",
-         "rate_date": "2026-10-13"
-        },
+        "available": "1500000.00",
+        "converted": null,
         "school_key": "chulalongkorn",
         "start_date": "2027-08-02",
         "enrolled_at": null,
-        "confirmed_at": "2026-10-12T18:17:53.703766+00:00",
+        "confirmed_at": "2026-10-13T11:21:32.213424+00:00",
         "is_simulated": true,
-        "funds_currency": "CNY",
-        "available_funds": "200000.00"
+        "funds_currency": "THB",
+        "available_funds": "1500000.00"
        }
       },
       "version": 2
@@ -2556,9 +1932,9 @@
     "kind": "user"
    },
    {
-    "id": "8f423b9a-97c1-4f98-9894-563e85aa0d67",
+    "id": "3087584b-4214-436c-aa1d-1e2305e617ba",
     "type": "agentsession",
-    "created_at": "2026-10-12T18:17:53.711Z",
+    "created_at": "2026-10-13T11:21:32.220Z",
     "goal": "",
     "locale": "zh",
     "mode": "system",
@@ -2566,8 +1942,8 @@
     "final_answer": "留学计划已保存，接下来一起准备入学。确认计划不代表已录取：你目前是在等待录取、已获录取，还是准备出发？我们可以先聊住宿安排、出发准备或首月预算，之后仍可继续咨询学校。",
     "error_code": "",
     "write_count": 0,
-    "updated_at": "2026-10-12T18:17:53.711Z",
-    "conversation": "3d283a0e-5e33-4cf1-8a27-de6759b4c823",
+    "updated_at": "2026-10-13T11:21:32.220Z",
+    "conversation": "a2636160-9d24-4879-b3b9-8d7808922425",
     "cards": [],
     "steps": [],
     "pending_actions": [],
@@ -2575,9 +1951,9 @@
     "kind": "assistant"
    },
    {
-    "id": "24085357-28b3-4b0e-a0e0-fb75a48890b3",
+    "id": "69d90106-ecd6-42a2-add5-398c9755ca4f",
     "type": "agentsession",
-    "created_at": "2026-10-12T18:17:53.724Z",
+    "created_at": "2026-10-13T11:21:32.233Z",
     "goal": "学校宿舍和周边环境怎么样？",
     "locale": "zh",
     "mode": "mock",
@@ -2585,8 +1961,8 @@
     "final_answer": "朱拉隆功大学在曼谷。校内有朱拉隆功大学中央图书馆、CU iHouse 国际公寓、朱拉隆功大学体育中心；附近可以吃各学院食堂、Samyan Mitrtown 美食广场、班塔通路街头美食；周末可以去暹罗广场、伦披尼公园、金·汤普森之家。（示例数据，来自公开资料，付款前请向学校确认。）",
     "error_code": "",
     "write_count": 0,
-    "updated_at": "2026-10-12T18:17:53.742Z",
-    "conversation": "3d283a0e-5e33-4cf1-8a27-de6759b4c823",
+    "updated_at": "2026-10-13T11:21:32.254Z",
+    "conversation": "a2636160-9d24-4879-b3b9-8d7808922425",
     "cards": [
      {
       "type": "school",
@@ -3138,8 +2514,8 @@
     ],
     "steps": [
      {
-      "id": "08423eda-e005-4cfb-a588-d5ba5236ef42",
-      "created_at": "2026-10-12T18:17:53.740Z",
+      "id": "69e5caab-c324-4928-be69-e943b51dfedb",
+      "created_at": "2026-10-13T11:21:32.252Z",
       "number": 1,
       "tool": "get_school_profile",
       "tier": "T0",
@@ -3205,6 +2581,8 @@
         "en": "Chulalongkorn University",
         "zh": "朱拉隆功大学"
        },
+       "total": "2351350.00",
+       "years": 4,
        "intake": "2027-08",
        "sample": true,
        "country": {
@@ -3218,6 +2596,7 @@
        "website": "https://bba.acc.chula.ac.th/",
        "currency": "THB",
        "language": "English",
+       "total_low": "2118650.00",
        "facilities": [
         {
          "kind": "library",
@@ -3275,6 +2654,7 @@
         }
        ],
        "start_date": "2027-08-02",
+       "total_high": "2584050.00",
        "attractions": [
         {
          "kind": "shopping",
@@ -3339,12 +2719,12 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.1"
+       "prompt_version": "planning-1.2"
       }
      },
      {
-      "id": "2b62df4d-8fe3-4864-a299-ae5da96ef341",
-      "created_at": "2026-10-12T18:17:53.741Z",
+      "id": "3b189989-20d0-453a-87b6-67963c06bafa",
+      "created_at": "2026-10-13T11:21:32.253Z",
       "number": 2,
       "tool": "",
       "tier": "",
@@ -3366,7 +2746,7 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.1"
+       "prompt_version": "planning-1.2"
       }
      }
     ],
@@ -3375,9 +2755,9 @@
     "kind": "user"
    },
    {
-    "id": "548f94d6-a8fa-4593-972d-eb2e372952ce",
+    "id": "7f04bb4e-ec57-40b5-8744-c4db593837a3",
     "type": "agentsession",
-    "created_at": "2026-10-12T18:17:53.757Z",
+    "created_at": "2026-10-13T11:21:32.271Z",
     "goal": "出发准备",
     "locale": "zh",
     "mode": "mock",
@@ -3385,13 +2765,13 @@
     "final_answer": "可以先梳理录取与报到材料、旅行证件、到达交通和首晚住宿。具体要求与日期需要向学校核实。你已经获得录取了吗，预计什么时候出发？这里只讨论准备事项，不代表已订票或完成手续。",
     "error_code": "",
     "write_count": 0,
-    "updated_at": "2026-10-12T18:17:53.776Z",
-    "conversation": "3d283a0e-5e33-4cf1-8a27-de6759b4c823",
+    "updated_at": "2026-10-13T11:21:32.287Z",
+    "conversation": "a2636160-9d24-4879-b3b9-8d7808922425",
     "cards": [],
     "steps": [
      {
-      "id": "9036871e-9eef-481b-bdd7-2e2d74b56f68",
-      "created_at": "2026-10-12T18:17:53.775Z",
+      "id": "f6e276d6-5cde-4446-8230-afce1e9846e3",
+      "created_at": "2026-10-13T11:21:32.287Z",
       "number": 1,
       "tool": "",
       "tier": "",
@@ -3413,7 +2793,7 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.1"
+       "prompt_version": "planning-1.2"
       }
      }
     ],
@@ -3422,9 +2802,9 @@
     "kind": "user"
    },
    {
-    "id": "513d442f-ffe1-4f16-9566-9ef380db20ac",
+    "id": "99ae2cf4-7988-4d6d-943f-715e77b2f12a",
     "type": "agentsession",
-    "created_at": "2026-10-12T18:17:53.791Z",
+    "created_at": "2026-10-13T11:21:32.299Z",
     "goal": "首月预算",
     "locale": "zh",
     "mode": "mock",
@@ -3432,13 +2812,13 @@
     "final_answer": "首月预算需要区分一次性开支和每月开支：住宿押金、安置用品，以及房租、吃饭和交通。先从学校费用示例核对，再用已确认的实际金额完善；目前没有生成新预算或账单。住宿是否已确定，有没有押金金额？",
     "error_code": "",
     "write_count": 0,
-    "updated_at": "2026-10-12T18:17:53.810Z",
-    "conversation": "3d283a0e-5e33-4cf1-8a27-de6759b4c823",
+    "updated_at": "2026-10-13T11:21:32.315Z",
+    "conversation": "a2636160-9d24-4879-b3b9-8d7808922425",
     "cards": [],
     "steps": [
      {
-      "id": "29d15ecc-78cc-43de-9ee1-0a7b8dd9bbf3",
-      "created_at": "2026-10-12T18:17:53.809Z",
+      "id": "72a7419b-d398-4b56-9907-701efeb46f4d",
+      "created_at": "2026-10-13T11:21:32.314Z",
       "number": 1,
       "tool": "",
       "tier": "",
@@ -3460,7 +2840,7 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.1"
+       "prompt_version": "planning-1.2"
       }
      }
     ],

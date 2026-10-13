@@ -10,13 +10,13 @@
 .copilot-scenarios .panel-chips { min-width:0; }
 .copilot-scenarios .panel-chips button { max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .copilot-scenarios > .panel-link { flex:none; font-size:12px; }
-.panel-chips button.is-error { border-color:#ff9c8a80; }
+.panel-chips button.is-error { border-color:#f53f3f80; }
 .copilot-form { border:0; margin:0; padding:0; min-width:0; display:flex; flex-direction:column; gap:12px; }
 .copilot-part { display:flex; flex-direction:column; gap:10px; }
 .copilot-part > .secondary { align-self:flex-start; }
 .copilot-parts button, .copilot-metric button { padding:5px 11px; font-size:12px; }
 .copilot-field { display:flex; flex-direction:column; gap:6px; font-size:12px; color:var(--text-3); min-width:0; }
-.copilot-row { display:grid; grid-template-columns:minmax(0, 1.15fr) minmax(0, 1fr) minmax(0, 1fr); gap:8px 10px; align-items:end; padding-top:10px; border-top:1px solid #9ff5dc14; }
+.copilot-row { display:grid; grid-template-columns:minmax(0, 1.15fr) minmax(0, 1fr) minmax(0, 1fr); gap:8px 10px; align-items:end; padding-top:10px; border-top:1px solid #1f232914; }
 .copilot-current { grid-column:1 / -1; display:grid; grid-template-columns:minmax(0, 1fr) auto; gap:4px 12px; align-items:center; font-size:12px; color:var(--text-3); }
 .copilot-current .chart-level { grid-column:1 / -1; }
 .copilot-current strong { color:var(--warn); font-weight:500; }
@@ -36,7 +36,7 @@
 .copilot-pair-table td.is-weaker { color:var(--warn); }
 .copilot-pair-table td.is-weaker::before { content:""; display:inline-block; width:6px; height:6px; margin-right:6px; border-radius:50%; background:var(--warn); vertical-align:middle; }
 .copilot-delta { display:inline-block; margin-top:2px; font-size:11px; font-weight:500; }
-.copilot-better { color:#6ff7d4; }
+.copilot-better { color:#1677ff; }
 .copilot-worse { color:var(--warn); }
 .copilot-same { color:var(--text-3); }
 .copilot-stale { display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; }
@@ -48,9 +48,9 @@
 .copilot-chart { margin:0; display:flex; flex-direction:column; gap:4px; }
 .copilot-chart svg { display:block; width:100%; height:84px; overflow:visible; }
 .copilot-chart polyline, .copilot-chart line { fill:none; vector-effect:non-scaling-stroke; stroke-linejoin:round; }
-.copilot-chart .is-ending { stroke:#6ff7d4; stroke-width:2; }
-.copilot-chart .is-minimum { stroke:#cfe9df99; stroke-width:1.5; stroke-dasharray:4 3; }
-.copilot-chart .is-zero { stroke:#ff9c8a80; stroke-width:1; stroke-dasharray:2 3; }
+.copilot-chart .is-ending { stroke:#1677ff; stroke-width:2; }
+.copilot-chart .is-minimum { stroke:#1f232999; stroke-width:1.5; stroke-dasharray:4 3; }
+.copilot-chart .is-zero { stroke:#f53f3f80; stroke-width:1; stroke-dasharray:2 3; }
 .copilot-chart figcaption { display:flex; flex-direction:column; gap:4px; }
 .copilot-chart .chart-axis { margin-top:0; }
 .copilot-conditions { display:flex; flex-direction:column; gap:6px; }
@@ -63,7 +63,7 @@
 .copilot-blocked { display:flex; flex-direction:column; gap:6px; }
 .copilot-blocked ul { margin:0; padding-left:18px; }
 .copilot-blocked a { color:var(--accent); }
-.copilot-confirm { display:flex; flex-direction:column; gap:8px; padding:12px 14px; border-radius:12px; border:1px solid #9ff5dc26; background:#4ff2c608; }
+.copilot-confirm { display:flex; flex-direction:column; gap:8px; padding:12px 14px; border-radius:12px; border:1px solid #1f232926; background:#1677ff08; }
 .copilot-checklist { margin:0; padding-left:18px; display:grid; gap:4px; font-size:13px; line-height:1.55; color:var(--text-2); }
 .copilot-review-item, .copilot-layer { display:flex; flex-direction:column; gap:8px; min-width:0; }
 .copilot-notifications li > .status-chip, .copilot-notifications li > .copilot-mini { flex:none; }

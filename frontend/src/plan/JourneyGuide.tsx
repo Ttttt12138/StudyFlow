@@ -26,8 +26,9 @@ export function JourneyGuide({ plan, phase = journeyPhase(plan.status), pending,
         <button className="chip" disabled={disabled} onClick={() => ask(t("plan.journey.housingPrompt"))}>{t("plan.journey.housing")}</button>
         <button className="chip" disabled={disabled} onClick={() => ask(t("plan.journey.departure"))}>{t("plan.journey.departure")}</button>
         <button className="chip" disabled={disabled} onClick={() => ask(t("plan.journey.firstBudget"))}>{t("plan.journey.firstBudget")}</button>
+        {plan.status === "CONFIRMED" && <button className="chip" onClick={() => workspace?.open({ kind: "life" })}>{t("life.title")}</button>}
       </> : <>
-        <button className="chip" onClick={() => workspace?.open({ kind: "bills" })}>{t("plan.journey.month")}</button>
+        <button className="chip" onClick={() => workspace?.open({ kind: "spending" })}>{t("plan.journey.month")}</button>
         <button className="chip" onClick={() => workspace?.open({ kind: "bills", section: "expense" })}>{t("ws.record")}</button>
         <button className="chip" disabled={disabled} onClick={() => ask(t("plan.journey.campusPrompt"))}>{t("plan.journey.campus")}</button>
       </>}

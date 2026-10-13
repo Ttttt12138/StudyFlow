@@ -1,5 +1,7 @@
 import { useI18n, type MessageKey } from "../i18n";
 import { day, money, percent, pick } from "./format";
+import { useShow } from "./currency";
+import { moneyActionName } from "./MoneyConfirm";
 import { formatRate } from "../backend/presenters";
 import type { Bill, Card, CatalogEntry, Estimate, Place, Plan, SchoolBrief, Spending } from "./types";
 
@@ -7,7 +9,6 @@ export type CardActions = {
   ask(text: string): void;
   confirm(pendingId: string): void;
   reject(pendingId: string): void;
-  openAgent(pendingId: string): void;
   busy: boolean;
   readOnly: boolean;
   pendingStatus(pendingId: string): string;
@@ -126,14 +127,15 @@ function Cost({ name, estimate, actions }: { name: string; estimate: Estimate; a
 
 export function PlanFacts({ plan }: { plan: Plan }) {
   const { lang, t } = useI18n();
+  const show = useShow();
   const cur = plan.currency ?? plan.school?.currency ?? "";
   return <dl className="comparison-facts">
     <div><dt>{t("plan.plan.school")}</dt><dd>{pick(plan.school?.name, lang) || plan.school_key}</dd></div>
     <div><dt>{t("plan.plan.years")}</dt><dd>{plan.years}</dd></div>
     <div><dt>{t("plan.plan.start")}</dt><dd>{day(plan.start_date, lang)}</dd></div>
-    <div><dt>{t("plan.plan.total")}</dt><dd>{money(plan.total, cur, lang)}</dd></div>
-    <div><dt>{t("plan.plan.funds")}</dt><dd>{plan.available_funds ? money(plan.available_funds, plan.funds_currency ?? "", lang) : t("plan.plan.noFunds")}</dd></div>
-    {plan.gap != null && <div><dt>{t("plan.plan.gap")}</dt><dd className={Number(plan.gap) > 0 ? "plan-gap" : ""}>{money(plan.gap, cur, lang)}</dd></div>}
+    <div><dt>{t("plan.plan.total")}</dt><dd>{show(plan.total, cur, lang).main}</dd></div>
+    <div><dt>{t("plan.plan.funds")}</dt><dd>{plan.available_funds ? show(plan.available_funds, plan.funds_currency || cur, lang).main : t("plan.plan.noFunds")}</dd></div>
+    {plan.gap != null && <div><dt>{t("plan.plan.gap")}</dt><dd className={Number(plan.gap) > 0 ? "plan-gap" : ""}>{show(plan.gap, cur, lang).main}</dd></div>}
   </dl>;
 }
 
@@ -174,7 +176,7 @@ function Confirmation({ card, actions }: { card: Extract<Card, { type: "confirma
   const open = status === "PENDING" && new Date(card.expires_at).getTime() > Date.now();
   return <div className="plan-card plan-card-confirm">
     <div className="plan-card-head">
-      <h3>{isPlan ? t(`plan.confirm.${card.action}` as MessageKey) : card.action}</h3>
+      <h3>{isPlan ? t(`plan.confirm.${card.action}` as MessageKey) : moneyActionName(card.action, t)}</h3>
       <span className={`status-chip status-${status.toLowerCase()}`}>{t(`plan.confirm.status.${status}` as MessageKey)}</span>
     </div>
     {card.plan && <PlanFacts plan={card.plan} />}
@@ -184,7 +186,8 @@ function Confirmation({ card, actions }: { card: Extract<Card, { type: "confirma
       <button type="button" className="primary" disabled={actions.busy} onClick={() => actions.confirm(card.pending_action_id)}>{t("plan.confirm.yes")}</button>
       <button type="button" className="secondary" disabled={actions.busy} onClick={() => actions.reject(card.pending_action_id)}>{t("plan.confirm.no")}</button>
     </div> : <div className="plan-card-actions">
-      <button type="button" className="secondary" onClick={() => actions.openAgent(card.pending_action_id)}>{t("plan.confirm.openAgent")}</button>
+      <button type="button" className="primary" disabled={actions.busy} onClick={() => actions.confirm(card.pending_action_id)}>{t("plan.confirm.review")}</button>
+      <button type="button" className="secondary" disabled={actions.busy} onClick={() => actions.reject(card.pending_action_id)}>{t("plan.confirm.no")}</button>
     </div>)}
   </div>;
 }

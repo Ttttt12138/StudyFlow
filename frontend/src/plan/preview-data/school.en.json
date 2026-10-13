@@ -1,24 +1,24 @@
 {
  "conversation": {
-  "id": "5a2a66b2-d113-4ed3-968b-1b7f0e1b2922",
+  "id": "a4703a56-091c-4f58-aeaa-83f262121c3d",
   "locale": "en",
-  "created_at": "2026-10-12T18:17:55.324976+00:00",
-  "updated_at": "2026-10-12T18:17:55.712906+00:00",
+  "created_at": "2026-10-13T11:21:33.233905+00:00",
+  "updated_at": "2026-10-13T11:21:33.601776+00:00",
   "profile": {
-   "role": "parent",
-   "home_currency": "CNY"
+   "role": null,
+   "home_currency": "THB"
   },
   "plan": {
-   "id": "10150a90-c040-4fa4-b917-fcbfb02cc3b3",
+   "id": "7c5dd1d8-851f-4944-a27d-82647c0a71eb",
    "status": "ENROLLED",
    "school_key": "chulalongkorn",
    "years": 4,
    "start_date": "2027-08-02",
    "version": 4,
-   "available_funds": "200000.00",
-   "funds_currency": "CNY",
-   "confirmed_at": "2026-10-12T18:17:54.956493+00:00",
-   "enrolled_at": "2026-10-12T18:17:55.380794+00:00",
+   "available_funds": "1500000.00",
+   "funds_currency": "THB",
+   "confirmed_at": "2026-10-13T11:21:33.072487+00:00",
+   "enrolled_at": "2026-10-13T11:21:33.285822+00:00",
    "is_simulated": true,
    "school": {
     "name": {
@@ -29,30 +29,24 @@
    },
    "total": "2351350.00",
    "currency": "THB",
-   "converted": {
-    "rate": "0.2173913043",
-    "amount": "511163.04",
-    "source": "fixture",
-    "currency": "CNY",
-    "rate_date": "2026-10-13"
-   },
-   "available": "920000.00",
-   "gap": "1431350.00",
+   "converted": null,
+   "available": "1500000.00",
+   "gap": "851350.00",
    "loan": {
-    "id": "b3390bd7-6ed3-4f5b-b1cd-b32d020019ef",
+    "id": "dcb02102-73a9-482f-ad94-cfcaedbacb94",
     "currency": "THB",
-    "principal": "1431350.00",
+    "principal": "851350.00",
     "months": 48,
     "annual_rate": "0.06",
-    "monthly_payment": "33615.30",
-    "total_repayment": "1613534.22"
+    "monthly_payment": "19993.98",
+    "total_repayment": "959711.01"
    }
   },
   "turns": [
    {
-    "id": "0f3ad165-d8fc-46fa-8763-188940752048",
+    "id": "3f070c65-ec68-4cac-86d2-995b7f12dc25",
     "type": "agentsession",
-    "created_at": "2026-10-12T18:17:55.331Z",
+    "created_at": "2026-10-13T11:21:33.238Z",
     "goal": "",
     "locale": "en",
     "mode": "system",
@@ -60,21 +54,21 @@
     "final_answer": "Your study plan is saved. Let's start preparing for enrollment. A confirmed plan is not an admission offer: are you awaiting an offer, holding an offer, or preparing to travel? We can discuss housing, departure preparation or your first-month budget. School questions are still welcome.",
     "error_code": "",
     "write_count": 0,
-    "updated_at": "2026-10-12T18:17:55.331Z",
-    "conversation": "5a2a66b2-d113-4ed3-968b-1b7f0e1b2922",
+    "updated_at": "2026-10-13T11:21:33.238Z",
+    "conversation": "a4703a56-091c-4f58-aeaa-83f262121c3d",
     "cards": [
      {
       "plan": {
-       "id": "10150a90-c040-4fa4-b917-fcbfb02cc3b3",
-       "gap": "1431350.00",
+       "id": "7c5dd1d8-851f-4944-a27d-82647c0a71eb",
+       "gap": "851350.00",
        "loan": {
-        "id": "b3390bd7-6ed3-4f5b-b1cd-b32d020019ef",
+        "id": "dcb02102-73a9-482f-ad94-cfcaedbacb94",
         "months": 48,
         "currency": "THB",
-        "principal": "1431350.00",
+        "principal": "851350.00",
         "annual_rate": "0.06",
-        "monthly_payment": "33615.30",
-        "total_repayment": "1613534.22"
+        "monthly_payment": "19993.98",
+        "total_repayment": "959711.01"
        },
        "total": "2351350.00",
        "years": 4,
@@ -88,21 +82,15 @@
        "status": "CONFIRMED",
        "version": 3,
        "currency": "THB",
-       "available": "920000.00",
-       "converted": {
-        "rate": "0.2173913043",
-        "amount": "511163.04",
-        "source": "fixture",
-        "currency": "CNY",
-        "rate_date": "2026-10-13"
-       },
+       "available": "1500000.00",
+       "converted": null,
        "school_key": "chulalongkorn",
        "start_date": "2027-08-02",
        "enrolled_at": null,
-       "confirmed_at": "2026-10-12T18:17:54.956493+00:00",
+       "confirmed_at": "2026-10-13T11:21:33.072487+00:00",
        "is_simulated": true,
-       "funds_currency": "CNY",
-       "available_funds": "200000.00"
+       "funds_currency": "THB",
+       "available_funds": "1500000.00"
       },
       "type": "plan"
      }
@@ -113,9 +101,9 @@
     "kind": "assistant"
    },
    {
-    "id": "912d1961-7a99-447d-a90a-ed3d39374b56",
+    "id": "83528802-ca8d-4621-b31f-b552076a921a",
     "type": "agentsession",
-    "created_at": "2026-10-12T18:17:55.336Z",
+    "created_at": "2026-10-13T11:21:33.243Z",
     "goal": "",
     "locale": "en",
     "mode": "system",
@@ -123,21 +111,21 @@
     "final_answer": "Classes start in 2 day(s). Has the student completed registration, or are they still preparing? Confirm enrollment only after registration: planned simulated tuition and repayments become bills. Tell me if you are still preparing or the date has changed. The date alone never enrolls you.",
     "error_code": "",
     "write_count": 0,
-    "updated_at": "2026-10-12T18:17:55.346Z",
-    "conversation": "5a2a66b2-d113-4ed3-968b-1b7f0e1b2922",
+    "updated_at": "2026-10-13T11:21:33.253Z",
+    "conversation": "a4703a56-091c-4f58-aeaa-83f262121c3d",
     "cards": [
      {
       "plan": {
-       "id": "10150a90-c040-4fa4-b917-fcbfb02cc3b3",
-       "gap": "1431350.00",
+       "id": "7c5dd1d8-851f-4944-a27d-82647c0a71eb",
+       "gap": "851350.00",
        "loan": {
-        "id": "b3390bd7-6ed3-4f5b-b1cd-b32d020019ef",
+        "id": "dcb02102-73a9-482f-ad94-cfcaedbacb94",
         "months": 48,
         "currency": "THB",
-        "principal": "1431350.00",
+        "principal": "851350.00",
         "annual_rate": "0.06",
-        "monthly_payment": "33615.30",
-        "total_repayment": "1613534.22"
+        "monthly_payment": "19993.98",
+        "total_repayment": "959711.01"
        },
        "total": "2351350.00",
        "years": 4,
@@ -151,37 +139,31 @@
        "status": "CONFIRMED",
        "version": 3,
        "currency": "THB",
-       "available": "920000.00",
-       "converted": {
-        "rate": "0.2173913043",
-        "amount": "511163.04",
-        "source": "fixture",
-        "currency": "CNY",
-        "rate_date": "2026-10-13"
-       },
+       "available": "1500000.00",
+       "converted": null,
        "school_key": "chulalongkorn",
        "start_date": "2027-08-02",
        "enrolled_at": null,
-       "confirmed_at": "2026-10-12T18:17:54.956493+00:00",
+       "confirmed_at": "2026-10-13T11:21:33.072487+00:00",
        "is_simulated": true,
-       "funds_currency": "CNY",
-       "available_funds": "200000.00"
+       "funds_currency": "THB",
+       "available_funds": "1500000.00"
       },
       "type": "confirmation",
       "action": "plan.enroll",
       "details": {
-       "plan_id": "10150a90-c040-4fa4-b917-fcbfb02cc3b3",
+       "plan_id": "7c5dd1d8-851f-4944-a27d-82647c0a71eb",
        "school_key": "chulalongkorn",
        "start_date": "2027-08-02"
       },
-      "expires_at": "2026-10-12T18:32:55.340641+00:00",
-      "pending_action_id": "0fa58544-0afd-4423-899d-7e998569976e"
+      "expires_at": "2026-10-13T11:36:33.248266+00:00",
+      "pending_action_id": "02409092-415a-45ef-9889-93c156d24e9c"
      }
     ],
     "steps": [
      {
-      "id": "257485d4-150a-49b5-8b56-bb74a7602d12",
-      "created_at": "2026-10-12T18:17:55.340Z",
+      "id": "801a01e4-45ad-474b-9626-cb571a17a3b4",
+      "created_at": "2026-10-13T11:21:33.248Z",
       "number": 1,
       "tool": "confirm_enrollment",
       "tier": "T2",
@@ -192,7 +174,7 @@
        "action": "plan.enroll",
        "amount": null,
        "details": {
-        "plan_id": "10150a90-c040-4fa4-b917-fcbfb02cc3b3",
+        "plan_id": "7c5dd1d8-851f-4944-a27d-82647c0a71eb",
         "school_key": "chulalongkorn",
         "start_date": "2027-08-02"
        },
@@ -201,9 +183,9 @@
        "requires": [
         "user_confirmation"
        ],
-       "target_id": "10150a90-c040-4fa4-b917-fcbfb02cc3b3",
-       "expires_at": "2026-10-12T18:32:55.340641+00:00",
-       "pending_action_id": "0fa58544-0afd-4423-899d-7e998569976e"
+       "target_id": "7c5dd1d8-851f-4944-a27d-82647c0a71eb",
+       "expires_at": "2026-10-13T11:36:33.248266+00:00",
+       "pending_action_id": "02409092-415a-45ef-9889-93c156d24e9c"
       },
       "call": {
        "purpose": "enrollment_due",
@@ -213,36 +195,36 @@
     ],
     "pending_actions": [
      {
-      "id": "0fa58544-0afd-4423-899d-7e998569976e",
+      "id": "02409092-415a-45ef-9889-93c156d24e9c",
       "type": "agentpendingaction",
-      "created_at": "2026-10-12T18:17:55.341Z",
-      "session": "912d1961-7a99-447d-a90a-ed3d39374b56",
-      "step": "257485d4-150a-49b5-8b56-bb74a7602d12",
+      "created_at": "2026-10-13T11:21:33.249Z",
+      "session": "83528802-ca8d-4621-b31f-b552076a921a",
+      "step": "801a01e4-45ad-474b-9626-cb571a17a3b4",
       "action": "plan.enroll",
       "tool": "confirm_enrollment",
       "arguments": {
-       "plan_id": "10150a90-c040-4fa4-b917-fcbfb02cc3b3",
+       "plan_id": "7c5dd1d8-851f-4944-a27d-82647c0a71eb",
        "school_key": "chulalongkorn",
        "start_date": "2027-08-02"
       },
-      "target_id": "10150a90-c040-4fa4-b917-fcbfb02cc3b3",
+      "target_id": "7c5dd1d8-851f-4944-a27d-82647c0a71eb",
       "amount": null,
       "currency": "",
       "status": "CONFIRMED",
-      "expires_at": "2026-10-12T18:32:55.340Z",
-      "decided_at": "2026-10-12T18:17:55.536Z",
+      "expires_at": "2026-10-13T11:36:33.248Z",
+      "decided_at": "2026-10-13T11:21:33.435Z",
       "result": {
        "plan": {
-        "id": "10150a90-c040-4fa4-b917-fcbfb02cc3b3",
-        "gap": "1431350.00",
+        "id": "7c5dd1d8-851f-4944-a27d-82647c0a71eb",
+        "gap": "851350.00",
         "loan": {
-         "id": "b3390bd7-6ed3-4f5b-b1cd-b32d020019ef",
+         "id": "dcb02102-73a9-482f-ad94-cfcaedbacb94",
          "months": 48,
          "currency": "THB",
-         "principal": "1431350.00",
+         "principal": "851350.00",
          "annual_rate": "0.06",
-         "monthly_payment": "33615.30",
-         "total_repayment": "1613534.22"
+         "monthly_payment": "19993.98",
+         "total_repayment": "959711.01"
         },
         "total": "2351350.00",
         "years": 4,
@@ -256,21 +238,15 @@
         "status": "ENROLLED",
         "version": 4,
         "currency": "THB",
-        "available": "920000.00",
-        "converted": {
-         "rate": "0.2173913043",
-         "amount": "511163.04",
-         "source": "fixture",
-         "currency": "CNY",
-         "rate_date": "2026-10-13"
-        },
+        "available": "1500000.00",
+        "converted": null,
         "school_key": "chulalongkorn",
         "start_date": "2027-08-02",
-        "enrolled_at": "2026-10-12T18:17:55.380794+00:00",
-        "confirmed_at": "2026-10-12T18:17:54.956493+00:00",
+        "enrolled_at": "2026-10-13T11:21:33.285822+00:00",
+        "confirmed_at": "2026-10-13T11:21:33.072487+00:00",
         "is_simulated": true,
-        "funds_currency": "CNY",
-        "available_funds": "200000.00"
+        "funds_currency": "THB",
+        "available_funds": "1500000.00"
        }
       },
       "version": 2
@@ -280,9 +256,9 @@
     "kind": "assistant"
    },
    {
-    "id": "be24704e-7378-4e36-a716-be34bbf23187",
+    "id": "406641a2-29a6-46fa-a593-67b32337f838",
     "type": "agentsession",
-    "created_at": "2026-10-12T18:17:55.541Z",
+    "created_at": "2026-10-13T11:21:33.439Z",
     "goal": "",
     "locale": "en",
     "mode": "system",
@@ -290,8 +266,8 @@
     "final_answer": "Enrollment is confirmed: let's settle into daily life. Your planned simulated bills are ready. Start with this month's budget, record an expense, or explore campus life. What would help first? Confirming enrollment has not paid any bill; all funds remain simulated.",
     "error_code": "",
     "write_count": 0,
-    "updated_at": "2026-10-12T18:17:55.541Z",
-    "conversation": "5a2a66b2-d113-4ed3-968b-1b7f0e1b2922",
+    "updated_at": "2026-10-13T11:21:33.439Z",
+    "conversation": "a4703a56-091c-4f58-aeaa-83f262121c3d",
     "cards": [],
     "steps": [],
     "pending_actions": [],
@@ -299,9 +275,9 @@
     "kind": "assistant"
    },
    {
-    "id": "c53ea875-31fc-49de-b670-4257f7fc02b7",
+    "id": "246d5a67-84ad-4699-9e00-a99464dd48f1",
     "type": "agentsession",
-    "created_at": "2026-10-12T18:17:55.553Z",
+    "created_at": "2026-10-13T11:21:33.450Z",
     "goal": "I spent 120 THB on lunch today",
     "locale": "en",
     "mode": "mock",
@@ -309,8 +285,8 @@
     "final_answer": "Recorded: 2027-08-14 120 THB (food). 2027-08: spent 120 THB of a 24,300 THB monthly living budget; 24,180 THB left. All money and loans are simulated.",
     "error_code": "",
     "write_count": 1,
-    "updated_at": "2026-10-12T18:17:55.576Z",
-    "conversation": "5a2a66b2-d113-4ed3-968b-1b7f0e1b2922",
+    "updated_at": "2026-10-13T11:21:33.471Z",
+    "conversation": "a4703a56-091c-4f58-aeaa-83f262121c3d",
     "cards": [
      {
       "type": "spending",
@@ -319,7 +295,7 @@
       "budget": "24300.00",
       "recent": [
        {
-        "id": "86989d68-3d96-4a3e-af12-a0277fb47f93",
+        "id": "1696ff86-985c-4334-94d8-b7b7b766eb09",
         "note": "I spent 120 THB on lunch today",
         "amount": "120.00",
         "category": "food",
@@ -329,7 +305,7 @@
        }
       ],
       "expense": {
-       "id": "86989d68-3d96-4a3e-af12-a0277fb47f93",
+       "id": "1696ff86-985c-4334-94d8-b7b7b766eb09",
        "note": "I spent 120 THB on lunch today",
        "amount": "120.00",
        "category": "food",
@@ -349,8 +325,8 @@
     ],
     "steps": [
      {
-      "id": "548c96f9-6a96-4494-a0e2-90682effc4e3",
-      "created_at": "2026-10-12T18:17:55.574Z",
+      "id": "f0ce9ddd-e0db-410e-a731-1d5a6321a78b",
+      "created_at": "2026-10-13T11:21:33.470Z",
       "number": 1,
       "tool": "record_expense",
       "tier": "T1",
@@ -367,7 +343,7 @@
        "budget": "24300.00",
        "recent": [
         {
-         "id": "86989d68-3d96-4a3e-af12-a0277fb47f93",
+         "id": "1696ff86-985c-4334-94d8-b7b7b766eb09",
          "note": "I spent 120 THB on lunch today",
          "amount": "120.00",
          "category": "food",
@@ -377,7 +353,7 @@
         }
        ],
        "expense": {
-        "id": "86989d68-3d96-4a3e-af12-a0277fb47f93",
+        "id": "1696ff86-985c-4334-94d8-b7b7b766eb09",
         "note": "I spent 120 THB on lunch today",
         "amount": "120.00",
         "category": "food",
@@ -406,12 +382,12 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.1"
+       "prompt_version": "planning-1.2"
       }
      },
      {
-      "id": "2076729f-1c48-40ea-8e80-dac3d6f5acfb",
-      "created_at": "2026-10-12T18:17:55.575Z",
+      "id": "cf943ce1-958d-414b-8c76-62903f0c2aa9",
+      "created_at": "2026-10-13T11:21:33.471Z",
       "number": 2,
       "tool": "",
       "tier": "",
@@ -433,7 +409,7 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.1"
+       "prompt_version": "planning-1.2"
       }
      }
     ],
@@ -442,9 +418,9 @@
     "kind": "user"
    },
    {
-    "id": "085ac541-8310-4ca3-b00b-ea995745de14",
+    "id": "9e3ec4f0-ffa6-4739-bd5e-6a6efd7bdea0",
     "type": "agentsession",
-    "created_at": "2026-10-12T18:17:55.588Z",
+    "created_at": "2026-10-13T11:21:33.483Z",
     "goal": "Taxi, spent 85 THB",
     "locale": "en",
     "mode": "mock",
@@ -452,8 +428,8 @@
     "final_answer": "Recorded: 2027-08-14 85.00 THB (transport). 2027-08: spent 205 THB of a 24,300 THB monthly living budget; 24,095 THB left. All money and loans are simulated.",
     "error_code": "",
     "write_count": 1,
-    "updated_at": "2026-10-12T18:17:55.612Z",
-    "conversation": "5a2a66b2-d113-4ed3-968b-1b7f0e1b2922",
+    "updated_at": "2026-10-13T11:21:33.505Z",
+    "conversation": "a4703a56-091c-4f58-aeaa-83f262121c3d",
     "cards": [
      {
       "type": "spending",
@@ -462,7 +438,7 @@
       "budget": "24300.00",
       "recent": [
        {
-        "id": "4f8174f8-77b1-476f-82df-0dc6a20a8ed0",
+        "id": "ddd8c250-7c22-452e-b44b-34aca60f4103",
         "note": "Taxi, spent 85 THB",
         "amount": "85.00",
         "category": "transport",
@@ -471,7 +447,7 @@
         "via_agent": true
        },
        {
-        "id": "86989d68-3d96-4a3e-af12-a0277fb47f93",
+        "id": "1696ff86-985c-4334-94d8-b7b7b766eb09",
         "note": "I spent 120 THB on lunch today",
         "amount": "120.00",
         "category": "food",
@@ -481,7 +457,7 @@
        }
       ],
       "expense": {
-       "id": "4f8174f8-77b1-476f-82df-0dc6a20a8ed0",
+       "id": "ddd8c250-7c22-452e-b44b-34aca60f4103",
        "note": "Taxi, spent 85 THB",
        "amount": "85.00",
        "category": "transport",
@@ -502,8 +478,8 @@
     ],
     "steps": [
      {
-      "id": "bfaf1960-3f3d-4732-be04-a320f1d6b783",
-      "created_at": "2026-10-12T18:17:55.610Z",
+      "id": "3d238aab-48bc-4e88-84ae-5deb83ae1e80",
+      "created_at": "2026-10-13T11:21:33.503Z",
       "number": 1,
       "tool": "record_expense",
       "tier": "T1",
@@ -520,7 +496,7 @@
        "budget": "24300.00",
        "recent": [
         {
-         "id": "4f8174f8-77b1-476f-82df-0dc6a20a8ed0",
+         "id": "ddd8c250-7c22-452e-b44b-34aca60f4103",
          "note": "Taxi, spent 85 THB",
          "amount": "85.00",
          "category": "transport",
@@ -529,7 +505,7 @@
          "via_agent": true
         },
         {
-         "id": "86989d68-3d96-4a3e-af12-a0277fb47f93",
+         "id": "1696ff86-985c-4334-94d8-b7b7b766eb09",
          "note": "I spent 120 THB on lunch today",
          "amount": "120.00",
          "category": "food",
@@ -539,7 +515,7 @@
         }
        ],
        "expense": {
-        "id": "4f8174f8-77b1-476f-82df-0dc6a20a8ed0",
+        "id": "ddd8c250-7c22-452e-b44b-34aca60f4103",
         "note": "Taxi, spent 85 THB",
         "amount": "85.00",
         "category": "transport",
@@ -569,12 +545,12 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.1"
+       "prompt_version": "planning-1.2"
       }
      },
      {
-      "id": "e9a58a60-dbca-41ad-9cdd-4f2c5b9c70da",
-      "created_at": "2026-10-12T18:17:55.611Z",
+      "id": "86c345df-02cb-47b2-8fd8-5d1e047b83d1",
+      "created_at": "2026-10-13T11:21:33.504Z",
       "number": 2,
       "tool": "",
       "tier": "",
@@ -596,7 +572,7 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.1"
+       "prompt_version": "planning-1.2"
       }
      }
     ],
@@ -605,9 +581,9 @@
     "kind": "user"
    },
    {
-    "id": "7c1ee38b-82bf-48c2-bea8-6d9ea1345011",
+    "id": "29ee2ac3-10c1-4cb9-b481-aeeb18083a2e",
     "type": "agentsession",
-    "created_at": "2026-10-12T18:17:55.625Z",
+    "created_at": "2026-10-13T11:21:33.516Z",
     "goal": "How much have I spent this month?",
     "locale": "en",
     "mode": "mock",
@@ -615,8 +591,8 @@
     "final_answer": "2027-08: spent 205 THB of a 24,300 THB monthly living budget; 24,095 THB left. All money and loans are simulated.",
     "error_code": "",
     "write_count": 0,
-    "updated_at": "2026-10-12T18:17:55.646Z",
-    "conversation": "5a2a66b2-d113-4ed3-968b-1b7f0e1b2922",
+    "updated_at": "2026-10-13T11:21:33.535Z",
+    "conversation": "a4703a56-091c-4f58-aeaa-83f262121c3d",
     "cards": [
      {
       "type": "spending",
@@ -625,7 +601,7 @@
       "budget": "24300.00",
       "recent": [
        {
-        "id": "4f8174f8-77b1-476f-82df-0dc6a20a8ed0",
+        "id": "ddd8c250-7c22-452e-b44b-34aca60f4103",
         "note": "Taxi, spent 85 THB",
         "amount": "85.00",
         "category": "transport",
@@ -634,7 +610,7 @@
         "via_agent": true
        },
        {
-        "id": "86989d68-3d96-4a3e-af12-a0277fb47f93",
+        "id": "1696ff86-985c-4334-94d8-b7b7b766eb09",
         "note": "I spent 120 THB on lunch today",
         "amount": "120.00",
         "category": "food",
@@ -656,8 +632,8 @@
     ],
     "steps": [
      {
-      "id": "c5955863-71ad-4856-90e5-039302f26062",
-      "created_at": "2026-10-12T18:17:55.644Z",
+      "id": "73f87132-be47-4d84-ac15-ffdf802cf1e6",
+      "created_at": "2026-10-13T11:21:33.533Z",
       "number": 1,
       "tool": "get_spending",
       "tier": "T0",
@@ -670,7 +646,7 @@
        "budget": "24300.00",
        "recent": [
         {
-         "id": "4f8174f8-77b1-476f-82df-0dc6a20a8ed0",
+         "id": "ddd8c250-7c22-452e-b44b-34aca60f4103",
          "note": "Taxi, spent 85 THB",
          "amount": "85.00",
          "category": "transport",
@@ -679,7 +655,7 @@
          "via_agent": true
         },
         {
-         "id": "86989d68-3d96-4a3e-af12-a0277fb47f93",
+         "id": "1696ff86-985c-4334-94d8-b7b7b766eb09",
          "note": "I spent 120 THB on lunch today",
          "amount": "120.00",
          "category": "food",
@@ -710,12 +686,12 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.1"
+       "prompt_version": "planning-1.2"
       }
      },
      {
-      "id": "4337142e-b80e-43ba-81e7-eeffab0b1d54",
-      "created_at": "2026-10-12T18:17:55.645Z",
+      "id": "855b94d9-6706-4916-aa4a-e7436c3abd4b",
+      "created_at": "2026-10-13T11:21:33.534Z",
       "number": 2,
       "tool": "",
       "tier": "",
@@ -737,7 +713,7 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.1"
+       "prompt_version": "planning-1.2"
       }
      }
     ],
@@ -746,9 +722,9 @@
     "kind": "user"
    },
    {
-    "id": "8c06f964-96e1-4ade-90e8-1c38b79abfda",
+    "id": "4c946f87-b164-4ec3-baed-55a1f72d1b59",
     "type": "agentsession",
-    "created_at": "2026-10-12T18:17:55.658Z",
+    "created_at": "2026-10-13T11:21:33.547Z",
     "goal": "Which bills are due?",
     "locale": "en",
     "mode": "mock",
@@ -756,14 +732,14 @@
     "final_answer": "Upcoming bills: 2027-08-02 Student health insurance 10,000 THB; 2027-08-02 Preparation course (June-July before year 1) 41,400 THB; 2027-08-02 Year 1 summer session 46,650 THB; 2027-08-02 Tuition and fees per semester (includes 50,000 confirmation fee in year 1) 117,600 THB. All money and loans are simulated.",
     "error_code": "",
     "write_count": 0,
-    "updated_at": "2026-10-12T18:17:55.679Z",
-    "conversation": "5a2a66b2-d113-4ed3-968b-1b7f0e1b2922",
+    "updated_at": "2026-10-13T11:21:33.567Z",
+    "conversation": "a4703a56-091c-4f58-aeaa-83f262121c3d",
     "cards": [
      {
       "type": "bills",
       "bills": [
        {
-        "id": "b614a3ef-a5ef-4b31-b2c5-c2ce82bb97bd",
+        "id": "dbeaf47e-d3f8-457b-b72f-85f55e455f45",
         "kind": "insurance",
         "label": {
          "en": "Student health insurance",
@@ -777,7 +753,7 @@
         "is_simulated": true
        },
        {
-        "id": "b06bceb6-fe9a-4938-804a-3c3d4a7c43e8",
+        "id": "adfdbddc-8ea2-45a9-b335-2206a5ef7113",
         "kind": "tuition",
         "label": {
          "en": "Preparation course (June-July before year 1)",
@@ -791,7 +767,7 @@
         "is_simulated": true
        },
        {
-        "id": "601b4b5e-a0c9-4d3e-b7da-e302efd55606",
+        "id": "d89ab0a0-c0f0-4bb4-9def-f3c43c5f151f",
         "kind": "tuition",
         "label": {
          "en": "Year 1 summer session",
@@ -805,7 +781,7 @@
         "is_simulated": true
        },
        {
-        "id": "21adbb03-27fc-450c-8119-5da3f90e9bff",
+        "id": "2a814c8e-a77b-4fbb-83a8-c9c6a5575304",
         "kind": "tuition",
         "label": {
          "en": "Tuition and fees per semester (includes 50,000 confirmation fee in year 1)",
@@ -819,7 +795,7 @@
         "is_simulated": true
        },
        {
-        "id": "f51af4d4-81dd-4322-97dc-faf95c77887e",
+        "id": "da6b006c-96eb-4300-92e6-e8f1253add88",
         "kind": "visa",
         "label": {
          "en": "Annual extension of stay",
@@ -833,7 +809,7 @@
         "is_simulated": true
        },
        {
-        "id": "8ab74567-fbbf-4278-bd0f-147d9f16b130",
+        "id": "bf93022f-fe73-4065-b1fe-997cc5e3468b",
         "kind": "visa",
         "label": {
          "en": "Non-Immigrant ED visa, single entry",
@@ -847,13 +823,13 @@
         "is_simulated": true
        },
        {
-        "id": "e66b5f22-1345-410d-882f-ef7e14f49fed",
+        "id": "376942fa-cab3-49fc-9419-d3f7dbaafbc4",
         "kind": "loan",
         "label": {
          "en": "Loan installment 1",
          "zh": "贷款第 1 期还款"
         },
-        "amount": "33615.30",
+        "amount": "19993.98",
         "status": "DUE",
         "paid_at": null,
         "currency": "THB",
@@ -861,13 +837,13 @@
         "is_simulated": true
        },
        {
-        "id": "de0373d9-3ccb-45a6-9531-46bb89c9ad83",
+        "id": "c972259a-bf9a-469d-8866-9c5588a13fd2",
         "kind": "loan",
         "label": {
          "en": "Loan installment 2",
          "zh": "贷款第 2 期还款"
         },
-        "amount": "33615.30",
+        "amount": "19993.98",
         "status": "DUE",
         "paid_at": null,
         "currency": "THB",
@@ -875,13 +851,13 @@
         "is_simulated": true
        },
        {
-        "id": "35d4e432-596b-40e8-a3b9-5bc1a682ee2c",
+        "id": "b8688ffa-da58-492a-b3e1-94228daaad82",
         "kind": "loan",
         "label": {
          "en": "Loan installment 3",
          "zh": "贷款第 3 期还款"
         },
-        "amount": "33615.30",
+        "amount": "19993.98",
         "status": "DUE",
         "paid_at": null,
         "currency": "THB",
@@ -889,13 +865,13 @@
         "is_simulated": true
        },
        {
-        "id": "6d9fb1d9-08f5-470e-9243-570bb4eafa18",
+        "id": "431ffb75-92d9-4ce2-883d-552191182ac0",
         "kind": "loan",
         "label": {
          "en": "Loan installment 4",
          "zh": "贷款第 4 期还款"
         },
-        "amount": "33615.30",
+        "amount": "19993.98",
         "status": "DUE",
         "paid_at": null,
         "currency": "THB",
@@ -903,13 +879,13 @@
         "is_simulated": true
        },
        {
-        "id": "aa736853-89da-417d-ab65-a832cb03c221",
+        "id": "d6ffe256-338c-4cfc-8a49-07876edfc388",
         "kind": "loan",
         "label": {
          "en": "Loan installment 5",
          "zh": "贷款第 5 期还款"
         },
-        "amount": "33615.30",
+        "amount": "19993.98",
         "status": "DUE",
         "paid_at": null,
         "currency": "THB",
@@ -917,13 +893,13 @@
         "is_simulated": true
        },
        {
-        "id": "3c61b63e-705f-4b0d-8389-81845b280fa8",
+        "id": "90f4b56f-6deb-48bf-a30f-3ebbf2b9ca03",
         "kind": "loan",
         "label": {
          "en": "Loan installment 6",
          "zh": "贷款第 6 期还款"
         },
-        "amount": "33615.30",
+        "amount": "19993.98",
         "status": "DUE",
         "paid_at": null,
         "currency": "THB",
@@ -935,8 +911,8 @@
     ],
     "steps": [
      {
-      "id": "cf3f6986-33ec-4f7b-b95f-c479103b46b7",
-      "created_at": "2026-10-12T18:17:55.677Z",
+      "id": "0a4ced12-dc8b-410a-a5e6-57c0d4d21313",
+      "created_at": "2026-10-13T11:21:33.565Z",
       "number": 1,
       "tool": "list_bills",
       "tier": "T0",
@@ -946,7 +922,7 @@
       "result": {
        "bills": [
         {
-         "id": "b614a3ef-a5ef-4b31-b2c5-c2ce82bb97bd",
+         "id": "dbeaf47e-d3f8-457b-b72f-85f55e455f45",
          "kind": "insurance",
          "label": {
           "en": "Student health insurance",
@@ -960,7 +936,7 @@
          "is_simulated": true
         },
         {
-         "id": "b06bceb6-fe9a-4938-804a-3c3d4a7c43e8",
+         "id": "adfdbddc-8ea2-45a9-b335-2206a5ef7113",
          "kind": "tuition",
          "label": {
           "en": "Preparation course (June-July before year 1)",
@@ -974,7 +950,7 @@
          "is_simulated": true
         },
         {
-         "id": "601b4b5e-a0c9-4d3e-b7da-e302efd55606",
+         "id": "d89ab0a0-c0f0-4bb4-9def-f3c43c5f151f",
          "kind": "tuition",
          "label": {
           "en": "Year 1 summer session",
@@ -988,7 +964,7 @@
          "is_simulated": true
         },
         {
-         "id": "21adbb03-27fc-450c-8119-5da3f90e9bff",
+         "id": "2a814c8e-a77b-4fbb-83a8-c9c6a5575304",
          "kind": "tuition",
          "label": {
           "en": "Tuition and fees per semester (includes 50,000 confirmation fee in year 1)",
@@ -1002,7 +978,7 @@
          "is_simulated": true
         },
         {
-         "id": "f51af4d4-81dd-4322-97dc-faf95c77887e",
+         "id": "da6b006c-96eb-4300-92e6-e8f1253add88",
          "kind": "visa",
          "label": {
           "en": "Annual extension of stay",
@@ -1016,7 +992,7 @@
          "is_simulated": true
         },
         {
-         "id": "8ab74567-fbbf-4278-bd0f-147d9f16b130",
+         "id": "bf93022f-fe73-4065-b1fe-997cc5e3468b",
          "kind": "visa",
          "label": {
           "en": "Non-Immigrant ED visa, single entry",
@@ -1030,13 +1006,13 @@
          "is_simulated": true
         },
         {
-         "id": "e66b5f22-1345-410d-882f-ef7e14f49fed",
+         "id": "376942fa-cab3-49fc-9419-d3f7dbaafbc4",
          "kind": "loan",
          "label": {
           "en": "Loan installment 1",
           "zh": "贷款第 1 期还款"
          },
-         "amount": "33615.30",
+         "amount": "19993.98",
          "status": "DUE",
          "paid_at": null,
          "currency": "THB",
@@ -1044,13 +1020,13 @@
          "is_simulated": true
         },
         {
-         "id": "de0373d9-3ccb-45a6-9531-46bb89c9ad83",
+         "id": "c972259a-bf9a-469d-8866-9c5588a13fd2",
          "kind": "loan",
          "label": {
           "en": "Loan installment 2",
           "zh": "贷款第 2 期还款"
          },
-         "amount": "33615.30",
+         "amount": "19993.98",
          "status": "DUE",
          "paid_at": null,
          "currency": "THB",
@@ -1058,13 +1034,13 @@
          "is_simulated": true
         },
         {
-         "id": "35d4e432-596b-40e8-a3b9-5bc1a682ee2c",
+         "id": "b8688ffa-da58-492a-b3e1-94228daaad82",
          "kind": "loan",
          "label": {
           "en": "Loan installment 3",
           "zh": "贷款第 3 期还款"
          },
-         "amount": "33615.30",
+         "amount": "19993.98",
          "status": "DUE",
          "paid_at": null,
          "currency": "THB",
@@ -1072,13 +1048,13 @@
          "is_simulated": true
         },
         {
-         "id": "6d9fb1d9-08f5-470e-9243-570bb4eafa18",
+         "id": "431ffb75-92d9-4ce2-883d-552191182ac0",
          "kind": "loan",
          "label": {
           "en": "Loan installment 4",
           "zh": "贷款第 4 期还款"
          },
-         "amount": "33615.30",
+         "amount": "19993.98",
          "status": "DUE",
          "paid_at": null,
          "currency": "THB",
@@ -1086,13 +1062,13 @@
          "is_simulated": true
         },
         {
-         "id": "aa736853-89da-417d-ab65-a832cb03c221",
+         "id": "d6ffe256-338c-4cfc-8a49-07876edfc388",
          "kind": "loan",
          "label": {
           "en": "Loan installment 5",
           "zh": "贷款第 5 期还款"
          },
-         "amount": "33615.30",
+         "amount": "19993.98",
          "status": "DUE",
          "paid_at": null,
          "currency": "THB",
@@ -1100,13 +1076,13 @@
          "is_simulated": true
         },
         {
-         "id": "3c61b63e-705f-4b0d-8389-81845b280fa8",
+         "id": "90f4b56f-6deb-48bf-a30f-3ebbf2b9ca03",
          "kind": "loan",
          "label": {
           "en": "Loan installment 6",
           "zh": "贷款第 6 期还款"
          },
-         "amount": "33615.30",
+         "amount": "19993.98",
          "status": "DUE",
          "paid_at": null,
          "currency": "THB",
@@ -1127,12 +1103,12 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.1"
+       "prompt_version": "planning-1.2"
       }
      },
      {
-      "id": "7eadad85-737e-4cdf-9146-aed857c6f9a6",
-      "created_at": "2026-10-12T18:17:55.678Z",
+      "id": "d1d3001b-e893-41d3-b033-de132dc41dee",
+      "created_at": "2026-10-13T11:21:33.566Z",
       "number": 2,
       "tool": "",
       "tier": "",
@@ -1154,7 +1130,7 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.1"
+       "prompt_version": "planning-1.2"
       }
      }
     ],
@@ -1163,9 +1139,9 @@
     "kind": "user"
    },
    {
-    "id": "517d2bb1-ce95-48c5-9a73-ebe7b8fb2452",
+    "id": "2cb9e33d-956f-4bc3-9064-d76941e56d34",
     "type": "agentsession",
-    "created_at": "2026-10-12T18:17:55.692Z",
+    "created_at": "2026-10-13T11:21:33.580Z",
     "goal": "What is the CNY to THB rate?",
     "locale": "en",
     "mode": "mock",
@@ -1173,13 +1149,13 @@
     "final_answer": "CNY/THB reference rate 4.6000000000 (fixture, 2026-10-13). All funds are simulated.",
     "error_code": "",
     "write_count": 0,
-    "updated_at": "2026-10-12T18:17:55.711Z",
-    "conversation": "5a2a66b2-d113-4ed3-968b-1b7f0e1b2922",
+    "updated_at": "2026-10-13T11:21:33.600Z",
+    "conversation": "a4703a56-091c-4f58-aeaa-83f262121c3d",
     "cards": [],
     "steps": [
      {
-      "id": "99075d62-9161-4822-bec1-c48bbf25a97a",
-      "created_at": "2026-10-12T18:17:55.710Z",
+      "id": "67231292-f385-4f05-8118-24f30e9338ad",
+      "created_at": "2026-10-13T11:21:33.599Z",
       "number": 1,
       "tool": "get_fx_rate",
       "tier": "T0",
@@ -1198,7 +1174,7 @@
        "issues": [],
        "source": "fixture",
        "rate_date": "2026-10-13",
-       "fetched_at": "2026-10-12T18:17:53.554103+00:00",
+       "fetched_at": "2026-10-13T11:21:32.737822+00:00",
        "is_reference_rate": true
       },
       "call": {
@@ -1213,12 +1189,12 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.1"
+       "prompt_version": "planning-1.2"
       }
      },
      {
-      "id": "b35fcd0e-f794-4e6d-8bf3-d8d9e6479923",
-      "created_at": "2026-10-12T18:17:55.711Z",
+      "id": "17566919-bf0a-4aa2-93df-e02ca0650fda",
+      "created_at": "2026-10-13T11:21:33.600Z",
       "number": 2,
       "tool": "",
       "tier": "",
@@ -1240,7 +1216,7 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.1"
+       "prompt_version": "planning-1.2"
       }
      }
     ],
@@ -1255,16 +1231,16 @@
   "enrolled": true,
   "today": "2027-08-14",
   "plan": {
-   "id": "10150a90-c040-4fa4-b917-fcbfb02cc3b3",
+   "id": "7c5dd1d8-851f-4944-a27d-82647c0a71eb",
    "status": "ENROLLED",
    "school_key": "chulalongkorn",
    "years": 4,
    "start_date": "2027-08-02",
    "version": 4,
-   "available_funds": "200000.00",
-   "funds_currency": "CNY",
-   "confirmed_at": "2026-10-12T18:17:54.956493+00:00",
-   "enrolled_at": "2026-10-12T18:17:55.380794+00:00",
+   "available_funds": "1500000.00",
+   "funds_currency": "THB",
+   "confirmed_at": "2026-10-13T11:21:33.072487+00:00",
+   "enrolled_at": "2026-10-13T11:21:33.285822+00:00",
    "is_simulated": true,
    "school": {
     "name": {
@@ -1275,28 +1251,22 @@
    },
    "total": "2351350.00",
    "currency": "THB",
-   "converted": {
-    "rate": "0.2173913043",
-    "amount": "511163.04",
-    "source": "fixture",
-    "currency": "CNY",
-    "rate_date": "2026-10-13"
-   },
-   "available": "920000.00",
-   "gap": "1431350.00",
+   "converted": null,
+   "available": "1500000.00",
+   "gap": "851350.00",
    "loan": {
-    "id": "b3390bd7-6ed3-4f5b-b1cd-b32d020019ef",
+    "id": "dcb02102-73a9-482f-ad94-cfcaedbacb94",
     "currency": "THB",
-    "principal": "1431350.00",
+    "principal": "851350.00",
     "months": 48,
     "annual_rate": "0.06",
-    "monthly_payment": "33615.30",
-    "total_repayment": "1613534.22"
+    "monthly_payment": "19993.98",
+    "total_repayment": "959711.01"
    }
   },
   "upcoming_bills": [
    {
-    "id": "b614a3ef-a5ef-4b31-b2c5-c2ce82bb97bd",
+    "id": "dbeaf47e-d3f8-457b-b72f-85f55e455f45",
     "kind": "insurance",
     "label": {
      "en": "Student health insurance",
@@ -1310,7 +1280,7 @@
     "is_simulated": true
    },
    {
-    "id": "b06bceb6-fe9a-4938-804a-3c3d4a7c43e8",
+    "id": "adfdbddc-8ea2-45a9-b335-2206a5ef7113",
     "kind": "tuition",
     "label": {
      "en": "Preparation course (June-July before year 1)",
@@ -1324,7 +1294,7 @@
     "is_simulated": true
    },
    {
-    "id": "601b4b5e-a0c9-4d3e-b7da-e302efd55606",
+    "id": "d89ab0a0-c0f0-4bb4-9def-f3c43c5f151f",
     "kind": "tuition",
     "label": {
      "en": "Year 1 summer session",
@@ -1338,7 +1308,7 @@
     "is_simulated": true
    },
    {
-    "id": "21adbb03-27fc-450c-8119-5da3f90e9bff",
+    "id": "2a814c8e-a77b-4fbb-83a8-c9c6a5575304",
     "kind": "tuition",
     "label": {
      "en": "Tuition and fees per semester (includes 50,000 confirmation fee in year 1)",
@@ -1352,7 +1322,7 @@
     "is_simulated": true
    },
    {
-    "id": "f51af4d4-81dd-4322-97dc-faf95c77887e",
+    "id": "da6b006c-96eb-4300-92e6-e8f1253add88",
     "kind": "visa",
     "label": {
      "en": "Annual extension of stay",
@@ -1366,7 +1336,7 @@
     "is_simulated": true
    },
    {
-    "id": "8ab74567-fbbf-4278-bd0f-147d9f16b130",
+    "id": "bf93022f-fe73-4065-b1fe-997cc5e3468b",
     "kind": "visa",
     "label": {
      "en": "Non-Immigrant ED visa, single entry",
@@ -1380,28 +1350,28 @@
     "is_simulated": true
    },
    {
-    "id": "e66b5f22-1345-410d-882f-ef7e14f49fed",
+    "id": "376942fa-cab3-49fc-9419-d3f7dbaafbc4",
     "kind": "loan",
     "label": {
      "en": "Loan installment 1",
      "zh": "贷款第 1 期还款"
     },
     "due_date": "2027-09-01",
-    "amount": "33615.30",
+    "amount": "19993.98",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,
     "is_simulated": true
    },
    {
-    "id": "de0373d9-3ccb-45a6-9531-46bb89c9ad83",
+    "id": "c972259a-bf9a-469d-8866-9c5588a13fd2",
     "kind": "loan",
     "label": {
      "en": "Loan installment 2",
      "zh": "贷款第 2 期还款"
     },
     "due_date": "2027-10-01",
-    "amount": "33615.30",
+    "amount": "19993.98",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,
@@ -1410,7 +1380,7 @@
   ],
   "overdue": [
    {
-    "id": "b614a3ef-a5ef-4b31-b2c5-c2ce82bb97bd",
+    "id": "dbeaf47e-d3f8-457b-b72f-85f55e455f45",
     "kind": "insurance",
     "label": {
      "en": "Student health insurance",
@@ -1424,7 +1394,7 @@
     "is_simulated": true
    },
    {
-    "id": "b06bceb6-fe9a-4938-804a-3c3d4a7c43e8",
+    "id": "adfdbddc-8ea2-45a9-b335-2206a5ef7113",
     "kind": "tuition",
     "label": {
      "en": "Preparation course (June-July before year 1)",
@@ -1438,7 +1408,7 @@
     "is_simulated": true
    },
    {
-    "id": "601b4b5e-a0c9-4d3e-b7da-e302efd55606",
+    "id": "d89ab0a0-c0f0-4bb4-9def-f3c43c5f151f",
     "kind": "tuition",
     "label": {
      "en": "Year 1 summer session",
@@ -1452,7 +1422,7 @@
     "is_simulated": true
    },
    {
-    "id": "21adbb03-27fc-450c-8119-5da3f90e9bff",
+    "id": "2a814c8e-a77b-4fbb-83a8-c9c6a5575304",
     "kind": "tuition",
     "label": {
      "en": "Tuition and fees per semester (includes 50,000 confirmation fee in year 1)",
@@ -1466,7 +1436,7 @@
     "is_simulated": true
    },
    {
-    "id": "f51af4d4-81dd-4322-97dc-faf95c77887e",
+    "id": "da6b006c-96eb-4300-92e6-e8f1253add88",
     "kind": "visa",
     "label": {
      "en": "Annual extension of stay",
@@ -1480,7 +1450,7 @@
     "is_simulated": true
    },
    {
-    "id": "8ab74567-fbbf-4278-bd0f-147d9f16b130",
+    "id": "bf93022f-fe73-4065-b1fe-997cc5e3468b",
     "kind": "visa",
     "label": {
      "en": "Non-Immigrant ED visa, single entry",
@@ -1510,7 +1480,7 @@
    "is_simulated": true,
    "recent": [
     {
-     "id": "4f8174f8-77b1-476f-82df-0dc6a20a8ed0",
+     "id": "ddd8c250-7c22-452e-b44b-34aca60f4103",
      "spent_on": "2027-08-14",
      "category": "transport",
      "amount": "85.00",
@@ -1519,7 +1489,7 @@
      "via_agent": true
     },
     {
-     "id": "86989d68-3d96-4a3e-af12-a0277fb47f93",
+     "id": "1696ff86-985c-4334-94d8-b7b7b766eb09",
      "spent_on": "2027-08-14",
      "category": "food",
      "amount": "120.00",
@@ -1531,7 +1501,7 @@
   },
   "bills": [
    {
-    "id": "b614a3ef-a5ef-4b31-b2c5-c2ce82bb97bd",
+    "id": "dbeaf47e-d3f8-457b-b72f-85f55e455f45",
     "kind": "insurance",
     "label": {
      "en": "Student health insurance",
@@ -1545,7 +1515,7 @@
     "is_simulated": true
    },
    {
-    "id": "b06bceb6-fe9a-4938-804a-3c3d4a7c43e8",
+    "id": "adfdbddc-8ea2-45a9-b335-2206a5ef7113",
     "kind": "tuition",
     "label": {
      "en": "Preparation course (June-July before year 1)",
@@ -1559,7 +1529,7 @@
     "is_simulated": true
    },
    {
-    "id": "601b4b5e-a0c9-4d3e-b7da-e302efd55606",
+    "id": "d89ab0a0-c0f0-4bb4-9def-f3c43c5f151f",
     "kind": "tuition",
     "label": {
      "en": "Year 1 summer session",
@@ -1573,7 +1543,7 @@
     "is_simulated": true
    },
    {
-    "id": "21adbb03-27fc-450c-8119-5da3f90e9bff",
+    "id": "2a814c8e-a77b-4fbb-83a8-c9c6a5575304",
     "kind": "tuition",
     "label": {
      "en": "Tuition and fees per semester (includes 50,000 confirmation fee in year 1)",
@@ -1587,7 +1557,7 @@
     "is_simulated": true
    },
    {
-    "id": "f51af4d4-81dd-4322-97dc-faf95c77887e",
+    "id": "da6b006c-96eb-4300-92e6-e8f1253add88",
     "kind": "visa",
     "label": {
      "en": "Annual extension of stay",
@@ -1601,7 +1571,7 @@
     "is_simulated": true
    },
    {
-    "id": "8ab74567-fbbf-4278-bd0f-147d9f16b130",
+    "id": "bf93022f-fe73-4065-b1fe-997cc5e3468b",
     "kind": "visa",
     "label": {
      "en": "Non-Immigrant ED visa, single entry",
@@ -1615,91 +1585,91 @@
     "is_simulated": true
    },
    {
-    "id": "e66b5f22-1345-410d-882f-ef7e14f49fed",
+    "id": "376942fa-cab3-49fc-9419-d3f7dbaafbc4",
     "kind": "loan",
     "label": {
      "en": "Loan installment 1",
      "zh": "贷款第 1 期还款"
     },
     "due_date": "2027-09-01",
-    "amount": "33615.30",
+    "amount": "19993.98",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,
     "is_simulated": true
    },
    {
-    "id": "de0373d9-3ccb-45a6-9531-46bb89c9ad83",
+    "id": "c972259a-bf9a-469d-8866-9c5588a13fd2",
     "kind": "loan",
     "label": {
      "en": "Loan installment 2",
      "zh": "贷款第 2 期还款"
     },
     "due_date": "2027-10-01",
-    "amount": "33615.30",
+    "amount": "19993.98",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,
     "is_simulated": true
    },
    {
-    "id": "35d4e432-596b-40e8-a3b9-5bc1a682ee2c",
+    "id": "b8688ffa-da58-492a-b3e1-94228daaad82",
     "kind": "loan",
     "label": {
      "en": "Loan installment 3",
      "zh": "贷款第 3 期还款"
     },
     "due_date": "2027-11-01",
-    "amount": "33615.30",
+    "amount": "19993.98",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,
     "is_simulated": true
    },
    {
-    "id": "6d9fb1d9-08f5-470e-9243-570bb4eafa18",
+    "id": "431ffb75-92d9-4ce2-883d-552191182ac0",
     "kind": "loan",
     "label": {
      "en": "Loan installment 4",
      "zh": "贷款第 4 期还款"
     },
     "due_date": "2027-12-01",
-    "amount": "33615.30",
+    "amount": "19993.98",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,
     "is_simulated": true
    },
    {
-    "id": "aa736853-89da-417d-ab65-a832cb03c221",
+    "id": "d6ffe256-338c-4cfc-8a49-07876edfc388",
     "kind": "loan",
     "label": {
      "en": "Loan installment 5",
      "zh": "贷款第 5 期还款"
     },
     "due_date": "2028-01-01",
-    "amount": "33615.30",
+    "amount": "19993.98",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,
     "is_simulated": true
    },
    {
-    "id": "3c61b63e-705f-4b0d-8389-81845b280fa8",
+    "id": "90f4b56f-6deb-48bf-a30f-3ebbf2b9ca03",
     "kind": "loan",
     "label": {
      "en": "Loan installment 6",
      "zh": "贷款第 6 期还款"
     },
     "due_date": "2028-02-01",
-    "amount": "33615.30",
+    "amount": "19993.98",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,
     "is_simulated": true
    },
    {
-    "id": "883fc9f4-562a-43cd-bc22-761254e2a01c",
+    "id": "0e319444-dca9-4ebb-9304-2b20e8f782dc",
     "kind": "tuition",
     "label": {
      "en": "Tuition and fees per semester (includes 50,000 confirmation fee in year 1)",
@@ -1713,91 +1683,91 @@
     "is_simulated": true
    },
    {
-    "id": "165de051-de0c-4fd6-88e7-9688e98b3654",
+    "id": "d2f8060a-a66a-4c53-9159-3f13a3f1f843",
     "kind": "loan",
     "label": {
      "en": "Loan installment 7",
      "zh": "贷款第 7 期还款"
     },
     "due_date": "2028-03-01",
-    "amount": "33615.30",
+    "amount": "19993.98",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,
     "is_simulated": true
    },
    {
-    "id": "f9dfdc76-8c85-4969-85ba-ceba4db2e997",
+    "id": "e0d8000a-f403-4246-9ee3-21114b8a0850",
     "kind": "loan",
     "label": {
      "en": "Loan installment 8",
      "zh": "贷款第 8 期还款"
     },
     "due_date": "2028-04-01",
-    "amount": "33615.30",
+    "amount": "19993.98",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,
     "is_simulated": true
    },
    {
-    "id": "054e0650-ae61-4091-93f7-214ee931dcf0",
+    "id": "49455cb9-b3d0-4a9f-8bfb-dd974f486fdd",
     "kind": "loan",
     "label": {
      "en": "Loan installment 9",
      "zh": "贷款第 9 期还款"
     },
     "due_date": "2028-05-01",
-    "amount": "33615.30",
+    "amount": "19993.98",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,
     "is_simulated": true
    },
    {
-    "id": "8ef48391-7a43-49ac-9bcc-bbbad1d7c7e2",
+    "id": "e7216b5c-bd4f-4cce-9863-fb9c44bc41a1",
     "kind": "loan",
     "label": {
      "en": "Loan installment 10",
      "zh": "贷款第 10 期还款"
     },
     "due_date": "2028-06-01",
-    "amount": "33615.30",
+    "amount": "19993.98",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,
     "is_simulated": true
    },
    {
-    "id": "e22c418e-5aac-4959-b0bc-4315eac431ef",
+    "id": "e9d54dd2-0c63-46c0-b10e-df4de5be248e",
     "kind": "loan",
     "label": {
      "en": "Loan installment 11",
      "zh": "贷款第 11 期还款"
     },
     "due_date": "2028-07-01",
-    "amount": "33615.30",
+    "amount": "19993.98",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,
     "is_simulated": true
    },
    {
-    "id": "5ef637c1-9eca-4c74-a049-56c7f2df5e70",
+    "id": "f9ea5f07-517a-4a07-a010-b49173c51f61",
     "kind": "loan",
     "label": {
      "en": "Loan installment 12",
      "zh": "贷款第 12 期还款"
     },
     "due_date": "2028-08-01",
-    "amount": "33615.30",
+    "amount": "19993.98",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,
     "is_simulated": true
    },
    {
-    "id": "923e94fc-cb89-4476-8ccc-0cb2e6c10c5f",
+    "id": "35414b20-0c84-4839-bd24-04b76c2e5648",
     "kind": "insurance",
     "label": {
      "en": "Student health insurance",
@@ -1811,7 +1781,7 @@
     "is_simulated": true
    },
    {
-    "id": "cb73998c-48e8-4c02-be03-a8e824e19827",
+    "id": "e3c79997-79e8-40eb-9163-fa8cc3ae9fdd",
     "kind": "tuition",
     "label": {
      "en": "Tuition and fees per semester (includes 50,000 confirmation fee in year 1)",
@@ -1825,7 +1795,7 @@
     "is_simulated": true
    },
    {
-    "id": "346215fa-312e-4caf-9317-8b5036dcba6d",
+    "id": "4d71adac-79aa-4dcf-9cf7-1292ab690695",
     "kind": "visa",
     "label": {
      "en": "Annual extension of stay",
@@ -1839,91 +1809,91 @@
     "is_simulated": true
    },
    {
-    "id": "78171b01-6e49-4a04-b734-2bffa14fe91e",
+    "id": "e3932204-b391-4d54-bbe5-cea233af7e35",
     "kind": "loan",
     "label": {
      "en": "Loan installment 13",
      "zh": "贷款第 13 期还款"
     },
     "due_date": "2028-09-01",
-    "amount": "33615.30",
+    "amount": "19993.98",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,
     "is_simulated": true
    },
    {
-    "id": "6f6bd4aa-0844-47bc-8e32-538832f101a0",
+    "id": "a9ca4aea-875a-40da-a9fe-b55a040a35cc",
     "kind": "loan",
     "label": {
      "en": "Loan installment 14",
      "zh": "贷款第 14 期还款"
     },
     "due_date": "2028-10-01",
-    "amount": "33615.30",
+    "amount": "19993.98",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,
     "is_simulated": true
    },
    {
-    "id": "259c5b4a-0f75-47af-8bdc-265301b3aec3",
+    "id": "3126fffe-3571-40e6-b4e1-5e282a776401",
     "kind": "loan",
     "label": {
      "en": "Loan installment 15",
      "zh": "贷款第 15 期还款"
     },
     "due_date": "2028-11-01",
-    "amount": "33615.30",
+    "amount": "19993.98",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,
     "is_simulated": true
    },
    {
-    "id": "1a4cd08f-39ce-43f6-a7de-3c52d98f74a4",
+    "id": "9984133e-8851-470d-9d9d-24251f5a7044",
     "kind": "loan",
     "label": {
      "en": "Loan installment 16",
      "zh": "贷款第 16 期还款"
     },
     "due_date": "2028-12-01",
-    "amount": "33615.30",
+    "amount": "19993.98",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,
     "is_simulated": true
    },
    {
-    "id": "766dca2a-50be-4047-9fb0-19180460245c",
+    "id": "affec820-5dab-4583-b6e6-76990fcb6205",
     "kind": "loan",
     "label": {
      "en": "Loan installment 17",
      "zh": "贷款第 17 期还款"
     },
     "due_date": "2029-01-01",
-    "amount": "33615.30",
+    "amount": "19993.98",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,
     "is_simulated": true
    },
    {
-    "id": "00b972b3-5e55-4631-ad81-39a35bbdd70e",
+    "id": "3b34a1de-20c4-4e5f-8b3e-5cebd7f07e45",
     "kind": "loan",
     "label": {
      "en": "Loan installment 18",
      "zh": "贷款第 18 期还款"
     },
     "due_date": "2029-02-01",
-    "amount": "33615.30",
+    "amount": "19993.98",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,
     "is_simulated": true
    },
    {
-    "id": "a028fb03-c0a5-46ce-bb43-644577c12de9",
+    "id": "95d4e2fd-d382-45f9-b3ff-5809111d837c",
     "kind": "tuition",
     "label": {
      "en": "Tuition and fees per semester (includes 50,000 confirmation fee in year 1)",
@@ -1937,91 +1907,91 @@
     "is_simulated": true
    },
    {
-    "id": "50c59573-30b8-4c24-a685-03437f696105",
+    "id": "b7d64c25-e2df-4486-b937-8c0b35a658ec",
     "kind": "loan",
     "label": {
      "en": "Loan installment 19",
      "zh": "贷款第 19 期还款"
     },
     "due_date": "2029-03-01",
-    "amount": "33615.30",
+    "amount": "19993.98",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,
     "is_simulated": true
    },
    {
-    "id": "51335f8a-6f8c-41d4-8869-84cb221d1f52",
+    "id": "867b72d5-46cd-420d-8d24-392ecca454a4",
     "kind": "loan",
     "label": {
      "en": "Loan installment 20",
      "zh": "贷款第 20 期还款"
     },
     "due_date": "2029-04-01",
-    "amount": "33615.30",
+    "amount": "19993.98",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,
     "is_simulated": true
    },
    {
-    "id": "71afde3a-2077-46a8-8c1e-1d854b49911b",
+    "id": "caf3e15b-b2b7-4b51-bc82-a51c09de328d",
     "kind": "loan",
     "label": {
      "en": "Loan installment 21",
      "zh": "贷款第 21 期还款"
     },
     "due_date": "2029-05-01",
-    "amount": "33615.30",
+    "amount": "19993.98",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,
     "is_simulated": true
    },
    {
-    "id": "3f501ae5-ada7-4079-b86a-8290fcf7f9c8",
+    "id": "17fcdd47-c4be-490c-9fc5-5227ac818c07",
     "kind": "loan",
     "label": {
      "en": "Loan installment 22",
      "zh": "贷款第 22 期还款"
     },
     "due_date": "2029-06-01",
-    "amount": "33615.30",
+    "amount": "19993.98",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,
     "is_simulated": true
    },
    {
-    "id": "65173010-0ee1-458a-bbbc-1e3d0f2ae48f",
+    "id": "9eeba6c4-485e-4795-8950-0eaeeefbc7f3",
     "kind": "loan",
     "label": {
      "en": "Loan installment 23",
      "zh": "贷款第 23 期还款"
     },
     "due_date": "2029-07-01",
-    "amount": "33615.30",
+    "amount": "19993.98",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,
     "is_simulated": true
    },
    {
-    "id": "5f5029b5-219b-4825-a201-d63e4d292709",
+    "id": "20829abf-3df1-43be-96d9-27081cd4cc12",
     "kind": "loan",
     "label": {
      "en": "Loan installment 24",
      "zh": "贷款第 24 期还款"
     },
     "due_date": "2029-08-01",
-    "amount": "33615.30",
+    "amount": "19993.98",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,
     "is_simulated": true
    },
    {
-    "id": "369726af-0e15-44e3-af0b-f2f6db738211",
+    "id": "683e988b-3944-4552-88b4-1d61279cfcbb",
     "kind": "insurance",
     "label": {
      "en": "Student health insurance",
@@ -2035,7 +2005,7 @@
     "is_simulated": true
    },
    {
-    "id": "da5dbe6a-9519-429c-b7c0-101645043377",
+    "id": "e8f752ef-3a91-43c0-a810-162c68d1b612",
     "kind": "tuition",
     "label": {
      "en": "Tuition and fees per semester (includes 50,000 confirmation fee in year 1)",
@@ -2049,7 +2019,7 @@
     "is_simulated": true
    },
    {
-    "id": "3bb87143-fd68-4e6d-8e5d-50d57b68b33d",
+    "id": "8e1c16d9-000e-40d3-ae75-f8b3d6dc62d4",
     "kind": "visa",
     "label": {
      "en": "Annual extension of stay",
@@ -2063,91 +2033,91 @@
     "is_simulated": true
    },
    {
-    "id": "48899d7c-9b47-41d3-82a2-d67b62bfc2e4",
+    "id": "9ed1ca9e-a320-445e-adca-dea5cf7ea15b",
     "kind": "loan",
     "label": {
      "en": "Loan installment 25",
      "zh": "贷款第 25 期还款"
     },
     "due_date": "2029-09-01",
-    "amount": "33615.30",
+    "amount": "19993.98",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,
     "is_simulated": true
    },
    {
-    "id": "df919c27-6952-4c87-938f-7f9178a72b32",
+    "id": "910ce336-1723-4111-81c3-3f4e220282c9",
     "kind": "loan",
     "label": {
      "en": "Loan installment 26",
      "zh": "贷款第 26 期还款"
     },
     "due_date": "2029-10-01",
-    "amount": "33615.30",
+    "amount": "19993.98",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,
     "is_simulated": true
    },
    {
-    "id": "eaefc4e5-f121-4b29-bdad-4c902e1f707d",
+    "id": "fb2cd199-a3b9-4609-bdfe-a89d2d9f46a6",
     "kind": "loan",
     "label": {
      "en": "Loan installment 27",
      "zh": "贷款第 27 期还款"
     },
     "due_date": "2029-11-01",
-    "amount": "33615.30",
+    "amount": "19993.98",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,
     "is_simulated": true
    },
    {
-    "id": "a814b3b2-f402-4cea-99f1-b0607cf06dc2",
+    "id": "0c99258b-c79a-4039-a5c9-e1900629e84d",
     "kind": "loan",
     "label": {
      "en": "Loan installment 28",
      "zh": "贷款第 28 期还款"
     },
     "due_date": "2029-12-01",
-    "amount": "33615.30",
+    "amount": "19993.98",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,
     "is_simulated": true
    },
    {
-    "id": "f465db71-ca5c-4ecc-8f25-8c4f305c0b3c",
+    "id": "beb75c8a-883d-4f2e-9919-dafd87707e00",
     "kind": "loan",
     "label": {
      "en": "Loan installment 29",
      "zh": "贷款第 29 期还款"
     },
     "due_date": "2030-01-01",
-    "amount": "33615.30",
+    "amount": "19993.98",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,
     "is_simulated": true
    },
    {
-    "id": "aef42bd3-76a0-4e75-bed6-aaed11310e80",
+    "id": "36a8abeb-221f-4ae4-a10f-4e092afceaa8",
     "kind": "loan",
     "label": {
      "en": "Loan installment 30",
      "zh": "贷款第 30 期还款"
     },
     "due_date": "2030-02-01",
-    "amount": "33615.30",
+    "amount": "19993.98",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,
     "is_simulated": true
    },
    {
-    "id": "21336dbc-543e-4657-aee9-1c9c4122a56c",
+    "id": "ac0ae335-2ed1-4509-a856-eaa39b6bf7b9",
     "kind": "tuition",
     "label": {
      "en": "Tuition and fees per semester (includes 50,000 confirmation fee in year 1)",
@@ -2161,91 +2131,91 @@
     "is_simulated": true
    },
    {
-    "id": "cc4dd8f2-0ea5-45a2-a061-71c84acf18a2",
+    "id": "347cf560-9624-4b50-b00f-a770ed39b655",
     "kind": "loan",
     "label": {
      "en": "Loan installment 31",
      "zh": "贷款第 31 期还款"
     },
     "due_date": "2030-03-01",
-    "amount": "33615.30",
+    "amount": "19993.98",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,
     "is_simulated": true
    },
    {
-    "id": "56f49821-dadf-49fc-9879-ec25a6db4444",
+    "id": "3582cdd9-fe57-429a-aab3-30f171e8f547",
     "kind": "loan",
     "label": {
      "en": "Loan installment 32",
      "zh": "贷款第 32 期还款"
     },
     "due_date": "2030-04-01",
-    "amount": "33615.30",
+    "amount": "19993.98",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,
     "is_simulated": true
    },
    {
-    "id": "931dcf6a-0f76-47aa-83b6-163f606c2eb9",
+    "id": "216329cf-2b51-4d1f-a66b-2ead915dc8c9",
     "kind": "loan",
     "label": {
      "en": "Loan installment 33",
      "zh": "贷款第 33 期还款"
     },
     "due_date": "2030-05-01",
-    "amount": "33615.30",
+    "amount": "19993.98",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,
     "is_simulated": true
    },
    {
-    "id": "6c35e4be-7e98-4cc0-9ff6-62f493b7d397",
+    "id": "7c45588c-0f7c-400f-bf60-0bb9ab66c512",
     "kind": "loan",
     "label": {
      "en": "Loan installment 34",
      "zh": "贷款第 34 期还款"
     },
     "due_date": "2030-06-01",
-    "amount": "33615.30",
+    "amount": "19993.98",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,
     "is_simulated": true
    },
    {
-    "id": "e978d71c-f636-415d-8dd6-4c267247bcb6",
+    "id": "c7bf41b5-c8aa-4401-83d8-8f52d9c97dc2",
     "kind": "loan",
     "label": {
      "en": "Loan installment 35",
      "zh": "贷款第 35 期还款"
     },
     "due_date": "2030-07-01",
-    "amount": "33615.30",
+    "amount": "19993.98",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,
     "is_simulated": true
    },
    {
-    "id": "45c3cff7-943f-4582-8a6a-59e19928b1b0",
+    "id": "994e414a-d4b0-4dd6-8d6f-3c0e7a12b1ec",
     "kind": "loan",
     "label": {
      "en": "Loan installment 36",
      "zh": "贷款第 36 期还款"
     },
     "due_date": "2030-08-01",
-    "amount": "33615.30",
+    "amount": "19993.98",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,
     "is_simulated": true
    },
    {
-    "id": "46727ee0-7d93-42af-b39b-32c6453efd3e",
+    "id": "b17de80a-5df5-4c92-ae20-9c65a79ec5f3",
     "kind": "insurance",
     "label": {
      "en": "Student health insurance",
@@ -2259,7 +2229,7 @@
     "is_simulated": true
    },
    {
-    "id": "637ad9fe-c36c-4e7e-9a78-9dcdc891f758",
+    "id": "33be0dd4-2e83-42e6-8b4f-cbbbb59f939b",
     "kind": "tuition",
     "label": {
      "en": "Tuition and fees per semester (includes 50,000 confirmation fee in year 1)",
@@ -2273,7 +2243,7 @@
     "is_simulated": true
    },
    {
-    "id": "4f61f489-7995-490a-9e72-6548daee5a1b",
+    "id": "2d905d3f-8d8b-41d5-bf2a-4081b63211b5",
     "kind": "visa",
     "label": {
      "en": "Annual extension of stay",
@@ -2287,91 +2257,91 @@
     "is_simulated": true
    },
    {
-    "id": "e9e6afd3-c7a5-49c1-b3a2-90a6986d4839",
+    "id": "897c1f06-2b0f-407f-b282-66468a901b7c",
     "kind": "loan",
     "label": {
      "en": "Loan installment 37",
      "zh": "贷款第 37 期还款"
     },
     "due_date": "2030-09-01",
-    "amount": "33615.30",
+    "amount": "19993.98",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,
     "is_simulated": true
    },
    {
-    "id": "aa357553-97af-4075-a153-11aeda293a9e",
+    "id": "5ca36b61-aae1-4a37-80f2-03f8f83fe6e4",
     "kind": "loan",
     "label": {
      "en": "Loan installment 38",
      "zh": "贷款第 38 期还款"
     },
     "due_date": "2030-10-01",
-    "amount": "33615.30",
+    "amount": "19993.98",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,
     "is_simulated": true
    },
    {
-    "id": "61c994f7-598b-4363-897f-4f2e7157f5b3",
+    "id": "f5775083-e567-4527-b19e-68d5b9ffe3fe",
     "kind": "loan",
     "label": {
      "en": "Loan installment 39",
      "zh": "贷款第 39 期还款"
     },
     "due_date": "2030-11-01",
-    "amount": "33615.30",
+    "amount": "19993.98",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,
     "is_simulated": true
    },
    {
-    "id": "eab34590-f53c-402b-b226-7251bdb61027",
+    "id": "1e7fe946-b567-453d-aed1-3b8c993df85b",
     "kind": "loan",
     "label": {
      "en": "Loan installment 40",
      "zh": "贷款第 40 期还款"
     },
     "due_date": "2030-12-01",
-    "amount": "33615.30",
+    "amount": "19993.98",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,
     "is_simulated": true
    },
    {
-    "id": "46c079fd-3cd1-4e57-879f-532fa9b6a808",
+    "id": "3d8acaae-cabc-42e8-b958-d257c6d76131",
     "kind": "loan",
     "label": {
      "en": "Loan installment 41",
      "zh": "贷款第 41 期还款"
     },
     "due_date": "2031-01-01",
-    "amount": "33615.30",
+    "amount": "19993.98",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,
     "is_simulated": true
    },
    {
-    "id": "82291f18-73f6-4854-ab7b-40bd8eef5d72",
+    "id": "0ec65099-828f-4898-9174-c0b367aaad85",
     "kind": "loan",
     "label": {
      "en": "Loan installment 42",
      "zh": "贷款第 42 期还款"
     },
     "due_date": "2031-02-01",
-    "amount": "33615.30",
+    "amount": "19993.98",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,
     "is_simulated": true
    },
    {
-    "id": "5dcb1b32-dc52-49d7-94bc-da45b741b411",
+    "id": "5ab9fa37-4b9e-4c65-8766-c9613e4d5f67",
     "kind": "tuition",
     "label": {
      "en": "Tuition and fees per semester (includes 50,000 confirmation fee in year 1)",
@@ -2385,84 +2355,84 @@
     "is_simulated": true
    },
    {
-    "id": "f2143993-ac59-4873-acdc-9acb5c46a65a",
+    "id": "07318235-4e6c-4681-82d5-57e4e3fea9d0",
     "kind": "loan",
     "label": {
      "en": "Loan installment 43",
      "zh": "贷款第 43 期还款"
     },
     "due_date": "2031-03-01",
-    "amount": "33615.30",
+    "amount": "19993.98",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,
     "is_simulated": true
    },
    {
-    "id": "d6dd3371-24fd-4efa-93b4-3ca1c8d9f7bc",
+    "id": "9b085fc0-8346-4451-a108-971f51ecfe74",
     "kind": "loan",
     "label": {
      "en": "Loan installment 44",
      "zh": "贷款第 44 期还款"
     },
     "due_date": "2031-04-01",
-    "amount": "33615.30",
+    "amount": "19993.98",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,
     "is_simulated": true
    },
    {
-    "id": "951d682f-648f-43b2-8375-b66529fa3a3d",
+    "id": "e69ca598-5195-4d4b-b056-b5b146ef424d",
     "kind": "loan",
     "label": {
      "en": "Loan installment 45",
      "zh": "贷款第 45 期还款"
     },
     "due_date": "2031-05-01",
-    "amount": "33615.30",
+    "amount": "19993.98",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,
     "is_simulated": true
    },
    {
-    "id": "6fab2e1b-9d9c-4eb8-92c5-f77d2293f969",
+    "id": "8a767f30-c774-4810-a25a-0cdd870907f1",
     "kind": "loan",
     "label": {
      "en": "Loan installment 46",
      "zh": "贷款第 46 期还款"
     },
     "due_date": "2031-06-01",
-    "amount": "33615.30",
+    "amount": "19993.98",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,
     "is_simulated": true
    },
    {
-    "id": "d84079ed-0442-4670-b2a4-46b9170c1919",
+    "id": "b8d64086-da2c-40bc-a4eb-6cbc6c28c862",
     "kind": "loan",
     "label": {
      "en": "Loan installment 47",
      "zh": "贷款第 47 期还款"
     },
     "due_date": "2031-07-01",
-    "amount": "33615.30",
+    "amount": "19993.98",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,
     "is_simulated": true
    },
    {
-    "id": "a2d12e8a-fb51-42b6-8f74-8f8838238f7f",
+    "id": "e9f80d09-37e5-4840-bcfa-a4dbfb0ad7b7",
     "kind": "loan",
     "label": {
      "en": "Loan installment 48",
      "zh": "贷款第 48 期还款"
     },
     "due_date": "2031-08-01",
-    "amount": "33615.12",
+    "amount": "19993.95",
     "currency": "THB",
     "status": "DUE",
     "paid_at": null,

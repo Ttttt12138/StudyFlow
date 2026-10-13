@@ -5,7 +5,7 @@ export function asksForMonthlySpending(text: string) {
     && /账单|消费|开销|支出|花销|花了多少|\b(bills?|spend|spending|spent|expenses?)\b/.test(value);
 }
 
-const COLORS = ["#40edc3", "#75a7ff", "#ffcf70", "#ca96ff", "#ff8d9c", "#8cd67d", "#65d5ef", "#c5b5a2"];
+const COLORS = ["#1677ff", "#ff8a3d", "#91caff", "#722ed1", "#eb2f96", "#52c41a", "#13a8a8", "#8f959e"];
 export function spendingSlices(categories: Record<string, string>) {
   const rows = Object.entries(categories).map(([category, amount]) => ({ category, amount, value: Number(amount) }))
     .filter(row => Number.isFinite(row.value) && row.value > 0).sort((a, b) => b.value - a.value);

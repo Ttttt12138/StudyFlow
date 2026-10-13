@@ -3,6 +3,9 @@
 // ConsumptionDemo.prepare_learning in backend/finance/management/commands/demo_consumption.py and runs over
 // the API; the import, review, coverage declaration and confirmation go through the UI.
 import { test } from '@playwright/test';
+// Retired 2026-10-13: the tool no longer opens in the workspace (navigation.ts sends its links to the main
+// conversation or to monthly spending). Kept until the module source is removed.
+test.skip(true, "tool retired from the workspace");
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { randomUUID } from 'node:crypto';

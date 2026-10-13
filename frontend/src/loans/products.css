@@ -1,0 +1,2 @@
+.loan-product-field { grid-column: 1 / -1; display: grid; gap: 8px; min-width: 0; }
+.loan-product-field .panel-muted { margin: 0; }

@@ -1,4 +1,7 @@
 import { test } from "@playwright/test";
+// Retired 2026-10-13: the tool no longer opens in the workspace (navigation.ts sends its links to the main
+// conversation or to monthly spending). Kept until the module source is removed.
+test.skip(true, "tool retired from the workspace");
 import assert from "node:assert/strict";
 import { screenshot } from "../../support.mjs";
 

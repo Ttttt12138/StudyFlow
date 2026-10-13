@@ -21,7 +21,7 @@
 .wallet-form-row label,.wallet-policy label{display:grid;gap:7px;font-size:12px;font-weight:650;color:var(--accent)}
 .wallet-form-row input,.wallet-form-row select,.wallet-policy input{width:100%;min-width:0;min-height:44px;border:1px solid var(--line);border-radius:7px;padding:10px 12px;background:var(--surface-1);color:var(--text);font:inherit}
 .wallet-form-row .primary{min-height:44px;justify-content:center}
-.wallet-quote-grid article.selected{border-color:color-mix(in srgb,var(--accent) 45%,transparent);box-shadow:0 0 0 2px rgba(0,0,0,0.60)}
+.wallet-quote-grid article.selected{border-color:color-mix(in srgb,var(--accent) 45%,transparent);box-shadow:0 0 0 2px rgba(31, 35, 41, 0.12)}
 .wallet-quote-grid article>p strong,.wallet-quote-grid article>p span{display:block}
 .wallet-quote-grid article>p strong{font-size:20px}
 .wallet-quote-grid article>p span,.wallet-quote-grid small{font-size:11px;color:var(--text-2)}

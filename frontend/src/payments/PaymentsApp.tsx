@@ -32,7 +32,11 @@ const PAYABILITY_TONE: Record<Payability, string> = { READY: "due", SETTLED: "pa
 type Tab = "due" | "pay" | "history";
 type Sheet = "bills" | "details" | "audit" | "payments" | null;
 
-export function PaymentsApp({ preview, onExit }: { preview: boolean; onExit: () => void }) {
+/**
+ * Tuition and bill payments. Inside the money tool (wallet/MoneyHub.tsx) `mode` splits it in two: "flow" is the
+ * Pay tab (bills due → pay), "history" is the payments part of Records; leaving the records for a payment calls `onFlow`.
+ */
+export function PaymentsApp({ preview, onExit, mode, onFlow }: { preview: boolean; onExit: () => void; mode?: "flow" | "history"; onFlow?: () => void }) {
   const { lang, t } = useI18n();
   const toolActive = useToolActive();
   const embedded = useEmbedded();
@@ -50,7 +54,8 @@ export function PaymentsApp({ preview, onExit }: { preview: boolean; onExit: () 
   const [policy, setPolicy] = useState<"" | "STEP_UP_REQUIRED" | "APPROVAL_REQUIRED">("");
   const [lostSubmit, setLostSubmit] = useState(false);
   const [reason, setReason] = useState(() => t("pay.policy.reasonDefault"));
-  const [tab, setTab] = useState<Tab | null>(null);
+  const [tab, setOwnTab] = useState<Tab | null>(null);
+  const setTab = (key: Tab | null) => { if (mode === "history" && key && key !== "history") onFlow?.(); setOwnTab(key); };
   const [sheet, setSheet] = useState<Sheet>(null);
   const [billPage, setBillPage] = useState(0);
   const [historyPage, setHistoryPage] = useState(0);
@@ -231,11 +236,13 @@ export function PaymentsApp({ preview, onExit }: { preview: boolean; onExit: () 
 
   // The step to show first follows the real records: a payment in flight, otherwise a bill ready to pay, otherwise the record.
   const auto: Tab = snapshot.payments.some((p) => ACTIVE.includes(p.status)) ? "pay" : readyEvents.length ? "due" : snapshot.payments.length ? "history" : "due";
-  const current = tab ?? auto;
-  const steps = [
+  const picked = tab ?? auto;
+  // In the money tool the records live under Records, so the Pay tab never lands on them.
+  const current: Tab = mode === "history" ? "history" : mode === "flow" && picked === "history" ? (snapshot.payments.length ? "pay" : "due") : picked;
+  const steps = mode === "history" ? [] : [
     { key: "due" as const, label: t("pay.step.due"), done: snapshot.payments.length > 0 },
     { key: "pay" as const, label: t("pay.step.pay"), done: snapshot.payments.some((p) => p.status === "reconciled") },
-    { key: "history" as const, label: t("pay.step.history") },
+    ...(mode === "flow" ? [] : [{ key: "history" as const, label: t("pay.step.history") }]),
   ];
   const bills = usePage(obligations, 4, billPage);
   const history = usePage(snapshot.payments, 5, historyPage);

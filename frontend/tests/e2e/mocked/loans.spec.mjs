@@ -1,6 +1,7 @@
 import { test } from "@playwright/test";
 import assert from "node:assert/strict";
 import { screenshot } from "../../support.mjs";
+import { enrolledPlanner } from "../plannerMock.mjs";
 
 const base = process.env.TEST_URL || "http://127.0.0.1:5173";
 
@@ -117,6 +118,7 @@ test.describe("loans with mocked Django", () => {
       if (path === "demo/wallets/") return json(route, 200, page_([wallet]));
       return json(route, 404, { detail: path });
     });
+    await enrolledPlanner(page);
     await page.goto(`${base}/?loans=1`);
     // An active loan account opens the repay step first.
     await page.getByRole("tab", { name: "Repay", selected: true }).waitFor();
@@ -180,6 +182,7 @@ test("the quote step starts from the study plan's loan and prefills adjusted ter
       : ["applications/", "loan-accounts/", "disbursements/"].includes(path) ? page_([]) : null;
     return body ? route.fulfill({ json: body }) : route.fulfill({ status: 404, json: { detail: path } });
   });
+  await enrolledPlanner(page);
   await page.goto(`${base}/?loans=1`);
   await page.getByRole("tab", { name: "Quote", selected: true }).waitFor();
   const quote = page.locator("#loans-quote");
@@ -193,6 +196,7 @@ test("the quote step starts from the study plan's loan and prefills adjusted ter
   assert.equal(await terms.getByLabel("Annual interest rate %").inputValue(), "5");
   await page.keyboard.press("Escape");
   assert.equal(await terms.count(), 0);
-  await page.getByRole("heading", { name: "Loans", exact: true }).waitFor();
+  // Escape closes only the terms sheet; the My loans panel stays open.
+  await page.getByRole("heading", { name: "My loans", exact: true }).waitFor();
   assert.deepEqual(errors, []);
 });

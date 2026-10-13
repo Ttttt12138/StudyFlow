@@ -1,0 +1,17 @@
+/* Phone layout: a slim strip, the drawer sidebar, full-width chat and 44px touch targets. */
+@media (max-width: 600px) {
+  body:has(.student-workspace) .sim-strip { flex-wrap: nowrap; gap: 8px; padding: 2px 12px; }
+  body:has(.student-workspace) .sim-strip :is(.sim-intro, .role-switch, .sim-text-full) { display: none; }
+  body:has(.student-workspace) .sim-text { flex: 1; order: 0; font-size: 11px; }
+  body:has(.student-workspace) .sim-text-short { display: inline; }
+  body:has(.student-workspace) .sim-strip .lang-switch { flex: none; margin-left: auto; }
+  body:has(.student-workspace) .sim-strip .lang-switch button { min-width: 44px; min-height: 44px; padding: 8px; }
+
+  .student-workspace { min-height: 0; }
+  .student-workspace .plan-messages button { min-height: 44px; }
+  .student-workspace .agent-suggestions .chip { min-height: 40px; }
+  .student-workspace .workspace-dock-header { padding: 10px 12px; gap: 6px; }
+  .student-workspace .workspace-dock-header button { width: 44px; height: 44px; }
+  .student-workspace .dock-title h2 { font-size: 17px; }
+  .student-workspace .tool-panel :is(.panel-steps button, .panel-footer button, .panel-menu > button) { min-height: 44px; min-width: 44px; }
+}

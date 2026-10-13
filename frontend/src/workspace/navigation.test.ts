@@ -1,10 +1,43 @@
 import { describe, expect, it } from "vitest";
-import { readWorkspaceRoute, workspaceUrl, appendTool } from "./navigation";
+import { readWorkspaceRoute, workspaceUrl, appendTool, toolAvailable, planningTools, enrolledTools } from "./navigation";
 
 describe("workspace navigation", () => {
+  it("restores the exact task or loan account from reminder links", () => {
+    const id = "f94c78d8-b708-4735-9b7a-7d4420f82660";
+    for (const tool of [{ kind: "life" as const, section: `task:${id}` }, { kind: "loans" as const, section: id }]) {
+      const route = { preview: false, stage: "plan" as const, tool };
+      expect(readWorkspaceRoute(`http://localhost${workspaceUrl(route)}`)).toEqual(route);
+    }
+  });
+  it("opens price and funding tools before enrollment and money tools only after", () => {
+    for (const kind of planningTools) expect(toolAvailable(kind, false)).toBe(true);
+    for (const kind of ["plan", "compare", "funding", "card", "family-links"] as const) expect(toolAvailable(kind, null)).toBe(true);
+    for (const kind of enrolledTools) {
+      expect(toolAvailable(kind, false)).toBe(false);
+      expect(toolAvailable(kind, null)).toBe(false);
+      expect(toolAvailable(kind, true)).toBe(true);
+    }
+    expect(enrolledTools).toEqual(expect.arrayContaining(["wallet", "payments", "bills", "spending"]));
+    expect(toolAvailable("loans", false)).toBe(true);
+  });
+  it("round trips the new compare and funding panels", () => {
+    for (const kind of ["compare", "funding"] as const) {
+      const route = { preview: false, stage: "plan" as const, tool: { kind } };
+      expect(readWorkspaceRoute(`http://localhost${workspaceUrl(route)}`)).toEqual(route);
+    }
+  });
   it("restores legacy student links as tools without losing preview", () => {
-    expect(readWorkspaceRoute("http://localhost/?wallet=preview")).toEqual({ preview: true, stage: "plan", tool: { kind: "wallet" } });
-    expect(readWorkspaceRoute("http://localhost/?plan=preview&stage=school&tool=bills")).toEqual({ preview: true, stage: "school", tool: { kind: "bills" } });
+    expect(readWorkspaceRoute("http://localhost/?wallet=preview")).toEqual({ preview: true, stage: "school", tool: { kind: "wallet" } });
+    expect(readWorkspaceRoute("http://localhost/?wallet=1").stage).toBe("plan");
+    expect(readWorkspaceRoute("http://localhost/?plan=preview&stage=school&tool=bills")).toEqual({ preview: true, stage: "school", tool: { kind: "life" } });
+  });
+  it("sends retired tools to where their job lives now", () => {
+    expect(readWorkspaceRoute("http://localhost/?tool=bills&section=expense").tool).toEqual({ kind: "bills", section: "expense" });
+    expect(readWorkspaceRoute("http://localhost/?tool=insights").tool).toEqual({ kind: "spending" });
+    expect(readWorkspaceRoute("http://localhost/?insights=preview")).toEqual({ preview: true, stage: "school", tool: { kind: "spending" } });
+    expect(readWorkspaceRoute("http://localhost/?tool=copilot").tool).toEqual({ kind: "agent" });
+    expect(planningTools).not.toContain("copilot");
+    expect(toolAvailable("life", false)).toBe(true);
   });
   it("round trips the preparing preview stage and ignores unknown stages", () => {
     const route = { preview: true, stage: "prepare" as const, tool: null };

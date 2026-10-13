@@ -20,7 +20,7 @@ const KNOWN_TRIGGERS = ["manual", "consumption_changed", "daily", "budget_change
 /** Money moving between own accounts, coming in, or coming back is not spending. */
 const NOT_SPENDING: readonly string[] = ["Transfer", "Income", "Refund"];
 const CATEGORY_COLORS: Record<string, string> = {
-  Rent: "#6ff7d4", Food: "#58b4ff", Transport: "#a78bfa", Mobile: "#f59ec0", Utilities: "#7dd3a8", Subscription: "#9fb4ff", Other: "#8aa39b",
+  Rent: "#1677ff", Food: "#ff8a3d", Transport: "#722ed1", Mobile: "#eb2f96", Utilities: "#13a8a8", Subscription: "#91caff", Other: "#8f959e",
 };
 type Recalc = { phase: "idle" | "waiting" | "done" | "retry" | "timeout"; code?: string };
 type Revision = { id: string; category: Category; cost_id: string; refund_of: string; reason: string };
@@ -269,7 +269,7 @@ export function InsightsApp({ preview, onExit }: { preview: boolean; onExit: () 
   const spentCents = spending.reduce((sum, item) => sum + cents(item.amount), 0);
   const slices: Slice[] = CATEGORIES.filter((value) => !NOT_SPENDING.includes(value)).map((value) => {
     const total = spending.filter((item) => item.category === value).reduce((sum, item) => sum + cents(item.amount), 0);
-    return { key: value, label: categoryName(value), value: total, color: CATEGORY_COLORS[value] ?? "#8aa39b", display: money((total / 100).toFixed(2)) };
+    return { key: value, label: categoryName(value), value: total, color: CATEGORY_COLORS[value] ?? "#8f959e", display: money((total / 100).toFixed(2)) };
   }).sort((a, b) => b.value - a.value);
 
   const riskPage = usePage(activeRisks, 3, pages.risks);

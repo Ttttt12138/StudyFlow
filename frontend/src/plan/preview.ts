@@ -15,12 +15,20 @@ const RECORDINGS: Record<PreviewStage, Record<Lang, () => Promise<{ default: unk
   school: { en: () => import("./preview-data/school.en.json"), zh: () => import("./preview-data/school.zh.json") },
 };
 
+const LIFE: Record<PreviewStage, Record<Lang, () => Promise<{ default: unknown }>>> = {
+  plan: { en: () => import("./preview-data/life.plan.en.json"), zh: () => import("./preview-data/life.plan.zh.json") },
+  prepare: { en: () => import("./preview-data/life.prepare.en.json"), zh: () => import("./preview-data/life.prepare.zh.json") },
+  school: { en: () => import("./preview-data/life.school.en.json"), zh: () => import("./preview-data/life.school.zh.json") },
+};
+
 /** Read-only client over a recorded conversation; every write is refused. */
 export function createPlanPreview(lang: Lang, stage: PreviewStage): WalletClient {
   let loaded: Promise<Recording> | null = null;
   const data = () => (loaded ??= RECORDINGS[stage][lang]().then((module) => module.default as Recording));
   return {
     async get<T>(path: string): Promise<T> {
+      if (path === "planning/life/") return (await LIFE[stage][lang]()).default as T;
+      if (path === "planning/assessment/") return (await import("./preview-data/assessment.json")).default as T;
       const { conversation, in_school, family } = await data();
       if (path === "agent/conversations/") return [{ id: conversation.id, updated_at: "", turn_count: conversation.turns.length }] as T;
       if (path.startsWith("agent/conversations/")) return conversation as T;

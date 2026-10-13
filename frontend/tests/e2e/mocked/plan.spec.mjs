@@ -4,55 +4,60 @@ import { readFileSync } from "node:fs";
 import { screenshot } from "../../support.mjs";
 
 const base = process.env.TEST_URL || "http://127.0.0.1:5173";
-// These cases exercise returning users; first-use introduction has its own suite.
-test.beforeEach(async ({ page }) => {
-  await page.addInitScript(() => localStorage.setItem('studyflow.journey.v1:parent', '2'));
-});
 // The same recordings the preview uses (backend/auto_test/fixture_plan_preview.py).
 const recorded = name => JSON.parse(readFileSync(new URL(`../../../src/plan/preview-data/${name}.json`, import.meta.url), "utf-8"));
+const tools = page => page.getByRole("navigation", { name: "Tools" });
 
 test.describe("Planner preview", () => {
-  test("shows a recorded parent conversation and the in-school stage without calling Django", async ({ page }) => {
+  test("shows the recorded price conversation and the in-school stage without calling Django", async ({ page }) => {
     const errors = [];
     let apiCalls = 0;
     page.on("pageerror", error => errors.push(error.message));
     await page.route("**/api/**", route => { apiCalls++; return route.abort(); });
     await page.setViewportSize({ width: 1360, height: 900 });
     await page.goto(`${base}/?plan=preview`);
-    await page.getByRole("heading", { level: 1, name: "Study planner" }).waitFor();
+    await page.getByRole("heading", { level: 1, name: "Study planner" }).waitFor({ state: "attached" });
     const chat = page.locator("#plan-chat");
-    await chat.getByText("I'm a parent", { exact: true }).first().waitFor();
-    await chat.getByRole("heading", { name: "Schools in the catalog" }).waitFor();
-    await chat.locator(".workspace-card-summary").filter({ hasText: "Schools in the catalog" }).getByRole("button", { name: "View details" }).click();
-    assert.equal(await page.locator(".tool-content:not([hidden]) .plan-school").count() >= 10, true);
+    await chat.getByText("What does 4 years at Chulalongkorn cost in total?", { exact: true }).first().waitFor();
+    // Whole-course price card with the total in the chosen currency; its line items open beside the chat.
+    const price = chat.getByRole("article", { name: "Chulalongkorn University · 4-year total" });
+    await price.getByText("฿2,351,350", { exact: true }).waitFor();
+    await price.getByRole("button", { name: "Line items" }).click();
+    await page.locator(".workspace-dock").waitFor();
     await page.getByRole("button", { name: "Close tool" }).click();
-    await chat.getByText("Cost for 4 year(s)", { exact: true }).first().waitFor();
-    await chat.getByRole("heading", { name: "Simulated loan" }).waitFor();
+    // The comparison marks the lowest total; the plan shows the gap, the simulated loan and the confirmation.
+    const compare = chat.getByRole("article", { name: "2 schools, whole-course totals" });
+    await compare.getByText("Lowest current estimate", { exact: true }).waitFor();
+    await chat.getByText("Funding gap about 851,350 THB", { exact: false }).waitFor();
+    await chat.getByRole("heading", { name: "Simulated loan · 48 months" }).waitFor();
     await chat.getByRole("heading", { name: "Confirm the study plan" }).waitFor();
     assert.equal(await chat.getByRole("button", { name: "Confirm", exact: true }).count(), 0, "preview never offers a decision");
     assert.ok(await chat.getByText("Sample data", { exact: true }).count() > 0, "school figures are labelled as sample data");
-    await page.getByRole("button", { name: "My plan", exact: true }).click();
-    await page.locator("#plan-summary").getByText("Funding gap").waitFor();
+    // The plan card opens the funding panel with its 90-day forecast; the sidebar item carries a funding-gap dot.
+    await chat.getByRole("button", { name: "View my plan" }).click();
+    await page.locator(".workspace-dock").getByText("Largest shortfall including reserve").first().waitFor();
+    await tools(page).getByRole("button", { name: /^My plan/ }).getByRole("img", { name: "Funding gap" }).waitFor();
     await page.getByRole("button", { name: "Close tool" }).click();
     await page.screenshot({ path: screenshot("plan-preview-desktop-en.png"), fullPage: true });
 
     await chat.getByRole("button", { name: "Which schools are there?" }).click();
     await page.getByText("The preview is read-only. Sign in to talk to the assistant.").waitFor();
 
-    await page.getByRole("button", { name: "In school", exact: true }).click();
-    await page.getByRole("button", { name: "Bills & spending", exact: true }).click();
-    await page.locator("#plan-school").getByRole("heading", { name: "Upcoming bills" }).waitFor();
-    await chat.getByRole("heading", { name: "Confirm enrollment" }).waitFor();
+    // The stage switch lives in the sidebar settings menu.
+    await tools(page).getByRole("button", { name: "Settings", exact: true }).click();
+    await page.locator("#side-settings").getByRole("button", { name: "In school", exact: true }).click();
+    await tools(page).getByRole("button", { name: "To-dos & payments", exact: true }).click();
+    await page.locator(".life-panel").getByRole("heading", { name: "Upcoming reminders" }).waitFor();
     await chat.getByText("I spent 120 THB on lunch today", { exact: true }).first().waitFor();
 
     await page.getByRole("button", { name: "Close tool" }).click();
     await page.getByRole("button", { name: "中文" }).click();
-    await page.getByRole("heading", { level: 1, name: "留学规划助手" }).waitFor();
+    await page.getByRole("heading", { level: 1, name: "留学规划助手" }).waitFor({ state: "attached" });
     await chat.getByText("今天午饭花了120泰铢", { exact: true }).first().waitFor();
     await page.getByRole("button", { name: "English" }).click();
 
     await page.setViewportSize({ width: 375, height: 812 });
-    await page.getByRole("heading", { level: 1, name: "Study planner" }).waitFor();
+    await page.getByRole("heading", { level: 1, name: "Study planner" }).waitFor({ state: "attached" });
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
     await page.screenshot({ path: screenshot("plan-preview-mobile-en.png"), fullPage: true });
     assert.equal(apiCalls, 0);
@@ -76,7 +81,7 @@ test.describe("Planner with mocked Django", () => {
     const conversation = { ...script, plan: null, profile: { role: null, home_currency: "CNY" }, turns: [greeting] };
     const calls = [];
     const json = (route, status, body) => route.fulfill({ status, contentType: "application/json", body: JSON.stringify(body) });
-    await page.route("**/api/auth/session/", route => json(route, 200, { authenticated: true, username: "parent", csrf_token: "test-csrf" }));
+    await page.route("**/api/auth/session/", route => json(route, 200, { authenticated: true, username: "student", csrf_token: "test-csrf" }));
     await page.route("**/api/v2/**", async route => {
       const request = route.request();
       const path = new URL(request.url()).pathname.replace("/api/v2/", "");
@@ -89,7 +94,6 @@ test.describe("Planner with mocked Django", () => {
         const next = turns.shift();
         assert.equal(text, next.goal);
         conversation.turns.push(next);
-        conversation.profile.role = "parent";
         const plan = next.cards.find(card => card.plan)?.plan;
         if (plan) conversation.plan = plan;
         return json(route, 201, { data: next });
@@ -108,21 +112,23 @@ test.describe("Planner with mocked Django", () => {
 
     await page.goto(`${base}/`);
     const chat = page.locator("#plan-chat");
-    await chat.getByText("are you a parent, or the student?", { exact: false }).waitFor();
-    await chat.getByRole("button", { name: "I'm a parent" }).click();
-    await chat.getByRole("heading", { name: "Schools in the catalog" }).waitFor();
-    // The parent view now suggests money questions; the rest of the script is typed.
-    for (const turn of turns.slice(0, turns.length)) {
+    // No role question any more: before the first question the price hero holds the composer.
+    await chat.getByRole("heading", { name: "Know what studying abroad costs before you go" }).waitFor();
+    for (const turn of [...turns]) {
       await chat.getByLabel("Message the assistant").fill(turn.goal);
       await chat.getByLabel("Message the assistant").press("Enter");
       await chat.getByText(turn.final_answer.slice(0, 40), { exact: false }).first().waitFor();
     }
-    await page.getByRole("button", { name: "My plan", exact: true }).click();
-    await page.locator("#plan-summary").getByText("Draft").waitFor();
+    await chat.getByRole("article", { name: /Chulalongkorn University · 4-year total/ }).waitFor();
+    await chat.getByText("Chulalongkorn University · Draft", { exact: true }).waitFor();
     await chat.locator(".plan-card-confirm").getByRole("button", { name: "Confirm", exact: true }).click();
     await page.getByRole("dialog", { name: "Review and confirm" }).getByRole("button", { name: "Confirm", exact: true }).click();
     await page.getByText("Done. The plan is updated.").waitFor();
-    await page.locator("#plan-summary").getByText("Confirmed").waitFor();
+    // A confirmed plan moves to preparing: the sidebar and the preparing guide both offer the to-dos.
+    await page.locator(".workspace-stage").getByText("Preparing to leave").waitFor();
+    await tools(page).getByRole("button", { name: "To-dos & payments", exact: true }).waitFor();
+    await chat.locator("#plan-journey-guide").getByRole("button", { name: "To-dos & payments", exact: true }).click();
+    await page.locator("#workspace-tool-title").getByText("To-dos & payments", { exact: true }).waitFor();
     assert.ok(calls.some(call => /^POST agent\/pending-actions\/.+\/confirm\/$/.test(call)));
     assert.deepEqual(errors, []);
   });

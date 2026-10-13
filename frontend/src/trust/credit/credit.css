@@ -3,7 +3,7 @@
 .credit-reveals{margin:8px 0 0;padding-left:20px}
 .credit-reveals li{margin:2px 0}
 .credit-result{border-left:4px solid var(--line);padding:4px 0 4px 14px;margin-top:14px}
-.credit-result.valid{border-color:#2f8f5b}
-.credit-result.invalid{border-color:#c2412d}
+.credit-result.valid{border-color:#0958d9}
+.credit-result.invalid{border-color:#f53f3f}
 .credit-result h3{margin:0 0 8px}
 .credit-snapshots td,.credit-snapshots th{white-space:nowrap}

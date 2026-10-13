@@ -8,16 +8,16 @@
 
 /* Overview: active risks */
 .insights-risks li{border-left:2px solid var(--warn);padding-left:12px}
-.insights-risks li.risk-data_stale,.insights-risks li.risk-sponsor_delayed{border-left-color:#f2c87988}
+.insights-risks li.risk-data_stale,.insights-risks li.risk-sponsor_delayed{border-left-color:#ff8a3d88}
 .insights-risks h4{margin:0;font-size:14px;font-weight:600;color:var(--text)}
 
 /* Forecast: planned vs forecast per cost */
 .insights-legend{display:inline-flex;gap:14px}
 .insights-legend span::before{content:"";display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:6px;vertical-align:1px}
-.insights-legend .is-planned::before{background:#4ff2c640}
-.insights-legend .is-forecast::before{background:linear-gradient(90deg,#1f9f82,#6ff7d4)}
+.insights-legend .is-planned::before{background:#1677ff40}
+.insights-legend .is-forecast::before{background:linear-gradient(90deg,#0958d9,#1677ff)}
 .insights-costs{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
-.insights-costs li{display:flex;flex-direction:column;gap:5px;padding:9px 0;border-top:1px solid #9ff5dc12;min-width:0}
+.insights-costs li{display:flex;flex-direction:column;gap:5px;padding:9px 0;border-top:1px solid #1f232912;min-width:0}
 .insights-cost-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;font-size:14px}
 .insights-cost-head > strong{font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .insights-cost-head .insights-amount{font-size:13px;color:var(--text-2)}
@@ -35,11 +35,11 @@
 
 /* Import review */
 .insights-rows{list-style:none;margin:0;padding:0}
-.insights-rows li{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:4px 10px;align-items:start;padding:10px 0;border-top:1px solid #9ff5dc12;font-size:14px}
+.insights-rows li{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:4px 10px;align-items:start;padding:10px 0;border-top:1px solid #1f232912;font-size:14px}
 .insights-rows li > input{margin-top:4px;accent-color:var(--accent)}
 .insights-rows li > span:nth-child(2){display:flex;flex-direction:column;gap:3px;min-width:0}
 .insights-rows li small{color:var(--text-3);font-size:12px;overflow-wrap:anywhere}
-.insights-rows li.is-flagged{background:linear-gradient(90deg,#f2c8790a,transparent)}
+.insights-rows li.is-flagged{background:linear-gradient(90deg,#ff8a3d0a,transparent)}
 .insights-flags{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px}
 .insights-flags .panel-tag{padding:1px 8px;font-size:11px}
 .insights-rows .panel-check{font-size:12px;margin-top:2px}
@@ -54,6 +54,6 @@
 .insights-app .panel-sheet-stack[hidden],.panel-sheet .panel-sheet-stack[hidden]{display:none !important}
 .insights-hero-row{align-items:flex-end}
 .insights-hero-row button.panel-tag{background:none;font:inherit;font-size:12px;cursor:pointer;margin-bottom:6px}
-.insights-hero-row button.panel-tag[aria-pressed=true]{background:#f2c8791f}
+.insights-hero-row button.panel-tag[aria-pressed=true]{background:#ff8a3d1f}
 #insights-categories .chart-legend{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 14px}
 #insights-categories .chart-donut{gap:14px}

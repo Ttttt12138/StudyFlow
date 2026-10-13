@@ -1,6 +1,10 @@
 import { test } from "@playwright/test";
+// Retired 2026-10-13: the tool no longer opens in the workspace (navigation.ts sends its links to the main
+// conversation or to monthly spending). Kept until the module source is removed.
+test.skip(true, "tool retired from the workspace");
 import assert from "node:assert/strict";
 import { screenshot } from "../../support.mjs";
+import { enrolledPlanner } from "../plannerMock.mjs";
 
 const base = process.env.TEST_URL || "http://127.0.0.1:5173";
 
@@ -132,6 +136,7 @@ test.describe("insights with mocked Django", () => {
       return json(route, 404, { detail: path });
     });
 
+    await enrolledPlanner(page);
     await page.goto(`${base}/?insights=1`);
     await page.getByRole("heading", { name: "Spending insights", level: 2 }).waitFor();
     const tab = name => page.getByRole("tab", { name }).click();
@@ -205,15 +210,21 @@ test.describe("insights with mocked Django", () => {
       if (path === "readiness/briefing/") return json(route, 200, { data: { status: "NEEDS_INFORMATION", as_of: "2026-10-11", risks: {}, forecast_changes: {} } });
       return json(route, 200, { count: 0, next: null, previous: null, results: [] });
     });
+    await enrolledPlanner(page);
     await page.goto(`${base}/?insights=1`);
     await page.getByRole("button", { name: "Run a readiness check now" }).click();
     await page.getByRole("alert").filter({ hasText: "This changed since the page loaded." }).waitFor();
     assert.deepEqual(checkBody, { semester_id: "s1", state_version: 3, budget_version: 2, analysis_version: 1 });
   });
 
-  test("signed out shows the sign-in card", async ({ page }) => {
+  // A signed-out visitor has no enrolled plan, so the enrollment gate keeps insights closed
+  // (formerly the panel opened on a sign-in card) and the sign-in hero stays in front.
+  test("signed out is kept out of insights by the enrollment gate", async ({ page }) => {
     await page.route("**/api/auth/session/", route => route.fulfill({ json: { authenticated: false } }));
     await page.goto(`${base}/?insights=1`);
-    await page.getByText("Sign in to import transactions and see your spending insights.").waitFor();
+    await page.getByRole("status").filter({ hasText: "That tool opens once enrollment is confirmed." }).waitFor();
+    await page.getByRole("link", { name: "Sign in to StudyFlow" }).waitFor();
+    assert.equal(await page.getByRole("heading", { name: "Spending insights" }).count(), 0);
+    assert.equal(await page.getByRole("navigation", { name: "Tools" }).getByRole("button", { name: "Spending insights" }).count(), 0);
   });
 });

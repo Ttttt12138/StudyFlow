@@ -7,6 +7,9 @@ export type SchoolBrief = {
   key: string; name: Text; country: Text; city: Text; currency: string; program: Text; duration_years: number;
   intake: string; start_date: string; tuition_per_year: string; living_per_year: string; first_year_total: string;
   first_year_converted?: Converted; sample: true;
+  /** Whole course over `years` (default duration); absent on results recorded before course totals were added. */
+  years?: number; total?: string; total_low?: string; total_high?: string; total_converted?: Converted;
+  complete?: boolean; missing_cost_ids?: string[]; duration_months?: number; observed_at?: string;
 };
 
 export type Place = { name: Text; kind: string; note: Text; distance_km: number | null; typical_cost: string | null; source_url: string | null };
@@ -19,10 +22,12 @@ export type CatalogEntry = {
 };
 
 export type CostLine = { cost_id: string; category: string; group: "tuition" | "living" | "essentials"; label: Text; period: string;
-  amount: string; lower: string | null; upper: string | null; per_year: string; total: string; estimate: boolean; source_url: string | null };
-export type Estimate = { school_key: string; currency: string; years: number; lines: CostLine[];
+  amount: string | null; lower: string | null; upper: string | null; per_year: string | null; total: string | null; estimate: boolean; source_url: string | null;
+  quote?: string | null; observed_at?: string; occurrences?: number };
+export type Estimate = { school_key: string; currency: string; years: number; lines: CostLine[]; program?: Text;
   groups: Record<"tuition" | "living" | "essentials", string>; first_year: string; total: string; total_low: string;
-  total_high: string; estimated_share: string; converted?: Converted; sample: true };
+  total_high: string; estimated_share: string; converted?: Converted; sample: true;
+  complete?: boolean; missing_cost_ids?: string[]; duration_months?: number; observed_at?: string };
 
 export type Loan = { id: string; currency: string; principal: string; months: number; annual_rate: string; monthly_payment: string; total_repayment: string };
 export type Plan = {
@@ -49,10 +54,12 @@ export type Card =
   | { type: "bills"; bills: Bill[] }
   | ({ type: "spending" } & Spending);
 
-export type PendingAction = { id: string; action: string; status: string; expires_at: string; session: string };
+export type PendingAction = { id: string; action: string; status: string; expires_at: string; session: string;
+  /** Money proposals: what the step-up grant is bound to (finance/agent_runner.py session_record). */
+  target_id?: string; amount?: string; currency?: string; result?: Record<string, unknown> };
 export type Turn = { id: string; kind: "user" | "assistant"; goal: string; final_answer: string; status: string; error_code: string;
   created_at: string; cards: Card[]; pending_actions: PendingAction[] };
-export type Conversation = { id: string; locale: "zh" | "en"; profile: { role: Role | null; home_currency: string };
+export type Conversation = { id: string; locale: "zh" | "en"; profile: { role: Role | "" | null; home_currency: string };
   plan: Plan | null; turns: Turn[] };
 export type ConversationSummary = { id: string; updated_at: string; turn_count: number };
 

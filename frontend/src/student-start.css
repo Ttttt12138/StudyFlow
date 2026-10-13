@@ -1,16 +1,16 @@
 .student-start{max-width:1100px;margin:8px auto 0}
-.student-welcome{position:relative;overflow:hidden;border-radius:26px;padding:clamp(32px,6vw,72px);background:radial-gradient(circle at 90% 10%,color-mix(in srgb,var(--accent) 12%,transparent) 0,transparent 35%),linear-gradient(135deg,var(--surface-1),var(--surface-1) 65%,var(--surface-1));box-shadow:0 20px 52px rgba(0,0,0,0.25)}
+.student-welcome{position:relative;overflow:hidden;border-radius:26px;padding:clamp(32px,6vw,72px);background:radial-gradient(circle at 90% 10%,color-mix(in srgb,var(--accent) 12%,transparent) 0,transparent 35%),linear-gradient(135deg,var(--surface-1),var(--surface-1) 65%,var(--surface-1));box-shadow:0 20px 52px rgba(31, 35, 41, 0.12)}
 .student-welcome::after{content:"";position:absolute;width:220px;height:220px;border:1px solid var(--line);border-radius:50%;right:-65px;bottom:-100px;pointer-events:none}
 .student-welcome h1{max-width:660px;font-size:clamp(38px,5.4vw,70px);line-height:1.04;letter-spacing:-.055em;margin:20px 0}
 .student-welcome p{max-width:590px;font-size:clamp(16px,1.6vw,20px);line-height:1.55;color:var(--accent);margin:0 0 29px}
 .student-welcome-actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
 .student-welcome-actions button{min-height:48px;border-radius:12px;font-size:14px;padding:12px 19px;transition:transform .18s ease,box-shadow .18s ease,background-color .18s ease}
-.student-welcome-actions button:not(:disabled):hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.25)}
+.student-welcome-actions button:not(:disabled):hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(31, 35, 41, 0.12)}
 .student-welcome-actions button:not(:disabled):active{transform:translateY(0)}
 .student-welcome small{display:block;margin-top:20px;color:var(--text-2);font-size:12px}
 .student-start-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:20px 0}
-.student-start-grid article{background:var(--surface-1);border:1px solid var(--line);border-radius:18px;padding:23px;box-shadow:0 5px 20px rgba(0,0,0,0.25);transition:transform .18s ease,box-shadow .18s ease}
-.student-start-grid article:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(0,0,0,0.25)}
+.student-start-grid article{background:var(--surface-1);border:1px solid var(--line);border-radius:18px;padding:23px;box-shadow:0 5px 20px rgba(31, 35, 41, 0.12);transition:transform .18s ease,box-shadow .18s ease}
+.student-start-grid article:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(31, 35, 41, 0.12)}
 .student-start-grid article>span{display:inline-grid;place-items:center;width:34px;height:34px;background:var(--surface-1);border-radius:10px;color:var(--accent);font-size:12px;font-weight:750}
 .student-start-grid h2{font-size:18px;margin:17px 0 7px}.student-start-grid p{font-size:14px;color:var(--text-2);margin:0}
 .student-developer-tools{margin:30px 0 10px;padding:18px 20px;border:1px solid var(--line);border-radius:14px;background:var(--surface-1);color:var(--text-2);font-size:13px}

@@ -24,14 +24,12 @@ type Item = { id: Module; label: MessageKey; color: string };
 const home: Item = { id: "home", label: "plan.title", color: "#4ff2c6" };
 const groups: { label: MessageKey; items: Item[] }[] = [
   { label: "nav.group.plan", items: [
-    { id: "copilot", label: "nav.copilot", color: "#a6c8f6" },
     { id: "family", label: "nav.family", color: "#f2d29a" },
   ] },
   { label: "nav.group.money", items: [
     { id: "wallet", label: "wallet.title", color: "#6fe3c8" },
     { id: "payments", label: "nav.payments", color: "#9fd2f2" },
     { id: "loans", label: "nav.loans", color: "#f29ab4" },
-    { id: "insights", label: "nav.insights", color: "#9ad6a0" },
   ] },
   { label: "nav.group.account", items: [
     { id: "trust", label: "nav.trust", color: "#f2b98a" },

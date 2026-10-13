@@ -1,4 +1,5 @@
 // Shapes of the B-lending records Django returns (finance/workflow_common.record, lending_ledger.account_record).
+import type { LoanProduct } from "./products";
 
 export type ApplicationStatus = "DRAFT" | "UNDER_REVIEW" | "APPROVED" | "REJECTED" | "DISBURSED" | "CANCELLED";
 export const APPLICATION_STATUSES: ApplicationStatus[] = ["DRAFT", "UNDER_REVIEW", "APPROVED", "REJECTED", "DISBURSED", "CANCELLED"];
@@ -8,7 +9,7 @@ export type Repayment = { number: number; due_date: string; principal: string; i
 export type LoanQuote = {
   id: string;
   created_at: string;
-  inputs: { currency?: string; principal: string; annual_rate: string; fees: string; months: number; first_due_date: string };
+  inputs: { product?: LoanProduct; currency?: string; principal: string; annual_rate: string; fees: string; months: number; first_due_date: string };
   result: {
     currency: string; principal: string; net_proceeds: string; fees: string; total_interest: string; total_repayment: string;
     repayments: Repayment[]; total_cost_over_net_proceeds?: string; maximum_installment?: string;

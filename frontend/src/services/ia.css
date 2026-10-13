@@ -10,8 +10,8 @@ aside { overflow-y: auto; }
 /* ---------- role switch (top strip) ---------- */
 .role-switch { display: inline-flex; border: 1px solid var(--line-2); border-radius: 8px; overflow: hidden; }
 .role-switch button { border: 0; background: transparent; color: var(--text-2); padding: 4px 10px; font: 500 12px var(--tech); cursor: pointer; }
-.role-switch button[aria-pressed="true"] { background: var(--warn); color: #1a1204; font-weight: 600; }
-.role-switch button:first-child[aria-pressed="true"] { background: var(--accent); color: #04110e; }
+.role-switch button[aria-pressed="true"] { background: var(--warn); color: #ffffff; font-weight: 600; }
+.role-switch button:first-child[aria-pressed="true"] { background: var(--accent); color: #ffffff; }
 .sim-intro + .role-switch { margin-left: 0; }
 .role-switch + .lang-switch { margin-left: 0; }
 
@@ -50,22 +50,22 @@ aside { overflow-y: auto; }
 .assistant-launcher {
   position: fixed; right: 20px; bottom: calc(20px + var(--tour-height, 0px) + env(safe-area-inset-bottom, 0px)); z-index: 30;
   display: inline-flex; align-items: center; gap: 10px; padding: 12px 18px; border-radius: 999px; cursor: pointer;
-  border: 1px solid color-mix(in srgb, #c6a6f6 60%, transparent); background: rgba(12, 10, 20, 0.86); color: var(--text);
-  font: 600 13px var(--sans); box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.8), 0 0 24px -6px color-mix(in srgb, #c6a6f6 60%, transparent);
+  border: 1px solid color-mix(in srgb, #1677ff 60%, transparent); background: rgba(255, 255, 255, 0.86); color: var(--text);
+  font: 600 13px var(--sans); box-shadow: 0 12px 30px -10px rgba(31, 35, 41, 0.12), 0 0 24px -6px color-mix(in srgb, #1677ff 60%, transparent);
   backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
 }
-.assistant-launcher i { width: 9px; height: 9px; border-radius: 50%; background: #c6a6f6; box-shadow: 0 0 12px #c6a6f6; }
-.assistant-launcher:hover { border-color: #c6a6f6; }
-.assistant-scrim { position: fixed; inset: 0; z-index: 40; background: rgba(0, 0, 0, 0.5); }
+.assistant-launcher i { width: 9px; height: 9px; border-radius: 50%; background: #1677ff; box-shadow: 0 0 12px #1677ff; }
+.assistant-launcher:hover { border-color: #1677ff; }
+.assistant-scrim { position: fixed; inset: 0; z-index: 40; background: rgba(31, 35, 41, 0.12); }
 .assistant-drawer {
   position: fixed; top: 0; right: 0; bottom: 0; z-index: 41; width: min(560px, 100%); display: flex; flex-direction: column;
-  background: #070b0b; border-left: 1px solid var(--line-2); box-shadow: -30px 0 60px -30px rgba(0, 0, 0, 0.9);
+  background: #ffffff; border-left: 1px solid var(--line-2); box-shadow: -30px 0 60px -30px rgba(31, 35, 41, 0.12);
 }
 .assistant-drawer-head {
   display: flex; align-items: center; gap: 10px; padding: calc(14px + env(safe-area-inset-top, 0px)) 18px 14px; border-bottom: 1px solid var(--line);
 }
 .assistant-drawer-head h2 { margin: 0 auto 0 0; font-size: 16px; display: flex; align-items: center; gap: 10px; }
-.assistant-drawer-head h2 i { width: 9px; height: 9px; border-radius: 50%; background: #c6a6f6; box-shadow: 0 0 12px #c6a6f6; }
+.assistant-drawer-head h2 i { width: 9px; height: 9px; border-radius: 50%; background: #1677ff; box-shadow: 0 0 12px #1677ff; }
 .assistant-drawer-body { flex: 1; overflow-y: auto; }
 /* The drawer reuses the full assistant page without its sidebar, header and footer. */
 .assistant-drawer .agent-app { display: block; min-height: 0; }
@@ -84,7 +84,7 @@ html.has-tour aside { padding-bottom: var(--tour-height, 0px); }
   position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(12px + env(safe-area-inset-bottom, 0px)); z-index: 35;
   width: min(980px, calc(100% - 24px)); display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 16px;
   padding: 14px 18px; border-radius: 16px; border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
-  background: rgba(5, 12, 11, 0.92); box-shadow: 0 20px 50px -20px rgba(0, 0, 0, 0.9); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  background: rgba(255, 255, 255, 0.92); box-shadow: 0 20px 50px -20px rgba(31, 35, 41, 0.12); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
 }
 .tour-count { display: grid; gap: 6px; font: 500 11px var(--tech); letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); white-space: nowrap; }
 .tour-dots { display: flex; gap: 4px; }

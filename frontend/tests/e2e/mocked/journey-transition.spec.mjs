@@ -1,9 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import { screenshot } from '../../support.mjs';
-test.beforeEach(async ({ page }) => {
-  await page.addInitScript(() => localStorage.setItem('studyflow.journey.v1:student', '2'));
-});
 
 const sample = () => JSON.parse(readFileSync(new URL('../../../src/plan/preview-data/school.en.json', import.meta.url), 'utf8'));
 
@@ -28,9 +25,12 @@ test('preparation and daily-life guidance fit both languages at desktop and phon
       await page.goto('/');
       for (const lang of ['English', '中文']) {
         await page.getByRole('button', { name: lang, exact: true }).click();
+        // Wait for the loaded plan (stage chip) so the guide is not re-rendered while it is scrolled to.
+        await expect(page.locator('.workspace-stage')).toHaveText(phase === 'CONFIRMED'
+          ? lang === 'English' ? 'Preparing to leave' : '准备中' : lang === 'English' ? 'Enrolled' : '已入学');
         const guide = page.locator('#plan-journey-guide');
         await expect(guide).toBeVisible();
-        await guide.scrollIntoViewIfNeeded();
+        await expect(async () => guide.scrollIntoViewIfNeeded({ timeout: 1000 })).toPass();
         await expect(guide).toContainText(phase === 'CONFIRMED'
           ? lang === 'English' ? 'not an admission offer' : '不代表已经录取'
           : lang === 'English' ? 'has not paid any bill' : '没有支付任何账单');

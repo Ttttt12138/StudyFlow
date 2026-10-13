@@ -8,18 +8,18 @@ import type { PreviewStage } from "../plan/preview";
 export type TourTarget = { kind: "home"; stage: PreviewStage; tool?: ToolKind } | { kind: "sponsor" | "ops" | "verify" };
 type TourStop = { target: TourTarget; extra?: TourTarget };
 
-// Follows the planner's journey: consultation and funding, preparing before enrollment, then daily life
-// with the money tools, then sharing the record. Tool stops keep the conversation at the matching stage behind them.
+// Price first: the total for one school, then a comparison, then the funding gap and a simulated loan.
+// Preparing and daily life come after; the money tools only appear once the student has enrolled.
 // Each stop may offer one side trip: another tool, or the other person involved.
 export const tourStops: TourStop[] = [
   { target: { kind: "home", stage: "plan" } },
-  { target: { kind: "home", stage: "plan", tool: "family" }, extra: { kind: "sponsor" } },
-  { target: { kind: "home", stage: "plan", tool: "loans" }, extra: { kind: "home", stage: "plan", tool: "copilot" } },
-  { target: { kind: "home", stage: "prepare" } },
+  { target: { kind: "home", stage: "plan", tool: "compare" } },
+  { target: { kind: "home", stage: "plan", tool: "funding" }, extra: { kind: "sponsor" } },
+  { target: { kind: "home", stage: "prepare", tool: "life" } },
   { target: { kind: "home", stage: "school" }, extra: { kind: "home", stage: "school", tool: "spending" } },
   { target: { kind: "home", stage: "school", tool: "wallet" }, extra: { kind: "ops" } },
   { target: { kind: "home", stage: "school", tool: "payments" } },
-  { target: { kind: "home", stage: "school", tool: "agent" } },
+  { target: { kind: "home", stage: "school" } },
   { target: { kind: "home", stage: "school", tool: "trust" }, extra: { kind: "verify" } },
 ];
 

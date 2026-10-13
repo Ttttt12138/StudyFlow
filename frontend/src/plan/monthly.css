@@ -4,7 +4,7 @@
 .monthly-report h2, .monthly-report h3 { margin: 0; font-size: 16px; }
 .monthly-report .plan-totals { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); }
 .monthly-distribution { margin: 0; display: grid; grid-template-columns: minmax(110px, 150px) minmax(0, 1fr); gap: 24px; align-items: center; }
-.monthly-pie { width: 100%; aspect-ratio: 1; border-radius: 50%; box-shadow: 0 0 0 1px #ffffff20; }
+.monthly-pie { width: 100%; aspect-ratio: 1; border-radius: 50%; box-shadow: 0 0 0 1px #1f232920; }
 .monthly-legend, .monthly-entries { padding: 0; margin: 0; list-style: none; }
 .monthly-legend li { display: grid; grid-template-columns: 10px minmax(0, 1fr) auto; align-items: center; gap: 8px; padding: 8px 0; }
 .monthly-swatch { width: 10px; height: 10px; border-radius: 3px; }
@@ -13,7 +13,7 @@
 .monthly-entries li > span:first-child { flex: 1; min-width: 0; overflow-wrap: anywhere; text-align: left; }
 .monthly-entries li > span + span { flex-shrink: 0; text-align: right; font-variant-numeric: tabular-nums; }
 .monthly-pagination { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; gap: 12px; }
-.monthly-empty { padding: 24px; border: 1px dashed #ffffff30; text-align: center; }
+.monthly-empty { padding: 24px; border: 1px dashed #1f232930; text-align: center; }
 @media (max-width: 480px) {
   .monthly-distribution { grid-template-columns: 1fr; gap: 16px; }
   .monthly-pie { width: 180px; justify-self: center; }

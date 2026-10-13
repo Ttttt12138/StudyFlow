@@ -1,6 +1,7 @@
 import { test } from "@playwright/test";
 import assert from "node:assert/strict";
 import { screenshot } from "../../support.mjs";
+import { enrolledPlanner } from "../plannerMock.mjs";
 
 const base = process.env.TEST_URL || "http://127.0.0.1:5173";
 
@@ -13,7 +14,7 @@ test.describe("permissions and activity preview", () => {
     page.on("pageerror", error => errors.push(error.message));
     await page.route("**/api/**", route => { apiCalls++; return route.abort(); });
     await page.goto(`${base}/?trust=preview`);
-    await page.getByRole("heading", { name: "Permissions & activity" }).waitFor();
+    await page.getByRole("heading", { name: "Credit record" }).waitFor();
     for (const tier of ["T0", "T1", "T2", "T3"]) await page.locator(`.tier-legend .tier-${tier.toLowerCase()}`).waitFor();
     await page.getByText("×1.2").waitFor();
     await page.getByText("Your T2 limits are the base limits × 1.2, set by this level.").waitFor();
@@ -22,13 +23,13 @@ test.describe("permissions and activity preview", () => {
     await page.locator("#trust-approvals li", { hasText: /Submit transfer.*CNY 15,000\.00.*Waiting for an operator/ }).waitFor();
     await page.getByRole("tab", { name: "Activity" }).click();
     await page.getByRole("cell", { name: /Password re-check passed/ }).waitFor();
-    await page.getByLabel("Show").selectOption("approval");
+    await page.getByRole("combobox", { name: "Show" }).selectOption("approval");
     assert.equal(await page.locator("#trust-audit tbody tr").count(), 1);
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
-    await page.getByLabel("Show").selectOption("all");
+    await page.getByRole("combobox", { name: "Show" }).selectOption("all");
     await page.screenshot({ path: screenshot("trust-preview-mobile.png"), fullPage: true });
     await page.getByRole("button", { name: "中文" }).click();
-    await page.getByRole("heading", { name: "权限与审计" }).waitFor();
+    await page.getByRole("heading", { name: "信用记录" }).waitFor();
     await page.getByRole("cell", { name: /密码二次验证通过/ }).waitFor();
     await page.screenshot({ path: screenshot("trust-preview-mobile-zh.png"), fullPage: true });
     assert.equal(apiCalls, 0);
@@ -63,8 +64,9 @@ test.describe("permissions and activity with mocked Django", () => {
         results: [event(3, "approval.approved", { action: "payment.submit", target_id: "x" })] });
       return json(route, 404, { detail: "unexpected" });
     });
+    await enrolledPlanner(page);
     await page.goto(`${base}/?trust=1`);
-    await page.getByRole("heading", { name: "Permissions & activity" }).waitFor();
+    await page.getByRole("heading", { name: "Credit record" }).waitFor();
     await page.locator("#trust-credit").getByText("Injected profile failure", { exact: false }).waitFor();
     await page.getByRole("tab", { name: "Limits" }).click();
     await page.locator("#trust-limits .panel-hero", { hasText: /THB 75,000\.00.*base THB 50,000\.00/ }).waitFor();
@@ -82,12 +84,19 @@ test.describe("permissions and activity with mocked Django", () => {
     assert.deepEqual(errors, []);
   });
 
-  test("signed-out students are sent to the StudyFlow sign-in page", async ({ page }) => {
+  test("signed-out students cannot open the credit record and are offered the StudyFlow sign-in page", async ({ page }) => {
+    // Signed out, the planner cannot load, so the workspace counts the student as not enrolled:
+    // the enrollment gate closes the credit tool and the conversation offers the sign-in link instead.
     await page.route("**/api/auth/session/", route => route.fulfill({ json: { authenticated: false } }));
-    await page.route("**/api/v2/**", route => route.abort());
+    let apiCalls = 0;
+    await page.route("**/api/v2/**", route => { apiCalls++; return route.abort(); });
     await page.goto(`${base}/?trust=1`);
+    await page.getByRole("status").filter({ hasText: "That tool opens once enrollment is confirmed." }).waitFor();
+    assert.equal(await page.locator("section.workspace-dock").isVisible(), false);
+    assert.equal(await page.locator("#trust-tiers").count(), 0);
     const link = page.getByRole("link", { name: "Sign in to StudyFlow" });
     await link.waitFor();
-    assert.match(await link.getAttribute("href"), /^\/auth\?next=.*trust%3D1$/);
+    assert.match(await link.getAttribute("href"), /^\/auth\?next=/);
+    assert.equal(apiCalls, 0);
   });
 });

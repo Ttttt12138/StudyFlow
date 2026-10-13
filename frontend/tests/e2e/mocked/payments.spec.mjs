@@ -1,6 +1,7 @@
 import { test } from "@playwright/test";
 import assert from "node:assert/strict";
 import { screenshot } from "../../support.mjs";
+import { enrolledPlanner } from "../plannerMock.mjs";
 
 const base = process.env.TEST_URL || "http://127.0.0.1:5173";
 
@@ -13,7 +14,7 @@ test.describe("payments preview", () => {
     page.on("pageerror", error => errors.push(error.message));
     await page.route("**/api/**", route => { apiCalls++; return route.abort(); });
     await page.goto(`${base}/?payments=preview`);
-    await page.getByRole("heading", { name: "Payments" }).waitFor();
+    await page.locator("#workspace-tool-title").getByText("Wallet & payments").waitFor();
     const detail = page.locator("#pay-detail");
     // A draft payment is in flight, so the panel opens on the Pay step.
     await detail.getByRole("heading", { name: /Authorize this payment/ }).waitFor();
@@ -32,24 +33,26 @@ test.describe("payments preview", () => {
     await scenario("reconciliation_exception");
     // An exception needs review elsewhere, so the panel opens on Due; the payment is one step over.
     await page.locator("#pay-bills").waitFor();
-    await page.getByRole("tab", { name: "Pay" }).click();
+    await page.getByRole("tab", { name: "Pay", exact: true }).click();
     await detail.getByText("Does not match").waitFor();
     assert.equal(await detail.locator(".chart-steps .is-failed").count(), 1);
     await scenario("reconciled");
     // Nothing is in flight any more and term 2 is ready, so the panel goes back to Due.
     await page.locator("#pay-bills").waitFor();
-    await page.getByRole("tab", { name: "Pay" }).click();
+    await page.getByRole("tab", { name: "Pay", exact: true }).click();
     await detail.getByText("Matched", { exact: true }).waitFor();
     await detail.getByRole("button", { name: /Audit trail/ }).click();
     await page.getByRole("dialog", { name: "Audit trail" }).locator(".pay-audit").getByText("Reconciled with invoice").waitFor();
     await page.keyboard.press("Escape");
+    // Payments and transfers share one money tool: bill payments sit under History, next to orders and the ledger.
     await page.getByRole("tab", { name: "History" }).click();
+    await page.getByRole("button", { name: "Bill payments" }).click();
     await page.locator("#pay-history").getByText("Settled 1").waitFor();
-    await page.getByRole("tab", { name: "Pay" }).click();
+    await page.getByRole("tab", { name: "Pay bills" }).click();
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
     await page.screenshot({ path: screenshot("payments-preview-mobile.png"), fullPage: true });
     await page.getByRole("button", { name: "中文" }).click();
-    await page.locator("#workspace-tool-title").getByText("付款", { exact: true }).waitFor();
+    await page.locator("#workspace-tool-title").getByText("钱包与付款", { exact: true }).waitFor();
     await detail.getByText("已支付并完成对账。").waitFor();
     await page.screenshot({ path: screenshot("payments-preview-mobile-zh.png"), fullPage: true });
     assert.equal(apiCalls, 0);
@@ -110,13 +113,14 @@ test.describe("payments with mocked Django", () => {
       if (path === "audit/") return json(route, 500, { detail: "Injected audit failure" });
       return json(route, 404, { detail: path });
     });
+    await enrolledPlanner(page);
     await page.goto(`${base}/?payments=1`);
     const detail = page.locator("#pay-detail");
     // An authorized payment is in flight, so the panel opens on the Pay step.
     await detail.getByRole("heading", { name: /Submit to the sandbox adapter/ }).waitFor();
     await page.getByRole("tab", { name: "Due" }).click();
     await page.locator("#pay-bills li", { hasText: /Tuition.*Payment in progress/ }).waitFor();
-    await page.getByRole("tab", { name: "Pay" }).click();
+    await page.getByRole("tab", { name: "Pay", exact: true }).click();
     // The audit read failing does not hide the payment.
     await detail.getByRole("button", { name: /Audit trail/ }).click();
     await page.getByRole("dialog", { name: "Audit trail" }).getByText(/Injected audit failure/).waitFor();

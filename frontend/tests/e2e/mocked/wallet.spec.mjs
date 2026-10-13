@@ -1,6 +1,7 @@
 import { test } from "@playwright/test";
 import assert from "node:assert/strict";
 import { screenshot } from "../../support.mjs";
+import { enrolledPlanner } from "../plannerMock.mjs";
 
 const base = process.env.TEST_URL || "http://127.0.0.1:5173";
 const inOneHour = () => new Date(Date.now() + 60 * 60 * 1000).toISOString();
@@ -14,9 +15,9 @@ test.describe("wallet preview", () => {
     preview.on("pageerror", error => errors.push(error.message));
     await preview.route("**/api/v2/**", route => { previewCalls++; return route.abort(); });
     await preview.goto(`${base}/?wallet=preview`);
-    await preview.getByRole("heading", { name: "Wallet & transfers" }).waitFor();
+    await preview.getByRole("heading", { name: "Wallet & payments" }).waitFor();
     await preview.reload();
-    await preview.getByRole("heading", { name: "Wallet & transfers" }).waitFor();
+    await preview.getByRole("heading", { name: "Wallet & payments" }).waitFor();
     await preview.getByText("THB 52,500.00").first().waitFor();
     // Remittance routes and the current order live on the remit tab.
     await preview.getByRole("tab", { name: "Remit" }).click();
@@ -108,6 +109,7 @@ test.describe("wallet with mocked Django", () => {
       }
       return json(route, 404, { detail: `Unexpected ${method} ${path}` });
     });
+    await enrolledPlanner(page);
     await page.goto(`${base}/?wallet=1`);
     await page.getByText("USD 800.00", { exact: true }).first().waitFor();
     await page.getByRole("tab", { name: "Remit" }).click();

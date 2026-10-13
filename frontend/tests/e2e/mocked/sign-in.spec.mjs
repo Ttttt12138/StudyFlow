@@ -17,9 +17,10 @@ test("sign-in links open /auth, which signs in with a password and returns to th
       ? { json: { authenticated: true, username: posted.login, email: "", csrf_token: "csrf-test" } }
       : { status: 400, json: { detail: "INVALID_CREDENTIALS", code: "INVALID_CREDENTIALS", message: "The email or password is incorrect." } });
   });
-  await page.route("**/api/v2/**", route => route.abort());
+  await page.route("**/api/v2/**", route => route.fulfill({ status: 401, json: { detail: "Authentication credentials were not provided." } }));
 
-  await page.goto(`${base}/?trust=1`);
+  // My loans is open before enrollment, so a signed-out visitor reaches its sign-in prompt.
+  await page.goto(`${base}/?loans=1`);
   const link = page.locator('.workspace-dock').getByRole("link", { name: "Sign in to StudyFlow" });
   assert.match(await link.getAttribute("href"), /^\/auth\?next=/);
   await link.click();
@@ -36,7 +37,7 @@ test("sign-in links open /auth, which signs in with a password and returns to th
   assert.deepEqual(posted, { login: "student", password: "wrong" });
 
   await page.getByLabel("Password", { exact: true }).fill("right-password");
-  await Promise.all([page.waitForURL(/\?trust=1$/), page.getByRole("button", { name: "Log in" }).click()]);
+  await Promise.all([page.waitForURL(/\?loans=1$/), page.getByRole("button", { name: "Log in" }).click()]);
   assert.deepEqual(errors, []);
 });
 
