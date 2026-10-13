@@ -1,6 +1,12 @@
 # StudyFlow
 
-**A finance back office for international students:** multi-currency wallets, remittance with server-side FX pricing, tiered permissions with step-up and second-person approval, an on-time payment record that adjusts limits, and an AI agent that prepares money movements but can never execute them on its own.
+**A study-abroad finance assistant that starts with the price.** Before departure, a student or family names a school and sees the **whole-course total** (tuition, housing, living costs, insurance and visa) in THB, CNY or USD, then **compares schools** on totals and yearly cost. When savings fall short, the assistant shows the **funding gap and a simulated loan** (monthly payment, total interest) or family support. Wallets, FX, remittance, bills and expense tracking stay in the product but **only appear after enrollment**, behind the same server-enforced permissions, limits, approvals and ledger rules.
+
+| Layer | What the user sees | Where |
+|---|---|---|
+| Core: price lookup | Whole-course total per school, range and yearly cost, shown in THB / CNY / USD with the rate date; side-by-side comparison with the lowest marked | Planner conversation and left sidebar "Price comparisons" ([agent-first design](docs/agent-first.md)) |
+| Extension: funding | Funding gap, simulated loan (THB lending core), family support, plan confirmation | Left sidebar "Funding & loan" |
+| After enrollment | Bills and expenses, monthly spending, wallet and FX, remittance, payments, insights, finance sub-assistant, credit record | Left sidebar "Life tools" (hidden until the plan is ENROLLED) |
 
 > **All money is simulated.** There is no real bank, card or remittance rail. Pricing, permissions, limits, approvals and ledger constraints are nevertheless really enforced by the server.
 >
@@ -8,7 +14,7 @@
 
 ---
 
-## What it does
+## Platform capabilities
 
 | Area | Highlights | Docs |
 |---|---|---|

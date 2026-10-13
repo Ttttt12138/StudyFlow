@@ -27,7 +27,7 @@ The repository keeps this app (A) next to the Django backend in `../backend/` (B
 
 On Windows in this checkout, use `../studyFlow/Scripts/python.exe` instead of `../.venv/bin/python` (the `studyFlow` environment).
 
-Set `STUDYFLOW_READINESS_ENABLED=true` in the ignored `backend/.env`. Consumption can also be enabled; its additional coverage requirements must remain visible as incomplete results when no bank history is present. Do not disable those checks to make a student's budget look complete.
+Readiness is on by default (`STUDYFLOW_READINESS_ENABLED`, set it to `false` in the ignored `backend/.env` to turn it off). Consumption can also be enabled; its additional coverage requirements must remain visible as incomplete results when no bank history is present. Do not disable those checks to make a student's budget look complete.
 
 From `frontend/` (Node 22+ recommended; validated here on Node 24):
 

@@ -4,7 +4,7 @@
 
 ## 启动
 
-沿用 README 的 PostgreSQL 和 Django 配置，先执行 `manage.py migrate` 和 `manage.py createcachetable`（限流计数表）。在后端配置中启用 `STUDYFLOW_READINESS_ENABLED=true`；关闭该开关会隐藏新 API 并停止新任务入队，原借款接口不受影响。
+沿用 README 的 PostgreSQL 和 Django 配置，先执行 `manage.py migrate` 和 `manage.py createcachetable`（限流计数表）。`STUDYFLOW_READINESS_ENABLED` 自 2026-10-13 起默认开启；设为 `false` 会隐藏新 API 并停止新任务入队，原借款接口不受影响。
 
 HTTP 服务与 worker 分别启动。worker 从 PostgreSQL 抢占任务，租约 5 分钟；重试间隔指数增长，最高 1 小时。每天曼谷时间 08:00 后安排一次当日检查，状态变化也会入队。无需 Redis，不在 Web worker 内运行定时器。
 

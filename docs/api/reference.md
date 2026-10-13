@@ -4,6 +4,20 @@ This is the concise endpoint reference for frontend and extraction-service
 integration. For detailed workflow explanations, see [guide.md](guide.md). The generated
 machine-readable contract is [openapi.yaml](../../backend/openapi.yaml).
 
+## Short planning workspace
+
+All routes below require an authenticated session. POST also requires CSRF and an `Idempotency-Key`.
+
+| Route | Purpose |
+| --- | --- |
+| `GET /api/v2/planning/assessment/` | Current declaration, revision, missing data, course estimate, short-term forecast, loan quotes and linked application/account progress. Read-only; creates no quote or wallet. |
+| `POST /api/v2/planning/assessment/` | `{expected_version, plan_version, inputs, draft}`. Draft saves declarations; evaluation creates THB quotes from explicit principal or a complete forecast shortfall. Default terms: 48/24 months, 6%, no fee. |
+| `POST /api/v2/planning/loan-applications/` | `{expected_version, plan_version, quote_id}`. Atomically creates and submits the selected current quote; repeats return the same application. |
+
+`inputs` contains available funds/currency/reserve, as-of date, 30/60/90-day horizon, fee payment dates/overrides, expected support, recurring monthly repayment budget with month range/change points, and adjustable loan terms. See the generated schema for exact fields. Missing amounts remain unknown. Declarations never credit the wallet. Application submission preserves existing permission, version and affordability checks. Existing operator disbursement and step-up-protected repayment routes remain authoritative. Old application routes also reject superseded planning quotes.
+
+Planning comparison returns the requested custom terms (48/24 months by default) plus one separate `commercial_student_demo` quote at 48 months. This fictional study-loan example uses the same principal, annual rate, fees and due date for comparison; defaults remain THB, 6%, zero fees. Select its card directly alongside the other quotes. The older `inputs.loan.product` field remains accepted for compatibility but no longer relabels every planning quote. `POST /api/v2/loans/` still accepts `product: "custom" | "commercial_student_demo"` (default `custom`) for standalone quotes. The product is saved with its original quote ID and follows that ID into applications, without changing calculation, eligibility or disbursement rules. Old quotes without a product identifier remain custom simulations.
+
 ## Connection
 
 Local base URL:
@@ -1091,3 +1105,20 @@ object, array or boolean, are rejected with 400.
       -> student reconciles receipt
 
 See [backend/examples/workflow.http](../../backend/examples/workflow.http) for executable request examples using the seeded demo.
+
+## Study life: in-app reminders and monthly budget
+
+All routes below use `/api/v2/`, session authentication and existing CSRF rules. POST commands require `Idempotency-Key` and use the existing transactional command/audit pipeline.
+
+| Method / path | Purpose / body |
+| --- | --- |
+| `GET planning/life/` | Read-only projection of tasks, estimated bills, explicit enrollment reminder and next unpaid installment of each actual loan account; top three upcoming items, unread count, current-month budget, dated planning forecast |
+| `POST planning/life/tasks/` | `title`, optional `due_date`, `amount`, `currency`, `source_text`; requires an existing plan |
+| `POST planning/life/actions/` | `source_key`, `expected_token`, `action`: acknowledge / snooze / reschedule / complete / reopen; date required for snooze or reschedule |
+| `POST planning/life/budget/` | `month` YYYY-MM, `amount`, `expected_version`; enrolled student only, zero means explicitly zero |
+| `POST planning/life/undo-expense/` | Owned `expense_id`; soft-void the entry without moving funds |
+| `POST planning/life/clock/` | `date`; advance shared simulated date by 0–730 days, never back; no wallet is created |
+
+Reminder tokens cover the original record, current reminder stage and preference version; stale writes return 409. Reading does not create notifications or mutate records. Acknowledgement does not complete a task. Snoozing does not change its deadline. Reminder date overrides do not alter original plan/bill snapshots; loan due dates cannot be overridden. Actual loan repayment and enrollment must use their original confirmed commands. Bill completion records the student's declaration only and does not execute a payment.
+
+Budget responses include `budget_known`, `budget_source`, `budget_version` and `unconverted`; incomplete estimates remain unknown in the life panel. A recorded budget never updates financial state or wallet balances. Agent tools `create_study_task` (T1) and `get_study_life` (T0) support the same conversation.
