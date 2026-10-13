@@ -4,14 +4,19 @@ import { getAll } from "../backend/client";
 import { formatDate } from "../backend/presenters";
 import { intlLocale, useI18n, type MessageKey } from "../i18n";
 import { WalletApiError, type WalletClient } from "../wallet/client";
+import { PanelSheet } from "../workspace/ToolPanel";
 import { isLevel, newSnapshots, type CreditSnapshot, type IssuedStatement } from "./credit/logic";
 import { previewSnapshots, previewStatement } from "./credit/previewData";
 import "./credit/credit.css";
 
 const lost = (reason: unknown) => reason instanceof WalletApiError && (reason.status === 0 || reason.status >= 500);
 
-/** Snapshots of the on-time record and signed statements a student can hand to a landlord or school. */
-export function CreditStatements({ client, preview }: { client: WalletClient; preview: boolean }) {
+/**
+ * Snapshots of the on-time record and signed statements a student can hand to a landlord or school.
+ * Stays mounted while the trust panel is open so an issued statement survives closing the sheet;
+ * it renders only while `open`.
+ */
+export function CreditStatements({ client, preview, open, onClose }: { client: WalletClient; preview: boolean; open: boolean; onClose: () => void }) {
   const { lang, t } = useI18n();
   const tRef = useRef(t);
   tRef.current = t;
@@ -102,52 +107,43 @@ export function CreditStatements({ client, preview }: { client: WalletClient; pr
     }
   }
 
-  if (signedOut) return null;
+  if (signedOut || !open) return null;
   return (
-    <section className="card service-card credit-statement" id="trust-statements" aria-labelledby="trust-statements-title">
-      <div className="service-card-body">
+    <PanelSheet title={t("credit.share.title")} onClose={onClose}
+      footer={<button className={issued ? "secondary" : "primary"} disabled={preview || busy} onClick={() => void snapshot()}>{t("credit.snapshot.take")}</button>}>
+      <div className="panel-sheet-stack credit-statement" id="trust-statements">
         {stale}
-        <h2 id="trust-statements-title">{t("credit.share.title")}</h2>
-        <p className="service-muted">{t("credit.share.text")}</p>
-        {error && <p className="error" role="alert">{error}</p>}
-        {notice && <p className="service-notice" role="status">{notice}</p>}
-        <div className="service-actions">
-          <button className="secondary" disabled={preview || busy} onClick={() => void snapshot()}>{t("credit.snapshot.take")}</button>
-        </div>
-        <h3>{t("credit.snapshots.title")}</h3>
-        {listError ? <p className="error" role="alert">{listError}</p> : !loaded ? <p className="service-muted">{t("common.loading")}</p>
-          : snapshots.length === 0 ? <p>{t("credit.snapshots.none")}</p>
-          : <div className="table-scroll"><table className="service-table credit-snapshots" aria-label={t("credit.snapshots.title")}>
-            <thead><tr><th>{t("credit.col.asOf")}</th><th>{t("credit.col.level")}</th><th>{t("credit.col.counts")}</th><th>{t("credit.col.action")}</th></tr></thead>
-            <tbody>{snapshots.map((item) => <tr key={item.id}>
-              <td>{formatDate(item.as_of, lang)}<small>{t("credit.col.taken", { time: stamp(item.created_at) })}</small></td>
-              <td>{level(item.level)}</td>
-              <td>{t("credit.counts", { onTime: item.on_time, late: item.late, overdue: item.overdue })}</td>
-              <td><button className="secondary" disabled={preview || busy} aria-label={t("credit.issue.for", { date: formatDate(item.as_of, lang) })}
-                onClick={() => void issue(item)}>{t("credit.issue")}</button></td>
-            </tr>)}</tbody>
-          </table></div>}
-        <div className="service-policy">
-          <h3>{t("credit.reveals.title")}</h3>
-          <ul className="credit-reveals">
-            <li>{t("credit.reveals.fields")}</li>
-            <li>{t("credit.reveals.not")}</li>
-            <li>{t("credit.reveals.expiry")}</li>
-          </ul>
-        </div>
-        {issued && <div className="wallet-review">
-          <h3>{t("credit.statement.title")}</h3>
-          <p className="service-muted">{t("credit.statement.text", { level: level(issued.level), days: issued.expires_in_days })}</p>
+        <p className="panel-muted">{t("credit.share.text")}</p>
+        {error && <p className="panel-note is-warn" role="alert">{error}</p>}
+        {notice && <p className="panel-note" role="status">{notice}</p>}
+        {issued && <div className="credit-issued">
+          <h4>{t("credit.statement.title")}</h4>
+          <p className="panel-muted">{t("credit.statement.text", { level: level(issued.level), days: issued.expires_in_days })}</p>
           <label htmlFor="credit-statement-text">{t("credit.statement.field")}</label>
           <textarea id="credit-statement-text" ref={area} readOnly value={issued.statement} spellCheck={false} onFocus={(e) => e.currentTarget.select()} />
-          <div className="service-actions">
+          <div className="panel-row">
+            <a className="panel-link" href={preview ? "/?verify=preview" : "/?verify=1"}>{t("credit.verify.link")}</a>
             <button className="primary" onClick={() => void copy()}>{t("credit.copy")}</button>
-            <a className="secondary" href={preview ? "/?verify=preview" : "/?verify=1"}>{t("credit.verify.link")}</a>
           </div>
-          {copied && <p className="service-notice" role="status">{copied}</p>}
+          {copied && <p className="panel-note" role="status">{copied}</p>}
         </div>}
-        <p className="service-disclaimer">{t("credit.disclaimer")}</p>
+        <h4 className="panel-section-title">{t("credit.snapshots.title")}</h4>
+        {listError ? <p className="panel-note is-warn" role="alert">{listError}</p> : !loaded ? <p className="panel-muted">{t("common.loading")}</p>
+          : snapshots.length === 0 ? <p className="panel-muted">{t("credit.snapshots.none")}</p>
+          : <ul className="panel-rows credit-snapshots" aria-label={t("credit.snapshots.title")}>{snapshots.map((item) => <li key={item.id}>
+            <span><strong>{level(item.level)} · {formatDate(item.as_of, lang)}</strong>
+              <small>{t("credit.counts", { onTime: item.on_time, late: item.late, overdue: item.overdue })} · {t("credit.col.taken", { time: stamp(item.created_at) })}</small></span>
+            <button className="secondary" disabled={preview || busy} aria-label={t("credit.issue.for", { date: formatDate(item.as_of, lang) })}
+              onClick={() => void issue(item)}>{t("credit.issue")}</button>
+          </li>)}</ul>}
+        <h4 className="panel-section-title">{t("credit.reveals.title")}</h4>
+        <ul className="credit-reveals panel-muted">
+          <li>{t("credit.reveals.fields")}</li>
+          <li>{t("credit.reveals.not")}</li>
+          <li>{t("credit.reveals.expiry")}</li>
+        </ul>
+        <p className="panel-muted">{t("credit.disclaimer")}</p>
       </div>
-    </section>
+    </PanelSheet>
   );
 }

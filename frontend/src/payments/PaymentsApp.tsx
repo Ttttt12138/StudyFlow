@@ -1,17 +1,17 @@
 import { FocusDialog } from "../workspace/FocusDialog";
-import { useToolRefresh, useToolActive, useClearWhenHidden, useWorkspace } from "../workspace/context";
-import { ModulePresentation } from "../workspace/ModulePresentation";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ModuleNav } from "../services/ModuleNav";
-import { Amount } from "../services/Amount";
+import { useToolRefresh, useToolActive, useClearWhenHidden, useEmbedded } from "../workspace/context";
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { ServiceShell } from "../services/ServiceShell";
 import { TierBadge } from "../services/TierBadge";
+import { PanelAlert, PanelEmpty, PanelFacts, PanelHero, PanelInfo, PanelMenu, PanelPager, PanelSheet, PanelSkeleton, ToolPanel, usePage } from "../workspace/ToolPanel";
+import { StackBar, StepTrack } from "../workspace/PanelCharts";
 import { formatDate, formatMoney } from "../backend/presenters";
 import { intlLocale, useI18n, type MessageKey } from "../i18n";
 import { SessionWalletClient, WalletApiError, type WalletClient } from "../wallet/client";
 import { loadPayments } from "./client";
-import { currentPlan, invoiceOf, MILESTONES, payability, paymentApproval, paymentAudit, paymentStage, railState } from "./logic";
+import { currentPlan, invoiceOf, milestoneReached, MILESTONES, payability, paymentApproval, paymentAudit, paymentStage, type Payability } from "./logic";
 import { createPaymentsPreview, previewStatuses, type PaymentPreviewScenario } from "./previewAdapter";
-import type { Payment, PaymentApproval, PaymentsSnapshot } from "./types";
+import type { Obligation, Payment, PaymentApproval, PaymentStatus, PaymentsSnapshot } from "./types";
 import "../wallet/wallet.css";
 import "../services/services.css";
 import "./payments.css";
@@ -21,14 +21,26 @@ const initial: PaymentsSnapshot = { state: null, plans: [], beneficiaries: [], p
 const KNOWN_EVENTS = ["payment.created", "payment.authorized", "payment.authorization_revoked", "payment.mock_submitted",
   "payment.mock_settled", "payment.mock_failed", "payment.mock_unknown", "payment.reconciled", "payment.invoice_mismatch",
   "auth.step_up_granted", "auth.step_up_failed", "approval.requested", "approval.approved", "approval.rejected"];
+// Payments the student still has to move along (authorize, submit, wait for the adapter, reconcile).
+const ACTIVE: PaymentStatus[] = ["draft", "authorized", "pending", "unknown", "settled"];
+const PAID: PaymentStatus[] = ["settled", "reconciled", "reconciliation_exception"];
+const STOPPED: PaymentStatus[] = ["failed", "cancelled", "expired", "reconciliation_exception"];
+const STATUS_TONE: Record<PaymentStatus, string> = { draft: "due", authorized: "due", pending: "pending", unknown: "review", settled: "settled",
+  reconciled: "done", reconciliation_exception: "error", failed: "failed", cancelled: "cancelled", expired: "expired" };
+const PAYABILITY_TONE: Record<Payability, string> = { READY: "due", SETTLED: "paid", HAS_PAYMENT: "scheduled", NO_AMOUNT: "draft",
+  NO_BENEFICIARY: "draft", BENEFICIARY_UNVERIFIED: "draft", INVOICE_REQUIRED: "draft" };
+type Tab = "due" | "pay" | "history";
+type Sheet = "bills" | "details" | "audit" | "payments" | null;
 
 export function PaymentsApp({ preview, onExit }: { preview: boolean; onExit: () => void }) {
   const { lang, t } = useI18n();
   const toolActive = useToolActive();
+  const embedded = useEmbedded();
   const [scenario, setScenario] = useState<PaymentPreviewScenario>("draft");
   const client = useMemo<WalletClient>(() => preview ? createPaymentsPreview(scenario) : new SessionWalletClient(), [preview, scenario]);
   const [snapshot, setSnapshot] = useState<PaymentsSnapshot>(initial);
   const [loading, setLoading] = useState(true);
+  const [loaded, setLoaded] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
@@ -38,6 +50,10 @@ export function PaymentsApp({ preview, onExit }: { preview: boolean; onExit: () 
   const [policy, setPolicy] = useState<"" | "STEP_UP_REQUIRED" | "APPROVAL_REQUIRED">("");
   const [lostSubmit, setLostSubmit] = useState(false);
   const [reason, setReason] = useState(() => t("pay.policy.reasonDefault"));
+  const [tab, setTab] = useState<Tab | null>(null);
+  const [sheet, setSheet] = useState<Sheet>(null);
+  const [billPage, setBillPage] = useState(0);
+  const [historyPage, setHistoryPage] = useState(0);
   const passwordRef = useRef<HTMLInputElement>(null);
   const policyRef = useRef<HTMLDivElement>(null);
 
@@ -63,14 +79,16 @@ export function PaymentsApp({ preview, onExit }: { preview: boolean; onExit: () 
     setLoading(true);
     const result = await loadPayments(api);
     setSnapshot(result);
-    setSelectedId((prior) => result.payments.some((p) => p.id === prior) ? prior : result.payments[0]?.id ?? "");
-    setLoading(false);
+    // Keep the payment on screen; otherwise open the one that still needs the student.
+    setSelectedId((prior) => result.payments.some((p) => p.id === prior) ? prior
+      : (result.payments.find((p) => ACTIVE.includes(p.status)) ?? result.payments[0])?.id ?? "");
+    setLoading(false); setLoaded(true);
     return result;
   }, [client]);
 
   useEffect(() => {
     setError(""); setNotice(""); setPolicy(""); setLostSubmit(false); setChecked(false);
-    void refresh().catch((reason: unknown) => { setError(message(reason)); setLoading(false); });
+    void refresh().catch((reason: unknown) => { setError(message(reason)); setLoading(false); setLoaded(true); });
   }, [refresh]);
   // The policy panel opens below the payment; move focus there for keyboard and screen-reader users.
   useEffect(() => {
@@ -107,11 +125,11 @@ export function PaymentsApp({ preview, onExit }: { preview: boolean; onExit: () 
         if (reason instanceof WalletApiError && (reason.status === 0 || reason.status >= 500)) {
           const result = await refresh();
           const existing = result.payments.find((p) => p.event_id === event.id && !["failed", "cancelled", "expired"].includes(p.status));
-          if (existing) { select(existing.id); setNotice(t("pay.notice.created")); return; }
+          if (existing) { select(existing.id); setTab("pay"); setNotice(t("pay.notice.created")); return; }
         }
         throw reason;
       }
-      await refresh(); select(created.id); setEventId("");
+      await refresh(); select(created.id); setEventId(""); setTab("pay");
       setNotice(t("pay.notice.created"));
     });
   }
@@ -195,192 +213,264 @@ export function PaymentsApp({ preview, onExit }: { preview: boolean; onExit: () 
   const readyEvents = states.filter((state) => state === "READY");
   const unpaid = states.some((state) => state !== "SETTLED" && state !== "HAS_PAYMENT");
 
-  const staleStatus = useToolRefresh(() => refresh());
-  const content = <>{staleStatus}
-          <div className="section-heading"><div>
-            <span className="eyebrow">{t("pay.eyebrow")}</span>
-            <h1>{t("pay.title")}</h1>
-            <p>{t("pay.intro")}</p>
-          </div>
-          {!preview && <button className="secondary" disabled={loading || busy} onClick={() => void refresh()}>{t("common.refresh")}</button>}
-          </div>
-          <div className="preview-banner" role="status">
-            <strong>{preview ? t("pay.preview.title") : t("common.simulatedMoney")}</strong>
-            <span>{preview ? t("pay.preview.text") : t("pay.banner.text")}</span>
-          </div>
-          {preview && <div className="wallet-controls"><label htmlFor="pay-scenario">{t("pay.preview.status")}</label>
-            <select id="pay-scenario" value={scenario} onChange={(event) => setScenario(event.target.value as PaymentPreviewScenario)}>
-              {previewStatuses.map((value) => <option key={value} value={value}>{t(`pay.status.${value}` as MessageKey)}</option>)}
-            </select></div>}
-          {loading && <div className="activity" role="status"><span className="activity-dot" aria-hidden="true" />{t("common.loading")}</div>}
-          {error && !policy && <div className="stale-banner" role="alert">{error}</div>}
-          {notice && <div className="demo" role="status">{notice}</div>}
-          {signedOut && <div className="card service-card"><div className="service-card-body service-empty">
-            <p>{t("pay.signedOut")}</p><a className="primary" href={signInUrl}>{t("common.signIn")}</a>
-          </div></div>}
+  // Each confirmed bill counts once, by its latest payment: paid, in progress, failed at the adapter, or not started.
+  const billPart = (o: Obligation): "paid" | "progress" | "failed" | "unpaid" => {
+    const mine = snapshot.payments.filter((p) => p.event_id === o.id);
+    if (o.settled_sequence !== undefined || mine.some((p) => PAID.includes(p.status))) return "paid";
+    if (mine.some((p) => ACTIVE.includes(p.status))) return "progress";
+    const latest = [...mine].sort((a, b) => b.created_at.localeCompare(a.created_at))[0];
+    return latest?.status === "failed" ? "failed" : "unpaid";
+  };
+  const totals = { paid: 0, progress: 0, failed: 0, unpaid: 0 };
+  for (const o of obligations) totals[billPart(o)] += Number(o.amount) || 0;
+  const toPay = totals.unpaid + totals.failed;
+  const paidPayments = snapshot.payments.filter((p) => PAID.includes(p.status));
+  const paidTotal = paidPayments.reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
+  const counts = { done: paidPayments.length, open: snapshot.payments.filter((p) => ["draft", "authorized", "pending", "unknown"].includes(p.status)).length,
+    closed: snapshot.payments.filter((p) => ["failed", "cancelled", "expired"].includes(p.status)).length };
 
-          <section className="card service-card" id="pay-bills" aria-labelledby="pay-bills-title">
-            <div className="service-card-body">
-              <div className="service-title-row">
-                <h2 id="pay-bills-title"><TierBadge tier="T1" /> {t("pay.bills.title")}</h2>
-                {snapshot.state?.assets.wallet_balance != null && <span className="service-muted">{t("pay.bills.balance", { amount: money(snapshot.state.assets.wallet_balance) })}</span>}
-              </div>
-              <p className="service-muted">{t("pay.bills.text")}</p>
-              {snapshot.errors.state && !signedOut && <p className="error">{snapshot.errors.state}</p>}
-              {/* Settling a payment bumps the state version, so the plan notice only matters while a bill is unpaid. */}
-              {snapshot.state && unpaid && <p className={plan.issue ? "service-alert" : "service-notice"}>
-                {plan.issue ? t(`pay.plan.${plan.issue}` as MessageKey) : t("pay.plan.ok", { date: when(plan.plan!.created_at) })}
-              </p>}
-              {snapshot.state && (obligations.length === 0 ? <p>{t("pay.bills.none")}</p> : <div className="table-scroll"><table className="service-table">
-                <thead><tr><th>{t("pay.bills.bill")}</th><th>{t("pay.bills.amount")}</th><th>{t("pay.bills.due")}</th><th>{t("pay.bills.payee")}</th><th>{t("pay.bills.state")}</th></tr></thead>
-                <tbody>{obligations.map((o) => {
-                  const status = payability(o, costs, snapshot.beneficiaries, snapshot.payments);
-                  const invoice = invoiceOf(o, costs);
-                  return <tr key={o.id}>
-                    <td><label className="pay-choice"><input type="radio" name="pay-bill" value={o.id} disabled={status !== "READY" || preview} checked={eventId === o.id} onChange={() => setEventId(o.id)} />
-                      <span><strong>{o.label ?? o.id}</strong>{invoice && <small>{t("pay.bills.invoice", { id: invoice.invoice_id, issuer: invoice.issuer })}</small>}</span></label></td>
-                    <td>{money(o.amount)}</td>
-                    <td>{date(o.date)}</td>
-                    <td>{payee(o.beneficiary_id)?.name ?? "—"}</td>
-                    <td><span className={`status-chip status-${status === "READY" ? "ok" : status === "SETTLED" || status === "HAS_PAYMENT" ? "used" : "pending"}`}>{t(`pay.payability.${status}` as MessageKey)}</span></td>
-                  </tr>;
-                })}</tbody>
-              </table></div>)}
-              <div className="service-actions">
-                <button className="primary" disabled={preview || busy || !eventId || !!plan.issue} onClick={() => void createPayment()}>{t("pay.bills.create")}</button>
-                {!preview && readyEvents.length === 0 && snapshot.state && <span className="service-muted">{t("pay.bills.noneReady")}</span>}
-              </div>
-            </div>
-          </section>
+  // The step to show first follows the real records: a payment in flight, otherwise a bill ready to pay, otherwise the record.
+  const auto: Tab = snapshot.payments.some((p) => ACTIVE.includes(p.status)) ? "pay" : readyEvents.length ? "due" : snapshot.payments.length ? "history" : "due";
+  const current = tab ?? auto;
+  const steps = [
+    { key: "due" as const, label: t("pay.step.due"), done: snapshot.payments.length > 0 },
+    { key: "pay" as const, label: t("pay.step.pay"), done: snapshot.payments.some((p) => p.status === "reconciled") },
+    { key: "history" as const, label: t("pay.step.history") },
+  ];
+  const bills = usePage(obligations, 4, billPage);
+  const history = usePage(snapshot.payments, 5, historyPage);
+  const firstLoad = loading && !loaded;
 
-          <section className="card service-card" id="pay-detail" aria-labelledby="pay-detail-title">
-            <div className="service-card-body">
-              <h2 id="pay-detail-title">{t("pay.detail.title")}</h2>
-              {!selected ? <p>{loading ? t("common.loading") : t("pay.detail.none")}</p> : <>
-                <div className="service-title-row">
-                  <h3>{label(selected.event_id)} · <Amount text={money(selected.amount)} /></h3>
-                  <span className={`status-chip status-${selected.status}`}>{t(`pay.status.${selected.status}` as MessageKey)}</span>
-                </div>
-                <ol className="pay-rail" aria-label={t("pay.detail.progress")}>
-                  {MILESTONES.map((step, n) => {
-                    const state = railState(selected, n);
-                    return <li key={step} className={`pay-step pay-step-${state}`} aria-current={state === "current" ? "step" : undefined}>
-                      <span aria-hidden="true">{state === "done" ? "✓" : state === "stopped" ? "!" : n + 1}</span>{t(`pay.milestone.${step}` as MessageKey)}
-                    </li>;
-                  })}
-                </ol>
-                <p className="pay-stage">{t(`pay.stage.${stage}` as MessageKey)}</p>
-                <dl className="comparison-facts">
-                  <div><dt>{t("pay.detail.payee")}</dt><dd>{payee(selected.beneficiary)?.name ?? selected.beneficiary.slice(0, 8)}{payee(selected.beneficiary)?.verified && <small> · {t("pay.detail.verified")}</small>}</dd></div>
-                  <div><dt>{t("pay.detail.invoice")}</dt><dd>{selected.invoice_snapshot.invoice_id ? `${selected.invoice_snapshot.invoice_id} · ${selected.invoice_snapshot.issuer ?? ""}` : "—"}</dd></div>
-                  <div><dt>{t("pay.detail.due")}</dt><dd>{date(selected.due_on)}</dd></div>
-                  <div><dt>{t("pay.detail.authorizedUntil")}</dt><dd>{when(selected.authorized_until)}</dd></div>
-                  <div><dt>{t("pay.detail.submittedAt")}</dt><dd>{when(selected.submitted_at)}</dd></div>
-                  <div><dt>{t("pay.detail.reference")}</dt><dd><code>{selected.id.slice(0, 8)}</code></dd></div>
-                </dl>
+  // The dock header already tags a preview; live records carry the simulated-money tag here.
+  const simTag = !preview && <span className="panel-tag">{t("common.simulatedMoney")}</span>;
+  const statusChip = (status: PaymentStatus) => <span className={`status-chip status-${STATUS_TONE[status]}`}>{t(`pay.status.${status}` as MessageKey)}</span>;
+  const billChip = (state: Payability) => <span className={`status-chip status-${PAYABILITY_TONE[state]}`}>{t(`pay.payability.${state}` as MessageKey)}</span>;
 
-                {stage === "authorize" && <div className="service-policy">
-                  <h4><TierBadge tier="T1" /> {t("pay.authorize.title")}</h4>
-                  <p>{t("pay.authorize.text", { amount: money(selected.amount), payee: payee(selected.beneficiary)?.name ?? "—" })}</p>
-                  {obligationFor(selected)?.amount && obligationFor(selected)!.amount !== selected.amount && <p className="error">{t("pay.authorize.changed")}</p>}
-                  <label className="wallet-confirm"><input type="checkbox" checked={checked} onChange={(event) => setChecked(event.target.checked)} />{t("pay.authorize.check")}</label>
-                  <div className="service-actions">
-                    <button className="primary" disabled={preview || busy || !checked || !snapshot.state} onClick={() => void authorize(selected)}>{t("pay.authorize.button")}</button>
-                    <button className="secondary" disabled={preview || busy} onClick={() => void cancel(selected)}>{t("pay.cancel")}</button>
-                  </div>
-                </div>}
+  const billsTable = <table className="panel-table">
+    <thead><tr><th>{t("pay.bills.bill")}</th><th>{t("pay.bills.amount")}</th><th>{t("pay.bills.due")}</th><th>{t("pay.bills.payee")}</th><th>{t("pay.bills.state")}</th></tr></thead>
+    <tbody>{obligations.map((o, n) => {
+      const invoice = invoiceOf(o, costs);
+      return <tr key={o.id}><td>{o.label ?? o.id}{invoice && <small className="pay-sub">{t("pay.bills.invoice", { id: invoice.invoice_id, issuer: invoice.issuer })}</small>}</td>
+        <td>{money(o.amount)}</td><td>{date(o.date)}</td><td>{payee(o.beneficiary_id)?.name ?? "—"}</td><td>{billChip(states[n])}</td></tr>;
+    })}</tbody>
+  </table>;
+  const paymentsTable = <table className="panel-table">
+    <thead><tr><th>{t("pay.bills.bill")}</th><th>{t("pay.bills.amount")}</th><th>{t("pay.history.created")}</th><th>{t("pay.bills.state")}</th></tr></thead>
+    <tbody>{snapshot.payments.map((p) => <tr key={p.id} aria-current={selected?.id === p.id ? "true" : undefined}>
+      <td>{label(p.event_id)}</td><td>{money(p.amount)}</td><td>{when(p.created_at)}</td><td>{statusChip(p.status)}</td></tr>)}</tbody>
+  </table>;
+  const receiptBlock = selected?.receipt && <div className="pay-receipt" aria-labelledby="pay-receipt-title">
+    <h4 id="pay-receipt-title" className="panel-section-title">{t("pay.receipt.title")}</h4>
+    <PanelFacts items={[
+      [t("pay.receipt.reference"), <code>{selected.receipt.reference}</code>],
+      [t("pay.receipt.amount"), money(selected.receipt.amount, selected.receipt.currency)],
+      [t("pay.receipt.settledOn"), date(selected.receipt.settled_on)],
+      [t("pay.detail.invoice"), selected.receipt.invoice_id ? `${selected.receipt.invoice_id} · ${selected.receipt.issuer ?? ""}` : "—"],
+      [t("pay.receipt.ledger"), ledgerRow ? t("pay.receipt.ledgerRow", { sequence: ledgerRow.sequence, amount: money(ledgerRow.amount, ledgerRow.currency) }) : "—"],
+      [t("pay.receipt.match"), matchText(selected)],
+    ]} />
+    {selected.receipt.is_simulated && <p className="panel-muted">{t("pay.receipt.simulated")}</p>}
+  </div>;
+  function matchText(payment: Payment) {
+    return payment.status === "reconciled" ? t("pay.receipt.matched") : payment.status === "reconciliation_exception" ? t("pay.receipt.mismatch") : t("pay.receipt.notYet");
+  }
+  const auditBlock = <>
+    {snapshot.errors.audit ? <PanelAlert message={snapshot.errors.audit} onRetry={() => void refresh()} /> : trail.length === 0 ? <p className="panel-muted">{t("pay.audit.none")}</p> :
+      <ol className="pay-audit">{trail.map((event) => <li key={event.id}>
+        <span>{when(event.created_at)}</span><strong>{auditName(event.action)}</strong>
+        <small><code>{event.action}</code>{actor(event.details) && ` · ${actor(event.details)}`}</small>
+      </li>)}</ol>}
+    <p className="panel-muted">{t("pay.audit.more")}</p>
+  </>;
 
-                {stage === "submit" && <div className="service-policy">
-                  <h4><TierBadge tier="T2" /> {t("pay.submit.title")}</h4>
-                  <p>{t("pay.submit.text")}</p>
-                  {approval && <p>{t("pay.approval.label")} <strong>{t(`approval.${approval.status}` as MessageKey)}</strong> · {t("pay.policy.expires", { date: when(approval.expires_at) })}</p>}
-                  <div className="service-actions">
-                    <button className="primary" disabled={preview || busy} onClick={() => approval?.status === "APPROVED" ? setPolicy("STEP_UP_REQUIRED") : void submit(selected)}>{t("pay.submit.button")}</button>
-                    {lostSubmit && <button className="secondary" disabled={preview || busy} onClick={() => void submit(selected)}>{t("pay.submit.retry")}</button>}
-                    <button className="secondary" disabled={preview || busy} onClick={() => void cancel(selected)}>{t("pay.cancel")}</button>
-                  </div>
-                  {policy === "APPROVAL_REQUIRED" && <FocusDialog title={t("ws.confirm")} busy={busy} onClose={() => setPolicy("")}><p>{money(selected.amount)} · {selected.id.slice(0, 8)}</p>{error && <p role="alert" className="error">{error}</p>}<div className="wallet-policy" ref={policyRef} tabIndex={-1}>
-                    <h4><TierBadge tier="T3" /> {t("pay.policy.approvalTitle")}</h4>
-                    <p>{t("pay.policy.approvalText")}</p>
-                    {(!approval || ["REJECTED", "EXPIRED"].includes(approval.status)) && <>
-                      <label className="service-field">{t("pay.policy.reason")}<input value={reason} maxLength={500} onChange={(event) => setReason(event.target.value)} /></label>
-                      <button className="secondary" disabled={preview || busy || !reason.trim()} onClick={() => void requestApproval(selected)}>{t("pay.policy.request")}</button>
-                    </>}
-                  </div><button className="secondary" disabled={busy} onClick={() => setPolicy("")}>{t("common.cancel")}</button></FocusDialog>}
-                  {policy === "STEP_UP_REQUIRED" && <FocusDialog title={t("ws.confirm")} busy={busy} onClose={() => setPolicy("")}><p>{money(selected.amount)} · {selected.id.slice(0, 8)}</p>{error && <p role="alert" className="error">{error}</p>}<div className="wallet-policy">
-                    <h4><TierBadge tier="T2" /> {t("pay.policy.stepUpTitle")}</h4>
-                    <p>{t("pay.policy.stepUpText", { amount: money(selected.amount) })}</p>
-                    <form onSubmit={(event) => { event.preventDefault(); void stepUpAndSubmit(selected); }}>
-                      <label className="service-field">{t("pay.policy.password")}<input ref={passwordRef} type="password" autoComplete="current-password" /></label>
-                      <button type="submit" className="primary" disabled={preview || busy}>{t("pay.policy.submit")}</button>
-                    </form>
-                  </div><button className="secondary" disabled={busy} onClick={() => setPolicy("")}>{t("common.cancel")}</button></FocusDialog>}
-                </div>}
+  // ---- Step 1: confirmed bills ----
+  const dueView = <section id="pay-bills" className="panel-view" hidden={current !== "due"} aria-labelledby="pay-bills-title">
+    <div className="panel-card-head"><h2 id="pay-bills-title">{t("pay.bills.title")}</h2>
+      <span className="panel-row">{simTag}<PanelInfo>{t("pay.bills.text")} {preview ? t("pay.preview.text") : t("pay.banner.text")}</PanelInfo></span></div>
+    {firstLoad ? <PanelSkeleton rows={4} /> : <>
+      {snapshot.errors.state && !signedOut && <PanelAlert message={snapshot.errors.state} onRetry={() => void refresh()} />}
+      {snapshot.state && <>
+        <PanelHero label={t("pay.due.hero")} value={money(toPay.toFixed(2))} tone={toPay > 0 ? "warn" : undefined}>
+          <span className="panel-muted">{t("pay.due.count", { n: obligations.length })}{snapshot.state.assets.wallet_balance != null && ` · ${t("pay.bills.balance", { amount: money(snapshot.state.assets.wallet_balance) })}`}</span>
+        </PanelHero>
+        {obligations.length > 0 && <StackBar label={t("pay.due.chart")} parts={[
+          { key: "paid", value: totals.paid, tone: "mint", label: t("pay.part.paid", { amount: money(totals.paid.toFixed(2)) }) },
+          { key: "progress", value: totals.progress, tone: "muted", label: t("pay.part.progress", { amount: money(totals.progress.toFixed(2)) }) },
+          { key: "unpaid", value: totals.unpaid, tone: "gold", label: t("pay.part.unpaid", { amount: money(totals.unpaid.toFixed(2)) }) },
+          ...(totals.failed > 0 ? [{ key: "failed", value: totals.failed, tone: "red" as const, label: t("pay.part.failed", { amount: money(totals.failed.toFixed(2)) }) }] : []),
+        ]} />}
+        {/* Settling a payment bumps the state version, so the plan notice only matters while a bill is unpaid. */}
+        {unpaid && <p className={plan.issue ? "panel-note is-warn" : "panel-muted"}>
+          {plan.issue ? t(`pay.plan.${plan.issue}` as MessageKey) : t("pay.plan.ok", { date: when(plan.plan!.created_at) })}
+        </p>}
+        {obligations.length === 0 ? <PanelEmpty title={t("pay.bills.none")} /> : <>
+          <div className="panel-card-head"><span className="panel-section-title">{t("pay.due.choose")}</span>
+            <PanelPager index={bills.index} count={bills.pages} onChange={setBillPage} label={t("pay.due.pager")} /></div>
+          <ul className="panel-rows pay-bills">{bills.rows.map((o) => {
+            const state = states[obligations.indexOf(o)];
+            return <li key={o.id}>
+              <label className="pay-choice"><input type="radio" name="pay-bill" value={o.id} disabled={state !== "READY" || preview} checked={eventId === o.id} onChange={() => setEventId(o.id)} />
+                <span><strong>{o.label ?? o.id}</strong><small>{date(o.date)} · {payee(o.beneficiary_id)?.name ?? "—"}</small>
+                  {invoiceOf(o, costs) && <small>{t("pay.bills.invoice", { id: invoiceOf(o, costs)!.invoice_id, issuer: invoiceOf(o, costs)!.issuer })}</small>}</span></label>
+              <span className="pay-bill-end"><strong>{money(o.amount)}</strong>{billChip(state)}</span>
+            </li>;
+          })}</ul>
+          {!preview && readyEvents.length === 0 && <p className="panel-muted">{t("pay.bills.noneReady")}</p>}
+        </>}
+      </>}
+    </>}
+  </section>;
 
-                {stage === "authorization_expired" && <div className="service-policy">
-                  <p>{t("pay.expired.text")}</p>
-                  <button className="secondary" disabled={preview || busy} onClick={() => void cancel(selected)}>{t("pay.cancel")}</button>
-                </div>}
+  // ---- Step 2: the selected payment ----
+  let reached = 0, failedTrack = false;
+  if (selected) {
+    reached = selected.status === "reconciled" ? MILESTONES.length : milestoneReached(selected) + 1;
+    failedTrack = STOPPED.includes(selected.status);
+  }
+  const payView = <section id="pay-detail" className="panel-view" hidden={current !== "pay"} aria-labelledby="pay-detail-title">
+    {firstLoad ? <PanelSkeleton rows={4} /> : !selected ? <>
+      <h2 id="pay-detail-title" className="sr-only">{t("pay.detail.title")}</h2>
+      {snapshot.errors.payments && !signedOut && <PanelAlert message={snapshot.errors.payments} onRetry={() => void refresh()} />}
+      <PanelEmpty title={t("pay.detail.empty")} text={t("pay.detail.none")}
+        action={<button type="button" className="secondary" onClick={() => setTab("due")}>{t("pay.detail.toDue")}</button>} />
+    </> : <>
+      <div className="panel-card-head"><h2 id="pay-detail-title">{label(selected.event_id)}</h2>
+        <PanelPager index={snapshot.payments.indexOf(selected)} count={snapshot.payments.length} onChange={(n) => select(snapshot.payments[n].id)} label={t("pay.detail.pager")} /></div>
+      <div className="panel-row">{statusChip(selected.status)}{simTag}</div>
+      <PanelHero label={t("pay.detail.hero")} value={money(selected.amount)} />
+      <StepTrack label={t("pay.detail.progress")} steps={MILESTONES.map((step) => t(`pay.milestone.${step}` as MessageKey))} current={reached} failed={failedTrack} />
+      <p className={stage === "exception" || stage === "unknown" ? "panel-note is-warn" : "panel-note"}>{t(`pay.stage.${stage}` as MessageKey)}</p>
+      <PanelFacts items={[
+        [t("pay.detail.payee"), <>{payee(selected.beneficiary)?.name ?? selected.beneficiary.slice(0, 8)}{payee(selected.beneficiary)?.verified && <small> · {t("pay.detail.verified")}</small>}</>],
+        [t("pay.detail.due"), date(selected.due_on)],
+        [t("pay.detail.invoice"), selected.invoice_snapshot.invoice_id ? `${selected.invoice_snapshot.invoice_id} · ${selected.invoice_snapshot.issuer ?? ""}` : "—"],
+        selected.receipt ? [t("pay.receipt.match"), matchText(selected)]
+          : selected.submitted_at ? [t("pay.detail.submittedAt"), when(selected.submitted_at)] : [t("pay.detail.authorizedUntil"), when(selected.authorized_until)],
+      ]} />
 
-                {stage === "reconcile" && <div className="service-actions">
-                  <button className="primary" disabled={preview || busy} onClick={() => void reconcile(selected)}>{t("pay.reconcile.button")}</button>
-                  <span className="service-muted">{t("pay.reconcile.text")}</span>
-                </div>}
+      {stage === "authorize" && <div className="pay-action">
+        <h4 className="panel-section-title"><TierBadge tier="T1" /> {t("pay.authorize.title")}</h4>
+        <p className="panel-muted">{t("pay.authorize.text", { amount: money(selected.amount), payee: payee(selected.beneficiary)?.name ?? "—" })}</p>
+        {obligationFor(selected)?.amount && obligationFor(selected)!.amount !== selected.amount && <p className="panel-note is-warn">{t("pay.authorize.changed")}</p>}
+        <label className="panel-check"><input type="checkbox" checked={checked} onChange={(event) => setChecked(event.target.checked)} />{t("pay.authorize.check")}</label>
+      </div>}
 
-                {selected.receipt && <div className="pay-receipt" aria-labelledby="pay-receipt-title">
-                  <h3 id="pay-receipt-title">{t("pay.receipt.title")}</h3>
-                  <dl className="comparison-facts">
-                    <div><dt>{t("pay.receipt.reference")}</dt><dd><code>{selected.receipt.reference}</code></dd></div>
-                    <div><dt>{t("pay.receipt.amount")}</dt><dd>{money(selected.receipt.amount, selected.receipt.currency)}</dd></div>
-                    <div><dt>{t("pay.receipt.settledOn")}</dt><dd>{date(selected.receipt.settled_on)}</dd></div>
-                    <div><dt>{t("pay.detail.invoice")}</dt><dd>{selected.receipt.invoice_id ? `${selected.receipt.invoice_id} · ${selected.receipt.issuer ?? ""}` : "—"}</dd></div>
-                    <div><dt>{t("pay.receipt.ledger")}</dt><dd>{ledgerRow ? t("pay.receipt.ledgerRow", { sequence: ledgerRow.sequence, amount: money(ledgerRow.amount, ledgerRow.currency) }) : "—"}</dd></div>
-                    <div><dt>{t("pay.receipt.match")}</dt><dd>{selected.status === "reconciled" ? t("pay.receipt.matched") : selected.status === "reconciliation_exception" ? t("pay.receipt.mismatch") : t("pay.receipt.notYet")}</dd></div>
-                  </dl>
-                  {selected.receipt.is_simulated && <p className="service-disclaimer">{t("pay.receipt.simulated")}</p>}
-                </div>}
+      {stage === "submit" && <div className="pay-action">
+        <h4 className="panel-section-title"><TierBadge tier="T2" /> {t("pay.submit.title")}<PanelInfo>{t("pay.submit.text")}</PanelInfo></h4>
+        {approval && <p className="panel-muted">{t("pay.approval.label")} <strong>{t(`approval.${approval.status}` as MessageKey)}</strong> · {t("pay.policy.expires", { date: when(approval.expires_at) })}</p>}
+        {policy === "APPROVAL_REQUIRED" && <FocusDialog title={t("ws.confirm")} busy={busy} onClose={() => setPolicy("")}><p>{money(selected.amount)} · {selected.id.slice(0, 8)}</p>{error && <p role="alert" className="error">{error}</p>}<div className="wallet-policy" ref={policyRef} tabIndex={-1}>
+          <h4><TierBadge tier="T3" /> {t("pay.policy.approvalTitle")}</h4>
+          <p>{t("pay.policy.approvalText")}</p>
+          {(!approval || ["REJECTED", "EXPIRED"].includes(approval.status)) && <>
+            <label className="service-field">{t("pay.policy.reason")}<input value={reason} maxLength={500} onChange={(event) => setReason(event.target.value)} /></label>
+            <button className="secondary" disabled={preview || busy || !reason.trim()} onClick={() => void requestApproval(selected)}>{t("pay.policy.request")}</button>
+          </>}
+        </div><button className="secondary" disabled={busy} onClick={() => setPolicy("")}>{t("common.cancel")}</button></FocusDialog>}
+        {policy === "STEP_UP_REQUIRED" && <FocusDialog title={t("ws.confirm")} busy={busy} onClose={() => setPolicy("")}><p>{money(selected.amount)} · {selected.id.slice(0, 8)}</p>{error && <p role="alert" className="error">{error}</p>}<div className="wallet-policy">
+          <h4><TierBadge tier="T2" /> {t("pay.policy.stepUpTitle")}</h4>
+          <p>{t("pay.policy.stepUpText", { amount: money(selected.amount) })}</p>
+          <form onSubmit={(event) => { event.preventDefault(); void stepUpAndSubmit(selected); }}>
+            <label className="service-field">{t("pay.policy.password")}<input ref={passwordRef} type="password" autoComplete="current-password" /></label>
+            <button type="submit" className="primary" disabled={preview || busy}>{t("pay.policy.submit")}</button>
+          </form>
+        </div><button className="secondary" disabled={busy} onClick={() => setPolicy("")}>{t("common.cancel")}</button></FocusDialog>}
+      </div>}
 
-                <h3>{t("pay.audit.title")}</h3>
-                {snapshot.errors.audit ? <p className="error">{snapshot.errors.audit}</p> : trail.length === 0 ? <p className="service-muted">{t("pay.audit.none")}</p> :
-                  <ol className="pay-audit">{trail.map((event) => <li key={event.id}>
-                    <span>{when(event.created_at)}</span><strong>{auditName(event.action)}</strong>
-                    <small><code>{event.action}</code>{actor(event.details) && ` · ${actor(event.details)}`}</small>
-                  </li>)}</ol>}
-                <p className="service-muted">{t("pay.audit.more")}</p>
-              </>}
-            </div>
-          </section>
+      {stage === "authorization_expired" && <p className="panel-note is-warn">{t("pay.expired.text")}</p>}
+      {stage === "reconcile" && <p className="panel-muted">{t("pay.reconcile.text")}</p>}
 
-          <section className="card service-card" id="pay-history" aria-labelledby="pay-history-title">
-            <div className="service-card-body">
-              <h2 id="pay-history-title">{t("pay.history.title")}</h2>
-              {snapshot.errors.payments && !signedOut && <p className="error">{snapshot.errors.payments}</p>}
-              {snapshot.payments.length === 0 ? <p>{t("pay.history.none")}</p> : <ul className="service-list">
-                {snapshot.payments.map((p) => <li key={p.id}>
-                  <button className="link-button" aria-current={selected?.id === p.id ? "true" : undefined} onClick={() => select(p.id)}>{label(p.event_id)} · {money(p.amount)}</button>
-                  <small className="service-muted">{t(`pay.status.${p.status}` as MessageKey)} · {when(p.created_at)}</small>
-                </li>)}
-              </ul>}
-            </div>
-          </section>
-        </>;
-  return <ModulePresentation className="payments-app" fullPage={(<div className="app connected service-app payments-app">
-      <aside>
-        <a className="brand" href="#" onClick={(event) => { event.preventDefault(); onExit(); }}><span className="brand-icon">S</span>StudyFlow<span className="brand-dot">.</span></a>
-        <ModuleNav />
-        <div className="journey-label">{t("pay.side.label")}</div>
-        <nav aria-label={t("pay.side.nav")}>
-          <a href="#pay-bills">{t("pay.bills.title")}</a>
-          <a href="#pay-detail">{t("pay.detail.title")}</a>
-          <a href="#pay-history">{t("pay.history.title")}</a>
-        </nav>
-        <div className="sidebar-note"><strong>{t("pay.side.noteTitle")}</strong><p>{t("pay.side.noteText")}</p></div>
-        <button className="secondary" onClick={onExit}>{t("common.backToPlan")}</button>
-      </aside>
-      <div className="workspace">
-        <header><span>StudyFlow / {t("pay.title")}</span><span className="avatar">ST</span></header>
-        <main>{content}</main>
-        <footer>{t("common.footer")}<span>{t("common.simulatedFooter")}</span></footer>
+      <div className="panel-row">
+        <button type="button" className="panel-link" onClick={() => setSheet("details")}>{t(selected.receipt ? "pay.detail.receiptLink" : "pay.detail.more")} →</button>
+        <button type="button" className="panel-link" onClick={() => setSheet("audit")}>{t("pay.audit.link", { n: trail.length })} →</button>
       </div>
-    </div>)}>{content}</ModulePresentation>;
+    </>}
+  </section>;
+
+  // ---- Step 3: every payment ----
+  const historyView = <section id="pay-history" className="panel-view" hidden={current !== "history"} aria-labelledby="pay-history-title">
+    <div className="panel-card-head"><h2 id="pay-history-title">{t("pay.history.title")}</h2>
+      <PanelPager index={history.index} count={history.pages} onChange={setHistoryPage} label={t("pay.history.pager")} /></div>
+    {firstLoad ? <PanelSkeleton rows={4} /> : <>
+      {snapshot.errors.payments && !signedOut && <PanelAlert message={snapshot.errors.payments} onRetry={() => void refresh()} />}
+      {snapshot.payments.length === 0 ? <PanelEmpty title={t("pay.history.none")} /> : <>
+        <PanelHero label={t("pay.history.hero")} value={money(paidTotal.toFixed(2))}>
+          <span className="panel-muted">{t("pay.history.count", { n: snapshot.payments.length })}</span></PanelHero>
+        <StackBar label={t("pay.history.chart")} parts={[
+          { key: "done", value: counts.done, tone: "mint", label: t("pay.history.done", { n: counts.done }) },
+          { key: "open", value: counts.open, tone: "gold", label: t("pay.history.open", { n: counts.open }) },
+          { key: "closed", value: counts.closed, tone: "red", label: t("pay.history.closed", { n: counts.closed }) },
+        ]} />
+        <ul className="panel-rows">{history.rows.map((p) => <li key={p.id} aria-current={selected?.id === p.id ? "true" : undefined}>
+          <span><strong>{label(p.event_id)}</strong><small>{when(p.created_at)}</small></span>
+          <span>{money(p.amount)}</span>{statusChip(p.status)}
+          <button type="button" className="chip" onClick={() => { select(p.id); setTab("pay"); }}>{t("pay.history.view")}</button>
+        </li>)}</ul>
+      </>}
+    </>}
+  </section>;
+
+  let footer: ReactNode = null;
+  if (current === "due") footer = <>
+    {obligations.length > 0 && <button type="button" className="panel-link panel-footer-note" onClick={() => setSheet("bills")}>{t("pay.due.all", { n: obligations.length })}</button>}
+    <button className="primary" disabled={preview || busy || !eventId || !!plan.issue} onClick={() => void createPayment()}>{t("pay.bills.create")}</button>
+  </>;
+  else if (current === "pay" && selected) footer = <>
+    {stage === "authorize" && <><button className="secondary" disabled={preview || busy} onClick={() => void cancel(selected)}>{t("pay.cancel")}</button>
+      <button className="primary" disabled={preview || busy || !checked || !snapshot.state} onClick={() => void authorize(selected)}>{t("pay.authorize.button")}</button></>}
+    {stage === "submit" && <><button className="secondary" disabled={preview || busy} onClick={() => void cancel(selected)}>{t("pay.cancel")}</button>
+      {lostSubmit && <button className="secondary" disabled={preview || busy} onClick={() => void submit(selected)}>{t("pay.submit.retry")}</button>}
+      <button className="primary" disabled={preview || busy} onClick={() => approval?.status === "APPROVED" ? setPolicy("STEP_UP_REQUIRED") : void submit(selected)}>{t("pay.submit.button")}</button></>}
+    {stage === "authorization_expired" && <button className="secondary" disabled={preview || busy} onClick={() => void cancel(selected)}>{t("pay.cancel")}</button>}
+    {stage === "reconcile" && <button className="primary" disabled={preview || busy} onClick={() => void reconcile(selected)}>{t("pay.reconcile.button")}</button>}
+    {(stage === "failed" || stage === "cancelled") && readyEvents.length > 0 && <button type="button" className="primary" onClick={() => setTab("due")}>{t("pay.detail.toDue")}</button>}
+  </>;
+  else if (current === "history" && snapshot.payments.length > 0) footer = <>
+    <button type="button" className="panel-link panel-footer-note" onClick={() => setSheet("payments")}>{t("pay.history.all", { n: snapshot.payments.length })}</button>
+    {readyEvents.length > 0 && <button type="button" className="primary" onClick={() => setTab("due")}>{t("pay.detail.toDue")}</button>}
+  </>;
+
+  const close = () => setSheet(null);
+  const sheets: Record<Exclude<Sheet, null>, () => ReactNode> = {
+    bills: () => <PanelSheet title={t("pay.bills.title")} onClose={close}>{billsTable}<p className="panel-muted">{t("pay.bills.text")}</p></PanelSheet>,
+    payments: () => <PanelSheet title={t("pay.history.title")} onClose={close}>{paymentsTable}</PanelSheet>,
+    details: () => selected && <PanelSheet title={t("pay.detail.sheet")} onClose={close}>
+      <PanelFacts items={[
+        [t("pay.detail.payee"), payee(selected.beneficiary)?.name ?? selected.beneficiary.slice(0, 8)],
+        [t("pay.detail.invoice"), selected.invoice_snapshot.invoice_id ? `${selected.invoice_snapshot.invoice_id} · ${selected.invoice_snapshot.issuer ?? ""}` : "—"],
+        [t("pay.detail.due"), date(selected.due_on)],
+        [t("pay.detail.authorizedUntil"), when(selected.authorized_until)],
+        [t("pay.detail.submittedAt"), when(selected.submitted_at)],
+        [t("pay.detail.reference"), <code>{selected.id.slice(0, 8)}</code>],
+      ]} />
+      {receiptBlock}
+    </PanelSheet>,
+    audit: () => selected && <PanelSheet title={t("pay.audit.title")} onClose={close}>{auditBlock}</PanelSheet>,
+  };
+  const aside = current === "due" ? obligations.length > 0 && <><h3 className="panel-section-title">{t("pay.bills.title")}</h3>{billsTable}</>
+    : current === "history" ? snapshot.payments.length > 0 && <><h3 className="panel-section-title">{t("pay.history.title")}</h3>{paymentsTable}</>
+    : selected && <>{receiptBlock}<h3 className="panel-section-title">{t("pay.audit.title")}</h3>{auditBlock}</>;
+
+  const staleStatus = useToolRefresh(() => refresh());
+  const showNotices = staleStatus || (loading && loaded) || (error && !policy) || notice;
+  return (
+    <ServiceShell className="payments-app" eyebrow={t("pay.eyebrow")} title={t("pay.title")} intro={t("pay.intro")} sideLabel={t("pay.side.label")}
+      sections={[]} noteTitle={t("pay.side.noteTitle")} noteText={t("pay.side.noteText")} preview={preview}
+      previewTitle={t("pay.preview.title")} previewText={t("pay.preview.text")} bannerText={t("pay.banner.text")}
+      signedOut={signedOut} signInUrl={signInUrl} signedOutText={t("pay.signedOut")} onExit={onExit}
+      onRefresh={embedded ? undefined : () => void refresh()} refreshing={loading || busy}>
+      <ToolPanel steps={steps} active={current} onSelect={(key) => { setTab(key); setSheet(null); }} label={t("pay.steps")}
+        tools={preview && <PanelMenu><label className="pay-scenario" htmlFor="pay-scenario">{t("pay.preview.status")}
+          <select id="pay-scenario" value={scenario} onChange={(event) => { setScenario(event.target.value as PaymentPreviewScenario); setTab(null); setSheet(null); }}>
+            {previewStatuses.map((value) => <option key={value} value={value}>{t(`pay.status.${value}` as MessageKey)}</option>)}
+          </select></label></PanelMenu>}
+        notices={showNotices && <>
+          {staleStatus}
+          {loading && loaded && <div className="activity" role="status"><span className="activity-dot" aria-hidden="true" />{t("common.loading")}</div>}
+          {error && !policy && <div className="stale-banner" role="alert">{error}</div>}
+          {notice && <div className="demo" role="status">{notice}</div>}</>}
+        footer={footer} sheet={sheet && sheets[sheet]()} aside={aside || undefined}>
+        {dueView}{payView}{historyView}
+      </ToolPanel>
+    </ServiceShell>
+  );
 }

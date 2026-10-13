@@ -14,3 +14,16 @@
 .family-steps li.current{color:var(--text);border-color:var(--accent);font-weight:650}
 .family-how{margin:8px 0;padding-left:20px;display:grid;gap:6px}
 @media (max-width:560px){.family-paste{grid-template-columns:minmax(0,1fr)}}
+/* Tool panel layout */
+.family-app .panel-card-head h2 { margin:0; font-size:16px; font-weight:600; }
+.family-head { display:flex; align-items:center; gap:6px; min-width:0; }
+.family-card { gap:12px; }
+.family-card .panel-card-head h3 { color:var(--text); }
+.family-ref { font-size:11px; overflow-wrap:anywhere; }
+.family-totals { display:flex; flex-direction:column; gap:10px; padding-top:12px; border-top:1px solid #9ff5dc14; }
+.family-total { display:grid; grid-template-columns:44px minmax(0, 1fr); gap:10px; align-items:start; }
+.family-total > strong { font-size:12px; color:var(--text-2); line-height:12px; }
+.tool-panel .family-form { grid-template-columns:repeat(2, minmax(0, 1fr)); }
+.family-how-block { display:flex; flex-direction:column; gap:8px; padding-top:12px; border-top:1px solid #9ff5dc14; }
+.tool-panel .family-how { margin:0; padding-left:18px; font-size:13px; line-height:1.55; color:var(--text-2); }
+@media (max-width:600px) { .tool-panel .family-form { grid-template-columns:minmax(0, 1fr); } }

@@ -1,29 +1,26 @@
-/* Payment execution (src/payments/PaymentsApp.tsx). */
-.pay-choice{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
-.pay-choice input{margin-top:3px}
-.pay-choice span{display:grid;gap:2px}
-.pay-rail{list-style:none;margin:14px 0 6px;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;counter-reset:none}
-.pay-step{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--text-2);border-top:3px solid var(--line);padding-top:8px;min-width:0}
-.pay-step span{display:grid;place-items:center;flex:none;width:22px;height:22px;border-radius:50%;background:var(--surface-1);font-size:11px;font-weight:700}
-.pay-step-done{border-top-color:var(--accent);color:var(--text)}
-.pay-step-done span{color:var(--accent)}
-.pay-step-current{border-top-color:var(--warn);color:var(--text);font-weight:650}
-.pay-step-current span{color:var(--warn)}
-.pay-step-stopped{border-top-color:var(--danger);color:var(--danger)}
-.pay-stage{font-size:13px;margin:8px 0 4px}
-.pay-receipt{border:1px solid var(--line);border-radius:10px;padding:4px 16px 12px;margin-top:16px;background:var(--surface-1)}
+/* Payment execution (src/payments/PaymentsApp.tsx): due → pay → history in the tool panel. */
+.pay-choice{display:flex;gap:10px;align-items:flex-start;cursor:pointer;min-width:0}
+.pay-choice input{margin-top:3px;flex:none}
+.tool-panel .pay-choice input[type=radio]{width:auto;accent-color:var(--accent)}
+.pay-choice span{display:grid;gap:2px;min-width:0;flex:1}
+.pay-choice input:disabled{cursor:not-allowed}
+.panel-rows.pay-bills li{align-items:center}
+.panel-rows.pay-bills li > .pay-choice{flex-direction:row;align-items:flex-start;gap:10px}
+.pay-bill-end{display:flex;flex-direction:column;align-items:flex-end;gap:4px;text-align:right}
+.pay-sub{display:block;color:var(--text-3);font-size:11px}
+.pay-action{display:flex;flex-direction:column;gap:8px}
+.pay-action .panel-section-title{justify-content:flex-start;gap:6px;font-size:13px;font-weight:600;color:var(--text)}
+.pay-action p{margin:0}
+.pay-receipt{display:flex;flex-direction:column;gap:8px}
+.pay-receipt .panel-section-title{margin:0}
+.pay-scenario{display:grid;gap:6px;font-size:12px;color:var(--text-2)}
 .pay-audit{list-style:none;margin:0;padding:0;display:grid;gap:6px}
-.pay-audit li{display:grid;grid-template-columns:150px 1fr;gap:2px 12px;font-size:12px;border-bottom:1px solid var(--line);padding-bottom:6px}
+.pay-audit li{display:grid;grid-template-columns:130px 1fr;gap:2px 12px;font-size:12px;border-bottom:1px solid var(--line);padding-bottom:6px}
 .pay-audit li span{color:var(--text-2);grid-row:span 2}
-.pay-audit li small{color:var(--text-2)}
-.status-draft,.status-authorized,.status-unknown,.status-settled{color:var(--warn)}
-.status-reconciled{color:var(--accent)}
-.status-reconciliation_exception,.status-cancelled{color:var(--danger)}
+.pay-audit li small{color:var(--text-2);overflow-wrap:anywhere}
 
 @media(max-width:650px){
-  .pay-rail{grid-template-columns:1fr;gap:4px}
-  .pay-step{border-top:0;border-left:3px solid var(--line);padding:2px 0 2px 8px}
-  .pay-step-done{border-left-color:var(--accent)}.pay-step-current{border-left-color:var(--warn)}.pay-step-stopped{border-left-color:var(--danger)}
   .pay-audit li{grid-template-columns:1fr}
   .pay-audit li span{grid-row:auto}
 }
+

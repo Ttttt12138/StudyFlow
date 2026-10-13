@@ -1,27 +1,59 @@
-/* Spending insights (src/insights/InsightsApp.tsx). */
-.insights-upload{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0 14px;align-items:end}
-.insights-upload .service-field select{width:100%;border:1px solid var(--line);border-radius:6px;background:var(--surface-1);padding:10px 12px;font:inherit;font-size:13px;color:inherit}
-.insights-upload .service-field input[type=file]{padding:7px 8px;min-width:0}
-.insights-upload .service-actions{margin:10px 0}
-.insights-review{border-top:1px solid var(--line);margin-top:14px}
-.insights-check{display:inline-flex;align-items:center;gap:6px;font-size:12px;white-space:nowrap}
-.insights-flagged td{background:color-mix(in srgb,var(--warn) 7%,transparent)}
+/* Spending insights (src/insights/InsightsApp.tsx), laid out on the shared ToolPanel. */
+.insights-app .activity-dot{display:inline-block;margin-right:8px;vertical-align:middle}
 .insights-amount{white-space:nowrap;font-variant-numeric:tabular-nums}
-.service-table td .status-chip + .insights-check{display:flex;margin-top:6px}
-.insights-issues ul{margin:6px 0 0;padding-left:18px}
-.insights-coverage{border:1px solid var(--line);border-radius:8px;padding:6px 14px 10px;margin:10px 0;min-width:0}
-.insights-coverage legend{font-size:12px;font-weight:650;padding:0 6px}
-.insights-dates{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0 14px}
-.insights-briefing{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:13px;margin:0 0 6px}
-.insights-filters{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px}
-.insights-small{padding:5px 10px;font-size:12px}
-.insights-decide{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
-.insights-decide select{border:1px solid var(--line);border-radius:6px;background:var(--surface-1);padding:5px 8px;font:inherit;font-size:12px;color:inherit;max-width:100%}
-.insights-risks{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
-.insights-risk{border:1px solid color-mix(in srgb,var(--danger) 40%,transparent);border-radius:8px;padding:12px 14px;background:var(--surface-1)}
-.insights-risk.risk-data_stale,.insights-risk.risk-sponsor_delayed{border-color:color-mix(in srgb,var(--warn) 45%,transparent)}
-.service-card-body .insights-risk h3{margin:0 0 6px;font-size:14px}
-.insights-risk p{margin:0 0 6px;font-size:13px}
-.insights-resolved{margin-top:12px;font-size:13px}
-.insights-resolved summary{cursor:pointer;color:var(--text-2)}
-.insights-app .service-alert .activity-dot{display:inline-block;margin-right:8px;vertical-align:middle}
+.insights-small{padding:5px 12px !important;font-size:12px !important}
+.insights-start{align-self:flex-start}
+.insights-pending{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.insights-pending .panel-link{flex:none;padding:0}
+
+/* Overview: active risks */
+.insights-risks li{border-left:2px solid var(--warn);padding-left:12px}
+.insights-risks li.risk-data_stale,.insights-risks li.risk-sponsor_delayed{border-left-color:#f2c87988}
+.insights-risks h4{margin:0;font-size:14px;font-weight:600;color:var(--text)}
+
+/* Forecast: planned vs forecast per cost */
+.insights-legend{display:inline-flex;gap:14px}
+.insights-legend span::before{content:"";display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:6px;vertical-align:1px}
+.insights-legend .is-planned::before{background:#4ff2c640}
+.insights-legend .is-forecast::before{background:linear-gradient(90deg,#1f9f82,#6ff7d4)}
+.insights-costs{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.insights-costs li{display:flex;flex-direction:column;gap:5px;padding:9px 0;border-top:1px solid #9ff5dc12;min-width:0}
+.insights-cost-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;font-size:14px}
+.insights-cost-head > strong{font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.insights-cost-head .insights-amount{font-size:13px;color:var(--text-2)}
+.insights-cost-head .insights-amount strong{color:var(--text);font-weight:600}
+.insights-cost-bars{display:flex;flex-direction:column;gap:3px}
+.insights-cost-bars .chart-level{height:6px}
+.insights-costs small{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:12px;color:var(--text-3)}
+
+/* Transactions */
+.insights-filters{align-items:flex-end}
+.insights-filter{display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--text-3);flex:1;min-width:160px;max-width:240px}
+.insights-filters .panel-check{align-items:center;padding-bottom:10px}
+.insights-filters .panel-check input{margin-top:0}
+.insights-tag{padding:1px 8px;font-size:11px}
+
+/* Import review */
+.insights-rows{list-style:none;margin:0;padding:0}
+.insights-rows li{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:4px 10px;align-items:start;padding:10px 0;border-top:1px solid #9ff5dc12;font-size:14px}
+.insights-rows li > input{margin-top:4px;accent-color:var(--accent)}
+.insights-rows li > span:nth-child(2){display:flex;flex-direction:column;gap:3px;min-width:0}
+.insights-rows li small{color:var(--text-3);font-size:12px;overflow-wrap:anywhere}
+.insights-rows li.is-flagged{background:linear-gradient(90deg,#f2c8790a,transparent)}
+.insights-flags{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px}
+.insights-flags .panel-tag{padding:1px 8px;font-size:11px}
+.insights-rows .panel-check{font-size:12px;margin-top:2px}
+.insights-issues{margin:6px 0 0;padding-left:18px}
+.insights-coverage{display:flex;flex-direction:column;gap:10px}
+.insights-coverage .error{margin:0}
+.panel-sheet .panel-section-title{margin:0}
+
+/* Sheets */
+.insights-revise .insights-wide{grid-column:1 / -1}
+.panel-form-single{display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--text-3)}
+.insights-app .panel-sheet-stack[hidden],.panel-sheet .panel-sheet-stack[hidden]{display:none !important}
+.insights-hero-row{align-items:flex-end}
+.insights-hero-row button.panel-tag{background:none;font:inherit;font-size:12px;cursor:pointer;margin-bottom:6px}
+.insights-hero-row button.panel-tag[aria-pressed=true]{background:#f2c8791f}
+#insights-categories .chart-legend{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 14px}
+#insights-categories .chart-donut{gap:14px}
