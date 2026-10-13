@@ -11,7 +11,7 @@ from finance import money
 from finance.workflow_common import audit, require
 
 from . import services
-from .models import ExpenseEntry, PlanBill
+from .models import ExpenseEntry, PlanBill, StudyMonthBudget
 
 BILLED = {"tuition", "housing", "insurance", "visa"}
 CATEGORY_WORDS = {
@@ -47,7 +47,10 @@ def generate_bills(user, plan):
     semesters = _semesters(plan)
     created = 0
     for line in lines:
-        if line["category"] not in BILLED or line["period"] == "month":
+        if line["category"] not in BILLED or line["period"] == "month" or line.get("amount") is None:
+            continue
+        if "period_amounts" in line:
+            created += _snapshot_bills(user, plan, line, currency, semesters)
             continue
         amount = Decimal(line["amount"])
         if amount <= 0:
@@ -77,6 +80,22 @@ def generate_bills(user, plan):
             created += made
     audit(user, user, "planning.bills_generated", plan, {"created": created})
     return created
+
+
+def _snapshot_bills(user, plan, line, currency, semesters):
+    """New snapshots freeze every billed amount; legacy snapshots keep their old schedule."""
+    made_count = 0
+    step = {"once": 0, "year": 12, "semester": 12 // semesters}[line["period"]]
+    for index, amount in enumerate(line["period_amounts"]):
+        if Decimal(amount) <= 0:
+            continue
+        tag = "once" if line["period"] == "once" else (
+            f"y{index + 1}" if line["period"] == "year" else f"y{index // semesters + 1}s{index % semesters + 1}")
+        _, made = PlanBill.objects.get_or_create(plan=plan, source_id=f"{line['cost_id']}:{tag}"[:60],
+            defaults={"owner": user, "kind": line["category"], "label": line["label"],
+                      "due_date": add_months(plan.start_date, index * step + line.get("start_month", 0)), "amount": amount, "currency": currency})
+        made_count += made
+    return made_count
 
 
 def _semesters(plan):
@@ -120,7 +139,7 @@ def _enrolled_plan(user):
 
 def monthly_budget(plan):
     lines = (plan.snapshot or {}).get("lines") or []
-    return sum((Decimal(l["amount"]) for l in lines if l["period"] == "month"), Decimal(0))
+    return sum((Decimal(l["amount"]) for l in lines if l["period"] == "month" and l.get("amount") is not None), Decimal(0))
 
 
 def record_expense(user, data, via_agent=False):
@@ -151,7 +170,7 @@ def spending(user, month=None, detail=True):
     require(len(month) == 7 and month[4] == "-" and month[:4].isdigit() and month[5:].isdigit()
             and 1 <= int(month[5:]) <= 12, "MONTH_INVALID")
     year, number = int(month[:4]), int(month[5:])
-    rows = ExpenseEntry.objects.filter(owner=user, spent_on__year=year, spent_on__month=number)
+    rows = ExpenseEntry.objects.filter(owner=user, spent_on__year=year, spent_on__month=number, voided_at__isnull=True)
     totals, unconverted = defaultdict(Decimal), []
     for entry in rows:
         value = entry.amount
@@ -163,10 +182,15 @@ def spending(user, month=None, detail=True):
             value = Decimal(converted["amount"])
         totals[entry.category] += value
     spent = sum(totals.values(), Decimal(0))
-    budget = monthly_budget(plan)
+    override = StudyMonthBudget.objects.filter(plan=plan, month=month).first()
+    budget = override.amount if override else monthly_budget(plan)
+    monthly = [line for line in plan.snapshot.get("lines", []) if line["period"] == "month"]
+    known = bool(override or (monthly and all(line.get("amount") is not None for line in monthly)))
     result = {"month": month, "currency": currency, "spent": money.fmt(spent, currency),
+              "budget_known": known, "budget_source": "declared" if override else "estimate",
+              "budget_version": override.version if override else 0,
               "budget": money.fmt(budget, currency), "remaining": money.fmt(budget - spent, currency),
-              "over_budget": budget > 0 and spent > budget,
+              "over_budget": known and not unconverted and spent > budget,
               "by_category": {k: money.fmt(v, currency) for k, v in sorted(totals.items())},
               "unconverted": unconverted, "is_simulated": True}
     if detail:
@@ -177,7 +201,7 @@ def spending(user, month=None, detail=True):
 def spending_page(user, month=None, offset=0):
     result = spending(user, month)
     year, number = map(int, result["month"].split("-"))
-    rows = ExpenseEntry.objects.filter(owner=user, spent_on__year=year, spent_on__month=number)
+    rows = ExpenseEntry.objects.filter(owner=user, spent_on__year=year, spent_on__month=number, voided_at__isnull=True)
     count = rows.count()
     entries = rows.order_by("-spent_on", "-created_at", "-id")[offset:offset + 50]
     return {**result, "entries": [expense_record(e) for e in entries], "count": count,

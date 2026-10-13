@@ -5,19 +5,22 @@ from django.db.models import Q
 from finance.models import OwnedRecord
 
 ROLES = ["parent", "student"]
+# The product no longer asks who is planning; the column is kept so existing rows stay valid.
+DISPLAY_CURRENCIES = ("THB", "CNY", "USD")
 PLAN_STATUSES = ["DRAFT", "CONFIRMED", "ENROLLED"]
 
 
 class PlanningProfile(OwnedRecord):
-    """Who is using the account. One account plays one role (product decision B)."""
-    role = models.CharField(max_length=10, choices=[(r, r.title()) for r in ROLES])
-    home_currency = models.CharField(max_length=3, default="CNY")
+    """Account preferences for planning: the display currency (role is optional legacy data)."""
+    role = models.CharField(max_length=10, blank=True, default="", choices=[(r, r.title()) for r in ROLES])
+    home_currency = models.CharField(max_length=3, default="THB")
+    demo_date = models.DateField(null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=["owner"], name="planning_profile_one_per_owner"),
-            models.CheckConstraint(condition=Q(role__in=ROLES), name="planning_profile_role_valid"),
+            models.CheckConstraint(condition=Q(role__in=["", *ROLES]), name="planning_profile_role_valid"),
         ]
 
 
@@ -63,6 +66,19 @@ class FamilyLink(models.Model):
         ]
 
 
+class PlanningAssessment(OwnedRecord):
+    """An immutable revision of declared planning inputs, separate from the wallet."""
+    plan = models.ForeignKey(StudyPlan, on_delete=models.PROTECT, related_name="assessments")
+    version = models.PositiveIntegerField()
+    plan_version = models.PositiveIntegerField()
+    inputs = models.JSONField(default=dict)
+    result = models.JSONField(default=dict)
+
+    class Meta:
+        ordering = ["-version"]
+        constraints = [models.UniqueConstraint(fields=["plan", "version"], name="planning_assessment_revision")]
+
+
 class AgentConversation(OwnedRecord):
     """A multi-turn chat; each user message runs as one AgentSession (a turn)."""
     locale = models.CharField(max_length=2, choices=[("zh", "Chinese"), ("en", "English")])
@@ -106,6 +122,7 @@ class ExpenseEntry(OwnedRecord):
     category = models.CharField(max_length=10, choices=[(c, c.title()) for c in EXPENSE_CATEGORIES])
     note = models.CharField(max_length=200, blank=True)
     via_agent = models.BooleanField(default=False)
+    voided_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         ordering = ["-spent_on", "-created_at"]
@@ -113,3 +130,43 @@ class ExpenseEntry(OwnedRecord):
             models.CheckConstraint(condition=Q(amount__gt=0), name="expense_entry_positive_amount"),
             models.CheckConstraint(condition=Q(category__in=EXPENSE_CATEGORIES), name="expense_entry_category_valid"),
         ]
+
+
+class StudyTask(OwnedRecord):
+    plan = models.ForeignKey(StudyPlan, on_delete=models.PROTECT)
+    title = models.CharField(max_length=200)
+    due_date = models.DateField(null=True, blank=True)
+    amount = models.DecimalField(max_digits=16, decimal_places=2, null=True, blank=True)
+    currency = models.CharField(max_length=3, default="THB")
+    source_text = models.TextField(blank=True)
+    # Set for checklist items seeded from the school's country template (planning/checklist.py).
+    template_key = models.CharField(max_length=60, blank=True)
+    done = models.BooleanField(default=False)
+    version = models.PositiveIntegerField(default=1)
+
+    class Meta:
+        constraints = [models.CheckConstraint(condition=Q(amount__isnull=True) | Q(amount__gte=0), name="study_task_amount_nonnegative")]
+
+
+class ReminderPreference(OwnedRecord):
+    source_key = models.CharField(max_length=100)
+    snoozed_until = models.DateField(null=True, blank=True)
+    due_override = models.DateField(null=True, blank=True)
+    # The amount on the school's actual notice, replacing the catalog estimate of a bill or task.
+    amount_override = models.DecimalField(max_digits=16, decimal_places=2, null=True, blank=True)
+    seen_token = models.CharField(max_length=64, blank=True)
+    version = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        constraints = [models.UniqueConstraint(fields=["owner", "source_key"], name="reminder_preference_unique")]
+
+
+class StudyMonthBudget(OwnedRecord):
+    plan = models.ForeignKey(StudyPlan, on_delete=models.PROTECT)
+    month = models.CharField(max_length=7)
+    amount = models.DecimalField(max_digits=16, decimal_places=2)
+    version = models.PositiveIntegerField(default=1)
+
+    class Meta:
+        constraints = [models.UniqueConstraint(fields=["plan", "month"], name="study_month_budget_unique"),
+                       models.CheckConstraint(condition=Q(amount__gte=0), name="study_month_budget_nonnegative")]

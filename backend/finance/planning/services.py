@@ -9,13 +9,14 @@ from finance import fx_rates, money
 from finance.workflow_common import audit, require
 
 from . import catalog
-from .models import PlanningProfile, StudyPlan
+from .models import DISPLAY_CURRENCIES, ROLES, PlanningProfile, StudyPlan
 
 LIVING = ("housing", "food", "transport", "communications")
 ESSENTIALS = ("insurance", "visa", "deposit", "travel", "settlement", "study_materials")
 ENROLLMENT_NOTICE_DAYS = 3
 DEFAULT_LOAN = {"months": 48, "annual_rate": "0.06"}
 CENT = Decimal(".01")
+DEFAULT_DISPLAY_CURRENCY = "THB"
 
 
 def _q(value):
@@ -68,52 +69,34 @@ def convert(amount, source, target):
 
 
 def estimate(entry, years=None, home_currency=None):
-    """Totals for `years` academic years: one-off costs once, recurring costs every year."""
-    years = years or default_years(entry)
-    require(1 <= years <= 6, "YEARS_OUT_OF_RANGE")
-    lines, totals = [], {"low": Decimal(0), "typical": Decimal(0), "high": Decimal(0)}
-    groups = {g: Decimal(0) for g in ("tuition", "living", "essentials")}
-    first_year = Decimal(0)
-    per_year_count = {**catalog.PER_YEAR, "semester": entry.calendar.semesters_per_year}
-    for cost in entry.costs:
-        low, typical, high = _bounds(cost)
-        per_year = typical * per_year_count[cost.period]
-        count = 1 if cost.period == "once" else per_year_count[cost.period] * years
-        for name, value in (("low", low), ("typical", typical), ("high", high)):
-            totals[name] += value * count
-        groups[_group(cost.category)] += typical * count
-        first_year += typical * (1 if cost.period == "once" else per_year_count[cost.period])
-        lines.append({"cost_id": cost.cost_id, "category": cost.category, "group": _group(cost.category),
-                      "label": cost.label.model_dump(), "period": cost.period, "amount": _s(typical),
-                      "lower": cost.lower, "upper": cost.upper, "per_year": _s(per_year),
-                      "total": _s(typical * count), "estimate": cost.estimate,
-                      "source_url": str(cost.source_url) if cost.source_url else None})
-    currency = entry.school.currency
-    result = {"school_key": entry.key, "catalog_version": entry.version, "currency": currency,
-              "years": years, "lines": lines, "groups": {k: _s(v) for k, v in groups.items()},
-              "first_year": _s(first_year), "total": _s(totals["typical"]),
-              "total_low": _s(totals["low"]), "total_high": _s(totals["high"]),
-              "estimated_share": _s(sum(Decimal(l["total"]) for l in lines if l["estimate"])
-                                    / totals["typical"] * 100 if totals["typical"] else 0),
-              "sample": True}
-    if home_currency and home_currency != currency:
-        result["converted"] = convert(totals["typical"], currency, home_currency)
+    from .costs import estimate as estimate_costs
+
+    if years is not None:
+        require(1 <= years <= 6, "YEARS_OUT_OF_RANGE")
+    result = estimate_costs(entry, years)
+    if home_currency and home_currency != entry.school.currency:
+        result["converted"] = convert(result["total"], entry.school.currency, home_currency)
     return result
 
 
 def school_brief(entry, home_currency=None):
-    """Compact summary for tool results and lists."""
+    """Compact summary for tool results and lists: first-year figures and the full-course total."""
     first = estimate(entry, 1)
-    tuition = sum((Decimal(l["per_year"]) for l in first["lines"] if l["category"] == "tuition"), Decimal(0))
-    living = sum((Decimal(l["per_year"]) for l in first["lines"] if l["group"] == "living"), Decimal(0))
+    full = estimate(entry)
+    tuition = sum((Decimal(l["per_year"]) for l in first["lines"] if l["category"] == "tuition" and l["per_year"] is not None), Decimal(0))
+    living = sum((Decimal(l["per_year"]) for l in first["lines"] if l["group"] == "living" and l["per_year"] is not None), Decimal(0))
     brief = {"key": entry.key, "name": entry.school.name.model_dump(), "country": entry.school.country.model_dump(),
              "city": entry.school.city.model_dump(), "currency": entry.school.currency,
              "program": entry.school.program.model_dump(), "duration_years": default_years(entry),
              "intake": entry.calendar.intake, "start_date": entry.calendar.start_date.isoformat(),
              "tuition_per_year": _s(tuition), "living_per_year": _s(living),
-             "first_year_total": first["first_year"], "sample": True}
+             "first_year_total": first["first_year"], "years": full["years"], "total": full["total"],
+             "complete": full["complete"], "missing_cost_ids": full["missing_cost_ids"],
+             "duration_months": full["duration_months"], "observed_at": full["observed_at"],
+             "total_low": full["total_low"], "total_high": full["total_high"], "sample": True}
     if home_currency and home_currency != entry.school.currency:
         brief["first_year_converted"] = convert(first["first_year"], entry.school.currency, home_currency)
+        brief["total_converted"] = convert(full["total"], entry.school.currency, home_currency)
     return brief
 
 
@@ -134,28 +117,56 @@ def profile(user):
     return PlanningProfile.objects.filter(owner=user).first()
 
 
-def set_role(user, data):
+def set_profile(user, data):
+    """Create or update the planning profile; only the display currency matters now."""
     home = (data.get("home_currency") or "").upper()
     if home:
-        money.require_supported(home)
-    item, _ = PlanningProfile.objects.get_or_create(owner=user, defaults={"role": data["role"]})
-    item.role = data["role"]
+        require(home in DISPLAY_CURRENCIES, "CURRENCY_NOT_SUPPORTED")
+    role = data.get("role")
+    item, _ = PlanningProfile.objects.get_or_create(owner=user)
+    if role in ("", *ROLES):  # legacy field, accepted but never asked for
+        item.role = role
     if home:
         item.home_currency = home
     item.save()
-    audit(user, user, "planning.role_set", item, {"role": item.role})
+    audit(user, user, "planning.profile_set", item, {"home_currency": item.home_currency})
     return profile_record(item)
+
+
+set_role = set_profile  # older callers
 
 
 def profile_record(item):
     if item is None:
-        return {"role": None, "home_currency": "CNY"}
-    return {"role": item.role, "home_currency": item.home_currency}
+        return {"role": None, "home_currency": DEFAULT_DISPLAY_CURRENCY}
+    return {"role": item.role or None, "home_currency": item.home_currency}
 
 
 def home_currency(user):
     item = profile(user)
-    return item.home_currency if item else "CNY"
+    return item.home_currency if item else DEFAULT_DISPLAY_CURRENCY
+
+
+def display_rates():
+    """Indicative THB value of one unit of each display and catalog currency."""
+    currencies = list(DISPLAY_CURRENCIES)
+    for entry in catalog.schools():
+        if entry.school.currency not in currencies:
+            currencies.append(entry.school.currency)
+    rates, rate_date, source = {}, None, None
+    for currency in currencies:
+        if currency == "THB":
+            rates[currency] = "1"
+            continue
+        try:
+            rate = fx_rates.get_rate(currency, "THB")
+        except Exception:  # noqa: BLE001 - one missing rate must not hide the others
+            continue
+        rates[currency] = str(rate["rate"])
+        rate_date = rate_date or rate.get("rate_date")
+        source = source or rate.get("source")
+    return {"currencies": list(DISPLAY_CURRENCIES), "thb_per_unit": rates,
+            "rate_date": str(rate_date) if rate_date else None, "source": source, "is_simulated": True}
 
 
 def plan_for(user):
@@ -193,6 +204,8 @@ def plan_record(plan, home=None):
     costs = plan.snapshot if plan.status != "DRAFT" and plan.snapshot else estimate(entry, plan.years, home)
     result["school"] = {"name": entry.school.name.model_dump(), "currency": entry.school.currency}
     result["total"], result["currency"] = costs["total"], costs["currency"]
+    result["duration_months"] = costs.get("duration_months", plan.years * 12)
+    result["complete"] = costs.get("complete", True)
     result["converted"] = costs.get("converted")
     result.update(funding(plan, entry, costs))
     if plan.loan_id:
@@ -231,6 +244,9 @@ def save_plan(user, data):
     # Any change reopens a confirmed plan for review.
     plan.status, plan.snapshot, plan.confirmed_at = "DRAFT", {}, None
     plan.save()
+    _reopened(plan)
+    from .assessment import remember_facts
+    remember_facts(user, plan, data)
     audit(user, user, "planning.plan_saved", plan, {"school_key": plan.school_key, "version": plan.version})
     return plan_record(plan, home_currency(user))
 
@@ -260,6 +276,7 @@ def simulate_loan(user, data):
     plan.status, plan.snapshot, plan.confirmed_at = "DRAFT", {}, None
     plan.version += 1
     plan.save()
+    _reopened(plan)
     return {**plan_record(plan, home_currency(user)), "gap": gap, "gap_currency": entry.school.currency,
             "principal_fx": principal}
 
@@ -271,8 +288,24 @@ def confirm_plan(user, plan):
     plan.status, plan.confirmed_at = "CONFIRMED", timezone.now()
     plan.version += 1
     plan.save()
+    # Deposits, the first tuition and the visa fall due before arrival, so bills and the
+    # arrival checklist start with the confirmed plan rather than at enrollment.
+    from . import checklist
+    from .in_school import generate_bills
+
+    generate_bills(user, plan)
+    checklist.seed(user, plan)
     audit(user, user, "planning.plan_confirmed", plan, {"version": plan.version})
     return plan_record(plan)
+
+
+def _reopened(plan):
+    """A confirmed plan reopened for changes drops what it generated; paid bills and finished items stay."""
+    from . import checklist
+    from .models import PlanBill
+
+    PlanBill.objects.filter(plan=plan, status="DUE").delete()
+    checklist.clear(plan)
 
 
 def enroll(user, plan):
@@ -282,7 +315,11 @@ def enroll(user, plan):
     plan.status, plan.enrolled_at = "ENROLLED", timezone.now()
     plan.version += 1
     plan.save()
+    # Plans confirmed before bills moved to confirmation get them now; existing rows are kept.
     generate_bills(user, plan)
+    # Confirming enrollment is the student saying registration is done.
+    from .models import StudyTask
+    StudyTask.objects.filter(plan=plan, template_key="registration", done=False).update(done=True)
     audit(user, user, "planning.enrolled", plan, {"version": plan.version})
     return plan_record(plan)
 
@@ -312,10 +349,6 @@ def link_family(parent, raw_token):
     item = lookup_token(raw_token)
     require(item.status == "CONFIRMED", "SPONSOR_LINK_NOT_CONFIRMED")
     require(item.owner_id != parent.pk, "CANNOT_LINK_OWN_ACCOUNT")
-    role = profile(parent)
-    require(role is None or role.role == "parent", "PARENT_ROLE_REQUIRED")
-    if role is None:
-        set_role(parent, {"role": "parent"})
     link = FamilyLink.objects.filter(student_id=item.owner_id, parent=parent).first()
     if link is None:
         try:

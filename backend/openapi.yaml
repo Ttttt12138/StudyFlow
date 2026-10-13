@@ -5,6 +5,84 @@ info:
   description: 'StudyFlow demo: budgets, FX, funding, loans and policy-controlled
     simulated execution. All settlements are simulated.'
 paths:
+  /api/auth/otp/request/:
+    post:
+      operationId: post_api_auth_otp_request
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OtpRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OtpRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OtpRequest'
+        required: true
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OtpRequested'
+          description: ''
+  /api/auth/otp/verify/:
+    post:
+      operationId: post_api_auth_otp_verify
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OtpVerify'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OtpVerify'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OtpVerify'
+        required: true
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignedIn'
+          description: ''
+  /api/auth/password/sign-in/:
+    post:
+      operationId: post_api_auth_password_sign_in
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordSignIn'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PasswordSignIn'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PasswordSignIn'
+        required: true
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignedIn'
+          description: ''
   /api/auth/session/:
     get:
       operationId: get_api_auth_session
@@ -2120,6 +2198,54 @@ paths:
               schema:
                 $ref: '#/components/schemas/CommandResponse'
           description: ''
+  /api/v2/planning/assessment/:
+    get:
+      operationId: get_api_v2_planning_assessment
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+    post:
+      operationId: post_api_v2_planning_assessment
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssessmentInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AssessmentInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AssessmentInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
   /api/v2/planning/bills/{id}/pay/:
     post:
       operationId: post_api_v2_planning_bills_id_pay
@@ -2156,6 +2282,10 @@ paths:
         name: month
         schema:
           type: string
+      - in: query
+        name: offset
+        schema:
+          type: integer
       tags:
       - api
       security:
@@ -2252,6 +2382,225 @@ paths:
               schema:
                 $ref: '#/components/schemas/CommandResponse'
           description: ''
+  /api/v2/planning/life/:
+    get:
+      operationId: get_api_v2_planning_life
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/planning/life/actions/:
+    post:
+      operationId: post_api_v2_planning_life_actions
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReminderActionInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ReminderActionInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ReminderActionInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/planning/life/budget/:
+    post:
+      operationId: post_api_v2_planning_life_budget
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudyBudgetInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/StudyBudgetInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/StudyBudgetInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/planning/life/clock/:
+    post:
+      operationId: post_api_v2_planning_life_clock
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudyClockInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/StudyClockInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/StudyClockInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/planning/life/tasks/:
+    post:
+      operationId: post_api_v2_planning_life_tasks
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudyTaskInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/StudyTaskInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/StudyTaskInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/planning/life/undo-expense/:
+    post:
+      operationId: post_api_v2_planning_life_undo_expense
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UndoExpenseInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UndoExpenseInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UndoExpenseInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/planning/loan-applications/:
+    post:
+      operationId: post_api_v2_planning_loan_applications
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmitPlanningLoan'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SubmitPlanningLoan'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SubmitPlanningLoan'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
   /api/v2/planning/profile/:
     get:
       operationId: get_api_v2_planning_profile
@@ -2282,7 +2631,23 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/PlanningProfileInput'
-        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/planning/rates/:
+    get:
+      operationId: get_api_v2_planning_rates
+      description: Indicative THB rates the app uses to show amounts in THB, CNY or
+        USD.
+      tags:
+      - api
       security:
       - tokenAuth: []
       - cookieAuth: []
@@ -4434,6 +4799,70 @@ components:
       - currency
       - reason
       - target_id
+    AssessmentDetails:
+      type: object
+      properties:
+        available_funds:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+          nullable: true
+        funds_currency:
+          type: string
+          maxLength: 3
+        reserve:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+          nullable: true
+        as_of:
+          type: string
+          format: date
+        horizon:
+          allOf:
+          - $ref: '#/components/schemas/HorizonEnum'
+          default: 90
+        payment_date:
+          type: string
+          format: date
+          nullable: true
+        supports:
+          type: array
+          items:
+            $ref: '#/components/schemas/SupportInput'
+        costs:
+          type: array
+          items:
+            $ref: '#/components/schemas/CostOverrideInput'
+        repayment:
+          $ref: '#/components/schemas/PlanningRecurringInput'
+        loan:
+          $ref: '#/components/schemas/LoanTermsInput'
+      required:
+      - as_of
+      - available_funds
+      - funds_currency
+      - loan
+      - repayment
+      - reserve
+    AssessmentInput:
+      type: object
+      properties:
+        expected_version:
+          type: integer
+          minimum: 0
+        plan_version:
+          type: integer
+          minimum: 1
+        inputs:
+          $ref: '#/components/schemas/AssessmentDetails'
+        draft:
+          type: boolean
+          default: false
+      required:
+      - expected_version
+      - inputs
+      - plan_version
     AuthToken:
       type: object
       properties:
@@ -4508,6 +4937,9 @@ components:
       - destination_label
       - name
       - state_version
+    BlankEnum:
+      enum:
+      - ''
     ClockInput:
       type: object
       properties:
@@ -4666,6 +5098,27 @@ components:
       - quote_id
       - source_amount
       - state_version
+    CostOverrideInput:
+      type: object
+      properties:
+        cost_id:
+          type: string
+          maxLength: 60
+          pattern: ^[-a-zA-Z0-9_]+$
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+          nullable: true
+        due_date:
+          type: string
+          format: date
+          nullable: true
+        paid:
+          type: boolean
+          default: false
+      required:
+      - cost_id
     CoverageInput:
       type: object
       properties:
@@ -4721,6 +5174,16 @@ components:
         * `decide_loan` - decide_loan
         * `verify_beneficiary` - verify_beneficiary
         * `reconcile_payment` - reconcile_payment
+    EmailOtpPurposeEnum:
+      enum:
+      - sign_up
+      - sign_in
+      - password_reset
+      type: string
+      description: |-
+        * `sign_up` - Sign up
+        * `sign_in` - Sign in
+        * `password_reset` - Password reset
     Event:
       type: object
       properties:
@@ -5067,6 +5530,10 @@ components:
     LoanInput:
       type: object
       properties:
+        product:
+          allOf:
+          - $ref: '#/components/schemas/ProductEnum'
+          default: custom
         currency:
           allOf:
           - $ref: '#/components/schemas/SettlementCurrencyEnum'
@@ -5096,6 +5563,41 @@ components:
       - first_due_date
       - months
       - principal
+    LoanTermsInput:
+      type: object
+      properties:
+        product:
+          allOf:
+          - $ref: '#/components/schemas/ProductEnum'
+          default: custom
+        principal:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+          nullable: true
+        annual_rate:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,1}(?:\.\d{0,8})?$
+          default: '0.06000000'
+        fees:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+          default: '0.00'
+        first_due_date:
+          type: string
+          format: date
+        periods:
+          type: array
+          items:
+            type: integer
+            maximum: 60
+            minimum: 1
+          maxItems: 3
+          minItems: 1
+      required:
+      - first_due_date
     LocaleEnum:
       enum:
       - zh
@@ -5226,6 +5728,49 @@ components:
           maxLength: 500
       required:
       - expected_version
+    OtpRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        purpose:
+          $ref: '#/components/schemas/EmailOtpPurposeEnum'
+      required:
+      - email
+      - purpose
+    OtpRequested:
+      type: object
+      properties:
+        message:
+          type: string
+        expires_in:
+          type: integer
+      required:
+      - expires_in
+      - message
+    OtpVerify:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        purpose:
+          $ref: '#/components/schemas/EmailOtpPurposeEnum'
+        code:
+          type: string
+          pattern: ^\d{6}$
+        full_name:
+          type: string
+          maxLength: 150
+        password:
+          type: string
+          writeOnly: true
+          maxLength: 128
+      required:
+      - code
+      - email
+      - purpose
     PaginatedSourceList:
       type: object
       required:
@@ -5249,6 +5794,19 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Source'
+    PasswordSignIn:
+      type: object
+      properties:
+        login:
+          type: string
+          maxLength: 254
+        password:
+          type: string
+          writeOnly: true
+          maxLength: 128
+      required:
+      - login
+      - password
     PaymentEventInput:
       type: object
       properties:
@@ -5301,12 +5859,48 @@ components:
       type: object
       properties:
         role:
-          $ref: '#/components/schemas/RoleEnum'
+          oneOf:
+          - $ref: '#/components/schemas/RoleEnum'
+          - $ref: '#/components/schemas/BlankEnum'
         home_currency:
           type: string
           maxLength: 3
-      required:
-      - role
+    PlanningRecurringInput:
+      type: object
+      properties:
+        income:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+          nullable: true
+        living_expenses:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+          nullable: true
+        existing_repayments:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+          nullable: true
+        from_month:
+          oneOf:
+          - type: string
+            default: ''
+            pattern: ^\d{4}-(0[1-9]|1[0-2])$
+          - type: string
+            maxLength: 0
+        to_month:
+          oneOf:
+          - type: string
+            default: ''
+            pattern: ^\d{4}-(0[1-9]|1[0-2])$
+          - type: string
+            maxLength: 0
+        changes:
+          type: array
+          items:
+            $ref: '#/components/schemas/RepaymentChange'
     PolicyActionEnum:
       enum:
       - payment.submit
@@ -5330,6 +5924,14 @@ components:
           minimum: 0
       required:
       - scenario_index
+    ProductEnum:
+      enum:
+      - custom
+      - commercial_student_demo
+      type: string
+      description: |-
+        * `custom` - custom
+        * `commercial_student_demo` - commercial_student_demo
     ProfileInput:
       type: object
       properties:
@@ -5392,6 +5994,68 @@ components:
       description: |-
         * `accepted` - accepted
         * `ignored` - ignored
+    ReminderActionInput:
+      type: object
+      properties:
+        source_key:
+          type: string
+          maxLength: 100
+        expected_token:
+          type: string
+          maxLength: 64
+        action:
+          $ref: '#/components/schemas/ReminderActionInputActionEnum'
+        date:
+          type: string
+          format: date
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+          nullable: true
+      required:
+      - action
+      - expected_token
+      - source_key
+    ReminderActionInputActionEnum:
+      enum:
+      - acknowledge
+      - snooze
+      - reschedule
+      - complete
+      - reopen
+      - set_amount
+      type: string
+      description: |-
+        * `acknowledge` - acknowledge
+        * `snooze` - snooze
+        * `reschedule` - reschedule
+        * `complete` - complete
+        * `reopen` - reopen
+        * `set_amount` - set_amount
+    RepaymentChange:
+      type: object
+      properties:
+        month:
+          type: string
+          pattern: ^\d{4}-(0[1-9]|1[0-2])$
+        income:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+          nullable: true
+        living_expenses:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+          nullable: true
+        existing_repayments:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+          nullable: true
+      required:
+      - month
     RepaymentInput:
       type: object
       properties:
@@ -5552,6 +6216,22 @@ components:
       - THB
       type: string
       description: '* `THB` - THB'
+    SignedIn:
+      type: object
+      properties:
+        authenticated:
+          type: boolean
+        email:
+          type: string
+        username:
+          type: string
+        csrf_token:
+          type: string
+      required:
+      - authenticated
+      - csrf_token
+      - email
+      - username
     SimulateInput:
       type: object
       properties:
@@ -5863,6 +6543,101 @@ components:
       - authenticated
       - csrf_token
       - username
+    StudyBudgetInput:
+      type: object
+      properties:
+        month:
+          type: string
+          pattern: ^\d{4}-(0[1-9]|1[0-2])$
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+        expected_version:
+          type: integer
+          minimum: 0
+      required:
+      - amount
+      - expected_version
+      - month
+    StudyClockInput:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+      required:
+      - date
+    StudyTaskInput:
+      type: object
+      properties:
+        title:
+          type: string
+          maxLength: 200
+        due_date:
+          type: string
+          format: date
+          nullable: true
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+          nullable: true
+        currency:
+          type: string
+          default: THB
+          maxLength: 3
+        source_text:
+          type: string
+          default: ''
+          maxLength: 4000
+      required:
+      - title
+    SubmitPlanningLoan:
+      type: object
+      properties:
+        expected_version:
+          type: integer
+          minimum: 1
+        plan_version:
+          type: integer
+          minimum: 1
+        quote_id:
+          type: string
+          format: uuid
+      required:
+      - expected_version
+      - plan_version
+      - quote_id
+    SupportInput:
+      type: object
+      properties:
+        id:
+          type: string
+          maxLength: 60
+          pattern: ^[-a-zA-Z0-9_]+$
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+        currency:
+          type: string
+          maxLength: 3
+        available_on:
+          type: string
+          format: date
+          nullable: true
+        confirmed:
+          type: boolean
+          default: false
+        included_in_funds:
+          type: boolean
+          default: false
+      required:
+      - amount
+      - available_on
+      - currency
+      - id
     SupportedCurrencyEnum:
       enum:
       - THB
@@ -6007,6 +6782,14 @@ components:
       - semester_id
       - state_version
       - text
+    UndoExpenseInput:
+      type: object
+      properties:
+        expense_id:
+          type: string
+          format: uuid
+      required:
+      - expense_id
     UploadInput:
       type: object
       properties:
