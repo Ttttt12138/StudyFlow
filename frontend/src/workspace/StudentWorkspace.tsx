@@ -5,8 +5,11 @@ import { PlanApp } from "../plan/PlanApp";
 import { ModuleNavContext, type Module } from "../services/ModuleNav";
 import { useI18n, type MessageKey } from "../i18n";
 import { ToolSlot, WorkspaceContext } from "./context";
+import { DockHeader } from "./DockHeader";
+import { signOut as endSession } from "./session";
 import { studentTools, type StudentTool, type ToolTarget } from "./navigation";
 import "./workspace.css";
+import "./panel-system.css";
 
 const components = {
   wallet: lazy(() => import("../wallet/WalletApp").then(m => ({ default: m.WalletApp }))),
@@ -57,16 +60,7 @@ function WorkspaceBody({ username, preview, onExternal }: { username: string; pr
   const { route, stack, menu, setMenu, expanded, setExpanded, open, close, back } = control;
   const [host, setHost] = useState<HTMLDivElement | null>(null);
   const [signingOut, setSigningOut] = useState(false);
-  // Django ends the session on a CSRF-checked POST; reloading the home page clears every in-memory draft.
-  async function signOut() {
-    setSigningOut(true);
-    try {
-      const session = await fetch("/api/auth/session/", { credentials: "same-origin" }).then(r => r.json()).catch(() => null);
-      const token = session?.csrf_token ?? "";
-      await fetch("/api/auth/logout/", { method: "POST", credentials: "same-origin", headers: { "X-CSRFToken": token,
-        "Content-Type": "application/x-www-form-urlencoded" }, body: new URLSearchParams({ csrfmiddlewaretoken: token }) });
-    } finally { window.location.assign("/"); }
-  }
+  async function signOut() { setSigningOut(true); await endSession(); }
   const dock = useRef<HTMLElement>(null);
   const frame = useRef<HTMLDivElement>(null);
   const small = useSmallScreen();
@@ -88,7 +82,7 @@ function WorkspaceBody({ username, preview, onExternal }: { username: string; pr
     }, openAssistant: () => open({ kind: "agent" }),
   };
   return <ModuleNavContext.Provider value={nav}><WorkspaceContext.Provider value={{ target: route.tool, host, open, close,
-    setStage: control.setStage }}>
+    setStage: control.setStage, account: username }}>
     <div ref={frame} className={`student-workspace${route.tool ? " has-tool" : ""}${expanded ? " tool-expanded" : ""}`}>
       <header className="workspace-topbar">
         <a className="workspace-brand" href="/" onClick={event => { event.preventDefault(); close(); }}><span className="workspace-mark" aria-hidden="true">S/</span>StudyFlow<span>.</span></a>
@@ -107,19 +101,13 @@ function WorkspaceBody({ username, preview, onExternal }: { username: string; pr
         </main>
         <section ref={dock} className="workspace-dock" hidden={!route.tool} role={small || expanded ? "dialog" : "region"}
           aria-modal={small || expanded ? true : undefined} aria-labelledby="workspace-tool-title">
-          <div className="workspace-dock-header">
-            {stack.length > 1 && <button className="secondary" onClick={back} aria-label={t("ws.back")}>←</button>}
-            <h2 id="workspace-tool-title">{route.tool ? t(labels[route.tool.kind]) : ""}</h2>
-            {!small && <button className="secondary" onClick={() => setExpanded(!expanded)} aria-label={t(expanded ? "ws.restore" : "ws.expand")}>{expanded ? "↙" : "↗"}</button>}
-            <button className="secondary" onClick={close} aria-label={t("ws.close")}>×</button>
-          </div>
-          {route.preview && <p className="workspace-preview">{t("agent.preview.title")}</p>}
+          <DockHeader kind={route.tool?.kind ?? null} title={route.tool ? t(labels[route.tool.kind]) : ""} preview={route.preview}
+            canBack={stack.length > 1} onBack={back} small={small} expanded={expanded} onExpand={() => setExpanded(!expanded)} onClose={close} />
           <div className="workspace-tool-host" ref={setHost} />
         </section>
       </div>
       {studentTools.map(kind => { const Component = components[kind]; return <ToolSlot key={kind} kind={kind}>
         <Suspense fallback={<p role="status">{t("common.loading")}</p>}>
-          {kind === "agent" && <p className="service-muted finance-hint">{t("ws.financeHint")}</p>}
           <Component preview={route.preview} onExit={close} />
         </Suspense>
       </ToolSlot>; })}

@@ -6,7 +6,7 @@ import type { PreviewStage } from "../plan/preview";
 
 export const WorkspaceContext = createContext<{
   target: ToolTarget | null; host: HTMLElement | null; open: (target: ToolTarget) => void;
-  close: () => void; setStage: (stage: PreviewStage) => void;
+  close: () => void; setStage: (stage: PreviewStage) => void; account?: string;
 } | null>(null);
 export const ToolContext = createContext({ embedded: false, active: true });
 export const useWorkspace = () => useContext(WorkspaceContext);
