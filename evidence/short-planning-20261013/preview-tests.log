@@ -1,0 +1,12 @@
+
+Running 5 tests using 1 worker
+
+(node:38936) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [mocked] › tests\e2e\mocked\price-workspace.spec.mjs:19:1 › the sidebar offers price tools before enrollment and adds the life tools in the in-school preview (1.3s)
+  ok 2 [mocked] › tests\e2e\mocked\price-workspace.spec.mjs:43:1 › a money tool asked for before enrollment is refused with a notice (671ms)
+  ok 3 [mocked] › tests\e2e\mocked\price-workspace.spec.mjs:56:1 › the currency switch shows the preview price card in CNY without writing anything (646ms)
+  ok 4 [mocked] › tests\e2e\mocked\price-workspace.spec.mjs:73:1 › the short-plan preview shows two loans and permits no application writes (630ms)
+  ok 5 [mocked] › tests\e2e\mocked\price-workspace.spec.mjs:85:1 › at 390px the tools open from a drawer and nothing overflows sideways (2.4s)
+
+  5 passed (6.5s)

@@ -1,0 +1,159 @@
+SIMULATED
+Every balance, transfer, loan and approval in StudyFlow is simulated. No real money moves.
+About StudyFlow ↗
+Student
+Operations
+English
+中文
+Study planner
+Comparing prices
+short-desktop
+Consultation
+
+October 13, 2026
+
+StudyFlow
+20:51
+
+Hi! I'm StudyFlow. Tell me the school you have in mind and I'll work out the full-course total for tuition, housing and living costs, or compare what several schools would cost.
+
+You
+
+Compare PSU Phuket, Chulalongkorn, Mahidol and Thammasat
+
+20:51
+StudyFlow
+20:51
+
+Comparison: Prince of Songkla University, Phuket Campus 3.5 year(s) total about 1,013,800 THB; Chulalongkorn University 4.0 year(s) total about 2,351,350 THB; Mahidol University International College (MUIC) 4.0 year(s) total about 2,372,550 THB; Thammasat University 4.0 year(s) total about 2,301,000 THB. Lowest full-course total: Prince of Songkla University, Phuket Campus, about 1,358,750 THB less than the most expensive. (Sample data from public sources; confirm with the school before paying.)
+
+4 schools, whole-course totals
+Lowest current estimate
+Prince of Songkla University, Phuket Campus · 3.5 years
+฿1,013,800
+about ฿289,657 a year
+Choose
+Chulalongkorn University · 4 years
+฿2,351,350
+about ฿587,838 a year
+฿1,337,550 more
+Choose
+Mahidol University International College (MUIC) · 4 years
+฿2,372,550
+about ฿593,138 a year
+฿1,358,750 more
+Choose
+Thammasat University · 4 years
+฿2,301,000
+about ฿575,250 a year
+฿1,287,200 more
+Choose
+
+Course lengths differ, so check both the total and the yearly figure · Sample data
+
+Line items
+You
+
+Choose PSU Phuket. Savings 10000 THB, monthly income 30000 THB, monthly expenses 10000 THB, existing repayments 0 THB. Borrow 20000 THB.
+
+20:51
+StudyFlow
+20:51
+
+Plan: Prince of Songkla University, Phuket Campus, 3.5 year(s), status: draft, total about 1,013,800 THB. Known details are in My plan. Complete the missing details together to compare loans and repayment capacity.
+
+My plan
+
+Prince of Songkla University, Phuket Campus · Draft
+
+Simulated
+View my plan
+Message the assistant
+฿ THB
+¥ CNY
+$ USD
+What does 4 years at Chulalongkorn cost in total?
+Compare Manchester and Melbourne
+Which school has the lowest total?
+Which schools are there?
+My plan
+
+Gap, simulated loan and family support
+
+School estimates and THB loans are illustrative. No actual lending or payment.
+
+Prince of Songkla University, Phuket Campus
+
+BBA in International Business (Faculty of International Studies) · 3.5 years
+
+Full-course estimated cost
+THB 1,013,800.00
+First-year estimated cost
+THB 316,100.00
+Details and sources
+Next 90 days · declared funds
+
+2027-08-01 → 2027-10-29
+
+Largest shortfall including reserve
+THB 121,950.00
+First shortfall
+2027-08-08
+Edit details
+Compare simulated loans · THB
+48 months
+Principal
+THB 22,000.00
+Net funds received
+THB 22,000.00
+Maximum monthly payment
+THB 516.75
+Total interest
+THB 2,800.24
+Withheld fee
+THB 0.00
+Total repayment
+THB 24,800.24
+Annual interest (%)
+6%
+First repayment date
+2027-09-08
+
+Affordable under declared assumptions
+
+Repayment schedule
+24 months
+Principal
+THB 22,000.00
+Net funds received
+THB 22,000.00
+Maximum monthly payment
+THB 975.15
+Total interest
+THB 1,401.30
+Withheld fee
+THB 0.00
+Total repayment
+THB 23,401.30
+Annual interest (%)
+6%
+First repayment date
+2027-09-08
+
+Affordable under declared assumptions
+
+Repayment schedule
+Review application
+Family plan summary
+Family plan summary
+Prince of Songkla University, Phuket Campus
+Full-course estimated cost: 1013800.00 THB
+First-year estimated cost: 316100.00 THB
+Next 90 days · declared funds: 2027-08-01 → 2027-10-29
+Largest shortfall including reserve: 121950.00 THB
+48 months · Maximum monthly payment: 516.75 THB · Total repayment: 24800.24 THB
+Net funds received: 22000.00 THB · Annual interest (%): 6% · Withheld fee: 0.00 THB
+Affordable under declared assumptions
+Items to confirm: —
+School estimates and THB loans are illustrative. No actual lending or payment.
+Copy summaryPrint summary

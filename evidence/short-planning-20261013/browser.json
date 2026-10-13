@@ -1,0 +1,42 @@
+{
+  "backend": "real local Django/PostgreSQL in isolated test database",
+  "planner": "deterministic rule provider",
+  "journeys": [
+    {
+      "viewport": "1440x1000",
+      "language": "en-US",
+      "schoolCount": 10,
+      "quoteTerms": [
+        48,
+        24
+      ],
+      "applicationId": "a63ff932-a2fc-481a-af9b-c677850e6b8d",
+      "firstInstallment": "PAID",
+      "declaredFundsDoNotCreditWallet": true,
+      "repeatedSubmissionOneApplication": true,
+      "studentDisbursementForbidden": true,
+      "staleReadDoesNotReplaceNewQuote": true,
+      "editedPrincipal": "22000.00",
+      "printSummaryContentChecked": true,
+      "pageErrors": []
+    },
+    {
+      "viewport": "390x844",
+      "language": "zh-CN",
+      "schoolCount": 10,
+      "quoteTerms": [
+        48,
+        24
+      ],
+      "applicationId": "4621395f-b61e-4028-96df-fded5ce10372",
+      "firstInstallment": "PAID",
+      "declaredFundsDoNotCreditWallet": true,
+      "repeatedSubmissionOneApplication": true,
+      "studentDisbursementForbidden": true,
+      "staleReadDoesNotReplaceNewQuote": true,
+      "editedPrincipal": "22000.00",
+      "printSummaryContentChecked": true,
+      "pageErrors": []
+    }
+  ]
+}

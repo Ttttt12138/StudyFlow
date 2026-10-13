@@ -1,0 +1,75 @@
+
+> studyflow-frontend@0.1.0 build
+> tsc --noEmit && vite build
+
+vite v6.4.3 building for production...
+transforming...
+✓ 319 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                                    0.35 kB │ gzip:   0.26 kB
+dist/assets/jetbrains-mono-greek-400-normal-C190GLew.woff2         4.23 kB
+dist/assets/chakra-petch-vietnamese-400-normal-Cn7ya5On.woff       5.04 kB
+dist/assets/chakra-petch-vietnamese-600-normal-Pvj4qcw_.woff       5.11 kB
+dist/assets/chakra-petch-vietnamese-500-normal-BVzUBLGs.woff       5.12 kB
+dist/assets/jetbrains-mono-cyrillic-400-normal-BEIGL1Tu.woff2      5.33 kB
+dist/assets/jetbrains-mono-vietnamese-400-normal-CqNFfHCs.woff     5.37 kB
+dist/assets/jetbrains-mono-greek-400-normal-B9oWc5Lo.woff          5.66 kB
+dist/assets/space-grotesk-vietnamese-wght-normal-D0rl6rjA.woff2    6.71 kB
+dist/assets/jetbrains-mono-cyrillic-400-normal-ugxPyKxw.woff       6.98 kB
+dist/assets/chakra-petch-thai-400-normal-Bw1Q-fVY.woff2            7.04 kB
+dist/assets/jetbrains-mono-latin-ext-400-normal-Bc8Ftmh3.woff2     7.34 kB
+dist/assets/chakra-petch-thai-500-normal-DeexCGiz.woff2            7.51 kB
+dist/assets/chakra-petch-thai-600-normal-C620THcd.woff2            7.56 kB
+dist/assets/chakra-petch-latin-ext-400-normal-C8u6EFkq.woff2       8.86 kB
+dist/assets/chakra-petch-latin-ext-500-normal-gA6791b0.woff2       9.03 kB
+dist/assets/chakra-petch-latin-ext-600-normal-CdGvbdDU.woff2       9.06 kB
+dist/assets/chakra-petch-thai-400-normal-KdzBjiWs.woff             9.42 kB
+dist/assets/chakra-petch-latin-400-normal-SafcrIr2.woff2           9.76 kB
+dist/assets/chakra-petch-thai-500-normal-CJG_V2_m.woff             9.91 kB
+dist/assets/chakra-petch-thai-600-normal-BiM5MXH8.woff             9.95 kB
+dist/assets/chakra-petch-latin-500-normal-BR1ody1F.woff2           9.96 kB
+dist/assets/chakra-petch-latin-600-normal-DVQm9bgb.woff2           9.97 kB
+dist/assets/jetbrains-mono-latin-ext-400-normal-fXTG6kC5.woff     10.13 kB
+dist/assets/chakra-petch-latin-ext-400-normal-MNNNbyh_.woff       12.04 kB
+dist/assets/chakra-petch-latin-ext-500-normal-BCHeNDEx.woff       12.18 kB
+dist/assets/chakra-petch-latin-ext-600-normal-nL80L4xU.woff       12.22 kB
+dist/assets/chakra-petch-latin-400-normal-D7EtbySE.woff           13.16 kB
+dist/assets/chakra-petch-latin-500-normal-CnUQnZ4D.woff           13.41 kB
+dist/assets/chakra-petch-latin-600-normal-DQKfcdKo.woff           13.43 kB
+dist/assets/space-grotesk-latin-ext-wght-normal-D9tNdqV9.woff2    18.94 kB
+dist/assets/jetbrains-mono-latin-400-normal-V6pRDFza.woff2        21.17 kB
+dist/assets/space-grotesk-latin-wght-normal-BhU9QXUp.woff2        22.29 kB
+dist/assets/jetbrains-mono-latin-400-normal-6-qcROiO.woff         27.50 kB
+dist/assets/LoansApp-C3sahfDK.css                                  1.28 kB │ gzip:   0.53 kB
+dist/assets/TrustApp-P0D5CrsQ.css                                  2.89 kB │ gzip:   0.89 kB
+dist/assets/InsightsApp-CyB2-LlO.css                               3.65 kB │ gzip:   1.16 kB
+dist/assets/MoneyHub-T-G1oFRx.css                                  4.09 kB │ gzip:   1.27 kB
+dist/assets/CopilotApp-BLCQ8dX-.css                                6.07 kB │ gzip:   1.64 kB
+dist/assets/IntroApp-C5y9JfHh.css                                 29.60 kB │ gzip:   6.94 kB
+dist/assets/index-B9ehoEnL.css                                   195.96 kB │ gzip:  50.33 kB
+dist/assets/ModulePresentation-CYezQJIu.js                         0.18 kB │ gzip:   0.17 kB
+dist/assets/Amount-DKMl1k8T.js                                     0.25 kB │ gzip:   0.22 kB
+dist/assets/logic-CA3eEnC5.js                                      2.21 kB │ gzip:   1.16 kB
+dist/assets/FamilyApp-D7EDDgDi.js                                 12.27 kB │ gzip:   4.06 kB
+dist/assets/TrustApp-DXeWKMiH.js                                  21.67 kB │ gzip:   6.70 kB
+dist/assets/IntroApp-w90ms4hJ.js                                  22.51 kB │ gzip:   6.52 kB
+dist/assets/LoansApp-DPrjwucE.js                                  30.15 kB │ gzip:   8.87 kB
+dist/assets/plan.zh-DrX1hQGF.js                                   39.58 kB │ gzip:   9.31 kB
+dist/assets/plan.en-CLCxildQ.js                                   39.78 kB │ gzip:   9.14 kB
+dist/assets/InsightsApp-DMGMQijc.js                               43.51 kB │ gzip:  12.09 kB
+dist/assets/school.zh-XkCjcNnX.js                                 46.79 kB │ gzip:   6.57 kB
+dist/assets/school.en-By4ylpIG.js                                 46.87 kB │ gzip:   6.27 kB
+dist/assets/CopilotApp-BlRkAPoM.js                                57.42 kB │ gzip:  15.88 kB
+dist/assets/prepare.zh-5PSdovPo.js                                59.12 kB │ gzip:  13.21 kB
+dist/assets/prepare.en-DKozKL3_.js                                59.43 kB │ gzip:  12.96 kB
+dist/assets/assessment-ByIDbT-i.js                                61.54 kB │ gzip:   7.70 kB
+dist/assets/MoneyHub-BBZhBbTI.js                                  82.52 kB │ gzip:  22.46 kB
+dist/assets/world-HOUb9gyW.js                                    631.83 kB │ gzip: 163.22 kB
+dist/assets/index-CkUGG6A_.js                                    973.61 kB │ gzip: 286.64 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 2.14s

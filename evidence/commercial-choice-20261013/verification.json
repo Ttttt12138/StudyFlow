@@ -1,0 +1,11 @@
+{
+  "change": "Commercial study loan is a separate third selectable quote card, alongside the original 48- and 24-month custom quotes.",
+  "default_choices": ["custom:48", "custom:24", "commercial_student_demo:48"],
+  "comparison": "Same principal, annual rate, fees and first due date; each choice has its own persisted quote ID.",
+  "backend_planning_and_lending_tests_passed": 33,
+  "mocked_browser_tests_passed": 5,
+  "frontend_build": "passed",
+  "real_local_api_journeys": "Desktop English and mobile Chinese: select third card, confirm application, operator disbursement, first installment repayment. See browser.json.",
+  "preview": "Regenerated from isolated local API; three radio choices, selection updates summary, no application writes.",
+  "limits": "Fictional demo product; isolated PostgreSQL test database and deterministic conversation planner; no actual bank or payment."
+}

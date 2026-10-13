@@ -1,0 +1,15 @@
+{
+  "feature": "commercial_student_demo",
+  "conditions": "Fictional THB study loan; editable 6% nominal annual rate, zero fees, 48 months with 24-month planning comparison.",
+  "backend_planning_and_lending_tests": 33,
+  "loan_calculation_tests": 17,
+  "frontend_unit_tests": 165,
+  "mocked_browser_tests": 8,
+  "frontend_build": "passed",
+  "openapi_validation": "passed",
+  "preview": "Recorded from local API in an isolated test database; read-only.",
+  "real_api_browser_evidence": "browser.json",
+  "real_api_browser_journeys": ["desktop English 1440x1000", "mobile Chinese 390x844"],
+  "verified": ["preset preserves principal and dates", "editable loan terms", "product saved with original quote ID", "product in confirmation and printed summary", "single application on retry", "operator disbursement", "first installment repayment", "standalone loan option", "no horizontal overflow"],
+  "limits": "Local PostgreSQL test database, rule-based conversation planner, simulated money. No real bank product or payment. failure-* files and mocked/ contain earlier debugging attempts; browser.json and mocked-final/ record the passing checks."
+}

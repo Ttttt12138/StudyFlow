@@ -1,0 +1,129 @@
+SIMULATED
+Every balance, transfer, loan and approval in StudyFlow is simulated. No real money moves.
+About StudyFlow ↗
+Student
+Operations
+English
+中文
+Study planner
+Comparing prices
+short-desktop
+Consultation
+
+October 13, 2026
+
+StudyFlow
+21:05
+
+Hi! I'm StudyFlow. Tell me the school you have in mind and I'll work out the full-course total for tuition, housing and living costs, or compare what several schools would cost.
+
+You
+
+Compare PSU Phuket, Chulalongkorn, Mahidol and Thammasat
+
+21:05
+StudyFlow
+21:05
+
+Comparison: Prince of Songkla University, Phuket Campus 3.5 year(s) total about 1,013,800 THB; Chulalongkorn University 4.0 year(s) total about 2,351,350 THB; Mahidol University International College (MUIC) 4.0 year(s) total about 2,372,550 THB; Thammasat University 4.0 year(s) total about 2,301,000 THB. Lowest full-course total: Prince of Songkla University, Phuket Campus, about 1,358,750 THB less than the most expensive. (Sample data from public sources; confirm with the school before paying.)
+
+4 schools, whole-course totals
+Lowest current estimate
+Prince of Songkla University, Phuket Campus · 3.5 years
+฿1,013,800
+about ฿289,657 a year
+Choose
+Chulalongkorn University · 4 years
+฿2,351,350
+about ฿587,838 a year
+฿1,337,550 more
+Choose
+Mahidol University International College (MUIC) · 4 years
+฿2,372,550
+about ฿593,138 a year
+฿1,358,750 more
+Choose
+Thammasat University · 4 years
+฿2,301,000
+about ฿575,250 a year
+฿1,287,200 more
+Choose
+
+Course lengths differ, so check both the total and the yearly figure · Sample data
+
+Line items
+You
+
+Choose PSU Phuket. Savings 10000 THB, monthly income 30000 THB, monthly expenses 10000 THB, existing repayments 0 THB. Borrow 20000 THB.
+
+21:05
+StudyFlow
+21:05
+
+Plan: Prince of Songkla University, Phuket Campus, 3.5 year(s), status: draft, total about 1,013,800 THB. Known details are in My plan. Complete the missing details together to compare loans and repayment capacity.
+
+My plan
+
+Prince of Songkla University, Phuket Campus · Draft
+
+Simulated
+View my plan
+Message the assistant
+฿ THB
+¥ CNY
+$ USD
+What does 4 years at Chulalongkorn cost in total?
+Compare Manchester and Melbourne
+Which school has the lowest total?
+Which schools are there?
+My plan
+
+Gap, simulated loan and family support
+
+School estimates and THB loans are illustrative. No actual lending or payment.
+
+Known details are reused. Blank amounts remain unknown.
+
+Available study funds
+Funds currency
+THB
+CNY
+USD
+GBP
+AUD
+SGD
+JPY
+MYR
+EUR
+Money to keep aside
+First fixed payment date
+
+An assumed date for undated fees, not a school invoice. Expand fee details to use individual dates.
+
+Monthly repayment budget · THB
+Income including family support
+Necessary expenses
+Existing repayments
+Repeat from
+Repeat through
+
+These are declared assumptions for the selected months, not verified future income. Change months only when the amounts change.
+
+Family support / other funds
+Changes from a month
+Loan option
+Custom simulated loan
+Commercial study loan (example)
+Amount to borrow (optional)
+
+Leave blank to use a complete forecast's shortfall plus fees. An incomplete forecast cannot supply an amount.
+
+Loan settings · THB simulation
+
+Default simulation: 48 and 24 months, 6% annual interest, no fees. Settings are adjustable.
+
+Fee amounts and payment dates · THB
+
+Draft saved
+
+View my options

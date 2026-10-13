@@ -1,0 +1,7 @@
+.......................                                                  [100%]
+============================== warnings summary ===============================
+..\studyFlow\Lib\site-packages\_pytest\cacheprovider.py:469
+  D:\Qoder-project\AI studyflow\studyFlow\Lib\site-packages\_pytest\cacheprovider.py:469: PytestCacheWarning: could not create cache path D:\Qoder-project\AI studyflow\studyflow-ai\..\evidence\short-planning-20261013\pytest-cache\v\cache\nodeids: [WinError 5] �ܾ����ʡ�: 'D:\\Qoder-project\\AI studyflow\\studyflow-ai\\..\\evidence\\short-planning-20261013\\pytest-cache\\v\\cache'
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html

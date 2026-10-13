@@ -1,0 +1,32 @@
+{
+  "recorded_at": "2026-10-13T13:56:41.196930+00:00",
+  "status": "passed",
+  "checks": {
+    "backend_focused_tests": 121,
+    "frontend_unit_tests": 165,
+    "planner_tests": 23,
+    "offline_browser_tests": 5,
+    "real_api_browser_journeys": 2,
+    "catalogs_validated": 10,
+    "frontend_production_build": "passed",
+    "openapi_validation": "passed without schema warnings",
+    "migration_drift": "none"
+  },
+  "evidence": {
+    "backend": "backend-tests.log",
+    "frontend": "frontend-unit.log",
+    "build": "frontend-build.log",
+    "planner": "planner-tests.log",
+    "offline_preview": "preview-tests.log",
+    "real_api": "browser.json"
+  },
+  "boundaries": [
+    "Django/PostgreSQL HTTP endpoints are real local services in isolated test databases.",
+    "Conversation provider is the deterministic rule planner, not a live model gateway.",
+    "Funds, quotes, approvals, disbursement and repayment are simulated.",
+    "Operator disbursement was exercised through an authenticated operator API session.",
+    "Printing verifies summary content and the print entrypoint, not a physical printer.",
+    "The Vite build retains a large-chunk advisory; pytest could not write its optional cache.",
+    "failure-*.png and failure-*.txt are debugging captures from earlier repaired iterations; current acceptance is browser.json and short-*-*.png."
+  ]
+}
