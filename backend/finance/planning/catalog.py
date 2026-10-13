@@ -53,6 +53,8 @@ class School(Contract):
     website: HttpUrl
     # Typical length of the bachelor's programme; estimates default to it.
     duration_years: int | None = Field(default=None, ge=1, le=6)
+    duration_months: int | None = Field(default=None, ge=1, le=72)
+    total_semesters: int | None = Field(default=None, ge=1, le=24)
 
 
 class Calendar(Contract):
@@ -79,13 +81,22 @@ class Cost(Contract):
     lower: Decimal2 | None = None
     upper: Decimal2 | None = None
     estimate: bool
+    status: Literal["known", "estimated", "missing"] | None = None
+    year_amounts: list[Decimal2] = Field(default_factory=list, max_length=6)
+    course_total: Decimal2 | None = None
+    due_date: date | None = None
+    start_month: int = Field(default=0, ge=0, le=71)
     source_url: HttpUrl | None = None
     quote: str | None = Field(default=None, max_length=300)
 
     @model_validator(mode="after")
     def valid_amounts(self):
-        for value in (self.amount, self.lower, self.upper):
+        for value in (self.amount, self.lower, self.upper, self.course_total, *self.year_amounts):
             _money(value)
+        if self.status == "missing":
+            if self.year_amounts or any(v is not None for v in (self.amount, self.lower, self.upper, self.course_total)):
+                raise ValueError("Missing costs cannot carry amounts")
+            return self
         if self.amount is None and (self.lower is None or self.upper is None):
             raise ValueError(f"{self.cost_id}: give amount or both lower and upper")
         if self.lower is not None and self.upper is not None and Decimal(self.lower) > Decimal(self.upper):

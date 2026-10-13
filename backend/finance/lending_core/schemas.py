@@ -40,6 +40,7 @@ class Input(BaseModel):
 
 
 class QuoteInput(Input):
+    product: Literal["custom", "commercial_student_demo"] = "custom"
     currency: Literal["THB"] = "THB"
     principal: Amount = Field(gt=0)
     annual_rate: Rate = Field(

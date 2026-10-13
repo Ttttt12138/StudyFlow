@@ -149,6 +149,9 @@ def _add_card(session, tool, arguments, result, status):
         logger.exception("Card for %s could not be built", tool)
         return
     if card is not None:
+        if card.get("type") == "plan":
+            session.cards = [old for old in session.cards if old.get("type") != "plan"
+                             or old.get("plan", {}).get("id") != card.get("plan", {}).get("id")]
         session.cards = [*session.cards, json_value(card)]
 
 

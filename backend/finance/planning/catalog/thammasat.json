@@ -1,19 +1,33 @@
 {
   "key": "thammasat",
-  "version": 1,
+  "version": 2,
   "sample": true,
   "observed_at": "2026-10-12",
   "school": {
-    "name": {"en": "Thammasat University", "zh": "法政大学"},
-    "country": {"en": "Thailand", "zh": "泰国"},
+    "name": {
+      "en": "Thammasat University",
+      "zh": "法政大学"
+    },
+    "country": {
+      "en": "Thailand",
+      "zh": "泰国"
+    },
     "country_code": "TH",
-    "city": {"en": "Bangkok", "zh": "曼谷"},
+    "city": {
+      "en": "Bangkok",
+      "zh": "曼谷"
+    },
     "campus": "Tha Prachan",
     "currency": "THB",
-    "program": {"en": "BBA International Program, Thammasat Business School (Accounting, Finance or Marketing)", "zh": "法政商学院工商管理学士国际课程（会计、金融或市场营销）"},
+    "program": {
+      "en": "BBA International Program, Thammasat Business School (Accounting, Finance or Marketing)",
+      "zh": "法政商学院工商管理学士国际课程（会计、金融或市场营销）"
+    },
     "language": "English",
     "website": "https://bba.tbs.tu.ac.th/",
-    "duration_years": 4
+    "duration_years": 4,
+    "duration_months": 48,
+    "total_semesters": 8
   },
   "calendar": {
     "intake": "2027-08",
@@ -25,7 +39,10 @@
     {
       "cost_id": "tuition_semester",
       "category": "tuition",
-      "label": {"en": "Tuition and fees per regular semester, non-Thai", "zh": "每常规学期学费及杂费（非泰籍）"},
+      "label": {
+        "en": "Tuition and fees per regular semester, non-Thai",
+        "zh": "每常规学期学费及杂费（非泰籍）"
+      },
       "period": "semester",
       "lower": "124600.00",
       "upper": "129600.00",
@@ -36,7 +53,10 @@
     {
       "cost_id": "summer_session",
       "category": "tuition",
-      "label": {"en": "Optional summer semester (June-July), non-Thai", "zh": "可选暑期学期（6-7 月，非泰籍）"},
+      "label": {
+        "en": "Optional summer semester (June-July), non-Thai",
+        "zh": "可选暑期学期（6-7 月，非泰籍）"
+      },
       "period": "year",
       "lower": "0.00",
       "upper": "41500.00",
@@ -47,7 +67,10 @@
     {
       "cost_id": "rent_near_campus",
       "category": "housing",
-      "label": {"en": "Room or studio near Tha Prachan (old town / across the river)", "zh": "塔帕章校区附近单间或公寓（老城区/河对岸）"},
+      "label": {
+        "en": "Room or studio near Tha Prachan (old town / across the river)",
+        "zh": "塔帕章校区附近单间或公寓（老城区/河对岸）"
+      },
       "period": "month",
       "lower": "6000.00",
       "upper": "15000.00",
@@ -56,7 +79,10 @@
     {
       "cost_id": "utilities",
       "category": "housing",
-      "label": {"en": "Electricity and water", "zh": "水电费"},
+      "label": {
+        "en": "Electricity and water",
+        "zh": "水电费"
+      },
       "period": "month",
       "lower": "800.00",
       "upper": "2000.00",
@@ -65,7 +91,10 @@
     {
       "cost_id": "housing_deposit",
       "category": "deposit",
-      "label": {"en": "Room security deposit (often 1-2 months' rent)", "zh": "住宿押金（通常 1-2 个月房租）"},
+      "label": {
+        "en": "Room security deposit (often 1-2 months' rent)",
+        "zh": "住宿押金（通常 1-2 个月房租）"
+      },
       "period": "once",
       "lower": "6000.00",
       "upper": "30000.00",
@@ -74,7 +103,10 @@
     {
       "cost_id": "food_monthly",
       "category": "food",
-      "label": {"en": "Food (campus canteen, street food)", "zh": "餐饮（校内食堂、街头小吃）"},
+      "label": {
+        "en": "Food (campus canteen, street food)",
+        "zh": "餐饮（校内食堂、街头小吃）"
+      },
       "period": "month",
       "lower": "6000.00",
       "upper": "10000.00",
@@ -83,7 +115,10 @@
     {
       "cost_id": "transport_monthly",
       "category": "transport",
-      "label": {"en": "River ferries, buses, MRT and taxis", "zh": "渡轮、公交、地铁和出租车"},
+      "label": {
+        "en": "River ferries, buses, MRT and taxis",
+        "zh": "渡轮、公交、地铁和出租车"
+      },
       "period": "month",
       "lower": "600.00",
       "upper": "2000.00",
@@ -92,7 +127,10 @@
     {
       "cost_id": "phone_internet",
       "category": "communications",
-      "label": {"en": "Mobile plan with data", "zh": "手机套餐及流量"},
+      "label": {
+        "en": "Mobile plan with data",
+        "zh": "手机套餐及流量"
+      },
       "period": "month",
       "lower": "300.00",
       "upper": "700.00",
@@ -101,7 +139,10 @@
     {
       "cost_id": "health_insurance",
       "category": "insurance",
-      "label": {"en": "Student health insurance", "zh": "学生医疗保险"},
+      "label": {
+        "en": "Student health insurance",
+        "zh": "学生医疗保险"
+      },
       "period": "year",
       "lower": "5000.00",
       "upper": "15000.00",
@@ -110,7 +151,10 @@
     {
       "cost_id": "ed_visa",
       "category": "visa",
-      "label": {"en": "Non-Immigrant ED visa, single entry", "zh": "非移民教育签证（单次入境）"},
+      "label": {
+        "en": "Non-Immigrant ED visa, single entry",
+        "zh": "非移民教育签证（单次入境）"
+      },
       "period": "once",
       "amount": "2000.00",
       "estimate": false,
@@ -120,7 +164,10 @@
     {
       "cost_id": "visa_extension",
       "category": "visa",
-      "label": {"en": "Annual extension of stay", "zh": "每年居留延期费"},
+      "label": {
+        "en": "Annual extension of stay",
+        "zh": "每年居留延期费"
+      },
       "period": "year",
       "amount": "1900.00",
       "estimate": false,
@@ -130,7 +177,10 @@
     {
       "cost_id": "reentry_permit",
       "category": "visa",
-      "label": {"en": "Single re-entry permit (one trip home a year)", "zh": "单次再入境许可（每年回国一次）"},
+      "label": {
+        "en": "Single re-entry permit (one trip home a year)",
+        "zh": "单次再入境许可（每年回国一次）"
+      },
       "period": "year",
       "amount": "1000.00",
       "estimate": false,
@@ -140,7 +190,10 @@
     {
       "cost_id": "flight_home",
       "category": "travel",
-      "label": {"en": "Return flight home, once a year (East Asia)", "zh": "每年一次往返机票（东亚）"},
+      "label": {
+        "en": "Return flight home, once a year (East Asia)",
+        "zh": "每年一次往返机票（东亚）"
+      },
       "period": "year",
       "lower": "8000.00",
       "upper": "20000.00",
@@ -149,7 +202,10 @@
     {
       "cost_id": "settling_in",
       "category": "settlement",
-      "label": {"en": "Settling in: bedding, kitchenware, SIM, first week", "zh": "安家费用：床品、厨具、电话卡、首周开销"},
+      "label": {
+        "en": "Settling in: bedding, kitchenware, SIM, first week",
+        "zh": "安家费用：床品、厨具、电话卡、首周开销"
+      },
       "period": "once",
       "lower": "5000.00",
       "upper": "15000.00",
@@ -158,7 +214,10 @@
     {
       "cost_id": "books_supplies",
       "category": "study_materials",
-      "label": {"en": "Books, case materials and supplies per semester", "zh": "每学期书本、案例资料及文具"},
+      "label": {
+        "en": "Books, case materials and supplies per semester",
+        "zh": "每学期书本、案例资料及文具"
+      },
       "period": "semester",
       "lower": "1500.00",
       "upper": "4000.00",
@@ -166,36 +225,232 @@
     }
   ],
   "facilities": [
-    {"name": {"en": "Thammasat Business School building", "zh": "法政商学院大楼"}, "kind": "academic", "note": {"en": "Home of the BBA International Program at Tha Prachan.", "zh": "塔帕章校区 BBA 国际课程所在地。"}, "distance_km": 0, "source_url": "https://tbs.tu.ac.th/bba-international-program/"},
-    {"name": {"en": "Prof. Sangvian Indaravijaya Library", "zh": "Sangvian Indaravijaya 教授图书馆"}, "kind": "library", "note": {"en": "Business school library at TBS.", "zh": "法政商学院图书馆。"}, "distance_km": 0, "source_url": "https://tbs.tu.ac.th/bba-international-program/"},
-    {"name": {"en": "Pridi Banomyong Library", "zh": "比里·帕侬荣图书馆"}, "kind": "library", "note": {"en": "Main university library on the Tha Prachan campus.", "zh": "塔帕章校区主图书馆。"}, "distance_km": 0.2},
-    {"name": {"en": "Dome Building", "zh": "圆顶大楼"}, "kind": "landmark", "note": {"en": "Historic dome building, symbol of the university.", "zh": "历史圆顶建筑，大学的象征。"}, "distance_km": 0.2},
-    {"name": {"en": "Thammasat Main Auditorium", "zh": "法政大学大礼堂"}, "kind": "auditorium", "note": {"en": "Riverside auditorium for ceremonies and events.", "zh": "河畔大礼堂，用于典礼和活动。"}, "distance_km": 0.3}
+    {
+      "name": {
+        "en": "Thammasat Business School building",
+        "zh": "法政商学院大楼"
+      },
+      "kind": "academic",
+      "note": {
+        "en": "Home of the BBA International Program at Tha Prachan.",
+        "zh": "塔帕章校区 BBA 国际课程所在地。"
+      },
+      "distance_km": 0,
+      "source_url": "https://tbs.tu.ac.th/bba-international-program/"
+    },
+    {
+      "name": {
+        "en": "Prof. Sangvian Indaravijaya Library",
+        "zh": "Sangvian Indaravijaya 教授图书馆"
+      },
+      "kind": "library",
+      "note": {
+        "en": "Business school library at TBS.",
+        "zh": "法政商学院图书馆。"
+      },
+      "distance_km": 0,
+      "source_url": "https://tbs.tu.ac.th/bba-international-program/"
+    },
+    {
+      "name": {
+        "en": "Pridi Banomyong Library",
+        "zh": "比里·帕侬荣图书馆"
+      },
+      "kind": "library",
+      "note": {
+        "en": "Main university library on the Tha Prachan campus.",
+        "zh": "塔帕章校区主图书馆。"
+      },
+      "distance_km": 0.2
+    },
+    {
+      "name": {
+        "en": "Dome Building",
+        "zh": "圆顶大楼"
+      },
+      "kind": "landmark",
+      "note": {
+        "en": "Historic dome building, symbol of the university.",
+        "zh": "历史圆顶建筑，大学的象征。"
+      },
+      "distance_km": 0.2
+    },
+    {
+      "name": {
+        "en": "Thammasat Main Auditorium",
+        "zh": "法政大学大礼堂"
+      },
+      "kind": "auditorium",
+      "note": {
+        "en": "Riverside auditorium for ceremonies and events.",
+        "zh": "河畔大礼堂，用于典礼和活动。"
+      },
+      "distance_km": 0.3
+    }
   ],
   "food": [
-    {"name": {"en": "Tha Prachan campus canteen", "zh": "塔帕章校区食堂"}, "kind": "canteen", "note": {"en": "Riverside student canteen with Thai dishes.", "zh": "河边学生食堂，提供泰式菜肴。"}, "distance_km": 0, "typical_cost": "50.00"},
-    {"name": {"en": "Tha Maharaj", "zh": "Tha Maharaj 河畔商场"}, "kind": "restaurants", "note": {"en": "Riverside mall next to campus with cafes and restaurants.", "zh": "校区旁的河畔商场，有咖啡馆和餐厅。"}, "distance_km": 0.3, "typical_cost": "150.00"},
-    {"name": {"en": "Wang Lang Market", "zh": "旺朗市场"}, "kind": "market", "note": {"en": "Busy street-food market across the river by ferry.", "zh": "乘渡轮过河即到的热闹小吃市场。"}, "distance_km": 1, "typical_cost": "60.00"},
-    {"name": {"en": "Khao San Road and Banglamphu", "zh": "考山路及邦兰普一带"}, "kind": "street food", "note": {"en": "Street food and cheap eateries in the old town.", "zh": "老城区的街头小吃和平价餐馆。"}, "distance_km": 1.2, "typical_cost": "70.00"}
+    {
+      "name": {
+        "en": "Tha Prachan campus canteen",
+        "zh": "塔帕章校区食堂"
+      },
+      "kind": "canteen",
+      "note": {
+        "en": "Riverside student canteen with Thai dishes.",
+        "zh": "河边学生食堂，提供泰式菜肴。"
+      },
+      "distance_km": 0,
+      "typical_cost": "50.00"
+    },
+    {
+      "name": {
+        "en": "Tha Maharaj",
+        "zh": "Tha Maharaj 河畔商场"
+      },
+      "kind": "restaurants",
+      "note": {
+        "en": "Riverside mall next to campus with cafes and restaurants.",
+        "zh": "校区旁的河畔商场，有咖啡馆和餐厅。"
+      },
+      "distance_km": 0.3,
+      "typical_cost": "150.00"
+    },
+    {
+      "name": {
+        "en": "Wang Lang Market",
+        "zh": "旺朗市场"
+      },
+      "kind": "market",
+      "note": {
+        "en": "Busy street-food market across the river by ferry.",
+        "zh": "乘渡轮过河即到的热闹小吃市场。"
+      },
+      "distance_km": 1,
+      "typical_cost": "60.00"
+    },
+    {
+      "name": {
+        "en": "Khao San Road and Banglamphu",
+        "zh": "考山路及邦兰普一带"
+      },
+      "kind": "street food",
+      "note": {
+        "en": "Street food and cheap eateries in the old town.",
+        "zh": "老城区的街头小吃和平价餐馆。"
+      },
+      "distance_km": 1.2,
+      "typical_cost": "70.00"
+    }
   ],
   "attractions": [
-    {"name": {"en": "Grand Palace and Wat Phra Kaew", "zh": "大皇宫及玉佛寺"}, "kind": "landmark", "note": {"en": "Royal palace a short walk away; dress code applies.", "zh": "步行可达的皇宫，需注意着装要求。"}, "distance_km": 0.8, "typical_cost": "500.00"},
-    {"name": {"en": "Sanam Luang", "zh": "皇家田广场"}, "kind": "park", "note": {"en": "Royal field beside the campus.", "zh": "校区旁的皇家广场。"}, "distance_km": 0.3, "typical_cost": "0.00"},
-    {"name": {"en": "Bangkok National Museum", "zh": "曼谷国家博物馆"}, "kind": "museum", "note": {"en": "Thai art and history museum next to campus.", "zh": "校区旁的泰国艺术与历史博物馆。"}, "distance_km": 0.4, "typical_cost": "200.00"},
-    {"name": {"en": "Wat Pho", "zh": "卧佛寺"}, "kind": "temple", "note": {"en": "Temple of the Reclining Buddha.", "zh": "以卧佛闻名的寺庙。"}, "distance_km": 1.5, "typical_cost": "300.00"},
-    {"name": {"en": "Wat Arun", "zh": "郑王庙"}, "kind": "temple", "note": {"en": "Temple of Dawn across the river.", "zh": "河对岸的黎明寺。"}, "distance_km": 2, "typical_cost": "200.00"}
+    {
+      "name": {
+        "en": "Grand Palace and Wat Phra Kaew",
+        "zh": "大皇宫及玉佛寺"
+      },
+      "kind": "landmark",
+      "note": {
+        "en": "Royal palace a short walk away; dress code applies.",
+        "zh": "步行可达的皇宫，需注意着装要求。"
+      },
+      "distance_km": 0.8,
+      "typical_cost": "500.00"
+    },
+    {
+      "name": {
+        "en": "Sanam Luang",
+        "zh": "皇家田广场"
+      },
+      "kind": "park",
+      "note": {
+        "en": "Royal field beside the campus.",
+        "zh": "校区旁的皇家广场。"
+      },
+      "distance_km": 0.3,
+      "typical_cost": "0.00"
+    },
+    {
+      "name": {
+        "en": "Bangkok National Museum",
+        "zh": "曼谷国家博物馆"
+      },
+      "kind": "museum",
+      "note": {
+        "en": "Thai art and history museum next to campus.",
+        "zh": "校区旁的泰国艺术与历史博物馆。"
+      },
+      "distance_km": 0.4,
+      "typical_cost": "200.00"
+    },
+    {
+      "name": {
+        "en": "Wat Pho",
+        "zh": "卧佛寺"
+      },
+      "kind": "temple",
+      "note": {
+        "en": "Temple of the Reclining Buddha.",
+        "zh": "以卧佛闻名的寺庙。"
+      },
+      "distance_km": 1.5,
+      "typical_cost": "300.00"
+    },
+    {
+      "name": {
+        "en": "Wat Arun",
+        "zh": "郑王庙"
+      },
+      "kind": "temple",
+      "note": {
+        "en": "Temple of Dawn across the river.",
+        "zh": "河对岸的黎明寺。"
+      },
+      "distance_km": 2,
+      "typical_cost": "200.00"
+    }
   ],
   "sources": [
-    {"url": "https://bba.tbs.tu.ac.th/admissions.php?menus=Semester%20and%20Tuition%20and%20Fee&OnlineStatus=Y", "title": "BBA Thammasat - Semester and Tuition and Fee", "accessed": "2026-10-12"},
-    {"url": "https://bba.tbs.tu.ac.th/bbabackend/upload/BBAFiles/FactsheetNonTH.pdf", "title": "BBA International Program factsheet for non-Thai applicants (PDF)", "accessed": "2026-10-12"},
-    {"url": "https://tbs.tu.ac.th/bba-international-program/", "title": "Thammasat Business School - BBA International Program (study at Tha Prachan)", "accessed": "2026-10-12"},
-    {"url": "https://bangkok.immigration.go.th/en/fee_en/", "title": "Immigration Division 1 - Fee", "accessed": "2026-10-12"}
+    {
+      "url": "https://bba.tbs.tu.ac.th/admissions.php?menus=Semester%20and%20Tuition%20and%20Fee&OnlineStatus=Y",
+      "title": "BBA Thammasat - Semester and Tuition and Fee",
+      "accessed": "2026-10-12"
+    },
+    {
+      "url": "https://bba.tbs.tu.ac.th/bbabackend/upload/BBAFiles/FactsheetNonTH.pdf",
+      "title": "BBA International Program factsheet for non-Thai applicants (PDF)",
+      "accessed": "2026-10-12"
+    },
+    {
+      "url": "https://tbs.tu.ac.th/bba-international-program/",
+      "title": "Thammasat Business School - BBA International Program (study at Tha Prachan)",
+      "accessed": "2026-10-12"
+    },
+    {
+      "url": "https://bangkok.immigration.go.th/en/fee_en/",
+      "title": "Immigration Division 1 - Fee",
+      "accessed": "2026-10-12"
+    }
   ],
   "notes": [
-    {"en": "Sample data from public sources; confirm with the school before paying.", "zh": "示例数据，来自公开资料；付款前请向学校确认。"},
-    {"en": "Tuition sources disagree: the BBA web page shows 124,600 THB and the non-Thai factsheet 129,600 THB per semester.", "zh": "学费来源不一致：BBA 网页为每学期 124,600 泰铢，非泰籍学生简介为 129,600 泰铢。"},
-    {"en": "BBA classes are at Tha Prachan, Bangkok. Semester 1 runs August-December; exact 2027 dates are projected.", "zh": "BBA 课程在曼谷塔帕章校区。第一学期为 8-12 月，2027 年具体日期为推算。"},
-    {"en": "University dorms are mainly at Rangsit; housing, food, transport and insurance near Tha Prachan are estimates.", "zh": "大学宿舍主要在兰实校区；塔帕章附近住宿、餐饮、交通和保险为估算值。"},
-    {"en": "Attraction entry prices are approximate foreigner rates.", "zh": "景点门票为大致外国人票价。"}
+    {
+      "en": "Sample data from public sources; confirm with the school before paying.",
+      "zh": "示例数据，来自公开资料；付款前请向学校确认。"
+    },
+    {
+      "en": "Tuition sources disagree: the BBA web page shows 124,600 THB and the non-Thai factsheet 129,600 THB per semester.",
+      "zh": "学费来源不一致：BBA 网页为每学期 124,600 泰铢，非泰籍学生简介为 129,600 泰铢。"
+    },
+    {
+      "en": "BBA classes are at Tha Prachan, Bangkok. Semester 1 runs August-December; exact 2027 dates are projected.",
+      "zh": "BBA 课程在曼谷塔帕章校区。第一学期为 8-12 月，2027 年具体日期为推算。"
+    },
+    {
+      "en": "University dorms are mainly at Rangsit; housing, food, transport and insurance near Tha Prachan are estimates.",
+      "zh": "大学宿舍主要在兰实校区；塔帕章附近住宿、餐饮、交通和保险为估算值。"
+    },
+    {
+      "en": "Attraction entry prices are approximate foreigner rates.",
+      "zh": "景点门票为大致外国人票价。"
+    }
   ]
 }

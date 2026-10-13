@@ -205,7 +205,8 @@ if DJANGO_SECURE:
         # Preload is an opt-in commitment that is hard to undo; it stays off by default.
         SILENCED_SYSTEM_CHECKS = ["security.W021"]
 
-STUDYFLOW_READINESS_ENABLED = os.getenv("STUDYFLOW_READINESS_ENABLED", "false").lower() == "true"
+# Readiness (budget checks, payment readiness) is on unless explicitly turned off.
+STUDYFLOW_READINESS_ENABLED = os.getenv("STUDYFLOW_READINESS_ENABLED", "true").lower() == "true"
 STUDYFLOW_AI_MODE = os.getenv("STUDYFLOW_MODE", "mock")
 # `manage.py test` stays offline and deterministic even when backend/.env selects live;
 # a test that needs live mode says so with override_settings.

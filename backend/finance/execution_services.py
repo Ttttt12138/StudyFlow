@@ -20,8 +20,13 @@ def available(item):
 def initialize(actor,data,obj=None):
     require(not DemoWallet.objects.filter(owner=actor).exists(),"Demo wallet is already initialized.")
     state = current(actor,data["state_version"])
+    from .planning.models import PlanningProfile
+    planning_date = PlanningProfile.objects.filter(owner=actor).values_list("demo_date", flat=True).first()
+    clock = date.fromisoformat(state.snapshot["as_of"])
+    if planning_date:
+        clock = max(clock, planning_date)
     item = DemoWallet.objects.create(owner=actor,initial_state=state,
-        balance=state.snapshot["opening_balance"],clock=state.snapshot["as_of"])
+        balance=state.snapshot["opening_balance"],clock=clock)
     audit(actor,actor,"demo.initialized",item,{"is_simulated":True})
     return record(item)
 

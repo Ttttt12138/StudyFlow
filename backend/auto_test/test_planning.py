@@ -61,6 +61,29 @@ class CatalogTests(APITestCase):
         for result in results:
             self.assertLessEqual(len(json.dumps(result, ensure_ascii=False)), agent_runner.RESULT_CHARS)
 
+    def test_school_brief_and_comparison_carry_full_course_totals(self):
+        from finance.planning import tools
+
+        user = get_user_model().objects.create_user("compare-check", password="planning-pass-8")
+        entry = catalog.school(SCHOOL)
+        brief = services.school_brief(entry, "USD")
+        full = services.estimate(entry)
+        self.assertEqual((brief["years"], brief["total"], brief["total_low"], brief["total_high"]),
+                         (services.default_years(entry), full["total"], full["total_low"], full["total_high"]))
+        self.assertEqual(brief["total_converted"]["currency"], "USD")
+        self.assertNotIn("total_converted", services.school_brief(entry, entry.school.currency))
+        compared = tools._compare(user, {"school_keys": [SCHOOL, "manchester", "melbourne"]})
+        self.assertEqual(compared["home_currency"], "THB")
+        for row in compared["schools"]:
+            self.assertTrue(row["total"] and row["years"], row["key"])
+            if row["currency"] != "THB":
+                self.assertEqual(row["total_converted"]["currency"], "THB")
+
+        def thb(row):
+            return Decimal(row["total"] if row["currency"] == "THB" else row["total_converted"]["amount"])
+        self.assertEqual(compared["cheapest"], min(compared["schools"], key=thb)["key"])
+        self.assertNotIn("set_role", CONVERSATION_TOOLS)
+
     def test_legacy_agent_sessions_keep_the_finance_tool_catalog(self):
         self.assertNotIn("list_schools", TOOLS)
         self.assertTrue(set(TOOLS) < set(CONVERSATION_TOOLS))
@@ -98,39 +121,105 @@ class ConversationHarness(APITestCase):
     def cards(self, turn, kind):
         return [c for c in turn["cards"] if c["type"] == kind]
 
+class ProfileTests(ConversationHarness):
+    username = "plan-profile"
+
+    def test_profile_defaults_to_thb_and_needs_only_a_display_currency(self):
+        data = self.client.get(API + "planning/profile/").data["data"]
+        self.assertEqual((data["role"], data["home_currency"]), (None, "THB"))
+        response = self.client.post(API + "planning/profile/", {"home_currency": "USD"}, format="json")
+        self.assertEqual(response.status_code, 200, response.data)
+        self.assertEqual(response.data["data"], {"role": None, "home_currency": "USD"})
+        self.assertEqual(services.profile(self.user).home_currency, "USD")
+        self.assertEqual(self.client.get(API + "planning/profile/").data["data"]["home_currency"], "USD")
+        lower = self.client.post(API + "planning/profile/", {"home_currency": "cny"}, format="json")
+        self.assertEqual(lower.data["data"]["home_currency"], "CNY")
+
+    def test_other_currencies_are_rejected(self):
+        for code in ("GBP", "EUR", "XYZ"):
+            response = self.client.post(API + "planning/profile/", {"home_currency": code}, format="json")
+            self.assertEqual(response.status_code, 400, code)
+            self.assertEqual(response.data["code"], "CURRENCY_NOT_SUPPORTED")
+        self.assertIsNone(services.profile(self.user))
+        bad_role = self.client.post(API + "planning/profile/", {"role": "teacher"}, format="json")
+        self.assertEqual(bad_role.status_code, 400)
+
+    def test_display_rates_cover_display_and_catalog_currencies(self):
+        response = self.client.get(API + "planning/rates/")
+        self.assertEqual(response.status_code, 200, response.data)
+        data = response.data["data"]
+        self.assertEqual(data["currencies"], ["THB", "CNY", "USD"])
+        self.assertTrue(data["is_simulated"])
+        wanted = {"THB", "CNY", "USD", *(e.school.currency for e in catalog.schools())}
+        self.assertEqual(set(data["thb_per_unit"]), wanted)
+        self.assertEqual(data["thb_per_unit"]["THB"], "1")
+        for code, rate in data["thb_per_unit"].items():
+            self.assertGreater(Decimal(rate), 0, code)
+        self.assertTrue(data["rate_date"] and data["source"])
+
+    def test_display_rates_skip_a_currency_without_a_rate(self):
+        from finance import fx_rates
+
+        real = fx_rates.get_rate
+
+        def flaky(base, quote):
+            if base == "JPY":
+                raise fx_rates.FxUnavailable()
+            return real(base, quote)
+
+        with patch.object(fx_rates, "get_rate", flaky):
+            data = self.client.get(API + "planning/rates/").data["data"]
+        self.assertNotIn("JPY", data["thb_per_unit"])
+        self.assertIn("USD", data["thb_per_unit"])
+
+
 class ConversationTests(ConversationHarness):
-    def test_greeting_asks_for_the_role_before_anything_else(self):
+    def test_greeting_leads_with_price_and_never_asks_for_a_role(self):
+        for locale in ("zh", "en"):
+            conversation = self.start(locale)
+            self.assertEqual(len(conversation["turns"]), 1)
+            greeting = conversation["turns"][0]
+            self.assertEqual(greeting["kind"], "assistant")
+            self.assertNotIn("家长", greeting["final_answer"])
+            self.assertNotIn("parent", greeting["final_answer"].lower())
+        self.assertIn("总价", self.start("zh")["turns"][0]["final_answer"])
         conversation = self.start()
-        self.assertEqual(len(conversation["turns"]), 1)
-        self.assertEqual(conversation["turns"][0]["kind"], "assistant")
-        self.assertIn("家长", conversation["turns"][0]["final_answer"])
         turn = self.say(conversation, "朱拉隆功贵吗")
-        self.assertFalse(turn["steps"][0].get("tool"))
-        self.assertIn("家长", turn["final_answer"])
+        self.assertEqual(turn["steps"][0]["tool"], "estimate_total_cost")
+        self.assertIsNone(services.profile(self.user))
 
-    def test_parent_journey_from_role_to_confirmed_plan(self):
+    def test_money_tools_wait_for_enrollment(self):
         conversation = self.start()
-        turn = self.say(conversation, "我是家长，想了解留学费用")
-        self.assertEqual(services.profile(self.user).role, "parent")
-        self.assertTrue(self.cards(turn, "school_list"))
+        turn = self.say(conversation, "人民币兑泰铢汇率是多少")
+        self.assertFalse(turn["steps"][0].get("tool"))
+        self.assertIn("确认入学后开放", turn["final_answer"])
 
-        turn = self.say(conversation, "朱拉隆功读4年全部费用多少？")
+    def test_journey_from_price_to_confirmed_plan(self):
+        conversation = self.start()
+        turn = self.say(conversation, "朱拉隆功读4年一共多少钱？")
         cost = self.cards(turn, "cost")[0]["estimate"]
         self.assertEqual(cost["years"], 4)
         self.assertTrue(cost["lines"])
-        self.assertIn(cost["converted"]["currency"], ("CNY",))
+        self.assertNotIn("converted", cost)  # THB school, THB display currency
         self.assertIn("示例数据", turn["final_answer"])
+
+        turn = self.say(conversation, "比较曼彻斯特和墨尔本")
+        comparison = self.cards(turn, "comparison")[0]
+        self.assertTrue(all(r["total_converted"]["currency"] == "THB" for r in comparison["schools"]))
+        self.assertIn("总价", turn["final_answer"])
 
         turn = self.say(conversation, "我们有存款20万人民币，就选朱拉隆功")
         plan = self.cards(turn, "plan")[0]["plan"]
         self.assertEqual((plan["school_key"], plan["status"], plan["funds_currency"], plan["years"]),
                          (SCHOOL, "DRAFT", "CNY", 4))
+        self.assertIsNone(services.profile(self.user))
         self.assertGreater(Decimal(plan["gap"]), 0)
 
         turn = self.say(conversation, "帮我试算一下贷款，分48个月")
-        loan = self.cards(turn, "loan")[0]["plan"]["loan"]
-        self.assertEqual((loan["currency"], loan["months"]), ("THB", 48))
-        self.assertIn("模拟", turn["final_answer"])
+        self.assertTrue(self.cards(turn, "plan"))
+        self.assertFalse(self.cards(turn, "loan"))
+        self.assertIsNone(StudyPlan.objects.get(owner=self.user).loan_id)
+        self.assertIn("我的方案", turn["final_answer"])
 
         turn = self.say(conversation, "确认计划")
         confirmation = self.cards(turn, "confirmation")[0]
@@ -146,17 +235,15 @@ class ConversationTests(ConversationHarness):
         last = AgentSession.objects.filter(conversation_id=conversation["id"]).exclude(goal="").order_by("-created_at").first()
         self.assertEqual(last.cards[0]["type"], "confirmation")
 
-    def test_student_sees_campus_life_first(self):
+    def test_campus_life_is_answered_when_asked(self):
         conversation = self.start("en")
-        self.say(conversation, "I'm a student")
-        turn = self.say(conversation, "Tell me about Chulalongkorn")
+        turn = self.say(conversation, "What food and fun is near Chulalongkorn?")
         school = self.cards(turn, "school")[0]["school"]
         self.assertEqual(school["key"], SCHOOL)
         self.assertTrue(school["food"] and school["attractions"] and school["facilities"])
         self.assertFalse(self.cards(turn, "cost"))
 
     def test_agent_proposes_enrollment_from_three_days_before_start(self):
-        services.set_role(self.user, {"role": "student"})
         services.save_plan(self.user, {"school_key": SCHOOL, "available_funds": "0", "funds_currency": "THB"})
         plan = StudyPlan.objects.get(owner=self.user)
         services.confirm_plan(self.user, plan)
@@ -179,7 +266,6 @@ class ConversationTests(ConversationHarness):
             services.save_plan(self.user, {"school_key": SCHOOL})
 
     def test_confirmations_append_one_persistent_stage_handoff(self):
-        services.set_role(self.user, {"role": "student"})
         services.save_plan(self.user, {"school_key": SCHOOL})
         conversation = self.start("en")
         for text, expected in [("Confirm the plan", "preparing for enrollment"),
@@ -197,7 +283,6 @@ class ConversationTests(ConversationHarness):
         self.assertIn("daily life", current["turns"][-1]["final_answer"])
 
     def test_not_ready_keeps_confirmed_plan_and_no_bills(self):
-        services.set_role(self.user, {"role": "student"})
         services.save_plan(self.user, {"school_key": SCHOOL})
         services.confirm_plan(self.user, StudyPlan.objects.get(owner=self.user))
         conversation = self.start()
@@ -215,11 +300,11 @@ class ConversationTests(ConversationHarness):
     def test_message_replay_returns_the_stored_turn(self):
         conversation = self.start()
         url = API + f"agent/conversations/{conversation['id']}/messages/"
-        first = self.client.post(url, {"text": "我是家长"}, format="json", HTTP_IDEMPOTENCY_KEY="k-1")
-        again = self.client.post(url, {"text": "我是家长"}, format="json", HTTP_IDEMPOTENCY_KEY="k-1")
+        first = self.client.post(url, {"text": "朱拉隆功"}, format="json", HTTP_IDEMPOTENCY_KEY="k-1")
+        again = self.client.post(url, {"text": "朱拉隆功"}, format="json", HTTP_IDEMPOTENCY_KEY="k-1")
         self.assertEqual((first.status_code, again.status_code), (201, 200))
         self.assertEqual(first.data["data"]["id"], again.data["data"]["id"])
-        clash = self.client.post(url, {"text": "我是学生"}, format="json", HTTP_IDEMPOTENCY_KEY="k-1")
+        clash = self.client.post(url, {"text": "早稻田"}, format="json", HTTP_IDEMPOTENCY_KEY="k-1")
         self.assertEqual(clash.status_code, 400)
 
 
@@ -259,7 +344,6 @@ class FamilyLinkTests(APITestCase):
         linked = self.client.post(API + "planning/family-links/", HTTP_X_SPONSOR_TOKEN=token)
         self.assertEqual(linked.status_code, 201, linked.data)
         self.assertEqual(linked.data["data"]["relation"], "child")
-        self.assertEqual(services.profile(self.parent).role, "parent")
         self.client.post(API + "planning/family-links/", HTTP_X_SPONSOR_TOKEN=token)
         self.assertEqual(FamilyLink.objects.count(), 1)
         self.client.force_authenticate(self.student)
@@ -273,7 +357,6 @@ class InSchoolTests(ConversationHarness):
     username = "plan-student"
 
     def enroll(self, with_loan=True):
-        services.set_role(self.user, {"role": "student"})
         services.save_plan(self.user, {"school_key": SCHOOL, "available_funds": "100000", "funds_currency": "THB"})
         if with_loan:
             services.simulate_loan(self.user, {"months": 12})
@@ -340,8 +423,8 @@ class InSchoolTests(ConversationHarness):
         empty = self.client.get(API + "planning/expenses/?month=2026-08").data["data"]
         self.assertEqual((empty["entries"], empty["count"]), ([], 0))
 
-    def test_finance_requests_still_reach_the_wallet_tools(self):
-        services.set_role(self.user, {"role": "student"})
+    def test_finance_requests_reach_the_wallet_tools_after_enrollment(self):
+        self.enroll(with_loan=False)
         conversation = self.start()
         turn = self.say(conversation, "人民币兑泰铢汇率是多少")
         self.assertEqual(turn["steps"][0]["tool"], "get_fx_rate")

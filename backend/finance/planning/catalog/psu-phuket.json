@@ -1,6 +1,6 @@
 {
   "key": "psu-phuket",
-  "version": 1,
+  "version": 3,
   "sample": true,
   "observed_at": "2026-10-12",
   "school": {
@@ -25,7 +25,9 @@
     },
     "language": "English",
     "website": "https://sites.google.com/phuket.psu.ac.th/fispsuphuket/International-Students",
-    "duration_years": 3
+    "duration_years": 3,
+    "duration_months": 42,
+    "total_semesters": 10
   },
   "calendar": {
     "intake": "2027-08",
@@ -421,8 +423,8 @@
       "zh": "费用为 2026 级标准，2027 级可能调整。"
     },
     {
-      "en": "The BBA runs 10 semesters over 3.5 years; estimates count 3 semesters a year for 3 years.",
-      "zh": "该 BBA 3.5 年共 10 个学期；估算按每年 3 个学期、共 3 年计算。"
+      "en": "The BBA runs 10 semesters over 3.5 years; estimates count all 10 semesters and 42 living-cost months.",
+      "zh": "该 BBA 学制 3.5 年共 10 学期；按 10 学期及 42 个月生活费估算。"
     },
     {
       "en": "2027 dates are projected from the 2026 Phuket calendar (10 Aug to 15 Dec 2026).",

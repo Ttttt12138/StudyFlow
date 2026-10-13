@@ -8,10 +8,13 @@ from rest_framework.views import APIView
 
 from finance.throttles import ScopedThrottle, UserThrottle
 from finance.workflow_common import require
+from finance.workflow_api import CommandView
 from finance.workflow_serializers import CommandResponse, Input
 
 from . import catalog, conversation, services
 from .models import ROLES, AgentConversation
+from . import assessment
+from .assessment_inputs import AssessmentInput, SubmitPlanningLoan
 
 KEY = OpenApiParameter(name="Idempotency-Key", location=OpenApiParameter.HEADER, required=True, type=str)
 
@@ -27,7 +30,9 @@ def _key(request):
 
 
 class PlanningProfileInput(Input):
-    role = s.ChoiceField(choices=ROLES)
+    # role is legacy and optional; the product no longer asks who is planning.
+    role = s.ChoiceField(choices=ROLES, required=False, allow_blank=True)
+    # One of DISPLAY_CURRENCIES; services.set_profile rejects others with CURRENCY_NOT_SUPPORTED.
     home_currency = s.CharField(max_length=3, required=False)
 
 
@@ -44,8 +49,16 @@ class ProfileView(APIView):
         data = PlanningProfileInput(data=request.data)
         data.is_valid(raise_exception=True)
         with transaction.atomic():
-            result = services.set_role(request.user, data.validated_data)
+            result = services.set_profile(request.user, data.validated_data)
         return Response({"data": result})
+
+
+class DisplayRatesView(APIView):
+    """Indicative THB rates the app uses to show amounts in THB, CNY or USD."""
+
+    @extend_schema(responses=CommandResponse)
+    def get(self, request):
+        return Response({"data": services.display_rates()})
 
 
 class SchoolListView(APIView):
@@ -144,6 +157,7 @@ class MessageView(APIView):
 
 urlpatterns = [
     path("planning/profile/", ProfileView.as_view()),
+    path("planning/rates/", DisplayRatesView.as_view()),
     path("planning/schools/", SchoolListView.as_view()),
     path("planning/schools/<slug:key>/", SchoolDetailView.as_view()),
     path("planning/family-links/", FamilyLinkView.as_view()),
@@ -198,8 +212,16 @@ def _commands():
 
     from .models import PlanBill
     from .tools import ExpenseInput
+    from . import life_commands
+    from .life_inputs import ReminderActionInput, StudyBudgetInput, StudyClockInput, StudyTaskInput, UndoExpenseInput
 
-    return [command("planning/expenses/record/", "PlanningExpense", ExpenseInput, _expense),
+    return [command("planning/life/tasks/", "StudyTaskCreate", StudyTaskInput, life_commands.create_task),
+            command("planning/life/clock/", "StudyClockAdvance", StudyClockInput, life_commands.advance_clock),
+            command("planning/life/actions/", "StudyReminderAction", ReminderActionInput, life_commands.act),
+            command("planning/life/budget/", "StudyBudgetSave", StudyBudgetInput, life_commands.save_budget),
+            command("planning/life/undo-expense/", "StudyExpenseUndo", UndoExpenseInput, life_commands.undo_expense),
+            command("planning/loan-applications/", "PlanningLoanSubmit", SubmitPlanningLoan, assessment.submit),
+            command("planning/expenses/record/", "PlanningExpense", ExpenseInput, _expense),
             command("planning/bills/<uuid:pk>/pay/", "PlanningBillPay", EmptyInput, _pay, PlanBill)]
 
 
@@ -208,3 +230,26 @@ urlpatterns += [
     path("planning/expenses/", ExpenseView.as_view()),
     *_commands(),
 ]
+
+
+class AssessmentView(CommandView):
+    serializer_class = AssessmentInput
+    handler = staticmethod(assessment.save)
+
+    @extend_schema(responses=CommandResponse)
+    def get(self, request):
+        return Response({"data": assessment.read(request.user)})
+
+
+# The combined read/write resource must precede the command route at the same path.
+urlpatterns.insert(0, path("planning/assessment/", AssessmentView.as_view()))
+
+
+class StudyLifeView(APIView):
+    @extend_schema(responses=CommandResponse)
+    def get(self, request):
+        from . import life
+        return Response({"data": life.read(request.user)})
+
+
+urlpatterns.append(path("planning/life/", StudyLifeView.as_view()))

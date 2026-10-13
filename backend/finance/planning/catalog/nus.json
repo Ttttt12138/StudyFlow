@@ -1,19 +1,33 @@
 {
   "key": "nus",
-  "version": 1,
+  "version": 2,
   "sample": true,
   "observed_at": "2026-10-12",
   "school": {
-    "name": {"en": "National University of Singapore (NUS Business School)", "zh": "新加坡国立大学（商学院）"},
-    "country": {"en": "Singapore", "zh": "新加坡"},
+    "name": {
+      "en": "National University of Singapore (NUS Business School)",
+      "zh": "新加坡国立大学（商学院）"
+    },
+    "country": {
+      "en": "Singapore",
+      "zh": "新加坡"
+    },
     "country_code": "SG",
-    "city": {"en": "Singapore (Kent Ridge)", "zh": "新加坡（肯特岗）"},
+    "city": {
+      "en": "Singapore (Kent Ridge)",
+      "zh": "新加坡（肯特岗）"
+    },
     "campus": "Kent Ridge",
     "currency": "SGD",
-    "program": {"en": "Bachelor of Business Administration (BBA)", "zh": "工商管理学士（BBA）"},
+    "program": {
+      "en": "Bachelor of Business Administration (BBA)",
+      "zh": "工商管理学士（BBA）"
+    },
     "language": "English",
     "website": "https://bba.nus.edu.sg/",
-    "duration_years": 4
+    "duration_years": 4,
+    "duration_months": 48,
+    "total_semesters": 8
   },
   "calendar": {
     "intake": "2027-08",
@@ -26,7 +40,10 @@
     {
       "cost_id": "tuition_year_no_grant",
       "category": "tuition",
-      "label": {"en": "Tuition, international student WITHOUT MOE Tuition Grant, Business (AY2026/27 cohort rate, incl. GST)", "zh": "学费：国际生不申请教育部学费津贴（商学院，AY2026/27 入学年级标准，含消费税）"},
+      "label": {
+        "en": "Tuition, international student WITHOUT MOE Tuition Grant, Business (AY2026/27 cohort rate, incl. GST)",
+        "zh": "学费：国际生不申请教育部学费津贴（商学院，AY2026/27 入学年级标准，含消费税）"
+      },
       "period": "year",
       "amount": "33400.00",
       "estimate": false,
@@ -36,7 +53,10 @@
     {
       "cost_id": "misc_student_fees",
       "category": "tuition",
-      "label": {"en": "Miscellaneous student fees (student services, health service, etc.)", "zh": "杂费（学生服务费、健康服务费等）"},
+      "label": {
+        "en": "Miscellaneous student fees (student services, health service, etc.)",
+        "zh": "杂费（学生服务费、健康服务费等）"
+      },
       "period": "semester",
       "lower": "200.00",
       "upper": "450.00",
@@ -45,7 +65,10 @@
     {
       "cost_id": "hostel_month",
       "category": "housing",
-      "label": {"en": "On-campus hall / residence room (varies by hall and room type)", "zh": "校内宿舍（视宿舍和房型而定）"},
+      "label": {
+        "en": "On-campus hall / residence room (varies by hall and room type)",
+        "zh": "校内宿舍（视宿舍和房型而定）"
+      },
       "period": "month",
       "lower": "500.00",
       "upper": "1200.00",
@@ -54,7 +77,10 @@
     {
       "cost_id": "food_monthly",
       "category": "food",
-      "label": {"en": "Canteens and hawker centres", "zh": "校内食堂与小贩中心"},
+      "label": {
+        "en": "Canteens and hawker centres",
+        "zh": "校内食堂与小贩中心"
+      },
       "period": "month",
       "lower": "300.00",
       "upper": "600.00",
@@ -63,7 +89,10 @@
     {
       "cost_id": "transport_monthly",
       "category": "transport",
-      "label": {"en": "MRT and buses (free NUS internal shuttle on campus)", "zh": "地铁和公交（校内穿梭巴士免费）"},
+      "label": {
+        "en": "MRT and buses (free NUS internal shuttle on campus)",
+        "zh": "地铁和公交（校内穿梭巴士免费）"
+      },
       "period": "month",
       "lower": "30.00",
       "upper": "100.00",
@@ -72,7 +101,10 @@
     {
       "cost_id": "phone_internet",
       "category": "communications",
-      "label": {"en": "Mobile plan", "zh": "手机套餐"},
+      "label": {
+        "en": "Mobile plan",
+        "zh": "手机套餐"
+      },
       "period": "month",
       "lower": "10.00",
       "upper": "30.00",
@@ -81,7 +113,10 @@
     {
       "cost_id": "student_insurance",
       "category": "insurance",
-      "label": {"en": "Compulsory NUS student medical insurance scheme", "zh": "NUS 学生强制医疗保险"},
+      "label": {
+        "en": "Compulsory NUS student medical insurance scheme",
+        "zh": "NUS 学生强制医疗保险"
+      },
       "period": "year",
       "lower": "50.00",
       "upper": "300.00",
@@ -90,7 +125,10 @@
     {
       "cost_id": "student_pass_issuance",
       "category": "visa",
-      "label": {"en": "Student's Pass issuance fee (ICA)", "zh": "学生准证签发费（ICA）"},
+      "label": {
+        "en": "Student's Pass issuance fee (ICA)",
+        "zh": "学生准证签发费（ICA）"
+      },
       "period": "once",
       "amount": "60.00",
       "estimate": false,
@@ -100,7 +138,10 @@
     {
       "cost_id": "multiple_journey_visa",
       "category": "visa",
-      "label": {"en": "Multiple Journey Visa (needed by visa-required nationals such as China)", "zh": "多次入境签证（中国等需签证国籍适用）"},
+      "label": {
+        "en": "Multiple Journey Visa (needed by visa-required nationals such as China)",
+        "zh": "多次入境签证（中国等需签证国籍适用）"
+      },
       "period": "once",
       "amount": "30.00",
       "estimate": false,
@@ -110,7 +151,10 @@
     {
       "cost_id": "student_pass_processing",
       "category": "visa",
-      "label": {"en": "Student's Pass processing fee (non-refundable)", "zh": "学生准证申请处理费（不退）"},
+      "label": {
+        "en": "Student's Pass processing fee (non-refundable)",
+        "zh": "学生准证申请处理费（不退）"
+      },
       "period": "once",
       "lower": "30.00",
       "upper": "45.00",
@@ -119,7 +163,10 @@
     {
       "cost_id": "flights_home",
       "category": "travel",
-      "label": {"en": "Return flight China-Singapore, once a year", "zh": "中国往返新加坡机票（每年一次）"},
+      "label": {
+        "en": "Return flight China-Singapore, once a year",
+        "zh": "中国往返新加坡机票（每年一次）"
+      },
       "period": "year",
       "lower": "400.00",
       "upper": "1000.00",
@@ -128,7 +175,10 @@
     {
       "cost_id": "settling_in",
       "category": "settlement",
-      "label": {"en": "Bedding, daily items and first-week costs", "zh": "床品、日用品及入住首周开销"},
+      "label": {
+        "en": "Bedding, daily items and first-week costs",
+        "zh": "床品、日用品及入住首周开销"
+      },
       "period": "once",
       "lower": "300.00",
       "upper": "600.00",
@@ -137,7 +187,10 @@
     {
       "cost_id": "books_supplies",
       "category": "study_materials",
-      "label": {"en": "Books, printing and software", "zh": "书本、打印及软件"},
+      "label": {
+        "en": "Books, printing and software",
+        "zh": "书本、打印及软件"
+      },
       "period": "year",
       "lower": "100.00",
       "upper": "300.00",
@@ -145,37 +198,243 @@
     }
   ],
   "facilities": [
-    {"name": {"en": "NUS Central Library", "zh": "国大中央图书馆"}, "kind": "library", "note": {"en": "Main library at Kent Ridge.", "zh": "肯特岗校区主图书馆。"}, "distance_km": 0.6},
-    {"name": {"en": "Hon Sui Sen Memorial Library", "zh": "韩瑞生纪念图书馆（商学院图书馆）"}, "kind": "library", "note": {"en": "Business school library.", "zh": "商学院专属图书馆。"}, "distance_km": 0},
-    {"name": {"en": "Mochtar Riady Building (NUS Business School)", "zh": "李文正大楼（国大商学院）"}, "kind": "faculty building", "note": {"en": "Main teaching building of the business school.", "zh": "商学院主要教学楼。"}, "distance_km": 0},
-    {"name": {"en": "University Town (UTown)", "zh": "大学城（UTown）"}, "kind": "residential campus", "note": {"en": "Residential colleges, study spaces and food court.", "zh": "住宿学院、自习空间与美食广场。"}, "distance_km": 1.5},
-    {"name": {"en": "University Sports Centre", "zh": "大学体育中心"}, "kind": "sports", "note": {"en": "Gym, pool and sports halls.", "zh": "健身房、游泳池和运动馆。"}, "distance_km": 0.8}
+    {
+      "name": {
+        "en": "NUS Central Library",
+        "zh": "国大中央图书馆"
+      },
+      "kind": "library",
+      "note": {
+        "en": "Main library at Kent Ridge.",
+        "zh": "肯特岗校区主图书馆。"
+      },
+      "distance_km": 0.6
+    },
+    {
+      "name": {
+        "en": "Hon Sui Sen Memorial Library",
+        "zh": "韩瑞生纪念图书馆（商学院图书馆）"
+      },
+      "kind": "library",
+      "note": {
+        "en": "Business school library.",
+        "zh": "商学院专属图书馆。"
+      },
+      "distance_km": 0
+    },
+    {
+      "name": {
+        "en": "Mochtar Riady Building (NUS Business School)",
+        "zh": "李文正大楼（国大商学院）"
+      },
+      "kind": "faculty building",
+      "note": {
+        "en": "Main teaching building of the business school.",
+        "zh": "商学院主要教学楼。"
+      },
+      "distance_km": 0
+    },
+    {
+      "name": {
+        "en": "University Town (UTown)",
+        "zh": "大学城（UTown）"
+      },
+      "kind": "residential campus",
+      "note": {
+        "en": "Residential colleges, study spaces and food court.",
+        "zh": "住宿学院、自习空间与美食广场。"
+      },
+      "distance_km": 1.5
+    },
+    {
+      "name": {
+        "en": "University Sports Centre",
+        "zh": "大学体育中心"
+      },
+      "kind": "sports",
+      "note": {
+        "en": "Gym, pool and sports halls.",
+        "zh": "健身房、游泳池和运动馆。"
+      },
+      "distance_km": 0.8
+    }
   ],
   "food": [
-    {"name": {"en": "The Deck (Faculty of Arts canteen)", "zh": "The Deck（文学院食堂）"}, "kind": "canteen", "note": {"en": "Large canteen near the business school.", "zh": "商学院附近的大型食堂。"}, "distance_km": 0.4, "typical_cost": "5.00"},
-    {"name": {"en": "Frontier (Science canteen)", "zh": "Frontier（理学院食堂）"}, "kind": "canteen", "note": {"en": "Halal and non-halal stalls.", "zh": "清真与非清真档口兼有。"}, "distance_km": 1, "typical_cost": "5.00"},
-    {"name": {"en": "Fine Food (UTown)", "zh": "Fine Food（大学城美食广场）"}, "kind": "food court", "note": {"en": "Food court in University Town.", "zh": "大学城美食广场。"}, "distance_km": 1.5, "typical_cost": "6.00"},
-    {"name": {"en": "West Coast Market Square hawker centre", "zh": "西海岸市场小贩中心"}, "kind": "hawker centre", "note": {"en": "Local hawker food near Clementi/West Coast.", "zh": "金文泰/西海岸一带的本地小贩美食。"}, "distance_km": 2, "typical_cost": "5.00"}
+    {
+      "name": {
+        "en": "The Deck (Faculty of Arts canteen)",
+        "zh": "The Deck（文学院食堂）"
+      },
+      "kind": "canteen",
+      "note": {
+        "en": "Large canteen near the business school.",
+        "zh": "商学院附近的大型食堂。"
+      },
+      "distance_km": 0.4,
+      "typical_cost": "5.00"
+    },
+    {
+      "name": {
+        "en": "Frontier (Science canteen)",
+        "zh": "Frontier（理学院食堂）"
+      },
+      "kind": "canteen",
+      "note": {
+        "en": "Halal and non-halal stalls.",
+        "zh": "清真与非清真档口兼有。"
+      },
+      "distance_km": 1,
+      "typical_cost": "5.00"
+    },
+    {
+      "name": {
+        "en": "Fine Food (UTown)",
+        "zh": "Fine Food（大学城美食广场）"
+      },
+      "kind": "food court",
+      "note": {
+        "en": "Food court in University Town.",
+        "zh": "大学城美食广场。"
+      },
+      "distance_km": 1.5,
+      "typical_cost": "6.00"
+    },
+    {
+      "name": {
+        "en": "West Coast Market Square hawker centre",
+        "zh": "西海岸市场小贩中心"
+      },
+      "kind": "hawker centre",
+      "note": {
+        "en": "Local hawker food near Clementi/West Coast.",
+        "zh": "金文泰/西海岸一带的本地小贩美食。"
+      },
+      "distance_km": 2,
+      "typical_cost": "5.00"
+    }
   ],
   "attractions": [
-    {"name": {"en": "NUS Museum", "zh": "国大博物馆"}, "kind": "museum", "note": {"en": "Asian art collections on campus; free.", "zh": "校内亚洲艺术收藏，免费。"}, "distance_km": 0.5, "typical_cost": "0.00"},
-    {"name": {"en": "Kent Ridge Park", "zh": "肯特岗公园"}, "kind": "park", "note": {"en": "Hilltop park with canopy walk next to campus.", "zh": "紧邻校园的山顶公园，有树冠步道。"}, "distance_km": 1, "typical_cost": "0.00"},
-    {"name": {"en": "Haw Par Villa", "zh": "虎豹别墅"}, "kind": "heritage", "note": {"en": "Chinese mythology theme park; free entry.", "zh": "中国神话主题公园，免费入园。"}, "distance_km": 2.5, "typical_cost": "0.00"},
-    {"name": {"en": "Southern Ridges and Henderson Waves", "zh": "南部山脊与亨德森波浪桥"}, "kind": "nature", "note": {"en": "Linked hilltop walking trail.", "zh": "连贯的山脊步道。"}, "distance_km": 4, "typical_cost": "0.00"},
-    {"name": {"en": "Singapore Botanic Gardens", "zh": "新加坡植物园"}, "kind": "park", "note": {"en": "UNESCO World Heritage garden; main garden free.", "zh": "世界遗产，主园区免费。"}, "distance_km": 8, "typical_cost": "0.00"},
-    {"name": {"en": "Gardens by the Bay (outdoor gardens)", "zh": "滨海湾花园（户外园区）"}, "kind": "park", "note": {"en": "Outdoor gardens free; conservatories charge entry.", "zh": "户外园区免费，温室需购票。"}, "distance_km": 12, "typical_cost": "0.00"}
+    {
+      "name": {
+        "en": "NUS Museum",
+        "zh": "国大博物馆"
+      },
+      "kind": "museum",
+      "note": {
+        "en": "Asian art collections on campus; free.",
+        "zh": "校内亚洲艺术收藏，免费。"
+      },
+      "distance_km": 0.5,
+      "typical_cost": "0.00"
+    },
+    {
+      "name": {
+        "en": "Kent Ridge Park",
+        "zh": "肯特岗公园"
+      },
+      "kind": "park",
+      "note": {
+        "en": "Hilltop park with canopy walk next to campus.",
+        "zh": "紧邻校园的山顶公园，有树冠步道。"
+      },
+      "distance_km": 1,
+      "typical_cost": "0.00"
+    },
+    {
+      "name": {
+        "en": "Haw Par Villa",
+        "zh": "虎豹别墅"
+      },
+      "kind": "heritage",
+      "note": {
+        "en": "Chinese mythology theme park; free entry.",
+        "zh": "中国神话主题公园，免费入园。"
+      },
+      "distance_km": 2.5,
+      "typical_cost": "0.00"
+    },
+    {
+      "name": {
+        "en": "Southern Ridges and Henderson Waves",
+        "zh": "南部山脊与亨德森波浪桥"
+      },
+      "kind": "nature",
+      "note": {
+        "en": "Linked hilltop walking trail.",
+        "zh": "连贯的山脊步道。"
+      },
+      "distance_km": 4,
+      "typical_cost": "0.00"
+    },
+    {
+      "name": {
+        "en": "Singapore Botanic Gardens",
+        "zh": "新加坡植物园"
+      },
+      "kind": "park",
+      "note": {
+        "en": "UNESCO World Heritage garden; main garden free.",
+        "zh": "世界遗产，主园区免费。"
+      },
+      "distance_km": 8,
+      "typical_cost": "0.00"
+    },
+    {
+      "name": {
+        "en": "Gardens by the Bay (outdoor gardens)",
+        "zh": "滨海湾花园（户外园区）"
+      },
+      "kind": "park",
+      "note": {
+        "en": "Outdoor gardens free; conservatories charge entry.",
+        "zh": "户外园区免费，温室需购票。"
+      },
+      "distance_km": 12,
+      "typical_cost": "0.00"
+    }
   ],
   "sources": [
-    {"url": "https://www.nus.edu.sg/registrar/docs/default-source/administrative-policies-procedures/ugtuitioncurrent.pdf", "title": "NUS Registrar - Undergraduate tuition fees AY2026/2027 (March 2026)", "accessed": "2026-10-12"},
-    {"url": "https://nus.edu.sg/registrar/calendar", "title": "NUS Registrar - Academic calendars", "accessed": "2026-10-12"},
-    {"url": "https://www.ica.gov.sg/reside/STP/collect", "title": "ICA - Collecting your Student's Pass (fees)", "accessed": "2026-10-12"},
-    {"url": "https://bba.nus.edu.sg/", "title": "NUS Business School - BBA", "accessed": "2026-10-12"}
+    {
+      "url": "https://www.nus.edu.sg/registrar/docs/default-source/administrative-policies-procedures/ugtuitioncurrent.pdf",
+      "title": "NUS Registrar - Undergraduate tuition fees AY2026/2027 (March 2026)",
+      "accessed": "2026-10-12"
+    },
+    {
+      "url": "https://nus.edu.sg/registrar/calendar",
+      "title": "NUS Registrar - Academic calendars",
+      "accessed": "2026-10-12"
+    },
+    {
+      "url": "https://www.ica.gov.sg/reside/STP/collect",
+      "title": "ICA - Collecting your Student's Pass (fees)",
+      "accessed": "2026-10-12"
+    },
+    {
+      "url": "https://bba.nus.edu.sg/",
+      "title": "NUS Business School - BBA",
+      "accessed": "2026-10-12"
+    }
   ],
   "notes": [
-    {"en": "Sample data from public sources; confirm with the school before paying.", "zh": "示例数据，来自公开资料；付款前请向学校确认。"},
-    {"en": "Tuition shown is WITHOUT the MOE Tuition Grant (S$33,400 a year). With the grant a non-ASEAN international student pays S$22,200 a year (ASEAN S$21,150) but must work in Singapore for 3 years after graduating.", "zh": "学费按不申请教育部学费津贴计（每年 S$33,400）。申请津贴后，非东盟国际生每年 S$22,200（东盟 S$21,150），但毕业后须在新加坡工作 3 年。"},
-    {"en": "These are AY2026/27 cohort fees; AY2027/28 fees were not yet available and are usually a little higher. Fees are fixed for a cohort once admitted.", "zh": "以上为 AY2026/27 入学年级学费，AY2027/28 尚未取得，通常略高；入学后该年级学费固定不变。"},
-    {"en": "The Semester 1 dates (9 Aug-4 Dec 2027) are projected; the AY2027/28 calendar was not checked.", "zh": "第一学期日期（2027-08-09 至 12-04）为推算，未核对 AY2027/28 校历。"},
-    {"en": "Hostel, insurance and miscellaneous fees are estimates; check NUS housing and the Registrar fee pages.", "zh": "宿舍、保险及杂费为估算，请以 NUS 住宿处和注册处页面为准。"}
+    {
+      "en": "Sample data from public sources; confirm with the school before paying.",
+      "zh": "示例数据，来自公开资料；付款前请向学校确认。"
+    },
+    {
+      "en": "Tuition shown is WITHOUT the MOE Tuition Grant (S$33,400 a year). With the grant a non-ASEAN international student pays S$22,200 a year (ASEAN S$21,150) but must work in Singapore for 3 years after graduating.",
+      "zh": "学费按不申请教育部学费津贴计（每年 S$33,400）。申请津贴后，非东盟国际生每年 S$22,200（东盟 S$21,150），但毕业后须在新加坡工作 3 年。"
+    },
+    {
+      "en": "These are AY2026/27 cohort fees; AY2027/28 fees were not yet available and are usually a little higher. Fees are fixed for a cohort once admitted.",
+      "zh": "以上为 AY2026/27 入学年级学费，AY2027/28 尚未取得，通常略高；入学后该年级学费固定不变。"
+    },
+    {
+      "en": "The Semester 1 dates (9 Aug-4 Dec 2027) are projected; the AY2027/28 calendar was not checked.",
+      "zh": "第一学期日期（2027-08-09 至 12-04）为推算，未核对 AY2027/28 校历。"
+    },
+    {
+      "en": "Hostel, insurance and miscellaneous fees are estimates; check NUS housing and the Registrar fee pages.",
+      "zh": "宿舍、保险及杂费为估算，请以 NUS 住宿处和注册处页面为准。"
+    }
   ]
 }

@@ -1,19 +1,33 @@
 {
   "key": "malaya",
-  "version": 1,
+  "version": 3,
   "sample": true,
   "observed_at": "2026-10-12",
   "school": {
-    "name": {"en": "Universiti Malaya (Faculty of Business and Economics)", "zh": "马来亚大学（商业与经济学院）"},
-    "country": {"en": "Malaysia", "zh": "马来西亚"},
+    "name": {
+      "en": "Universiti Malaya (Faculty of Business and Economics)",
+      "zh": "马来亚大学（商业与经济学院）"
+    },
+    "country": {
+      "en": "Malaysia",
+      "zh": "马来西亚"
+    },
     "country_code": "MY",
-    "city": {"en": "Kuala Lumpur", "zh": "吉隆坡"},
+    "city": {
+      "en": "Kuala Lumpur",
+      "zh": "吉隆坡"
+    },
     "campus": "Kuala Lumpur (Pantai Valley)",
     "currency": "MYR",
-    "program": {"en": "Bachelor of Business Administration (3.5 years, 7 semesters)", "zh": "工商管理学士（3.5 年，共 7 个学期）"},
+    "program": {
+      "en": "Bachelor of Business Administration (3.5 years, 7 semesters)",
+      "zh": "工商管理学士（3.5 年，共 7 个学期）"
+    },
     "language": "English",
     "website": "https://study.um.edu.my/bachelor-of-business-administration",
-    "duration_years": 4
+    "duration_years": 4,
+    "duration_months": 42,
+    "total_semesters": 7
   },
   "calendar": {
     "intake": "2027-10",
@@ -25,17 +39,24 @@
     {
       "cost_id": "tuition_semester",
       "category": "tuition",
-      "label": {"en": "Tuition, international student: RM 77,100 for the whole programme (excl. 6% SST), spread over 7 semesters", "zh": "国际生学费：全程 RM 77,100（不含 6% 销售与服务税），按 7 个学期平摊"},
+      "label": {
+        "en": "Tuition, international student: RM 77,100 for the whole programme (excl. 6% SST), spread over 7 semesters",
+        "zh": "国际生学费：全程 RM 77,100（不含 6% 销售与服务税），按 7 个学期平摊"
+      },
       "period": "semester",
       "amount": "11014.29",
       "estimate": false,
       "source_url": "https://study.um.edu.my/bachelor-of-business-administration",
-      "quote": "International RM 77,100"
+      "quote": "International RM 77,100",
+      "course_total": "77100.00"
     },
     {
       "cost_id": "residential_college",
       "category": "housing",
-      "label": {"en": "UM residential college room, per semester (quadruple to twin room; incl. utilities and WiFi)", "zh": "马大住宿学院，每学期（四人间至双人间，含水电和网络）"},
+      "label": {
+        "en": "UM residential college room, per semester (quadruple to twin room; incl. utilities and WiFi)",
+        "zh": "马大住宿学院，每学期（四人间至双人间，含水电和网络）"
+      },
       "period": "semester",
       "lower": "915.00",
       "upper": "1960.00",
@@ -46,7 +67,10 @@
     {
       "cost_id": "food_monthly",
       "category": "food",
-      "label": {"en": "Campus cafeterias and hawker food", "zh": "校内食堂与小贩美食"},
+      "label": {
+        "en": "Campus cafeterias and hawker food",
+        "zh": "校内食堂与小贩美食"
+      },
       "period": "month",
       "lower": "600.00",
       "upper": "1000.00",
@@ -55,7 +79,10 @@
     {
       "cost_id": "transport_monthly",
       "category": "transport",
-      "label": {"en": "LRT/MRT, buses and occasional Grab rides", "zh": "轻轨/地铁、公交及偶尔打车（Grab）"},
+      "label": {
+        "en": "LRT/MRT, buses and occasional Grab rides",
+        "zh": "轻轨/地铁、公交及偶尔打车（Grab）"
+      },
       "period": "month",
       "lower": "50.00",
       "upper": "150.00",
@@ -64,7 +91,10 @@
     {
       "cost_id": "phone_internet",
       "category": "communications",
-      "label": {"en": "Prepaid mobile plan", "zh": "预付费手机套餐"},
+      "label": {
+        "en": "Prepaid mobile plan",
+        "zh": "预付费手机套餐"
+      },
       "period": "month",
       "lower": "30.00",
       "upper": "60.00",
@@ -73,7 +103,10 @@
     {
       "cost_id": "medical_insurance",
       "category": "insurance",
-      "label": {"en": "Compulsory international student medical insurance (may be included in the visa processing fee)", "zh": "国际生强制医疗保险（可能已含在签证处理费中）"},
+      "label": {
+        "en": "Compulsory international student medical insurance (may be included in the visa processing fee)",
+        "zh": "国际生强制医疗保险（可能已含在签证处理费中）"
+      },
       "period": "year",
       "lower": "500.00",
       "upper": "1000.00",
@@ -82,7 +115,10 @@
     {
       "cost_id": "visa_processing_3yr",
       "category": "visa",
-      "label": {"en": "UM international student processing fee, 3-year student visa (China; includes the Multiple Entry Visa fee)", "zh": "马大国际生签证处理费，3 年学生签证（中国籍，已含多次入境签证费）"},
+      "label": {
+        "en": "UM international student processing fee, 3-year student visa (China; includes the Multiple Entry Visa fee)",
+        "zh": "马大国际生签证处理费，3 年学生签证（中国籍，已含多次入境签证费）"
+      },
       "period": "once",
       "amount": "6181.00",
       "estimate": false,
@@ -92,7 +128,10 @@
     {
       "cost_id": "flights_home",
       "category": "travel",
-      "label": {"en": "Return flight China-Kuala Lumpur, once a year", "zh": "中国往返吉隆坡机票（每年一次）"},
+      "label": {
+        "en": "Return flight China-Kuala Lumpur, once a year",
+        "zh": "中国往返吉隆坡机票（每年一次）"
+      },
       "period": "year",
       "lower": "1500.00",
       "upper": "3500.00",
@@ -101,7 +140,10 @@
     {
       "cost_id": "settling_in",
       "category": "settlement",
-      "label": {"en": "Bedding, daily items and first-week costs", "zh": "床品、日用品及入住首周开销"},
+      "label": {
+        "en": "Bedding, daily items and first-week costs",
+        "zh": "床品、日用品及入住首周开销"
+      },
       "period": "once",
       "lower": "500.00",
       "upper": "1000.00",
@@ -110,44 +152,264 @@
     {
       "cost_id": "books_supplies",
       "category": "study_materials",
-      "label": {"en": "Books, printing and software", "zh": "书本、打印及软件"},
+      "label": {
+        "en": "Books, printing and software",
+        "zh": "书本、打印及软件"
+      },
       "period": "year",
       "lower": "200.00",
       "upper": "500.00",
       "estimate": true
+    },
+    {
+      "cost_id": "tuition_tax",
+      "category": "tuition",
+      "label": {
+        "zh": "学费税费（适用金额待确认）",
+        "en": "Tuition tax (applicable amount to confirm)"
+      },
+      "period": "once",
+      "estimate": true,
+      "status": "missing"
+    },
+    {
+      "cost_id": "visa_renewal",
+      "category": "visa",
+      "label": {
+        "en": "Visa renewal beyond 3 years",
+        "zh": "超过三年的签证续签费用"
+      },
+      "period": "once",
+      "amount": null,
+      "status": "missing",
+      "estimate": true,
+      "start_month": 36
     }
   ],
   "facilities": [
-    {"name": {"en": "UM Main Library", "zh": "马大主图书馆"}, "kind": "library", "note": {"en": "Central library on the Kuala Lumpur campus.", "zh": "吉隆坡校区中央图书馆。"}, "distance_km": 0.5},
-    {"name": {"en": "Faculty of Business and Economics building", "zh": "商业与经济学院大楼"}, "kind": "faculty building", "note": {"en": "Home of the BBA programme.", "zh": "BBA 项目所在学院。"}, "distance_km": 0},
-    {"name": {"en": "Dewan Tunku Canselor", "zh": "东姑校长礼堂"}, "kind": "landmark", "note": {"en": "Main hall for convocations and events.", "zh": "毕业典礼与大型活动礼堂。"}, "distance_km": 0.6},
-    {"name": {"en": "UM Sports Centre", "zh": "马大体育中心"}, "kind": "sports", "note": {"en": "Stadium, pool and courts on campus.", "zh": "校内体育场、游泳池和球场。"}, "distance_km": 1},
-    {"name": {"en": "Rimba Ilmu botanic garden", "zh": "Rimba Ilmu 植物园"}, "kind": "garden", "note": {"en": "University tropical botanic garden.", "zh": "大学热带植物园。"}, "distance_km": 1.2},
-    {"name": {"en": "Museum of Asian Art", "zh": "亚洲艺术博物馆"}, "kind": "museum", "note": {"en": "University museum of Asian ceramics and art.", "zh": "收藏亚洲陶瓷与艺术的大学博物馆。"}, "distance_km": 0.7}
+    {
+      "name": {
+        "en": "UM Main Library",
+        "zh": "马大主图书馆"
+      },
+      "kind": "library",
+      "note": {
+        "en": "Central library on the Kuala Lumpur campus.",
+        "zh": "吉隆坡校区中央图书馆。"
+      },
+      "distance_km": 0.5
+    },
+    {
+      "name": {
+        "en": "Faculty of Business and Economics building",
+        "zh": "商业与经济学院大楼"
+      },
+      "kind": "faculty building",
+      "note": {
+        "en": "Home of the BBA programme.",
+        "zh": "BBA 项目所在学院。"
+      },
+      "distance_km": 0
+    },
+    {
+      "name": {
+        "en": "Dewan Tunku Canselor",
+        "zh": "东姑校长礼堂"
+      },
+      "kind": "landmark",
+      "note": {
+        "en": "Main hall for convocations and events.",
+        "zh": "毕业典礼与大型活动礼堂。"
+      },
+      "distance_km": 0.6
+    },
+    {
+      "name": {
+        "en": "UM Sports Centre",
+        "zh": "马大体育中心"
+      },
+      "kind": "sports",
+      "note": {
+        "en": "Stadium, pool and courts on campus.",
+        "zh": "校内体育场、游泳池和球场。"
+      },
+      "distance_km": 1
+    },
+    {
+      "name": {
+        "en": "Rimba Ilmu botanic garden",
+        "zh": "Rimba Ilmu 植物园"
+      },
+      "kind": "garden",
+      "note": {
+        "en": "University tropical botanic garden.",
+        "zh": "大学热带植物园。"
+      },
+      "distance_km": 1.2
+    },
+    {
+      "name": {
+        "en": "Museum of Asian Art",
+        "zh": "亚洲艺术博物馆"
+      },
+      "kind": "museum",
+      "note": {
+        "en": "University museum of Asian ceramics and art.",
+        "zh": "收藏亚洲陶瓷与艺术的大学博物馆。"
+      },
+      "distance_km": 0.7
+    }
   ],
   "food": [
-    {"name": {"en": "Faculty and residential college cafeterias", "zh": "学院及住宿学院食堂"}, "kind": "canteen", "note": {"en": "Malay, Chinese and Indian rice dishes on campus.", "zh": "校内马来、中式和印度饭食。"}, "distance_km": 0.2, "typical_cost": "8.00"},
-    {"name": {"en": "SS2 Petaling Jaya hawker area", "zh": "八打灵再也 SS2 美食区"}, "kind": "hawker", "note": {"en": "Popular Chinese hawker food and night eats.", "zh": "热门华人小吃与宵夜区。"}, "distance_km": 5, "typical_cost": "12.00"},
-    {"name": {"en": "Mid Valley Megamall food court", "zh": "谷中城美食广场"}, "kind": "food court", "note": {"en": "Large mall food court near KL Sentral line.", "zh": "大型商场美食广场。"}, "distance_km": 4, "typical_cost": "15.00"},
-    {"name": {"en": "Bangsar (Jalan Telawi) restaurants", "zh": "孟沙（Jalan Telawi）餐馆"}, "kind": "district", "note": {"en": "Cafes and restaurants close to campus.", "zh": "校园附近的咖啡馆与餐馆。"}, "distance_km": 3, "typical_cost": "25.00"}
+    {
+      "name": {
+        "en": "Faculty and residential college cafeterias",
+        "zh": "学院及住宿学院食堂"
+      },
+      "kind": "canteen",
+      "note": {
+        "en": "Malay, Chinese and Indian rice dishes on campus.",
+        "zh": "校内马来、中式和印度饭食。"
+      },
+      "distance_km": 0.2,
+      "typical_cost": "8.00"
+    },
+    {
+      "name": {
+        "en": "SS2 Petaling Jaya hawker area",
+        "zh": "八打灵再也 SS2 美食区"
+      },
+      "kind": "hawker",
+      "note": {
+        "en": "Popular Chinese hawker food and night eats.",
+        "zh": "热门华人小吃与宵夜区。"
+      },
+      "distance_km": 5,
+      "typical_cost": "12.00"
+    },
+    {
+      "name": {
+        "en": "Mid Valley Megamall food court",
+        "zh": "谷中城美食广场"
+      },
+      "kind": "food court",
+      "note": {
+        "en": "Large mall food court near KL Sentral line.",
+        "zh": "大型商场美食广场。"
+      },
+      "distance_km": 4,
+      "typical_cost": "15.00"
+    },
+    {
+      "name": {
+        "en": "Bangsar (Jalan Telawi) restaurants",
+        "zh": "孟沙（Jalan Telawi）餐馆"
+      },
+      "kind": "district",
+      "note": {
+        "en": "Cafes and restaurants close to campus.",
+        "zh": "校园附近的咖啡馆与餐馆。"
+      },
+      "distance_km": 3,
+      "typical_cost": "25.00"
+    }
   ],
   "attractions": [
-    {"name": {"en": "Perdana Botanical Gardens", "zh": "秀丽湖花园（Perdana 植物园）"}, "kind": "park", "note": {"en": "Large city park; free.", "zh": "大型城市公园，免费。"}, "distance_km": 6, "typical_cost": "0.00"},
-    {"name": {"en": "Islamic Arts Museum Malaysia", "zh": "马来西亚伊斯兰艺术博物馆"}, "kind": "museum", "note": {"en": "Major museum near the gardens (entry fee approximate).", "zh": "植物园旁的大型博物馆（门票为约数）。"}, "distance_km": 6, "typical_cost": "20.00"},
-    {"name": {"en": "KLCC Park and Petronas Twin Towers", "zh": "KLCC 公园与双子塔"}, "kind": "landmark", "note": {"en": "Park is free; tower visits charge entry.", "zh": "公园免费，登塔需购票。"}, "distance_km": 9, "typical_cost": "0.00"},
-    {"name": {"en": "Batu Caves", "zh": "黑风洞"}, "kind": "heritage", "note": {"en": "Hindu temple caves; main cave free.", "zh": "印度教洞穴寺庙，主洞免费。"}, "distance_km": 20, "typical_cost": "0.00"}
+    {
+      "name": {
+        "en": "Perdana Botanical Gardens",
+        "zh": "秀丽湖花园（Perdana 植物园）"
+      },
+      "kind": "park",
+      "note": {
+        "en": "Large city park; free.",
+        "zh": "大型城市公园，免费。"
+      },
+      "distance_km": 6,
+      "typical_cost": "0.00"
+    },
+    {
+      "name": {
+        "en": "Islamic Arts Museum Malaysia",
+        "zh": "马来西亚伊斯兰艺术博物馆"
+      },
+      "kind": "museum",
+      "note": {
+        "en": "Major museum near the gardens (entry fee approximate).",
+        "zh": "植物园旁的大型博物馆（门票为约数）。"
+      },
+      "distance_km": 6,
+      "typical_cost": "20.00"
+    },
+    {
+      "name": {
+        "en": "KLCC Park and Petronas Twin Towers",
+        "zh": "KLCC 公园与双子塔"
+      },
+      "kind": "landmark",
+      "note": {
+        "en": "Park is free; tower visits charge entry.",
+        "zh": "公园免费，登塔需购票。"
+      },
+      "distance_km": 9,
+      "typical_cost": "0.00"
+    },
+    {
+      "name": {
+        "en": "Batu Caves",
+        "zh": "黑风洞"
+      },
+      "kind": "heritage",
+      "note": {
+        "en": "Hindu temple caves; main cave free.",
+        "zh": "印度教洞穴寺庙，主洞免费。"
+      },
+      "distance_km": 20,
+      "typical_cost": "0.00"
+    }
   ],
   "sources": [
-    {"url": "https://study.um.edu.my/bachelor-of-business-administration", "title": "Universiti Malaya - Bachelor of Business Administration (fees, intake)", "accessed": "2026-10-12"},
-    {"url": "https://hep.um.edu.my/UG%20STUDENTS%20RATE.pdf", "title": "UM - Residential college accommodation fees (undergraduate)", "accessed": "2026-10-12"},
-    {"url": "https://study.um.edu.my/doc/VISA%20SERVICES/International%20Student%20Processing%20Fees%20by%20Country%20-%20Updated%2010%20July%202026%202026.pdf", "title": "UM - International student processing fees by country (updated 10 July 2026)", "accessed": "2026-10-12"},
-    {"url": "https://study.um.edu.my/international-student", "title": "Universiti Malaya - International students", "accessed": "2026-10-12"}
+    {
+      "url": "https://study.um.edu.my/bachelor-of-business-administration",
+      "title": "Universiti Malaya - Bachelor of Business Administration (fees, intake)",
+      "accessed": "2026-10-12"
+    },
+    {
+      "url": "https://hep.um.edu.my/UG%20STUDENTS%20RATE.pdf",
+      "title": "UM - Residential college accommodation fees (undergraduate)",
+      "accessed": "2026-10-12"
+    },
+    {
+      "url": "https://study.um.edu.my/doc/VISA%20SERVICES/International%20Student%20Processing%20Fees%20by%20Country%20-%20Updated%2010%20July%202026%202026.pdf",
+      "title": "UM - International student processing fees by country (updated 10 July 2026)",
+      "accessed": "2026-10-12"
+    },
+    {
+      "url": "https://study.um.edu.my/international-student",
+      "title": "Universiti Malaya - International students",
+      "accessed": "2026-10-12"
+    }
   ],
   "notes": [
-    {"en": "Sample data from public sources; confirm with the school before paying.", "zh": "示例数据，来自公开资料；付款前请向学校确认。"},
-    {"en": "The programme is 3.5 years (7 semesters), rounded up to 4 years here, so a 4-year plan counts one semester too many; RM 77,100 is the whole-programme international fee, shown per semester.", "zh": "学制 3.5 年（7 个学期），此处按 4 年计，4 年计划会多算一个学期；RM 77,100 为国际生全程学费，此处按学期平摊显示。"},
-    {"en": "Intakes are October (Semester 1) and March (Semester 2). October 2027 dates are projected; the 2027/28 calendar was not found.", "zh": "每年 10 月（第一学期）和 3 月（第二学期）入学；2027 年 10 月的日期为推算，未找到 2027/28 校历。"},
-    {"en": "The processing fee PDF lists China at RM 30 MEV, RM 5,461 (1-year visa) and RM 6,181 (3-year visa); the visa prices already include the MEV fee. A 3-year visa does not cover a 3.5-year programme, so expect a renewal. Confirm what the package includes (EMGS, insurance).", "zh": "签证处理费 PDF 中国籍一栏：MEV RM 30、1 年签证 RM 5,461、3 年签证 RM 6,181，签证价格已含 MEV 费用。3 年签证不足以覆盖 3.5 年学制，预计需续签。请确认套餐所含内容（EMGS、保险等）。"},
-    {"en": "College room rates are the published undergraduate rates; places for international students are not guaranteed.", "zh": "住宿学院价格为公布的本科生标准，国际生床位不保证。"}
+    {
+      "en": "The programme runs 3.5 years (7 semesters). The RM 77,100 international tuition total is allocated across 7 semesters; the school excludes 6% SST. Tax scope and visa renewal cost need confirmation.",
+      "zh": "学制 3.5 年共 7 学期；国际生全程学费 RM 77,100 按 7 学期分摊。学校注明不含 6% SST；税费范围及签证续签费用待确认。"
+    },
+    {
+      "en": "The programme is 3.5 years (7 semesters), rounded up to 4 years here, so a 4-year plan counts one semester too many; RM 77,100 is the whole-programme international fee, shown per semester.",
+      "zh": "学制 3.5 年（7 个学期），此处按 4 年计，4 年计划会多算一个学期；RM 77,100 为国际生全程学费，此处按学期平摊显示。"
+    },
+    {
+      "en": "Intakes are October (Semester 1) and March (Semester 2). October 2027 dates are projected; the 2027/28 calendar was not found.",
+      "zh": "每年 10 月（第一学期）和 3 月（第二学期）入学；2027 年 10 月的日期为推算，未找到 2027/28 校历。"
+    },
+    {
+      "en": "The processing fee PDF lists China at RM 30 MEV, RM 5,461 (1-year visa) and RM 6,181 (3-year visa); the visa prices already include the MEV fee. A 3-year visa does not cover a 3.5-year programme, so expect a renewal. Confirm what the package includes (EMGS, insurance).",
+      "zh": "签证处理费 PDF 中国籍一栏：MEV RM 30、1 年签证 RM 5,461、3 年签证 RM 6,181，签证价格已含 MEV 费用。3 年签证不足以覆盖 3.5 年学制，预计需续签。请确认套餐所含内容（EMGS、保险等）。"
+    },
+    {
+      "en": "College room rates are the published undergraduate rates; places for international students are not guaranteed.",
+      "zh": "住宿学院价格为公布的本科生标准，国际生床位不保证。"
+    }
   ]
 }

@@ -17,12 +17,12 @@ from finance.planning.models import StudyPlan
 
 OUT = Path(settings.BASE_DIR).parent / "frontend" / "src" / "plan" / "preview-data"
 SCRIPTS = {
-    "zh": {"plan": ["我是家长", "朱拉隆功读4年全部费用多少？", "比较曼彻斯特和墨尔本", "早稻田周边有什么好吃好玩的？",
-                    "我们有存款20万人民币，就选朱拉隆功", "帮我试算贷款，分48个月", "确认计划"],
+    "zh": {"plan": ["朱拉隆功读4年一共多少钱？", "比较曼彻斯特和墨尔本", "早稻田周边有什么好吃好玩的？",
+                    "我们有存款150万泰铢，就选朱拉隆功", "帮我试算贷款，分48个月", "确认计划"],
            "prepare": ["学校宿舍和周边环境怎么样？", "出发准备", "首月预算"],
            "school": ["今天午饭花了120泰铢", "打车花了85泰铢", "这个月花了多少？", "接下来有哪些账单？", "人民币兑泰铢汇率是多少"]},
-    "en": {"plan": ["I'm a parent", "What does 4 years at Chulalongkorn cost in total?", "Compare Manchester and Melbourne",
-                    "What food and fun is near Waseda?", "We have savings of 200000 CNY, choose Chulalongkorn",
+    "en": {"plan": ["What does 4 years at Chulalongkorn cost in total?", "Compare Manchester and Melbourne",
+                    "What food and fun is near Waseda?", "We have savings of 1500000 THB, choose Chulalongkorn",
                     "Simulate a loan over 48 months", "Confirm the plan"],
            "prepare": ["What are the school's dorms and surroundings like?", "Departure preparation", "First-month budget"],
            "school": ["I spent 120 THB on lunch today", "Taxi, spent 85 THB", "How much have I spent this month?",

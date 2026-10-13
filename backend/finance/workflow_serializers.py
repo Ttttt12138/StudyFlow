@@ -60,6 +60,7 @@ class PlanInput(Input):
     allocations = Allocation(many=True,max_length=100,allow_empty=True)
 
 class LoanInput(Input):
+    product = s.ChoiceField(choices=["custom", "commercial_student_demo"], default="custom")
     currency = s.ChoiceField(choices=["THB"], default="THB")
     principal = MoneyField()
     annual_rate = s.DecimalField(max_digits=9, decimal_places=8, min_value=0, max_value=1)

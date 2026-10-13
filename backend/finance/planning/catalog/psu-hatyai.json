@@ -1,6 +1,6 @@
 {
   "key": "psu-hatyai",
-  "version": 1,
+  "version": 2,
   "sample": true,
   "observed_at": "2026-10-12",
   "school": {
@@ -25,7 +25,9 @@
     },
     "language": "English",
     "website": "https://www.interbba.com/",
-    "duration_years": 4
+    "duration_years": 4,
+    "duration_months": 48,
+    "total_semesters": 8
   },
   "calendar": {
     "intake": "2027-06",

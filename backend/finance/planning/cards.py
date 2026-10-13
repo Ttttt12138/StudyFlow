@@ -21,7 +21,7 @@ def build(user, tool, arguments, result, status):
                 "plan": services.plan_record(services.plan_for(user), services.home_currency(user))["plan"]}
     if status != "OK":
         return None
-    if tool == "set_role":
+    if tool == "set_role":  # retired tool; kept so stored turns from older conversations still render
         return {"type": "role", **result}
     if tool == "list_schools":
         from .tools import filtered_schools
@@ -39,6 +39,8 @@ def build(user, tool, arguments, result, status):
         return {"type": "cost", "school": {"key": entry.key, "name": entry.school.name.model_dump()},
                 "estimate": estimate, "notes": [n.model_dump() for n in entry.notes]}
     if tool == "simulate_loan":
+        if result.get("open_assessment"):
+            return {"type": "plan", "plan": result.get("plan")} if result.get("plan") else None
         return {"type": "loan", **result}
     if tool == "list_bills":
         return {"type": "bills", "bills": result.get("bills", [])}

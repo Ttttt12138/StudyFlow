@@ -1,19 +1,33 @@
 {
   "key": "melbourne",
-  "version": 1,
+  "version": 2,
   "sample": true,
   "observed_at": "2026-10-12",
   "school": {
-    "name": {"en": "The University of Melbourne", "zh": "墨尔本大学"},
-    "country": {"en": "Australia", "zh": "澳大利亚"},
+    "name": {
+      "en": "The University of Melbourne",
+      "zh": "墨尔本大学"
+    },
+    "country": {
+      "en": "Australia",
+      "zh": "澳大利亚"
+    },
     "country_code": "AU",
-    "city": {"en": "Melbourne, Victoria", "zh": "维多利亚州墨尔本"},
+    "city": {
+      "en": "Melbourne, Victoria",
+      "zh": "维多利亚州墨尔本"
+    },
     "campus": "Parkville",
     "currency": "AUD",
-    "program": {"en": "Bachelor of Commerce (B-COM)", "zh": "商学学士（B-COM）"},
+    "program": {
+      "en": "Bachelor of Commerce (B-COM)",
+      "zh": "商学学士（B-COM）"
+    },
     "language": "English",
     "website": "https://study.unimelb.edu.au/find/courses/undergraduate/bachelor-of-commerce/",
-    "duration_years": 3
+    "duration_years": 3,
+    "duration_months": 36,
+    "total_semesters": 6
   },
   "calendar": {
     "intake": "2027-02",
@@ -26,7 +40,10 @@
     {
       "cost_id": "tuition_year",
       "category": "tuition",
-      "label": {"en": "Tuition, international student, 2027 first-year fee (range depends on subjects)", "zh": "国际生学费，2027 年第一年（按所选科目浮动）"},
+      "label": {
+        "en": "Tuition, international student, 2027 first-year fee (range depends on subjects)",
+        "zh": "国际生学费，2027 年第一年（按所选科目浮动）"
+      },
       "period": "year",
       "lower": "56451.00",
       "upper": "62464.00",
@@ -37,7 +54,10 @@
     {
       "cost_id": "ssaf_year",
       "category": "tuition",
-      "label": {"en": "Student Services and Amenities Fee (SSAF)", "zh": "学生服务与设施费（SSAF）"},
+      "label": {
+        "en": "Student Services and Amenities Fee (SSAF)",
+        "zh": "学生服务与设施费（SSAF）"
+      },
       "period": "year",
       "lower": "350.00",
       "upper": "400.00",
@@ -46,7 +66,10 @@
     {
       "cost_id": "lisa_bellear_month",
       "category": "housing",
-      "label": {"en": "Lisa Bellear House (university apartments), 2027: $459-$639 a week depending on room type and length of stay, shown per month", "zh": "Lisa Bellear House 大学公寓 2027 年每周 $459–$639（视房型和租期而定），折算为每月"},
+      "label": {
+        "en": "Lisa Bellear House (university apartments), 2027: $459-$639 a week depending on room type and length of stay, shown per month",
+        "zh": "Lisa Bellear House 大学公寓 2027 年每周 $459–$639（视房型和租期而定），折算为每月"
+      },
       "period": "month",
       "lower": "1989.00",
       "upper": "2769.00",
@@ -57,7 +80,10 @@
     {
       "cost_id": "food_monthly",
       "category": "food",
-      "label": {"en": "Groceries and eating out", "zh": "日常伙食（自炊加外食）"},
+      "label": {
+        "en": "Groceries and eating out",
+        "zh": "日常伙食（自炊加外食）"
+      },
       "period": "month",
       "lower": "400.00",
       "upper": "700.00",
@@ -66,7 +92,10 @@
     {
       "cost_id": "transport_monthly",
       "category": "transport",
-      "label": {"en": "Myki public transport (international undergraduates pay full fare)", "zh": "Myki 公共交通（本科国际生无优惠，全价）"},
+      "label": {
+        "en": "Myki public transport (international undergraduates pay full fare)",
+        "zh": "Myki 公共交通（本科国际生无优惠，全价）"
+      },
       "period": "month",
       "lower": "50.00",
       "upper": "200.00",
@@ -75,7 +104,10 @@
     {
       "cost_id": "phone_internet",
       "category": "communications",
-      "label": {"en": "Prepaid mobile plan", "zh": "预付费手机套餐"},
+      "label": {
+        "en": "Prepaid mobile plan",
+        "zh": "预付费手机套餐"
+      },
       "period": "month",
       "lower": "30.00",
       "upper": "50.00",
@@ -84,7 +116,10 @@
     {
       "cost_id": "oshc_year",
       "category": "insurance",
-      "label": {"en": "Overseas Student Health Cover (OSHC), single, per year", "zh": "海外学生健康保险（OSHC，单人，每年）"},
+      "label": {
+        "en": "Overseas Student Health Cover (OSHC), single, per year",
+        "zh": "海外学生健康保险（OSHC，单人，每年）"
+      },
       "period": "year",
       "lower": "500.00",
       "upper": "750.00",
@@ -94,7 +129,10 @@
     {
       "cost_id": "student_visa",
       "category": "visa",
-      "label": {"en": "Subclass 500 Student visa application charge", "zh": "500 类学生签证申请费"},
+      "label": {
+        "en": "Subclass 500 Student visa application charge",
+        "zh": "500 类学生签证申请费"
+      },
       "period": "once",
       "amount": "2500.00",
       "estimate": false,
@@ -104,7 +142,10 @@
     {
       "cost_id": "health_check",
       "category": "visa",
-      "label": {"en": "Visa health examination and biometrics in China", "zh": "签证体检及生物信息采集（中国境内）"},
+      "label": {
+        "en": "Visa health examination and biometrics in China",
+        "zh": "签证体检及生物信息采集（中国境内）"
+      },
       "period": "once",
       "lower": "100.00",
       "upper": "250.00",
@@ -113,7 +154,10 @@
     {
       "cost_id": "flights_home",
       "category": "travel",
-      "label": {"en": "Return flight China-Melbourne, once a year", "zh": "中国往返墨尔本机票（每年一次）"},
+      "label": {
+        "en": "Return flight China-Melbourne, once a year",
+        "zh": "中国往返墨尔本机票（每年一次）"
+      },
       "period": "year",
       "lower": "1200.00",
       "upper": "2500.00",
@@ -122,7 +166,10 @@
     {
       "cost_id": "settling_in",
       "category": "settlement",
-      "label": {"en": "Bedding, kitchenware and first-week costs", "zh": "床品、厨具及入住首周开销"},
+      "label": {
+        "en": "Bedding, kitchenware and first-week costs",
+        "zh": "床品、厨具及入住首周开销"
+      },
       "period": "once",
       "lower": "500.00",
       "upper": "1000.00",
@@ -131,7 +178,10 @@
     {
       "cost_id": "books_supplies",
       "category": "study_materials",
-      "label": {"en": "Textbooks, printing and software", "zh": "教材、打印及软件"},
+      "label": {
+        "en": "Textbooks, printing and software",
+        "zh": "教材、打印及软件"
+      },
       "period": "year",
       "lower": "300.00",
       "upper": "600.00",
@@ -139,39 +189,261 @@
     }
   ],
   "facilities": [
-    {"name": {"en": "Baillieu Library", "zh": "Baillieu 图书馆"}, "kind": "library", "note": {"en": "Main humanities and social sciences library.", "zh": "人文与社科主图书馆。"}, "distance_km": 0.2},
-    {"name": {"en": "The Spot (Faculty of Business and Economics)", "zh": "The Spot 商业与经济学院大楼"}, "kind": "faculty building", "note": {"en": "Home of the business and economics faculty.", "zh": "商业与经济学院所在地。"}, "distance_km": 0.3},
-    {"name": {"en": "Melbourne Connect", "zh": "Melbourne Connect 创新区"}, "kind": "innovation hub", "note": {"en": "Innovation precinct with study and event spaces.", "zh": "带自习与活动空间的创新园区。"}, "distance_km": 0.5},
-    {"name": {"en": "Union House", "zh": "学生会大楼 Union House"}, "kind": "student centre", "note": {"en": "Student union, clubs and food outlets.", "zh": "学生会、社团与餐饮。"}, "distance_km": 0.1},
-    {"name": {"en": "Melbourne University Sport (Beaurepaire Centre)", "zh": "墨大体育中心（Beaurepaire Centre）"}, "kind": "sports", "note": {"en": "Gym, pool and sports courts on campus.", "zh": "校内健身房、游泳池和球场。"}, "distance_km": 0.3},
-    {"name": {"en": "Stop 1 student services", "zh": "Stop 1 学生服务中心"}, "kind": "student services", "note": {"en": "Help with enrolment, fees and visas.", "zh": "提供注册、缴费和签证咨询。"}, "distance_km": 0.2}
+    {
+      "name": {
+        "en": "Baillieu Library",
+        "zh": "Baillieu 图书馆"
+      },
+      "kind": "library",
+      "note": {
+        "en": "Main humanities and social sciences library.",
+        "zh": "人文与社科主图书馆。"
+      },
+      "distance_km": 0.2
+    },
+    {
+      "name": {
+        "en": "The Spot (Faculty of Business and Economics)",
+        "zh": "The Spot 商业与经济学院大楼"
+      },
+      "kind": "faculty building",
+      "note": {
+        "en": "Home of the business and economics faculty.",
+        "zh": "商业与经济学院所在地。"
+      },
+      "distance_km": 0.3
+    },
+    {
+      "name": {
+        "en": "Melbourne Connect",
+        "zh": "Melbourne Connect 创新区"
+      },
+      "kind": "innovation hub",
+      "note": {
+        "en": "Innovation precinct with study and event spaces.",
+        "zh": "带自习与活动空间的创新园区。"
+      },
+      "distance_km": 0.5
+    },
+    {
+      "name": {
+        "en": "Union House",
+        "zh": "学生会大楼 Union House"
+      },
+      "kind": "student centre",
+      "note": {
+        "en": "Student union, clubs and food outlets.",
+        "zh": "学生会、社团与餐饮。"
+      },
+      "distance_km": 0.1
+    },
+    {
+      "name": {
+        "en": "Melbourne University Sport (Beaurepaire Centre)",
+        "zh": "墨大体育中心（Beaurepaire Centre）"
+      },
+      "kind": "sports",
+      "note": {
+        "en": "Gym, pool and sports courts on campus.",
+        "zh": "校内健身房、游泳池和球场。"
+      },
+      "distance_km": 0.3
+    },
+    {
+      "name": {
+        "en": "Stop 1 student services",
+        "zh": "Stop 1 学生服务中心"
+      },
+      "kind": "student services",
+      "note": {
+        "en": "Help with enrolment, fees and visas.",
+        "zh": "提供注册、缴费和签证咨询。"
+      },
+      "distance_km": 0.2
+    }
   ],
   "food": [
-    {"name": {"en": "Union House food outlets", "zh": "Union House 校内餐饮"}, "kind": "canteen", "note": {"en": "Cafes and food stalls on campus.", "zh": "校内咖啡馆与快餐档口。"}, "distance_km": 0.1, "typical_cost": "14.00"},
-    {"name": {"en": "Lygon Street, Carlton", "zh": "卡尔顿 Lygon Street"}, "kind": "street", "note": {"en": "Melbourne's Italian restaurant street next to campus.", "zh": "紧邻校园的意大利餐饮街。"}, "distance_km": 0.8, "typical_cost": "25.00"},
-    {"name": {"en": "Queen Victoria Market", "zh": "维多利亚女王市场"}, "kind": "market", "note": {"en": "Fresh food market and food stalls.", "zh": "生鲜市场与小吃档口。"}, "distance_km": 1.5, "typical_cost": "15.00"},
-    {"name": {"en": "Chinatown (Little Bourke Street)", "zh": "唐人街（Little Bourke Street）"}, "kind": "district", "note": {"en": "Chinese and Asian restaurants in the CBD.", "zh": "市中心的中餐与亚洲餐馆。"}, "distance_km": 2, "typical_cost": "18.00"}
+    {
+      "name": {
+        "en": "Union House food outlets",
+        "zh": "Union House 校内餐饮"
+      },
+      "kind": "canteen",
+      "note": {
+        "en": "Cafes and food stalls on campus.",
+        "zh": "校内咖啡馆与快餐档口。"
+      },
+      "distance_km": 0.1,
+      "typical_cost": "14.00"
+    },
+    {
+      "name": {
+        "en": "Lygon Street, Carlton",
+        "zh": "卡尔顿 Lygon Street"
+      },
+      "kind": "street",
+      "note": {
+        "en": "Melbourne's Italian restaurant street next to campus.",
+        "zh": "紧邻校园的意大利餐饮街。"
+      },
+      "distance_km": 0.8,
+      "typical_cost": "25.00"
+    },
+    {
+      "name": {
+        "en": "Queen Victoria Market",
+        "zh": "维多利亚女王市场"
+      },
+      "kind": "market",
+      "note": {
+        "en": "Fresh food market and food stalls.",
+        "zh": "生鲜市场与小吃档口。"
+      },
+      "distance_km": 1.5,
+      "typical_cost": "15.00"
+    },
+    {
+      "name": {
+        "en": "Chinatown (Little Bourke Street)",
+        "zh": "唐人街（Little Bourke Street）"
+      },
+      "kind": "district",
+      "note": {
+        "en": "Chinese and Asian restaurants in the CBD.",
+        "zh": "市中心的中餐与亚洲餐馆。"
+      },
+      "distance_km": 2,
+      "typical_cost": "18.00"
+    }
   ],
   "attractions": [
-    {"name": {"en": "Royal Exhibition Building and Carlton Gardens", "zh": "皇家展览馆与卡尔顿园林"}, "kind": "heritage", "note": {"en": "UNESCO World Heritage site; gardens are free.", "zh": "世界文化遗产，园林免费。"}, "distance_km": 1.2, "typical_cost": "0.00"},
-    {"name": {"en": "State Library Victoria", "zh": "维多利亚州立图书馆"}, "kind": "landmark", "note": {"en": "Domed reading room; free entry.", "zh": "著名穹顶阅览室，免费参观。"}, "distance_km": 1.8, "typical_cost": "0.00"},
-    {"name": {"en": "NGV International", "zh": "维多利亚国家美术馆（国际馆）"}, "kind": "museum", "note": {"en": "General collection is free.", "zh": "常设展免费。"}, "distance_km": 3.5, "typical_cost": "0.00"},
-    {"name": {"en": "Royal Botanic Gardens Melbourne", "zh": "墨尔本皇家植物园"}, "kind": "park", "note": {"en": "Large free botanic garden by the Yarra.", "zh": "雅拉河畔大型免费植物园。"}, "distance_km": 4.5, "typical_cost": "0.00"},
-    {"name": {"en": "St Kilda Beach", "zh": "圣基尔达海滩"}, "kind": "beach", "note": {"en": "Beach and pier reachable by tram.", "zh": "可乘电车到达的海滩与栈桥。"}, "distance_km": 8, "typical_cost": "0.00"},
-    {"name": {"en": "Great Ocean Road (Torquay start)", "zh": "大洋路（托尔坎起点）"}, "kind": "nature", "note": {"en": "Coastal drive; transport or tour cost extra.", "zh": "海岸公路，交通或旅行团费用另计。"}, "distance_km": 100, "typical_cost": "0.00"}
+    {
+      "name": {
+        "en": "Royal Exhibition Building and Carlton Gardens",
+        "zh": "皇家展览馆与卡尔顿园林"
+      },
+      "kind": "heritage",
+      "note": {
+        "en": "UNESCO World Heritage site; gardens are free.",
+        "zh": "世界文化遗产，园林免费。"
+      },
+      "distance_km": 1.2,
+      "typical_cost": "0.00"
+    },
+    {
+      "name": {
+        "en": "State Library Victoria",
+        "zh": "维多利亚州立图书馆"
+      },
+      "kind": "landmark",
+      "note": {
+        "en": "Domed reading room; free entry.",
+        "zh": "著名穹顶阅览室，免费参观。"
+      },
+      "distance_km": 1.8,
+      "typical_cost": "0.00"
+    },
+    {
+      "name": {
+        "en": "NGV International",
+        "zh": "维多利亚国家美术馆（国际馆）"
+      },
+      "kind": "museum",
+      "note": {
+        "en": "General collection is free.",
+        "zh": "常设展免费。"
+      },
+      "distance_km": 3.5,
+      "typical_cost": "0.00"
+    },
+    {
+      "name": {
+        "en": "Royal Botanic Gardens Melbourne",
+        "zh": "墨尔本皇家植物园"
+      },
+      "kind": "park",
+      "note": {
+        "en": "Large free botanic garden by the Yarra.",
+        "zh": "雅拉河畔大型免费植物园。"
+      },
+      "distance_km": 4.5,
+      "typical_cost": "0.00"
+    },
+    {
+      "name": {
+        "en": "St Kilda Beach",
+        "zh": "圣基尔达海滩"
+      },
+      "kind": "beach",
+      "note": {
+        "en": "Beach and pier reachable by tram.",
+        "zh": "可乘电车到达的海滩与栈桥。"
+      },
+      "distance_km": 8,
+      "typical_cost": "0.00"
+    },
+    {
+      "name": {
+        "en": "Great Ocean Road (Torquay start)",
+        "zh": "大洋路（托尔坎起点）"
+      },
+      "kind": "nature",
+      "note": {
+        "en": "Coastal drive; transport or tour cost extra.",
+        "zh": "海岸公路，交通或旅行团费用另计。"
+      },
+      "distance_km": 100,
+      "typical_cost": "0.00"
+    }
   ],
   "sources": [
-    {"url": "https://study.unimelb.edu.au/find/courses/undergraduate/bachelor-of-commerce/fees/", "title": "University of Melbourne - Bachelor of Commerce fees (international, 2027; figures read from the page's fee data feed)", "accessed": "2026-10-12"},
-    {"url": "https://study.unimelb.edu.au/accommodation", "title": "University of Melbourne - University Accommodation 2027 cost (read via Wayback snapshot 2026-09-18)", "accessed": "2026-10-12"},
-    {"url": "https://www.unimelb.edu.au/dates?queries_year_fquery=next_year", "title": "University of Melbourne - Key dates 2027", "accessed": "2026-10-12"},
-    {"url": "https://study.unimelb.edu.au/student-life/cost-of-living", "title": "University of Melbourne - Cost of living", "accessed": "2026-10-12"},
-    {"url": "https://students.unimelb.edu.au/support-and-wellbeing/international-student-support/visas/arrange-your-oshc", "title": "University of Melbourne - Arrange your OSHC", "accessed": "2026-10-12"},
-    {"url": "https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/student-500", "title": "Department of Home Affairs - Student visa (subclass 500)", "accessed": "2026-10-12"}
+    {
+      "url": "https://study.unimelb.edu.au/find/courses/undergraduate/bachelor-of-commerce/fees/",
+      "title": "University of Melbourne - Bachelor of Commerce fees (international, 2027; figures read from the page's fee data feed)",
+      "accessed": "2026-10-12"
+    },
+    {
+      "url": "https://study.unimelb.edu.au/accommodation",
+      "title": "University of Melbourne - University Accommodation 2027 cost (read via Wayback snapshot 2026-09-18)",
+      "accessed": "2026-10-12"
+    },
+    {
+      "url": "https://www.unimelb.edu.au/dates?queries_year_fquery=next_year",
+      "title": "University of Melbourne - Key dates 2027",
+      "accessed": "2026-10-12"
+    },
+    {
+      "url": "https://study.unimelb.edu.au/student-life/cost-of-living",
+      "title": "University of Melbourne - Cost of living",
+      "accessed": "2026-10-12"
+    },
+    {
+      "url": "https://students.unimelb.edu.au/support-and-wellbeing/international-student-support/visas/arrange-your-oshc",
+      "title": "University of Melbourne - Arrange your OSHC",
+      "accessed": "2026-10-12"
+    },
+    {
+      "url": "https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/student-500",
+      "title": "Department of Home Affairs - Student visa (subclass 500)",
+      "accessed": "2026-10-12"
+    }
   ],
   "notes": [
-    {"en": "Sample data from public sources; confirm with the school before paying.", "zh": "示例数据，来自公开资料；付款前请向学校确认。"},
-    {"en": "February intake: orientation 22-26 Feb 2027, Semester 1 teaching 1 Mar-30 May, exams to 25 Jun 2027.", "zh": "2 月入学：迎新 2027-02-22 至 02-26，第一学期 3 月 1 日开课至 5 月 30 日，考试至 6 月 25 日。"},
-    {"en": "The course page lists a 3-year total of $180,714-$200,139 for 2027 starters; fees rise each year.", "zh": "课程页列出 2027 入学三年总学费约 $180,714–$200,139，学费逐年上调。"},
-    {"en": "Housing is university accommodation; a private 1-bed flat in Melbourne has a median of about $475 a week.", "zh": "住宿按大学公寓计；墨尔本私人一居室周租中位数约 $475。"}
+    {
+      "en": "Sample data from public sources; confirm with the school before paying.",
+      "zh": "示例数据，来自公开资料；付款前请向学校确认。"
+    },
+    {
+      "en": "February intake: orientation 22-26 Feb 2027, Semester 1 teaching 1 Mar-30 May, exams to 25 Jun 2027.",
+      "zh": "2 月入学：迎新 2027-02-22 至 02-26，第一学期 3 月 1 日开课至 5 月 30 日，考试至 6 月 25 日。"
+    },
+    {
+      "en": "The course page lists a 3-year total of $180,714-$200,139 for 2027 starters; fees rise each year.",
+      "zh": "课程页列出 2027 入学三年总学费约 $180,714–$200,139，学费逐年上调。"
+    },
+    {
+      "en": "Housing is university accommodation; a private 1-bed flat in Melbourne has a median of about $475 a week.",
+      "zh": "住宿按大学公寓计；墨尔本私人一居室周租中位数约 $475。"
+    }
   ]
 }

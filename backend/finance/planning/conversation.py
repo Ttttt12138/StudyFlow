@@ -24,7 +24,6 @@ HISTORY_TURNS = 12
 
 def _memory(conversation):
     user = conversation.owner
-    profile = services.profile(user)
     plan = services.plan_for(user)
     plan_info = None
     if plan is not None:
@@ -32,6 +31,10 @@ def _memory(conversation):
         plan_info = {k: full.get(k) for k in ("status", "school_key", "years", "start_date", "total",
                                               "currency", "gap")}
         plan_info["has_loan"] = plan.loan_id is not None
+        from .assessment import latest
+        assessment = latest(plan)
+        if assessment:
+            plan_info["known_planning_inputs"] = assessment.inputs
     recent = []
     for turn in conversation.turns.order_by("-created_at")[:6]:
         for step in turn.steps.order_by("-number"):
@@ -39,7 +42,6 @@ def _memory(conversation):
                 if key and key not in recent:
                     recent.append(key)
     return {
-        "role": profile.role if profile else None,
         "home_currency": services.home_currency(user),
         "today": services.today_for(user).isoformat(),
         "plan": plan_info,
@@ -75,26 +77,23 @@ def _assistant_turn(conversation, text, cards=None):
         status="COMPLETED", final_answer=text, cards=json_value(cards or []))
 
 
+# One price-first greeting; the product no longer asks whether a parent or the student is planning.
 GREETING = {
-    None: {"zh": "你好！我是 StudyFlow 留学规划助手。先问一句：你是家长，还是学生本人？",
-           "en": "Hi! I'm StudyFlow's study-abroad planner. First: are you a parent, or the student?"},
-    "parent": {"zh": "欢迎回来。可以继续问我学费、生活费和全部费用，或者比较几所学校。",
-               "en": "Welcome back. Ask about tuition, living costs and the total, or compare schools."},
-    "student": {"zh": "欢迎回来。想看看哪所学校的设施、美食和好玩的地方？",
-                "en": "Welcome back. Which school's campus, food and things to do shall we look at?"},
+    "zh": "你好！我是 StudyFlow。告诉我想去的学校，我来算学费、住宿和生活费的全程总价，也可以帮你比较几所学校差多少。",
+    "en": "Hi! I'm StudyFlow. Tell me the school you have in mind and I'll work out the full-course total for "
+          "tuition, housing and living costs, or compare what several schools would cost.",
 }
 
 
 def start(user, locale):
     conversation = AgentConversation.objects.create(owner=user, locale=locale)
-    profile = services.profile(user)
     plan = services.plan_for(user)
     cards = []
     if plan is not None:
         cards.append({"type": "plan", "plan": services.plan_record(plan, services.home_currency(user))["plan"]})
     from .guidance import HANDOFFS
 
-    greeting = HANDOFFS[plan.status][locale] if plan and plan.status in HANDOFFS else GREETING[profile.role if profile else None][locale]
+    greeting = HANDOFFS[plan.status][locale] if plan and plan.status in HANDOFFS else GREETING[locale]
     _assistant_turn(conversation, greeting, cards)
     open_conversation(conversation)
     return conversation

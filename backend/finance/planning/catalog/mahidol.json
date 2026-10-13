@@ -1,19 +1,33 @@
 {
   "key": "mahidol",
-  "version": 1,
+  "version": 2,
   "sample": true,
   "observed_at": "2026-10-12",
   "school": {
-    "name": {"en": "Mahidol University International College (MUIC)", "zh": "玛希敦大学国际学院（MUIC）"},
-    "country": {"en": "Thailand", "zh": "泰国"},
+    "name": {
+      "en": "Mahidol University International College (MUIC)",
+      "zh": "玛希敦大学国际学院（MUIC）"
+    },
+    "country": {
+      "en": "Thailand",
+      "zh": "泰国"
+    },
     "country_code": "TH",
-    "city": {"en": "Salaya, Nakhon Pathom (west of Bangkok)", "zh": "佛统府沙拉亚（曼谷西郊）"},
+    "city": {
+      "en": "Salaya, Nakhon Pathom (west of Bangkok)",
+      "zh": "佛统府沙拉亚（曼谷西郊）"
+    },
     "campus": "Salaya",
     "currency": "THB",
-    "program": {"en": "BBA in International Business (trimester system)", "zh": "国际商务工商管理学士（三学期制）"},
+    "program": {
+      "en": "BBA in International Business (trimester system)",
+      "zh": "国际商务工商管理学士（三学期制）"
+    },
     "language": "English",
     "website": "https://muic.mahidol.ac.th/eng/",
-    "duration_years": 4
+    "duration_years": 4,
+    "duration_months": 48,
+    "total_semesters": 12
   },
   "calendar": {
     "intake": "2027-09",
@@ -26,7 +40,10 @@
     {
       "cost_id": "tuition_year",
       "category": "tuition",
-      "label": {"en": "Tuition + education service fee, non-resident (1/4 of approx. 4-year total)", "zh": "学费及教育服务费（非居民，约为四年总额的 1/4）"},
+      "label": {
+        "en": "Tuition + education service fee, non-resident (1/4 of approx. 4-year total)",
+        "zh": "学费及教育服务费（非居民，约为四年总额的 1/4）"
+      },
       "period": "year",
       "amount": "314250.00",
       "estimate": false,
@@ -36,7 +53,10 @@
     {
       "cost_id": "admission_fee",
       "category": "tuition",
-      "label": {"en": "Admission fee (one-time)", "zh": "入学费（一次性）"},
+      "label": {
+        "en": "Admission fee (one-time)",
+        "zh": "入学费（一次性）"
+      },
       "period": "once",
       "amount": "10000.00",
       "estimate": false,
@@ -46,7 +66,10 @@
     {
       "cost_id": "student_insurance",
       "category": "insurance",
-      "label": {"en": "Insurance premium for international students, per trimester", "zh": "国际学生保险费（每学期/三学期制）"},
+      "label": {
+        "en": "Insurance premium for international students, per trimester",
+        "zh": "国际学生保险费（每学期/三学期制）"
+      },
       "period": "semester",
       "amount": "1500.00",
       "estimate": false,
@@ -56,7 +79,10 @@
     {
       "cost_id": "apartment_salaya",
       "category": "housing",
-      "label": {"en": "Private apartment near MUIC (no on-campus housing), e.g. The September Salaya", "zh": "MUIC 附近私人公寓（学院不提供校内住宿），如 The September Salaya"},
+      "label": {
+        "en": "Private apartment near MUIC (no on-campus housing), e.g. The September Salaya",
+        "zh": "MUIC 附近私人公寓（学院不提供校内住宿），如 The September Salaya"
+      },
       "period": "month",
       "lower": "7500.00",
       "upper": "13000.00",
@@ -67,7 +93,10 @@
     {
       "cost_id": "utilities",
       "category": "housing",
-      "label": {"en": "Electricity and water", "zh": "水电费"},
+      "label": {
+        "en": "Electricity and water",
+        "zh": "水电费"
+      },
       "period": "month",
       "lower": "800.00",
       "upper": "2000.00",
@@ -76,7 +105,10 @@
     {
       "cost_id": "housing_deposit",
       "category": "deposit",
-      "label": {"en": "Apartment security deposit (often 1-2 months' rent)", "zh": "公寓押金（通常 1-2 个月房租）"},
+      "label": {
+        "en": "Apartment security deposit (often 1-2 months' rent)",
+        "zh": "公寓押金（通常 1-2 个月房租）"
+      },
       "period": "once",
       "lower": "7500.00",
       "upper": "26000.00",
@@ -85,7 +117,10 @@
     {
       "cost_id": "food_monthly",
       "category": "food",
-      "label": {"en": "Food (campus canteens, Salaya markets)", "zh": "餐饮（校内食堂、沙拉亚市场）"},
+      "label": {
+        "en": "Food (campus canteens, Salaya markets)",
+        "zh": "餐饮（校内食堂、沙拉亚市场）"
+      },
       "period": "month",
       "lower": "5000.00",
       "upper": "9000.00",
@@ -94,7 +129,10 @@
     {
       "cost_id": "transport_monthly",
       "category": "transport",
-      "label": {"en": "Local songthaew/motorbike taxi, vans or buses into Bangkok", "zh": "本地双条车/摩的及往返曼谷的面包车或公交"},
+      "label": {
+        "en": "Local songthaew/motorbike taxi, vans or buses into Bangkok",
+        "zh": "本地双条车/摩的及往返曼谷的面包车或公交"
+      },
       "period": "month",
       "lower": "500.00",
       "upper": "1500.00",
@@ -103,7 +141,10 @@
     {
       "cost_id": "phone_internet",
       "category": "communications",
-      "label": {"en": "Mobile plan with data", "zh": "手机套餐及流量"},
+      "label": {
+        "en": "Mobile plan with data",
+        "zh": "手机套餐及流量"
+      },
       "period": "month",
       "lower": "300.00",
       "upper": "700.00",
@@ -112,7 +153,10 @@
     {
       "cost_id": "ed_visa",
       "category": "visa",
-      "label": {"en": "Non-Immigrant ED visa, single entry", "zh": "非移民教育签证（单次入境）"},
+      "label": {
+        "en": "Non-Immigrant ED visa, single entry",
+        "zh": "非移民教育签证（单次入境）"
+      },
       "period": "once",
       "amount": "2000.00",
       "estimate": false,
@@ -122,7 +166,10 @@
     {
       "cost_id": "visa_extension",
       "category": "visa",
-      "label": {"en": "Annual extension of stay", "zh": "每年居留延期费"},
+      "label": {
+        "en": "Annual extension of stay",
+        "zh": "每年居留延期费"
+      },
       "period": "year",
       "amount": "1900.00",
       "estimate": false,
@@ -132,7 +179,10 @@
     {
       "cost_id": "reentry_permit",
       "category": "visa",
-      "label": {"en": "Single re-entry permit (one trip home a year)", "zh": "单次再入境许可（每年回国一次）"},
+      "label": {
+        "en": "Single re-entry permit (one trip home a year)",
+        "zh": "单次再入境许可（每年回国一次）"
+      },
       "period": "year",
       "amount": "1000.00",
       "estimate": false,
@@ -142,7 +192,10 @@
     {
       "cost_id": "flight_home",
       "category": "travel",
-      "label": {"en": "Return flight home, once a year (East Asia)", "zh": "每年一次往返机票（东亚）"},
+      "label": {
+        "en": "Return flight home, once a year (East Asia)",
+        "zh": "每年一次往返机票（东亚）"
+      },
       "period": "year",
       "lower": "8000.00",
       "upper": "20000.00",
@@ -151,7 +204,10 @@
     {
       "cost_id": "settling_in",
       "category": "settlement",
-      "label": {"en": "Settling in: bedding, kitchenware, SIM, first week", "zh": "安家费用：床品、厨具、电话卡、首周开销"},
+      "label": {
+        "en": "Settling in: bedding, kitchenware, SIM, first week",
+        "zh": "安家费用：床品、厨具、电话卡、首周开销"
+      },
       "period": "once",
       "lower": "5000.00",
       "upper": "15000.00",
@@ -160,7 +216,10 @@
     {
       "cost_id": "books_supplies",
       "category": "study_materials",
-      "label": {"en": "Books, printing and supplies per trimester", "zh": "每学期书本、打印及文具"},
+      "label": {
+        "en": "Books, printing and supplies per trimester",
+        "zh": "每学期书本、打印及文具"
+      },
       "period": "semester",
       "lower": "1000.00",
       "upper": "3000.00",
@@ -168,37 +227,235 @@
     }
   ],
   "facilities": [
-    {"name": {"en": "Aditayathorn Building", "zh": "Aditayathorn 大楼"}, "kind": "academic", "note": {"en": "MUIC's main building with classrooms and student offices.", "zh": "MUIC 主楼，设有教室和学生事务办公室。"}, "distance_km": 0},
-    {"name": {"en": "MUIC Library & Co-working Space", "zh": "MUIC 图书馆及共享学习空间"}, "kind": "library", "note": {"en": "College library with study and co-working areas.", "zh": "学院图书馆，设自习和共享学习区。"}, "distance_km": 0},
-    {"name": {"en": "Mahidol Learning Center (MLC)", "zh": "玛希敦学习中心（MLC）"}, "kind": "study space", "note": {"en": "University-wide learning hub with study rooms and food outlets.", "zh": "全校学习中心，有自习室和餐饮。"}, "distance_km": 0.5},
-    {"name": {"en": "Prince Mahidol Hall", "zh": "玛希敦亲王音乐厅"}, "kind": "concert hall", "note": {"en": "Campus concert hall hosting orchestra and cultural events.", "zh": "校内音乐厅，举办交响乐和文化活动。"}, "distance_km": 1},
-    {"name": {"en": "Mahidol University sports facilities", "zh": "玛希敦大学体育设施"}, "kind": "sports", "note": {"en": "Stadium, pool and courts on the Salaya campus.", "zh": "沙拉亚校区的体育场、泳池和球场。"}, "distance_km": 1},
-    {"name": {"en": "MUIC Health Service", "zh": "MUIC 健康服务"}, "kind": "health", "note": {"en": "Student health and counseling services.", "zh": "学生医疗和心理咨询服务。"}, "distance_km": 0, "source_url": "https://muic.mahidol.ac.th/eng/"}
+    {
+      "name": {
+        "en": "Aditayathorn Building",
+        "zh": "Aditayathorn 大楼"
+      },
+      "kind": "academic",
+      "note": {
+        "en": "MUIC's main building with classrooms and student offices.",
+        "zh": "MUIC 主楼，设有教室和学生事务办公室。"
+      },
+      "distance_km": 0
+    },
+    {
+      "name": {
+        "en": "MUIC Library & Co-working Space",
+        "zh": "MUIC 图书馆及共享学习空间"
+      },
+      "kind": "library",
+      "note": {
+        "en": "College library with study and co-working areas.",
+        "zh": "学院图书馆，设自习和共享学习区。"
+      },
+      "distance_km": 0
+    },
+    {
+      "name": {
+        "en": "Mahidol Learning Center (MLC)",
+        "zh": "玛希敦学习中心（MLC）"
+      },
+      "kind": "study space",
+      "note": {
+        "en": "University-wide learning hub with study rooms and food outlets.",
+        "zh": "全校学习中心，有自习室和餐饮。"
+      },
+      "distance_km": 0.5
+    },
+    {
+      "name": {
+        "en": "Prince Mahidol Hall",
+        "zh": "玛希敦亲王音乐厅"
+      },
+      "kind": "concert hall",
+      "note": {
+        "en": "Campus concert hall hosting orchestra and cultural events.",
+        "zh": "校内音乐厅，举办交响乐和文化活动。"
+      },
+      "distance_km": 1
+    },
+    {
+      "name": {
+        "en": "Mahidol University sports facilities",
+        "zh": "玛希敦大学体育设施"
+      },
+      "kind": "sports",
+      "note": {
+        "en": "Stadium, pool and courts on the Salaya campus.",
+        "zh": "沙拉亚校区的体育场、泳池和球场。"
+      },
+      "distance_km": 1
+    },
+    {
+      "name": {
+        "en": "MUIC Health Service",
+        "zh": "MUIC 健康服务"
+      },
+      "kind": "health",
+      "note": {
+        "en": "Student health and counseling services.",
+        "zh": "学生医疗和心理咨询服务。"
+      },
+      "distance_km": 0,
+      "source_url": "https://muic.mahidol.ac.th/eng/"
+    }
   ],
   "food": [
-    {"name": {"en": "MUIC canteen", "zh": "MUIC 食堂"}, "kind": "canteen", "note": {"en": "Thai and international dishes on campus.", "zh": "校内泰式和国际菜肴。"}, "distance_km": 0, "typical_cost": "60.00"},
-    {"name": {"en": "Mahidol Learning Center food court", "zh": "玛希敦学习中心美食广场"}, "kind": "food court", "note": {"en": "Budget stalls used by students across the university.", "zh": "全校学生常去的平价档口。"}, "distance_km": 0.5, "typical_cost": "50.00"},
-    {"name": {"en": "Salaya Market area", "zh": "沙拉亚市场一带"}, "kind": "market", "note": {"en": "Local market and street food near the campus gates.", "zh": "校门附近的本地市场和街头小吃。"}, "distance_km": 2, "typical_cost": "50.00"},
-    {"name": {"en": "Central Salaya", "zh": "Central Salaya 购物中心"}, "kind": "mall food court", "note": {"en": "Shopping mall with food court and chain restaurants.", "zh": "购物中心，有美食广场和连锁餐厅。"}, "distance_km": 4, "typical_cost": "120.00"}
+    {
+      "name": {
+        "en": "MUIC canteen",
+        "zh": "MUIC 食堂"
+      },
+      "kind": "canteen",
+      "note": {
+        "en": "Thai and international dishes on campus.",
+        "zh": "校内泰式和国际菜肴。"
+      },
+      "distance_km": 0,
+      "typical_cost": "60.00"
+    },
+    {
+      "name": {
+        "en": "Mahidol Learning Center food court",
+        "zh": "玛希敦学习中心美食广场"
+      },
+      "kind": "food court",
+      "note": {
+        "en": "Budget stalls used by students across the university.",
+        "zh": "全校学生常去的平价档口。"
+      },
+      "distance_km": 0.5,
+      "typical_cost": "50.00"
+    },
+    {
+      "name": {
+        "en": "Salaya Market area",
+        "zh": "沙拉亚市场一带"
+      },
+      "kind": "market",
+      "note": {
+        "en": "Local market and street food near the campus gates.",
+        "zh": "校门附近的本地市场和街头小吃。"
+      },
+      "distance_km": 2,
+      "typical_cost": "50.00"
+    },
+    {
+      "name": {
+        "en": "Central Salaya",
+        "zh": "Central Salaya 购物中心"
+      },
+      "kind": "mall food court",
+      "note": {
+        "en": "Shopping mall with food court and chain restaurants.",
+        "zh": "购物中心，有美食广场和连锁餐厅。"
+      },
+      "distance_km": 4,
+      "typical_cost": "120.00"
+    }
   ],
   "attractions": [
-    {"name": {"en": "Phutthamonthon Buddhist park", "zh": "佛陀公园（Phutthamonthon）"}, "kind": "park", "note": {"en": "Large Buddhist park with a giant walking Buddha; good for cycling.", "zh": "大型佛教公园，有巨型行走佛像，适合骑行。"}, "distance_km": 3, "typical_cost": "0.00"},
-    {"name": {"en": "Don Wai Floating Market", "zh": "当外水上市场"}, "kind": "market", "note": {"en": "Riverside market known for Thai snacks and braised duck.", "zh": "河边市场，以泰式小吃和卤鸭闻名。"}, "distance_km": 10, "typical_cost": "0.00"},
-    {"name": {"en": "Taling Chan Floating Market", "zh": "达令船水上市场"}, "kind": "market", "note": {"en": "Weekend canal market on Bangkok's western edge.", "zh": "曼谷西郊的周末运河市场。"}, "distance_km": 15, "typical_cost": "0.00"},
-    {"name": {"en": "Grand Palace, Bangkok", "zh": "曼谷大皇宫"}, "kind": "landmark", "note": {"en": "Royal palace and Wat Phra Kaew; dress code applies.", "zh": "大皇宫及玉佛寺，需注意着装要求。"}, "distance_km": 30, "typical_cost": "500.00"}
+    {
+      "name": {
+        "en": "Phutthamonthon Buddhist park",
+        "zh": "佛陀公园（Phutthamonthon）"
+      },
+      "kind": "park",
+      "note": {
+        "en": "Large Buddhist park with a giant walking Buddha; good for cycling.",
+        "zh": "大型佛教公园，有巨型行走佛像，适合骑行。"
+      },
+      "distance_km": 3,
+      "typical_cost": "0.00"
+    },
+    {
+      "name": {
+        "en": "Don Wai Floating Market",
+        "zh": "当外水上市场"
+      },
+      "kind": "market",
+      "note": {
+        "en": "Riverside market known for Thai snacks and braised duck.",
+        "zh": "河边市场，以泰式小吃和卤鸭闻名。"
+      },
+      "distance_km": 10,
+      "typical_cost": "0.00"
+    },
+    {
+      "name": {
+        "en": "Taling Chan Floating Market",
+        "zh": "达令船水上市场"
+      },
+      "kind": "market",
+      "note": {
+        "en": "Weekend canal market on Bangkok's western edge.",
+        "zh": "曼谷西郊的周末运河市场。"
+      },
+      "distance_km": 15,
+      "typical_cost": "0.00"
+    },
+    {
+      "name": {
+        "en": "Grand Palace, Bangkok",
+        "zh": "曼谷大皇宫"
+      },
+      "kind": "landmark",
+      "note": {
+        "en": "Royal palace and Wat Phra Kaew; dress code applies.",
+        "zh": "大皇宫及玉佛寺，需注意着装要求。"
+      },
+      "distance_km": 30,
+      "typical_cost": "500.00"
+    }
   ],
   "sources": [
-    {"url": "https://muic.mahidol.ac.th/eng/admissions/fees-and-costs/undergraduate-tuition-fees/", "title": "MUIC Undergraduate Tuition & Fees (updated 25 Aug 2025; read via Wayback snapshot 2026-03-10)", "accessed": "2026-10-12"},
-    {"url": "https://web.archive.org/web/20260310165237/https://muic.mahidol.ac.th/eng/admissions/fees-and-costs/undergraduate-tuition-fees/", "title": "Wayback Machine snapshot of MUIC tuition page", "accessed": "2026-10-12"},
-    {"url": "https://muic.mahidol.ac.th/eng/academic-resources/academic-calendar/", "title": "MUIC Academic Calendar (read via Wayback snapshot 2026-03-10)", "accessed": "2026-10-12"},
-    {"url": "https://muic.mahidol.ac.th/eng/study-abroad/inbound-student/housing-list/", "title": "MUIC Housing List - private apartments in Salaya (read via Wayback snapshot 2026-03-12)", "accessed": "2026-10-12"},
-    {"url": "https://bangkok.immigration.go.th/en/fee_en/", "title": "Immigration Division 1 - Fee", "accessed": "2026-10-12"}
+    {
+      "url": "https://muic.mahidol.ac.th/eng/admissions/fees-and-costs/undergraduate-tuition-fees/",
+      "title": "MUIC Undergraduate Tuition & Fees (updated 25 Aug 2025; read via Wayback snapshot 2026-03-10)",
+      "accessed": "2026-10-12"
+    },
+    {
+      "url": "https://web.archive.org/web/20260310165237/https://muic.mahidol.ac.th/eng/admissions/fees-and-costs/undergraduate-tuition-fees/",
+      "title": "Wayback Machine snapshot of MUIC tuition page",
+      "accessed": "2026-10-12"
+    },
+    {
+      "url": "https://muic.mahidol.ac.th/eng/academic-resources/academic-calendar/",
+      "title": "MUIC Academic Calendar (read via Wayback snapshot 2026-03-10)",
+      "accessed": "2026-10-12"
+    },
+    {
+      "url": "https://muic.mahidol.ac.th/eng/study-abroad/inbound-student/housing-list/",
+      "title": "MUIC Housing List - private apartments in Salaya (read via Wayback snapshot 2026-03-12)",
+      "accessed": "2026-10-12"
+    },
+    {
+      "url": "https://bangkok.immigration.go.th/en/fee_en/",
+      "title": "Immigration Division 1 - Fee",
+      "accessed": "2026-10-12"
+    }
   ],
   "notes": [
-    {"en": "Sample data from public sources; confirm with the school before paying.", "zh": "示例数据，来自公开资料；付款前请向学校确认。"},
-    {"en": "MUIC runs 3 trimesters a year; the academic year begins in September. 2027 dates are projected; the 2027-28 calendar was not available.", "zh": "MUIC 每年三个学期，学年从 9 月开始。2027 年日期为推算，2027-28 校历尚未获取。"},
-    {"en": "Tuition is charged per credit (5,700 THB non-resident); the yearly figure divides the school's approx. 4-year total by four.", "zh": "学费按学分收取（非居民每学分 5,700 泰铢）；年度金额为学校公布的四年估算总额除以四。"},
-    {"en": "The MUIC website blocked direct access; figures were read from Internet Archive copies of the official pages.", "zh": "MUIC 官网拒绝直接访问，数据取自官方页面的 Internet Archive 存档。"},
-    {"en": "Food, utilities, transport, deposit, travel and supplies are estimates.", "zh": "餐饮、水电、交通、押金、旅行和学习用品为估算值。"}
+    {
+      "en": "Sample data from public sources; confirm with the school before paying.",
+      "zh": "示例数据，来自公开资料；付款前请向学校确认。"
+    },
+    {
+      "en": "MUIC runs 3 trimesters a year; the academic year begins in September. 2027 dates are projected; the 2027-28 calendar was not available.",
+      "zh": "MUIC 每年三个学期，学年从 9 月开始。2027 年日期为推算，2027-28 校历尚未获取。"
+    },
+    {
+      "en": "Tuition is charged per credit (5,700 THB non-resident); the yearly figure divides the school's approx. 4-year total by four.",
+      "zh": "学费按学分收取（非居民每学分 5,700 泰铢）；年度金额为学校公布的四年估算总额除以四。"
+    },
+    {
+      "en": "The MUIC website blocked direct access; figures were read from Internet Archive copies of the official pages.",
+      "zh": "MUIC 官网拒绝直接访问，数据取自官方页面的 Internet Archive 存档。"
+    },
+    {
+      "en": "Food, utilities, transport, deposit, travel and supplies are estimates.",
+      "zh": "餐饮、水电、交通、押金、旅行和学习用品为估算值。"
+    }
   ]
 }

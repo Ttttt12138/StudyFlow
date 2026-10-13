@@ -17,8 +17,12 @@ from .workflow_models import (
 
 
 def business_date(owner):
+    from .planning.models import PlanningProfile
     wallet = DemoWallet.objects.filter(owner=owner).first()
-    return wallet.clock if wallet else timezone.localdate()
+    if wallet:
+        return wallet.clock
+    demo_date = PlanningProfile.objects.filter(owner=owner).values_list("demo_date", flat=True).first()
+    return demo_date or timezone.localdate()
 
 
 def ensure_future(loan):
@@ -48,7 +52,9 @@ def changed(application, actor, event):
 
 
 def create_application(actor, data, obj=None):
+    from .planning.assessment import ensure_current_quote
     loan = owned(LoanSimulation, actor, data["quote_id"])
+    ensure_current_quote(actor, loan.id)
     require(
         loan.engine_version == "b-monthly-amortization-v1",
         "Create a new B quote; legacy simulations are read-only.",

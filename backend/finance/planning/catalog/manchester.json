@@ -1,19 +1,33 @@
 {
   "key": "manchester",
-  "version": 1,
+  "version": 2,
   "sample": true,
   "observed_at": "2026-10-12",
   "school": {
-    "name": {"en": "The University of Manchester (Alliance Manchester Business School)", "zh": "曼彻斯特大学（联盟曼彻斯特商学院）"},
-    "country": {"en": "United Kingdom", "zh": "英国"},
+    "name": {
+      "en": "The University of Manchester (Alliance Manchester Business School)",
+      "zh": "曼彻斯特大学（联盟曼彻斯特商学院）"
+    },
+    "country": {
+      "en": "United Kingdom",
+      "zh": "英国"
+    },
     "country_code": "GB",
-    "city": {"en": "Manchester, England", "zh": "英格兰曼彻斯特"},
+    "city": {
+      "en": "Manchester, England",
+      "zh": "英格兰曼彻斯特"
+    },
     "campus": "Oxford Road",
     "currency": "GBP",
-    "program": {"en": "BSc (Hons) Management (International Business Economics)", "zh": "管理学（国际商务经济方向）荣誉理学士"},
+    "program": {
+      "en": "BSc (Hons) Management (International Business Economics)",
+      "zh": "管理学（国际商务经济方向）荣誉理学士"
+    },
     "language": "English",
     "website": "https://www.alliancembs.manchester.ac.uk/study/undergraduate/bsc-hons-management-international-business-economics/",
-    "duration_years": 3
+    "duration_years": 3,
+    "duration_months": 36,
+    "total_semesters": 6
   },
   "calendar": {
     "intake": "2027-09",
@@ -26,7 +40,10 @@
     {
       "cost_id": "tuition_year",
       "category": "tuition",
-      "label": {"en": "Tuition, international student, September 2027 entry (per year)", "zh": "国际生学费（2027年9月入学，每年）"},
+      "label": {
+        "en": "Tuition, international student, September 2027 entry (per year)",
+        "zh": "国际生学费（2027年9月入学，每年）"
+      },
       "period": "year",
       "amount": "35300.00",
       "estimate": false,
@@ -36,7 +53,10 @@
     {
       "cost_id": "halls_year",
       "category": "housing",
-      "label": {"en": "University halls, 2026/27 'from' weekly prices £122 (cheapest hall) to £263 (dearest hall) x 41-42 week let (2027/28 not yet published)", "zh": "大学宿舍：2026/27 各宿舍最低周租 £122 至 £263 不等，按 41–42 周租期计（2027/28 价格未公布）"},
+      "label": {
+        "en": "University halls, 2026/27 'from' weekly prices £122 (cheapest hall) to £263 (dearest hall) x 41-42 week let (2027/28 not yet published)",
+        "zh": "大学宿舍：2026/27 各宿舍最低周租 £122 至 £263 不等，按 41–42 周租期计（2027/28 价格未公布）"
+      },
       "period": "year",
       "lower": "5002.00",
       "upper": "11046.00",
@@ -47,7 +67,10 @@
     {
       "cost_id": "food_monthly",
       "category": "food",
-      "label": {"en": "Groceries and some eating out (self-catered)", "zh": "日常伙食（自炊为主，偶尔外食）"},
+      "label": {
+        "en": "Groceries and some eating out (self-catered)",
+        "zh": "日常伙食（自炊为主，偶尔外食）"
+      },
       "period": "month",
       "lower": "200.00",
       "upper": "350.00",
@@ -56,7 +79,10 @@
     {
       "cost_id": "transport_monthly",
       "category": "transport",
-      "label": {"en": "Local buses (Oxford Road / Wilmslow Road corridor)", "zh": "市内公交（Oxford Road / Wilmslow Road 沿线）"},
+      "label": {
+        "en": "Local buses (Oxford Road / Wilmslow Road corridor)",
+        "zh": "市内公交（Oxford Road / Wilmslow Road 沿线）"
+      },
       "period": "month",
       "lower": "20.00",
       "upper": "60.00",
@@ -65,7 +91,10 @@
     {
       "cost_id": "phone_internet",
       "category": "communications",
-      "label": {"en": "UK SIM-only mobile plan", "zh": "英国手机卡套餐"},
+      "label": {
+        "en": "UK SIM-only mobile plan",
+        "zh": "英国手机卡套餐"
+      },
       "period": "month",
       "lower": "10.00",
       "upper": "25.00",
@@ -74,7 +103,10 @@
     {
       "cost_id": "ihs_year",
       "category": "insurance",
-      "label": {"en": "Immigration Health Surcharge (NHS access), paid upfront for the whole visa", "zh": "移民医疗附加费（NHS），签证申请时一次性按年数预缴"},
+      "label": {
+        "en": "Immigration Health Surcharge (NHS access), paid upfront for the whole visa",
+        "zh": "移民医疗附加费（NHS），签证申请时一次性按年数预缴"
+      },
       "period": "year",
       "amount": "776.00",
       "estimate": false,
@@ -84,7 +116,10 @@
     {
       "cost_id": "student_visa",
       "category": "visa",
-      "label": {"en": "Student visa application fee (outside the UK)", "zh": "学生签证申请费（境外递交）"},
+      "label": {
+        "en": "Student visa application fee (outside the UK)",
+        "zh": "学生签证申请费（境外递交）"
+      },
       "period": "once",
       "amount": "558.00",
       "estimate": false,
@@ -94,7 +129,10 @@
     {
       "cost_id": "tb_test",
       "category": "visa",
-      "label": {"en": "Tuberculosis test at an approved clinic in China (required for UK visa)", "zh": "肺结核检测（中国申请人赴英签证必需）"},
+      "label": {
+        "en": "Tuberculosis test at an approved clinic in China (required for UK visa)",
+        "zh": "肺结核检测（中国申请人赴英签证必需）"
+      },
       "period": "once",
       "lower": "50.00",
       "upper": "80.00",
@@ -103,7 +141,10 @@
     {
       "cost_id": "flights_home",
       "category": "travel",
-      "label": {"en": "Return flight China-Manchester, once a year", "zh": "中国往返曼彻斯特机票（每年一次）"},
+      "label": {
+        "en": "Return flight China-Manchester, once a year",
+        "zh": "中国往返曼彻斯特机票（每年一次）"
+      },
       "period": "year",
       "lower": "600.00",
       "upper": "1200.00",
@@ -112,7 +153,10 @@
     {
       "cost_id": "settling_in",
       "category": "settlement",
-      "label": {"en": "Bedding, kitchenware and first-week costs", "zh": "床品、厨具及入住首周开销"},
+      "label": {
+        "en": "Bedding, kitchenware and first-week costs",
+        "zh": "床品、厨具及入住首周开销"
+      },
       "period": "once",
       "lower": "300.00",
       "upper": "600.00",
@@ -121,7 +165,10 @@
     {
       "cost_id": "books_supplies",
       "category": "study_materials",
-      "label": {"en": "Books, printing and a laptop share", "zh": "书本、打印及电脑分摊"},
+      "label": {
+        "en": "Books, printing and a laptop share",
+        "zh": "书本、打印及电脑分摊"
+      },
       "period": "year",
       "lower": "100.00",
       "upper": "300.00",
@@ -129,41 +176,271 @@
     }
   ],
   "facilities": [
-    {"name": {"en": "Main Library", "zh": "大学主图书馆"}, "kind": "library", "note": {"en": "One of the largest academic libraries in the UK.", "zh": "英国规模最大的学术图书馆之一。"}, "distance_km": 0.3},
-    {"name": {"en": "Alan Gilbert Learning Commons", "zh": "Alan Gilbert 学习共享空间"}, "kind": "study space", "note": {"en": "24/7 study space on Oxford Road.", "zh": "位于 Oxford Road 的 24 小时自习空间。"}, "distance_km": 0.3},
-    {"name": {"en": "Alliance Manchester Business School building (Booth Street West)", "zh": "联盟曼彻斯特商学院大楼（Booth Street West）"}, "kind": "faculty building", "note": {"en": "Home of the business school's teaching rooms.", "zh": "商学院主要授课楼。"}, "distance_km": 0},
-    {"name": {"en": "Students' Union (Oxford Road)", "zh": "学生会大楼（Oxford Road）"}, "kind": "student centre", "note": {"en": "Societies, advice centre and events.", "zh": "社团、咨询中心与活动场地。"}, "distance_km": 0.4},
-    {"name": {"en": "Sugden Sports Centre", "zh": "Sugden 体育中心"}, "kind": "sports", "note": {"en": "University gym and sports halls near campus.", "zh": "校园附近的大学健身房与运动馆。"}, "distance_km": 0.5},
-    {"name": {"en": "Manchester Museum", "zh": "曼彻斯特博物馆"}, "kind": "museum", "note": {"en": "University museum on campus; free entry.", "zh": "校内大学博物馆，免费参观。"}, "distance_km": 0.4}
+    {
+      "name": {
+        "en": "Main Library",
+        "zh": "大学主图书馆"
+      },
+      "kind": "library",
+      "note": {
+        "en": "One of the largest academic libraries in the UK.",
+        "zh": "英国规模最大的学术图书馆之一。"
+      },
+      "distance_km": 0.3
+    },
+    {
+      "name": {
+        "en": "Alan Gilbert Learning Commons",
+        "zh": "Alan Gilbert 学习共享空间"
+      },
+      "kind": "study space",
+      "note": {
+        "en": "24/7 study space on Oxford Road.",
+        "zh": "位于 Oxford Road 的 24 小时自习空间。"
+      },
+      "distance_km": 0.3
+    },
+    {
+      "name": {
+        "en": "Alliance Manchester Business School building (Booth Street West)",
+        "zh": "联盟曼彻斯特商学院大楼（Booth Street West）"
+      },
+      "kind": "faculty building",
+      "note": {
+        "en": "Home of the business school's teaching rooms.",
+        "zh": "商学院主要授课楼。"
+      },
+      "distance_km": 0
+    },
+    {
+      "name": {
+        "en": "Students' Union (Oxford Road)",
+        "zh": "学生会大楼（Oxford Road）"
+      },
+      "kind": "student centre",
+      "note": {
+        "en": "Societies, advice centre and events.",
+        "zh": "社团、咨询中心与活动场地。"
+      },
+      "distance_km": 0.4
+    },
+    {
+      "name": {
+        "en": "Sugden Sports Centre",
+        "zh": "Sugden 体育中心"
+      },
+      "kind": "sports",
+      "note": {
+        "en": "University gym and sports halls near campus.",
+        "zh": "校园附近的大学健身房与运动馆。"
+      },
+      "distance_km": 0.5
+    },
+    {
+      "name": {
+        "en": "Manchester Museum",
+        "zh": "曼彻斯特博物馆"
+      },
+      "kind": "museum",
+      "note": {
+        "en": "University museum on campus; free entry.",
+        "zh": "校内大学博物馆，免费参观。"
+      },
+      "distance_km": 0.4
+    }
   ],
   "food": [
-    {"name": {"en": "Curry Mile, Wilmslow Road (Rusholme)", "zh": "咖喱一英里（Rusholme 区 Wilmslow Road）"}, "kind": "street", "note": {"en": "Long row of South Asian and Middle Eastern restaurants.", "zh": "南亚和中东餐馆聚集的街道。"}, "distance_km": 1.5, "typical_cost": "12.00"},
-    {"name": {"en": "Manchester Chinatown", "zh": "曼彻斯特唐人街"}, "kind": "district", "note": {"en": "Chinese restaurants and Asian supermarkets.", "zh": "中餐馆与亚洲超市集中。"}, "distance_km": 2, "typical_cost": "15.00"},
-    {"name": {"en": "Hatch (Oxford Road)", "zh": "Hatch 集装箱美食市集（Oxford Road）"}, "kind": "food market", "note": {"en": "Street-food stalls under the Mancunian Way, close to campus.", "zh": "校园附近的街头小吃档口。"}, "distance_km": 0.6, "typical_cost": "10.00"},
-    {"name": {"en": "Mackie Mayor (Northern Quarter)", "zh": "Mackie Mayor 美食大厅（北区）"}, "kind": "food hall", "note": {"en": "Food hall in a restored Victorian market building.", "zh": "由维多利亚时期市场改建的美食大厅。"}, "distance_km": 2.5, "typical_cost": "14.00"}
+    {
+      "name": {
+        "en": "Curry Mile, Wilmslow Road (Rusholme)",
+        "zh": "咖喱一英里（Rusholme 区 Wilmslow Road）"
+      },
+      "kind": "street",
+      "note": {
+        "en": "Long row of South Asian and Middle Eastern restaurants.",
+        "zh": "南亚和中东餐馆聚集的街道。"
+      },
+      "distance_km": 1.5,
+      "typical_cost": "12.00"
+    },
+    {
+      "name": {
+        "en": "Manchester Chinatown",
+        "zh": "曼彻斯特唐人街"
+      },
+      "kind": "district",
+      "note": {
+        "en": "Chinese restaurants and Asian supermarkets.",
+        "zh": "中餐馆与亚洲超市集中。"
+      },
+      "distance_km": 2,
+      "typical_cost": "15.00"
+    },
+    {
+      "name": {
+        "en": "Hatch (Oxford Road)",
+        "zh": "Hatch 集装箱美食市集（Oxford Road）"
+      },
+      "kind": "food market",
+      "note": {
+        "en": "Street-food stalls under the Mancunian Way, close to campus.",
+        "zh": "校园附近的街头小吃档口。"
+      },
+      "distance_km": 0.6,
+      "typical_cost": "10.00"
+    },
+    {
+      "name": {
+        "en": "Mackie Mayor (Northern Quarter)",
+        "zh": "Mackie Mayor 美食大厅（北区）"
+      },
+      "kind": "food hall",
+      "note": {
+        "en": "Food hall in a restored Victorian market building.",
+        "zh": "由维多利亚时期市场改建的美食大厅。"
+      },
+      "distance_km": 2.5,
+      "typical_cost": "14.00"
+    }
   ],
   "attractions": [
-    {"name": {"en": "The Whitworth (art gallery)", "zh": "惠特沃斯美术馆"}, "kind": "museum", "note": {"en": "University-run gallery in Whitworth Park.", "zh": "大学管理的美术馆，位于惠特沃斯公园。"}, "distance_km": 0.8, "typical_cost": "0.00"},
-    {"name": {"en": "John Rylands Research Institute and Library", "zh": "约翰·莱兰兹图书馆"}, "kind": "landmark", "note": {"en": "Neo-Gothic library on Deansgate; free entry.", "zh": "Deansgate 上的新哥特式图书馆，免费参观。"}, "distance_km": 2, "typical_cost": "0.00"},
-    {"name": {"en": "Science and Industry Museum", "zh": "科学与工业博物馆"}, "kind": "museum", "note": {"en": "Industrial revolution history; general entry free.", "zh": "工业革命主题，常设展免费。"}, "distance_km": 2.2, "typical_cost": "0.00"},
-    {"name": {"en": "Heaton Park", "zh": "希顿公园"}, "kind": "park", "note": {"en": "One of Europe's largest municipal parks.", "zh": "欧洲最大的市政公园之一。"}, "distance_km": 8, "typical_cost": "0.00"},
-    {"name": {"en": "Old Trafford stadium tour", "zh": "老特拉福德球场参观"}, "kind": "sport", "note": {"en": "Manchester United stadium and museum tour (price approximate).", "zh": "曼联主场及博物馆导览（价格为约数）。"}, "distance_km": 5, "typical_cost": "30.00"},
-    {"name": {"en": "Peak District (Edale)", "zh": "峰区国家公园（Edale）"}, "kind": "nature", "note": {"en": "Hiking about one hour by train; train fare extra.", "zh": "乘火车约一小时可到的徒步胜地，车费另计。"}, "distance_km": 40, "typical_cost": "0.00"}
+    {
+      "name": {
+        "en": "The Whitworth (art gallery)",
+        "zh": "惠特沃斯美术馆"
+      },
+      "kind": "museum",
+      "note": {
+        "en": "University-run gallery in Whitworth Park.",
+        "zh": "大学管理的美术馆，位于惠特沃斯公园。"
+      },
+      "distance_km": 0.8,
+      "typical_cost": "0.00"
+    },
+    {
+      "name": {
+        "en": "John Rylands Research Institute and Library",
+        "zh": "约翰·莱兰兹图书馆"
+      },
+      "kind": "landmark",
+      "note": {
+        "en": "Neo-Gothic library on Deansgate; free entry.",
+        "zh": "Deansgate 上的新哥特式图书馆，免费参观。"
+      },
+      "distance_km": 2,
+      "typical_cost": "0.00"
+    },
+    {
+      "name": {
+        "en": "Science and Industry Museum",
+        "zh": "科学与工业博物馆"
+      },
+      "kind": "museum",
+      "note": {
+        "en": "Industrial revolution history; general entry free.",
+        "zh": "工业革命主题，常设展免费。"
+      },
+      "distance_km": 2.2,
+      "typical_cost": "0.00"
+    },
+    {
+      "name": {
+        "en": "Heaton Park",
+        "zh": "希顿公园"
+      },
+      "kind": "park",
+      "note": {
+        "en": "One of Europe's largest municipal parks.",
+        "zh": "欧洲最大的市政公园之一。"
+      },
+      "distance_km": 8,
+      "typical_cost": "0.00"
+    },
+    {
+      "name": {
+        "en": "Old Trafford stadium tour",
+        "zh": "老特拉福德球场参观"
+      },
+      "kind": "sport",
+      "note": {
+        "en": "Manchester United stadium and museum tour (price approximate).",
+        "zh": "曼联主场及博物馆导览（价格为约数）。"
+      },
+      "distance_km": 5,
+      "typical_cost": "30.00"
+    },
+    {
+      "name": {
+        "en": "Peak District (Edale)",
+        "zh": "峰区国家公园（Edale）"
+      },
+      "kind": "nature",
+      "note": {
+        "en": "Hiking about one hour by train; train fare extra.",
+        "zh": "乘火车约一小时可到的徒步胜地，车费另计。"
+      },
+      "distance_km": 40,
+      "typical_cost": "0.00"
+    }
   ],
   "sources": [
-    {"url": "https://www.alliancembs.manchester.ac.uk/study/undergraduate/bsc-hons-management-international-business-economics/", "title": "AMBS - BSc (Hons) Management (International Business Economics): fees", "accessed": "2026-10-12"},
-    {"url": "https://www.alliancembs.manchester.ac.uk/study/undergraduate/fees-and-scholarships/", "title": "AMBS - Undergraduate fees and scholarships", "accessed": "2026-10-12"},
-    {"url": "https://www.manchester.ac.uk/study/accommodation/student-accommodation/search/", "title": "University of Manchester - Accommodation search (2026/27 prices)", "accessed": "2026-10-12"},
-    {"url": "https://www.manchester.ac.uk/study/accommodation/student-accommodation/", "title": "University of Manchester - Student accommodation, let lengths 2026/27", "accessed": "2026-10-12"},
-    {"url": "https://www.manchester.ac.uk/discover/key-dates/", "title": "University of Manchester - Key dates", "accessed": "2026-10-12"},
-    {"url": "https://www.gov.uk/student-visa", "title": "GOV.UK - Student visa", "accessed": "2026-10-12"},
-    {"url": "https://www.gov.uk/healthcare-immigration-application/how-much-pay", "title": "GOV.UK - Immigration Health Surcharge: how much you pay", "accessed": "2026-10-12"},
-    {"url": "https://www.gov.uk/student-visa/money", "title": "GOV.UK - Student visa: money you need", "accessed": "2026-10-12"}
+    {
+      "url": "https://www.alliancembs.manchester.ac.uk/study/undergraduate/bsc-hons-management-international-business-economics/",
+      "title": "AMBS - BSc (Hons) Management (International Business Economics): fees",
+      "accessed": "2026-10-12"
+    },
+    {
+      "url": "https://www.alliancembs.manchester.ac.uk/study/undergraduate/fees-and-scholarships/",
+      "title": "AMBS - Undergraduate fees and scholarships",
+      "accessed": "2026-10-12"
+    },
+    {
+      "url": "https://www.manchester.ac.uk/study/accommodation/student-accommodation/search/",
+      "title": "University of Manchester - Accommodation search (2026/27 prices)",
+      "accessed": "2026-10-12"
+    },
+    {
+      "url": "https://www.manchester.ac.uk/study/accommodation/student-accommodation/",
+      "title": "University of Manchester - Student accommodation, let lengths 2026/27",
+      "accessed": "2026-10-12"
+    },
+    {
+      "url": "https://www.manchester.ac.uk/discover/key-dates/",
+      "title": "University of Manchester - Key dates",
+      "accessed": "2026-10-12"
+    },
+    {
+      "url": "https://www.gov.uk/student-visa",
+      "title": "GOV.UK - Student visa",
+      "accessed": "2026-10-12"
+    },
+    {
+      "url": "https://www.gov.uk/healthcare-immigration-application/how-much-pay",
+      "title": "GOV.UK - Immigration Health Surcharge: how much you pay",
+      "accessed": "2026-10-12"
+    },
+    {
+      "url": "https://www.gov.uk/student-visa/money",
+      "title": "GOV.UK - Student visa: money you need",
+      "accessed": "2026-10-12"
+    }
   ],
   "notes": [
-    {"en": "Sample data from public sources; confirm with the school before paying.", "zh": "示例数据，来自公开资料；付款前请向学校确认。"},
-    {"en": "The course page says £35,300 a year for 2027 entry, but the AMBS fees page says £34,800 for 2027/28; the higher figure is used. Later years may rise by up to 7% a year.", "zh": "课程页写 2027 入学国际生每年 £35,300，商学院学费页写 2027/28 为 £34,800，此处取较高值；之后每年最多可上涨 7%。"},
-    {"en": "2027/28 term dates are not published yet; dates are projected from 2026/27 (Semester 1: 28 Sep 2026 to 31 Jan 2027).", "zh": "2027/28 校历尚未公布，日期按 2026/27（第一学期 2026-09-28 至 2027-01-31）推算。"},
-    {"en": "UKVI also asks you to show £1,171 a month (up to 9 months) for living costs outside London.", "zh": "签证还要求证明伦敦以外地区每月 £1,171 生活费（最多 9 个月）。"}
+    {
+      "en": "Sample data from public sources; confirm with the school before paying.",
+      "zh": "示例数据，来自公开资料；付款前请向学校确认。"
+    },
+    {
+      "en": "The course page says £35,300 a year for 2027 entry, but the AMBS fees page says £34,800 for 2027/28; the higher figure is used. Later years may rise by up to 7% a year.",
+      "zh": "课程页写 2027 入学国际生每年 £35,300，商学院学费页写 2027/28 为 £34,800，此处取较高值；之后每年最多可上涨 7%。"
+    },
+    {
+      "en": "2027/28 term dates are not published yet; dates are projected from 2026/27 (Semester 1: 28 Sep 2026 to 31 Jan 2027).",
+      "zh": "2027/28 校历尚未公布，日期按 2026/27（第一学期 2026-09-28 至 2027-01-31）推算。"
+    },
+    {
+      "en": "UKVI also asks you to show £1,171 a month (up to 9 months) for living costs outside London.",
+      "zh": "签证还要求证明伦敦以外地区每月 £1,171 生活费（最多 9 个月）。"
+    }
   ]
 }
