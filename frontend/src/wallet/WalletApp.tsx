@@ -10,9 +10,11 @@ import { loadWallet, SessionWalletClient, WalletApiError, type WalletClient } fr
 import { createWalletPreview, previewQuotes, type WalletPreviewScenario } from "./mockAdapter";
 import type { Approval, Order, Quote, WalletSnapshot } from "./types";
 import "./wallet.css";
+import "./walletPanel.css";
 import { WalletExtras } from "./WalletExtras";
 import { TierBadge } from "../services/TierBadge";
-import { PanelFacts, PanelHero, PanelPager, PanelSheet, ToolPanel, usePage } from "../workspace/ToolPanel";
+import { PanelAlert, PanelEmpty, PanelFacts, PanelHero, PanelMenu, PanelPager, PanelSheet, PanelSkeleton, ToolPanel, usePage } from "../workspace/ToolPanel";
+import { BarCompare, DateWindow, Donut, StackBar, StepTrack } from "../workspace/PanelCharts";
 import { intlLocale, useI18n, type MessageKey } from "../i18n";
 
 const previewStates: WalletPreviewScenario[] = ["submitted", "pending", "refunded", "unknown", "expired", "empty"];
@@ -218,18 +220,41 @@ export function WalletApp({ preview, onExit }: { preview: boolean; onExit: () =>
   const balances = snapshot.balances?.balances ?? [];
   const homeRow = balances.find((row) => row.is_home) ?? balances[0];
   const orders = usePage(snapshot.orders, 5, orderPage);
+  // Home-currency terms come from the backend's indicative values; rows without one are left out, not estimated.
+  const PALETTE = ["#4ff2c6", "#f2c879", "#7fb8ff", "#c6a6f6", "#ff9c8a"];
+  const composition = balances.map((row, n) => ({ key: row.currency, label: row.currency, color: PALETTE[n % PALETTE.length],
+    value: row.is_home ? Number(row.balance) : Number(row.indicative_home_value ?? 0), display: money(row.balance, row.currency) }));
+  const missingIndicative = balances.filter((row) => !row.is_home && Number(row.balance) > 0 && row.indicative_home_value == null);
+  const compositionTotal = composition.reduce((sum, slice) => sum + slice.value, 0).toFixed(2);
   const showOrder = remitView === "order" && !!selectedOrder;
   const notices = <>
     {staleStatus}
-    <div className="panel-row">{preview ? <div className="wallet-controls"><label htmlFor="wallet-scenario">{t("wallet.previewStatus")}</label><select id="wallet-scenario" value={scenario} onChange={(event) => setScenario(event.target.value as WalletPreviewScenario)}>{previewStates.map((value) => <option value={value} key={value}>{t(`wallet.preview.${value}`)}</option>)}</select></div> : <span />}<button type="button" className="panel-link" disabled={busy || loading} onClick={() => void refresh()}>{t("wallet.refreshFrom", { source: preview ? t("wallet.source.demo") : t("wallet.source.django") })}</button></div>
-    {loading && <div className="activity" role="status"><span className="activity-dot" aria-hidden="true"/>{t("wallet.loading")}</div>}
-    {error && !policy && <div className="stale-banner" role="alert">{error}</div>}{notice && <div className="demo" role="status">{notice}</div>}
+    {loading && !snapshot.balances && <PanelSkeleton />}
+    {error && !policy && !recipientOpen && <div className="stale-banner" role="alert">{error}</div>}{notice && <div className="demo" role="status">{notice}</div>}
   </>;
+  const menu = <PanelMenu>
+    {preview && <div className="wallet-controls"><label htmlFor="wallet-scenario">{t("wallet.previewStatus")}</label><select id="wallet-scenario" value={scenario} onChange={(event) => setScenario(event.target.value as WalletPreviewScenario)}>{previewStates.map((value) => <option value={value} key={value}>{t(`wallet.preview.${value}`)}</option>)}</select></div>}
+    <button type="button" className="panel-link" disabled={busy || loading} onClick={() => void refresh()}>{t("wallet.refreshFrom", { source: preview ? t("wallet.source.demo") : t("wallet.source.django") })}</button>
+    <p className="panel-muted">{preview ? t("wallet.banner.previewText") : t("wallet.banner.liveText")}</p>
+  </PanelMenu>;
+  // Remittance progress: prepared → submitted → in transit → delivered; refunds and expiries stop in red.
+  const STEPS = ["CREATED", "SUBMITTED", "IN_TRANSIT", "DELIVERED"];
+  const stepOf = (status: string) => status === "RECONCILED" ? 3 : Math.max(0, STEPS.indexOf(status));
+  const failedStatus = (status: string) => ["REFUNDED", "EXPIRED", "CANCELLED"].includes(status);
   const orderReview = selectedOrder && <div className="wallet-review panel-view">
     <div className="panel-card-head"><h3>{t("wallet.order.transfer", { id: selectedOrder.id.slice(0, 8) })}</h3><span className="calendar-pill">{selectedOrder.effective_status}</span></div>
     <p className="panel-note">{describeStatus(selectedOrder)}</p>
     {approval && <p className="wallet-approval-status panel-muted">{t("wallet.approval.label")} <strong>{approval.status}</strong>. {["PENDING", "APPROVED", "USED"].includes(approval.status) ? t(`wallet.approval.${approval.status}` as MessageKey) : t("wallet.approval.other")}{approval.status === "APPROVED" && selectedOrder.effective_status === "CREATED" && policy !== "STEP_UP_REQUIRED" && <> <button className="secondary" disabled={busy || preview} onClick={() => setPolicy("STEP_UP_REQUIRED")}>{t("wallet.approval.continue")}</button></>}</p>}
+    <StepTrack label={t("wp.orderSteps")} current={failedStatus(selectedOrder.effective_status) ? Math.max(1, stepOf(selectedOrder.history.at(-2)?.to ?? "SUBMITTED")) : stepOf(selectedOrder.effective_status) + (["DELIVERED", "RECONCILED"].includes(selectedOrder.effective_status) ? 1 : 0)}
+      failed={failedStatus(selectedOrder.effective_status)}
+      steps={[t("wp.step.created"), t("wp.step.submitted"), t("wp.step.processing"), failedStatus(selectedOrder.effective_status) ? t("wp.step.failed") : t("wp.step.done")]} />
     <PanelHero label={t("wallet.order.expectedReceipt")} value={money(selectedOrder.receive_amount, selectedOrder.receive_currency)} />
+    {selectedOrder.expected_earliest && selectedOrder.expected_latest && <div className="fx-figure"><div className="panel-section-title">{t("wp.arrival")}
+      <span>{date(selectedOrder.expected_earliest)} – {date(selectedOrder.expected_latest)}</span></div>
+      <DateWindow start={selectedOrder.expected_earliest} end={selectedOrder.expected_latest} deadline={selectedOrder.deadline}
+        from={[selectedOrder.expected_earliest, selectedOrder.deadline].filter(Boolean).sort()[0]!} to={[selectedOrder.expected_latest, selectedOrder.deadline].filter(Boolean).sort().at(-1)!}
+        labels={{ start: date(selectedOrder.expected_earliest), end: date(selectedOrder.expected_latest), deadline: selectedOrder.deadline ? t("wp.deadlineMark", { date: date(selectedOrder.deadline) }) : undefined }} />
+      {selectedOrder.deadline && selectedOrder.expected_latest > selectedOrder.deadline && <small className="fx-warn">{t("wp.lateWarn")}</small>}</div>}
     <PanelFacts items={[[t("wallet.quote.send"), money(selectedOrder.send_amount, selectedOrder.send_currency)],
       [t("wallet.order.recipient"), selectedOrder.recipient === "SELF" ? t("wallet.order.self") : snapshot.beneficiaries.find((item) => item.id === selectedOrder.beneficiary)?.name ?? t("wallet.order.beneficiary")],
       [t("wallet.order.totalCost"), money(selectedOrder.total_cost, selectedOrder.send_currency)], [t("wallet.order.arrival"), `${date(selectedOrder.expected_earliest)} – ${date(selectedOrder.expected_latest)}`],
@@ -268,31 +293,39 @@ export function WalletApp({ preview, onExit }: { preview: boolean; onExit: () =>
   </PanelSheet>;
   const content = <ToolPanel label={t("wallet.title")} numbered={false} active={tab} onSelect={(key) => { setTab(key); if (key === "remit" && selectedOrder?.effective_status === "CREATED") setRemitView("order"); }}
     steps={[{ key: "balances", label: t("wp.tab.balances") }, { key: "convert", label: t("wp.tab.convert") }, { key: "remit", label: t("wp.tab.remit") }, { key: "history", label: t("wp.tab.history") }]}
-    notices={notices} footer={footer} sheet={recipientSheet}>
+    notices={notices} footer={footer} sheet={recipientSheet} tools={menu}>
     <h1 className="sr-only">{t("wallet.title")}</h1>
     {unauthenticated && <section className="panel-note" role="alert"><h2>{t("wallet.signIn.title")}</h2><p>{t("wallet.signIn.text")}</p><a className="primary" href={signInUrl}>{t("wallet.signIn.link")}</a></section>}
     <section id="wallet-balances" className="panel-view" hidden={tab !== "balances"}>
       <div className="panel-card-head"><h2>{t("wallet.balances.title")}</h2><span className="panel-tag">{snapshot.balances?.is_simulated ? t("wallet.balances.simulated") : t("wallet.balances.backendData")}</span></div>
-      {snapshot.errors.balances && <p className="error" role="alert">{snapshot.errors.balances}</p>}
+      {snapshot.errors.balances && <PanelAlert message={snapshot.errors.balances} onRetry={() => void refresh()} />}
       {homeRow ? <>
         <PanelHero label={t("wp.total", { currency: homeRow.currency })} value={money(homeRow.balance, homeRow.currency)}>
           <span className="panel-muted">{t("wallet.balances.available", { amount: money(homeRow.available_balance, homeRow.currency) })}</span></PanelHero>
+        <Donut label={t("wp.composition")} center={<><span>{t("wp.totalHome")}</span><strong>{money(String(compositionTotal), "")}</strong><span>{homeRow.currency}</span></>}
+          slices={composition} />
+        {missingIndicative.map((row) => <small key={row.currency} className="panel-muted">{t("wp.noIndicative", { currency: row.currency })}</small>)}
+        {Number(homeRow.balance) > Number(homeRow.available_balance) && <StackBar label={t("wp.availableVsHeld")} parts={[
+          { key: "available", value: Number(homeRow.available_balance), tone: "mint", label: t("wp.available", { amount: money(homeRow.available_balance, homeRow.currency) }) },
+          { key: "held", value: Number(homeRow.balance) - Number(homeRow.available_balance), tone: "muted", label: t("wp.onHold", { amount: money(String(Number(homeRow.balance) - Number(homeRow.available_balance)), homeRow.currency) }) }]} />}
         <ul className="panel-rows">{balances.filter((row) => row !== homeRow).map((row) => <li key={row.currency}>
           <span><strong>{row.currency}{row.is_home ? t("wallet.balances.home") : ""}</strong>
             <small>{t("wallet.balances.available", { amount: money(row.available_balance, row.currency) })}{row.indicative_home_value && !row.is_home ? ` · ${t("wallet.balances.indicative", { amount: money(row.indicative_home_value, snapshot.balances!.home_currency) })}` : ""}</small></span>
           <span><Amount text={money(row.balance, row.currency)} /></span></li>)}</ul>
       </> : !loading && <p className="panel-muted">{t("wallet.balances.none")}</p>}
-      <p className="panel-muted">{preview ? t("wallet.banner.previewText") : t("wallet.banner.liveText")}</p>
     </section>
     <section id="wallet-quote" className="panel-view" hidden={tab !== "remit" || showOrder}>
       <div className="panel-card-head"><h2>{t("wallet.quote.title")}</h2></div>
-      {snapshot.errors.corridors && <p className="error" role="alert">{snapshot.errors.corridors}</p>}
+      {snapshot.errors.corridors && <PanelAlert message={snapshot.errors.corridors} onRetry={() => void refresh()} />}
       {snapshot.corridors.length ? <div className="panel-form">
         <label>{t("wallet.quote.route")}<select value={corridorId} onChange={(event) => { setCorridorId(event.target.value); setQuotes(preview ? previewQuotes() : []); setSelectedQuoteId(""); }}>{snapshot.corridors.map((item) => <option key={item.id} value={item.id}>{item.source_currency} → {item.target_currency} · {item.provider} ({item.tier})</option>)}</select></label>
         <label>{t("wallet.quote.sendAmount")} {selectedCorridor?.source_currency}<input inputMode="decimal" value={sendAmount} onChange={(event) => { setSendAmount(event.target.value); setQuotes(preview ? previewQuotes() : []); setSelectedQuoteId(""); }} placeholder="200.00"/></label>
         <span className="panel-row" style={{ gridColumn: "1 / -1" }}>{selectedCorridor ? <small className="panel-muted">{t("wallet.quote.range", { min: money(selectedCorridor.min_amount, selectedCorridor.source_currency), max: money(selectedCorridor.max_amount, selectedCorridor.source_currency) })}</small> : <span />}
           <button className="secondary" disabled={preview || busy} onClick={() => void requestQuotes()}>{t("wallet.quote.get")}</button></span>
       </div> : !loading && <p className="panel-muted">{t("wallet.quote.noRoutes")}</p>}
+      {quotes.length > 1 && <BarCompare label={t("wp.routeCompare")} rows={quotes.map((quote) => ({ key: quote.id, label: quote.route_name,
+        value: Number(quote.net_received), display: money(quote.net_received, quote.target_currency), note: t("wallet.quote.days", { min: quote.settlement_min_days, max: quote.settlement_days }),
+        best: Number(quote.net_received) === Math.max(...quotes.map((item) => Number(item.net_received))) }))} />}
       {quotes.length ? <div className="wallet-quote-grid panel-carousel">{quotes.map((quote) => <article key={quote.id} className={selectedQuoteId === quote.id ? "selected" : ""}>
         <h3>{quote.route_name}</h3><p><strong><Amount text={money(quote.net_received, quote.target_currency)} /></strong><span>{t("wallet.quote.receipt")}</span></p>
         <dl><div><dt>{t("wallet.quote.senderFee")}</dt><dd>{money(quote.sender_fee, quote.source_currency)}</dd></div><div><dt>{t("wallet.quote.rate")}</dt><dd title={quote.rate}>{Number(quote.rate).toLocaleString(intlLocale(lang), { maximumFractionDigits: 4 })}</dd></div>
@@ -304,7 +337,7 @@ export function WalletApp({ preview, onExit }: { preview: boolean; onExit: () =>
       {!selectedQuote && !preview && <small className="panel-muted">{t("wallet.order.chooseQuote")}</small>}
     </section>
     <section className="panel-view" hidden={tab !== "remit" || !showOrder}>{orderReview}</section>
-    <WalletExtras client={client} preview={preview} onChanged={() => void refresh()} view={tab === "convert" ? "convert" : tab === "history" && historyView === "ledger" ? "ledger" : "none"} />
+    <WalletExtras client={client} preview={preview} balances={snapshot.balances} onChanged={() => void refresh()} view={tab === "convert" ? "convert" : tab === "history" && historyView === "ledger" ? "ledger" : "none"} />
     <section id="wallet-history" className="panel-view" hidden={tab !== "history"}>
       <div className="panel-card-head"><div className="panel-chips" role="group" aria-label={t("wp.tab.history")}>
         <button type="button" aria-pressed={historyView === "orders"} onClick={() => setHistoryView("orders")}>{t("wp.orders")}</button>
@@ -312,12 +345,12 @@ export function WalletApp({ preview, onExit }: { preview: boolean; onExit: () =>
         {historyView === "orders" && <PanelPager index={orders.index} count={orders.pages} onChange={setOrderPage} label={t("wp.orders")} />}</div>
       {historyView === "orders" && <>
         <h2 className="sr-only">{t("wallet.history.title")}</h2>
-        {snapshot.errors.orders && <p className="error" role="alert">{snapshot.errors.orders}</p>}
+        {snapshot.errors.orders && <PanelAlert message={snapshot.errors.orders} onRetry={() => void refresh()} />}
         {snapshot.orders.length ? <ul className="panel-rows">{orders.rows.map((item) => <li key={item.id}>
           <span><strong>{purposeName(item.purpose)} · {money(item.send_amount, item.send_currency)}</strong><small>{item.history.length ? stamp(item.history[item.history.length - 1].at) : ""}</small></span>
           <span className="calendar-pill">{item.effective_status}</span>
           <button className="chip" aria-pressed={selectedOrder?.id === item.id} disabled={busy} onClick={() => { void loadOrder(item.id); setTab("remit"); setRemitView("order"); }}>{t("ws.details")}</button></li>)}</ul>
-          : <p className="panel-muted">{t("wallet.history.none")}</p>}
+          : <PanelEmpty title={t("wallet.history.none")} action={<button type="button" className="secondary" onClick={() => { setTab("remit"); setRemitView("quote"); }}>{t("wp.newRemit")}</button>} />}
       </>}
     </section>
   </ToolPanel>;

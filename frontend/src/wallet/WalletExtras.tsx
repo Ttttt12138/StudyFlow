@@ -11,13 +11,18 @@ import { amountProblem, amountRange, countdown, directions, ledgerCurrencies, le
   type Conversion, type ExecQuote, type FxCorridor, type LedgerEntry } from "./extras/logic";
 import { previewConversions, previewCorridors, previewHeld, previewHome, previewLedger, previewQuotes } from "./extras/previewData";
 import "./extras/walletx.css";
+import { ArrowDown } from "@phosphor-icons/react/dist/csr/ArrowDown";
+import { BarCompare, LevelBar, LineChart, RangeTrack } from "../workspace/PanelCharts";
+import { PanelAlert, PanelEmpty } from "../workspace/ToolPanel";
 
 type Errors = Partial<Record<"corridors" | "balances" | "ledger" | "conversions", string>>;
 const POLICY_CODES = ["STEP_UP_REQUIRED", "STEP_UP_INVALID", "APPROVAL_REQUIRED"];
 const REQUOTE_CODES = ["QUOTE_EXPIRED", "QUOTE_CONSUMED", "QUOTE_IN_USE", "QUOTE_NOT_EXECUTABLE", "QUOTE_AMOUNT_MISMATCH", "CORRIDOR_DISABLED", "CORRIDOR_AMOUNT_OUT_OF_RANGE"];
 
 /** Currency conversion between wallet balances (T2) and the append-only ledger, below the transfer form. */
-export function WalletExtras({ client, preview, onChanged, view = "all" }: { client: WalletClient; preview: boolean; onChanged: () => void;
+export function WalletExtras({ client, preview, onChanged, view = "all", balances }: { client: WalletClient; preview: boolean; onChanged: () => void;
+  /** Balances WalletApp already loaded; used to show the effect of a conversion before it runs. */
+  balances?: WalletBalances | null;
   /** Which section is on screen; both stay mounted so a quote in progress survives switching views. */
   view?: "all" | "convert" | "ledger" | "none" }) {
   const { lang, t } = useI18n();
@@ -59,6 +64,12 @@ export function WalletExtras({ client, preview, onChanged, view = "all" }: { cli
   const selected = quotes.find((item) => item.id === selectedId) ?? null;
   const selectedLive = selected && !quoteExpired(selected, now);
   const rows = filter === "all" ? ledger : ledger.filter((row) => row.currency === filter);
+  const sourceRow = balances?.balances.find((row) => row.currency === source);
+  // Rates of the most common direction among recent conversions, oldest first.
+  const pairs = conversions.map((item) => `${item.source_currency}/${item.target_currency}`);
+  const trendPair = pairs.sort((a, b) => pairs.filter((x) => x === b).length - pairs.filter((x) => x === a).length)[0] ?? "";
+  const trend = conversions.filter((item) => `${item.source_currency}/${item.target_currency}` === trendPair)
+    .sort((a, b) => a.created_at.localeCompare(b.created_at)).map((item) => Number(item.rate)).filter((n) => Number.isFinite(n) && n > 0);
 
   const loadHistory = useCallback(async () => {
     if (preview) return;
@@ -190,17 +201,36 @@ export function WalletExtras({ client, preview, onChanged, view = "all" }: { cli
     <section id="wallet-convert" className="card wallet-panel walletx" hidden={view !== "all" && view !== "convert"}>
       <div className="wallet-heading"><div><span className="eyebrow">{t("walletx.convert.eyebrow")}</span><h2>{t("walletx.convert.title")}</h2></div><TierBadge tier="T2" withLabel /></div>
       <p>{t("walletx.convert.text")}</p>
-      {(["corridors", "balances"] as const).map((key) => errors[key] && <p key={key} className="error" role="alert">{errors[key]}</p>)}
-      {list.length ? <div className="wallet-form-row">
-        <label>{t("walletx.convert.from")}<select value={source} disabled={preview || busy} onChange={(event) => { setSource(event.target.value); resetQuotes(); }}>{sources.map((code) => <option key={code} value={code}>{code}{code === home ? t("walletx.convert.homeTag") : ""}</option>)}</select></label>
-        <label>{t("walletx.convert.to")}<select value={target} disabled={preview || busy} onChange={(event) => { setTarget(event.target.value); resetQuotes(); }}>{targets.map((code) => <option key={code} value={code}>{code}</option>)}</select></label>
-        <label>{t("walletx.convert.amount", { currency: source })}<input inputMode="decimal" value={amount} disabled={preview} placeholder="200.00" onChange={(event) => { setAmount(event.target.value); resetQuotes(); }} /></label>
-        <button className="primary" disabled={preview || busy || !tiers.length} onClick={() => void requestQuotes()}>{t("walletx.convert.quote")}</button>
-        {range && <small>{t("walletx.convert.range", { min: money(range.min, source), max: money(range.max, source), n: tiers.length })}</small>}
+      {(["corridors", "balances"] as const).map((key) => errors[key] && <PanelAlert key={key} message={errors[key]!} />)}
+      {list.length ? <>
+        <div className="fx-card">
+          <div className="fx-leg">
+            <label>{t("walletx.convert.from")}<select value={source} disabled={preview || busy} onChange={(event) => { setSource(event.target.value); resetQuotes(); }}>{sources.map((code) => <option key={code} value={code}>{code}{code === home ? t("walletx.convert.homeTag") : ""}</option>)}</select></label>
+            <label className="fx-amount">{t("walletx.convert.amount", { currency: source })}<input inputMode="decimal" value={amount} disabled={preview} placeholder="200.00" onChange={(event) => { setAmount(event.target.value); resetQuotes(); }} /></label>
+            {sourceRow && <small className="fx-available">{t("wallet.balances.available", { amount: money(sourceRow.available_balance, source) })}</small>}
+          </div>
+          <span className="fx-arrow" aria-hidden="true"><ArrowDown size={16} /></span>
+          <div className="fx-leg is-to">
+            <label>{t("walletx.convert.to")}<select value={target} disabled={preview || busy} onChange={(event) => { setTarget(event.target.value); resetQuotes(); }}>{targets.map((code) => <option key={code} value={code}>{code}</option>)}</select></label>
+            <div className="fx-credit"><span>{t("walletx.quote.net")}</span>
+              <strong>{selected ? <Amount text={money(selected.net_received, selected.target_currency)} /> : t("walletx.fx.afterQuote")}</strong></div>
+          </div>
+        </div>
+        {range && <div className="fx-figure"><div className="panel-section-title">{t("walletx.fx.tiers")}<small>{t("walletx.convert.range", { min: money(range.min, source), max: money(range.max, source), n: tiers.length })}</small></div>
+          <RangeTrack label={t("walletx.fx.tiers")} value={Number(amount) || null} format={(n) => money(String(n), source)}
+            tiers={tiers.map((tier) => ({ key: tier.id, label: tier.tier, min: Number(tier.min_amount), max: Number(tier.max_amount) }))} /></div>}
+        {sourceRow && Number(amount) > 0 && <div className="fx-figure"><div className="panel-section-title">{t("walletx.fx.impact", { currency: source })}
+          <span>{money(sourceRow.balance, source)} → {money(String(Math.max(0, Number(sourceRow.balance) - Number(amount))), source)}</span></div>
+          <LevelBar value={Number(sourceRow.balance)} max={Number(sourceRow.balance)} after={Math.max(0, Number(sourceRow.balance) - Number(amount))}
+            tone={Number(amount) > Number(sourceRow.available_balance) ? "warn" : undefined} />
+          {Number(amount) > Number(sourceRow.available_balance) && <small className="fx-warn">{t("walletx.fx.overAvailable")}</small>}</div>}
         {!sources.length && <small>{t("walletx.convert.noSource")}</small>}
-      </div> : <p className="wallet-empty">{t("walletx.convert.noRoutes")}</p>}
+        <div className="fx-actions"><button className="primary" disabled={preview || busy || !tiers.length} onClick={() => void requestQuotes()}>{t("walletx.convert.quote")}</button></div>
+      </> : <PanelEmpty title={t("walletx.convert.noRoutes")} />}
       {error && <p className="error" role="alert">{error}</p>}
       {notice && <p className="service-notice" role="status">{notice}</p>}
+      {quotes.length > 1 && <BarCompare label={t("walletx.fx.compare")} rows={quotes.map((quote) => ({ key: quote.id, label: quote.route_name, value: Number(quote.net_received),
+        display: money(quote.net_received, quote.target_currency), best: Number(quote.net_received) === Math.max(...quotes.map((item) => Number(item.net_received))) }))} />}
       {quotes.length > 0 && <div className="wallet-quote-grid">{quotes.map((quote) => {
         const left = quoteSecondsLeft(quote, now);
         return <article key={quote.id} className={selectedId === quote.id ? "selected" : ""}>
@@ -242,6 +272,8 @@ export function WalletExtras({ client, preview, onChanged, view = "all" }: { cli
         </dl>
       </div>}
       <h3 className="walletx-sub">{t("walletx.recent.title")}</h3>
+      {trend.length >= 2 && <div className="fx-figure"><div className="panel-section-title">{t("walletx.fx.trend", { pair: trendPair })}<span>{trend[trend.length - 1]}</span></div>
+        <LineChart points={trend} label={t("walletx.fx.trend", { pair: trendPair })} height={64} /></div>}
       {errors.conversions && <p className="error" role="alert">{errors.conversions}</p>}
       {conversions.length ? <ul className="walletx-recent">{conversions.map((item) => <li key={item.id}>
         <strong>{money(item.source_amount, item.source_currency)} → {money(item.target_amount, item.target_currency)}</strong>

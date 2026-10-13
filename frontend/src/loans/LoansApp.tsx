@@ -2,7 +2,9 @@ import { useToolRefresh, useEmbedded, useWorkspace } from "../workspace/context"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ServiceShell } from "../services/ServiceShell";
 import { Amount } from "../services/Amount";
-import { PanelFacts, PanelHero, PanelPager, PanelSheet, ToolPanel } from "../workspace/ToolPanel";
+import { PanelAlert, PanelEmpty, PanelFacts, PanelHero, PanelPager, PanelSheet, PanelSkeleton, ToolPanel } from "../workspace/ToolPanel";
+import { LineChart } from "../workspace/PanelCharts";
+import { Bank } from "@phosphor-icons/react/dist/csr/Bank";
 import { usePolicyAction } from "../services/usePolicyAction";
 import { formatDate, formatMoney } from "../backend/presenters";
 import { intlLocale, useI18n, type MessageKey } from "../i18n";
@@ -261,14 +263,14 @@ export function LoansApp({ preview, onExit }: { preview: boolean; onExit: () => 
       footer = <><button type="button" className="secondary" disabled={preview} onClick={openTerms}>{t("lp.quote.adjust")}</button>
         <button className="primary" disabled={preview || busy || expired(shownQuote)} onClick={() => void apply(shownQuote)}>{t("loans.quote.apply")}</button></>;
     } else {
-      body = <div className="panel-empty" id="loans-quote"><p>{t("lp.quote.empty")}</p>
-        {snapshot.errors.quotes && !signedOut && <p className="error">{snapshot.errors.quotes}</p>}</div>;
+      body = <div id="loans-quote" className="panel-view">{snapshot.errors.quotes && !signedOut && <PanelAlert message={snapshot.errors.quotes} onRetry={() => void refresh()} />}
+        {loading ? <PanelSkeleton /> : <PanelEmpty icon={Bank} title={t("lp.step.quote")} text={t("lp.quote.empty")} />}</div>;
       footer = <button type="button" className="primary" disabled={preview || busy} onClick={openTerms}>{t("loans.form.create")}</button>;
     }
   } else if (current === "apply") {
     if (!application) {
-      body = <div className="panel-empty" id="loans-applications"><p>{t("lp.apply.empty")}</p>
-        {snapshot.errors.applications && !signedOut && <p className="error">{snapshot.errors.applications}</p>}</div>;
+      body = <div id="loans-applications" className="panel-view">{snapshot.errors.applications && !signedOut && <PanelAlert message={snapshot.errors.applications} onRetry={() => void refresh()} />}
+        {loading ? <PanelSkeleton /> : <PanelEmpty title={t("lp.step.apply")} text={t("lp.apply.empty")} />}</div>;
       footer = <button type="button" className="primary" onClick={() => setTab("quote")}>{t("lp.apply.toQuote")}</button>;
     } else {
       const quote = quoteOf(application), a = application.assessment;
@@ -304,8 +306,8 @@ export function LoansApp({ preview, onExit }: { preview: boolean; onExit: () => 
       </>;
     }
   } else if (!account) {
-    body = <div className="panel-empty" id="loans-accounts"><p>{t("lp.repay.empty")}</p>
-      {snapshot.errors.accounts && !signedOut && <p className="error">{snapshot.errors.accounts}</p>}</div>;
+    body = <div id="loans-accounts" className="panel-view">{snapshot.errors.accounts && !signedOut && <PanelAlert message={snapshot.errors.accounts} onRetry={() => void refresh()} />}
+      {loading ? <PanelSkeleton /> : <PanelEmpty title={t("lp.step.repay")} text={t("lp.repay.empty")} />}</div>;
   } else {
     const next = nextInstallment(account);
     const eligibility = next ? repayEligibility(account, next) : "closed";
@@ -325,7 +327,10 @@ export function LoansApp({ preview, onExit }: { preview: boolean; onExit: () => 
           <span>{new Date(`${next.due_on}T00:00:00`).toLocaleDateString(intlLocale(lang), { month: "short" })}</span></time>
         <div><span className="panel-muted">{t("loans.repay.title", { number: next.number })}</span><strong><Amount text={money(next.amount)} /></strong>{chip(next.status)}</div>
       </div> : account.status === "CLOSED" && <p className="panel-note">{t("loans.accounts.closed")}</p>}
-      <ul className="panel-list" aria-label={t("loans.inst.caption")}>
+      {account.installments.length > 1 && <div className="fx-figure"><div className="panel-section-title">{t("lp.paidCurve")}<span>{t("lp.repay.progress", { paid, total })}</span></div>
+        <LineChart label={t("lp.paidCurve")} height={56} points={account.installments.reduce<number[]>((points, row) =>
+          [...points, Math.max(0, points[points.length - 1] - Number(row.principal))], [account.installments.reduce((sum, row) => sum + Number(row.principal), 0)])} /></div>}
+      <ul className="panel-list panel-aside-hide" aria-label={t("loans.inst.caption")}>
         {account.installments.slice(at, at + 3).map((row) => <li key={row.number} aria-current={next?.number === row.number ? "true" : undefined}>
           <span>{row.number}</span><span>{date(row.due_on)}</span><span>{money(row.amount)}</span>{chip(row.status)}</li>)}
       </ul>
@@ -375,7 +380,7 @@ export function LoansApp({ preview, onExit }: { preview: boolean; onExit: () => 
     </PanelSheet>,
     disbursements: () => <PanelSheet title={t("loans.disb.title")} onClose={close}><div id="loans-disbursements">
       <p className="panel-muted">{t("loans.disb.text")}</p>
-      {snapshot.errors.disbursements && !signedOut && <p className="error">{snapshot.errors.disbursements}</p>}
+      {snapshot.errors.disbursements && !signedOut && <PanelAlert message={snapshot.errors.disbursements} />}
       {snapshot.disbursements.length === 0 ? <p className="panel-muted">{t("loans.disb.none")}</p> : <table className="panel-table">
         <thead><tr><th>{t("loans.disb.date")}</th><th>{t("loans.disb.amount")}</th><th>{t("loans.disb.status")}</th></tr></thead>
         <tbody>{snapshot.disbursements.map((d) => <tr key={d.id}><td>{date(d.scheduled_on)}</td><td>{money(d.amount)}</td>
@@ -386,7 +391,7 @@ export function LoansApp({ preview, onExit }: { preview: boolean; onExit: () => 
       ? <button className="primary" disabled={preview || busy || !clockCheck} onClick={() => void moveClock(target)}>{t("loans.clock.button", { date: date(target) })}</button> : undefined}>
       <div id="loans-clock">
         <p className="panel-muted">{t("loans.clock.text")}</p>
-        {snapshot.errors.wallet && !signedOut && <p className="error">{snapshot.errors.wallet}</p>}
+        {snapshot.errors.wallet && !signedOut && <PanelAlert message={snapshot.errors.wallet} />}
         {!snapshot.wallet ? <p className="panel-muted">{t("loans.clock.noWallet")}</p> : <>
           <PanelFacts items={[[t("loans.clock.today"), date(snapshot.wallet.clock)], [t("loans.clock.next"), target ? date(target) : "—"]]} />
           {!target ? <p className="panel-muted">{t("loans.clock.nothing")}</p> : target <= snapshot.wallet.clock ? <p className="panel-muted">{t("loans.clock.alreadyDue")}</p> : <>
@@ -402,7 +407,7 @@ export function LoansApp({ preview, onExit }: { preview: boolean; onExit: () => 
       <button className="primary" disabled={preview || busy} onClick={() => void saveProfile()}>{t("loans.profile.save")}</button></>}>
       <div id="loans-profile" className="panel-sheet-stack">
         <p className="panel-muted">{t("loans.profile.text")}</p>
-        {snapshot.errors.profile && !signedOut && <p className="error">{snapshot.errors.profile}</p>}
+        {snapshot.errors.profile && !signedOut && <PanelAlert message={snapshot.errors.profile} />}
         {coverable.length > 1 && <label className="panel-form" style={{ gridTemplateColumns: "1fr" }}><span>{t("loans.profile.for")}</span>
           <select value={cover?.id} onChange={(e) => setCoverId(e.target.value)}>
             {coverable.map((q) => <option key={q.id} value={q.id}>{`${money(q.result.principal)} · ${repaymentMonths(q).join(", ")}`}</option>)}
@@ -432,12 +437,16 @@ export function LoansApp({ preview, onExit }: { preview: boolean; onExit: () => 
       {staleStatus}
       <ToolPanel steps={steps} active={current} onSelect={(key) => { setTab(key); setSheet(null); }} label={t("lp.steps")}
         notices={(loading || (error && !sheet) || notice) && <>
-          {loading && <div className="activity" role="status"><span className="activity-dot" aria-hidden="true" />{t("common.loading")}</div>}
+          {loading && snapshot.applications.length + snapshot.quotes.length + snapshot.accounts.length > 0 && <div className="activity" role="status"><span className="activity-dot" aria-hidden="true" />{t("common.loading")}</div>}
           {error && !sheet && <div className="stale-banner" role="alert">{error}</div>}
           {notice && <div className="demo" role="status">{notice}</div>}</>}
         footer={<>{footer}{current === "quote" && workspace && <button type="button" className="panel-link panel-footer-note" style={{ order: -1 }}
           onClick={() => workspace.open({ kind: "plan" })}>{t("lp.backToPlan")}</button>}</>}
-        sheet={sheet && sheets[sheet]()}>
+        sheet={sheet && sheets[sheet]()}
+        aside={current === "quote" && shownQuote ? <><h3 className="panel-section-title">{t("lp.quote.schedule")}</h3>{scheduleTable(shownQuote)}</>
+          : current === "repay" && account ? <><h3 className="panel-section-title">{t("loans.inst.caption")}</h3><table className="panel-table">
+            <thead><tr><th>#</th><th>{t("loans.inst.due")}</th><th>{t("loans.inst.amount")}</th><th>{t("loans.inst.status")}</th></tr></thead>
+            <tbody>{account.installments.map((row) => <tr key={row.number}><td>{row.number}</td><td>{date(row.due_on)}</td><td>{money(row.amount)}</td><td>{chip(row.status)}</td></tr>)}</tbody></table></> : undefined}>
         {body}
       </ToolPanel>
     </ServiceShell>

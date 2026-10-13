@@ -13,7 +13,9 @@ import { MonthlySpending } from "./MonthlySpending";
 import { asksForMonthlySpending } from "./monthly";
 import { ToolSlot, useWorkspace, useToolRefresh, useClearWhenHidden, useToolActive } from "../workspace/context";
 import { FocusDialog } from "../workspace/FocusDialog";
-import { PanelFacts, PanelHero, PanelPager, ToolPanel, usePage } from "../workspace/ToolPanel";
+import { PanelAlert, PanelEmpty, PanelFacts, PanelHero, PanelInfo, PanelPager, ToolPanel, usePage } from "../workspace/ToolPanel";
+import { LevelBar, MonthStrip, StackBar } from "../workspace/PanelCharts";
+import { UsersThree } from "@phosphor-icons/react/dist/csr/UsersThree";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useI18n, type MessageKey } from "../i18n";
 import { ServiceShell } from "../services/ServiceShell";
@@ -315,15 +317,24 @@ function PlanSummary({ plan, onRefresh }: { plan: Conversation["plan"]; onRefres
   const stale = useToolRefresh(onRefresh);
   const cur = plan?.currency ?? plan?.school?.currency ?? "";
   const loan = plan?.loan;
+  // Shares of the plan's own total and gap (same currency); the loan share is shown only when it is in that currency too.
+  const total = Number(plan?.total ?? 0), gap = Math.max(0, Number(plan?.gap ?? 0));
+  const coverage = plan && total > 0 && plan.gap != null && gap <= total ? { covered: total - gap, gap,
+    loanShare: loan && gap > 0 && loan.currency === cur ? Math.min(100, Math.round(Number(loan.principal) / gap * 100)) : null } : null;
   return <section className="plan-tool" id="plan-summary" aria-labelledby="plan-summary-title">
     <ToolPanel label={t("plan.side.plan")} notices={stale}
-      footer={plan && <><span className="panel-footer-note">{t("status.estimateNote")}</span>
+      footer={plan && <><span className="panel-footer-note"><PanelInfo>{t("status.estimateNote")}</PanelInfo></span>
         <button type="button" className="secondary" onClick={() => workspace?.open({ kind: "loans" })}>{t("plan.school.loans")}</button></>}>
       <div className="panel-card-head"><h3 id="plan-summary-title">{plan ? pick(plan.school?.name, lang) || plan.school_key : t("plan.side.plan")}</h3>
         {plan && <span className={`status-chip status-${plan.status.toLowerCase()}`}>{t(`plan.plan.status.${plan.status}`)}</span>}</div>
       {plan ? <>
         <PanelHero label={t("plan.plan.total")} value={money(plan.total, cur, lang)}>
           <span className="panel-muted">{t("plan.plan.years")} {plan.years} · {t("plan.plan.start")} {day(plan.start_date, lang)}</span></PanelHero>
+        {coverage && <div className="fx-figure"><div className="panel-section-title">{t("plan.coverage")}</div>
+          <StackBar label={t("plan.coverage")} parts={[
+            { key: "covered", value: coverage.covered, tone: "mint", label: t("plan.covered", { amount: money(coverage.covered, cur, lang) }) },
+            { key: "gap", value: coverage.gap, tone: "gold", label: t("plan.gapPart", { amount: money(coverage.gap, cur, lang) }) }]} />
+          {coverage.loanShare !== null && <small className="panel-muted">{t("plan.loanCovers", { share: coverage.loanShare })}</small>}</div>}
         <div className="panel-grid-2">
           <div className="panel-tile"><span>{t("plan.plan.funds")}</span>
             <strong>{plan.available_funds ? money(plan.available_funds, plan.funds_currency ?? "", lang) : t("plan.plan.noFunds")}</strong></div>
@@ -335,7 +346,7 @@ function PlanSummary({ plan, onRefresh }: { plan: Conversation["plan"]; onRefres
           <PanelFacts items={[[t("plan.loan.principal"), money(loan.principal, loan.currency, lang)], [t("plan.loan.months"), t("plan.loan.monthsValue", { months: loan.months })],
             [t("plan.loan.monthly"), money(loan.monthly_payment, loan.currency, lang)], [t("plan.loan.total"), money(loan.total_repayment, loan.currency, lang)]]} />
         </>}
-      </> : <div className="panel-empty"><p>{t("plan.plan.none")}</p></div>}
+      </> : <PanelEmpty title={t("plan.plan.none")} />}
     </ToolPanel>
   </section>;
 }
@@ -387,11 +398,16 @@ function InSchoolPanel({ data, client, preview, onChange, onError }: { data: InS
   const next = due.find(bill => bill.status === "DUE");
   const spending = data?.enrolled ? data.spending : null;
   const used = spending && Number(spending.budget) > 0 ? Math.min(100, Number(spending.spent) / Number(spending.budget) * 100) : 0;
-  const notices = (stale || panelError || panelNotice) && <>{stale}{panelError && <p role="alert" className="error">{panelError}</p>}
+  const all = data?.enrolled ? data.bills ?? data.upcoming_bills : [];
+  const month = (next?.due_date ?? (data?.enrolled ? data.today : "")).slice(0, 7);
+  const inMonth = all.filter(bill => bill.due_date.startsWith(month) && bill.currency === (next?.currency ?? bill.currency));
+  const tone = (bill: Bill) => bill.status === "PAID" ? "paid" as const : data?.enrolled && bill.due_date < data.today ? "overdue" as const : "due" as const;
+  const sum = (kind: string) => inMonth.filter(bill => tone(bill) === kind).reduce((total, bill) => total + Number(bill.amount), 0);
+  const notices = (stale || panelError || panelNotice) && <>{stale}{panelError && <PanelAlert message={panelError} />}
     {panelNotice && <p role="status" className="service-notice">{panelNotice}</p>}</>;
   const footer = !data?.enrolled ? null : tab === "record"
     ? <button type="submit" form="plan-expense-form" className="primary" disabled={preview || busy || !Number(amount)}>{t("plan.expense.save")}</button>
-    : tab === "bills" ? <><span className="panel-footer-note">{t("plan.bills.payHint")}</span>
+    : tab === "bills" ? <><span className="panel-footer-note"><PanelInfo>{t("plan.bills.payHint")}</PanelInfo></span>
       <button type="button" className="secondary" onClick={() => setTab("record")}>{t("ws.record")}</button></>
     : <><button type="button" className="panel-link panel-footer-note" onClick={() => workspace?.open({ kind: "spending", month: data.spending.month })}>{t("plan.monthly.title")} →</button>
       <button type="button" className="secondary" onClick={() => setTab("record")}>{t("ws.record")}</button></>;
@@ -400,7 +416,7 @@ function InSchoolPanel({ data, client, preview, onChange, onError }: { data: InS
     <h2 id="plan-school-title" className="sr-only">{t("plan.school.title")}</h2>
     <ToolPanel label={t("ws.bills")} numbered={false} active={tab} onSelect={setTab} notices={notices} footer={footer}
       steps={data?.enrolled ? [{ key: "bills", label: t("plan.bills.title") }, { key: "spending", label: t("bp.tab.spending") }, { key: "record", label: t("plan.expense.title") }] : []}>
-      {!data?.enrolled ? <div className="panel-empty"><p>{t("plan.school.notYet")}</p></div> : <>
+      {!data?.enrolled ? <PanelEmpty title={t("plan.school.notYet")} /> : <>
         <div className="panel-view" hidden={tab !== "bills"}>
           <div className="panel-card-head"><h3>{t("plan.bills.title")}</h3>
             <PanelPager index={page.index} count={page.pages} onChange={setBillPage} label={t("plan.bills.title")} /></div>
@@ -408,9 +424,16 @@ function InSchoolPanel({ data, client, preview, onChange, onError }: { data: InS
             <time dateTime={next.due_date}><strong>{Number(next.due_date.slice(8, 10))}</strong>
               <span>{new Date(`${next.due_date}T00:00:00`).toLocaleDateString(lang, { month: "short" })}</span></time>
             <div><span className="panel-muted">{pick(next.label, lang)}</span><strong>{money(next.amount, next.currency, lang)}</strong>
-              <span className="panel-tag">{t(next.due_date < data.today ? "plan.bills.overdue" : "status.due")}</span></div>
+              <span className="panel-tag is-warn">{t(next.due_date < data.today ? "plan.bills.overdue" : "status.due")}</span></div>
           </div>}
-          {!due.length ? <p className="panel-muted">{t("plan.bills.none")}</p> : <ul className="panel-rows plan-bills">{page.rows.map(bill => <li key={bill.id}>
+          {month && inMonth.length > 0 && <div className="fx-figure"><div className="panel-section-title">{t("bp.calendar")}<span>{month}</span></div>
+            <MonthStrip month={month} label={t("bp.calendar")} today={data.today.startsWith(month) ? Number(data.today.slice(8, 10)) : undefined}
+              marks={inMonth.map(bill => ({ day: Number(bill.due_date.slice(8, 10)), tone: tone(bill) }))} />
+            <StackBar label={t("bp.paidShare")} parts={[
+              { key: "paid", value: sum("paid"), tone: "mint", label: t("bp.paid", { amount: money(sum("paid"), next?.currency ?? "", lang) }) },
+              { key: "due", value: sum("due"), tone: "gold", label: t("bp.due", { amount: money(sum("due"), next?.currency ?? "", lang) }) },
+              { key: "overdue", value: sum("overdue"), tone: "red", label: t("bp.overdue", { amount: money(sum("overdue"), next?.currency ?? "", lang) }) }]} /></div>}
+          {!due.length ? <PanelEmpty title={t("plan.bills.none")} /> : <ul className="panel-rows plan-bills">{page.rows.map(bill => <li key={bill.id}>
             <span><strong>{pick(bill.label, lang)}</strong><small>{day(bill.due_date, lang)}</small></span>
             <span>{money(bill.amount, bill.currency, lang)}</span>
             {bill.status === "PAID" ? <span className="status-chip status-confirmed">{t("plan.bills.paid")}</span>
@@ -479,33 +502,39 @@ function FamilyPanel({ links, role, client, preview, onLinked, onError, onRefres
     } catch (err) { setPanelError(describe(err, t)); onError(err); } finally { setBusy(false); }
   }
 
-  return <section className="card service-card" id="plan-family" aria-labelledby="plan-family-title">
-    <div className="service-card-body">
-      <h2 id="plan-family-title">{t("plan.family.title")}</h2>
-      {stale}{panelError && <p role="alert" className="error">{panelError}</p>}
-      {links.length === 0 ? <p className="service-muted">{t("plan.family.none")}</p> : <ul className="plan-family">
-        {links.map((item) => <li key={item.id}>
-          <strong>{t(item.relation === "child" ? "plan.family.child" : "plan.family.parent", { account: item.account })}</strong>
-          {item.plan && <span>{t("plan.family.childPlan", { school: pick(item.plan.school?.name, lang) || item.plan.school_key,
-            status: t(`plan.plan.status.${item.plan.status}`) })}</span>}
-          {item.in_school?.enrolled && <>
-            <span>{t("plan.family.childSpending", { month: item.in_school.spending.month,
-              spent: money(item.in_school.spending.spent, item.in_school.spending.currency, lang),
-              budget: money(item.in_school.spending.budget, item.in_school.spending.currency, lang) })}</span>
-            {item.in_school.upcoming_bills[0] && <span>{t("plan.family.childBills", { label: pick(item.in_school.upcoming_bills[0].label, lang),
-              amount: money(item.in_school.upcoming_bills[0].amount, item.in_school.upcoming_bills[0].currency, lang),
-              date: item.in_school.upcoming_bills[0].due_date })}</span>}
-            <span className="service-muted">{t("plan.family.private")}</span>
-          </>}
-        </li>)}
-      </ul>}
-      {role !== "student" && <form onSubmit={link}>
-        <h3>{t("plan.family.linkTitle")}</h3>
-        <p className="service-muted">{t("plan.family.linkText")}</p>
-        <label className="service-field">{t("plan.family.token")}<input data-sensitive="true" value={token} maxLength={64} disabled={preview || busy}
-          autoComplete="off" onChange={(event) => setToken(event.target.value.trim())} /></label>
-        <button type="submit" className="secondary" disabled={preview || busy || token.length !== 64}>{t("plan.family.link")}</button>
-      </form>}
-    </div>
+  const [index, setIndex] = useState(0);
+  const item = links[Math.min(index, links.length - 1)];
+  const school = item?.in_school?.enrolled ? item.in_school : null;
+  const linkForm = role !== "student" && <form id="plan-family-form" className="panel-view" onSubmit={link}>
+    <div className="panel-section-title">{t("plan.family.linkTitle")}<PanelInfo>{t("plan.family.linkText")}</PanelInfo></div>
+    <label className="panel-form" style={{ gridTemplateColumns: "1fr" }}><span>{t("plan.family.token")}</span><input data-sensitive="true" value={token} maxLength={64} disabled={preview || busy}
+      autoComplete="off" onChange={(event) => setToken(event.target.value.trim())} /></label>
+  </form>;
+  return <section className="plan-tool" id="plan-family" aria-labelledby="plan-family-title">
+    <ToolPanel label={t("plan.family.title")} notices={(stale || panelError) && <>{stale}{panelError && <PanelAlert message={panelError} />}</>}
+      footer={role !== "student" && <button type="submit" form="plan-family-form" className="primary" disabled={preview || busy || token.length !== 64}>{t("plan.family.link")}</button>}>
+      <div className="panel-card-head"><h2 id="plan-family-title">{t("fl.linked")}</h2>
+        <PanelPager index={Math.min(index, links.length - 1)} count={links.length} onChange={setIndex} label={t("fl.linked")} /></div>
+      {!item ? <PanelEmpty icon={UsersThree} title={t("fl.none")} text={t("plan.family.none")} /> : <article className="panel-view plan-family">
+        <div className="panel-row"><strong>{t(item.relation === "child" ? "plan.family.child" : "plan.family.parent", { account: item.account })}</strong>
+          {item.plan && <span className={`status-chip status-${item.plan.status.toLowerCase()}`}>{t(`plan.plan.status.${item.plan.status}`)}</span>}</div>
+        {item.plan && <p className="panel-muted">{t("plan.family.childPlan", { school: pick(item.plan.school?.name, lang) || item.plan.school_key,
+          status: t(`plan.plan.status.${item.plan.status}`) })}</p>}
+        {school && <>
+          <PanelHero label={t("plan.spending.title", { month: school.spending.month })} value={money(school.spending.spent, school.spending.currency, lang)}>
+            <LevelBar value={Number(school.spending.budget)} max={Number(school.spending.budget)} after={Math.min(Number(school.spending.spent), Number(school.spending.budget))}
+              tone={school.spending.over_budget ? "warn" : undefined} />
+            <span className="panel-muted">{t("plan.family.childSpending", { month: school.spending.month, spent: money(school.spending.spent, school.spending.currency, lang),
+              budget: money(school.spending.budget, school.spending.currency, lang) })}</span></PanelHero>
+          {school.upcoming_bills[0] && <div className="panel-timeline">
+            <time dateTime={school.upcoming_bills[0].due_date}><strong>{Number(school.upcoming_bills[0].due_date.slice(8, 10))}</strong>
+              <span>{new Date(`${school.upcoming_bills[0].due_date}T00:00:00`).toLocaleDateString(lang, { month: "short" })}</span></time>
+            <div><span className="panel-muted">{pick(school.upcoming_bills[0].label, lang)}</span>
+              <strong>{money(school.upcoming_bills[0].amount, school.upcoming_bills[0].currency, lang)}</strong></div></div>}
+          <p className="panel-note">{t("plan.family.private")}</p>
+        </>}
+      </article>}
+      {linkForm}
+    </ToolPanel>
   </section>;
 }

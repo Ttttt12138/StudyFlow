@@ -4,7 +4,8 @@ import type { WalletClient } from "../wallet/client";
 import { useToolActive, useWorkspace } from "../workspace/context";
 import { Bills } from "./cards";
 import { money } from "./format";
-import { PanelHero, PanelPager, ToolPanel, usePage } from "../workspace/ToolPanel";
+import { PanelHero, PanelPager, PanelSkeleton, ToolPanel, usePage } from "../workspace/ToolPanel";
+import { LineChart } from "../workspace/PanelCharts";
 import { spendingSlices } from "./monthly";
 import type { InSchool, Spending, SpendingPage } from "./types";
 import "./monthly.css";
@@ -86,6 +87,18 @@ export function MonthlySpending({ client, preview }: { client: WalletClient; pre
     .filter(bill => bill.status === "DUE" && page && bill.due_date.startsWith(page.month)) : [];
   const views = page ? Math.max(1, Math.ceil(page.entries.length / ENTRY_PAGE)) : 1;
   const used = page && Number(page.budget) > 0 ? Math.min(100, Number(page.spent) / Number(page.budget) * 100) : 0;
+  // Cumulative spending by day, only when the whole month is loaded and every entry is in the summary currency.
+  const complete = !!page && offset === 0 && page.entries.length === page.count && page.entries.every(entry => entry.currency === page.currency && !page.unconverted?.includes(entry.id));
+  const curve = (() => {
+    if (!page || !complete || !page.entries.length) return [];
+    const [y, m] = page.month.split("-").map(Number);
+    const days = new Date(y, m, 0).getDate();
+    const daily = Array.from({ length: days }, () => 0);
+    for (const entry of page.entries) { const day = Number(entry.spent_on.slice(8, 10)); if (day >= 1 && day <= days) daily[day - 1] += Number(entry.amount); }
+    const last = Math.max(...page.entries.map(entry => Number(entry.spent_on.slice(8, 10))));
+    let sum = 0;
+    return [0, ...daily.slice(0, last).map(value => (sum += value))];
+  })();
   // Entries arrive 50 at a time; the panel pages through each batch eight rows at a time.
   const batch = page && page.count > 50 && <nav className="monthly-pagination panel-row" aria-label={t("plan.monthly.pages")}>
     <span className="panel-muted">{t("ms.batch", { from: offset + 1, to: offset + page.entries.length, total: page.count })}</span>
@@ -94,8 +107,11 @@ export function MonthlySpending({ client, preview }: { client: WalletClient; pre
   </nav>;
   return <article className="monthly-report" aria-busy={loading}>
     <ToolPanel label={t("plan.monthly.title")} numbered={false} active={tab} onSelect={setTab}
+      aside={page && tab === "overview" && page.entries.length > 0 ? <><h3 className="panel-section-title">{t("plan.monthly.details")} <span>{page.count}</span></h3>
+        <ul className="panel-rows">{page.entries.map(entry => <li key={entry.id}><span><strong>{entry.note || t(`plan.cat.${entry.category}` as MessageKey)}</strong><small>{entry.spent_on}</small></span>
+          <span>{amountLabel(entry.amount, entry.currency, lang)}</span></li>)}</ul></> : undefined}
       steps={page ? [{ key: "overview", label: t("ms.tab.overview") }, { key: "entries", label: `${t("ms.tab.entries")} ${page.count}` }, { key: "due", label: t("ms.tab.due") }] : []}>
-      {loading && !result ? <p role="status">{t("common.loading")}</p> : error ?
+      {loading && !result ? <PanelSkeleton rows={4} /> : error ?
         <p role="alert">{error} <button className="chip" onClick={() => setRevision(value => value + 1)}>{t("common.refresh")}</button></p> : page && result && <>
           <div className="panel-view" hidden={tab !== "overview"}>
             <div className="panel-card-head"><h2>{t("plan.spending.title", { month: page.month })}</h2><span className="panel-tag">{t("plan.simulated")}</span></div>
@@ -106,6 +122,10 @@ export function MonthlySpending({ client, preview }: { client: WalletClient; pre
               <div className="panel-tile"><span>{t("plan.spending.budget")}</span><strong>{money(page.budget, page.currency, lang)}</strong></div>
               <div className="panel-tile"><span>{t("plan.spending.remaining")}</span><strong className={page.over_budget ? "plan-gap" : ""}>{money(page.remaining, page.currency, lang)}</strong></div>
             </div>
+            {curve.length > 1 ? <div className="fx-figure"><div className="panel-section-title">{t("ms.pace")}<small>{t("ms.paceNote")}</small></div>
+              <LineChart label={t("ms.pace")} points={curve} pace={Number(page.budget) * (curve.length - 1) / new Date(Number(page.month.slice(0, 4)), Number(page.month.slice(5, 7)), 0).getDate()}
+                max={Math.max(Number(page.spent), Number(page.budget) * (curve.length - 1) / new Date(Number(page.month.slice(0, 4)), Number(page.month.slice(5, 7)), 0).getDate())} height={72} /></div>
+              : page.count > 0 && !complete && <p className="panel-muted">{t("ms.paceIncomplete")}</p>}
             <SpendingPie spending={page} />
             {!!page.unconverted?.length && <p role="status" className="panel-note is-warn">{t("plan.monthly.unconverted", { n: page.unconverted.length })}</p>}
             <p className="panel-muted">{t("plan.monthly.scope", { currency: page.currency })}{preview && ` ${t("plan.monthly.preview")}`}</p>
