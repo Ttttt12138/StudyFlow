@@ -2,7 +2,7 @@ name: Django B and C integration
 # Pushes to the main branch and pull requests; a newer commit cancels the older run of the same ref.
 on:
   push:
-    branches: [feature/bc-integration]
+    branches: [feature/bc-integration, integration/abc]
   pull_request:
   workflow_dispatch:
 concurrency:
