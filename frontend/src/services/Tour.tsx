@@ -16,7 +16,7 @@ export const tourStops: TourStop[] = [
   { target: { kind: "home", stage: "plan", tool: "compare" } },
   { target: { kind: "home", stage: "plan", tool: "funding" }, extra: { kind: "sponsor" } },
   { target: { kind: "home", stage: "prepare", tool: "life" } },
-  { target: { kind: "home", stage: "school" }, extra: { kind: "home", stage: "school", tool: "spending" } },
+  { target: { kind: "home", stage: "school" }, extra: { kind: "home", stage: "school", tool: "life" } },
   { target: { kind: "home", stage: "school", tool: "wallet" }, extra: { kind: "ops" } },
   { target: { kind: "home", stage: "school", tool: "payments" } },
   { target: { kind: "home", stage: "school" } },

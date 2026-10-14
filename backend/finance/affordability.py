@@ -25,11 +25,14 @@ def save_profile(actor, data, obj=None):
     return record(profile)
 
 
-def commitments(application):
+def commitments(application, exclude_loans=()):
+    """Monthly repayments owed on the owner's other approved or disbursed loans.
+
+    `exclude_loans` leaves out loans that the caller is about to replace (a plan's own earlier quotes)."""
     totals = defaultdict(Decimal)
     others = SimulatedApplication.objects.filter(
         owner=application.owner, status__in=["APPROVED", "DISBURSED"]
-    )
+    ).exclude(loan_id__in=list(exclude_loans))
     for other in others.exclude(pk=application.pk).select_related("loan"):
         installments = LoanInstallment.objects.filter(
             account__disbursement__application=other

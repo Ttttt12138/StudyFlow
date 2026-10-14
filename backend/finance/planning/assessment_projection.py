@@ -1,8 +1,10 @@
 """Read-only projections of user-declared funds through the existing cashflow engine."""
 from datetime import date, timedelta
+from decimal import Decimal
 
 from finance.calculations import forecast
 from finance.lending_core.calculations import month_date
+from finance.readiness.budget import money
 from finance.workflow_common import require
 
 from . import costs, services
@@ -65,7 +67,8 @@ def support_events(inputs, issues):
 def projections(entry, inputs, years=None, start_date=None):
     issues = []
     opening = thb(inputs["available_funds"], inputs["funds_currency"], issues, "available_funds")
-    reserve = thb(inputs["reserve"], inputs["funds_currency"], issues, "reserve")
+    # Money to keep aside is optional: blank means nothing is held back.
+    reserve = thb(inputs["reserve"] or "0.00", inputs["funds_currency"], issues, "reserve")
     events = payment_events(entry, inputs, issues, years, start_date) + support_events(inputs, issues)
     estimate = services.estimate(entry, years)
     overridden = {c["cost_id"] for c in inputs.get("costs", []) if c.get("amount") is not None}
@@ -81,6 +84,18 @@ def projections(entry, inputs, years=None, start_date=None):
         value.update(complete=not missing, issues=missing, horizon=inputs["horizon"],
                      as_of=inputs["as_of"], conditional=conditional, declared_funds=True)
         result["conditional_forecast" if conditional else "forecast"] = value
-    result["suggested_principal"] = (result["forecast"]["maximum_reserve_gap"]
-                                     if result["forecast"]["complete"] else None)
+    result["suggested_principal"] = course_gap(estimate, opening)
     return result
+
+
+def course_gap(estimate, opening):
+    """What the declared funds leave uncovered of the full course, in THB: the default loan amount.
+
+    Unknown (None) without declared funds or an exchange rate, so the course cost never stands in for a principal.
+    """
+    if opening is None:
+        return None
+    total = services.convert(estimate["total"], estimate["currency"], "THB")
+    if total is None:
+        return None
+    return money(max(Decimal(total["amount"]) - Decimal(opening), Decimal(0)))

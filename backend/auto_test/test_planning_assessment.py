@@ -13,8 +13,9 @@ from rest_framework.test import APIClient, APITestCase, APITransactionTestCase
 
 from finance.models import FinancialState
 from finance.planning import catalog, services
+from finance.planning.models import PlanBill
 from finance.services import save_state
-from finance.workflow_models import DemoWallet, LoanSimulation, SimulatedApplication
+from finance.workflow_models import DemoWallet, Disbursement, LoanSimulation, SimulatedApplication
 
 
 class ShortPlanningTests(APITestCase):
@@ -47,14 +48,12 @@ class ShortPlanningTests(APITestCase):
         inputs["loan"].update(product="commercial_student_demo", annual_rate="0.075", fees="300.00")
         result = self.save(inputs)
         self.assertEqual(result["inputs"]["loan"]["product"], "commercial_student_demo")
-        self.assertEqual([q["inputs"]["months"] for q in result["quotes"]], [48, 24, 48])
-        self.assertEqual([q["inputs"]["product"] for q in result["quotes"]],
-                         ["custom", "custom", "commercial_student_demo"])
-        self.assertEqual(len({q["id"] for q in result["quotes"]}), 3)
-        for quote in result["quotes"]:
-            self.assertEqual(Decimal(quote["inputs"]["annual_rate"]), Decimal("0.075"))
-            self.assertEqual(quote["result"]["net_proceeds"], "19700.00")
-        quote = result["quotes"][2]
+        self.assertEqual([(q["inputs"]["months"], q["inputs"]["product"]) for q in result["quotes"]],
+                         [(48, "commercial_student_demo")])
+        quote = result["quotes"][0]
+        # The study loan keeps its own lower rate whatever rate is declared for the custom loan.
+        self.assertEqual(Decimal(quote["inputs"]["annual_rate"]), Decimal("0.045"))
+        self.assertEqual(quote["result"]["net_proceeds"], "19700.00")
         response = self.post("loan-applications/", {"expected_version": result["version"],
             "plan_version": self.plan["version"], "quote_id": quote["id"]})
         self.assertEqual(response.status_code, 201, response.data)
@@ -65,6 +64,27 @@ class ShortPlanningTests(APITestCase):
         application.refresh_from_db()
         self.assertEqual(application.loan.inputs["product"], "commercial_student_demo")
 
+    def test_study_loan_has_a_lower_rate_and_the_only_60_month_term(self):
+        result = self.save()
+        offers = {o["key"]: o for o in result["prequal"]["products"]}
+        self.assertEqual((offers["custom"]["annual_rate"], offers["custom"]["terms"]), ("0.06", [24, 36, 48]))
+        self.assertEqual((offers["commercial_student_demo"]["annual_rate"], offers["commercial_student_demo"]["terms"]),
+                         ("0.045", [24, 36, 48, 60]))
+        data = self.inputs()
+        data["loan"]["months"] = 60
+        custom = self.post("assessment/", {"expected_version": result["version"], "plan_version": self.plan["version"], "inputs": data})
+        self.assertEqual(custom.status_code, 400, custom.data)
+        data["loan"]["product"] = "commercial_student_demo"
+        study = self.save(data, version=result["version"])
+        self.assertEqual((study["quotes"][0]["inputs"]["months"], Decimal(study["quotes"][0]["inputs"]["annual_rate"])), (60, Decimal("0.045")))
+        preview = lambda product: self.client.post("/api/v2/planning/loan-preview/", {"principal": "20000.00", "months": 60,
+                                                                                      "product": product}, format="json")
+        self.assertEqual(preview("custom").status_code, 400)
+        cheap, normal = preview("commercial_student_demo").data["data"], self.client.post(
+            "/api/v2/planning/loan-preview/", {"principal": "20000.00", "months": 48}, format="json").data["data"]
+        self.assertEqual(cheap["annual_rate"], "0.045")
+        self.assertLess(Decimal(cheap["monthly_payment"]), Decimal(normal["monthly_payment"]))
+
     def test_loan_product_defaults_and_validation(self):
         result = self.save()
         self.assertEqual(result["quotes"][0]["inputs"]["product"], "custom")
@@ -73,7 +93,7 @@ class ShortPlanningTests(APITestCase):
         response = self.post("assessment/", {"expected_version": result["version"],
             "plan_version": self.plan["version"], "inputs": inputs})
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(LoanSimulation.objects.filter(owner=self.user).count(), 3)
+        self.assertEqual(LoanSimulation.objects.filter(owner=self.user).count(), 1)
 
     def test_standalone_commercial_example_and_unknown_product(self):
         body = {key: value for key, value in self.inputs()["loan"].items() if key != "periods"}
@@ -100,14 +120,16 @@ class ShortPlanningTests(APITestCase):
         self.assertIn("tuition_semester", result["missing_cost_ids"])
         self.assertIsNone(result["lines"][0]["total"])
 
-    def test_assessment_is_isolated_and_returns_three_choices(self):
+    def test_assessment_is_isolated_and_quotes_the_chosen_term(self):
         result = self.save()
         self.assertFalse(FinancialState.objects.filter(owner=self.user).exists())
         self.assertFalse(DemoWallet.objects.filter(owner=self.user).exists())
-        self.assertEqual([r["inputs"]["months"] for r in result["quotes"]], [48, 24, 48])
-        self.assertEqual([r["inputs"]["product"] for r in result["quotes"]],
-                         ["custom", "custom", "commercial_student_demo"])
-        self.assertTrue(all(r["assessment"]["status"] == "AFFORDABLE" for r in result["quotes"]))
+        self.assertEqual([(r["inputs"]["months"], r["inputs"]["product"]) for r in result["quotes"]], [(48, "custom")])
+        data = self.inputs()
+        data["loan"]["months"] = 36
+        other = self.save(data, version=result["version"])
+        self.assertEqual([r["inputs"]["months"] for r in other["quotes"]], [36])
+        self.assertTrue(all(r["assessment"]["status"] == "NOT_ASSESSED" for r in result["quotes"]))
         self.assertEqual(result["inputs"]["repayment"]["income"], "30000.00")
         self.assertEqual(result["forecast"]["horizon"], 90)
 
@@ -118,13 +140,6 @@ class ShortPlanningTests(APITestCase):
         result = self.save(data)
         self.assertGreater(Decimal(result["forecast"]["maximum_reserve_gap"]),
                            Decimal(result["conditional_forecast"]["maximum_reserve_gap"]))
-
-    def test_missing_repayment_months_stay_unknown(self):
-        data = self.inputs()
-        data["repayment"]["to_month"] = "2027-10"
-        result = self.save(data)
-        self.assertEqual(result["quotes"][0]["assessment"]["status"], "INSUFFICIENT_DATA")
-        self.assertIn("2027-11.income", result["quotes"][0]["assessment"]["missing_inputs"])
 
     def test_revision_conflict_and_get_do_not_create_quotes(self):
         self.save()
@@ -192,6 +207,16 @@ class ShortPlanningTests(APITestCase):
         self.assertEqual(LoanSimulation.objects.filter(owner=self.user).count(), 0)
         self.assertEqual(services.plan_for(self.user).status, "DRAFT")
 
+    def test_evaluated_funds_become_the_plan_funds_and_its_gap(self):
+        draft = self.post("assessment/", {"expected_version": 0, "plan_version": self.plan["version"],
+            "inputs": {**self.inputs(), "available_funds": "600000.00"}, "draft": True})
+        self.assertEqual(draft.status_code, 201, draft.data)
+        self.assertIsNone(services.plan_for(self.user).available_funds)
+        result = self.save({**self.inputs(), "available_funds": "600000.00"}, version=1)
+        self.assertEqual((result["plan"]["available_funds"], result["plan"]["gap"]), ("600000.00", "413800.00"))
+        plan = services.plan_for(self.user)
+        self.assertEqual((plan.version, plan.status), (self.plan["version"], "DRAFT"))
+
     def test_bills_use_frozen_actual_semesters(self):
         from finance.planning.in_school import generate_bills
         from finance.planning.models import PlanBill
@@ -214,14 +239,6 @@ class ShortPlanningTests(APITestCase):
         self.assertEqual(alumni["per_year"], "0.00")
         self.assertEqual(alumni["total"], "40000.00")
 
-    def test_repayment_change_preserves_other_recurring_fields(self):
-        data = self.inputs()
-        data["repayment"]["changes"] = [{"month": "2027-10", "income": "11000.00"}]
-        result = self.save(data)
-        rows = result["quotes"][0]["repayment_months"]
-        self.assertEqual(rows[1]["income"], "11000.00")
-        self.assertEqual(rows[1]["living_expenses"], "10000.00")
-
     def test_other_user_cannot_submit_quote(self):
         result = self.save()
         other = get_user_model().objects.create_user("planning-other")
@@ -231,16 +248,146 @@ class ShortPlanningTests(APITestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(SimulatedApplication.objects.count(), 0)
 
-    def test_external_repayment_change_requires_review_before_application(self):
-        from finance.lending_models import AffordabilityProfile
+    def test_loans_default_to_the_full_course_gap(self):
+        data = self.inputs()
+        data["available_funds"] = "600000.00"
+        data["loan"].update(principal=None, fees="1200.00")
+        result = self.save(data)
+        self.assertEqual(result["suggested_principal"], "413800.00")
+        self.assertEqual((result["prequal"]["status"], result["prequal"]["max_principal"]), ("enough", "415000.00"))
+        self.assertEqual([q["inputs"]["principal"] for q in result["quotes"]], ["415000.00"])
+        data["funds_currency"] = "CNY"
+        data["available_funds"] = "100000.00"
+        converted = self.save(data, version=result["version"])
+        thb = services.convert("100000.00", "CNY", "THB")["amount"]
+        self.assertEqual(Decimal(converted["suggested_principal"]), Decimal("1013800.00") - Decimal(thb))
+
+    def confirm(self, assessment, quote_id=None):
+        return self.post("plan/confirm/", {"expected_version": assessment["version"], "plan_version": assessment["plan_version"],
+                                           "quote_id": quote_id})
+
+    def test_one_confirmation_confirms_the_plan_without_a_loan(self):
+        conversation = self.client.post("/api/v2/agent/conversations/", {"locale": "zh"}, format="json",
+                                        HTTP_IDEMPOTENCY_KEY=str(uuid4())).data["data"]
         result = self.save()
-        AffordabilityProfile.objects.create(owner=self.user, version=1, months=[])
-        current = self.client.get("/api/v2/planning/assessment/").data["data"]
-        self.assertTrue(current["stale"])
-        response = self.post("loan-applications/", {"expected_version": result["version"],
-            "plan_version": self.plan["version"], "quote_id": result["quotes"][0]["id"]})
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(SimulatedApplication.objects.count(), 0)
+        response = self.confirm(result)
+        self.assertEqual(response.status_code, 201, response.data)
+        data = response.data["data"]
+        self.assertEqual((data["plan"]["status"], data["application"], data["stale"]), ("CONFIRMED", None, False))
+        self.assertEqual(SimulatedApplication.objects.filter(owner=self.user).count(), 0)
+        self.assertTrue(PlanBill.objects.filter(owner=self.user).exists())
+        turns = self.client.get(f"/api/v2/agent/conversations/{conversation['id']}/").data["data"]["turns"]
+        self.assertIn("留学计划已保存", turns[-1]["final_answer"])
+        again = self.confirm(data)
+        self.assertEqual(again.status_code, 400, again.data)
+
+    def test_one_confirmation_submits_the_chosen_loan_and_confirms_the_plan(self):
+        result = self.save()
+        quote = result["quotes"][0]
+        stale = self.post("plan/confirm/", {"expected_version": result["version"] - 1, "plan_version": result["plan_version"],
+                                            "quote_id": quote["id"]})
+        self.assertEqual(stale.status_code, 409, stale.data)
+        self.assertEqual(services.plan_for(self.user).status, "DRAFT")
+        response = self.confirm(result, quote["id"])
+        self.assertEqual(response.status_code, 201, response.data)
+        data = response.data["data"]
+        self.assertEqual(data["plan"]["status"], "CONFIRMED")
+        self.assertEqual(data["application"]["loan"], quote["id"])
+        self.assertNotEqual(data["application"]["status"], "DRAFT")
+        self.assertEqual([a["loan"] for a in data["lifecycle"]["applications"]], [quote["id"]])
+
+    def test_prequal_needs_only_the_funds_and_approves_without_income(self):
+        data = self.inputs()
+        data["available_funds"] = "600000.00"
+        data["loan"]["principal"] = None
+        data["repayment"].update(income=None, living_expenses=None)
+        unknown = self.save({**data, "available_funds": None})
+        self.assertEqual((unknown["prequal"]["status"], unknown["quotes"]), ("unknown", []))
+        result = self.save(data, version=unknown["version"])
+        self.assertEqual((result["prequal"]["status"], result["prequal"]["max_principal"]), ("enough", "413800.00"))
+        self.assertNotIn("room", result["prequal"])
+        self.assertEqual(result["quotes"][0]["assessment"]["status"], "NOT_ASSESSED")
+        self.assertEqual(self.confirm(result, result["quotes"][0]["id"]).status_code, 201)
+        application = SimulatedApplication.objects.get(owner=self.user)
+        self.assertEqual((application.status, application.assessment["status"]), ("APPROVED", "PREQUALIFIED"))
+
+    def test_preview_gives_instant_figures_without_storing_anything(self):
+        result = self.save({**self.inputs(), "available_funds": "600000.00"})
+        before = LoanSimulation.objects.count()
+        response = self.client.post("/api/v2/planning/loan-preview/", {"principal": "413800.00", "months": 48}, format="json")
+        self.assertEqual(response.status_code, 200, response.data)
+        data = response.data["data"]
+        self.assertEqual(data["monthly_payment"], "9718.11")
+        self.assertNotIn("room_share", data)
+        self.assertEqual(len(data["schedule"]), 48)
+        self.assertEqual(data["schedule"][-1]["remaining_principal"], "0.00")
+        self.assertEqual(sum(Decimal(r["principal"]) for r in data["schedule"]), Decimal("413800.00"))
+        self.assertEqual((data["annual_rate"], data["net_proceeds"]), ("0.06", "413800.00"))
+        self.assertEqual(LoanSimulation.objects.count(), before)
+        cap = Decimal(result["prequal"]["max_principal"])
+        over = self.client.post("/api/v2/planning/loan-preview/", {"principal": str(cap + 1), "months": 60}, format="json")
+        self.assertEqual(over.status_code, 400)
+
+    def test_changing_school_withdraws_the_unsigned_application(self):
+        result = self.save()
+        self.assertEqual(self.confirm(result, result["quotes"][0]["id"]).status_code, 201)
+        application = SimulatedApplication.objects.get(owner=self.user)
+        self.assertEqual(application.status, "APPROVED")
+        saved = services.save_plan(self.user, {"school_key": "malaya"})
+        self.assertTrue(saved["withdrawn_application"])
+        application.refresh_from_db()
+        self.assertEqual(application.status, "CANCELLED")
+
+    def test_signing_pays_the_school_bill_by_bill_from_the_loan(self):
+        from finance.planning import loan_stage
+        from finance.planning.models import LoanPayout, StudyTask
+
+        inputs = self.inputs()
+        inputs["loan"]["principal"] = "30000.00"
+        result = self.save(inputs)
+        data = self.confirm(result, result["quotes"][0]["id"]).data["data"]
+        application = SimulatedApplication.objects.get(owner=self.user)
+        documents = data["loan_stage"]["documents"]
+        self.assertEqual([d["key"] for d in documents],
+                         ["loan_doc:admission", "loan_doc:identity", "loan_doc:income:student_with_parent"])
+        self.assertEqual(documents[2]["title"]["zh"], "共同借款人（家长）收入证明")
+        sign = {"application_id": str(application.id), "expected_version": application.version}
+        missing = self.post("loan/sign/", sign)
+        self.assertEqual(missing.status_code, 400, missing.data)
+        StudyTask.objects.filter(template_key__startswith=loan_stage.PREFIX).update(done=True)
+        before = dict(PlanBill.objects.filter(owner=self.user).values_list("source_id", "amount"))
+        response = self.post("loan/sign/", sign)
+        self.assertEqual(response.status_code, 201, response.data)
+        application.refresh_from_db()
+        self.assertEqual(application.status, "DISBURSED")
+        self.assertEqual(Disbursement.objects.get(application=application).status, "school")
+        self.assertEqual(DemoWallet.objects.get(owner=self.user).balance, Decimal("0"))
+        payouts = list(LoanPayout.objects.filter(application=application))
+        # Tuition first, in date order: one bill fully, then the part of the next one the loan still covers,
+        # split off as its own bill so the family's remaining part stays due.
+        self.assertEqual([p.bill.kind for p in payouts], ["tuition", "tuition"])
+        self.assertEqual(sum(p.amount for p in payouts), Decimal("30000.00"))
+        full, part = payouts
+        self.assertEqual(full.bill.amount, before[full.bill.source_id])
+        source = part.bill.source_id.removesuffix(":loan")
+        self.assertNotEqual(source, part.bill.source_id)
+        rest = PlanBill.objects.get(owner=self.user, source_id=source)
+        self.assertEqual(rest.amount + part.bill.amount, before[source])
+        self.assertEqual(payouts[0].status, "SCHEDULED")
+        self.client.post("/api/v2/planning/life/clock/", {"date": payouts[0].due_date.isoformat()}, format="json",
+                         HTTP_IDEMPOTENCY_KEY=str(uuid4()))
+        payouts[0].refresh_from_db()
+        self.assertEqual((payouts[0].status, payouts[0].bill.status), ("PAID", "PAID"))
+        rest.refresh_from_db()
+        self.assertEqual(rest.status, "DUE")
+        operator = get_user_model().objects.create_user("ops-plan", password="ops-pass-17", is_staff=True)
+        self.client.force_authenticate(operator)
+        wired = self.client.post(f"/api/v2/applications/{application.id}/disburse/", {"expected_version": application.version},
+                                 format="json", HTTP_IDEMPOTENCY_KEY=str(uuid4()))
+        self.assertNotEqual(wired.status_code, 201)
+        self.client.force_authenticate(self.user)
+        with self.assertRaises(Exception):
+            services.save_plan(self.user, {"school_key": "malaya"})
 
     def test_sufficient_funds_skip_loans_even_with_nonzero_fee(self):
         data = self.inputs()
@@ -255,7 +402,7 @@ class ShortPlanningTests(APITestCase):
 
         from rest_framework.exceptions import ValidationError
         result = self.save()
-        with patch("finance.lending_applications.application_action", side_effect=ValidationError("submission interrupted")):
+        with patch("finance.planning.assessment.planning_decision", side_effect=ValidationError("submission interrupted")):
             response = self.post("loan-applications/", {"expected_version": result["version"],
                 "plan_version": self.plan["version"], "quote_id": result["quotes"][0]["id"]})
         self.assertEqual(response.status_code, 400)

@@ -96,18 +96,25 @@ try {
     await page.screenshot({ path: fileURLToPath(new URL(`${name}-prices.png`, output)), fullPage: true });
     await say(page, 'Choose PSU Phuket. Savings 10000 THB, monthly income 30000 THB, monthly expenses 10000 THB, existing repayments 0 THB. Borrow 20000 THB.');
     const panel = page.locator('.assessment-panel');
-    await panel.locator('form').waitFor();
+    // The plan is shown as pictures; the hand-edit form sits behind two collapsed sections.
+    const openForm = async () => {
+      await panel.getByText(mobile ? '手动修改详细信息' : 'Edit details by hand', { exact: true }).click();
+      await panel.locator('form').waitFor();
+      await panel.getByText(mobile ? '更多设置（可选）' : 'More settings (optional)', { exact: true }).click();
+    };
+    await panel.locator('.plan-visual').waitFor();
+    await openForm();
     const input = mobile ? { reserve: '希望保留的资金', payment: '首次固定费用付款日期', view: '查看我的方案', review: '核对申请', confirm: '确认并提交申请', dialog: '确认模拟贷款申请', refresh: '刷新状态', repay: '确认还款' }
       : { reserve: 'Money to keep aside', payment: 'First fixed payment date', view: 'View my options', review: 'Review application', confirm: 'Confirm and submit application', dialog: 'Confirm simulated loan application', refresh: 'Refresh status', repay: 'Confirm repayment' };
     assert.equal(await panel.getByLabel(mobile ? '可用于留学的资金' : 'Available study funds', { exact: true }).inputValue(), '10000.00');
-    assert.equal(await panel.getByLabel(mobile ? '收入（含家庭支持）' : 'Income including family support', { exact: true }).inputValue(), '30000.00');
+    assert.equal(await panel.getByLabel(mobile ? '每月收入（含家庭支持，泰铢）' : 'Monthly income incl. family support (THB)', { exact: true }).inputValue(), '30000.00');
     await panel.getByLabel(input.reserve, { exact: true }).fill('0');
     await panel.getByLabel(input.payment, { exact: true }).fill('2027-08-08');
     const productName = mobile ? '商业助学贷款（示例）' : 'Commercial study loan (example)';
     assert.equal(await panel.getByLabel(mobile ? '拟借金额（可选）' : 'Amount to borrow (optional)', { exact: true }).inputValue(), '20000.00');
     await panel.getByRole('button', { name: input.view, exact: true }).click();
-    await panel.locator('.assessment-quotes article').first().waitFor();
-    assert.equal(await panel.locator('.assessment-quotes article').count(), 3);
+    await panel.locator('.plan-visual-quote').first().waitFor();
+    assert.equal(await panel.locator('.plan-visual-quote').count(), 3);
     const before = await get(context, 'planning/assessment/');
     const layout = await page.evaluate(() => ({ scrollY, height: innerHeight, scrollHeight: document.documentElement.scrollHeight,
       workspaceTop: document.querySelector('.student-workspace').getBoundingClientRect().top,
@@ -132,10 +139,10 @@ try {
     });
     await page.evaluate(() => window.dispatchEvent(new Event('studyflow:write')));
     await oldReadStarted;
-    await panel.getByRole('button', { name: mobile ? '修改资料' : 'Edit details', exact: true }).click();
+    await openForm();
     await panel.getByLabel(mobile ? '拟借金额（可选）' : 'Amount to borrow (optional)', { exact: true }).fill('22000');
     await panel.getByRole('button', { name: input.view, exact: true }).click();
-    await page.waitForFunction(() => !document.querySelector('.assessment-panel form'));
+    await page.waitForFunction(() => !document.querySelector('.assessment-panel form')?.closest('details')?.open);
     const revised = await get(context, 'planning/assessment/');
     assert.equal(revised.quotes[0].result.principal, '22000.00');
     assert.notEqual(revised.quotes[0].id, before.quotes[0].id);
@@ -145,8 +152,10 @@ try {
     await staleReply;
     await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
     await page.waitForFunction(() => document.querySelector('.assessment-summary')?.textContent.includes('22000'));
-    await panel.getByRole('radio', { name: productName, exact: true }).check();
+    await panel.getByRole('radio', { name: productName, exact: true }).click();
     await page.evaluate(() => { window.print = () => { window.printedSummary = document.getElementById('planning-print-summary')?.textContent; }; });
+    const details = panel.locator('details.assessment-more').filter({ has: page.locator('.assessment-summary') });
+    if (!await details.evaluate(d => d.open)) await details.locator('> summary').click();
     await panel.getByRole('button', { name: mobile ? '打印摘要' : 'Print summary', exact: true }).click();
     assert.match(await page.evaluate(() => window.printedSummary), /22000/);
     assert.ok((await page.evaluate(() => window.printedSummary)).includes(productName));

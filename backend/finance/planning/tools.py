@@ -26,25 +26,29 @@ class CompareInput(Input):
     school_keys = s.ListField(child=s.CharField(max_length=60), min_length=2, max_length=4)
 
 
+class YearsField(s.FloatField):
+    """Academic years in half-year steps, so a 3.5-year programme can be asked for as it is."""
+
+    def to_internal_value(self, data):
+        value = super().to_internal_value(data)
+        if value * 2 != int(value * 2):
+            self.fail("invalid")
+        return int(value) if value == int(value) else value
+
+
 class EstimateInput(Input):
     school_key = s.CharField(max_length=60)
-    years = s.IntegerField(min_value=1, max_value=6, required=False)
+    years = YearsField(min_value=1, max_value=6, required=False)
 
 
 class PlanInput(Input):
     school_key = s.CharField(max_length=60)
-    years = s.IntegerField(min_value=1, max_value=6, required=False)
+    years = YearsField(min_value=1, max_value=6, required=False)
     available_funds = s.DecimalField(max_digits=16, decimal_places=2, min_value=0, required=False)
     funds_currency = s.CharField(max_length=3, required=False)
-    monthly_income = s.DecimalField(max_digits=16, decimal_places=2, min_value=0, required=False)
-    monthly_expenses = s.DecimalField(max_digits=16, decimal_places=2, min_value=0, required=False)
-    existing_repayments = s.DecimalField(max_digits=16, decimal_places=2, min_value=0, required=False)
     support_amount = s.DecimalField(max_digits=16, decimal_places=2, min_value=0, required=False)
     support_date = s.DateField(required=False)
     principal = s.DecimalField(max_digits=16, decimal_places=2, min_value=0, required=False)
-    monthly_income_currency = s.CharField(max_length=3, required=False)
-    monthly_expenses_currency = s.CharField(max_length=3, required=False)
-    existing_repayments_currency = s.CharField(max_length=3, required=False)
     support_currency = s.CharField(max_length=3, required=False)
     principal_currency = s.CharField(max_length=3, required=False)
 
@@ -134,7 +138,7 @@ def _confirm_plan(user, data):
     require(plan.status == "DRAFT", "PLAN_NOT_DRAFT")
     record = services.plan_record(plan, services.home_currency(user))["plan"]
     return Proposal("plan.confirm", plan.id, None, "", {
-        "plan_id": str(plan.id), "school_key": plan.school_key, "years": plan.years,
+        "plan_id": str(plan.id), "school_key": plan.school_key, "years": services.plan_years(plan),
         "total": record.get("total"), "currency": record.get("currency"), "gap": record.get("gap")})
 
 
@@ -170,7 +174,7 @@ def _study_life(user, data):
 HINTS = {
     "school_key": "key of a school from list_schools (not its name)",
     "school_keys": "2-4 keys of schools from list_schools",
-    "years": "academic years to cover; omit to use the programme length",
+    "years": "academic years to cover in half-year steps, e.g. 3.5; omit to use the programme length",
     "available_funds": "decimal string of savings the family already has for study",
     "funds_currency": "currency of available_funds; omit to use the home currency",
     "amount": "decimal string the user says they spent",

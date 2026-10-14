@@ -4,9 +4,6 @@ from decimal import Decimal
 
 LABELS = {
     "available_funds": r"存款|积蓄|准备了|有存|savings|saved|we have",
-    "monthly_income": r"月收入|每月收入|monthly income",
-    "monthly_expenses": r"每月(?:必要)?支出|月支出|monthly (?:living )?expenses",
-    "existing_repayments": r"每月(?:已有)?还款|已有还款|existing repayments",
     "support_amount": r"家(?:人|里|庭)(?:还会|将|预计|会)?(?:支持|资助)|family support",
     "principal": r"(?:想|拟|要)?借(?:款)?|borrow(?:ing)?",
 }

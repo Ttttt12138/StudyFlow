@@ -188,6 +188,119 @@ class ConversationTests(ConversationHarness):
         self.assertEqual(turn["steps"][0]["tool"], "estimate_total_cost")
         self.assertIsNone(services.profile(self.user))
 
+    def test_a_retried_estimate_replaces_the_earlier_cost_card(self):
+        from types import SimpleNamespace
+
+        session = SimpleNamespace(conversation_id=uuid4(), owner=self.user, cards=[])
+        for years in (3, None):
+            agent_runner._add_card(session, "estimate_total_cost", {"school_key": "psu-phuket", "years": years}, {}, "OK")
+        agent_runner._add_card(session, "estimate_total_cost", {"school_key": "chulalongkorn"}, {}, "OK")
+        self.assertEqual([c["school"]["key"] for c in session.cards], ["psu-phuket", "chulalongkorn"])
+        self.assertEqual(session.cards[0]["estimate"]["years"], 3.5)
+
+    def test_choosing_a_school_shows_its_plan_instead_of_repeating_the_cost_card(self):
+        from types import SimpleNamespace
+
+        session = SimpleNamespace(conversation_id=uuid4(), owner=self.user, cards=[])
+        estimate = ("estimate_total_cost", {"school_key": "psu-phuket"}, {}, "OK")
+        agent_runner._add_card(session, *estimate)
+        saved = services.save_plan(self.user, {"school_key": "psu-phuket"})
+        agent_runner._add_card(session, "save_plan", {"school_key": "psu-phuket"}, saved, "OK")
+        agent_runner._add_card(session, *estimate)
+        self.assertEqual([c["type"] for c in session.cards], ["plan"])
+
+    def test_choosing_from_a_price_card_saves_the_plan_without_a_model_call(self):
+        conversation = self.start()
+        url = f"agent/conversations/{conversation['id']}/choose/"
+        key = str(uuid4())
+        with patch.object(agent_runner, "planner", side_effect=AssertionError("no model call")):
+            response = self.client.post(API + url, {"school_key": "psu-phuket", "years": 3.5}, format="json",
+                                        HTTP_IDEMPOTENCY_KEY=key)
+        self.assertEqual(response.status_code, 201, response.data)
+        turn = response.data["data"]
+        self.assertEqual((turn["kind"], turn["status"]), ("user", "COMPLETED"))
+        self.assertIn("宋卡王子大学", turn["goal"])
+        self.assertIn("3.5 年", turn["final_answer"])
+        self.assertEqual([c["type"] for c in turn["cards"]], ["plan"])
+        self.assertEqual(turn["cards"][0]["plan"]["years"], 3.5)
+        self.assertEqual(turn["steps"][0]["tool"], "save_plan")
+        self.assertEqual(services.plan_for(self.user).years, 3.5)
+        replay = self.client.post(API + url, {"school_key": "psu-phuket", "years": 3.5}, format="json",
+                                  HTTP_IDEMPOTENCY_KEY=key)
+        self.assertEqual((replay.status_code, replay.data["data"]["id"]), (200, turn["id"]))
+        history = self.client.get(API + f"agent/conversations/{conversation['id']}/").data["data"]["turns"]
+        self.assertEqual(len(history), 2)
+
+        plan = services.plan_for(self.user)
+        plan.status = "ENROLLED"
+        plan.save(update_fields=["status"])
+        refused = self.post(url, {"school_key": "chulalongkorn"})
+        self.assertEqual(refused.status_code, 400, refused.data)
+        history = self.client.get(API + f"agent/conversations/{conversation['id']}/").data["data"]["turns"]
+        self.assertEqual(len(history), 2)
+        self.assertEqual(services.plan_for(self.user).school_key, "psu-phuket")
+
+    def test_choosing_schools_keeps_the_latest_three_drafts_and_one_opens_back(self):
+        for key in ("psu-phuket", "chulalongkorn", "malaya", "mahidol"):
+            services.save_plan(self.user, {"school_key": key})
+        services.save_plan(self.user, {"school_key": "malaya", "available_funds": "300000", "funds_currency": "THB"})
+        data = self.client.get(API + "planning/history/").data["data"]
+        self.assertEqual([d["school_key"] for d in data["drafts"]], ["malaya", "mahidol", "chulalongkorn"])
+        self.assertEqual([d["current"] for d in data["drafts"]], [True, False, False])
+        # Each draft keeps its own school's length, not the previous school's.
+        self.assertEqual([d["years"] for d in data["drafts"]], [3.5, 4, 4])
+        self.assertEqual(data["drafts"][0]["available_funds"], "300000.00")
+        chula = data["drafts"][2]
+        response = self.post(f"planning/drafts/{chula['id']}/open/")
+        self.assertEqual(response.status_code, 201, response.data)
+        self.assertEqual(services.plan_for(self.user).school_key, "chulalongkorn")
+        self.assertEqual(response.data["data"]["drafts"][0]["school_key"], "chulalongkorn")
+        malaya = next(d for d in response.data["data"]["drafts"] if d["school_key"] == "malaya")
+        self.assertEqual(self.post(f"planning/drafts/{malaya['id']}/open/").status_code, 201)
+        plan = services.plan_for(self.user)
+        self.assertEqual((plan.school_key, plan.available_funds), ("malaya", Decimal("300000.00")))
+        plan.status = "CONFIRMED"
+        plan.save(update_fields=["status"])
+        refused = self.post(f"planning/drafts/{chula['id']}/open/")
+        self.assertEqual(refused.status_code, 400, refused.data)
+
+    def test_first_month_budget_is_answered_with_the_plans_own_figures(self):
+        services.save_plan(self.user, {"school_key": "psu-phuket"})
+        services.confirm_plan(self.user, services.plan_for(self.user))
+        turn = self.say(self.start(), "首月预算")
+        month = services.first_month(services.plan_for(self.user))
+        self.assertIn("第一个月大约需要 18,850 THB", turn["final_answer"])
+        self.assertIn(f"{float(month['bills_at_start_total']):,.0f} THB", turn["final_answer"])
+        for jargon in ("登记入学", "工具", "开放"):
+            self.assertNotIn(jargon, turn["final_answer"])
+        self.assertEqual(turn["cards"], [])
+
+    def test_price_history_covers_every_conversation_newest_first(self):
+        first, second = self.start(), self.start()
+        self.say(first, "朱拉隆功读4年一共多少钱？")
+        self.say(second, "宋卡王子大学（普吉校区）读3.5年一共多少钱？")
+        prices = self.client.get(API + "planning/history/").data["data"]["prices"]
+        self.assertEqual([p["card"]["school"]["key"] for p in prices[:2]], ["psu-phuket", "chulalongkorn"])
+        self.assertEqual({p["conversation_id"] for p in prices[:2]}, {first["id"], second["id"]})
+
+    def test_half_year_courses_are_estimated_and_planned_as_they_run(self):
+        from finance.planning.tools import EstimateInput
+
+        entry = catalog.school("psu-phuket")
+        self.assertEqual(services.estimate(entry, 3.5)["duration_months"], 42)
+        self.assertEqual(services.estimate(entry, 3)["duration_months"], 36)
+        self.assertEqual(services.estimate(entry)["years"], 3.5)
+        self.assertEqual(services.estimate(catalog.school("chulalongkorn"), 4)["years"], 4)
+        self.assertTrue(EstimateInput(data={"school_key": "psu-phuket", "years": 3.5}).is_valid())
+        self.assertFalse(EstimateInput(data={"school_key": "psu-phuket", "years": 3.3}).is_valid())
+        plan = services.save_plan(self.user, {"school_key": "psu-phuket"})["plan"]
+        self.assertEqual((plan["years"], plan["duration_months"]), (3.5, 42))
+        plan = services.save_plan(self.user, {"school_key": "chulalongkorn", "years": 4})["plan"]
+        self.assertEqual(plan["years"], 4)
+        response = self.client.get(API + "planning/schools/psu-phuket/?years=3.5")
+        self.assertEqual(response.data["data"]["estimate"]["duration_months"], 42, response.data)
+        self.assertEqual(self.client.get(API + "planning/schools/psu-phuket/?years=3.3").status_code, 400)
+
     def test_money_tools_wait_for_enrollment(self):
         conversation = self.start()
         turn = self.say(conversation, "人民币兑泰铢汇率是多少")

@@ -71,6 +71,22 @@ html:has(.student-workspace), body:has(.student-workspace) { height: 100%; overf
 .workspace-signin:hover { background: var(--accent-strong); }
 .workspace-signin:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 .workspace-account { max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; color: var(--text-3); }
+.workspace-account-menu { position: relative; }
+button.workspace-account { display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 12px; border: 1px solid transparent; border-radius: 18px;
+  background: transparent; font: inherit; font-size: 14px; color: var(--text-2); cursor: pointer; }
+button.workspace-account:hover, button.workspace-account[aria-expanded="true"] { background: var(--surface-1); border-color: var(--line-2); color: var(--text); }
+button.workspace-account:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.workspace-account-name { overflow: hidden; text-overflow: ellipsis; }
+.workspace-account-icon { display: none; }
+.workspace-account-panel { position: absolute; top: calc(100% + 8px); right: 0; z-index: 40; min-width: 220px; padding: 6px; border: 1px solid var(--line);
+  border-radius: 14px; background: var(--surface-1); box-shadow: 0 12px 32px rgba(31, 35, 41, .14); }
+.workspace-account-who { display: grid; gap: 2px; margin: 0; padding: 10px 10px 8px; border-bottom: 1px solid var(--line); }
+.workspace-account-who small { color: var(--text-3); font-size: 12px; }
+.workspace-account-who strong { color: var(--text); font-size: 14px; overflow-wrap: anywhere; }
+.workspace-account-item { display: flex; align-items: center; gap: 10px; width: 100%; margin-top: 4px; padding: 10px; border: 0; border-radius: 10px;
+  background: transparent; font: inherit; font-size: 14px; color: var(--text); text-align: left; cursor: pointer; }
+.workspace-account-item:hover:not(:disabled), .workspace-account-item:focus-visible { background: var(--surface-2); outline: none; }
+.workspace-account-item:disabled { color: var(--text-3); cursor: wait; }
 .workspace-conversation { flex: 1; min-width: 0; min-height: 0; margin: 0; padding: 0; overflow: hidden; max-width: none; }
 .workspace-preview { flex: none; margin: 0; padding: 2px 8px; font-size: 11px; color: var(--warm-text); }
 
@@ -109,10 +125,55 @@ html:has(.student-workspace), body:has(.student-workspace) { height: 100%; overf
   .workspace-dock { position: absolute; inset: 0; width: 100%; z-index: 20; }
   .tool-expanded .workspace-dock { inset: 0; }
   .workspace-topbar { padding: 0 16px; gap: 10px; min-height: 56px; }
-  .workspace-account { display: none; }
+  span.workspace-account { display: none; }
+  /* Phones: a round account button the size of the reminder bell; the menu still names the account. */
+  button.workspace-account { justify-content: center; width: 38px; height: 38px; padding: 0; border-color: var(--line-2); border-radius: 50%; background: var(--surface-1); }
+  .workspace-account-name, .workspace-account-caret { display: none; }
+  .workspace-account-icon { display: block; }
+  .workspace-top-end { gap: 8px; }
 }
 @media (max-width: 600px) {
   .workspace-notice { order: 5; flex-basis: 100%; margin-bottom: 8px; }
   .workspace-topbar { flex-wrap: wrap; }
   .tool-content { padding: 12px 14px; }
 }
+
+/* Stage summary in the sidebar: a small card of next steps, each with its figure on the right. */
+/* Right rail beside the conversation (wide screens, no tool open). */
+.workspace-conversation.has-rail { display: flex; }
+.workspace-conversation.has-rail > .plan-app { flex: 1 1 auto; }
+.workspace-rail { flex: none; width: 272px; margin: 0; padding: 12px 28px 20px 0; box-sizing: border-box; overflow-y: auto; background: none; border: 0; border-radius: 0; box-shadow: none; }
+.workspace-rail[hidden] { display: none; }
+.workspace-rail:empty { display: none; }
+.journey-summary { display: grid; gap: 10px; min-width: 0; overflow: hidden; padding: 12px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface-1);
+  box-shadow: 0 1px 2px rgba(31, 35, 41, .04); list-style: none; }
+.journey-summary.is-inline { margin: 8px 0; }
+.journey-summary-title { padding: 0 4px; font-size: 13px; color: var(--text-3); font-weight: 600; }
+.journey-summary-section, .journey-summary ul, .journey-summary li { min-width: 0; }
+.journey-summary-section { display: grid; gap: 2px; }
+.journey-summary-section + .journey-summary-section { padding-top: 8px; border-top: 1px solid var(--line); }
+.journey-summary-head { margin: 0; padding: 0 4px; font-size: 13px; color: var(--text-3); }
+.journey-summary-note { margin: 2px 0 4px; padding: 0 4px; font-size: 12px; color: var(--text-3); line-height: 1.5; }
+.journey-summary ul { display: grid; gap: 1px; margin: 0; padding: 0; list-style: none; }
+.journey-summary-row { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 38px; padding: 6px 8px; border: 0; border-radius: 8px;
+  background: transparent; font: inherit; font-size: 14px; color: var(--text); text-align: left; cursor: pointer; }
+.journey-summary-row:hover:not(:disabled) { background: var(--surface-2); }
+.journey-summary-row:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+.journey-summary-row:disabled { color: var(--text-3); cursor: default; }
+.journey-summary-row > svg { flex: none; color: var(--text-2); }
+.journey-summary-label { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.journey-summary-value { flex: none; max-width: 55%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; color: var(--text-3); }
+.journey-summary-value.is-warn { color: var(--danger); font-weight: 600; }
+.journey-summary-value.is-ok { color: var(--ok); }
+.journey-summary-foot { margin: 0; padding: 8px 4px 0; border-top: 1px solid var(--line); font-size: 12px; color: var(--text-3); line-height: 1.5; }
+
+/* Sidebar history under "School comparison" and "My plan" */
+.side-history { display: grid; gap: 2px; margin: 2px 0 6px; padding: 0 0 0 28px; list-style: none; }
+.side-history-item { display: flex; align-items: center; gap: 6px; width: 100%; min-height: 30px; padding: 4px 8px; border: 0; border-radius: 8px;
+  background: none; color: var(--text-2); font: inherit; font-size: 13px; text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: pointer; }
+.side-history-item:hover:not(:disabled) { background: var(--surface-2); color: var(--text); }
+.side-history-item[aria-current="true"] { color: var(--accent-strong); font-weight: 600; }
+.side-history-item small { flex: none; padding: 0 6px; border-radius: 6px; background: var(--accent-soft); color: var(--accent-strong); font-size: 11px; }
+.side-history-item:disabled { opacity: .5; cursor: not-allowed; }
+.side-history-more { margin: 0 0 6px 36px; padding: 2px 0; border: 0; background: none; color: var(--accent-strong); font: inherit; font-size: 12px; cursor: pointer; }
+.side-history-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

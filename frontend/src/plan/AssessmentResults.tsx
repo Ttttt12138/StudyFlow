@@ -1,22 +1,25 @@
 import { useI18n, type MessageKey } from "../i18n";
+import { verdict } from "./verdict";
 import { formatMoney } from "../backend/presenters";
 import { pick } from "./format";
 import type { PlanningAssessment, PlanningQuote } from "./assessmentTypes";
 import { LoanProductNotice } from "../loans/LoanProductSelect";
 
-export function QuoteFacts({ quote, showProduct = true }: { quote: PlanningQuote; showProduct?: boolean }) {
+export function QuoteFacts({ quote, showProduct = true, toSchool = false }: {
+  quote: PlanningQuote; showProduct?: boolean;
+  /** A planning loan is paid to the school, so its net amount is not "received". */
+  toSchool?: boolean;
+}) {
   const { t, lang } = useI18n();
   const r = quote.result;
-  const facts: [MessageKey, string][] = [["simple.principalLabel", r.principal], ["simple.net", r.net_proceeds],
+  const facts: [MessageKey, string][] = [["simple.principalLabel", r.principal], [toSchool ? "stage.toSchool" : "simple.net", r.net_proceeds],
     ["simple.monthly", r.maximum_installment ?? r.repayments[0]?.amount], ["simple.interest", r.total_interest],
     ["simple.fees", r.fees], ["simple.totalRepay", r.total_repayment]];
-  const status = quote.assessment.status === "AFFORDABLE" ? "simple.affordable" : quote.assessment.status === "UNAFFORDABLE" ? "simple.unaffordable" : "simple.insufficient";
   return <>{showProduct && <LoanProductNotice product={quote.inputs.product} />}<dl className="assessment-facts">{facts.map(([key, value]) => <div key={key}><dt>{t(key)}</dt><dd>{formatMoney(value, "THB", lang)}</dd></div>)}
     <div><dt>{t("simple.rate")}</dt><dd>{Number(quote.inputs.annual_rate) * 100}%</dd></div>
     <div><dt>{t("simple.firstDue")}</dt><dd>{quote.inputs.first_due_date}</dd></div></dl>
-    <p className={`assessment-status is-${quote.assessment.status}`}>{t(status)}</p>
-    {quote.assessment.shortfall_months?.length ? <p>{quote.assessment.shortfall_months.join(", ")}</p> : null}
-    {quote.assessment.missing_inputs?.length ? <p>{t("simple.missing")}: {[...new Set(quote.assessment.missing_inputs.map(k => k.slice(0, 7)))].join(", ")}</p> : null}</>;
+    {verdict(t, quote) && <p className={`assessment-status is-${quote.assessment.status}`}>{verdict(t, quote)}</p>}
+    {quote.assessment.shortfall_months?.length ? <p className="panel-muted">{t("simple.shortMonths", { months: quote.assessment.shortfall_months.join("、") })}</p> : null}</>;
 }
 
 export function QuoteChoices({ quotes, selected, onSelect }: { quotes: PlanningQuote[]; selected: string; onSelect: (id: string) => void }) {
@@ -26,8 +29,8 @@ export function QuoteChoices({ quotes, selected, onSelect }: { quotes: PlanningQ
       <strong>{q.inputs.product === "commercial_student_demo" ? t("loanProduct.commercial") : t("simple.months", { n: q.inputs.months })}</strong></label>
     {q.inputs.product === "commercial_student_demo" && <p className="panel-muted">{t("simple.months", { n: q.inputs.months })} · {t("loanProduct.hint")}</p>}
     <QuoteFacts quote={q} showProduct={false} />
-    <details><summary>{t("simple.schedule")}</summary><div className="assessment-table"><table><thead><tr><th>{t("simple.date")}</th><th>{t("simple.amount")}</th></tr></thead>
-      <tbody>{q.result.repayments.map(r => <tr key={r.number}><td>{r.due_date}</td><td>{r.amount} THB</td></tr>)}</tbody></table></div></details>
+    <section className="assessment-group"><h4>{t("simple.schedule")}</h4><div className="assessment-table"><table><thead><tr><th>{t("simple.date")}</th><th>{t("simple.amount")}</th></tr></thead>
+      <tbody>{q.result.repayments.map(r => <tr key={r.number}><td>{r.due_date}</td><td>{r.amount} THB</td></tr>)}</tbody></table></div></section>
   </article>)}</div></section>;
 }
 
@@ -49,17 +52,17 @@ export function AssessmentResults({ data }: { data: PlanningAssessment }) {
       <div><dt>{t("simple.total")}</dt><dd>{money(e.total, e.currency)}</dd></div>
       <div><dt>{t("simple.firstYear")}</dt><dd>{money(e.first_year, e.currency)}</dd></div></dl>
       {e.complete === false && <p className="panel-note">{t("simple.incomplete")}: {e.missing_cost_ids?.join(", ")}</p>}
-      <details><summary>{t("simple.details")}</summary>{e.lines.map(c => <div className="assessment-item" key={c.cost_id}>
+      <section className="assessment-group"><h4>{t("simple.feeList")}</h4>{e.lines.map(c => <div className="assessment-item" key={c.cost_id}>
         <p>{pick(c.label, lang)} · {c.total === null ? t("simple.unknown") : money(c.total, e.currency)}</p>
         <p className="panel-muted">{t(`plan.period.${c.period}` as MessageKey)} · {c.occurrences ?? "—"} × {c.amount ?? "—"} {e.currency} · {c.observed_at}
           {c.estimate && <> · {t("plan.estimate")}</>}</p>
         {c.quote && <blockquote>{c.quote}</blockquote>}
-        {c.source_url && <a href={c.source_url} target="_blank" rel="noreferrer">{t("simple.details")}</a>}</div>)}</details></section>}
+        {c.source_url && <a href={c.source_url} target="_blank" rel="noreferrer">{t("simple.sourceLink")}</a>}</div>)}</section></section>}
     {f && <section><h3>{t("simple.forecast", { days: f.horizon })}</h3><p className="panel-muted">{f.as_of} → {f.end_date}</p>
       <dl className="assessment-facts"><div><dt>{t("simple.gap")}</dt><dd>{f.complete ? money(f.maximum_reserve_gap) : t("simple.unknown")}</dd></div>
         <div><dt>{t("simple.firstGap")}</dt><dd>{f.first_gap_date ?? (f.complete ? t("simple.noGap") : t("simple.unknown"))}</dd></div>
         {data.inputs?.supports.some(s => !s.confirmed && !s.included_in_funds) && data.conditional_forecast && <div><dt>{t("simple.conditional")}</dt><dd>{money(data.conditional_forecast.maximum_reserve_gap)}</dd></div>}</dl>
-      {!f.complete && <details className="panel-note"><summary>{t("simple.missing")} ({f.issues.length})</summary>
-        <ul>{[...new Set(f.issues.map(issueLabel))].map(issue => <li key={issue}>{issue}</li>)}</ul></details>}</section>}
+      {!f.complete && <section className="assessment-group panel-note"><h4>{t("simple.missing")} ({f.issues.length})</h4>
+        <ul>{[...new Set(f.issues.map(issueLabel))].map(issue => <li key={issue}>{issue}</li>)}</ul></section>}</section>}
   </>;
 }

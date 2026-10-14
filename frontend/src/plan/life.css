@@ -43,3 +43,59 @@
 .life-bell-all { display: block; width: 100%; margin-top: 4px; padding: 10px; border: 0; border-top: 1px solid var(--line); border-radius: 0 0 10px 10px;
   background: transparent; color: var(--accent); font: inherit; font-size: 13px; font-weight: 600; text-align: left; cursor: pointer; }
 .life-bell-all:hover { background: var(--accent-soft); }
+
+/* To-dos & payments: one open list, folds for done items, the month budget and the demo clock. */
+.life-panel { display: grid; gap: 12px; }
+.life-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+.life-add { display: contents; }
+.life-head .life-form { flex-basis: 100%; }
+.life-list { display: grid; gap: 10px; }
+.life-empty { margin: 0; padding: 18px; border: 1px dashed var(--line-2); border-radius: 12px; color: var(--text-3); text-align: center; }
+.life-gap { padding: 10px 12px; border: 0; border-radius: 10px; background: var(--warm-soft); color: var(--warm-text); font: inherit; font-size: 13px; text-align: left; cursor: pointer; }
+.life-fold { border: 1px solid var(--line); border-radius: 12px; background: var(--surface-1); }
+.life-fold > summary { padding: 11px 14px; cursor: pointer; font-size: 14px; color: var(--text-2); }
+.life-fold[open] > summary { border-bottom: 1px solid var(--line); }
+.life-fold > :not(summary) { margin: 10px 14px; }
+.life-fold .life-budget h3 { display: none; }
+
+/* A to-do is one row until opened: title and amount, date and status, and whether the money is there. */
+.life-item { padding: 0; margin: 0; gap: 0; overflow: hidden; background: var(--surface-1); }
+.life-item-main { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; width: 100%; padding: 12px 14px; border: 0;
+  background: transparent; font: inherit; color: var(--text); text-align: left; cursor: pointer; }
+.life-item-main:hover { background: var(--surface-2); }
+.life-item-main:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+.life-item-title { display: flex; align-items: center; gap: 6px; min-width: 0; font-weight: 600; }
+.life-item-amount { justify-self: end; white-space: nowrap; }
+.life-item-meta { grid-column: 1 / -1; color: var(--text-3); font-size: 12px; }
+.life-item.is-overdue .life-item-meta { color: var(--danger); }
+.life-item-main > p { grid-column: 1 / -1; margin: 0; font-size: 12px; }
+.life-item-more { display: grid; gap: 8px; padding: 0 14px 14px; border-top: 1px solid var(--line); padding-top: 10px; }
+.life-item-more p { margin: 0; }
+
+/* "This month": summary card, to-do filter, spending, and the detail pages rows open. */
+.life-head .life-date { color: var(--text-3); font-size: 13px; text-decoration: none; }
+.life-summary { display: grid; gap: 10px; padding: 16px; border-radius: 14px; background: var(--accent-soft); }
+.life-summary-budget { display: grid; gap: 6px; }
+.life-summary-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 16px; font-weight: 600; color: var(--text); }
+.life-summary-line { margin: 0; font-size: 14px; color: var(--text-2); }
+.life-ok { margin: 0; color: var(--ok); font-size: 13px; }
+.life-icon-button { display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 1px solid var(--line-2); border-radius: 50%;
+  background: var(--surface-1); color: var(--text-2); cursor: pointer; }
+.life-icon-button:hover { color: var(--accent); border-color: var(--accent); }
+.life-inline-form { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.life-inline-form input { width: 140px; padding: 8px 10px; border: 1px solid var(--line-2); border-radius: 8px; font: inherit; }
+.life-section-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.life-section-head h3 { margin: 0; font-size: 16px; }
+.life-todo, .life-spending { display: grid; gap: 10px; }
+.life-filter { display: inline-flex; padding: 3px; border-radius: 10px; background: var(--surface-2); }
+.life-filter button { padding: 6px 12px; border: 0; border-radius: 8px; background: transparent; font: inherit; font-size: 13px; color: var(--text-2); cursor: pointer; }
+.life-filter button[aria-pressed="true"] { background: var(--surface-1); color: var(--text); font-weight: 600; box-shadow: 0 1px 2px rgba(31, 35, 41, .08); }
+.life-item-main { grid-template-columns: minmax(0, 1fr) auto auto; }
+.life-item-go { align-self: center; color: var(--text-3); }
+.life-detail { display: grid; gap: 10px; }
+.life-detail-head { display: grid; gap: 4px; padding: 14px; border-radius: 12px; background: var(--surface-2); }
+.life-detail-amount { font-size: 24px; }
+.life-source { margin: 0; padding: 10px 12px; border-left: 3px solid var(--line-2); color: var(--text-2); white-space: pre-wrap; }
+.life-form-pair { display: grid; grid-template-columns: minmax(0, 1fr) 110px; gap: 10px; }
+.life-spending .monthly-distribution { display: grid; grid-template-columns: 112px minmax(0, 1fr); align-items: center; gap: 16px; margin: 0; }
+.life-spending .monthly-pie { width: 112px; height: 112px; aspect-ratio: 1; -webkit-mask: radial-gradient(circle, transparent 34px, #000 35px); mask: radial-gradient(circle, transparent 34px, #000 35px); }

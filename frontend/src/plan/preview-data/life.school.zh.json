@@ -4,7 +4,7 @@
  "in_app_only": true,
  "items": [
   {
-   "source_key": "task:6d73027c-baa6-46aa-84e6-beb2de742614",
+   "source_key": "task:cfd4fba6-fb8e-44ff-92b4-38d58d3c41e2",
    "kind": "task",
    "title": "补充学校通知日期",
    "due_date": null,
@@ -19,8 +19,8 @@
    "stage": "unknown",
    "catalog_amount": null,
    "amount_confirmed": false,
-   "token": "9b2aeeb2ce0e14481241ad142083dfa095c141bd3ea94703047a88200f011b5b",
-   "notice_token": "8a5be1f5339f5ad68c8d6030476a8409bab7ca7e9299bea6d53d0b1a7b63d7cc",
+   "token": "ddf636857587132a03247d966dea8dd5cff394a7838379d3cb7702d6f7010892",
+   "notice_token": "032e844386be694a4a3580e234f726e8b490cd7df763594649141e5d57a3dc8c",
    "unread": true,
    "snoozed": false,
    "snoozed_until": null,
@@ -29,7 +29,7 @@
    "at_risk": false
   },
   {
-   "source_key": "task:09b826cd-a202-4b4e-9084-3316ff20105b",
+   "source_key": "task:abd6275c-b6b4-49b0-833e-eff4120c664e",
    "kind": "task",
    "title": {
     "en": "File the 90-day address report with immigration",
@@ -47,8 +47,8 @@
    "stage": "later",
    "catalog_amount": null,
    "amount_confirmed": false,
-   "token": "a48899497bc84c55ad7ba8e0d98be1738cb1342e83c03ab0d7dff35caf6b126e",
-   "notice_token": "f0cec2ec21f4f93b4f5e3021efbb976209b960d9bdcac013638e22919c1c43d1",
+   "token": "c09122a437166570dcb164cb762aee490c80777a35b4638e123789b5b5b2f194",
+   "notice_token": "77633bd15905ce4da02862c3d552789e232c9aea12d90cf0b665fa93ae30f75c",
    "unread": true,
    "snoozed": false,
    "snoozed_until": null,
@@ -57,7 +57,7 @@
    "at_risk": false
   },
   {
-   "source_key": "bill:83075fba-7a15-4c06-b3ad-b09064617ba8",
+   "source_key": "bill:597d8600-aae0-4f25-a40b-e406a54a2ca6",
    "kind": "bill",
    "title": {
     "en": "Tuition and fees per semester (includes 50,000 confirmation fee in year 1)",
@@ -73,8 +73,8 @@
    "stage": "later",
    "catalog_amount": "117600.00",
    "amount_confirmed": false,
-   "token": "8f42f45fd6807926dece7abfa97ecb2b5607f1122fc37c88a3f62ae321b799f2",
-   "notice_token": "83618a1a4726188e1b45afeafd93f7a3d8972cdc99304f873ac38a93a8fca4c9",
+   "token": "da268218e6c297f41eb154596cdf5b9554af59b5a49953f32a63cca63fb56045",
+   "notice_token": "9c69bcfadc516f4859f252854005d1356a3ff5ffe8c1c61601b9dc9c27b2db36",
    "unread": true,
    "snoozed": false,
    "snoozed_until": null,
@@ -83,59 +83,7 @@
    "at_risk": true
   },
   {
-   "source_key": "bill:07229e9e-06d9-46ef-9b32-ff76100c21cc",
-   "kind": "bill",
-   "title": {
-    "en": "Annual extension of stay",
-    "zh": "每年居留延期费"
-   },
-   "due_date": "2028-08-02",
-   "amount": "1900.00",
-   "currency": "THB",
-   "done": false,
-   "estimated": true,
-   "source_version": "DUE",
-   "target": "bills",
-   "stage": "later",
-   "catalog_amount": "1900.00",
-   "amount_confirmed": false,
-   "token": "c40997e51dc906ffb950c90dcbf68f73f61c8d94dc30e5ba2e46ec6d99da77e1",
-   "notice_token": "e9fa6d758243699dbcb9ea518c664d46a5025db9b3ed9d2c2291bb4b675a772a",
-   "unread": true,
-   "snoozed": false,
-   "snoozed_until": null,
-   "shortfall": "1900.00",
-   "shortfall_basis": "wallet",
-   "at_risk": true
-  },
-  {
-   "source_key": "bill:20957ce5-6777-4906-a7db-70b9523bf344",
-   "kind": "bill",
-   "title": {
-    "en": "Student health insurance",
-    "zh": "学生医疗保险"
-   },
-   "due_date": "2028-08-02",
-   "amount": "10000.00",
-   "currency": "THB",
-   "done": false,
-   "estimated": true,
-   "source_version": "DUE",
-   "target": "bills",
-   "stage": "later",
-   "catalog_amount": "10000.00",
-   "amount_confirmed": false,
-   "token": "007822f93509e18f74c2f9ba6699db256e7fa50c4d8f3a998aa3a47f539bc03f",
-   "notice_token": "7a96818b9f6399752039794403455107ef916b34428b9567aa7efc19583adec5",
-   "unread": true,
-   "snoozed": false,
-   "snoozed_until": null,
-   "shortfall": "10000.00",
-   "shortfall_basis": "wallet",
-   "at_risk": true
-  },
-  {
-   "source_key": "bill:6fccdb23-54aa-4a95-a6cb-bef8b26f737d",
+   "source_key": "bill:74853766-163f-48e4-b3c3-dcb40efaae58",
    "kind": "bill",
    "title": {
     "en": "Tuition and fees per semester (includes 50,000 confirmation fee in year 1)",
@@ -151,8 +99,8 @@
    "stage": "later",
    "catalog_amount": "117600.00",
    "amount_confirmed": false,
-   "token": "cbea6438b2c699bf5d531aa11e60599d1e213ebb94d3f2a645060d30ec176933",
-   "notice_token": "4d8269f2104aa54614aca1412becefc64d1a4370a38d1f174c379d6da569c3ef",
+   "token": "e63c9abda3cdfb0f5771de4af5c8cee29250c4dadbbf57f00488793123e770a3",
+   "notice_token": "490a72f177ef2bf33df3e19135484887dbee9230c09a7b3b85f3c235f647d548",
    "unread": true,
    "snoozed": false,
    "snoozed_until": null,
@@ -161,7 +109,59 @@
    "at_risk": true
   },
   {
-   "source_key": "bill:b19d27c8-888f-419b-bd62-54b1e5456ea1",
+   "source_key": "bill:b30e1a8f-8733-4482-8849-a57431306049",
+   "kind": "bill",
+   "title": {
+    "en": "Annual extension of stay",
+    "zh": "每年居留延期费"
+   },
+   "due_date": "2028-08-02",
+   "amount": "1900.00",
+   "currency": "THB",
+   "done": false,
+   "estimated": true,
+   "source_version": "DUE",
+   "target": "bills",
+   "stage": "later",
+   "catalog_amount": "1900.00",
+   "amount_confirmed": false,
+   "token": "d188b4012e3bc16947ef721cd4b2cd57771adc473c7d45d86b8f4d1cfff7822e",
+   "notice_token": "321f05224a5f2f2d99e8f7ab8651386b4ef844a3db6cce007bf07ee87df3d02a",
+   "unread": true,
+   "snoozed": false,
+   "snoozed_until": null,
+   "shortfall": "1900.00",
+   "shortfall_basis": "wallet",
+   "at_risk": true
+  },
+  {
+   "source_key": "bill:e16185ee-8af2-4ef0-b200-4ba937bc8e0c",
+   "kind": "bill",
+   "title": {
+    "en": "Student health insurance",
+    "zh": "学生医疗保险"
+   },
+   "due_date": "2028-08-02",
+   "amount": "10000.00",
+   "currency": "THB",
+   "done": false,
+   "estimated": true,
+   "source_version": "DUE",
+   "target": "bills",
+   "stage": "later",
+   "catalog_amount": "10000.00",
+   "amount_confirmed": false,
+   "token": "586190ee56a0aa1e650891794d17e56264a099674258ef22412625e6bdbceac3",
+   "notice_token": "2470091be93db53f8590aee12d2e5535248ea3f6cf7a2791296e43c05bcf0ae9",
+   "unread": true,
+   "snoozed": false,
+   "snoozed_until": null,
+   "shortfall": "10000.00",
+   "shortfall_basis": "wallet",
+   "at_risk": true
+  },
+  {
+   "source_key": "bill:b4f316de-8edf-4d2d-981f-8fe44e802b74",
    "kind": "bill",
    "title": {
     "en": "Tuition and fees per semester (includes 50,000 confirmation fee in year 1)",
@@ -177,8 +177,8 @@
    "stage": "later",
    "catalog_amount": "117600.00",
    "amount_confirmed": false,
-   "token": "405c0a9ac6e8792cf390df2b8530da3b356b5eb1d579cc5608a7f9234e0150ec",
-   "notice_token": "267fa75c1a78a900303e338b647499e8a930a6da822255445839f096d191787f",
+   "token": "558a313e6a5b149f21b6d95ee21ffa3e5e86942084381bac98ab90971ce24311",
+   "notice_token": "592adcd45c51cfb6f98f1719c6f7f75347d58ea729f8dea0be7bde43c278e7d5",
    "unread": true,
    "snoozed": false,
    "snoozed_until": null,
@@ -187,59 +187,7 @@
    "at_risk": true
   },
   {
-   "source_key": "bill:0ea657c6-7a11-4268-8779-867633d50118",
-   "kind": "bill",
-   "title": {
-    "en": "Annual extension of stay",
-    "zh": "每年居留延期费"
-   },
-   "due_date": "2029-08-02",
-   "amount": "1900.00",
-   "currency": "THB",
-   "done": false,
-   "estimated": true,
-   "source_version": "DUE",
-   "target": "bills",
-   "stage": "later",
-   "catalog_amount": "1900.00",
-   "amount_confirmed": false,
-   "token": "6d7ef0731b6430d684bcac6a2ae3f0c14414706e7d8e6ac9c2b70bb40e435868",
-   "notice_token": "e37851b9caa36ac1d3413784b601fda5313787cce1ee8d2a8c51310a57461fff",
-   "unread": true,
-   "snoozed": false,
-   "snoozed_until": null,
-   "shortfall": "1900.00",
-   "shortfall_basis": "wallet",
-   "at_risk": true
-  },
-  {
-   "source_key": "bill:16beb3aa-fccf-4b7f-b7ab-d683a26696b1",
-   "kind": "bill",
-   "title": {
-    "en": "Student health insurance",
-    "zh": "学生医疗保险"
-   },
-   "due_date": "2029-08-02",
-   "amount": "10000.00",
-   "currency": "THB",
-   "done": false,
-   "estimated": true,
-   "source_version": "DUE",
-   "target": "bills",
-   "stage": "later",
-   "catalog_amount": "10000.00",
-   "amount_confirmed": false,
-   "token": "1a00f3da0ce11d6155f45e7f504a9c19233cbc791cfdb49349cb9160448219da",
-   "notice_token": "0da6a3f674329b8605c2e2e957129d5d6c2e3048275db34e75fe40eab7857544",
-   "unread": true,
-   "snoozed": false,
-   "snoozed_until": null,
-   "shortfall": "10000.00",
-   "shortfall_basis": "wallet",
-   "at_risk": true
-  },
-  {
-   "source_key": "bill:9f3bbd8d-3817-4c74-b879-69416ef73c52",
+   "source_key": "bill:1b15c87e-a640-43ee-81ab-8131b25791c6",
    "kind": "bill",
    "title": {
     "en": "Tuition and fees per semester (includes 50,000 confirmation fee in year 1)",
@@ -255,8 +203,8 @@
    "stage": "later",
    "catalog_amount": "117600.00",
    "amount_confirmed": false,
-   "token": "ce9c41a0ce3188bc39d80148ae0c211ce5023c6a93f0e1fdfb0cb5f6d3a3b2ac",
-   "notice_token": "8d68bba83f6aa5a23e10ed8343f7ccdcf93432f5ab1bd13b1c1175a525d797b5",
+   "token": "270c5091a77ab329ac0d030e44aa9fd07bd3385ea7b3b1704b73acf263eaba59",
+   "notice_token": "6c6942ed9b0e46a3c91d5daf1382b1d78da57699dcf5daa87f7deea9d6d1c180",
    "unread": true,
    "snoozed": false,
    "snoozed_until": null,
@@ -265,7 +213,59 @@
    "at_risk": true
   },
   {
-   "source_key": "bill:c0acd6e1-bba9-4a41-b85a-0345c83ac713",
+   "source_key": "bill:1e771193-5c53-4813-b310-bc4b15761796",
+   "kind": "bill",
+   "title": {
+    "en": "Student health insurance",
+    "zh": "学生医疗保险"
+   },
+   "due_date": "2029-08-02",
+   "amount": "10000.00",
+   "currency": "THB",
+   "done": false,
+   "estimated": true,
+   "source_version": "DUE",
+   "target": "bills",
+   "stage": "later",
+   "catalog_amount": "10000.00",
+   "amount_confirmed": false,
+   "token": "bb57da40a5829293bfd7e7a91bab1ce4912003e726916cd122c29944fc0bcdcd",
+   "notice_token": "b0a272730188278ecfc931d8580ce337ad00aa245f1e9172ab26e5d7fbd300f4",
+   "unread": true,
+   "snoozed": false,
+   "snoozed_until": null,
+   "shortfall": "10000.00",
+   "shortfall_basis": "wallet",
+   "at_risk": true
+  },
+  {
+   "source_key": "bill:dab801dd-9c94-4154-9c37-5f5ab71a533f",
+   "kind": "bill",
+   "title": {
+    "en": "Annual extension of stay",
+    "zh": "每年居留延期费"
+   },
+   "due_date": "2029-08-02",
+   "amount": "1900.00",
+   "currency": "THB",
+   "done": false,
+   "estimated": true,
+   "source_version": "DUE",
+   "target": "bills",
+   "stage": "later",
+   "catalog_amount": "1900.00",
+   "amount_confirmed": false,
+   "token": "48f4a7c04cd04e5513cf36fa881063413eed5a79fa6a2af98142a22ac687c508",
+   "notice_token": "151da5bb5a70d6bc523c4723cf6a7791614d7e8afe93a9f86872abd293c967c1",
+   "unread": true,
+   "snoozed": false,
+   "snoozed_until": null,
+   "shortfall": "1900.00",
+   "shortfall_basis": "wallet",
+   "at_risk": true
+  },
+  {
+   "source_key": "bill:c7ed79d4-e083-4a96-8e60-bebd3f3927dc",
    "kind": "bill",
    "title": {
     "en": "Tuition and fees per semester (includes 50,000 confirmation fee in year 1)",
@@ -281,8 +281,8 @@
    "stage": "later",
    "catalog_amount": "117600.00",
    "amount_confirmed": false,
-   "token": "f66dfd6eebffa3e6955401f3f11871e165c4e53496d5b5db16c4141b838f844b",
-   "notice_token": "94da6f7a4c46ff272816863ae8774b5b0018599b3b2e3e527fd77c12c1039baf",
+   "token": "f168e09a6330a947d4b41ce789bbe9dd3cf93f57c9024d3464daf0c1ddeea53a",
+   "notice_token": "ff8d4a5366a3b1937bfe15f883129f161417645b4284d5c40714d62dfc396c0b",
    "unread": true,
    "snoozed": false,
    "snoozed_until": null,
@@ -291,33 +291,7 @@
    "at_risk": true
   },
   {
-   "source_key": "bill:421f8e57-8d16-4ef2-a384-c9f25d7e70ef",
-   "kind": "bill",
-   "title": {
-    "en": "Tuition and fees per semester (includes 50,000 confirmation fee in year 1)",
-    "zh": "每学期学费及杂费（第一年含 50,000 确认费）"
-   },
-   "due_date": "2030-08-02",
-   "amount": "117600.00",
-   "currency": "THB",
-   "done": false,
-   "estimated": true,
-   "source_version": "DUE",
-   "target": "bills",
-   "stage": "later",
-   "catalog_amount": "117600.00",
-   "amount_confirmed": false,
-   "token": "596c7a9659bd35a63719cc4ed86c4fb225e3b7cdfede175d3bc1d4c5f3cf008e",
-   "notice_token": "5efc8b2d9d226053cda634b976d70b9816bde6b39aeaa963541fe71308c26922",
-   "unread": true,
-   "snoozed": false,
-   "snoozed_until": null,
-   "shortfall": "117600.00",
-   "shortfall_basis": "wallet",
-   "at_risk": true
-  },
-  {
-   "source_key": "bill:47aab720-c529-4301-82f6-08125a8e5030",
+   "source_key": "bill:03496453-7df8-490c-95d1-e31cfbeab44e",
    "kind": "bill",
    "title": {
     "en": "Annual extension of stay",
@@ -333,8 +307,8 @@
    "stage": "later",
    "catalog_amount": "1900.00",
    "amount_confirmed": false,
-   "token": "41cedc58c23e8be6198c587a7fcffd8c283b02ed68c66bed1bdb1cccfc90fc16",
-   "notice_token": "4db33071478f805f5a34310022fc5d406ba6231027630fe3fdcdde792043664a",
+   "token": "cead96d18ca9cd61673ec73463477e8ebaa62de5c0a0b7d628ea31e02b01e979",
+   "notice_token": "b706bef9f4ebcfe36f6d1533aa419f8f541d2c4652417f691ac9cabdc1bff910",
    "unread": true,
    "snoozed": false,
    "snoozed_until": null,
@@ -343,7 +317,7 @@
    "at_risk": true
   },
   {
-   "source_key": "bill:60629a06-664a-4b24-bebc-d181f3e5358c",
+   "source_key": "bill:143e8905-107b-4d68-82ca-16142b199a73",
    "kind": "bill",
    "title": {
     "en": "Student health insurance",
@@ -359,8 +333,8 @@
    "stage": "later",
    "catalog_amount": "10000.00",
    "amount_confirmed": false,
-   "token": "89e85fd2d3646b9edf50853d1dd4ee86a9ee9fea33c95fcc5cb6f397781fcf9b",
-   "notice_token": "3e37f12313edb8eaab2a6c5790c4d7ee32e944725b67b491b6b7cf64c5b1755c",
+   "token": "62a48fd48cb71763b6894e19e2136bc8abc8a43e32d9012a6d12efe1b618e593",
+   "notice_token": "c241a24cd1ad7da63194053093b0c4ca12720c6b4784d4a1f554422c432af48d",
    "unread": true,
    "snoozed": false,
    "snoozed_until": null,
@@ -369,7 +343,33 @@
    "at_risk": true
   },
   {
-   "source_key": "bill:2a8a2c9b-5fe3-4a1f-a53f-697af92da412",
+   "source_key": "bill:454a7c09-35f8-4fff-927c-3c7f73e8477a",
+   "kind": "bill",
+   "title": {
+    "en": "Tuition and fees per semester (includes 50,000 confirmation fee in year 1)",
+    "zh": "每学期学费及杂费（第一年含 50,000 确认费）"
+   },
+   "due_date": "2030-08-02",
+   "amount": "117600.00",
+   "currency": "THB",
+   "done": false,
+   "estimated": true,
+   "source_version": "DUE",
+   "target": "bills",
+   "stage": "later",
+   "catalog_amount": "117600.00",
+   "amount_confirmed": false,
+   "token": "87327de62def106fb4cdfefa5f6ae21833b865af0ef629fb0bc7eacb164d8d3d",
+   "notice_token": "46512126d12e26f43bd869617fba0908d05bc57e1e518b33bf9a1018498d1edf",
+   "unread": true,
+   "snoozed": false,
+   "snoozed_until": null,
+   "shortfall": "117600.00",
+   "shortfall_basis": "wallet",
+   "at_risk": true
+  },
+  {
+   "source_key": "bill:f29957ce-0542-4f9b-a8bb-3c6c573948b3",
    "kind": "bill",
    "title": {
     "en": "Tuition and fees per semester (includes 50,000 confirmation fee in year 1)",
@@ -385,8 +385,8 @@
    "stage": "later",
    "catalog_amount": "117600.00",
    "amount_confirmed": false,
-   "token": "e2434226d16ebea684937ba36eb4a1b8938bd2a59269827c420bf3dc0ff0f7a8",
-   "notice_token": "bc18185eb851abe2e43356532d231b39abcf19baae9eafab42f9d7d2dffb9a2d",
+   "token": "fb21501efd8ecaf552f91a86eab18e545a8569eed05e48732c93156bb96adb91",
+   "notice_token": "a72a00bd61248e2defa641369840469f8d2ef2df325ce4d884e7eb1ed452ef52",
    "unread": true,
    "snoozed": false,
    "snoozed_until": null,
@@ -395,7 +395,7 @@
    "at_risk": true
   },
   {
-   "source_key": "task:ef3180ed-6702-40c1-9a43-3f23eccedde0",
+   "source_key": "task:16c6aa1f-2a7a-449f-80ba-8cc59f7a9fab",
    "kind": "task",
    "title": {
     "en": "Confirm the admission result and accept the offer",
@@ -413,8 +413,8 @@
    "stage": "overdue",
    "catalog_amount": null,
    "amount_confirmed": false,
-   "token": "98ae3cfc8acdf291617b60f2525b92e63f558501c0df2c0e4d1baaf523d8c8d9",
-   "notice_token": "1ac4664fd4a39f7e27ade6832ceeafd97d48d471b4595c7862af3d2498400f12",
+   "token": "f234c90bd748047b5161b3d35b092e63c4427deeac7a0912766542e53253cbfd",
+   "notice_token": "f71cddb7bbfd2e1720136fed56bdf2d7f7698c527c0433a005367a210b50e639",
    "unread": false,
    "snoozed": false,
    "snoozed_until": null,
@@ -423,7 +423,7 @@
    "at_risk": false
   },
   {
-   "source_key": "task:50801cdc-9173-4c4e-bac5-1c4d14845dfa",
+   "source_key": "task:aca83807-945e-4d89-8a0c-b1f1bffe0b4d",
    "kind": "task",
    "title": {
     "en": "Prepare passport, photos and original transcripts",
@@ -441,8 +441,8 @@
    "stage": "overdue",
    "catalog_amount": null,
    "amount_confirmed": false,
-   "token": "d0adff4a45f3e87ea081e46997c49aabda050c31109a1f2d5b0a383012aeab04",
-   "notice_token": "d82fe546e18fac978f660fbc1840384461899cdbb3893929cb6453e64708f6ea",
+   "token": "804937aa91c5a5c070a4cd4e32496c201243f5823a4c83c4aae485b820ce3aa3",
+   "notice_token": "ef067c0aaded76faeb1252da2687775435e5ea0f6d0db338d5949bf82decb74b",
    "unread": false,
    "snoozed": false,
    "snoozed_until": null,
@@ -451,7 +451,7 @@
    "at_risk": false
   },
   {
-   "source_key": "task:e1a74f49-fa71-4336-b948-97bc23572cf6",
+   "source_key": "task:164ae6e0-7651-4ecd-8f04-4b6b4c94e0f5",
    "kind": "task",
    "title": {
     "en": "Apply for the Non-Immigrant ED visa",
@@ -469,8 +469,8 @@
    "stage": "overdue",
    "catalog_amount": null,
    "amount_confirmed": false,
-   "token": "85b80e8209155547e7ab2d01d8fb90f922e49ee2be6185c8ddaffd4ff9e8d2c7",
-   "notice_token": "a2554d34592e1c7b435347ebe6f8891777bd02f72dc09d4e148437ac555757d4",
+   "token": "4b49001b3b52b89cd2433ffa6de09fef1f6dc445d2a68d812ca4accff78f13f9",
+   "notice_token": "35d0c18387af0c5c7df25494f882fa4d603e88f84b8abadbb2c7d3855a7a7786",
    "unread": false,
    "snoozed": false,
    "snoozed_until": null,
@@ -479,7 +479,7 @@
    "at_risk": false
   },
   {
-   "source_key": "task:d8d61fce-3215-4e71-be36-85443be228e1",
+   "source_key": "task:93e29be7-7f19-47cb-a170-08adf4019d94",
    "kind": "task",
    "title": {
     "en": "Book housing and pay the deposit",
@@ -497,8 +497,8 @@
    "stage": "overdue",
    "catalog_amount": null,
    "amount_confirmed": false,
-   "token": "632dc96f4a1f579e3fc04ac2c7486a8f7ecf52b1dba303e034429282531ecd15",
-   "notice_token": "56e4494a9f1856f225f7f4348870375ac7a19b4bda3825a08511f631d6799ce7",
+   "token": "35211342d0adf6f469b5462501ae886840e17eab7aff4f40e0d0c9bccbb1513a",
+   "notice_token": "588974ab588cb13880c9144007e211d9de7edda17bfc6376012f8e680fa606d6",
    "unread": false,
    "snoozed": false,
    "snoozed_until": null,
@@ -507,35 +507,7 @@
    "at_risk": false
   },
   {
-   "source_key": "task:95ead427-8387-4213-bc21-e3ce6eb1532a",
-   "kind": "task",
-   "title": {
-    "en": "Buy or confirm the health insurance the school requires",
-    "zh": "购买或确认学校要求的健康保险"
-   },
-   "due_date": "2027-07-03",
-   "amount": null,
-   "currency": "THB",
-   "done": true,
-   "estimated": false,
-   "source_text": "",
-   "source_version": 1,
-   "target": "life",
-   "template": true,
-   "stage": "overdue",
-   "catalog_amount": null,
-   "amount_confirmed": false,
-   "token": "02ab2c3c951317856a77282d148cbe34e1faab995274fdd5a0193f61628e263c",
-   "notice_token": "3dd131e0ad55ebbe1919746ffd9e8a07a9b275dfe8db260e394deb8f450252a9",
-   "unread": false,
-   "snoozed": false,
-   "snoozed_until": null,
-   "shortfall": null,
-   "shortfall_basis": null,
-   "at_risk": false
-  },
-  {
-   "source_key": "task:e3f629d9-9cc2-4516-85c7-6ee1ab34a24d",
+   "source_key": "task:073094ef-add7-4a07-95af-1c1c9ff39e0d",
    "kind": "task",
    "title": {
     "en": "Get the medical certificate",
@@ -553,8 +525,8 @@
    "stage": "overdue",
    "catalog_amount": null,
    "amount_confirmed": false,
-   "token": "a5c98d431c8a0868441b80d742af96b2ea202af5d8a1bf9408a840ebffa201c0",
-   "notice_token": "34e86ba5666b6ba50f926d9022457eee95308478b13d361f916d035e67aa224d",
+   "token": "f9adfa639eda74bd94293a2ede826b355895cc92b0bf605d2a10fc042df1b9ab",
+   "notice_token": "d834f4c0af00c39a278178acaf1a164251d4655887c91f440ecd8039860d92a6",
    "unread": false,
    "snoozed": false,
    "snoozed_until": null,
@@ -563,24 +535,26 @@
    "at_risk": false
   },
   {
-   "source_key": "bill:1e9c6805-1b5b-4766-9d4f-38061a1d9b3b",
-   "kind": "bill",
+   "source_key": "task:da155bce-44c0-4424-a27c-97ea19533afb",
+   "kind": "task",
    "title": {
-    "en": "Year 1 summer session",
-    "zh": "第一年暑期学期"
+    "en": "Buy or confirm the health insurance the school requires",
+    "zh": "购买或确认学校要求的健康保险"
    },
-   "due_date": "2027-08-02",
-   "amount": "46650.00",
+   "due_date": "2027-07-03",
+   "amount": null,
    "currency": "THB",
    "done": true,
-   "estimated": true,
-   "source_version": "PAID",
-   "target": "bills",
+   "estimated": false,
+   "source_text": "",
+   "source_version": 1,
+   "target": "life",
+   "template": true,
    "stage": "overdue",
-   "catalog_amount": "46650.00",
+   "catalog_amount": null,
    "amount_confirmed": false,
-   "token": "e2a78d2998e69e53b425b4a8c9c71ead1ba39e51d249f5e7a0a4d86cb56e35ba",
-   "notice_token": "0d1ba074600d5c57b305e7544b4fad4e7db8c737581405639eee9fb5c2e40402",
+   "token": "03e6eab0c6bac974d35d399bb3b954d51f1b489fc596efcd0bc312f5a3634dfd",
+   "notice_token": "13c91f381d2708d2d799f9b0c9bb9225177c6285db9a76730ba7dd0730f5f744",
    "unread": false,
    "snoozed": false,
    "snoozed_until": null,
@@ -589,59 +563,7 @@
    "at_risk": false
   },
   {
-   "source_key": "bill:1f73556a-e22c-4747-a8a8-3b202abe319a",
-   "kind": "bill",
-   "title": {
-    "en": "Tuition and fees per semester (includes 50,000 confirmation fee in year 1)",
-    "zh": "每学期学费及杂费（第一年含 50,000 确认费）"
-   },
-   "due_date": "2027-08-02",
-   "amount": "117600.00",
-   "currency": "THB",
-   "done": true,
-   "estimated": true,
-   "source_version": "PAID",
-   "target": "bills",
-   "stage": "overdue",
-   "catalog_amount": "117600.00",
-   "amount_confirmed": false,
-   "token": "074279469c0be01e570d5d1e16ddcaff8afa13c3e271951b0ab0acf90ae55fe6",
-   "notice_token": "3ba509c8055ae4aa0ec9bf780252e0823d4ed64e14cfb7184578c4b35e73e7bb",
-   "unread": false,
-   "snoozed": false,
-   "snoozed_until": null,
-   "shortfall": null,
-   "shortfall_basis": null,
-   "at_risk": false
-  },
-  {
-   "source_key": "bill:4d2a8008-ebfd-4751-895a-7eaf659fad5b",
-   "kind": "bill",
-   "title": {
-    "en": "Preparation course (June-July before year 1)",
-    "zh": "入学预备课程（第一年前 6-7 月）"
-   },
-   "due_date": "2027-08-02",
-   "amount": "41400.00",
-   "currency": "THB",
-   "done": true,
-   "estimated": true,
-   "source_version": "PAID",
-   "target": "bills",
-   "stage": "overdue",
-   "catalog_amount": "41400.00",
-   "amount_confirmed": false,
-   "token": "862f7a9d6adcfa37440b8030252ea72063122c0c04552a96198ac42b0644299e",
-   "notice_token": "b4569a4d7323de06dbd52026f3a7493e5056a8560ab5ff319faa4eeaf7f37c7b",
-   "unread": false,
-   "snoozed": false,
-   "snoozed_until": null,
-   "shortfall": null,
-   "shortfall_basis": null,
-   "at_risk": false
-  },
-  {
-   "source_key": "bill:6c4e72b0-c8c2-457e-a1fe-171adc080450",
+   "source_key": "bill:35326625-8f8e-4a6d-8edb-9c178bc5f975",
    "kind": "bill",
    "title": {
     "en": "Non-Immigrant ED visa, single entry",
@@ -657,8 +579,8 @@
    "stage": "overdue",
    "catalog_amount": "2000.00",
    "amount_confirmed": false,
-   "token": "c8d422c2cfd6a4d98a5eca0f1058a6874d451410a9437f6c8c9d7440b5edbb63",
-   "notice_token": "115e817d5cfc5d6eda6e3c81d9c55108aa813b812423e38da158218f7b73d337",
+   "token": "7601e2100c1d61fefe5784f8718dc3d76e5927782a02f7e0202e91cfa5246fdc",
+   "notice_token": "9809339a89c520468dd2a98a3e05f887876f6df29ae07c8589e0313e71894b50",
    "unread": false,
    "snoozed": false,
    "snoozed_until": null,
@@ -667,7 +589,59 @@
    "at_risk": false
   },
   {
-   "source_key": "bill:c545c60e-b22f-466a-954a-b6dd5b3d46f8",
+   "source_key": "bill:3ca58ebd-c2c6-4ccd-b11d-9bbab7a038ef",
+   "kind": "bill",
+   "title": {
+    "en": "Tuition and fees per semester (includes 50,000 confirmation fee in year 1)",
+    "zh": "每学期学费及杂费（第一年含 50,000 确认费）"
+   },
+   "due_date": "2027-08-02",
+   "amount": "117600.00",
+   "currency": "THB",
+   "done": true,
+   "estimated": true,
+   "source_version": "PAID",
+   "target": "bills",
+   "stage": "overdue",
+   "catalog_amount": "117600.00",
+   "amount_confirmed": false,
+   "token": "dd3c438c3bee19d70e249005d6471b31665e67173c4eb2279904d27cf6a264f7",
+   "notice_token": "a07c19ec967be59f280f28f8035d5d7558ce579eab1fccb9f03c3093b510e86a",
+   "unread": false,
+   "snoozed": false,
+   "snoozed_until": null,
+   "shortfall": null,
+   "shortfall_basis": null,
+   "at_risk": false
+  },
+  {
+   "source_key": "bill:8acd8f71-5568-40d2-ace3-93bec9a8ffe6",
+   "kind": "bill",
+   "title": {
+    "en": "Preparation course (June-July before year 1)",
+    "zh": "入学预备课程（第一年前 6-7 月）"
+   },
+   "due_date": "2027-08-02",
+   "amount": "41400.00",
+   "currency": "THB",
+   "done": true,
+   "estimated": true,
+   "source_version": "PAID",
+   "target": "bills",
+   "stage": "overdue",
+   "catalog_amount": "41400.00",
+   "amount_confirmed": false,
+   "token": "e5ced09ad114e28b6fb067a451e310b077377f44ebfec2495f1e1c9789f4e2f4",
+   "notice_token": "64e02fbcdc6699033e81e0a50873c55b82bc03197af21ef7095944d661e33a74",
+   "unread": false,
+   "snoozed": false,
+   "snoozed_until": null,
+   "shortfall": null,
+   "shortfall_basis": null,
+   "at_risk": false
+  },
+  {
+   "source_key": "bill:a057d2bc-e4ee-4c9c-b5f8-012839188547",
    "kind": "bill",
    "title": {
     "en": "Student health insurance",
@@ -683,8 +657,8 @@
    "stage": "overdue",
    "catalog_amount": "10000.00",
    "amount_confirmed": false,
-   "token": "572a53306d38b7d65e0bf2ab0d8d5400031d64d7326677779eb6863c6b9d1393",
-   "notice_token": "0677f1fe5139914a24856c3f1c22e3e5b9abb90f03ae315bec10f9a38cc91543",
+   "token": "fae651c4972cb6d6a9ea6baefd06639a1a414248cd9ab60aeef9050b6df3af12",
+   "notice_token": "298742100a217a7a735a9310c875ea183ece39c8d8c91398b877bfe1716e1faa",
    "unread": false,
    "snoozed": false,
    "snoozed_until": null,
@@ -693,7 +667,7 @@
    "at_risk": false
   },
   {
-   "source_key": "bill:d3a340cd-071f-428b-b65e-b3cbef71cf26",
+   "source_key": "bill:f6ecd70d-c6a0-4721-ba89-de29a952b35f",
    "kind": "bill",
    "title": {
     "en": "Annual extension of stay",
@@ -709,8 +683,8 @@
    "stage": "overdue",
    "catalog_amount": "1900.00",
    "amount_confirmed": false,
-   "token": "487f02e415ea71c2f98ccc31d9879a9b589fe77c33df2ee0a1aae45d7c085aa7",
-   "notice_token": "71286ecb259a9de69414e36fd8af7324c6776c1c0201c97953a07d89eb24d65a",
+   "token": "71aced8f259c05b3abf46056f0d0f7d6eb2f7321fbb3e6af0b12a439cb8bb96e",
+   "notice_token": "d70e77bb67212a6cedea5ff9b894cd1c763898e5735a3671207fb60bc758f9c2",
    "unread": false,
    "snoozed": false,
    "snoozed_until": null,
@@ -719,7 +693,33 @@
    "at_risk": false
   },
   {
-   "source_key": "task:3c9aa9a7-050b-4226-b7fc-cffa8f0aeb95",
+   "source_key": "bill:fa26f3c3-bd68-48e6-a65f-cb8b25897459",
+   "kind": "bill",
+   "title": {
+    "en": "Year 1 summer session",
+    "zh": "第一年暑期学期"
+   },
+   "due_date": "2027-08-02",
+   "amount": "46650.00",
+   "currency": "THB",
+   "done": true,
+   "estimated": true,
+   "source_version": "PAID",
+   "target": "bills",
+   "stage": "overdue",
+   "catalog_amount": "46650.00",
+   "amount_confirmed": false,
+   "token": "df6e226f1cef7580d8ada603a9e36fd1c42703542d95603ad2de9432201b9bd5",
+   "notice_token": "d67e5845c09ead39c51ad1078aa629076a05c41c04054e118b9c234b9666ea11",
+   "unread": false,
+   "snoozed": false,
+   "snoozed_until": null,
+   "shortfall": null,
+   "shortfall_basis": null,
+   "at_risk": false
+  },
+  {
+   "source_key": "task:92377c80-a6f2-436c-908c-6923ea2536a3",
    "kind": "task",
    "title": {
     "en": "Register at the university",
@@ -737,8 +737,8 @@
    "stage": "overdue",
    "catalog_amount": null,
    "amount_confirmed": false,
-   "token": "795b22f11a90b1392d3e0431026eab42ec206864958855538b7ac09f6d856ee6",
-   "notice_token": "4a118cf09ca31cf03b3e6fd335fbac4f7071360e7cdcc6be69971e85362848c3",
+   "token": "9d8a3808143a015c02505ce595e7e3c2cb56fa5a47b1982776e2136aa1433eed",
+   "notice_token": "f8505903996d5ab6fcff2fbcbdbcc86d335b68c10eceaf4fc72d9a4e2a2759c6",
    "unread": false,
    "snoozed": false,
    "snoozed_until": null,
@@ -749,7 +749,7 @@
  ],
  "upcoming": [
   {
-   "source_key": "task:6d73027c-baa6-46aa-84e6-beb2de742614",
+   "source_key": "task:cfd4fba6-fb8e-44ff-92b4-38d58d3c41e2",
    "kind": "task",
    "title": "补充学校通知日期",
    "due_date": null,
@@ -764,8 +764,8 @@
    "stage": "unknown",
    "catalog_amount": null,
    "amount_confirmed": false,
-   "token": "9b2aeeb2ce0e14481241ad142083dfa095c141bd3ea94703047a88200f011b5b",
-   "notice_token": "8a5be1f5339f5ad68c8d6030476a8409bab7ca7e9299bea6d53d0b1a7b63d7cc",
+   "token": "ddf636857587132a03247d966dea8dd5cff394a7838379d3cb7702d6f7010892",
+   "notice_token": "032e844386be694a4a3580e234f726e8b490cd7df763594649141e5d57a3dc8c",
    "unread": true,
    "snoozed": false,
    "snoozed_until": null,
@@ -800,7 +800,7 @@
   "is_simulated": true,
   "recent": [
    {
-    "id": "21895804-ee01-4275-adb0-e0955a0f7885",
+    "id": "5f489c83-15e3-4f1d-aea7-83b73ee3b203",
     "spent_on": "2027-08-14",
     "category": "food",
     "amount": "120.00",
@@ -809,5 +809,17 @@
     "via_agent": false
    }
   ]
+ },
+ "credit": {
+  "currency": "THB",
+  "limit": "10500.00",
+  "used": "0.00",
+  "available": "10500.00",
+  "monthly_room": "10550.00",
+  "basis_known": true,
+  "term_days": 30,
+  "cap": "20000.00",
+  "is_simulated": true,
+  "charges": []
  }
 }

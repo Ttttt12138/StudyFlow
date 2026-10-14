@@ -77,6 +77,9 @@ def items(school_key):
 
 def title(school_key, key):
     """The bilingual title of a seeded item, or None once the template no longer has it."""
+    from .loan_stage import PREFIX, document_title
+    if key.startswith(PREFIX):
+        return document_title(key)
     return next(({"en": en, "zh": zh} for k, _, en, zh in items(school_key) if k == key), None)
 
 

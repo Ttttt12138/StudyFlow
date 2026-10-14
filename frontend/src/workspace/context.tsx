@@ -1,3 +1,4 @@
+import type { PlanHistory } from "../plan/types";
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { useI18n } from "../i18n";
@@ -5,12 +6,16 @@ import type { ToolKind, ToolTarget } from "./navigation";
 import type { PreviewStage } from "../plan/preview";
 
 /** What the planner tells the workspace shell: the plan's stage decides which tools exist. */
-export type PlanState = { status: "DRAFT" | "CONFIRMED" | "ENROLLED" | null; gap: boolean };
+export type PlanState = { status: "DRAFT" | "CONFIRMED" | "ENROLLED" | null; gap: boolean;
+  /** Shown under the sidebar's tools; opening a draft makes it the current plan. */
+  history?: PlanHistory | null; openDraft?: (id: string) => void };
 
 export const WorkspaceContext = createContext<{
   target: ToolTarget | null; host: HTMLElement | null; open: (target: ToolTarget) => void;
   /** Top-bar slot the reminder bell renders into. */
   bellHost?: HTMLElement | null;
+  /** Sidebar slot the stage summary renders into (wide screens only). */
+  guideHost?: HTMLElement | null;
   close: () => void; setStage: (stage: PreviewStage) => void; account?: string;
   reportPlan?: (state: PlanState) => void;
 } | null>(null);

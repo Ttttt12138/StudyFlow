@@ -44,13 +44,13 @@ test('preview tools preserve chat and wallet drafts, history and all student too
   // Wallet, exchange, remittance and payments are one tool with one tab row.
   await openTool(page, 'Wallet & payments');
   await expect(page.locator('#workspace-tool-title')).toHaveText('Wallet & payments');
-  await page.getByRole('tablist', { name: 'Wallet & payments' }).getByRole('tab', { name: 'Remit' }).click();
+  await page.locator('.panel-footer-center').getByRole('button', { name: 'Remit', exact: true }).click();
   await page.locator('#wallet-quote input').first().fill('1234');
   await page.getByRole('button', { name: 'Expand tool' }).click();
   await expect(page.locator('.workspace-dock')).toHaveAttribute('aria-modal', 'true');
   await page.getByRole('button', { name: 'Restore width' }).click();
-  await openTool(page, "This month's spending");
-  await expect(page.locator('.tool-content:not([hidden]) .monthly-report')).toBeVisible();
+  await openTool(page, 'This month');
+  await expect(page.locator('.tool-content:not([hidden]) .life-spending')).toBeVisible();
   await page.getByRole('button', { name: 'Previous tool' }).click();
   await expect(page.locator('#wallet-quote input').first()).toHaveValue('1234');
   await page.getByRole('button', { name: 'Close tool' }).click();
@@ -59,8 +59,7 @@ test('preview tools preserve chat and wallet drafts, history and all student too
   expect(await page.locator('.plan-messages').evaluate(element => Math.abs(element.scrollTop - 100))).toBeLessThanOrEqual(32);
   await page.goBack();
   await expect(page.locator('#wallet-quote input').first()).toHaveValue('1234');
-  for (const [label, selector, setting] of [['My loans', '.loans-app'], ["This month's spending", '.monthly-report'],
-    ['To-dos & payments', '.life-panel'], ['Wallet & payments', '#wallet-balances'], ['Credit record', '.trust-app', true]]) {
+  for (const [label, selector, setting] of [['My loans', '.loans-app'], ['This month', '.life-panel'], ['Wallet & payments', '#wallet-balances'], ['Credit record', '.trust-app', true]]) {
     await (setting ? openSetting : openTool)(page, label);
     await expect(page.locator('#workspace-tool-title')).toHaveText(label);
     await expect(page.locator(`.tool-content:not([hidden]) ${selector}`)).toBeVisible();
@@ -150,8 +149,8 @@ test('reopened tools refresh records, preserve expense drafts, clear sponsor tok
   await page.route('**/api/v2/**', route => {
     const path = new URL(route.request().url()).pathname;
     if (path.endsWith('/planning/expenses/record/')) return route.fulfill({ status: 503, json: { message: 'Expense service unavailable' } });
-    if (path.endsWith('/planning/in-school/')) { reads++; return route.fulfill({ json: { data: data.in_school } }); }
-    if (path.endsWith('/planning/life/')) return route.fulfill({ json: { data: recording('life.school') } });
+    if (path.endsWith('/planning/in-school/')) return route.fulfill({ json: { data: data.in_school } });
+    if (path.endsWith('/planning/life/')) { reads++; return route.fulfill({ json: { data: recording('life.school') } }); }
     const result = path.endsWith('/agent/conversations/') ? [{ id: data.conversation.id }]
       : path.includes('/agent/conversations/') ? data.conversation : [];
     return route.fulfill({ json: { data: result } });
@@ -163,21 +162,21 @@ test('reopened tools refresh records, preserve expense drafts, clear sponsor tok
   await expect(page.locator('.workspace-stage')).toHaveText('Enrolled');
   await expect(page.locator('#plan-chat .plan-turn').first()).toBeVisible();
   await openRecord(page);
-  await page.getByRole('tab', { name: 'Record spending' }).click();
-  await page.locator('.plan-expense input').first().fill('222');
+  const amount = page.locator('.life-panel').getByLabel(/^Amount/);
+  await amount.fill('222');
   await openSetting(page, 'Link a family account');
   await page.locator('[data-sensitive]').fill('a'.repeat(64));
   const before = reads;
   await openRecord(page);
   await expect.poll(() => reads).toBeGreaterThan(before);
-  await expect(page.locator('.plan-expense input').first()).toHaveValue('222');
-  await page.getByRole('button', { name: 'Save', exact: true }).click();
-  await expect(page.locator('#plan-school').getByRole('alert')).toHaveText('Expense service unavailable');
+  await expect(amount).toHaveValue('222');
+  await page.locator('.life-panel').getByRole('button', { name: 'Save', exact: true }).click();
+  await expect(page.locator('.life-panel').getByRole('alert')).toContainText('Expense service unavailable');
   await openSetting(page, 'Link a family account');
   await expect(page.locator('[data-sensitive]')).toHaveValue('');
 });
 
-test('signed-in students can sign out from the sidebar settings', async ({ page }) => {
+test('signed-in students can sign out from the account menu in the top bar', async ({ page }) => {
   let signedIn = true;
   const logouts = [];
   await page.route('**/api/auth/session/', route => route.fulfill({ json: signedIn
@@ -190,8 +189,19 @@ test('signed-in students can sign out from the sidebar settings', async ({ page 
   await page.route('**/api/v2/**', route => route.fulfill({ status: 404, json: { detail: 'not mocked' } }));
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto('/');
-  await expect(page.locator('.workspace-account')).toHaveText('demo-approver');
-  await openSetting(page, 'Sign out');
+  const account = page.locator('.workspace-topbar').getByRole('button', { name: 'demo-approver' });
+  await expect(account).toHaveAttribute('aria-expanded', 'false');
+  // The settings menu keeps its own sign-out too.
+  await sidebar(page).getByRole('button', { name: 'Settings', exact: true }).click();
+  await expect(page.locator('#side-settings').getByRole('button', { name: 'Sign out' })).toBeVisible();
+  await page.keyboard.press('Escape');
+  await account.click();
+  const menu = page.getByRole('menu', { name: 'Account' });
+  await page.keyboard.press('Escape');
+  await expect(menu).toHaveCount(0);
+  await expect(account).toBeFocused();
+  await account.click();
+  await menu.getByRole('menuitem', { name: 'Sign out' }).click();
   await expect.poll(() => logouts).toEqual([{ method: 'POST', token: 'csrf-1' }]);
   // After the reload the session reads signed out: the top bar offers sign-in and the settings menu no sign-out.
   await expect(page.locator('.workspace-account')).toHaveCount(0);

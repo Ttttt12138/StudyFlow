@@ -1,8 +1,7 @@
 import { Bank } from "@phosphor-icons/react/dist/csr/Bank";
 import { CaretDoubleLeft } from "@phosphor-icons/react/dist/csr/CaretDoubleLeft";
 import { CaretDoubleRight } from "@phosphor-icons/react/dist/csr/CaretDoubleRight";
-import { ListChecks } from "@phosphor-icons/react/dist/csr/ListChecks";
-import { ChartPie } from "@phosphor-icons/react/dist/csr/ChartPie";
+import { CalendarCheck } from "@phosphor-icons/react/dist/csr/CalendarCheck";
 import { Coins } from "@phosphor-icons/react/dist/csr/Coins";
 import { Compass } from "@phosphor-icons/react/dist/csr/Compass";
 import { GearSix } from "@phosphor-icons/react/dist/csr/GearSix";
@@ -19,38 +18,49 @@ import type { PreviewStage } from "../plan/preview";
 import { RoleSwitch } from "../services/ModuleNav";
 import type { PlanState } from "./context";
 import type { ToolTarget } from "./navigation";
+import { pick } from "../plan/format";
+import type { Card, PlanHistory } from "../plan/types";
 
 type Icon = ComponentType<{ size?: number; weight?: "light" | "regular" | "fill"; "aria-hidden"?: boolean | "true" }>;
 type Item = { target: ToolTarget; label: MessageKey; icon: Icon };
 
-/** Price lookup first. A confirmed plan adds its to-dos and payments; the month's spending and the wallet that pays
- *  the bills follow enrollment. The credit record is not a daily tool: it sits in the settings menu. */
+/** Price lookup first. A confirmed plan adds "This month" (to-dos, payments and, once enrolled, spending);
+ *  enrollment adds the wallet that pays the bills. The credit record is not a daily tool: it sits in the settings menu. */
 const planning: Item[] = [
   { target: { kind: "compare" }, label: "simple.compare", icon: Scales },
   { target: { kind: "funding" }, label: "simple.plan", icon: Coins },
   { target: { kind: "loans" }, label: "simple.loans", icon: Bank },
 ];
-const todo: Item = { target: { kind: "life" }, label: "life.title", icon: ListChecks };
-const spending: Item = { target: { kind: "spending" }, label: "plan.monthly.title", icon: ChartPie };
+const todo: Item = { target: { kind: "life" }, label: "life.title", icon: CalendarCheck };
 const wallet: Item = { target: { kind: "wallet" }, label: "money.title", icon: ArrowsLeftRight };
 const extras: Item[] = [{ target: { kind: "trust" }, label: "side.trust", icon: ShieldCheck }];
 
 const same = (a: ToolTarget | null, b: ToolTarget) => !!a && a.kind === b.kind;
+const SHOWN = 3;
+
+/** One line per price lookup: the school and years, or the schools compared. */
+function priceLabel(card: Card, t: ReturnType<typeof useI18n>["t"], lang: ReturnType<typeof useI18n>["lang"]) {
+  if (card.type === "cost") return `${pick(card.school.name, lang)} · ${t("simple.years", { n: card.estimate.years })}`;
+  if (card.type === "comparison") return card.schools.map(s => pick(s.name, lang)).join(" / ");
+  return "";
+}
 
 /**
  * The workspace's left sidebar: new price question, the tools for the current stage, then tour and settings.
  * `compact` shows icons only; `drawer` is the phone layout, opened from the top bar.
  */
-export function ToolSidebar({ active, status, gap, compact, drawer, preview, stage, account, signingOut,
+export function ToolSidebar({ active, status, gap, compact, drawer, preview, stage, account, signingOut, history = null, onOpenDraft,
   onOpen, onNewChat, onToggle, onClose, onStage, onSignOut }: {
   active: ToolTarget | null; status: PlanState["status"]; gap: boolean; compact: boolean; drawer: boolean; preview: boolean;
+  history?: PlanHistory | null; onOpenDraft?: (id: string) => void;
   stage: PreviewStage; account: string; signingOut: boolean;
   onOpen: (target: ToolTarget) => void; onNewChat: () => void; onToggle: () => void; onClose: () => void;
   onStage: (stage: PreviewStage) => void; onSignOut: () => void;
 }) {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const enrolled = status === "ENROLLED";
-  const life = enrolled ? [todo, spending, wallet] : status === "CONFIRMED" ? [todo] : [];
+  const [allPrices, setAllPrices] = useState(false);
+  const life = enrolled ? [todo, wallet] : status === "CONFIRMED" ? [todo] : [];
   const [settings, setSettings] = useState(false);
   const menu = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -72,6 +82,27 @@ export function ToolSidebar({ active, status, gap, compact, drawer, preview, sta
         <span className="side-label">{t(item.label)}</span>
         {dot && <span className="side-dot" aria-label={t("side.gap")} role="img" />}
       </button>
+      {!compact && item.target.kind === "compare" && history && history.prices.length > 0 && <>
+        <ul className="side-history" aria-label={t("side.history.prices")}>
+          {(allPrices ? history.prices : history.prices.slice(0, SHOWN)).map(row => <li key={row.id}>
+            <button type="button" className="side-history-item" aria-current={active?.kind === "card" && active.cardId === row.id ? "true" : undefined}
+              title={priceLabel(row.card, t, lang)} onClick={() => onOpen({ kind: "card", cardId: row.id })}>
+              <span className="side-history-text">{priceLabel(row.card, t, lang)}</span></button></li>)}
+        </ul>
+        {history.prices.length > SHOWN && <button type="button" className="side-history-more" aria-expanded={allPrices}
+          onClick={() => setAllPrices(!allPrices)}>{t(allPrices ? "side.history.less" : "side.history.more", { n: history.prices.length - SHOWN })}</button>}
+      </>}
+      {!compact && item.target.kind === "funding" && history && history.drafts.length > 0 &&
+        <ul className="side-history" aria-label={t("side.history.drafts", { n: history.draft_limit })}>
+          {history.drafts.map(draft => <li key={draft.id}>
+            <button type="button" className="side-history-item" aria-current={draft.current ? "true" : undefined}
+              disabled={draft.current ? false : !onOpenDraft || (status !== null && status !== "DRAFT")}
+              title={!draft.current && status !== null && status !== "DRAFT" ? t("side.history.locked")
+                : `${pick(draft.name, lang) || draft.school_key} · ${t("simple.years", { n: draft.years })}`}
+              onClick={() => draft.current ? onOpen({ kind: "funding" }) : onOpenDraft?.(draft.id)}>
+              <span className="side-history-text">{pick(draft.name, lang) || draft.school_key} · {t("simple.years", { n: draft.years })}</span>
+              {draft.current && <small>{t("side.history.current")}</small>}</button></li>)}
+        </ul>}
     </li>;
   };
 
@@ -91,7 +122,7 @@ export function ToolSidebar({ active, status, gap, compact, drawer, preview, sta
       disabled={preview} onClick={onNewChat}><Plus size={20} aria-hidden="true" /><span className="side-label">{t("side.new")}</span></button>
     <div className="side-scroll">
       <p className="side-group">{t("side.group.price")}</p>
-      <ul>{planning.map(button)}</ul>
+      <ul>{planning.filter(item => item.target.kind !== "loans" || enrolled).map(button)}</ul>
       {life.length > 0 && <>
         <p className="side-group side-group-life">{t("side.group.life")}</p>
         <ul>{life.map(button)}</ul>

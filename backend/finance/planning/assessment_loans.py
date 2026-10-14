@@ -1,51 +1,34 @@
 from datetime import date
 from decimal import Decimal
-from types import SimpleNamespace
-
-from finance import affordability, budget_services
-from finance.lending_core.calculations import assess, month_date
-from finance.lending_core.schemas import MonthBudget
+from finance import budget_services
 from finance.workflow_common import require
 
-
-def repayment_months(inputs, last_due):
-    recurring = inputs["repayment"]
-    first = inputs["loan"]["first_due_date"][:7]
-    changes = {c["month"]: c for c in recurring["changes"]}
-    values = {key: recurring[key] for key in ("income", "living_expenses", "existing_repayments")}
-    # Changes persist from their effective month, including changes before the first repayment.
-    rows, changes = [], sorted(changes.items())
-    for offset in range(60):
-        month = month_date(date.fromisoformat(first + "-01"), offset).strftime("%Y-%m")
-        if month > last_due[:7]:
-            break
-        while changes and changes[0][0] <= month:
-            values.update({k: v for k, v in changes.pop(0)[1].items() if k != "month"})
-        covered = bool(recurring["from_month"]) and recurring["from_month"] <= month <= recurring["to_month"]
-        rows.append({"month": month, **{k: v if covered else None for k, v in values.items()}})
-    return rows
+from . import products
 
 
-def create_quotes(user, inputs, projection):
+def create_quotes(user, inputs, check):
+    """One quote for the amount, term and product the family picked, within the pre-check's maximum.
+
+    No amount picked means the pre-check's maximum. A planning loan is approved by the pre-check (planning_decision),
+    not by a month-by-month budget, so the quote carries no affordability verdict."""
     terms = inputs["loan"]
+    cap = check["max_principal"]
     principal = terms["principal"]
-    if principal is None and projection["suggested_principal"] is not None:
-        if Decimal(projection["suggested_principal"]) <= 0:
+    if principal is None:
+        if cap is None:
             return []
-        principal = str(Decimal(projection["suggested_principal"]) + Decimal(terms["fees"]))
-    if principal is None or Decimal(principal) <= 0:
+        principal = cap
+    elif cap is not None:
+        require(Decimal(principal) <= Decimal(cap), "AMOUNT_ABOVE_PREQUAL")
+    if Decimal(principal) <= 0:
         return []
     require(Decimal(principal) > Decimal(terms["fees"]), "LOAN_FEES_EXCEED_PRINCIPAL")
-    additional = affordability.commitments(SimpleNamespace(owner=user, pk=None))
-    quotes = []
-    options = [(months, "custom") for months in dict.fromkeys(terms["periods"])]
-    options.append((48, "commercial_student_demo"))
-    for months, product in options:
-        body = {"product": product, "currency": "THB", "principal": principal, "annual_rate": terms["annual_rate"],
-                "fees": terms["fees"], "months": months, "first_due_date": date.fromisoformat(terms["first_due_date"])}
-        quote = budget_services.create_loan(user, body)
-        rows = repayment_months(inputs, quote["result"]["repayments"][-1]["due_date"])
-        quote["assessment"] = assess(quote["result"], [MonthBudget.model_validate(r) for r in rows], additional)
-        quote["repayment_months"] = rows
-        quotes.append(quote)
-    return quotes
+    months = int(terms.get("months") or (terms.get("periods") or [48])[0])
+    product = terms.get("product") or "custom"
+    products.check_term(product, months)
+    body = {"product": product, "currency": "THB", "principal": str(principal),
+            "annual_rate": str(products.rate(product, terms["annual_rate"])), "fees": terms["fees"], "months": months,
+            "first_due_date": date.fromisoformat(terms["first_due_date"])}
+    quote = budget_services.create_loan(user, body)
+    quote["assessment"] = {"status": "NOT_ASSESSED", "missing_inputs": [], "shortfall_months": []}
+    return [quote]

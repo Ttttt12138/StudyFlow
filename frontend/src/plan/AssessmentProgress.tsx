@@ -30,15 +30,15 @@ export function AssessmentProgress({ data, client, refresh }: {
     } catch (e) { setError(e instanceof Error ? e.message : String(e)); await refresh().catch(() => undefined); }
     finally { setBusy(false); }
   }
-  if (!apps.length) return null;
-  return <section><h3>{t("simple.lifecycle")}</h3>{apps.map(a => {
+  // Approval, documents and signing are shown by LoanStage; this section is the signed loan's repayments.
+  const signed = apps.filter(a => data.lifecycle?.disbursements.some(d => d.application === a.id));
+  if (!signed.length) return null;
+  return <section><h3>{t("simple.lifecycle")}</h3>{signed.map(a => {
     const disbursement = data.lifecycle?.disbursements.find(d => d.application === a.id);
     const account = data.lifecycle?.accounts.find(r => r.disbursement === disbursement?.id);
     const next = account?.installments.find(r => r.status !== "PAID");
     return <div key={a.id} className="assessment-item">
-      <p>{t("simple.pending")}: <strong>{t(`loans.status.${a.status}`)}</strong></p>
-      {a.status === "APPROVED" && <p>{t("simple.wait")}</p>}
-      {disbursement && <p>{t("simple.net")}: {formatMoney(disbursement.amount, "THB", lang)} · {disbursement.scheduled_on}</p>}
+      {disbursement && disbursement.status !== "school" && <p>{t("simple.net")}: {formatMoney(disbursement.amount, "THB", lang)} · {disbursement.scheduled_on}</p>}
       {next && account && <><p>{t("simple.next")}: {next.due_on} · {formatMoney(next.amount, "THB", lang)} · {t(`loans.status.${next.status}`)}</p>
         <button className="primary" disabled={busy || policy.pending || next.status === "SCHEDULED"} onClick={() => setConfirm({ account, next })}>{t("simple.confirmRepay")}</button>
         {next.status === "SCHEDULED" && <p className="panel-muted">{t("simple.notDue")}</p>}</>}

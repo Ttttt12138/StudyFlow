@@ -8,7 +8,7 @@ const tools = page => page.getByRole('navigation', { name: 'Tools' });
 // "Funding & loan" may carry a "Funding gap" dot in its name, so items match on the start of their name.
 const item = (page, name) => tools(page).getByRole('button', { name: new RegExp(`^${name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`) });
 const PRICE_TOOLS = ['School comparison', 'My plan', 'My loans'];
-const TODO = 'To-dos & payments', SPENDING = 'This month\x27s spending', WALLET = 'Wallet & payments';
+const TODO = 'This month', WALLET = 'Wallet & payments';
 // The credit record is not a daily tool: it is in the settings menu once enrolled.
 const EXTRAS = ['Credit record'];
 
@@ -18,36 +18,41 @@ test.beforeEach(async ({ page }) => {
   await page.route('**/api/**', route => { apiCalls.push(`${route.request().method()} ${new URL(route.request().url()).pathname}`); return route.abort(); });
 });
 
-test('the sidebar adds to-dos once the plan is confirmed and monthly spending once enrolled', async ({ page }) => {
+test('the sidebar adds This month once the plan is confirmed and the wallet once enrolled', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto('/?plan=preview');
   await expect(page.locator('#plan-chat .plan-turn').first()).toBeVisible();
   await expect(page.locator('.workspace-stage')).toHaveText('Comparing prices');
   await expect(tools(page).getByRole('button', { name: 'New price question' })).toBeVisible();
   for (const name of PRICE_TOOLS) await expect(item(page, name)).toBeVisible();
-  for (const name of [TODO, SPENDING, WALLET, ...EXTRAS]) await expect(item(page, name)).toHaveCount(0);
-  await expect(tools(page).getByText('To-dos and payments appear here once the plan is confirmed.')).toBeVisible();
+  for (const name of [TODO, WALLET, ...EXTRAS]) await expect(tools(page).getByRole('button', { name, exact: true })).toHaveCount(0);
+  await expect(tools(page).getByText('This month appears here once the plan is confirmed.')).toBeVisible();
 
   await page.goto('/?plan=preview&stage=prepare');
   await expect(page.locator('.workspace-stage')).toHaveText('Preparing to leave');
   await expect(tools(page).getByText('Arrival & daily life', { exact: true })).toBeVisible();
   await expect(item(page, TODO)).toBeVisible();
-  await expect(item(page, SPENDING)).toHaveCount(0);
   await expect(item(page, WALLET)).toHaveCount(0);
-  await expect(tools(page).getByText('Monthly spending appears after enrollment is confirmed.')).toBeVisible();
-  // The confirmed plan already lists the country checklist and the first bills, with the general-checklist note.
+  await expect(tools(page).getByText('After enrollment, This month adds spending and Wallet & payments appears.')).toBeVisible();
+  // The confirmed plan already lists the country checklist and the first bills; spending waits for enrollment.
   await item(page, TODO).click();
   await expect(page.locator('#workspace-tool-title')).toHaveText(TODO);
-  await page.locator('.life-panel summary').filter({ hasText: 'All items' }).click();
-  await expect(page.locator('.life-panel').getByText('General checklist item', { exact: false }).first()).toBeVisible();
+  await expect(page.locator('.life-spending')).toHaveCount(0);
+  // A row opens its own page with a back button; a checklist item shows its note there.
+  await page.locator('.life-panel .life-item-main').filter({ hasText: 'Register at the university' }).click();
+  await expect(page.locator('.life-panel').getByText('General checklist item', { exact: false })).toBeVisible();
+  await page.locator('.life-panel').getByRole('button', { name: 'Back' }).click();
+  await expect(page.locator('.life-panel .life-todo')).toBeVisible();
+  await expect(page.locator('.life-panel details')).toHaveCount(0);
 
   await page.goto('/?plan=preview&stage=school');
   await expect(page.locator('.workspace-stage')).toHaveText('Enrolled');
-  for (const name of [...PRICE_TOOLS, TODO, SPENDING, WALLET]) await expect(item(page, name)).toBeVisible();
+  for (const name of [...PRICE_TOOLS, TODO, WALLET]) await expect(item(page, name)).toBeVisible();
   for (const name of EXTRAS) await expect(item(page, name)).toHaveCount(0);
   // While a tool is open the sidebar is icon-only but every item keeps its accessible name.
-  await item(page, SPENDING).click();
-  await expect(page.locator('#workspace-tool-title')).toHaveText(SPENDING);
+  await item(page, TODO).click();
+  await expect(page.locator('#workspace-tool-title')).toHaveText(TODO);
+  await expect(page.locator('.life-spending')).toBeVisible();
   await expect(page.locator('.tool-sidebar')).toHaveClass(/is-compact/);
   await item(page, WALLET).click();
   await expect(page.locator('#workspace-tool-title')).toHaveText(WALLET);
@@ -94,21 +99,27 @@ test('the short-plan preview offers the commercial example alongside two terms w
   await expect(page.locator('#workspace-tool-title')).toHaveText('My plan');
   const dock = page.locator('.workspace-dock');
   await expect(dock).toContainText('Read-only preview');
-  await expect(dock.locator('.assessment-quotes article')).toHaveCount(3);
+  await expect(dock.locator('.plan-visual-quote')).toHaveCount(3);
   await expect(dock).toContainText('48 months');
   await expect(dock).toContainText('24 months');
   const example = dock.getByRole('radio', { name: 'Commercial study loan (example)', exact: true });
   await expect(example).toHaveCount(1);
   await example.check();
   await expect(example).toBeChecked();
-  await expect(dock.locator('.assessment-summary')).toContainText('Commercial study loan (example)');
+  // The family summary is on the "Details and sources" page.
+  const summary = async (text, open = /^Details and sources/, back = 'Back') => {
+    await dock.getByRole('button', { name: open }).click();
+    await expect(dock.locator('.assessment-summary')).toContainText(text);
+    await dock.getByRole('button', { name: back }).click();
+  };
+  await summary('Commercial study loan (example)');
   await dock.getByRole('radio', { name: '24 months', exact: true }).check();
   await expect(example).not.toBeChecked();
-  await expect(dock.locator('.assessment-summary')).toContainText('Custom simulated loan');
+  await summary('Custom simulated loan');
   await page.setViewportSize({ width: 390, height: 844 });
   await page.getByRole('button', { name: '中文', exact: true }).click();
   await dock.getByRole('radio', { name: '商业助学贷款（示例）', exact: true }).check();
-  await expect(dock.locator('.assessment-summary')).toContainText('商业助学贷款（示例）');
+  await summary('商业助学贷款（示例）', /^明细与来源/, '返回');
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await expect(dock.getByRole('button', { name: 'Review application' })).toHaveCount(0);
   expect(apiCalls).toEqual([]);

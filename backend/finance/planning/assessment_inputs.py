@@ -3,6 +3,10 @@ from rest_framework import serializers as s
 from finance.workflow_serializers import Input
 
 
+TERMS = [24, 36, 48, 60]
+BORROWERS = ["student_with_parent", "parent"]
+
+
 def amount(**kwargs):
     return s.DecimalField(max_digits=16, decimal_places=2, min_value=0, **kwargs)
 
@@ -46,8 +50,11 @@ class LoanTermsInput(Input):
     annual_rate = s.DecimalField(max_digits=9, decimal_places=8, min_value=0, max_value=1, default="0.06")
     fees = amount(default="0.00")
     first_due_date = s.DateField()
+    # The one term the family picked; principal null means "as much as the pre-check allows".
+    months = s.ChoiceField(choices=TERMS, default=48)
+    # Kept so stored inputs from before single-term quotes still validate; no longer read.
     periods = s.ListField(child=s.IntegerField(min_value=1, max_value=60), min_length=1,
-                         max_length=3, default=lambda: [48, 24])
+                         max_length=3, required=False)
 
 
 class CostOverrideInput(Input):
@@ -68,6 +75,8 @@ class AssessmentDetails(Input):
     costs = CostOverrideInput(many=True, default=list)
     repayment = PlanningRecurringInput()
     loan = LoanTermsInput()
+    # Who signs the simulated loan; it changes the wording only, income is the family's either way.
+    borrower = s.ChoiceField(choices=BORROWERS, default="student_with_parent")
 
     def validate(self, data):
         for name, key in (("supports", "id"), ("costs", "cost_id")):
@@ -88,3 +97,28 @@ class SubmitPlanningLoan(Input):
     expected_version = s.IntegerField(min_value=1)
     plan_version = s.IntegerField(min_value=1)
     quote_id = s.UUIDField()
+
+
+class LoanPreviewInput(Input):
+    """Instant repayment figures while the amount or term is being chosen; nothing is stored."""
+    principal = amount()
+    months = s.ChoiceField(choices=TERMS)
+    product = s.ChoiceField(choices=["custom", "commercial_student_demo"], default="custom")
+
+
+class LoanDocumentInput(Input):
+    task_id = s.UUIDField()
+    done = s.BooleanField()
+    expected_version = s.IntegerField(min_value=1)
+
+
+class SignPlanningLoan(Input):
+    application_id = s.UUIDField()
+    expected_version = s.IntegerField(min_value=1)
+
+
+class ConfirmPlanningPlan(Input):
+    """Confirm the plan; quote_id is the simulated loan to apply for at the same time, or null for no loan."""
+    expected_version = s.IntegerField(min_value=0)
+    plan_version = s.IntegerField(min_value=1)
+    quote_id = s.UUIDField(required=False, allow_null=True)

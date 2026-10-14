@@ -19,7 +19,7 @@ test.describe("money in the conversation, preview", () => {
     await page.getByText("Transfers and currency exchange are now asked and confirmed right here in the conversation.").waitFor();
     assert.equal(await page.locator(".workspace-dock").isVisible(), false);
     const tools = page.getByRole("navigation", { name: "Tools" });
-    await tools.getByRole("button", { name: "To-dos & payments" }).waitFor();
+    await tools.getByRole("button", { name: "This month" }).waitFor();
     assert.equal(await tools.getByRole("button", { name: "Finance assistant" }).count(), 0);
     await page.locator(".plan-composer textarea").waitFor();
     assert.equal(apiCalls, 0);

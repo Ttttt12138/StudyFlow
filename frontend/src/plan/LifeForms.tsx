@@ -1,68 +1,76 @@
+import { PencilSimple } from "@phosphor-icons/react/dist/csr/PencilSimple";
 import { useState } from "react";
-import { useI18n } from "../i18n";
-import { formatMoney } from "../backend/presenters";
+import { useI18n, type MessageKey } from "../i18n";
 import type { LifeControl } from "./useStudyLife";
 
-export function TaskForm({ control, preview }: { control: LifeControl; preview: boolean }) {
+const CURRENCIES = ["THB", "CNY", "USD", "GBP", "AUD", "SGD", "JPY", "MYR", "EUR"];
+export const EXPENSE_CATEGORIES = ["food", "transport", "housing", "study", "shopping", "fun", "health", "other"] as const;
+
+/** New to-do, on its own page. */
+export function TaskForm({ control, preview, onDone }: { control: LifeControl; preview: boolean; onDone: () => void }) {
   const { t } = useI18n();
-  const [open, setOpen] = useState(false);
   const [task, setTask] = useState({ title: "", due_date: "", amount: "", currency: "THB", source_text: "" });
   const submit = async () => {
-    try { await control.run("planning/life/tasks/", { ...task, due_date: task.due_date || null, amount: task.amount || null });
-      setTask({ title: "", due_date: "", amount: "", currency: "THB", source_text: "" }); setOpen(false); } catch { /* control error */ }
+    try { await control.run("planning/life/tasks/", { ...task, due_date: task.due_date || null, amount: task.amount || null }); onDone(); }
+    catch { /* control error */ }
   };
-  return <section><button className="secondary" disabled={preview} onClick={() => setOpen(!open)}>{t("life.add")}</button>
-    {open && <form className="life-form" onSubmit={e => { e.preventDefault(); void submit(); }}><fieldset disabled={control.busy || preview}>
-      <label>{t("life.taskTitle")}<input required maxLength={200} value={task.title} onChange={e => setTask({ ...task, title: e.target.value })} /></label>
-      <label>{t("life.deadline")}<input type="date" value={task.due_date} onChange={e => setTask({ ...task, due_date: e.target.value })} /></label>
-      <details><summary>{t("life.source")}</summary><label>{t("life.source")}<textarea maxLength={4000} value={task.source_text}
-        onChange={e => setTask({ ...task, source_text: e.target.value })} /></label><p className="panel-muted">{t("life.sourceHint")}</p></details>
-      <details><summary>{t("life.amount")}</summary>
-        <label>{t("life.amount")}<input type="number" min="0" step="0.01" value={task.amount} onChange={e => setTask({ ...task, amount: e.target.value })} /></label>
-        <label>{t("life.currency")}<select value={task.currency} onChange={e => setTask({ ...task, currency: e.target.value })}>
-          {["THB", "CNY", "USD", "GBP", "AUD", "SGD", "JPY", "MYR", "EUR"].map(c => <option key={c}>{c}</option>)}</select></label></details>
-      <button className="primary">{t("life.save")}</button></fieldset></form>}</section>;
+  return <form className="life-form" onSubmit={e => { e.preventDefault(); void submit(); }}><fieldset disabled={control.busy || preview}>
+    <label>{t("life.taskTitle")}<input required maxLength={200} value={task.title} onChange={e => setTask({ ...task, title: e.target.value })} /></label>
+    <label>{t("life.deadline")}<input type="date" value={task.due_date} onChange={e => setTask({ ...task, due_date: e.target.value })} /></label>
+    <div className="life-form-pair">
+      <label>{t("life.amount")}<input type="number" min="0" step="0.01" value={task.amount} onChange={e => setTask({ ...task, amount: e.target.value })} /></label>
+      <label>{t("life.currency")}<select value={task.currency} onChange={e => setTask({ ...task, currency: e.target.value })}>
+        {CURRENCIES.map(c => <option key={c}>{c}</option>)}</select></label>
+    </div>
+    <label>{t("life.source")}<textarea maxLength={4000} rows={3} value={task.source_text} onChange={e => setTask({ ...task, source_text: e.target.value })} /></label>
+    <p className="panel-muted">{t("life.sourceHint")}</p>
+    <button className="primary">{t("life.save")}</button></fieldset></form>;
 }
 
-export function LifeBudget({ control, preview }: { control: LifeControl; preview: boolean }) {
-  const { t, lang } = useI18n();
+/** Spending entry, on its own page: amount, a category chip and an optional note. */
+export function ExpenseForm({ control, preview, currency, onDone }: { control: LifeControl; preview: boolean; currency: string; onDone: () => void }) {
+  const { t } = useI18n();
+  const [amount, setAmount] = useState(""), [note, setNote] = useState(""), [category, setCategory] = useState("");
+  const submit = async () => {
+    try { await control.run("planning/expenses/record/", { amount: Number(amount).toFixed(2), currency, note, ...(category ? { category } : {}) }); onDone(); }
+    catch { /* control error */ }
+  };
+  return <form className="life-form" onSubmit={e => { e.preventDefault(); void submit(); }}><fieldset disabled={control.busy || preview}>
+    <label>{t("plan.expense.amount")} · {currency}<input required inputMode="decimal" value={amount}
+      onChange={e => setAmount(e.target.value.replace(/[^\d.]/g, ""))} placeholder="0.00" /></label>
+    <div className="panel-chips" role="group" aria-label={t("plan.expense.category")}>{EXPENSE_CATEGORIES.map(item =>
+      <button type="button" key={item} aria-pressed={category === item} onClick={() => setCategory(category === item ? "" : item)}>{t(`plan.cat.${item}` as MessageKey)}</button>)}</div>
+    <label>{t("plan.expense.note")}<input maxLength={200} value={note} onChange={e => setNote(e.target.value)} /></label>
+    <button className="primary" disabled={!Number(amount)}>{t("plan.expense.save")}</button></fieldset></form>;
+}
+
+/** The month's budget, edited in place in the summary card. */
+export function BudgetEdit({ control, preview }: { control: LifeControl; preview: boolean }) {
+  const { t } = useI18n();
   const [editing, setEditing] = useState(false), [amount, setAmount] = useState("");
-  const [spent, setSpent] = useState(""), [note, setNote] = useState("");
   const budget = control.data?.budget;
-  if (!budget) return <p className="panel-muted">{t("life.before")}</p>;
-  const money = (v: string) => formatMoney(v, budget.currency, lang);
-  const submitBudget = async () => {
-    try { await control.run("planning/life/budget/", { month: budget.month, amount, expected_version: budget.budget_version }); setEditing(false); } catch { /* control error */ }
+  if (!budget) return null;
+  const submit = async () => {
+    try { await control.run("planning/life/budget/", { month: budget.month, amount, expected_version: budget.budget_version }); setEditing(false); }
+    catch { /* control error */ }
   };
-  const submitExpense = async () => {
-    try { await control.run("planning/expenses/record/", { amount: spent, currency: budget.currency, note }); setSpent(""); setNote(""); } catch { /* control error */ }
-  };
-  return <section className="life-budget"><h3>{t("life.budget")} · {budget.month}</h3>
-    <dl className="assessment-facts"><div><dt>{t("life.budgetAmount")}</dt><dd>{budget.budget_known ? money(budget.budget) : t("simple.unknown")}</dd></div>
-      <div><dt>{t("life.spent")}</dt><dd>{money(budget.spent)}</dd></div><div><dt>{t("life.remaining")}</dt>
-        <dd>{budget.budget_known && !budget.unconverted?.length ? money(budget.remaining) : t("simple.unknown")}</dd></div></dl>
-    <p className="panel-muted">{t("life.budgetHint")}</p>
-    {budget.unconverted?.length ? <p>{t("simple.missingFx")}</p> : null}
-    {budget.budget_source === "estimate" && <p className="panel-muted">{t("life.budgetEstimate")}</p>}
-    <button className="secondary" disabled={preview} onClick={() => { setAmount(budget.budget_known ? budget.budget : ""); setEditing(!editing); }}>{t("life.editBudget")}</button>
-    {editing && <form className="life-form" onSubmit={e => { e.preventDefault(); void submitBudget(); }}>
-      <label>{t("life.budgetAmount")} · {budget.currency}<input required type="number" min="0" step="0.01" value={amount} onChange={e => setAmount(e.target.value)} /></label>
-      <button className="primary" disabled={control.busy || preview}>{t("life.save")}</button></form>}
-    <details><summary>{t("life.expense")}</summary><form className="life-form" onSubmit={e => { e.preventDefault(); void submitExpense(); }}>
-      <label>{t("life.expenseAmount")} · {budget.currency}<input required type="number" min="0.01" step="0.01" value={spent} onChange={e => setSpent(e.target.value)} /></label>
-      <label>{t("life.expenseNote")}<input maxLength={200} value={note} onChange={e => setNote(e.target.value)} /></label>
-      <button className="primary" disabled={control.busy || preview}>{t("life.save")}</button></form></details>
-    {budget.recent?.slice(0, 3).map(expense => <div className="life-row" key={expense.id}>
-      <span>{expense.spent_on} · {expense.note} · {formatMoney(expense.amount, expense.currency, lang)}</span>
-      <button className="link-button" disabled={control.busy || preview} onClick={() => void control.run("planning/life/undo-expense/", { expense_id: expense.id }).catch(() => {})}>{t("life.undoExpense")}</button></div>)}
-  </section>;
+  if (!editing) return <button type="button" className="life-icon-button" aria-label={t("life.editBudget")} title={t("life.editBudget")} disabled={preview}
+    onClick={() => { setAmount(budget.budget_known ? budget.budget : ""); setEditing(true); }}><PencilSimple size={16} aria-hidden="true" /></button>;
+  return <form className="life-inline-form" onSubmit={e => { e.preventDefault(); void submit(); }}>
+    <label className="sr-only" htmlFor="life-budget-amount">{t("life.budgetAmount")}</label>
+    <input id="life-budget-amount" required autoFocus type="number" min="0" step="0.01" value={amount} onChange={e => setAmount(e.target.value)} />
+    <span>{budget.currency}</span>
+    <button className="primary" disabled={control.busy}>{t("life.save")}</button>
+    <button type="button" className="secondary" onClick={() => setEditing(false)}>{t("life.cancel")}</button>
+  </form>;
 }
 
-export function LifeClock({ control, preview }: { control: LifeControl; preview: boolean }) {
+/** Moves the shared simulated date forward (demo only), on its own page. */
+export function ClockForm({ control, preview, onDone }: { control: LifeControl; preview: boolean; onDone: () => void }) {
   const { t } = useI18n();
   const [date, setDate] = useState("");
-  return <details><summary>{t("life.clock")}</summary><p className="panel-muted">{t("life.clockHint")}</p>
-    <form className="life-form" onSubmit={e => { e.preventDefault(); void control.run("planning/life/clock/", { date }).catch(() => {}); }}>
-      <label>{t("life.date")}<input type="date" required min={control.data?.today} value={date} onChange={e => setDate(e.target.value)} /></label>
-      <button className="secondary" disabled={control.busy || preview}>{t("life.advance")}</button></form></details>;
+  return <form className="life-form" onSubmit={e => { e.preventDefault(); void control.run("planning/life/clock/", { date }).then(onDone).catch(() => {}); }}>
+    <p className="panel-muted">{t("life.clockHint")}</p>
+    <label>{t("life.date")}<input type="date" required min={control.data?.today} value={date} onChange={e => setDate(e.target.value)} /></label>
+    <button className="primary" disabled={control.busy || preview}>{t("life.advance")}</button></form>;
 }

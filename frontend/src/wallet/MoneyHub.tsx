@@ -1,15 +1,17 @@
 import { useEffect, useId, useState } from "react";
 import { useI18n, type MessageKey } from "../i18n";
-import { PaymentsApp } from "../payments/PaymentsApp";
+import { PlanBillsPay } from "./PlanBillsPay";
 import { useToolActive, useWorkspace } from "../workspace/context";
 import { WalletApp, type WalletTab } from "./WalletApp";
 
 type Tab = "balances" | "convert" | "remit" | "pay" | "history";
 type Records = "orders" | "ledger" | "payments";
+// Exchange and transfers are opened from the balance view, so they are not tabs of their own.
 const TABS: { key: Tab; label: MessageKey }[] = [
-  { key: "balances", label: "wp.tab.balances" }, { key: "convert", label: "wp.tab.convert" }, { key: "remit", label: "wp.tab.remit" },
-  { key: "pay", label: "money.tab.pay" }, { key: "history", label: "wp.tab.history" },
+  { key: "balances", label: "wp.tab.balances" }, { key: "pay", label: "money.tab.pay" }, { key: "history", label: "wp.tab.history" },
 ];
+/** The tab that stays highlighted: exchange and transfers belong to the balance view. */
+const tabOf = (tab: Tab): Tab => tab === "convert" || tab === "remit" ? "balances" : tab;
 const RECORDS: { key: Records; label: MessageKey }[] = [
   { key: "orders", label: "wp.orders" }, { key: "payments", label: "money.records.payments" }, { key: "ledger", label: "wp.ledger" },
 ];
@@ -40,25 +42,29 @@ export function MoneyHub({ preview, onExit }: { preview: boolean; onExit: () => 
     if (active && target && (target.kind === "wallet" || target.kind === "payments")) setTab(tabFor(target.kind, target.section));
   }, [active, target?.kind, target?.section]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const paymentsShown = tab === "pay" || tab === "history" && records === "payments";
+  // The pay tab pays the study plan's bills, and its records list what was paid.
+  const paymentsShown = tab === "history" && records === "payments";
   const walletTab: WalletTab = tab === "pay" ? "balances" : tab;
   return <div className="money-hub">
     <div className="panel-bar">
       <div className="panel-steps is-segments" role="tablist" aria-label={t("money.title")}>
-        {TABS.map(item => <button key={item.key} type="button" role="tab" id={`${id}-${item.key}`} aria-selected={tab === item.key}
+        {TABS.map(item => <button key={item.key} type="button" role="tab" id={`${id}-${item.key}`} aria-selected={tabOf(tab) === item.key}
           aria-controls={`${id}-body`} onClick={() => setTab(item.key)}>{t(item.label)}</button>)}
       </div>
     </div>
     {tab === "history" && <div className="money-records panel-chips" role="group" aria-label={t("wp.tab.history")}>
       {RECORDS.map(item => <button key={item.key} type="button" aria-pressed={records === item.key} onClick={() => setRecords(item.key)}>{t(item.label)}</button>)}
     </div>}
-    <div className="money-body" id={`${id}-body`} role="tabpanel" aria-labelledby={`${id}-${tab}`}>
-      <div className="money-part" hidden={paymentsShown}>
+    <div className="money-body" id={`${id}-body`} role="tabpanel" aria-labelledby={`${id}-${tabOf(tab)}`}>
+      <div className="money-part" hidden={tab !== "pay"}>
+        <PlanBillsPay preview={preview} />
+      </div>
+      <div className="money-part" hidden={paymentsShown || tab === "pay"}>
         <WalletApp preview={preview} onExit={onExit} bare tab={walletTab} historyView={records === "ledger" ? "ledger" : "orders"}
           onTab={next => setTab(next)} />
       </div>
       <div className="money-part" hidden={!paymentsShown}>
-        <PaymentsApp preview={preview} onExit={onExit} mode={tab === "history" ? "history" : "flow"} onFlow={() => setTab("pay")} />
+        <PlanBillsPay preview={preview} mode="history" />
       </div>
     </div>
   </div>;

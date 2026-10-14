@@ -25,8 +25,16 @@ def bill_rows(user, plan):
     return [{"source_key": f"bill:{b.id}", "kind": "bill", "title": b.label,
              "due_date": b.due_date, "amount": str(b.amount), "currency": b.currency,
              "done": b.status == "PAID", "estimated": True, "source_version": b.status,
-             "target": "bills"}
-            for b in PlanBill.objects.filter(owner=user, plan=plan).exclude(kind="loan")]
+             "target": "bills", "paid_by_loan": _loan_part(b)}
+            for b in PlanBill.objects.filter(owner=user, plan=plan).exclude(kind="loan").select_related("payout")]
+
+
+def _loan_part(bill):
+    """THB the signed loan pays (or will pay) the school for this bill, or None."""
+    try:
+        return str(bill.payout.amount)
+    except PlanBill.payout.RelatedObjectDoesNotExist:
+        return None
 
 
 def loan_rows(user):
@@ -53,7 +61,8 @@ def source_rows(user, plan):
             "title": {"en": "Confirm arrival and enrollment", "zh": "核对报到与入学进度"},
             "due_date": plan.start_date, "amount": None, "currency": "", "done": False,
             "estimated": True, "source_version": plan.version, "target": "enrollment"})
-    return rows + loan_rows(user)
+    from .credit import rows as credit_rows
+    return rows + loan_rows(user) + (credit_rows(user) if plan else [])
 
 
 def balances(user):

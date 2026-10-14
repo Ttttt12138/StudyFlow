@@ -4,6 +4,7 @@ import json
 from decimal import Decimal
 
 from . import assessment, in_school, services
+from .credit import line as credit_line
 from .life_sources import balances, source_rows
 from .models import ReminderPreference
 
@@ -86,4 +87,5 @@ def read(user):
     return {"today": today.isoformat(), "is_simulated": True, "in_app_only": True,
         "items": rows, "upcoming": active[:3], "attention_count": len(active),
         "unread_count": sum(r["unread"] for r in active), "funding": plan_funding,
-        "budget": in_school.spending(user) if plan and plan.status == "ENROLLED" else None}
+        "budget": in_school.spending(user) if plan and plan.status == "ENROLLED" else None,
+        "credit": credit_line(user, plan) if plan else None}

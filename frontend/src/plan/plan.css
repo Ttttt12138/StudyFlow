@@ -36,6 +36,13 @@
 .plan-bubble-user p { margin: 0; padding: 11px 16px; border-radius: 18px 18px 4px 18px; background: var(--accent); color: #ffffff; font-size: 15px; }
 .plan-bubble-agent { align-self: stretch; display: flex; flex-direction: column; gap: 10px; }
 .plan-bubble-agent > p { font-size: 15px; line-height: 1.7; }
+.plan-answer { display: flex; flex-direction: column; gap: 8px; font-size: 15px; line-height: 1.7; color: var(--text); }
+.plan-answer p, .plan-answer ul, .plan-answer ol { margin: 0; }
+.plan-answer ul, .plan-answer ol { padding-left: 1.4em; }
+.plan-answer li + li { margin-top: 2px; }
+.plan-answer strong { font-weight: 650; }
+.plan-answer code { padding: 1px 5px; border-radius: 4px; background: var(--surface-2); font-size: 0.9em; }
+.plan-answer a { color: var(--accent); }
 .plan-who { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--text-2); }
 .plan-avatar { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 8px; background: var(--accent); color: #ffffff; }
 .plan-time { font-size: 11px; font-weight: 400; color: var(--text-3); }

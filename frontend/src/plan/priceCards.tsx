@@ -45,7 +45,7 @@ export function PriceCard({ id, name, estimate, actions }: { id: string; name: T
       <div className="price-actions">
         <button type="button" className="link-button" onClick={() => workspace?.open({ kind: "card", cardId: id })}>{t("price.details")}<ArrowRight size={14} aria-hidden="true" /></button>
         {!actions.readOnly && <button type="button" className="primary" disabled={actions.busy}
-          onClick={() => actions.ask(`${t("plan.card.choose")}：${title}`)}>{t("price.chooseGap")}</button>}
+          onClick={() => actions.choose(estimate.school_key, title, estimate.years)}>{t("price.chooseGap")}</button>}
       </div>
     </div>
   </article>;
@@ -86,7 +86,7 @@ export function CompareCard({ id, schools, actions, list }: { id: string; school
           {!column.firstYear && <span className="price-sub">{t("price.perYear", { amount: show(column.total! / Math.max(column.years, 1), column.school.currency, lang).main.replace("≈ ", "") })}</span>}
           {extra !== null && <span className="compare-more">{t("price.more", { amount: show(extra, currency, lang).main.replace("≈ ", "") })}</span>}
           {!actions.readOnly && <button type="button" className="chip" disabled={actions.busy}
-            onClick={() => actions.ask(`${t("plan.card.choose")}：${name}`)}>{t("price.chooseThis")}</button>}
+            onClick={() => actions.choose(column.school.key, name, column.firstYear ? undefined : column.years)}>{t("price.chooseThis")}</button>}
         </li>;
       })}
     </ul>

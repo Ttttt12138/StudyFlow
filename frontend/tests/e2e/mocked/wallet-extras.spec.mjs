@@ -15,7 +15,8 @@ test.describe("wallet conversion and ledger preview", () => {
     page.on("pageerror", error => errors.push(error.message));
     await page.route("**/api/**", route => { apiCalls++; return route.abort(); });
     await page.goto(`${base}/?wallet=preview`);
-    await page.getByRole("tab", { name: "Exchange" }).click();
+    await page.getByRole("tab", { name: "Balances" }).click();
+    await page.locator(".panel-footer-center").getByRole("button", { name: "Exchange", exact: true }).click();
     const convert = page.locator("#wallet-convert");
     await convert.getByRole("heading", { name: "Convert between currencies" }).waitFor();
     await convert.locator("article").getByText("Example route (standard)").waitFor();
@@ -37,11 +38,13 @@ test.describe("wallet conversion and ledger preview", () => {
     await ledger.getByText("append-only").waitFor();
     // WalletApp's own preview still renders around this section.
     await page.getByRole("tab", { name: "Balances" }).click();
-    await page.getByText("THB 52,500.00").first().waitFor();
+    // The balance is the left loop of the wallet/credit figure (available balance; holds are listed below it).
+    await page.locator(".credit-loop .is-wallet").getByText("THB 47,500.00").waitFor();
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
     await page.screenshot({ path: screenshot("wallet-extras-preview-mobile.png"), fullPage: true });
     await page.getByRole("button", { name: "中文" }).click();
-    await page.getByRole("tab", { name: "换汇" }).click();
+    await page.getByRole("tab", { name: "余额" }).click();
+    await page.locator(".panel-footer-center").getByRole("button", { name: "换汇", exact: true }).click();
     await convert.getByRole("heading", { name: "币种兑换" }).waitFor();
     await page.getByRole("tab", { name: "记录" }).click();
     await ledger.getByRole("row", { name: /资金到账.*\+ USD 1,100\.00/ }).waitFor();
@@ -142,7 +145,8 @@ test.describe("wallet conversion with mocked Django", () => {
     await ledger.getByLabel("Currency").selectOption("all");
 
     // Only held balances with a seeded direction are offered; CNY has no balance.
-    await page.getByRole("tab", { name: "Exchange" }).click();
+    await page.getByRole("tab", { name: "Balances" }).click();
+    await page.locator(".panel-footer-center").getByRole("button", { name: "Exchange", exact: true }).click();
     const from = convert.getByLabel("Convert from");
     assert.deepEqual(await from.locator("option").allTextContents(), ["USD", "THB (home)"]);
     assert.deepEqual(await convert.getByLabel("Convert to").locator("option").allTextContents(), ["THB"]);
@@ -199,7 +203,8 @@ test.describe("wallet conversion with mocked Django", () => {
     await page.route("**/api/v2/**", mock.route);
     await enrolledPlanner(page);
     await page.goto(`${base}/?wallet=1`);
-    await page.getByRole("tab", { name: "Exchange" }).click();
+    await page.getByRole("tab", { name: "Balances" }).click();
+    await page.locator(".panel-footer-center").getByRole("button", { name: "Exchange", exact: true }).click();
     const convert = page.locator("#wallet-convert");
     await convert.getByLabel("Convert from").selectOption("THB");
     assert.deepEqual(await convert.getByLabel("Convert to").locator("option").allTextContents(), ["CNY"]);

@@ -10,6 +10,18 @@ export function useStripHeight(frame: RefObject<HTMLDivElement | null>) {
   }, [frame]);
 }
 
+/** Room for the right rail beside the conversation. */
+export function useWideScreen() {
+  const [wide, setWide] = useState(() => window.innerWidth >= 1280);
+  useEffect(() => {
+    const media = matchMedia("(min-width: 1280px)");
+    const resized = () => setWide(media.matches);
+    media.addEventListener("change", resized);
+    return () => media.removeEventListener("change", resized);
+  }, []);
+  return wide;
+}
+
 export function useSmallScreen() {
   const [small, setSmall] = useState(() => window.innerWidth < 1100);
   useEffect(() => {
@@ -21,9 +33,17 @@ export function useSmallScreen() {
   return small;
 }
 
+/** Content of a closed <details> still reports layout boxes in current browsers but cannot take focus; its own summary can. */
+function insideClosedDetails(node: HTMLElement) {
+  for (let closed = node.closest("details:not([open])"); closed; closed = closed.parentElement?.closest("details:not([open])") ?? null) {
+    if (!(node.tagName === "SUMMARY" && node.parentElement === closed)) return true;
+  }
+  return false;
+}
+
 function trapFocus(event: KeyboardEvent, dock: HTMLElement) {
-  const nodes = [...dock.querySelectorAll<HTMLElement>('button, a[href], input, select, textarea, [tabindex="0"]')]
-    .filter(node => !node.closest("[hidden]") && !node.hasAttribute("disabled") && node.getClientRects().length > 0);
+  const nodes = [...dock.querySelectorAll<HTMLElement>('button, a[href], input, select, textarea, summary, [tabindex="0"]')]
+    .filter(node => !node.closest("[hidden]") && !node.hasAttribute("disabled") && node.getClientRects().length > 0 && !insideClosedDetails(node));
   const first = nodes[0], last = nodes.at(-1);
   if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
   else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }

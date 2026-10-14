@@ -58,7 +58,7 @@ function SchoolDetail({ school, actions }: { school: CatalogEntry; actions: Card
     steps={[{ key: "facilities", label: t("plan.card.facilities") }, { key: "food", label: t("plan.card.food") }, { key: "attractions", label: t("plan.card.attractions") }]}
     footer={<><a className="panel-link panel-footer-note" href={school.school.website} target="_blank" rel="noreferrer">{t("plan.card.website")} ↗</a>
       {!actions.readOnly && <><button type="button" className="secondary" disabled={actions.busy} onClick={() => actions.ask(`${name} ${t("plan.card.costOf")}`)}>{t("plan.card.costOf")}</button>
-        <button type="button" className="primary" disabled={actions.busy} onClick={() => actions.ask(`${t("plan.card.choose")}：${name}`)}>{t("plan.card.choose")}</button></>}</>}>
+        <button type="button" className="primary" disabled={actions.busy} onClick={() => actions.choose(school.key, name)}>{t("plan.card.choose")}</button></>}</>}>
     <div className="panel-card-head"><h3 style={{ color: "var(--text)", fontSize: 20 }}>{name}</h3><span className="panel-tag">{t("plan.sample")}</span></div>
     <p className="panel-muted">{pick(school.school.program, lang)} · {pick(school.school.city, lang)}, {pick(school.school.country, lang)}</p>
     <div className="panel-card-head"><h4 className="panel-muted">{t(`plan.card.${tab}`)} · {rows.length}</h4>
@@ -80,7 +80,7 @@ function CostDetail({ name, estimate, actions }: { name: Text; estimate: Estimat
   const lines = usePage(estimate.lines.filter((line) => line.group === tab), 5, page);
   return <ToolPanel label={title} numbered={false} active={tab} onSelect={(key) => { setTab(key); setPage(0); }}
     steps={groups.map((group) => ({ key: group, label: t(`plan.cost.group.${group}`) }))}
-    footer={!actions.readOnly && <button type="button" className="primary" disabled={actions.busy} onClick={() => actions.ask(`${t("plan.card.choose")}：${title}`)}>{t("plan.card.choose")}</button>}>
+    footer={!actions.readOnly && <button type="button" className="primary" disabled={actions.busy} onClick={() => actions.choose(estimate.school_key, title, estimate.years)}>{t("plan.card.choose")}</button>}>
     <div className="panel-card-head"><h3 style={{ color: "var(--text)" }}>{title}</h3><span className="panel-tag">{t("plan.sample")}</span></div>
     <PanelHero label={t("plan.cost.title", { years: estimate.years })} value={money(estimate.total, cur, lang)}>
       <span className="panel-muted">{t("plan.cost.range")}: {money(estimate.total_low, cur, lang)} – {money(estimate.total_high, cur, lang)} · {t("plan.cost.estimated", { share: percent(estimate.estimated_share, lang) })}</span></PanelHero>

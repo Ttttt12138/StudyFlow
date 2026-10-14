@@ -1,6 +1,7 @@
 """Stage two: fixed bills from the confirmed plan, day-to-day spending and the monthly budget."""
 
 import calendar
+import math
 from collections import defaultdict
 from datetime import date
 from decimal import Decimal
@@ -55,7 +56,8 @@ def generate_bills(user, plan):
         amount = Decimal(line["amount"])
         if amount <= 0:
             continue
-        for year in range(plan.years):
+        course_end = add_months(plan.start_date, round(plan.years * 12))
+        for year in range(math.ceil(plan.years)):
             year_start = add_months(plan.start_date, 12 * year)
             if line["period"] == "once":
                 dues = [(plan.start_date, "once")] if year == 0 else []
@@ -65,6 +67,8 @@ def generate_bills(user, plan):
                 dues = [(add_months(year_start, k * 12 // semesters), f"y{year + 1}s{k + 1}")
                         for k in range(semesters)]
             for due, tag in dues:
+                if due >= course_end:  # the last half year of a 3.5-year course has no second semester
+                    continue
                 _, made = PlanBill.objects.get_or_create(
                     plan=plan, source_id=f"{line['cost_id']}:{tag}"[:60],
                     defaults={"owner": user, "kind": line["category"], "label": line["label"], "due_date": due,
@@ -219,3 +223,49 @@ def summary(user, detail=True):
             "plan": services.plan_record(plan, services.home_currency(user))["plan"],
             "upcoming_bills": upcoming[:8], "overdue": [b for b in upcoming if b["due_date"] < today.isoformat()],
             "bill_count": len(upcoming), "spending": spending(user, detail=detail)}
+
+
+def pay_from_wallet(user, data, bill):
+    """Pays one plan bill from the demo wallet in the bill's currency, then records it as paid.
+
+    A bill the signed loan pays to the school is not paid again. Home-currency payments also settle a confirmed
+    expense in the financial state, as other wallet payments do."""
+    from copy import deepcopy
+
+    from finance import money
+    from finance.execution_services import available
+    from finance.wallets import balance_of, post, wallet
+    from finance.workflow_common import append_state, current
+
+    from .models import LoanPayout
+
+    require(bill.status == "DUE", "BILL_ALREADY_PAID")
+    require(not LoanPayout.objects.filter(bill=bill).exists(), "BILL_PAID_BY_LOAN")
+    item = wallet(user)
+    home = bill.currency == money.home_currency()
+    require((available(item) if home else balance_of(item, bill.currency)) >= bill.amount, "WALLET_BALANCE_TOO_LOW")
+    entry = post(item, bill.currency, -bill.amount, {"plan_bill": bill})
+    if home:
+        snapshot = deepcopy(current(user).snapshot)
+        label = bill.label.get("en") if isinstance(bill.label, dict) else str(bill.label)
+        snapshot["events"].append({"id": f"bill:{bill.id}", "label": (label or "Plan bill")[:120], "kind": "expense",
+                                   "amount": money.fmt(bill.amount, bill.currency), "date": item.clock.isoformat(),
+                                   "certainty": "confirmed", "settled_sequence": entry.sequence})
+        append_state(user, snapshot, user, "state.plan_bill_paid")
+    pay_bill(user, {}, bill)
+    bill.refresh_from_db()
+    return {"bill": bill_record(bill), "balance": money.fmt(balance_of(item, bill.currency), bill.currency),
+            "currency": bill.currency, "is_simulated": True}
+
+
+def wallet_bills(user):
+    """The plan's bills for the wallet's pay tab: unpaid first, each with who pays it."""
+    from .models import LoanPayout
+
+    plan = services.plan_for(user)
+    if plan is None:
+        return {"bills": [], "is_simulated": True}
+    loan = set(LoanPayout.objects.filter(plan=plan).values_list("bill_id", flat=True))
+    rows = [{**bill_record(b), "paid_by_loan": b.id in loan}
+            for b in PlanBill.objects.filter(owner=user, plan=plan).exclude(kind="loan").order_by("status", "due_date")]
+    return {"bills": rows, "is_simulated": True}

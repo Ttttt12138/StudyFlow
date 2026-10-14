@@ -13,5 +13,17 @@
   "gap": null,
   "first_gap_date": null
  },
- "budget": null
+ "budget": null,
+ "credit": {
+  "currency": "THB",
+  "limit": "0.00",
+  "used": "0.00",
+  "available": "0.00",
+  "monthly_room": null,
+  "basis_known": false,
+  "term_days": 30,
+  "cap": "20000.00",
+  "is_simulated": true,
+  "charges": []
+ }
 }

@@ -36,6 +36,12 @@ export type Plan = {
   total?: string; currency?: string; converted?: Converted; available?: string | null; gap?: string | null; loan?: Loan;
 };
 
+/** Sidebar history (GET planning/history/): price lookups of every conversation, and the latest three school drafts. */
+export type HistoryPrice = { id: string; conversation_id: string; created_at: string; card: Card };
+export type PlanDraftItem = { id: string; school_key: string; name: Text | null; years: number; total: string | null; currency: string | null;
+  available_funds: string | null; funds_currency: string | null; current: boolean; updated_at: string;
+  loan: { principal: string | null; months?: number; product?: string } | null };
+export type PlanHistory = { prices: HistoryPrice[]; drafts: PlanDraftItem[]; draft_limit: number };
 export type Bill = { id: string; kind: string; label: Text; due_date: string; amount: string; currency: string; status: "DUE" | "PAID"; paid_at: string | null };
 export type Expense = { id: string; spent_on: string; category: string; amount: string; currency: string; note: string; via_agent: boolean };
 export type Spending = { month: string; currency: string; spent: string; budget: string; remaining: string; over_budget: boolean;

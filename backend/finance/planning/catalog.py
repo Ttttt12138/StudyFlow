@@ -52,7 +52,7 @@ class School(Contract):
     language: str = Field(max_length=40)
     website: HttpUrl
     # Typical length of the bachelor's programme; estimates default to it.
-    duration_years: int | None = Field(default=None, ge=1, le=6)
+    duration_years: float | None = Field(default=None, ge=1, le=6, multiple_of=0.5)
     duration_months: int | None = Field(default=None, ge=1, le=72)
     total_semesters: int | None = Field(default=None, ge=1, le=24)
 

@@ -187,12 +187,11 @@ class PlanningRules:
         if m.ambiguous:
             if m.facts and m.focus and not _tried(context, "save_plan"):
                 return self._save(context, m)
-            labels = {"available_funds": ("可用资金", "available funds"), "monthly_income": ("月收入", "monthly income"),
-                      "monthly_expenses": ("每月支出", "monthly expenses"), "existing_repayments": ("已有还款", "existing repayments"),
+            labels = {"available_funds": ("可用资金", "available funds"),
                       "support_amount": ("家庭支持", "family support"), "principal": ("拟借金额", "borrowing amount")}
             return self._final(context, "仅需确认：" + "、".join(labels[k][0] for k in m.ambiguous) + "有多个数值或币种，应使用哪一个？其他已知资料会保留。",
                 "Please clarify only " + ", ".join(labels[k][1] for k in m.ambiguous) + ": which amount and currency should I use? Other known details are retained.")
-        guidance = preparation_reply(m.text, (m.plan or {}).get("status"), context.locale)
+        guidance = preparation_reply(m.text, (m.plan or {}).get("status"), context.locale, m.plan)
         if guidance:
             return FinalStep(answer=guidance)
         finance = self._finance(context, m)

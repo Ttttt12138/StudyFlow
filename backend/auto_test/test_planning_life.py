@@ -1,7 +1,9 @@
 from datetime import date
+from decimal import Decimal
 from uuid import uuid4
 
 from django.contrib.auth import get_user_model
+from django.core.cache import cache
 from rest_framework.test import APITestCase
 
 from finance.planning import services
@@ -255,3 +257,120 @@ class PlanningLifeChecklistTests(LifeCase):
         money_check(rows, None, {"first_gap_date": "2027-08-20"})
         self.assertEqual([r["at_risk"] for r in rows], [False, True, False])
         self.assertEqual([r["shortfall_basis"] for r in rows], ["forecast", "forecast", None])
+
+
+class PlanningCreditTests(LifeCase):
+    """Pay-later line: a fixed 2,000 CNY (in THB), used by paying a bill, freed by repaying it."""
+
+    def bill(self, amount, currency="THB", source="credit-bill"):
+        return PlanBill.objects.create(owner=self.user, plan=self.plan, kind="tuition", source_id=source,
+            label={"en": "Tuition", "zh": "学费"}, due_date=date(2027, 8, 8), amount=amount, currency=currency)
+
+    def credit(self):
+        return self.read()["credit"]
+
+    def pay(self, item):
+        return self.client.post("/api/v2/planning/credit/pay/", {"source_key": item["source_key"], "expected_token": item["token"]},
+                                format="json", HTTP_IDEMPOTENCY_KEY=str(uuid4()))
+
+    def limit(self):
+        from finance.planning.credit import fixed_limit
+        return fixed_limit()
+
+    def test_limit_is_a_fixed_2000_cny_without_any_income(self):
+        line = self.credit()
+        thb = Decimal(services.convert("2000.00", "CNY", "THB")["amount"]).quantize(Decimal("0.01"), rounding="ROUND_DOWN")
+        self.assertEqual((line["limit"], line["fixed"]), (f"{thb:.2f}", {"amount": "2000.00", "currency": "CNY"}))
+        self.assertTrue(line["basis_known"])
+        self.assertNotIn("monthly_room", line)
+
+    def test_paying_with_credit_records_the_bill_and_owes_it_back_until_repaid(self):
+        limit = self.limit()
+        bill = self.bill("1000")
+        item = next(i for i in self.read()["items"] if i["kind"] == "bill")
+        self.assertEqual(self.pay(item).status_code, 201)
+        bill.refresh_from_db()
+        self.assertEqual(bill.status, "PAID")
+        line = self.credit()
+        self.assertEqual((line["used"], line["available"]), ("1000.00", f"{limit - 1000:.2f}"))
+        owed = next(i for i in self.read()["items"] if i["kind"] == "credit")
+        self.assertEqual((owed["amount"], owed["done"]), ("1000.00", False))
+        self.assertEqual(self.act(owed, "reschedule", date="2027-12-01").status_code, 400)
+        self.assertEqual(self.act(owed, "complete").status_code, 201)
+        self.assertEqual(self.credit()["available"], f"{limit:.2f}")
+        self.assertTrue(next(i for i in self.read()["items"] if i["kind"] == "credit")["done"])
+
+    def test_over_limit_foreign_currency_and_stale_tokens_are_refused(self):
+        self.bill(f"{self.limit() + 1:.2f}", source="big")
+        item = next(i for i in self.read()["items"] if i["kind"] == "bill")
+        self.assertEqual(self.pay(item).status_code, 400)
+        PlanBill.objects.all().delete()
+        self.bill("100", currency="JPY", source="yen")
+        item = next(i for i in self.read()["items"] if i["kind"] == "bill")
+        self.assertEqual(self.pay(item).status_code, 400)
+        self.assertEqual(self.pay({**item, "token": "stale"}).status_code, 409)
+        from finance.planning.models import CreditCharge
+        self.assertFalse(CreditCharge.objects.exists())
+
+
+class WalletBillPaymentTests(APITestCase):
+    """The wallet's pay tab lists the plan's bills and pays them from the demo wallet after a password step-up."""
+    PASSWORD = "bill-pay-pass-17"
+
+    def setUp(self):
+        from finance.planning.assessment import ensure_demo_state
+        from finance.workflow_models import DemoWallet
+
+        cache.clear()
+        self.user = get_user_model().objects.create_user("bill-payer", password=self.PASSWORD)
+        self.client.force_authenticate(self.user)
+        services.save_plan(self.user, {"school_key": "psu-phuket"})
+        self.plan = services.plan_for(self.user)
+        ensure_demo_state(self.user)
+        DemoWallet.objects.filter(owner=self.user).update(balance=Decimal("30000.00"))
+        self.bill = PlanBill.objects.create(owner=self.user, plan=self.plan, kind="tuition", source_id="tuition:y1s1",
+            label={"en": "Tuition", "zh": "学费"}, due_date=date(2027, 8, 8), amount=Decimal("20000.00"), currency="THB")
+
+    def pay(self, bill, token=None):
+        headers = {"HTTP_IDEMPOTENCY_KEY": str(uuid4())}
+        if token:
+            headers["HTTP_X_STEP_UP_TOKEN"] = token
+        return self.client.post(f"/api/v2/planning/bills/{bill.id}/pay-from-wallet/", {}, format="json", **headers)
+
+    def token(self, bill):
+        response = self.client.post("/api/v2/auth/step-up/", {"password": self.PASSWORD, "action": "bill.pay",
+            "target_id": str(bill.id), "amount": str(bill.amount), "currency": bill.currency}, format="json")
+        self.assertEqual(response.status_code, 200, response.data)
+        return response.data["token"]
+
+    def test_bills_are_listed_and_paid_from_the_wallet_after_step_up(self):
+        from finance.models import FinancialState
+        from finance.workflow_models import DemoLedgerEntry, DemoWallet
+
+        listed = self.client.get("/api/v2/planning/wallet-bills/").data["data"]["bills"]
+        self.assertEqual([(b["id"], b["status"], b["paid_by_loan"]) for b in listed], [(str(self.bill.id), "DUE", False)])
+        self.assertNotEqual(self.pay(self.bill).status_code, 201)
+        response = self.pay(self.bill, self.token(self.bill))
+        self.assertEqual(response.status_code, 201, response.data)
+        self.bill.refresh_from_db()
+        self.assertEqual(self.bill.status, "PAID")
+        self.assertEqual(DemoWallet.objects.get(owner=self.user).balance, Decimal("10000.00"))
+        entry = DemoLedgerEntry.objects.get(plan_bill=self.bill)
+        self.assertEqual(entry.amount, Decimal("-20000.00"))
+        events = FinancialState.objects.filter(owner=self.user).order_by("-version").first().snapshot["events"]
+        self.assertEqual(next(e for e in events if e["id"] == f"bill:{self.bill.id}")["settled_sequence"], entry.sequence)
+
+    def test_short_balance_and_loan_paid_bills_are_refused(self):
+        big = PlanBill.objects.create(owner=self.user, plan=self.plan, kind="housing", source_id="housing:y1s1",
+            label={"en": "Housing", "zh": "住宿"}, due_date=date(2027, 8, 8), amount=Decimal("40000.00"), currency="THB")
+        short = self.pay(big, self.token(big))
+        self.assertEqual(short.status_code, 400, short.data)
+        from finance.planning.models import LoanPayout
+        from finance.workflow_models import LoanSimulation, SimulatedApplication
+        loan = LoanSimulation.objects.create(owner=self.user, inputs={}, result={})
+        application = SimulatedApplication.objects.create(owner=self.user, loan=loan, status="DISBURSED")
+        LoanPayout.objects.create(owner=self.user, plan=self.plan, application=application, bill=self.bill,
+                                  amount=self.bill.amount, bill_amount=self.bill.amount, due_date=self.bill.due_date)
+        listed = self.client.get("/api/v2/planning/wallet-bills/").data["data"]["bills"]
+        self.assertTrue(next(b for b in listed if b["id"] == str(self.bill.id))["paid_by_loan"])
+        self.assertEqual(self.pay(self.bill, self.token(self.bill)).status_code, 400)

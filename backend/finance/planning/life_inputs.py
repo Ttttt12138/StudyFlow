@@ -20,6 +20,11 @@ class ReminderActionInput(Input):
     amount = s.DecimalField(max_digits=16, decimal_places=2, min_value=0, required=False, allow_null=True)
 
 
+class CreditPayInput(Input):
+    source_key = s.CharField(max_length=100)
+    expected_token = s.CharField(max_length=64)
+
+
 class StudyBudgetInput(Input):
     month = s.RegexField(r"^\d{4}-(0[1-9]|1[0-2])$")
     amount = s.DecimalField(max_digits=16, decimal_places=2, min_value=0)

@@ -28,7 +28,7 @@ class StudyPlan(OwnedRecord):
     """The school chosen in the planning conversation and how it will be paid for."""
     school_key = models.CharField(max_length=60)
     catalog_version = models.PositiveIntegerField()
-    years = models.PositiveSmallIntegerField(default=1)
+    years = models.FloatField(default=1)  # half-year steps, e.g. 3.5
     available_funds = models.DecimalField(max_digits=16, decimal_places=2, null=True, blank=True)
     funds_currency = models.CharField(max_length=3, blank=True)
     loan = models.ForeignKey("finance.LoanSimulation", null=True, blank=True, on_delete=models.PROTECT)
@@ -114,6 +114,45 @@ class PlanBill(OwnedRecord):
         ]
 
 
+class PlanDraft(OwnedRecord):
+    """A school the student chose, kept so they can switch back to it (planning/drafts.py keeps the latest three)."""
+    school_key = models.CharField(max_length=60)
+    years = models.FloatField()
+    available_funds = models.DecimalField(max_digits=16, decimal_places=2, null=True, blank=True)
+    funds_currency = models.CharField(max_length=3, blank=True)
+    # The assessment inputs last used with this school: funds, borrower and the loan picked.
+    inputs = models.JSONField(default=dict)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-updated_at"]
+        constraints = [models.UniqueConstraint(fields=["owner", "school_key"], name="plan_draft_one_per_school")]
+
+
+PAYOUT_STATUSES = ["SCHEDULED", "PAID"]
+
+
+class LoanPayout(OwnedRecord):
+    """One tranche of a signed planning loan, paid to the school for one plan bill on its due date (simulated).
+
+    Amounts are THB (the loan's currency); `bill_amount` is what it settles in the bill's own currency."""
+    plan = models.ForeignKey(StudyPlan, on_delete=models.PROTECT, related_name="payouts")
+    application = models.ForeignKey("finance.SimulatedApplication", on_delete=models.PROTECT, related_name="payouts")
+    bill = models.OneToOneField(PlanBill, on_delete=models.PROTECT, related_name="payout")
+    amount = models.DecimalField(max_digits=16, decimal_places=2)
+    bill_amount = models.DecimalField(max_digits=16, decimal_places=2)
+    due_date = models.DateField()
+    status = models.CharField(max_length=10, default="SCHEDULED", choices=[(s, s.title()) for s in PAYOUT_STATUSES])
+    paid_on = models.DateField(null=True, blank=True)
+
+    class Meta:
+        ordering = ["due_date", "created_at"]
+        constraints = [
+            models.CheckConstraint(condition=Q(amount__gt=0), name="loan_payout_positive_amount"),
+            models.CheckConstraint(condition=Q(status__in=PAYOUT_STATUSES), name="loan_payout_status_valid"),
+        ]
+
+
 class ExpenseEntry(OwnedRecord):
     """Day-to-day spending the student records by form or by telling the agent."""
     spent_on = models.DateField()
@@ -170,3 +209,18 @@ class StudyMonthBudget(OwnedRecord):
     class Meta:
         constraints = [models.UniqueConstraint(fields=["plan", "month"], name="study_month_budget_unique"),
                        models.CheckConstraint(condition=Q(amount__gte=0), name="study_month_budget_nonnegative")]
+
+
+class CreditCharge(OwnedRecord):
+    """A bill paid with the simulated credit line; it is owed back by `due_date` and frees the line once repaid."""
+    plan = models.ForeignKey(StudyPlan, on_delete=models.PROTECT)
+    bill = models.OneToOneField(PlanBill, on_delete=models.PROTECT, related_name="credit_charge")
+    amount = models.DecimalField(max_digits=16, decimal_places=2)
+    currency = models.CharField(max_length=3)
+    charged_on = models.DateField()
+    due_date = models.DateField()
+    repaid_on = models.DateField(null=True, blank=True)
+    version = models.PositiveIntegerField(default=1)
+
+    class Meta:
+        constraints = [models.CheckConstraint(condition=Q(amount__gt=0), name="credit_charge_positive")]

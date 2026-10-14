@@ -148,11 +148,23 @@ def _add_card(session, tool, arguments, result, status):
     except Exception:  # noqa: BLE001 - a card is a view; it must never undo the tool's effect
         logger.exception("Card for %s could not be built", tool)
         return
-    if card is not None:
-        if card.get("type") == "plan":
-            session.cards = [old for old in session.cards if old.get("type") != "plan"
-                             or old.get("plan", {}).get("id") != card.get("plan", {}).get("id")]
-        session.cards = [*session.cards, json_value(card)]
+    if card is None:
+        return
+    planned = {(old.get("plan") or {}).get("school_key") for old in session.cards if old.get("type") == "plan"}
+    if card.get("type") == "plan":
+        school = (card.get("plan") or {}).get("school_key")
+        # The plan card already carries the chosen school's total, so its cost card would repeat it.
+        session.cards = [old for old in session.cards
+                         if not (old.get("type") == "plan" and old.get("plan", {}).get("id") == card["plan"].get("id"))
+                         and not (old.get("type") == "cost" and old.get("school", {}).get("key") == school)]
+    elif card.get("type") == "cost":
+        school = card.get("school", {}).get("key")
+        if school in planned:
+            return
+        # A retried estimate for the same school replaces the earlier one instead of stacking a duplicate.
+        session.cards = [old for old in session.cards
+                         if not (old.get("type") == "cost" and old.get("school", {}).get("key") == school)]
+    session.cards = [*session.cards, json_value(card)]
 
 
 def run(session, history=None, memory=None):

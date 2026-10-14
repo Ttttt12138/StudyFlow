@@ -105,6 +105,8 @@ def application_decision(actor, data, obj):
 
 
 def disburse(actor, data, obj):
+    from .planning.assessment import planning_loan
+    require(not planning_loan(obj.loan_id), "PLANNING_LOAN_PAID_TO_SCHOOL")
     check_version(obj, data)
     require(obj.status == "APPROVED", "INVALID_STATE")
     require(

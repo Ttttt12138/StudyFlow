@@ -22,8 +22,12 @@ def create_task(user, data, obj=None):
 
 def _complete(user, item, done):
     kind, pk = item["source_key"].split(":", 1)
-    require(kind in ("task", "bill"), "USE_ORIGINAL_ENROLLMENT_OR_REPAYMENT_ACTION")
-    if kind == "task":
+    require(kind in ("task", "bill", "credit"), "USE_ORIGINAL_ENROLLMENT_OR_REPAYMENT_ACTION")
+    if kind == "credit":
+        require(done, "CREDIT_REOPEN_NOT_SUPPORTED")
+        from .credit import repay
+        repay(user, pk)
+    elif kind == "task":
         task = get_object_or_404(StudyTask, owner=user, pk=pk)
         task.done, task.version = done, task.version + 1
         task.save(update_fields=["done", "version"])
@@ -42,7 +46,7 @@ def act(user, data, obj=None):
     action, day = data["action"], data.get("date")
     require(action not in ("snooze", "reschedule") or day is not None, "REMINDER_DATE_REQUIRED")
     require(action != "snooze" or day > services.today_for(user), "SNOOZE_MUST_BE_FUTURE")
-    require(action != "reschedule" or item["kind"] != "loan", "LOAN_DUE_DATE_IS_CONTRACTUAL")
+    require(action != "reschedule" or item["kind"] not in ("loan", "credit"), "LOAN_DUE_DATE_IS_CONTRACTUAL")
     require(action != "set_amount" or item["kind"] in ("task", "bill"), "LOAN_AMOUNT_IS_CONTRACTUAL")
     require(action != "set_amount" or "amount" in data, "REMINDER_AMOUNT_REQUIRED")
     pref, _ = ReminderPreference.objects.get_or_create(owner=user, source_key=data["source_key"])
@@ -100,4 +104,6 @@ def advance_clock(user, data, obj=None):
         profile.demo_date = data["date"]
         profile.save(update_fields=["demo_date"])
         audit(user, user, "planning.demo_date_advanced", profile, {"date": str(data["date"])})
+    from .loan_stage import settle_payouts
+    settle_payouts(user, data["date"])
     return life.read(user)

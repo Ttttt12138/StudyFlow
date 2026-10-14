@@ -8,13 +8,14 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { formatDate, formatMoney, formatRate } from "../backend/presenters";
 import { loadWallet, SessionWalletClient, WalletApiError, type WalletClient } from "./client";
 import { createWalletPreview, previewQuotes, type WalletPreviewScenario } from "./mockAdapter";
+import { CreditLoop } from "./CreditLoop";
 import type { Approval, Order, Quote, WalletSnapshot } from "./types";
 import "./wallet.css";
 import "./walletPanel.css";
 import { WalletExtras } from "./WalletExtras";
 import { TierBadge } from "../services/TierBadge";
 import { PanelAlert, PanelEmpty, PanelFacts, PanelHero, PanelMenu, PanelPager, PanelSheet, PanelSkeleton, ToolPanel, usePage } from "../workspace/ToolPanel";
-import { BarCompare, DateWindow, Donut, StackBar, StepTrack } from "../workspace/PanelCharts";
+import { BarCompare, DateWindow, StackBar, StepTrack } from "../workspace/PanelCharts";
 import { intlLocale, useI18n, type MessageKey } from "../i18n";
 
 const previewStates: WalletPreviewScenario[] = ["submitted", "pending", "refunded", "unknown", "expired", "empty"];
@@ -229,12 +230,7 @@ export function WalletApp({ preview, onExit, tab: shownTab, onTab, historyView: 
   const balances = snapshot.balances?.balances ?? [];
   const homeRow = balances.find((row) => row.is_home) ?? balances[0];
   const orders = usePage(snapshot.orders, 5, orderPage);
-  // Home-currency terms come from the backend's indicative values; rows without one are left out, not estimated.
-  const PALETTE = ["#1677ff", "#ff8a3d", "#91caff", "#722ed1", "#13a8a8"];
-  const composition = balances.map((row, n) => ({ key: row.currency, label: row.currency, color: PALETTE[n % PALETTE.length],
-    value: row.is_home ? Number(row.balance) : Number(row.indicative_home_value ?? 0), display: money(row.balance, row.currency) }));
   const missingIndicative = balances.filter((row) => !row.is_home && Number(row.balance) > 0 && row.indicative_home_value == null);
-  const compositionTotal = composition.reduce((sum, slice) => sum + slice.value, 0).toFixed(2);
   const showOrder = remitView === "order" && !!selectedOrder;
   const notices = <>
     {staleStatus}
@@ -276,8 +272,9 @@ export function WalletApp({ preview, onExit, tab: shownTab, onTab, historyView: 
     {policy === "APPROVAL_REQUIRED" && selectedOrder.effective_status === "CREATED" && <FocusDialog title={t("ws.confirm")} busy={busy} onClose={() => setPolicy("")}><p>{money(selectedOrder.send_amount, selectedOrder.send_currency)} · {selectedOrder.id.slice(0, 8)}</p>{error && <p role="alert" className="error">{error}</p>}<div className="wallet-policy" ref={policyRef} tabIndex={-1}><h4><TierBadge tier="T3"/> {t("wallet.policy.approvalTitle")}</h4><p>{t("wallet.policy.approvalText")}</p>{approval && <p>{t("wallet.policy.approvalStatus")} <strong>{approval.status}</strong> · {t("wallet.policy.expires", { date: stamp(approval.expires_at) })}</p>}{(!approval || ["REJECTED", "EXPIRED"].includes(approval.status)) && <><label>{t("wallet.policy.reason")}<input value={approvalReason} maxLength={500} onChange={(event) => setApprovalReason(event.target.value)}/></label><button className="secondary" disabled={busy || preview || !approvalReason.trim()} onClick={() => void requestApproval()}>{t("wallet.policy.request")}</button></>}</div>{retrySubmit && <button className="secondary" disabled={busy} onClick={() => void loadOrder(selectedOrder.id)}>{t("wallet.order.refresh")}</button>}<button className="secondary" disabled={busy} onClick={() => setPolicy("")}>{t("common.cancel")}</button></FocusDialog>}
     {policy === "STEP_UP_REQUIRED" && selectedOrder.effective_status === "CREATED" && <FocusDialog title={t("ws.confirm")} busy={busy} onClose={() => setPolicy("")}><p>{money(selectedOrder.send_amount, selectedOrder.send_currency)} · {selectedOrder.id.slice(0, 8)}</p>{error && <p role="alert" className="error">{error}</p>}<div className="wallet-policy"><h4><TierBadge tier="T2"/> {t("wallet.policy.stepUpTitle")}</h4><p>{t("wallet.policy.stepUpText")}</p><form onSubmit={(event) => { event.preventDefault(); void stepUpAndSubmit(); }}><label>{t("wallet.policy.password")}<input ref={passwordRef} type="password" autoComplete="current-password"/></label><button type="submit" className="primary" disabled={preview || busy}>{t("wallet.policy.submit")}</button></form></div>{retrySubmit && <button className="secondary" disabled={busy} onClick={() => void loadOrder(selectedOrder.id)}>{t("wallet.order.refresh")}</button>}<button className="secondary" disabled={busy} onClick={() => setPolicy("")}>{t("common.cancel")}</button></FocusDialog>}
   </div>;
-  const footer = tab === "balances" ? <><button type="button" className="secondary" onClick={() => setTab("convert")}>{t("wp.tab.convert")}</button>
-      <button type="button" className="primary" onClick={() => setTab("remit")}>{t("wp.tab.remit")}</button></>
+  // Exchange and transfers start from the balance: two centred actions instead of extra tabs.
+  const footer = tab === "balances" ? <div className="panel-footer-center"><button type="button" className="secondary" onClick={() => setTab("convert")}>{t("wp.tab.convert")}</button>
+      <button type="button" className="primary" onClick={() => setTab("remit")}>{t("wp.tab.remit")}</button></div>
     : tab === "remit" ? showOrder && selectedOrder ? <>
       <button type="button" className="panel-link panel-footer-note" onClick={() => setRemitView("quote")}>{t("wp.newRemit")}</button>
       <button className="secondary" disabled={busy || preview} onClick={() => void loadOrder(selectedOrder.id)}>{t("wallet.order.refresh")}</button>
@@ -310,10 +307,8 @@ export function WalletApp({ preview, onExit, tab: shownTab, onTab, historyView: 
       <div className="panel-card-head"><h2>{t("wallet.balances.title")}</h2><span className="panel-tag">{snapshot.balances?.is_simulated ? t("wallet.balances.simulated") : t("wallet.balances.backendData")}</span></div>
       {snapshot.errors.balances && <PanelAlert message={snapshot.errors.balances} onRetry={() => void refresh()} />}
       {homeRow ? <>
-        <PanelHero label={t("wp.total", { currency: homeRow.currency })} value={money(homeRow.balance, homeRow.currency)}>
-          <span className="panel-muted">{t("wallet.balances.available", { amount: money(homeRow.available_balance, homeRow.currency) })}</span></PanelHero>
-        <Donut label={t("wp.composition")} center={<><span>{t("wp.totalHome")}</span><strong>{money(String(compositionTotal), "")}</strong><span>{homeRow.currency}</span></>}
-          slices={composition} />
+        {/* Balance (left loop) and credit (right loop) as one figure; other currencies and holds are listed below it. */}
+        <CreditLoop client={client} preview={preview} walletAvailable={homeRow.available_balance} currency={homeRow.currency} />
         {missingIndicative.map((row) => <small key={row.currency} className="panel-muted">{t("wp.noIndicative", { currency: row.currency })}</small>)}
         {Number(homeRow.balance) > Number(homeRow.available_balance) && <StackBar label={t("wp.availableVsHeld")} parts={[
           { key: "available", value: Number(homeRow.available_balance), tone: "mint", label: t("wp.available", { amount: money(homeRow.available_balance, homeRow.currency) }) },

@@ -24,3 +24,19 @@ def append_handoff(pending):
         defaults={"conversation": conversation, "goal": "", "locale": conversation.locale,
                   "mode": "system", "status": "COMPLETED",
                   "final_answer": HANDOFFS[status][conversation.locale], "cards": []})
+
+
+def append_confirmed(user, plan):
+    """The same handoff when the plan is confirmed in the panel, in the student's most recent conversation."""
+    from finance.agent_models import AgentSession
+
+    from .models import AgentConversation
+
+    conversation = AgentConversation.objects.filter(owner=user).order_by("-updated_at").first()
+    if conversation is None:
+        return
+    AgentSession.objects.get_or_create(
+        owner=user, idempotency_key=f"handoff:plan:{plan.id}:{plan.version}",
+        defaults={"conversation": conversation, "goal": "", "locale": conversation.locale,
+                  "mode": "system", "status": "COMPLETED",
+                  "final_answer": HANDOFFS["CONFIRMED"][conversation.locale], "cards": []})

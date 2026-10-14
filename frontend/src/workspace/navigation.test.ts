@@ -32,9 +32,9 @@ describe("workspace navigation", () => {
     expect(readWorkspaceRoute("http://localhost/?plan=preview&stage=school&tool=bills")).toEqual({ preview: true, stage: "school", tool: { kind: "life" } });
   });
   it("sends retired tools to where their job lives now", () => {
-    expect(readWorkspaceRoute("http://localhost/?tool=bills&section=expense").tool).toEqual({ kind: "bills", section: "expense" });
-    expect(readWorkspaceRoute("http://localhost/?tool=insights").tool).toEqual({ kind: "spending" });
-    expect(readWorkspaceRoute("http://localhost/?insights=preview")).toEqual({ preview: true, stage: "school", tool: { kind: "spending" } });
+    expect(readWorkspaceRoute("http://localhost/?tool=bills&section=expense").tool).toEqual({ kind: "life", section: "record" });
+    expect(readWorkspaceRoute("http://localhost/?tool=insights").tool).toEqual({ kind: "life" });
+    expect(readWorkspaceRoute("http://localhost/?insights=preview")).toEqual({ preview: true, stage: "school", tool: { kind: "life" } });
     expect(readWorkspaceRoute("http://localhost/?tool=copilot").tool).toEqual({ kind: "agent" });
     expect(planningTools).not.toContain("copilot");
     expect(toolAvailable("life", false)).toBe(true);
@@ -49,10 +49,10 @@ describe("workspace navigation", () => {
     const route = { preview: false, stage: "plan" as const, tool: { kind: "agent" as const, sessionId: "s-12", pendingId: "p-8" } };
     expect(readWorkspaceRoute(`http://localhost${workspaceUrl(route)}`)).toEqual(route);
   });
-  it("restores the requested spending month", () => {
-    const route = { preview: false, stage: "plan" as const, tool: { kind: "spending" as const, month: "2026-10" } };
+  it("opens This month for old spending links and the expense form for record links", () => {
+    expect(readWorkspaceRoute("http://localhost/?tool=spending&month=2026-10").tool).toEqual({ kind: "life" });
+    const route = { preview: false, stage: "plan" as const, tool: { kind: "life" as const, section: "record" } };
     expect(readWorkspaceRoute(`http://localhost${workspaceUrl(route)}`)).toEqual(route);
-    expect(readWorkspaceRoute("http://localhost/?tool=spending&month=2026-99").tool).toEqual({ kind: "spending" });
   });
   it("ignores unknown tools and does not route public pages into the workspace", () => {
     expect(readWorkspaceRoute("http://localhost/?tool=not-a-tool").tool).toBeNull();

@@ -1,11 +1,12 @@
 import { useWorkspaceNavigation } from "./useWorkspaceNavigation";
-import { useStripHeight, useSmallScreen, useDockKeyboard } from "./useDockLayout";
+import { useStripHeight, useSmallScreen, useWideScreen, useDockKeyboard } from "./useDockLayout";
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { List } from "@phosphor-icons/react/dist/csr/List";
 import { PlanApp } from "../plan/PlanApp";
 import { ModuleNavContext, type Module } from "../services/ModuleNav";
 import { useI18n, type MessageKey } from "../i18n";
 import { ToolSlot, WorkspaceContext, type PlanState } from "./context";
+import { AccountMenu } from "./AccountMenu";
 import { DockHeader } from "./DockHeader";
 import { ToolSidebar } from "./ToolSidebar";
 import { signOut as endSession } from "./session";
@@ -65,6 +66,7 @@ function WorkspaceBody({ username, preview, onExternal }: { username: string; pr
   const { route, stack, menu, setMenu, expanded, setExpanded, open, close, back } = control;
   const [host, setHost] = useState<HTMLDivElement | null>(null);
   const [bellHost, setBellHost] = useState<HTMLDivElement | null>(null);
+  const [guideHost, setGuideHost] = useState<HTMLElement | null>(null);
   const [signingOut, setSigningOut] = useState(false);
   const [plan, setPlan] = useState<PlanState | null>(null);
   const [collapsed, setCollapsed] = useState(readCollapsed);
@@ -73,6 +75,8 @@ function WorkspaceBody({ username, preview, onExternal }: { username: string; pr
   const dock = useRef<HTMLElement>(null);
   const frame = useRef<HTMLDivElement>(null);
   const small = useSmallScreen();
+  // Wide screens get a right rail beside the conversation for the stage summary; it gives way to an open tool.
+  const wide = useWideScreen();
   const enrolled = plan ? plan.status === "ENROLLED" : null;
   // A money tool asked for before enrollment (an old link, another module's button) waits for the plan, then is refused.
   const blocked = !!route.tool && !toolAvailable(route.tool.kind, enrolled);
@@ -113,11 +117,12 @@ function WorkspaceBody({ username, preview, onExternal }: { username: string; pr
     }, openAssistant: () => { close(); requestAnimationFrame(() => document.querySelector<HTMLTextAreaElement>(".plan-composer textarea")?.focus()); },
   };
   const sidebar = (drawer: boolean) => <ToolSidebar active={tool} status={plan?.status ?? null} gap={!!plan?.gap} drawer={drawer}
+    history={plan?.history ?? null} onOpenDraft={plan?.openDraft}
     compact={!drawer && (collapsed || !!tool)} preview={route.preview} stage={route.stage} account={username} signingOut={signingOut}
     onOpen={open} onClose={close} onToggle={drawer ? () => setMenu(false) : toggleCollapsed}
     onNewChat={() => { setMenu(false); close(); window.dispatchEvent(new Event("studyflow:new-conversation")); }}
     onStage={stage => { setMenu(false); control.setStage(stage); }} onSignOut={() => void signOut()} />;
-  return <ModuleNavContext.Provider value={nav}><WorkspaceContext.Provider value={{ target: tool, host, bellHost, open, close,
+  return <ModuleNavContext.Provider value={nav}><WorkspaceContext.Provider value={{ target: tool, host, bellHost, guideHost, open, close,
     setStage: control.setStage, account: username, reportPlan }}>
     <div ref={frame} className={`student-workspace${tool ? " has-tool" : ""}${expanded ? " tool-expanded" : ""}`}>
       {!small && sidebar(false)}
@@ -131,13 +136,15 @@ function WorkspaceBody({ username, preview, onExternal }: { username: string; pr
           <span className="workspace-stage"><span aria-hidden="true" />{t(STAGE[plan?.status ?? "DRAFT"])}</span>
           {notice && <p className="workspace-notice" role="status">{notice}</p>}
           <div className="workspace-top-end">
-            {username ? <span className="workspace-account">{username}</span>
+            {username ? (route.preview ? <span className="workspace-account">{username}</span>
+              : <AccountMenu account={username} signingOut={signingOut} onSignOut={() => void signOut()} />)
               : <a className="workspace-signin" href={`/auth?next=${encodeURIComponent(window.location.origin + "/")}`}>{t("ws.signIn")}</a>}
             <div className="workspace-bell" ref={setBellHost} />
           </div>
         </header>
-        <main className="workspace-conversation">
+        <main className={`workspace-conversation${wide ? " has-rail" : ""}`}>
           <PlanApp key={`${route.preview}:${route.stage}`} account={username} preview={route.preview} initialStage={route.stage} onExit={close} />
+          {wide && <aside className="workspace-rail" ref={setGuideHost} hidden={!!tool} aria-label={t("guide.rail")} />}
         </main>
       </div>
       <section ref={dock} className="workspace-dock" hidden={!tool} role={small || expanded ? "dialog" : "region"}

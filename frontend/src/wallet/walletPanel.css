@@ -21,3 +21,37 @@
 @media (max-width:600px) { .fx-leg { grid-template-columns:minmax(0, 1fr); } .fx-credit { align-items:flex-start; } }
 .fx-figure .panel-section-title { flex-wrap:wrap; }
 .fx-figure .panel-section-title small { flex-basis:100%; text-align:left; }
+
+/* Credit pay: wallet and credit line as one Möbius band. */
+.credit-loop { display: grid; gap: 8px; }
+.credit-loop .panel-card-head h3 { margin: 0; font-size: 16px; }
+.credit-loop-figure { display: grid; gap: 6px; margin: 0; }
+.credit-loop-figure svg { width: 100%; max-width: 360px; justify-self: center; overflow: visible; }
+.credit-loop-figure path { fill: none; stroke-width: 14; stroke-linecap: round; }
+.credit-loop-wallet { stroke: var(--accent); }
+.credit-loop-credit { stroke: var(--warm); }
+.credit-loop-track { stroke: var(--line-2); }
+.credit-loop-figure .credit-loop-gap { stroke: var(--surface-1); stroke-width: 22; stroke-linecap: butt; }
+.credit-loop-legend { display: grid; grid-template-columns: 1fr auto 1fr; align-items: end; gap: 8px; }
+.credit-loop-legend span { display: grid; gap: 2px; }
+.credit-loop-legend small { color: var(--text-3); font-size: 12px; }
+.credit-loop-legend .is-wallet strong { color: var(--accent); }
+.credit-loop-legend .is-credit { text-align: right; }
+.credit-loop-legend .is-credit strong { color: var(--warm-text); }
+.credit-loop-legend .is-total { text-align: center; }
+.credit-loop-legend .is-total strong { font-size: 18px; }
+.credit-loop-figure .credit-loop-over { stroke-linecap: butt; }
+/* The tab bar's "more" menu sits at the top right of the panel; keep card headings clear of it. */
+.money-hub .panel-card-head { padding-right: 48px; }
+.student-workspace .tool-panel .panel-footer-center > button { min-width: 120px; }
+
+/* Pay tab: the study plan's bills */
+.plan-bills-pay { display: grid; gap: 12px; padding: 16px; }
+.plan-bills-pay .panel-card-head h2 { margin: 0; font-size: 18px; }
+.plan-bills-list { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.plan-bills-list li { display: grid; grid-template-columns: 1fr auto; gap: 6px 12px; align-items: center; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; }
+.plan-bills-list li > span:first-child { display: grid; gap: 2px; min-width: 0; }
+.plan-bills-list li small { color: var(--text-2); font-size: 12px; }
+.plan-bills-list li button { grid-column: 1 / -1; justify-self: end; }
+.plan-bills-amount { font-weight: 700; font-variant-numeric: tabular-nums; }
+.plan-bills-list.is-quiet li { background: var(--surface-2); border-color: transparent; }

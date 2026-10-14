@@ -8,9 +8,9 @@ LIVING = {"housing", "food", "transport", "communications"}
 
 
 def duration(entry, years=None):
-    normal = years is None or years == entry.school.duration_years
-    months = entry.school.duration_months if normal else None
-    months = months or (years or entry.school.duration_years or 1) * 12
+    course = entry.school.duration_months or round((entry.school.duration_years or 1) * 12)
+    normal = years is None or round(years * 12) == course
+    months = course if normal else round(years * 12)
     semesters = entry.school.total_semesters if normal else None
     semesters = semesters or int(Decimal(months * entry.calendar.semesters_per_year) / 12)
     return months, semesters
@@ -91,7 +91,7 @@ def estimate(entry, years=None):
     months, semesters = duration(entry, years)
     return {"school_key": entry.key, "catalog_version": entry.version, "currency": entry.school.currency,
             "program": entry.school.program.model_dump(),
-            "years": months / 12, "duration_months": months, "total_semesters": semesters,
+            "years": months // 12 if months % 12 == 0 else months / 12, "duration_months": months, "total_semesters": semesters,
             "lines": rows, "groups": {g: money(sum((Decimal(r["total"]) for r in known
               if r["group"] == g), Decimal(0))) for g in ("tuition", "living", "essentials")},
             "first_year": money(sum((Decimal(r["per_year"]) for r in known), Decimal(0))),

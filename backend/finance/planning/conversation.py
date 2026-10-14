@@ -14,7 +14,7 @@ from django.db import transaction
 from finance import agent_runner
 from finance.agent_models import AgentPendingAction, AgentSession
 from finance.services import json_value
-from finance.workflow_common import record
+from finance.workflow_common import record, require
 
 from . import catalog, services
 from .models import AgentConversation
@@ -31,10 +31,14 @@ def _memory(conversation):
         plan_info = {k: full.get(k) for k in ("status", "school_key", "years", "start_date", "total",
                                               "currency", "gap")}
         plan_info["has_loan"] = plan.loan_id is not None
+        plan_info["first_month"] = services.first_month(plan)
         from .assessment import latest
         assessment = latest(plan)
         if assessment:
             plan_info["known_planning_inputs"] = assessment.inputs
+            check = assessment.result.get("prequal")
+            if check:
+                plan_info["prequal"] = {k: check.get(k) for k in ("status", "max_principal", "gap", "currency")}
     recent = []
     for turn in conversation.turns.order_by("-created_at")[:6]:
         for step in turn.steps.order_by("-number"):
@@ -131,6 +135,48 @@ def send(conversation, text, key):
         owner=conversation.owner, conversation=conversation, idempotency_key=key, goal=text,
         locale=conversation.locale, mode=settings.STUDYFLOW_AI_MODE)
     agent_runner.run(turn, history=_history_before(conversation, turn), memory=_memory(conversation))
+    conversation.save(update_fields=["updated_at"])
+    return turn, True
+
+
+CHOSEN = {
+    "zh": ("选这所学校：{name}",
+           "已选{name}，按 {years} 年计划，全程约 {total} {currency}。在左侧「我的方案」填上可用资金和每月收支，就能算出资金缺口。"),
+    "en": ("Choose this school: {name}",
+           "{name} is in your plan for {years} years, about {total} {currency} in total. Add your available funds "
+           "and monthly budget in My plan on the left to see the funding gap."),
+}
+
+
+WITHDRAWN = {
+    "zh": "原来按上一所学校申请的模拟贷款已撤回，请在「我的方案」里按新学校重新选择。",
+    "en": " The simulated loan applied for the previous school has been withdrawn; choose again for this school in My plan.",
+}
+
+
+def choose(conversation, school_key, years, key):
+    """The price card's choose button: save the plan as a turn of its own, without a model call."""
+    existing = AgentSession.objects.filter(owner=conversation.owner, idempotency_key=key).first()
+    if existing is not None:
+        return existing, False
+    entry = services.entry_or_404(school_key)
+    asked, answer = CHOSEN[conversation.locale]
+    name = getattr(entry.school.name, conversation.locale)
+    arguments = {"school_key": entry.key, **({"years": years} if years is not None else {})}
+    with transaction.atomic():
+        turn = AgentSession.objects.create(
+            owner=conversation.owner, conversation=conversation, idempotency_key=key,
+            goal=asked.format(name=name), locale=conversation.locale, mode="system", status="COMPLETED")
+        step = SimpleNamespace(tool="save_plan", rationale="Chosen from a price card", arguments_json="")
+        observation = agent_runner._execute(turn, 1, step, {"provider": "system", "purpose": "choose_school"}, arguments)
+        # Roll the turn back with the plan: a refused choice (e.g. already enrolled) leaves no trace.
+        require(observation.status == "OK", (observation.result or {}).get("error", "PLAN_NOT_SAVED"))
+        plan = observation.result["plan"]
+        turn.final_answer = answer.format(name=name, years=plan["years"], currency=plan["currency"],
+                                          total=f"{float(plan['total']):,.0f}")
+        if observation.result.get("withdrawn_application"):
+            turn.final_answer += WITHDRAWN[conversation.locale]
+        turn.save()
     conversation.save(update_fields=["updated_at"])
     return turn, True
 

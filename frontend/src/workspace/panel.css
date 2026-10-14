@@ -16,6 +16,8 @@
 .panel-notices { flex:none; display:grid; gap:6px; padding:10px 20px 0; }
 .panel-notices > * { margin:0; font-size:13px; }
 .panel-body { flex:1; min-height:0; overflow:auto; overscroll-behavior:contain; padding:16px 20px; display:flex; flex-direction:column; gap:14px; scrollbar-width:thin; scrollbar-color:var(--line-2) transparent; }
+.panel-footer-center { flex:1; display:flex; justify-content:center; gap:12px; }
+.panel-footer-center > button { min-width:120px; display:inline-flex; align-items:center; justify-content:center; text-align:center; }
 .panel-footer { flex:none; display:flex; align-items:center; justify-content:flex-end; gap:10px; flex-wrap:wrap; padding:12px 20px 16px; border-top:1px solid #1f23291a; background:linear-gradient(#ffffff00, #ffffffcc 30%); }
 .panel-footer .panel-footer-note { margin-right:auto; font-size:12px; color:var(--text-3); max-width:55%; }
 .tool-panel .primary, .panel-sheet .primary { border:0; border-radius:12px; padding:11px 20px; font-weight:600; background:linear-gradient(145deg, #1677ff, #1677ff); color:#ffffff; box-shadow:0 0 20px #1677ff33; }
@@ -203,3 +205,20 @@
 /* A panel's own "more" menu sits at the end of the hub's tab row instead of taking a row of its own. */
 .money-part .panel-bar:not(:has(.panel-steps)) { position: absolute; top: 12px; right: 16px; z-index: 2; padding: 0; border: 0; background: none; }
 .money-hub > .panel-bar .panel-steps { padding-right: 56px; }
+
+/* Detail pages inside a tool panel (PanelPage) and the rows that open them (PanelLink). */
+.panel-page { display:grid; gap:14px; }
+.panel-page-head { display:grid; gap:8px; }
+.panel-page-head h3 { margin:0; font-size:18px; color:var(--text); }
+.panel-page-back { justify-self:start; display:inline-flex; align-items:center; gap:6px; padding:6px 10px 6px 6px; border:0; border-radius:8px;
+  background:transparent; color:var(--accent); font:inherit; font-size:14px; cursor:pointer; }
+.panel-page-back:hover { background:var(--accent-soft); }
+.panel-page-back:focus-visible { outline:2px solid var(--focus); outline-offset:2px; }
+.panel-page-body { display:grid; gap:12px; min-width:0; }
+.panel-page-link { display:flex; align-items:center; justify-content:space-between; gap:12px; width:100%; padding:12px 14px; border:1px solid var(--line);
+  border-radius:12px; background:var(--surface-1); font:inherit; font-size:14px; color:var(--text); text-align:left; cursor:pointer; }
+.panel-page-link:hover { border-color:var(--accent); }
+.panel-page-link:focus-visible { outline:2px solid var(--focus); outline-offset:2px; }
+.panel-page-link > span { display:grid; gap:2px; min-width:0; }
+.panel-page-link small { color:var(--text-3); font-size:12px; }
+.panel-page-link > svg { flex:none; color:var(--text-3); }

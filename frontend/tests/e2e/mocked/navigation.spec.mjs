@@ -25,7 +25,7 @@ test("guided demo walks nine stops, side trips switch role, public pages hide st
   // then the enrolled stage. Tool stops open beside the conversation, which stays at the stop's stage.
   // Stops 6 and 7 both land in the single wallet & payments tool (the second on its Pay bills tab).
   // Stop 8 (index 7) is the in-school conversation itself: money moves are asked for in the main chat.
-  const stops = [[null, "plan"], ["School comparison", "plan"], ["My plan", "plan"], ["To-dos & payments", "prepare"],
+  const stops = [[null, "plan"], ["School comparison", "plan"], ["My plan", "plan"], ["This month", "prepare"],
     [null, "school"], ["Wallet & payments", "school"], ["Wallet & payments", "school"], [null, "school"], ["Credit record", "school"]];
   for (const [index, [tool, stage]] of stops.entries()) {
     await bar.getByText(`Step ${index + 1} of 9`).waitFor();
@@ -43,10 +43,11 @@ test("guided demo walks nine stops, side trips switch role, public pages hide st
       const menu = await settings(page);
       assert.equal(await menu.getByRole("button", { name: "In school", exact: true }).getAttribute("aria-pressed"), "true");
       await page.keyboard.press("Escape");
-      // Enrolled: the sidebar now offers this month's spending.
-      await page.getByRole("navigation", { name: "Tools" }).getByRole("button", { name: "This month's spending", exact: true }).waitFor();
-      await bar.getByRole("button", { name: /Open this month's spending/ }).click();
-      await page.locator("#workspace-tool-title").getByText("This month's spending").waitFor();
+      // Enrolled: the sidebar adds the wallet, and This month now includes spending.
+      await page.getByRole("navigation", { name: "Tools" }).getByRole("button", { name: "Wallet & payments", exact: true }).waitFor();
+      await bar.getByRole("button", { name: /Open This month/ }).click();
+      await page.locator("#workspace-tool-title").getByText("This month", { exact: true }).waitFor();
+      await page.locator(".life-spending").waitFor();
     }
     if (index === 6) await page.getByRole("tablist", { name: "Wallet & payments" }).getByRole("tab", { name: "Pay bills" }).and(page.locator("[aria-selected=true]")).waitFor();
     if (index === 7) await page.locator(".workspace-stage").getByText("Enrolled").waitFor();

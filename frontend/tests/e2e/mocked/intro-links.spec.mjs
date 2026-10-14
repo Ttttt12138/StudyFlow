@@ -23,8 +23,8 @@ test("intro deep links open the planner preview at a stage, old journey links st
   await page.goto(`${base}/?plan=preview&stage=school`);
   assert.equal(await (await stageButton(page, "In school")).getAttribute("aria-pressed"), "true");
   await page.keyboard.press("Escape");
-  await page.getByRole("navigation", { name: "Tools" }).getByRole("button", { name: "This month's spending", exact: true }).click();
-  await page.locator(".monthly-report").getByRole("heading", { name: /^Spending in / }).waitFor();
+  await page.getByRole("navigation", { name: "Tools" }).getByRole("button", { name: "This month", exact: true }).click();
+  await page.locator(".life-spending").getByRole("heading", { name: "Spending this month" }).waitFor();
 
   // The funding link from /intro opens the funding panel in the consultation stage.
   await page.goto(`${base}/?plan=preview&tool=funding`);

@@ -13,16 +13,16 @@ function acceptsSection(kind: ToolKind, section: string) {
   if (kind === "wallet") return WALLET_SECTIONS.includes(section);
   if (kind === "bills") return section === "expense";
   if (kind === "loans") return /^[a-f0-9-]{36}$/.test(section);
-  return kind === "life" && /^(task|bill|enrollment|loan):[a-f0-9-]{36}(:\d+)?$/.test(section);
+  return kind === "life" && (section === "record" || /^(task|bill|enrollment|loan|credit):[a-f0-9-]{36}(:\d+)?$/.test(section));
 }
 
 /** Price lookup, funding and the to-dos of a confirmed plan: open from the first visit. */
 export const planningTools: readonly ToolKind[] = ["plan", "compare", "funding", "life", "loans", "family"];
 /** Money movement and records: these only appear once the plan is ENROLLED. */
 export const enrolledTools: readonly ToolKind[] = ["bills", "spending", "wallet", "payments", "insights", "trust"];
-/** Retired tools whose job lives elsewhere now: the comparison assistant is the main conversation,
- *  spending insights are the monthly spending panel. */
-const MERGED: Partial<Record<string, ToolKind>> = { copilot: "agent", insights: "spending" };
+/** Retired tools whose job lives elsewhere now: the comparison assistant is the main conversation; spending,
+ *  spending insights and bills are part of "This month". */
+const MERGED: Partial<Record<string, ToolKind>> = { copilot: "agent", insights: "life", spending: "life" };
 
 /** Whether a tool may open. `enrolled` is null while the plan is still loading. */
 export function toolAvailable(kind: ToolKind, enrolled: boolean | null) {
@@ -42,12 +42,12 @@ export function readWorkspaceRoute(href: string): WorkspaceRoute {
   if (tool?.kind === "card" && query.get("card")) tool.cardId = query.get("card")!;
   const section = query.get("section");
   if (tool && section && acceptsSection(tool.kind, section)) tool.section = section;
-  // Bills are listed with the other to-dos; the bills tool itself is only the expense form now.
-  if (tool?.kind === "bills" && !tool.section) tool.kind = "life";
-  if (tool?.kind === "spending" && /^\d{4}-(0[1-9]|1[0-2])$/.test(query.get("month") ?? "")) tool.month = query.get("month")!;
+  // The old bills tool: its list and its expense form both live in "This month" now.
+  if (tool?.kind === "bills") { tool.kind = "life"; if (tool.section === "expense") tool.section = "record"; else delete tool.section; }
   const preview = query.get("plan") === "preview" || query.get("journey") === "preview" || !!legacy && query.get(legacy) === "preview";
-  // A recorded preview of a money tool (old ?wallet=preview links, /intro) shows the enrolled stage it belongs to.
-  const stage = preview && !query.get("stage") && tool && (enrolledTools.includes(tool.kind) || tool.kind === "agent") ? "school" : previewStage(query.get("stage"));
+  // A recorded preview of a money tool (old ?wallet=preview, ?insights=preview links, /intro) shows the enrolled stage it belongs to.
+  const enrolledLink = !!asked && (enrolledTools as readonly string[]).includes(asked);
+  const stage = preview && !query.get("stage") && tool && (enrolledLink || tool.kind === "agent") ? "school" : previewStage(query.get("stage"));
   return { preview, stage, tool };
 }
 

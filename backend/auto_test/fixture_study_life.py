@@ -10,7 +10,7 @@ from rest_framework.test import APITestCase
 
 from finance import execution_services
 from finance.planning import checklist, in_school, services
-from finance.planning.models import PlanBill, PlanningProfile, StudyTask
+from finance.planning.models import PlanBill, PlanningAssessment, PlanningProfile, StudyTask
 from finance.services import save_state
 
 
@@ -37,6 +37,9 @@ class StudyLifeFixture(APITestCase):
                     # As confirm_plan does: bills and the country checklist, with the early steps already done.
                     in_school.generate_bills(user, plan)
                     checklist.seed(user, plan)
+                    # A declared monthly budget, so the recording shows a credit line (one month of the surplus).
+                    PlanningAssessment.objects.create(owner=user, plan=plan, version=1, plan_version=plan.version,
+                        inputs={"repayment": {"income": "30000.00", "living_expenses": "19450.00", "existing_repayments": "0.00"}})
                     finished = plan.start_date + timedelta(days=1) if stage == "school" else today - timedelta(days=14)
                     StudyTask.objects.filter(plan=plan, due_date__lt=finished).update(done=True)
                     StudyTask.objects.create(owner=user, plan=plan, title="补充学校通知日期" if lang == "zh" else "Check the notice deadline",

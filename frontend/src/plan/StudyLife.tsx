@@ -1,13 +1,15 @@
 import { Bell } from "@phosphor-icons/react/dist/csr/Bell";
 import { createPortal } from "react-dom";
 import { useI18n, type MessageKey } from "../i18n";
-import { useEffect, useRef, useState } from "react";
-import { useWorkspace } from "../workspace/context";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useToolRefresh, useWorkspace } from "../workspace/context";
 import { PanelAlert, PanelSkeleton, ToolPanel } from "../workspace/ToolPanel";
 import { formatMoney } from "../backend/presenters";
 import { pick } from "./format";
-import { LifeItemCard } from "./LifeItems";
-import { LifeBudget, LifeClock, TaskForm } from "./LifeForms";
+import { LifeItemDetail, LifeItemRow, titleOf } from "./LifeItems";
+import { BudgetEdit, ClockForm, ExpenseForm, TaskForm } from "./LifeForms";
+import { SpendingPie } from "./MonthlySpending";
+import { PanelPage } from "../workspace/PanelPage";
 import type { LifeControl } from "./useStudyLife";
 import type { LifeItem } from "./lifeTypes";
 import "./life.css";
@@ -61,40 +63,105 @@ export function UpcomingReminders({ control }: { control: LifeControl }) {
   return workspace?.bellHost ? createPortal(bell, workspace.bellHost) : bell;
 }
 
+type View = { page: "list" } | { page: "item"; key: string } | { page: "add" } | { page: "record" } | { page: "clock" };
+type Filter = "soon" | "later" | "done";
+const SOON = new Set(["overdue", "due", "tomorrow", "week", "unknown"]);
+
+/**
+ * "This month": what is due, whether the money is there and what has been spent, on one page. Rows open their own
+ * page (back returns to the list); nothing is folded away.
+ */
 export function StudyLifePanel({ control, preview, ask }: { control: LifeControl; preview: boolean; ask: (text: string) => void }) {
   const { t, lang } = useI18n();
   const workspace = useWorkspace();
   const data = control.data;
-  const loaded = data !== null;
-  const panel = useRef<HTMLDivElement>(null);
+  const [view, setView] = useState<View>({ page: "list" });
+  const [filter, setFilter] = useState<Filter>("soon");
+  const stale = useToolRefresh(control.refresh);
+  // Links into the panel: ?section=<source key> opens that item, ?section=record the expense form.
   const section = workspace?.target?.kind === "life" ? workspace.target.section : undefined;
   useEffect(() => {
-    if (!section) return;
-    const item = Array.from(panel.current?.querySelectorAll<HTMLElement>("[data-source]") ?? []).find(node => node.dataset.source === section);
-    const details = item?.closest("details");
-    if (details) details.open = true;
-    item?.scrollIntoView({ block: "nearest" });
-  }, [section, loaded]);
+    if (section === "record") setView({ page: "record" });
+    else if (section) setView({ page: "item", key: section });
+  }, [section]);
   const open = (item: LifeItem) => {
     if (item.kind === "enrollment") { workspace?.close(); ask(lang === "zh" ? "我已完成报到，确认入学" : "I have completed registration. Confirm enrollment."); }
     else workspace?.open({ kind: "loans", section: item.source_key.split(":")[1] });
   };
-  return <ToolPanel label={t("life.title")}><div className="life-panel" ref={panel}>
-    <p className="panel-muted">{t(preview ? "life.preview" : "life.channel")}</p>
+  const back = () => setView({ page: "list" });
+  const page = (title: string, body: ReactNode) => <ToolPanel label={t("life.title")} notices={stale}><div className="life-panel">
     {control.error && <PanelAlert message={control.error} onRetry={() => void control.refresh()} />}
-    {!data ? <PanelSkeleton /> : <><p>{t("life.date")}: <strong>{data.today}</strong></p>
-      <TaskForm control={control} preview={preview} />
-      <section><h3>{t("life.recent")}</h3>{data.upcoming.map(item => <LifeItemCard key={item.source_key} item={item} control={control} preview={preview} onOpen={open} />)}
-        {!data.upcoming.length && <p>{t("life.empty")}</p>}</section>
-      <details><summary>{t("life.all")} ({data.items.length})</summary>
-        {data.items.filter(item => !data.upcoming.some(r => r.source_key === item.source_key)).map(item =>
-          <LifeItemCard key={item.source_key} item={item} control={control} preview={preview} onOpen={open} />)}</details>
-      <section><h3>{t("life.forecast")}</h3>
-        {data.funding.current ? <><p>{data.funding.as_of} → {data.funding.end_date}</p>
-          <p>{t("life.gap")}: <strong>{formatMoney(data.funding.gap, "THB", lang)}</strong></p><p className="panel-muted">{t("life.forecastHint")}</p></>
-          : <p>{t("life.stale")}{data.funding.as_of && ` (${data.funding.as_of})`}</p>}
-        <button className="link-button" onClick={() => workspace?.open({ kind: "funding" })}>{t("life.plan")}</button></section>
-      <LifeBudget control={control} preview={preview} /><LifeClock control={control} preview={preview} />
+    <PanelPage title={title} onBack={back}>{body}</PanelPage></div></ToolPanel>;
+
+  if (data && view.page === "item") {
+    const item = data.items.find(row => row.source_key === view.key);
+    if (item) return page(titleOf(item, lang), <LifeItemDetail item={item} control={control} preview={preview} onOpen={open} />);
+  }
+  if (view.page === "add") return page(t("life.add"), <TaskForm control={control} preview={preview} onDone={back} />);
+  if (view.page === "clock") return page(t("life.clock"), <ClockForm control={control} preview={preview} onDone={back} />);
+  if (data?.budget && view.page === "record") return page(t("plan.expense.title"),
+    <ExpenseForm control={control} preview={preview} currency={data.budget.currency} onDone={back} />);
+
+  const gapDate = data?.funding.first_gap_date ?? null;
+  const open7 = data ? data.items.filter(item => !item.done && SOON.has(item.stage)) : [];
+  const groups: Record<Filter, LifeItem[]> = { soon: open7,
+    later: data ? data.items.filter(item => !item.done && !SOON.has(item.stage)) : [], done: data ? data.items.filter(item => item.done) : [] };
+  const budget = data?.budget;
+  const currency = budget?.currency ?? open7.find(item => item.amount !== null)?.currency ?? "THB";
+  const dueSoon = open7.filter(item => item.amount !== null && item.stage !== "unknown" && item.currency === currency);
+  const dueSum = dueSoon.reduce((sum, item) => sum + Number(item.amount), 0);
+  const short = data ? data.items.filter(item => !item.done && item.at_risk) : [];
+  const walletChecked = data?.items.some(item => !item.done && item.shortfall_basis === "wallet");
+  const used = budget && budget.budget_known && Number(budget.budget) > 0 ? Math.min(100, Number(budget.spent) / Number(budget.budget) * 100) : 0;
+  const money = (value: string | number, cur = currency) => formatMoney(String(value), cur, lang);
+
+  return <ToolPanel label={t("life.title")} notices={stale}><div className="life-panel">
+    {control.error && <PanelAlert message={control.error} onRetry={() => void control.refresh()} />}
+    {!data ? <PanelSkeleton /> : <>
+      <div className="life-head">
+        <button type="button" className="link-button life-date" onClick={() => setView({ page: "clock" })}>{t("life.date")} {data.today}</button>
+        <button type="button" className="link-button" disabled={preview} onClick={() => setView({ page: "add" })}>＋ {t("life.add")}</button>
+      </div>
+
+      {budget && <section className="life-summary" aria-label={t("life.summary")}>
+        <div className="life-summary-budget">
+          <div className="life-summary-row"><span>{t("life.spentOf", { spent: money(budget.spent, budget.currency),
+            budget: budget.budget_known ? money(budget.budget, budget.currency) : t("simple.unknown") })}</span>
+            <BudgetEdit control={control} preview={preview} /></div>
+          {budget.budget_known && <div className="panel-meter" role="meter" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(used)}
+            aria-label={t("life.spent")}><span style={{ width: `${used}%` }} className={budget.over_budget ? "is-over" : ""} /></div>}
+          {budget.budget_known && <small className="panel-muted">{t("life.remainingLine", { amount: money(budget.remaining, budget.currency) })}</small>}
+        </div>
+      </section>}
+
+      <section className="life-todo" aria-label={t("life.todo")}>
+        <div className="life-section-head"><h3>{t("life.todo")}</h3>
+          <div className="life-filter" role="group" aria-label={t("life.todo")}>{(["soon", "later", "done"] as const).map(key =>
+            <button key={key} type="button" aria-pressed={filter === key} onClick={() => setFilter(key)}>{t(`life.filter.${key}` as MessageKey)} {groups[key].length}</button>)}</div>
+        </div>
+        {filter === "soon" && dueSoon.length > 0 && <p className="life-summary-line">{t("life.dueSoon", { n: dueSoon.length, amount: money(dueSum) })}</p>}
+        {short.length > 0 ? <button type="button" className="life-gap" onClick={() => setView({ page: "item", key: short[0].source_key })}>
+            {t("life.notEnough", { title: titleOf(short[0], lang), n: short.length })} →</button>
+          : data.funding.current && Number(data.funding.gap) > 0 ? <button type="button" className="life-gap" onClick={() => workspace?.open({ kind: "funding" })}>
+            {t("life.gapLine", { date: gapDate ?? data.funding.as_of ?? "", amount: money(data.funding.gap ?? "0", "THB") })} →</button>
+          : walletChecked && <p className="life-ok">{t("life.enough")}</p>}
+        <div className="life-list">{groups[filter].map(item => <LifeItemRow key={item.source_key} item={item} gapDate={gapDate}
+          onSelect={row => setView({ page: "item", key: row.source_key })} />)}
+          {!groups[filter].length && <p className="life-empty">{t(filter === "soon" ? "life.nothingSoon" : filter === "later" ? "life.nothingLater" : "life.nothingDone")}</p>}</div>
+      </section>
+
+      {budget && <section className="life-spending" aria-label={t("life.spending")}>
+        <div className="life-section-head"><h3>{t("life.spending")}</h3>
+          <button type="button" className="secondary" disabled={preview} onClick={() => setView({ page: "record" })}>{t("plan.expense.title")}</button></div>
+        <SpendingPie spending={budget} />
+        {!!budget.unconverted?.length && <p className="panel-note is-warn">{t("simple.missingFx")}</p>}
+        {budget.recent?.length ? <ul className="panel-rows">{budget.recent.slice(0, 3).map(expense => <li key={expense.id}>
+          <span><strong>{expense.note || t(`plan.cat.${expense.category}` as MessageKey)}</strong><small>{expense.spent_on}</small></span>
+          <span>{formatMoney(expense.amount, expense.currency, lang)}</span>
+          <button type="button" className="link-button" disabled={control.busy || preview}
+            onClick={() => void control.run("planning/life/undo-expense/", { expense_id: expense.id }).catch(() => {})}>{t("life.undoExpense")}</button>
+        </li>)}</ul> : null}
+      </section>}
     </>}
   </div></ToolPanel>;
 }

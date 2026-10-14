@@ -34,7 +34,14 @@ def entry_or_404(key):
 
 
 def default_years(entry):
+    months = entry.school.duration_months
+    if months:
+        return months // 12 if months % 12 == 0 else months / 12
     return entry.school.duration_years or 1
+
+
+def valid_years(years):
+    return 1 <= years <= 6 and years * 2 == int(years * 2)
 
 
 def today_for(user):
@@ -72,7 +79,7 @@ def estimate(entry, years=None, home_currency=None):
     from .costs import estimate as estimate_costs
 
     if years is not None:
-        require(1 <= years <= 6, "YEARS_OUT_OF_RANGE")
+        require(valid_years(years), "YEARS_OUT_OF_RANGE")
     result = estimate_costs(entry, years)
     if home_currency and home_currency != entry.school.currency:
         result["converted"] = convert(result["total"], entry.school.currency, home_currency)
@@ -187,12 +194,16 @@ def funding(plan, entry, estimate_result):
     return {"available": _s(funds), "gap": _s(max(total - funds, Decimal(0)))}
 
 
+def plan_years(plan):
+    return int(plan.years) if plan.years == int(plan.years) else plan.years
+
+
 def plan_record(plan, home=None):
     if plan is None:
         return {"plan": None}
     entry = catalog.school(plan.school_key)
     result = {"id": str(plan.id), "status": plan.status, "school_key": plan.school_key,
-              "years": plan.years, "start_date": plan.start_date.isoformat(), "version": plan.version,
+              "years": plan_years(plan), "start_date": plan.start_date.isoformat(), "version": plan.version,
               "available_funds": _s(plan.available_funds) if plan.available_funds is not None else None,
               "funds_currency": plan.funds_currency or None,
               "confirmed_at": plan.confirmed_at.isoformat() if plan.confirmed_at else None,
@@ -204,7 +215,7 @@ def plan_record(plan, home=None):
     costs = plan.snapshot if plan.status != "DRAFT" and plan.snapshot else estimate(entry, plan.years, home)
     result["school"] = {"name": entry.school.name.model_dump(), "currency": entry.school.currency}
     result["total"], result["currency"] = costs["total"], costs["currency"]
-    result["duration_months"] = costs.get("duration_months", plan.years * 12)
+    result["duration_months"] = costs.get("duration_months", round(plan.years * 12))
     result["complete"] = costs.get("complete", True)
     result["converted"] = costs.get("converted")
     result.update(funding(plan, entry, costs))
@@ -221,24 +232,28 @@ def save_plan(user, data):
     entry = entry_or_404(data["school_key"])
     plan = plan_for(user)
     require(plan is None or plan.status != "ENROLLED", "PLAN_ALREADY_ENROLLED")
+    require(plan is None or not _signed(plan), "PLAN_LOAN_SIGNED")
     funds = data.get("available_funds")
     currency = (data.get("funds_currency") or "").upper()
     if funds is not None:
         require(Decimal(funds) >= 0, "FUNDS_MUST_BE_NONNEGATIVE")
         currency = currency or home_currency(user)
         money.require_supported(currency)
+    withdrawn = False
     if plan is None:
         plan = StudyPlan(owner=user, school_key=entry.key, catalog_version=entry.version,
                          years=data.get("years") or default_years(entry), start_date=entry.calendar.start_date)
     else:
         if plan.school_key != entry.key:
             plan.loan = None  # a loan sized for another school no longer applies
+            withdrawn = _withdraw_applications(user, plan)
+            plan.years = default_years(entry)  # another school's length does not carry over
         plan.school_key, plan.catalog_version = entry.key, entry.version
         plan.start_date = entry.calendar.start_date
         if data.get("years"):
             plan.years = data["years"]
         plan.version += 1
-    require(1 <= plan.years <= 6, "YEARS_OUT_OF_RANGE")
+    require(valid_years(plan.years), "YEARS_OUT_OF_RANGE")
     if funds is not None:
         plan.available_funds, plan.funds_currency = _q(funds), currency
     # Any change reopens a confirmed plan for review.
@@ -248,7 +263,32 @@ def save_plan(user, data):
     from .assessment import remember_facts
     remember_facts(user, plan, data)
     audit(user, user, "planning.plan_saved", plan, {"school_key": plan.school_key, "version": plan.version})
-    return plan_record(plan, home_currency(user))
+    from .drafts import remember
+    remember(user, plan)
+    return {**plan_record(plan, home_currency(user)), "withdrawn_application": withdrawn}
+
+
+def _signed(plan):
+    from .loan_stage import signed
+    return signed(plan)
+
+
+def _withdraw_applications(user, plan):
+    """A loan applied for one school does not carry over to another: open applications are withdrawn.
+
+    A signed loan (paid out to the school) cannot be withdrawn, so the school cannot change any more."""
+    from finance.lending_applications import application_action
+    from finance.workflow_models import SimulatedApplication
+
+    from .assessment import plan_loans
+
+    apps = SimulatedApplication.objects.filter(owner=user, loan_id__in=plan_loans(plan),
+                                               status__in=["DRAFT", "UNDER_REVIEW", "APPROVED", "DISBURSED"])
+    require(not apps.filter(status="DISBURSED").exists(), "PLAN_LOAN_SIGNED")
+    open_apps = list(apps)
+    for app in open_apps:
+        application_action(user, {"expected_version": app.version, "action": "cancel"}, app)
+    return bool(open_apps)
 
 
 def simulate_loan(user, data):
@@ -258,6 +298,7 @@ def simulate_loan(user, data):
     plan = plan_for(user)
     require(plan is not None, "PLAN_REQUIRED")
     require(plan.status != "ENROLLED", "PLAN_ALREADY_ENROLLED")
+    require(not _signed(plan), "PLAN_LOAN_SIGNED")
     entry = entry_or_404(plan.school_key)
     gap = funding(plan, entry, estimate(entry, plan.years)).get("gap")
     require(gap is not None, "AVAILABLE_FUNDS_REQUIRED")
@@ -380,3 +421,23 @@ def links(user):
 
     rows = FamilyLink.objects.filter(Q(parent=user) | Q(student=user)).select_related("parent", "student")
     return [link_record(link, user) for link in rows.order_by("created_at")]
+
+
+def first_month(plan):
+    """The first month after arrival, from the school's sample costs: what is spent every month, the one-off
+    arrival costs, and the bills already due at the start (those are in This month, not counted again)."""
+    entry = catalog.school(plan.school_key)
+    if entry is None:
+        return None
+    lines = [l for l in estimate(entry, plan.years)["lines"] if l.get("amount") is not None]
+    row = lambda l: {"label": l["label"], "amount": l["amount"]}
+    monthly = [row(l) for l in lines if l["period"] == "month" and l["start_month"] == 0]
+    one_off = [row(l) for l in lines if l["period"] == "once" and l["start_month"] == 0 and l["category"] != "tuition"]
+    from .in_school import BILLED
+    bills = [row(l) for l in lines if l["category"] in BILLED and l["start_month"] == 0
+             and (l["period"] in ("semester", "year") or l["category"] == "tuition")]
+    total = lambda rows: _s(sum((Decimal(r["amount"]) for r in rows), Decimal(0)))
+    return {"currency": entry.school.currency, "monthly": monthly, "monthly_total": total(monthly),
+            "one_off": one_off, "one_off_total": total(one_off),
+            "first_month_total": _s(Decimal(total(monthly)) + Decimal(total(one_off))),
+            "bills_at_start": bills, "bills_at_start_total": total(bills), "sample": True}

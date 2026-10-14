@@ -71,7 +71,7 @@ class Subject:
 
 @dataclass(frozen=True)
 class Action:
-    model: type | None
+    model: type | str | None   # a model, or "app_label.Model" for one that would import this module back
     resolve: Callable | None   # (actor, data, obj) -> Subject | None (None: nothing leaves the wallet)
     check: Callable | None     # (actor, target_id, amount, currency) -> None; raises on mismatch
 
@@ -115,6 +115,18 @@ def _repayment_check(actor, target_id, amount, currency):
             "POLICY_SUBJECT_MISMATCH")
 
 
+def _bill_subject(actor, data, obj):
+    if obj.status != "DUE":
+        return None  # the handler answers BILL_ALREADY_PAID
+    return Subject("bill.pay", str(obj.pk), obj.amount, obj.currency)
+
+
+def _bill_check(actor, target_id, amount, currency):
+    from .planning.models import PlanBill
+    bill = get_object_or_404(PlanBill, owner=actor, pk=target_id)
+    require(bill.status == "DUE" and bill.amount == amount and bill.currency == currency, "POLICY_SUBJECT_MISMATCH")
+
+
 # Every T2 action must be registered here and declared on its route (CommandView.policy).
 def _remittance_subject(actor, data, obj):
     if obj.status != "CREATED" or obj.quote.expires_at <= timezone.now():
@@ -144,6 +156,7 @@ ACTIONS = {
     "wallet.convert": Action(None, _conversion_subject, _conversion_check),
     "loan.repay": Action(LoanAccount, _repayment_subject, _repayment_check),
     "remittance.submit": Action(RemittanceOrder, _remittance_subject, _remittance_check),
+    "bill.pay": Action("finance.PlanBill", _bill_subject, _bill_check),
     # Confirming an agent proposal; step-up is requested for the underlying action.
     "agent.confirm": Action(AgentPendingAction, _pending_subject, None),
 }
@@ -154,7 +167,9 @@ def subject_for(action, actor, data, pk=None):
     spec = ACTIONS[action]
     obj = None
     if spec.model is not None:
-        obj = spec.model.objects.filter(owner=actor, pk=pk).first()
+        from django.apps import apps
+        model = apps.get_model(spec.model) if isinstance(spec.model, str) else spec.model
+        obj = model.objects.filter(owner=actor, pk=pk).first()
         if obj is None:
             return None
     return spec.resolve(actor, data, obj)

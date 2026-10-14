@@ -35,7 +35,8 @@ test.describe("Planner preview", () => {
     assert.ok(await chat.getByText("Sample data", { exact: true }).count() > 0, "school figures are labelled as sample data");
     // The plan card opens the funding panel with its 90-day forecast; the sidebar item carries a funding-gap dot.
     await chat.getByRole("button", { name: "View my plan" }).click();
-    await page.locator(".workspace-dock").getByText("Largest shortfall including reserve").first().waitFor();
+    await page.locator(".workspace-dock").getByRole("heading", { name: "Where the money goes" }).waitFor();
+    await page.locator(".workspace-dock").getByText("Short from 2027-08-02", { exact: false }).waitFor();
     await tools(page).getByRole("button", { name: /^My plan/ }).getByRole("img", { name: "Funding gap" }).waitFor();
     await page.getByRole("button", { name: "Close tool" }).click();
     await page.screenshot({ path: screenshot("plan-preview-desktop-en.png"), fullPage: true });
@@ -46,8 +47,9 @@ test.describe("Planner preview", () => {
     // The stage switch lives in the sidebar settings menu.
     await tools(page).getByRole("button", { name: "Settings", exact: true }).click();
     await page.locator("#side-settings").getByRole("button", { name: "In school", exact: true }).click();
-    await tools(page).getByRole("button", { name: "To-dos & payments", exact: true }).click();
-    await page.locator(".life-panel").getByRole("heading", { name: "Upcoming reminders" }).waitFor();
+    await tools(page).getByRole("button", { name: "This month", exact: true }).click();
+    await page.locator(".life-panel .life-list").first().waitFor();
+    await page.locator(".life-panel .life-filter").getByRole("button", { name: /^Later \d+$/ }).waitFor();
     await chat.getByText("I spent 120 THB on lunch today", { exact: true }).first().waitFor();
 
     await page.getByRole("button", { name: "Close tool" }).click();
@@ -124,11 +126,13 @@ test.describe("Planner with mocked Django", () => {
     await chat.locator(".plan-card-confirm").getByRole("button", { name: "Confirm", exact: true }).click();
     await page.getByRole("dialog", { name: "Review and confirm" }).getByRole("button", { name: "Confirm", exact: true }).click();
     await page.getByText("Done. The plan is updated.").waitFor();
-    // A confirmed plan moves to preparing: the sidebar and the preparing guide both offer the to-dos.
+    // A confirmed plan moves to preparing: the sidebar offers This month and the stage summary (right rail) its to-dos.
     await page.locator(".workspace-stage").getByText("Preparing to leave").waitFor();
-    await tools(page).getByRole("button", { name: "To-dos & payments", exact: true }).waitFor();
-    await chat.locator("#plan-journey-guide").getByRole("button", { name: "To-dos & payments", exact: true }).click();
-    await page.locator("#workspace-tool-title").getByText("To-dos & payments", { exact: true }).waitFor();
+    await tools(page).getByRole("button", { name: "This month", exact: true }).waitFor();
+    // The rail gives way to an open tool, so close it first.
+    if (await page.locator(".workspace-dock").isVisible()) await page.getByRole("button", { name: "Close tool" }).click();
+    await page.locator(".workspace-rail #plan-journey-guide").getByRole("button", { name: /^To do/ }).click();
+    await page.locator("#workspace-tool-title").getByText("This month", { exact: true }).waitFor();
     assert.ok(calls.some(call => /^POST agent\/pending-actions\/.+\/confirm\/$/.test(call)));
     assert.deepEqual(errors, []);
   });

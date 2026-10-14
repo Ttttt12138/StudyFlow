@@ -150,7 +150,7 @@ HINTS = {
 
 def _field_schema(name, field):
     kind = type(field).__name__
-    schema = {"type": {"ListField": "array", "IntegerField": "integer"}.get(kind, "string")}
+    schema = {"type": {"ListField": "array", "IntegerField": "integer", "YearsField": "number"}.get(kind, "string")}
     if kind == "UUIDField":
         schema["format"] = "uuid"
     elif kind == "DateField":

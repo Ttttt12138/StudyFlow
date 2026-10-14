@@ -1,0 +1,163 @@
+"""Stage two of a planning loan (simulated): documents, signing, and payouts to the school bill by bill.
+
+As with a study loan from a lender: once the application is approved, the borrower hands in the documents, signs,
+and the loan is paid to the school on each bill's due date rather than into the student's wallet. Tuition is
+covered first, then the other plan bills, in date order; a bill the loan only partly covers is split into the part
+the loan pays and the part the family still pays. Repayments follow the signed schedule in the loan account.
+"""
+from copy import deepcopy
+from datetime import timedelta
+from decimal import ROUND_FLOOR, Decimal
+from types import SimpleNamespace
+
+from django.utils import timezone
+
+from finance.lending_applications import changed, check_version, ensure_future
+from finance.lending_ledger import create_account, loan_events
+from finance.workflow_common import append_state, audit, current, owned, record, require
+from finance.workflow_models import Disbursement, SimulatedApplication
+
+from . import services
+from .models import LoanPayout, PlanBill, StudyTask
+
+PREFIX = "loan_doc:"
+# (key, English, Chinese); the income proof names whoever signs.
+DOCUMENTS = [
+    ("admission", "Upload the admission letter", "上传录取通知书"),
+    ("identity", "Provide a passport or ID", "提供护照或身份证件"),
+]
+INCOME = {
+    "student_with_parent": ("Income proof of the co-borrower (parent)", "共同借款人（家长）收入证明"),
+    "parent": ("Income proof of the borrower (parent)", "借款人（家长）收入证明"),
+}
+FIRST = ["tuition"]
+
+
+def document_title(key):
+    """Bilingual title of a loan document item (template_key "loan_doc:<name>[:<borrower>]"), else None."""
+    if not key.startswith(PREFIX):
+        return None
+    name, _, borrower = key[len(PREFIX):].partition(":")
+    if name == "income":
+        en, zh = INCOME.get(borrower, INCOME["student_with_parent"])
+        return {"en": en, "zh": zh}
+    return next(({"en": en, "zh": zh} for k, en, zh in DOCUMENTS if k == name), None)
+
+
+def seed_documents(user, plan, borrower):
+    """The documents an approved loan needs before signing, as to-dos in "This month"."""
+    have = set(StudyTask.objects.filter(plan=plan, template_key__startswith=PREFIX).values_list("template_key", flat=True))
+    due = max(services.today_for(user) + timedelta(days=7), plan.start_date - timedelta(days=30))
+    keys = [PREFIX + k for k, _, _ in DOCUMENTS] + [f"{PREFIX}income:{borrower}"]
+    StudyTask.objects.bulk_create([StudyTask(owner=user, plan=plan, title=document_title(k)["en"], template_key=k,
+                                             due_date=due) for k in keys if k not in have])
+
+
+def missing_documents(plan):
+    return StudyTask.objects.filter(plan=plan, template_key__startswith=PREFIX, done=False)
+
+
+def signed(plan):
+    return LoanPayout.objects.filter(plan=plan).exists()
+
+
+def _thb(amount, currency):
+    if currency == "THB":
+        return Decimal(amount)
+    value = services.convert(amount, currency, "THB")
+    require(value is not None, "FX_RATE_UNAVAILABLE")
+    return Decimal(value["amount"])
+
+
+def _allocate(user, plan, application, total):
+    """Spread the loan over the plan's unpaid bills: tuition first, then the rest, each in date order."""
+    bills = list(PlanBill.objects.filter(plan=plan, status="DUE").exclude(kind="loan").filter(payout__isnull=True))
+    bills.sort(key=lambda b: (b.kind not in FIRST, b.due_date, b.source_id))
+    left = total
+    for bill in bills:
+        if left <= 0:
+            break
+        thb = _thb(bill.amount, bill.currency)
+        if thb <= left:
+            covered_thb, covered = thb, bill.amount
+        else:
+            # Part of this bill: the loan's part becomes its own bill, the family keeps the rest.
+            back = services.convert(left, "THB", bill.currency) if bill.currency != "THB" else {"amount": str(left)}
+            require(back is not None, "FX_RATE_UNAVAILABLE")
+            covered = Decimal(back["amount"]).quantize(Decimal("0.01"), ROUND_FLOOR)
+            if covered <= 0:
+                break
+            covered_thb = left
+            bill.amount -= covered
+            bill.save(update_fields=["amount"])
+            bill = PlanBill.objects.create(owner=user, plan=plan, kind=bill.kind, source_id=f"{bill.source_id}:loan"[:60],
+                                           label=bill.label, due_date=bill.due_date, amount=covered, currency=bill.currency)
+        LoanPayout.objects.create(owner=user, plan=plan, application=application, bill=bill, amount=covered_thb,
+                                  bill_amount=covered, due_date=bill.due_date)
+        left -= covered_thb
+    return left
+
+
+def settle_payouts(user, today=None):
+    """Pays the school every scheduled tranche whose bill has fallen due by the demo date."""
+    today = today or services.today_for(user)
+    paid = 0
+    for payout in LoanPayout.objects.filter(owner=user, status="SCHEDULED", due_date__lte=today).select_related("bill"):
+        payout.status, payout.paid_on = "PAID", today
+        payout.save(update_fields=["status", "paid_on"])
+        if payout.bill.status == "DUE":
+            payout.bill.status, payout.bill.paid_at = "PAID", timezone.now()
+            payout.bill.save(update_fields=["status", "paid_at"])
+        paid += 1
+    return paid
+
+
+def sign(user, data, obj=None):
+    from .assessment import plan_loans, read
+
+    plan = services.plan_for(user)
+    require(plan is not None and plan.status in ("CONFIRMED", "ENROLLED"), "LOAN_SIGN_NEEDS_CONFIRMED_PLAN")
+    application = owned(SimulatedApplication, user, data["application_id"])
+    require(str(application.loan_id) in plan_loans(plan), "LOAN_NOT_IN_PLAN")
+    check_version(application, data)
+    require(application.status == "APPROVED", "LOAN_NOT_APPROVED")
+    require(not missing_documents(plan).exists(), "LOAN_DOCUMENTS_MISSING")
+    ensure_future(application.loan)
+    today = services.today_for(user)
+    loan = application.loan
+    # Signed and paid to the school: nothing reaches the wallet, so only the repayments enter the cash plan.
+    disbursement = Disbursement.objects.create(owner=user, application=application, amount=Decimal(loan.result["net_proceeds"]),
+                                               scheduled_on=today, status="school")
+    create_account(disbursement)
+    snapshot = deepcopy(current(user).snapshot)
+    snapshot["events"].extend(e for e in loan_events(disbursement, SimpleNamespace(effective_on=today, sequence=None))
+                              if e["kind"] == "expense")
+    append_state(user, snapshot, user, "state.loan_signed")
+    application.status = "DISBURSED"
+    changed(application, user, "application.SIGNED")
+    unused = _allocate(user, plan, application, Decimal(loan.result["net_proceeds"]))
+    settle_payouts(user, today)
+    audit(user, user, "planning.loan_signed", application, {"unallocated": str(unused)})
+    return read(user)
+
+
+def tick_document(user, data, obj=None):
+    """Marks a loan document as handed in (or not); the same to-do also shows in "This month"."""
+    from finance.services import VersionConflict
+
+    from .assessment import read
+
+    plan = services.plan_for(user)
+    require(plan is not None, "PLAN_REQUIRED")
+    task = owned(StudyTask, user, data["task_id"])
+    require(task.plan_id == plan.id and task.template_key.startswith(PREFIX), "LOAN_DOCUMENT_UNKNOWN")
+    if task.version != data["expected_version"]:
+        raise VersionConflict()
+    task.done, task.version = data["done"], task.version + 1
+    task.save(update_fields=["done", "version"])
+    return read(user)
+
+
+def payout_records(plan):
+    return [{**record(p), "bill_label": p.bill.label, "bill_currency": p.bill.currency, "kind": p.bill.kind}
+            for p in LoanPayout.objects.filter(plan=plan).select_related("bill")]

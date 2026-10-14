@@ -8,6 +8,12 @@
 .assessment-form .assessment-check { display: flex; align-items: center; gap: 8px; }
 .assessment-check input, .assessment-choice input { width: 17px; height: 17px; }
 .assessment-panel details { margin-top: 8px; }
+.assessment-essentials { display: grid; gap: 12px; }
+.assessment-money span { display: grid; grid-template-columns: minmax(0, 1fr) 96px; gap: 8px; }
+.assessment-more { margin-top: 0; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-1); }
+.assessment-more > summary { padding: 12px 14px; cursor: pointer; font-size: 14px; color: var(--text-2); }
+.assessment-more[open] > summary { border-bottom: 1px solid var(--line); }
+.assessment-more-body { display: grid; gap: 12px; padding: 12px 14px 14px; }
 .assessment-panel summary { cursor: pointer; padding: 8px 0; font-size: 13px; color: #245a96; }
 .assessment-item { padding: 12px 0; border-bottom: 1px solid #e4e8ee; }
 .assessment-main { width: 100%; margin-top: 12px; }
@@ -34,3 +40,83 @@
   #planning-print-summary { display: block !important; white-space: pre-wrap; overflow-wrap: anywhere; padding: 20px; font: 14px/1.7 sans-serif; color: black; }
 }
 #planning-print-summary { display: none; }
+
+/* "My plan" as pictures: hero total, missing-fact chips, cost mix, coverage, cash run and loan cards. */
+.plan-visual { display: grid; gap: 18px; }
+.plan-visual section { display: grid; gap: 8px; }
+.plan-visual-hero { padding: 16px; border-radius: 14px; background: var(--accent-soft); }
+.plan-visual-hero p { margin: 0; }
+.plan-visual-hero strong { font-size: 28px; line-height: 1.2; color: var(--text); }
+.assessment-quick { display: grid; gap: 12px; padding: 14px; border: 1px solid var(--warm); border-radius: 12px; background: var(--warm-soft); }
+.assessment-quick h3 { margin: 0; font-size: 15px; color: var(--warm-text); }
+.assessment-quick fieldset { margin: 0; padding: 0; border: 0; min-width: 0; }
+.assessment-quick > p { margin: 0; }
+.plan-visual-gap { margin: 6px 0 0; font-size: 15px; font-weight: 600; color: var(--ok); }
+.plan-visual-gap.is-short { color: var(--warm-text); }
+.plan-visual-axis { display: flex; justify-content: space-between; margin: 0; color: var(--text-3); font-size: 12px; }
+.plan-visual-quotes { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
+.plan-visual-quote { display: grid; gap: 6px; padding: 12px 14px; border: 1px solid var(--line-2); border-radius: 12px; background: var(--surface-1);
+  font: inherit; color: var(--text); text-align: left; cursor: pointer; }
+.plan-visual-quote:hover { border-color: var(--accent); }
+.plan-visual-quote.is-selected { border: 2px solid var(--accent); padding: 11px 13px; background: var(--accent-soft); }
+.plan-visual-quote:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.plan-visual-quote-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.plan-visual-pay { font-size: 20px; font-weight: 700; }
+.plan-visual-pay small { font-size: 12px; font-weight: 400; color: var(--text-3); }
+.plan-visual-tag { padding: 2px 8px; border-radius: 10px; font-size: 12px; background: var(--surface-2); color: var(--text-2); }
+.plan-visual-tag.is-AFFORDABLE { background: #e6f6ec; color: var(--ok); }
+.plan-visual-tag.is-UNAFFORDABLE { background: var(--warm-soft); color: var(--danger); }
+
+.assessment-links { display: grid; gap: 8px; }
+.assessment-edit { display: grid; gap: 12px; }
+.assessment-group { display: grid; gap: 10px; }
+.assessment-group > h4 { margin: 8px 0 0; font-size: 14px; color: var(--text); }
+.assessment-group.assessment-more { border: 0; background: none; }
+
+/* Loan pre-check, choice and stage two (LoanChooser, LoanStage) */
+.prequal-borrower { display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: center; margin-bottom: 10px; }
+.prequal-borrower > span { width: 100%; color: var(--text-2); font-size: 13px; }
+.assessment-quick .prequal-borrower label { display: inline-flex; width: auto; gap: 6px; align-items: center; white-space: nowrap; }
+.prequal-result { display: grid; gap: 8px; padding: 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-1); }
+.prequal-head { display: flex; justify-content: space-between; align-items: center; }
+.prequal-head h3 { margin: 0; font-size: 15px; }
+.prequal-result > p { margin: 0; }
+.loan-chooser { display: grid; gap: 12px; }
+.loan-chooser-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.loan-chooser-row > span, .loan-chooser-amount > span:first-child { width: 100%; color: var(--text-2); font-size: 13px; }
+.loan-chooser .chip.is-selected, .loan-chooser .chip[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); color: var(--accent-strong); }
+.loan-chooser-amount { display: grid; gap: 6px; }
+.loan-chooser-amount input[type="range"] { width: 100%; accent-color: var(--accent); }
+.loan-chooser-figure { display: inline-flex; gap: 6px; align-items: center; font-weight: 600; }
+.loan-chooser-figure input { width: 9em; }
+.loan-chooser-method { display: grid; gap: 6px; margin: 0; padding: 0; border: 0; }
+.loan-chooser-method legend { margin-bottom: 4px; color: var(--text-2); font-size: 13px; }
+.loan-chooser-method label { display: inline-flex; gap: 6px; align-items: center; }
+.loan-chooser-method .is-disabled { color: var(--text-2); }
+.loan-chooser-plan { padding: 12px 14px; border-radius: 12px; background: var(--accent-soft); }
+.loan-chooser-plan h4 { margin: 0 0 4px; font-size: 13px; color: var(--text-2); }
+.loan-chooser-plan p { margin: 2px 0; }
+.loan-chooser-pay { font-size: 20px; font-weight: 700; color: var(--accent-strong); }
+.loan-stage { display: grid; gap: 10px; }
+.loan-stage-docs { display: grid; gap: 8px; margin: 0; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; }
+.loan-stage-docs legend { padding: 0 4px; font-weight: 600; }
+.loan-stage-docs label { display: grid; grid-template-columns: auto 1fr auto; gap: 8px; align-items: center; }
+.loan-stage-payouts h4 { margin: 0 0 6px; font-size: 14px; }
+.loan-stage-payouts ul { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.loan-stage-payouts li { display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 10px; }
+.loan-stage-payouts li small { grid-column: 1 / -1; }
+.loan-stage-payouts li.is-paid strong { color: var(--ok); }
+.workspace-card-next { color: var(--accent-strong); font-size: 13px; }
+.loan-chooser input[type="radio"], .prequal-borrower input[type="radio"], .loan-stage-docs input[type="checkbox"] { width: auto; flex: none; margin: 0; }
+.loan-chooser .loan-chooser-figure { flex-wrap: nowrap; white-space: nowrap; }
+.loan-chooser .loan-chooser-figure input { width: 10em; flex: none; }
+.loan-chooser-facts { margin: 8px 0; }
+.loan-chooser-table { max-height: 260px; overflow: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-1); }
+.loan-chooser-table table { width: 100%; border-collapse: collapse; font-size: 12px; font-variant-numeric: tabular-nums; }
+.loan-chooser-table caption { padding: 8px 10px; text-align: left; font-weight: 600; color: var(--text-2); }
+.loan-chooser-table th, .loan-chooser-table td { padding: 6px 8px; text-align: right; white-space: nowrap; border-top: 1px solid var(--line); }
+.loan-chooser-table th:nth-child(-n+2), .loan-chooser-table td:nth-child(-n+2) { text-align: left; }
+.loan-chooser-table thead th { position: sticky; top: 0; background: var(--surface-2); }
+.loan-chooser .loan-chooser-product { display: inline-grid; gap: 2px; height: auto; padding: 6px 12px; text-align: left; }
+.loan-chooser .loan-chooser-product small { color: var(--text-2); font-size: 11px; }
+.loan-chooser .chip:disabled { opacity: .45; cursor: not-allowed; }

@@ -7,6 +7,8 @@ import type { Bill, Card, CatalogEntry, Estimate, Place, Plan, SchoolBrief, Spen
 
 export type CardActions = {
   ask(text: string): void;
+  /** Saves the school as the plan straight away (no model call) and opens the funding panel. */
+  choose(schoolKey: string, name: string, years?: number): void;
   confirm(pendingId: string): void;
   reject(pendingId: string): void;
   busy: boolean;
@@ -88,7 +90,7 @@ function School({ school, actions }: { school: CatalogEntry; actions: CardAction
       <a className="link-button" href={school.school.website} target="_blank" rel="noreferrer">{t("plan.card.website")}</a>
       {!actions.readOnly && <>
         <button type="button" className="chip" disabled={actions.busy} onClick={() => actions.ask(`${name} ${t("plan.card.costOf")}`)}>{t("plan.card.costOf")}</button>
-        <button type="button" className="chip" disabled={actions.busy} onClick={() => actions.ask(`${t("plan.card.choose")}：${name}`)}>{t("plan.card.choose")}</button>
+        <button type="button" className="chip" disabled={actions.busy} onClick={() => actions.choose(school.key, name)}>{t("plan.card.choose")}</button>
       </>}
     </div>
   </div>;
@@ -120,7 +122,7 @@ function Cost({ name, estimate, actions }: { name: string; estimate: Estimate; a
       </table>
     </details>)}
     {!actions.readOnly && <div className="plan-card-actions">
-      <button type="button" className="chip" disabled={actions.busy} onClick={() => actions.ask(`${t("plan.card.choose")}：${name}`)}>{t("plan.card.choose")}</button>
+      <button type="button" className="chip" disabled={actions.busy} onClick={() => actions.choose(estimate.school_key, name, estimate.years)}>{t("plan.card.choose")}</button>
     </div>}
   </div>;
 }

@@ -17,7 +17,9 @@ export type LoanQuote = {
   engine_version?: string;
 };
 
-export type Assessment = { status?: "AFFORDABLE" | "UNAFFORDABLE" | "INSUFFICIENT_DATA"; missing_inputs?: string[]; shortfall_months?: string[]; profile_version?: number };
+export type Assessment = { status?: "AFFORDABLE" | "UNAFFORDABLE" | "INSUFFICIENT_DATA"; missing_inputs?: string[]; shortfall_months?: string[]; profile_version?: number;
+  /** Highest monthly repayment already owed on other simulated loans during this loan's term (planning quotes only). */
+  other_loans?: string };
 
 export type LoanApplication = {
   id: string; created_at: string; version: number; loan: string; status: ApplicationStatus;
