@@ -167,6 +167,11 @@ def _add_card(session, tool, arguments, result, status):
     session.cards = [*session.cards, json_value(card)]
 
 
+def _context_memory(memory):
+    """Expiry uses real UTC time; the study/demo date is a separate planning fact."""
+    return {**(memory or {}), "server_time": timezone.now().isoformat()}
+
+
 def run(session, history=None, memory=None):
     brain = planner()
     catalog = tools_for(session)
@@ -177,7 +182,7 @@ def run(session, history=None, memory=None):
             remaining = 0 if _must_stop(observations) else max(MAX_STEPS - number + 1, 0)
             context = AgentContext(goal=session.goal, locale=session.locale, tools=specs,
                                    observations=observations[-12:], steps_remaining=remaining,
-                                   history=history or [], memory=memory or {})
+                                   history=history or [], memory=_context_memory(memory))
             try:
                 step, call_record = brain.next_step(context)
             except ProviderFailure as exc:

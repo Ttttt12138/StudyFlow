@@ -80,18 +80,26 @@ class LiveAgentProvider:
     def __init__(self, openai_provider):
         self.provider = openai_provider
 
-    # Observed live (planning-1.0): the gateway intermittently returns an empty body. An empty
-    # reply carries no decision, so it is retried; malformed or prose replies are not.
-    EMPTY_RETRIES = 2
+    # An unstructured gateway reply is not a validated decision or a user-facing answer.
+    FORMAT_RETRIES = 2
 
     def _request(self, context, instruction):
-        for attempt in range(self.EMPTY_RETRIES + 1):
+        attempts, elapsed = 0, 0
+        for attempt in range(self.FORMAT_RETRIES + 1):
             try:
-                return self.provider._request("plan", context.model_dump_json(), PlannerOutput, instruction)
+                output, record = self.provider._request("plan", context.model_dump_json(), PlannerOutput, instruction)
+                record.attempts += attempts
+                record.duration_ms += elapsed
+                return output, record
             except ProviderFailure as exc:
-                empty = exc.code == "INVALID_MODEL_OUTPUT" and not (getattr(exc, "raw_output", None) or "").strip()
-                if not empty or attempt == self.EMPTY_RETRIES:
+                attempts += exc.record.attempts
+                elapsed += exc.record.duration_ms
+                text = (getattr(exc, "raw_output", None) or "").strip()
+                unstructured = exc.code == "INVALID_MODEL_OUTPUT" and not text.startswith(("{", "["))
+                if not unstructured or attempt == self.FORMAT_RETRIES:
+                    exc.record.attempts, exc.record.duration_ms = attempts, elapsed
                     raise
+                instruction += "\nReturn only the required JSON object with a step; no unstructured prose."
 
     def _call(self, context, instruction):
         try:
@@ -99,11 +107,6 @@ class LiveAgentProvider:
         except ProviderFailure as exc:
             exc.record.prompt_version = prompts.version(context)
             text = (getattr(exc, "raw_output", None) or "").strip()
-            # Some gateways let the model answer in plain prose instead of the JSON envelope.
-            # Prose cannot call a tool, so it is accepted as the final answer; malformed JSON is not.
-            if exc.code == "INVALID_MODEL_OUTPUT" and text and not text.startswith(("{", "[")):
-                exc.record.error_code = None
-                return FinalStep(answer=text[:2000]), exc.record
             step = _leading_envelope(text) if exc.code == "INVALID_MODEL_OUTPUT" else None
             if step is not None:
                 exc.record.error_code = None

@@ -556,12 +556,17 @@ def _unparsed(text):
     return failure
 
 
-def test_live_plain_prose_reply_becomes_final_answer():
-    # Observed live: the gateway sometimes returns prose instead of the JSON envelope.
-    fake = FakeOpenAI(failure=_unparsed("余额不足，无法汇出 40,000 元。所有资金均为模拟。"))
-    step, record = AgentPlanner(LiveAgentProvider(fake)).next_step(ctx())
-    assert isinstance(step, FinalStep) and step.answer.startswith("余额不足")
-    assert record.error_code is None and record.prompt_version == prompts.VERSION
+@pytest.mark.parametrize("text", [
+    "余额不足，无法汇出 40,000 元。所有资金均为模拟。",
+    "Wait requirement tool. output toolcall. JSON args schema title required.",
+])
+def test_live_unstructured_prose_is_not_presented_as_a_successful_answer(text):
+    fake = FakeOpenAI(failure=_unparsed(text))
+    with pytest.raises(ProviderFailure) as raised:
+        AgentPlanner(LiveAgentProvider(fake)).next_step(ctx())
+    assert raised.value.code == "INVALID_MODEL_OUTPUT"
+    assert len(fake.calls) == 3
+    assert raised.value.record.attempts == 3
 
 
 def test_live_envelope_with_stray_closing_brackets_is_recovered_and_validated():
@@ -997,6 +1002,14 @@ def test_live_empty_reply_is_retried_then_succeeds():
     fake = FlakyOpenAI([_unparsed(""), _unparsed("  ")])
     step, record = AgentPlanner(LiveAgentProvider(fake)).next_step(ctx())
     assert step.tool == "get_balances" and len(fake.calls) == 3
+
+
+def test_live_unstructured_reply_is_retried_without_executing_or_exposing_it():
+    fake = FlakyOpenAI([_unparsed("Wait requirement tool. output toolcall.")])
+    step, record = AgentPlanner(LiveAgentProvider(fake)).next_step(ctx())
+    assert step.tool == "get_balances" and len(fake.calls) == 2
+    assert record.attempts == 2
+    assert "JSON" in fake.calls[-1][-1]
 
 
 def test_live_empty_reply_gives_up_after_the_retries():
