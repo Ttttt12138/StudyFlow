@@ -9,14 +9,13 @@ test.skip(true, "tool retired from the workspace");
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
-import { backend, root, python, screenshot, enroll } from '../../support.mjs';
+import { backend, root, python, screenshot } from '../../support.mjs';
 
 test('real Django spending insights: CSV upload, review, complete coverage, confirm, recalculation, forecast changes.', async ({ browser }) => {
   const origin = process.env.TEST_URL || 'http://127.0.0.1:5173';
   const username = `insights-uat-${randomUUID()}`, password = randomUUID();
   execFileSync(python, ['manage.py', 'shell', '-c', 'import os; from django.contrib.auth import get_user_model; get_user_model().objects.create_user(username=os.environ["UAT_NAME"], password=os.environ["UAT_PASSWORD"])'],
     { cwd: backend, env: { ...process.env, UAT_NAME: username, UAT_PASSWORD: password }, stdio: 'pipe' });
-  enroll(username);
   const context = await browser.newContext({ locale: 'en-US', viewport: { width: 1440, height: 1000 } });
   const errors = [], endpoints = new Set();
   try {

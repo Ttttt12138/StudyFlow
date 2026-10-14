@@ -48,9 +48,10 @@ test('real Django conversion: quotes for every tier, password step-up, balances 
     const thbBefore = Number(await balance('THB'));
 
     await wallet.reload();
-    // Currency exchange is its own tab in the wallet panel.
-    await wallet.getByRole('tab', { name: 'Exchange' }).click();
-    const section = wallet.locator('section').filter({ has: wallet.getByRole('heading', { name: 'Convert between currencies' }) });
+    // Exchange opens from the balance view of the wallet panel.
+    await wallet.locator('.panel-footer-center').getByRole('button', { name: 'Exchange', exact: true }).click();
+    const section = wallet.locator('#wallet-convert');
+    await section.getByRole('heading', { name: 'Convert between currencies' }).waitFor();
     await section.getByLabel('Convert from').selectOption('CNY');
     await section.getByLabel('Convert to').selectOption('THB');
     await section.getByLabel('Amount to convert (CNY)').fill('2000');
@@ -62,7 +63,7 @@ test('real Django conversion: quotes for every tier, password step-up, balances 
     // wallet.convert is T2: the password panel opens, then the retry carries the single-use grant.
     await wallet.getByRole('dialog', { name: 'Review and confirm' }).getByLabel('Password', { exact: true }).fill(passwords.student);
     await wallet.getByRole('dialog', { name: 'Review and confirm' }).getByRole('button', { name: 'Confirm', exact: true }).click();
-    await wallet.getByText('Conversion recorded. Balances and the ledger were refreshed.').waitFor();
+    await section.getByRole('heading', { name: 'Conversion recorded' }).waitFor();
     await wallet.screenshot({ path: screenshot('wallet-conversion.png'), fullPage: true });
 
     assert.equal(await balance('CNY'), '8000.00');

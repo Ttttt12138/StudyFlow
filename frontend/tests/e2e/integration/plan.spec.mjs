@@ -27,6 +27,11 @@ test('real Django planner: parent plans a school with a loan, enrolls three days
     await page.getByRole('button', { name: 'Log in', exact: true }).click();
     return page;
   }
+  async function get(kind, path) {
+    const response = await contexts[kind].request.get(`${origin}/api/v2/${path}`);
+    assert.equal(response.status(), 200, `${path}: ${await response.text()}`);
+    return (await response.json()).data;
+  }
   async function post(kind, path, body, headers = {}) {
     const identity = await (await contexts[kind].request.get(`${origin}/api/auth/session/`)).json();
     const response = await contexts[kind].request.post(`${origin}/api/v2/${path}`,
@@ -46,17 +51,24 @@ test('real Django planner: parent plans a school with a loan, enrolls three days
     // The first screen leads with the price question; nobody is asked whether they are a parent or the student.
     await chat.getByRole('heading', { name: 'Know what studying abroad costs before you go' }).waitFor();
     await say('What does 4 years at Chulalongkorn cost in total?', '4 year(s) total about');
-    await say('We have savings of 200000 CNY, choose Chulalongkorn', 'Funding gap about');
-    await page.getByRole('button', { name: 'My plan', exact: true }).click();
-    await page.locator('#plan-summary').getByText('Draft').waitFor();
-    await say('Simulate a loan over 48 months', 'Simulated loan: principal');
-    await page.locator('#plan-summary').getByRole('heading', { name: 'Simulated loan' }).waitFor();
-    await say('Confirm the plan', 'A plan confirmation is ready');
-    await chat.locator('.plan-card-confirm').last().getByRole('button', { name: 'Confirm', exact: true }).click();
-    await page.getByRole('dialog', { name: 'Review and confirm' }).getByRole('button', { name: 'Confirm', exact: true }).click();
-    await page.getByRole('button', { name: 'My plan', exact: true }).click();
-    await page.getByText('Done. The plan is updated.').waitFor();
-    await page.locator('#plan-summary').getByText('Confirmed').waitFor();
+    await say('We have savings of 200000 CNY, choose Chulalongkorn', 'status: draft');
+    // The pre-check uses the declared savings; the whole gap can be borrowed with the study loan example.
+    await page.goto(`${origin}/?tool=funding`);
+    const panel = page.locator('.assessment-panel');
+    await panel.getByRole('region', { name: 'Pre-check result' }).waitFor();
+    const checked = (await get('parent', 'planning/assessment/')).prequal;
+    assert.equal(checked.status, 'enough');
+    const chooser = panel.locator('.loan-chooser');
+    await chooser.getByRole('radio', { name: /Commercial study loan .example./ }).click();
+    await chooser.getByRole('spinbutton', { name: 'How much' }).fill(String(Math.round(Number(checked.max_principal))));
+    await chooser.getByRole('radio', { name: '48 months', exact: true }).click();
+    await chooser.locator('.loan-chooser-table tbody tr').nth(47).waitFor({ state: 'attached' });
+    // One confirmation: the plan and the simulated loan application together.
+    await panel.getByRole('button', { name: 'Confirm plan and apply', exact: true }).click();
+    await page.getByRole('dialog', { name: 'Confirm your plan' }).getByRole('button', { name: 'Confirm plan and apply', exact: true }).click();
+    await panel.locator('.loan-stage').waitFor();
+    assert.equal((await get('parent', 'planning/profile/')).plan.status, 'CONFIRMED');
+    await page.getByRole('button', { name: 'Close tool' }).click();
     await chat.getByText("Let's start preparing for enrollment.", { exact: false }).waitFor();
     await page.locator('#plan-journey-guide').getByRole('button', { name: 'Departure preparation' }).click();
     await chat.getByText('Do you have an offer', { exact: false }).waitFor();
@@ -68,32 +80,30 @@ test('real Django planner: parent plans a school with a loan, enrolls three days
     await chat.getByText('Classes start in 3 day(s).', { exact: false }).waitFor();
     await page.locator('#plan-journey-guide').getByRole('button', { name: 'Still preparing' }).click();
     await chat.getByText('I will not confirm enrollment', { exact: false }).waitFor();
-    await page.locator('#plan-summary').getByText('Confirmed').waitFor();
+    assert.equal((await get('parent', 'planning/profile/')).plan.status, 'CONFIRMED');
     await page.locator('#plan-journey-guide').getByRole('button', { name: 'Registration completed' }).click();
     await page.getByRole('dialog', { name: 'Review and confirm' }).getByRole('button', { name: 'Confirm', exact: true }).click();
-    await page.locator('#plan-summary').getByText('Enrolled').waitFor();
     // Enrolled: the sidebar gains the life tools.
     await page.locator('.workspace-stage').getByText('Enrolled').waitFor();
     await page.getByRole('navigation', { name: 'Tools' }).getByRole('button', { name: 'Wallet & payments' }).waitFor();
     await chat.getByText("let's settle into daily life", { exact: false }).waitFor();
     await page.locator('#plan-journey-guide').getByRole('button', { name: 'Campus life', exact: true }).click();
     await chat.locator('.workspace-card-summary').getByRole('heading', { name: 'Chulalongkorn University' }).last().waitFor();
-    await page.getByRole('navigation', { name: 'Tools' }).getByRole('button', { name: 'Bills & expenses', exact: true }).click();
-    const school = page.locator('#plan-school');
-    await school.getByRole('heading', { name: 'Upcoming bills' }).waitFor();
-    // Bills page four at a time; step through the pages until the first loan installment shows.
-    for (let n = 0; n < 6 && !(await school.getByText('Loan installment 1').count()); n++) await school.getByRole('button', { name: 'Next', exact: true }).click();
-    await school.getByText('Loan installment 1').first().waitFor();
+    // Enrolled: the plan's bills are paid from the wallet's Pay tab.
+    await page.getByRole('navigation', { name: 'Tools' }).getByRole('button', { name: 'Wallet & payments' }).click();
+    await page.getByRole('tab', { name: 'Pay bills' }).click();
+    await page.locator('.plan-bills-pay .plan-bills-list li').first().waitFor();
+    assert.ok((await get('parent', 'planning/wallet-bills/')).bills.length > 0);
+    await page.getByRole('button', { name: 'Close tool' }).click();
     await say('I spent 120 THB on lunch today', 'Recorded:');
-    await school.getByRole('tab', { name: 'This month' }).click();
-    await school.getByText('120 THB').first().waitFor();
     await page.screenshot({ path: screenshot('plan-integration-in-school.png'), fullPage: true });
     await say('How much have I spent this month?', '120');
-    const monthly = page.locator('.monthly-report');
-    await monthly.getByRole('img', { name: 'Spending by category' }).waitFor();
-    await monthly.locator('.monthly-legend').getByText('100%', { exact: true }).waitFor();
-    await monthly.getByRole('tab', { name: /^Entries/ }).click();
-    await monthly.locator('.monthly-entries').getByText('120.00 THB').waitFor();
+    // The monthly question opens This month: one category, so the pie is 100%, and the entry is listed.
+    await page.locator('#workspace-tool-title').getByText('This month', { exact: true }).waitFor();
+    const spending = page.locator('.life-spending');
+    await spending.getByRole('img', { name: 'Spending by category' }).waitFor();
+    await spending.locator('.monthly-legend').getByText('100%', { exact: true }).waitFor();
+    await spending.locator('.panel-rows li', { hasText: '120' }).first().waitFor();
     await page.screenshot({ path: screenshot('plan-integration-monthly.png'), fullPage: true });
 
     // The student asks for support; the operator issues the link; the parent confirms it, then links accounts.

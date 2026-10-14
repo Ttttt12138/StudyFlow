@@ -44,7 +44,7 @@ test('real Django loan: quote, affordable application, operator disbursement, de
     await ok('student', 'state/', { expected_version: 0, snapshot: SNAPSHOT });
     await ok('student', 'demo/initialize/', { state_version: 1 });
     await loans.reload();
-    await loans.getByRole('heading', { name: 'Loans', exact: true }).waitFor();
+    await loans.getByRole('heading', { name: 'My loans', exact: true }).waitFor();
 
     // Quote in the UI: 12,000 THB at 8% over 3 months.
     await loans.getByRole('tab', { name: 'Quote' }).click();
