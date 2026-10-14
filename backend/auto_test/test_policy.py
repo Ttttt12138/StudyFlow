@@ -717,7 +717,7 @@ class DeploymentSettingsTests(SimpleTestCase):
         self.assertIn("Invalid throttle rate", result.stderr)
 
 
-@override_settings(**FX_SETTINGS)
+@override_settings(**FX_SETTINGS, STUDYFLOW_SIMULATED_APPROVAL_SECONDS=10)
 class SimulatedApprovalTests(PolicyHarness, APITestCase):
     """Demo: approvals/<id>/simulate/ lets a simulated operator approve the student's own request after a wait."""
 
@@ -733,6 +733,7 @@ class SimulatedApprovalTests(PolicyHarness, APITestCase):
 
     def test_waits_then_a_simulated_operator_approves_and_the_password_still_applies(self):
         approval = self.ask("payment.submit", self.tuition["id"], "65000.00")
+        self.assertEqual(approval["simulated_after_seconds"], 10)
         early = self.api("approvals/" + approval["id"] + "/simulate", {})
         self.assertEqual((early.status_code, early.data["detail"]), (409, "APPROVAL_STILL_IN_REVIEW"))
         ApprovalRequest.objects.filter(pk=approval["id"]).update(created_at=timezone.now() - timedelta(seconds=11))
@@ -753,5 +754,6 @@ class SimulatedApprovalTests(PolicyHarness, APITestCase):
     @override_settings(STUDYFLOW_SIMULATED_APPROVAL_SECONDS=0)
     def test_can_be_turned_off(self):
         approval = self.ask("payment.submit", self.tuition["id"], "65000.00")
+        self.assertEqual(approval["simulated_after_seconds"], 0)
         self.denial(self.api("approvals/" + approval["id"] + "/simulate", {}), "APPROVAL_SIMULATION_OFF")
         self.assertEqual(ApprovalRequest.objects.get(pk=approval["id"]).status, "PENDING")

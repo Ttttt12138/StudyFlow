@@ -30,6 +30,8 @@ x-django: &django
     # `docker compose exec app python manage.py reset_demo --yes` wipes this stack's database and
     # reseeds the demo accounts; off unless the demo deployment opts in.
     STUDYFLOW_ALLOW_DEMO_RESET: ${STUDYFLOW_ALLOW_DEMO_RESET:-false}
+    # Simulated operator approval after N seconds (demo only); 0 keeps every T3 approval with real staff.
+    STUDYFLOW_SIMULATED_APPROVAL_SECONDS: ${STUDYFLOW_SIMULATED_APPROVAL_SECONDS:-0}
 
 services:
   db:

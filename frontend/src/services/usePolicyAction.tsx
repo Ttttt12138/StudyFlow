@@ -6,7 +6,7 @@ import { useI18n } from "../i18n";
 import { WalletApiError, type WalletClient } from "../wallet/client";
 import { TierBadge } from "./TierBadge";
 
-/** The demo's simulated operator approves this long after the request (STUDYFLOW_SIMULATED_APPROVAL_SECONDS). */
+/** Scale of the countdown bar; the wait itself comes from the approval's simulated_after_seconds. */
 const REVIEW_SECONDS = 10;
 
 /** What a T2/T3 policy check is bound to (finance/policy.py Subject). */
@@ -78,17 +78,19 @@ export function usePolicyAction(client: WalletClient, preview: boolean) {
     if (!need) return;
     setBusy(true); setError("");
     try {
-      const created = await client.post<{ id: string } | { data: { id: string } }>("approvals/", { ...need.subject, reason: reason.trim() },
+      const created = await client.post<{ id: string; simulated_after_seconds?: number }>("approvals/", { ...need.subject, reason: reason.trim() },
         `approval:${need.subject.action}:${need.subject.target_id}`);
-      const id = "data" in created ? created.data.id : created.id;
       setReason(""); setNow(Date.now());
-      setNeed({ ...need, kind: "REVIEW", approvalId: id, readyAt: Date.now() + REVIEW_SECONDS * 1000 });
+      // Without the demo's simulated operator, real staff decide: say so and close, as before.
+      if (!created.simulated_after_seconds) { setNotice(t("shell.policy.requested")); setNeed(null); return; }
+      setNeed({ ...need, kind: "REVIEW", approvalId: created.id, readyAt: Date.now() + created.simulated_after_seconds * 1000 });
     } catch (reasonValue) {
       // Asked before and closed: pick the waiting request up again instead of failing.
       if (reasonValue instanceof WalletApiError && reasonValue.code === "APPROVAL_ALREADY_OPEN") {
-        const page = await client.get<{ results: { id: string; target_id: string; action: string; created_at: string }[] }>("approvals/?status=PENDING").catch(() => null);
+        const page = await client.get<{ results: { id: string; target_id: string; action: string; created_at: string; simulated_after_seconds?: number }[] }>("approvals/?status=PENDING").catch(() => null);
         const open = page?.results.find(row => row.action === need.subject.action && row.target_id === need.subject.target_id);
-        if (open) { setNow(Date.now()); setNeed({ ...need, kind: "REVIEW", approvalId: open.id, readyAt: Date.parse(open.created_at) + 1000 + REVIEW_SECONDS * 1000 }); return; }
+        if (open?.simulated_after_seconds) { setNow(Date.now()); setNeed({ ...need, kind: "REVIEW", approvalId: open.id, readyAt: Date.parse(open.created_at) + 1000 + open.simulated_after_seconds * 1000 }); return; }
+        if (open) { setNotice(t("shell.policy.requested")); setNeed(null); return; }
       }
       setError(reasonValue instanceof Error ? reasonValue.message : t("shell.err.generic")); }
     finally { setBusy(false); }
@@ -113,7 +115,7 @@ export function usePolicyAction(client: WalletClient, preview: boolean) {
   const review = need?.kind === "REVIEW" && <div className="service-policy" role="status" aria-live="polite">
     <h4><TierBadge tier="T3" /> {t("shell.policy.reviewTitle")}</h4>
     <p>{t("shell.policy.contact")}</p>
-    <div className="policy-countdown" aria-hidden="true"><span style={{ width: `${(REVIEW_SECONDS - left) / REVIEW_SECONDS * 100}%` }} /></div>
+    <div className="policy-countdown" aria-hidden="true"><span style={{ width: `${Math.max(0, (REVIEW_SECONDS - left) / REVIEW_SECONDS * 100)}%` }} /></div>
     <p className="panel-muted">{left > 0 ? t("shell.policy.countdown", { n: left }) : t("shell.policy.approving")}</p>
     <div className="service-actions"><button className="secondary" disabled={busy} onClick={() => setNeed(null)}>{t("shell.policy.later")}</button></div>
   </div>;
