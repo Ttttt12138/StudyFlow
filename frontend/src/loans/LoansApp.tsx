@@ -353,12 +353,14 @@ export function LoansApp({ preview, onExit }: { preview: boolean; onExit: () => 
         {eligibility !== "ok" && <p className="panel-muted" id={`why-${account.id}`}>{t(`loans.repay.why.${eligibility}` as MessageKey, { date: date(next.due_on), clock: clock ? date(clock) : "—" })}</p>}
         <label className="panel-check"><input type="checkbox" disabled={preview || eligibility !== "ok"} checked={repayCheck === checkKey}
           onChange={(e) => setRepayCheck(e.target.checked ? checkKey : "")} />{t("loans.repay.check", { amount: money(next.amount) })}</label>
+        {/* The repay button stays disabled until the box is ticked; say so instead of leaving a grey button. */}
+        {!preview && eligibility === "ok" && repayCheck !== checkKey && <small className="panel-muted" id={`tick-${account.id}`}>{t("loans.repay.tickFirst")}</small>}
         {repayAccount === account.id && policy.panel}
       </>}
     </section>;
     footer = <>
       {snapshot.wallet && <button type="button" className="panel-link panel-footer-note" onClick={() => setSheet("clock")}>{t("lp.repay.clock", { date: date(snapshot.wallet.clock) })}</button>}
-      {next && account.status === "ACTIVE" && <button className="primary" aria-describedby={eligibility !== "ok" ? `why-${account.id}` : undefined}
+      {next && account.status === "ACTIVE" && <button className="primary" aria-describedby={eligibility !== "ok" ? `why-${account.id}` : repayCheck !== checkKey ? `tick-${account.id}` : undefined}
         disabled={preview || busy || policy.pending || eligibility !== "ok" || repayCheck !== checkKey}
         onClick={() => void repay(account, next.number, next.amount)}>{t("loans.repay.button", { number: next.number })}</button>}
     </>;

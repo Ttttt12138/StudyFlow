@@ -120,6 +120,7 @@ export const en = {
   "loans.repay.why.paid": "This installment is already paid.",
   "loans.repay.why.closed": "This loan is closed.",
   "loans.repay.check": "I confirm repaying {amount} from my simulated wallet.",
+  "loans.repay.tickFirst": "Tick the confirmation above first, then repay.",
   "loans.repay.button": "Repay installment {number}",
 
   "loans.disb.title": "Disbursements",
@@ -283,6 +284,7 @@ export const zh: Record<keyof typeof en, string> = {
   "loans.repay.why.paid": "此分期已还清。",
   "loans.repay.why.closed": "此贷款已结清。",
   "loans.repay.check": "我确认从模拟钱包偿还 {amount}。",
+  "loans.repay.tickFirst": "请先勾选上方的确认，再点击还款。",
   "loans.repay.button": "偿还第 {number} 期",
 
   "loans.disb.title": "放款记录",
