@@ -1,0 +1,58 @@
+[
+  {
+    "name": "opening",
+    "seconds": 0.5839043999999999
+  },
+  {
+    "name": "prompt-1",
+    "seconds": 7.608058600000001
+  },
+  {
+    "name": "answer-1",
+    "seconds": 17.920249600000002
+  },
+  {
+    "name": "single-school-total",
+    "seconds": 24.928164299999995
+  },
+  {
+    "name": "cost-tuition",
+    "seconds": 31.0097342
+  },
+  {
+    "name": "cost-living",
+    "seconds": 37.0841664
+  },
+  {
+    "name": "cost-essentials",
+    "seconds": 41.1449386
+  },
+  {
+    "name": "prompt-2",
+    "seconds": 45.5534722
+  },
+  {
+    "name": "answer-2",
+    "seconds": 55.6470591
+  },
+  {
+    "name": "comparison-CNY",
+    "seconds": 62.697430700000005
+  },
+  {
+    "name": "comparison-USD",
+    "seconds": 66.7509577
+  },
+  {
+    "name": "comparison-THB",
+    "seconds": 70.81441119999998
+  },
+  {
+    "name": "comparison-cards",
+    "seconds": 74.9185806
+  },
+  {
+    "name": "prompt-3",
+    "seconds": 80.9427068
+  }
+]

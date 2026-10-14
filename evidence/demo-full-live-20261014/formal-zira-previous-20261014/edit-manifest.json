@@ -1,0 +1,643 @@
+{
+  "duration": 290.00000000000006,
+  "sha256": "33ca32b1e97aa9b5e52995ac0d292b86343d826ade79b6853746e828df9efe17",
+  "take": "D:\\Qoder-project\\AI studyflow\\evidence\\demo-full-live-20261014\\take-07",
+  "sync": "SAPI SpeakProgress AudioPosition word times; 240ms audio lead-in; separate source range per sentence",
+  "shots": [
+    {
+      "id": "shot-01",
+      "start": 0,
+      "duration": 9.066666666666666,
+      "source": null,
+      "chapter": "STUDYFLOW",
+      "title": "Plan your study journey",
+      "narration": "StudyFlow connects study costs, funding and student life, with live AI guidance and simulated financial transactions."
+    },
+    {
+      "id": "shot-02",
+      "start": 9.066666666666666,
+      "duration": 8.3,
+      "source": {
+        "path": "D:\\Qoder-project\\AI studyflow\\evidence\\demo-full-live-20261014\\take-07\\raw-video\\page@ffd872460111afa22eb236169884dbf3.webm",
+        "start": 24.5046596,
+        "available": 5.400000000000001,
+        "marker": "single-school-total"
+      },
+      "chapter": "01 / COSTS",
+      "title": "The full course",
+      "narration": "Ask for a school's full-course cost. The answer combines tuition, living costs and essential expenses."
+    },
+    {
+      "id": "shot-03",
+      "start": 17.366666666666667,
+      "duration": 4.8,
+      "source": {
+        "path": "D:\\Qoder-project\\AI studyflow\\evidence\\demo-full-live-20261014\\take-07\\raw-video\\page@ffd872460111afa22eb236169884dbf3.webm",
+        "start": 36.6292719,
+        "available": 3.4000000000000012,
+        "marker": "cost-living"
+      },
+      "chapter": "01 / COSTS",
+      "title": "Inspect the assumptions",
+      "narration": "Open the line items to distinguish sourced fees from estimates."
+    },
+    {
+      "id": "shot-04",
+      "start": 22.166666666666668,
+      "duration": 6.133333333333334,
+      "source": {
+        "path": "D:\\Qoder-project\\AI studyflow\\evidence\\demo-full-live-20261014\\take-07\\raw-video\\page@ffd872460111afa22eb236169884dbf3.webm",
+        "start": 70.01832470000001,
+        "available": 3.399999999999994,
+        "marker": "comparison-THB"
+      },
+      "chapter": "01 / COSTS",
+      "title": "Compare schools",
+      "narration": "Compare four universities, with course duration and total cost visible together."
+    },
+    {
+      "id": "shot-05",
+      "start": 28.3,
+      "duration": 6.566666666666666,
+      "source": {
+        "path": "D:\\Qoder-project\\AI studyflow\\evidence\\demo-full-live-20261014\\take-07\\raw-video\\page@ffd872460111afa22eb236169884dbf3.webm",
+        "start": 61.8964374,
+        "available": 3.4000000000000012,
+        "marker": "comparison-CNY"
+      },
+      "chapter": "01 / COSTS",
+      "title": "Choose your currency",
+      "narration": "Switch the display between baht, yuan and dollars, using reference exchange rates."
+    },
+    {
+      "id": "shot-06",
+      "start": 34.86666666666667,
+      "duration": 3.533333333333333,
+      "source": {
+        "path": "D:\\Qoder-project\\AI studyflow\\evidence\\demo-full-live-20261014\\take-07\\raw-video\\page@ffd872460111afa22eb236169884dbf3.webm",
+        "start": 65.96103860000001,
+        "available": 3.399999999999994,
+        "marker": "comparison-USD"
+      },
+      "chapter": "01 / COSTS",
+      "title": "One comparison, three currencies",
+      "narration": "Here is the same comparison in dollars."
+    },
+    {
+      "id": "shot-07",
+      "start": 38.4,
+      "duration": 8.0,
+      "source": {
+        "path": "D:\\Qoder-project\\AI studyflow\\evidence\\demo-full-live-20261014\\take-07\\raw-video\\page@ffd872460111afa22eb236169884dbf3.webm",
+        "start": 100.2090477,
+        "available": 6.399999999999994,
+        "marker": "precheck"
+      },
+      "chapter": "02 / FUNDING",
+      "title": "Reuse known funds",
+      "narration": "The assistant reuses the declared savings. My plan shows the funding gap and a simulated borrowing ceiling."
+    },
+    {
+      "id": "shot-08",
+      "start": 46.4,
+      "duration": 3.8666666666666667,
+      "source": {
+        "path": "D:\\Qoder-project\\AI studyflow\\evidence\\demo-full-live-20261014\\take-07\\raw-video\\page@ffd872460111afa22eb236169884dbf3.webm",
+        "start": 107.60105460000001,
+        "available": 2.399999999999994,
+        "marker": "adjust-cost-assumption"
+      },
+      "chapter": "02 / FUNDING",
+      "title": "Adjust an assumption",
+      "narration": "Edit a fee and save the revised cost estimate."
+    },
+    {
+      "id": "shot-09",
+      "start": 50.266666666666666,
+      "duration": 5.1,
+      "source": {
+        "path": "D:\\Qoder-project\\AI studyflow\\evidence\\demo-full-live-20261014\\take-07\\raw-video\\page@ffd872460111afa22eb236169884dbf3.webm",
+        "start": 116.86821540000001,
+        "available": 5.399999999999994,
+        "marker": "forecast-and-sources"
+      },
+      "chapter": "02 / FUNDING",
+      "title": "Check the dates",
+      "narration": "Inspect the dated cash-flow forecast and the sources behind each fee."
+    },
+    {
+      "id": "shot-10",
+      "start": 55.36666666666667,
+      "duration": 5.1,
+      "source": {
+        "path": "D:\\Qoder-project\\AI studyflow\\evidence\\demo-full-live-20261014\\take-07\\raw-video\\page@ffd872460111afa22eb236169884dbf3.webm",
+        "start": 155.74270310000003,
+        "available": 5.399999999999994,
+        "marker": "loan-custom"
+      },
+      "chapter": "02 / FUNDING",
+      "title": "Compare loan options",
+      "narration": "Compare a custom simulated loan with the commercial study-loan example."
+    },
+    {
+      "id": "shot-11",
+      "start": 60.46666666666667,
+      "duration": 8.4,
+      "source": {
+        "path": "D:\\Qoder-project\\AI studyflow\\evidence\\demo-full-live-20261014\\take-07\\raw-video\\page@ffd872460111afa22eb236169884dbf3.webm",
+        "start": 162.7052538,
+        "available": 5.399999999999994,
+        "marker": "loan-interest-only"
+      },
+      "chapter": "02 / FUNDING",
+      "title": "Study-period payments",
+      "narration": "This option pays interest during study, followed by principal and interest. The complete schedule is available."
+    },
+    {
+      "id": "shot-12",
+      "start": 68.86666666666667,
+      "duration": 7.066666666666666,
+      "source": {
+        "path": "D:\\Qoder-project\\AI studyflow\\evidence\\demo-full-live-20261014\\take-07\\raw-video\\page@ffd872460111afa22eb236169884dbf3.webm",
+        "start": 169.6454734,
+        "available": 6.5,
+        "marker": "loan-quote"
+      },
+      "chapter": "02 / FUNDING",
+      "title": "Review repayments",
+      "narration": "Here we choose twenty thousand baht over sixty months, repaying principal and interest from the start."
+    },
+    {
+      "id": "shot-13",
+      "start": 75.93333333333334,
+      "duration": 5.1,
+      "source": {
+        "path": "D:\\Qoder-project\\AI studyflow\\evidence\\demo-full-live-20261014\\take-07\\raw-video\\page@ffd872460111afa22eb236169884dbf3.webm",
+        "start": 178.70014600000002,
+        "available": 5.399999999999994,
+        "marker": "confirm-plan"
+      },
+      "chapter": "03 / LOAN",
+      "title": "Confirm the application",
+      "narration": "The student explicitly confirms the plan and simulated application."
+    },
+    {
+      "id": "shot-14",
+      "start": 81.03333333333333,
+      "duration": 7.4,
+      "source": {
+        "path": "D:\\Qoder-project\\AI studyflow\\evidence\\demo-full-live-20261014\\take-07\\raw-video\\page@ffd872460111afa22eb236169884dbf3.webm",
+        "start": 185.4985995,
+        "available": 4.399999999999994,
+        "marker": "documents"
+      },
+      "chapter": "03 / LOAN",
+      "title": "Prepare to sign",
+      "narration": "The document checklist records demo declarations. These are not verified document uploads."
+    },
+    {
+      "id": "shot-15",
+      "start": 88.43333333333334,
+      "duration": 5.6,
+      "source": {
+        "path": "D:\\Qoder-project\\AI studyflow\\evidence\\demo-full-live-20261014\\take-07\\raw-video\\page@ffd872460111afa22eb236169884dbf3.webm",
+        "start": 193.6092131,
+        "available": 5.399999999999994,
+        "marker": "sign-dialog"
+      },
+      "chapter": "03 / LOAN",
+      "title": "Sign with consent",
+      "narration": "Signing requires another confirmation, including the school recipient."
+    },
+    {
+      "id": "shot-16",
+      "start": 94.03333333333333,
+      "duration": 7.566666666666666,
+      "source": {
+        "path": "D:\\Qoder-project\\AI studyflow\\evidence\\demo-full-live-20261014\\take-07\\raw-video\\page@ffd872460111afa22eb236169884dbf3.webm",
+        "start": 199.9194573,
+        "available": 6.5,
+        "marker": "signed"
+      },
+      "chapter": "03 / LOAN",
+      "title": "Pay the school",
+      "narration": "The signed loan schedules payments to the verified school account. It does not credit the student's wallet."
+    },
+    {
+      "id": "shot-17",
+      "start": 101.6,
+      "duration": 4.633333333333334,
+      "source": {
+        "path": "D:\\Qoder-project\\AI studyflow\\evidence\\demo-full-live-20261014\\take-07\\raw-video\\page@ffd872460111afa22eb236169884dbf3.webm",
+        "start": 262.4713794,
+        "available": 4.8,
+        "marker": "family-request"
+      },
+      "chapter": "04 / FAMILY",
+      "title": "Ask for support",
+      "narration": "The student requests family support for first-month housing."
+    },
+    {
+      "id": "shot-18",
+      "start": 106.23333333333333,
+      "duration": 7.766666666666667,
+      "source": {
+        "path": "D:\\Qoder-project\\AI studyflow\\evidence\\demo-full-live-20261014\\take-07\\raw-family\\page@91b98fac324035f0546c3de82ce80aba.webm",
+        "start": 0.6853120000000346,
+        "available": 5.4,
+        "marker": "family-confirms"
+      },
+      "chapter": "04 / FAMILY",
+      "title": "Confirm the promise",
+      "narration": "A family member confirms through a private link. A promise alone does not increase the wallet balance."
+    },
+    {
+      "id": "shot-19",
+      "start": 114.0,
+      "duration": 5.966666666666667,
+      "source": {
+        "path": "D:\\Qoder-project\\AI studyflow\\evidence\\demo-full-live-20261014\\take-07\\raw-video\\page@ffd872460111afa22eb236169884dbf3.webm",
+        "start": 286.8441517,
+        "available": 4.8,
+        "marker": "family-received"
+      },
+      "chapter": "04 / FAMILY",
+      "title": "Record actual receipt",
+      "narration": "Only the operator's simulated receipt adds six thousand five hundred baht to the wallet."
+    },
+    {
+      "id": "shot-20",
+      "start": 119.96666666666667,
+      "duration": 7.233333333333333,
+      "source": {
+        "path": "D:\\Qoder-project\\AI studyflow\\evidence\\demo-full-live-20261014\\take-07\\raw-video\\page@ffd872460111afa22eb236169884dbf3.webm",
+        "start": 225.8943052,
+        "available": 4.8,
+        "marker": "preparation-reminder"
+      },
+      "chapter": "05 / ARRIVAL",
+      "title": "Remember the next task",
+      "narration": "A natural-language request creates a dated reminder. The student can acknowledge and complete it."
+    },
+    {
+      "id": "shot-21",
+      "start": 127.2,
+      "duration": 6.633333333333334,
+      "source": {
+        "path": "D:\\Qoder-project\\AI studyflow\\evidence\\demo-full-live-20261014\\take-07\\raw-video\\page@ffd872460111afa22eb236169884dbf3.webm",
+        "start": 313.05282569999997,
+        "available": 5.400000000000023,
+        "marker": "enrollment-proposal"
+      },
+      "chapter": "05 / ARRIVAL",
+      "title": "Confirm enrollment",
+      "narration": "Arrival is explicit: the student reports completed registration and confirms enrollment."
+    },
+    {
+      "id": "shot-22",
+      "start": 133.83333333333334,
+      "duration": 6.4,
+      "source": {
+        "path": "D:\\Qoder-project\\AI studyflow\\evidence\\demo-full-live-20261014\\take-07\\raw-video\\page@ffd872460111afa22eb236169884dbf3.webm",
+        "start": 319.44115859999994,
+        "available": 5.400000000000023,
+        "marker": "enrolled"
+      },
+      "chapter": "05 / ARRIVAL",
+      "title": "Open student-life tools",
+      "narration": "Enrollment opens the wallet and daily-life tools. It does not pay any bill."
+    },
+    {
+      "id": "shot-23",
+      "start": 140.23333333333335,
+      "duration": 5.866666666666666,
+      "source": {
+        "path": "D:\\Qoder-project\\AI studyflow\\evidence\\demo-full-live-20261014\\take-07\\raw-video\\page@ffd872460111afa22eb236169884dbf3.webm",
+        "start": 326.61035919999995,
+        "available": 4.8,
+        "marker": "monthly-budget"
+      },
+      "chapter": "06 / DAILY LIFE",
+      "title": "Set a monthly budget",
+      "narration": "Set a six-thousand-baht monthly budget and see upcoming payments and shortfalls."
+    },
+    {
+      "id": "shot-24",
+      "start": 146.10000000000002,
+      "duration": 7.8,
+      "source": {
+        "path": "D:\\Qoder-project\\AI studyflow\\evidence\\demo-full-live-20261014\\take-07\\raw-video\\page@ffd872460111afa22eb236169884dbf3.webm",
+        "start": 355.7223362,
+        "available": 4.8,
+        "marker": "expense-recorded"
+      },
+      "chapter": "06 / DAILY LIFE",
+      "title": "Record an expense",
+      "narration": "Tell the assistant about lunch. The expense appears in the category totals and reduces the remaining budget."
+    },
+    {
+      "id": "shot-25",
+      "start": 153.90000000000003,
+      "duration": 3.8333333333333335,
+      "source": {
+        "path": "D:\\Qoder-project\\AI studyflow\\evidence\\demo-full-live-20261014\\take-07\\raw-video\\page@ffd872460111afa22eb236169884dbf3.webm",
+        "start": 361.4589462999999,
+        "available": 2.4000000000000226,
+        "marker": "expense-undone"
+      },
+      "chapter": "06 / DAILY LIFE",
+      "title": "Correct a mistake",
+      "narration": "Undoing the entry restores the remaining budget."
+    },
+    {
+      "id": "shot-26",
+      "start": 157.73333333333338,
+      "duration": 7.9,
+      "source": {
+        "path": "D:\\Qoder-project\\AI studyflow\\evidence\\demo-full-live-20261014\\take-07\\raw-video\\page@ffd872460111afa22eb236169884dbf3.webm",
+        "start": 365.2720412,
+        "available": 4.8,
+        "marker": "multicurrency-wallet"
+      },
+      "chapter": "07 / MONEY",
+      "title": "Separate currency balances",
+      "narration": "The wallet holds separate currency balances. Demo top-ups provide the simulated funds shown here."
+    },
+    {
+      "id": "shot-27",
+      "start": 165.63333333333338,
+      "duration": 7.066666666666666,
+      "source": {
+        "path": "D:\\Qoder-project\\AI studyflow\\evidence\\demo-full-live-20261014\\take-07\\raw-video\\page@ffd872460111afa22eb236169884dbf3.webm",
+        "start": 417.26735439999993,
+        "available": 5.400000000000023,
+        "marker": "conversion-proposal"
+      },
+      "chapter": "07 / MONEY",
+      "title": "AI proposes an exchange",
+      "narration": "The live assistant compares conversion quotes and prepares a proposal. No money moves yet."
+    },
+    {
+      "id": "shot-28",
+      "start": 172.70000000000005,
+      "duration": 5.9,
+      "source": {
+        "path": "D:\\Qoder-project\\AI studyflow\\evidence\\demo-full-live-20261014\\take-07\\raw-video\\page@ffd872460111afa22eb236169884dbf3.webm",
+        "start": 423.45049529999994,
+        "available": 5.400000000000023,
+        "marker": "wrong-password-refused"
+      },
+      "chapter": "07 / MONEY",
+      "title": "Recheck the password",
+      "narration": "An incorrect password is refused. The balance stays unchanged."
+    },
+    {
+      "id": "shot-29",
+      "start": 178.60000000000005,
+      "duration": 6.6,
+      "source": {
+        "path": "D:\\Qoder-project\\AI studyflow\\evidence\\demo-full-live-20261014\\take-07\\raw-video\\page@ffd872460111afa22eb236169884dbf3.webm",
+        "start": 432.8919643,
+        "available": 5.400000000000023,
+        "marker": "conversion-confirmed"
+      },
+      "chapter": "07 / MONEY",
+      "title": "Confirm the conversion",
+      "narration": "After the correct password and confirmation, the server converts five hundred yuan into baht."
+    },
+    {
+      "id": "shot-30",
+      "start": 185.20000000000005,
+      "duration": 8.166666666666666,
+      "source": {
+        "path": "D:\\Qoder-project\\AI studyflow\\evidence\\demo-full-live-20261014\\take-07\\raw-video\\page@ffd872460111afa22eb236169884dbf3.webm",
+        "start": 483.8230294999999,
+        "available": 5.400000000000023,
+        "marker": "remittance-proposal"
+      },
+      "chapter": "07 / MONEY",
+      "title": "Compare transfer routes",
+      "narration": "For a remittance, the assistant compares routes, fees and arrival estimates, then requests confirmation."
+    },
+    {
+      "id": "shot-31",
+      "start": 193.3666666666667,
+      "duration": 5.433333333333334,
+      "source": {
+        "path": "D:\\Qoder-project\\AI studyflow\\evidence\\demo-full-live-20261014\\take-07\\raw-video\\page@ffd872460111afa22eb236169884dbf3.webm",
+        "start": 501.0632642,
+        "available": 3.8,
+        "marker": "transfer-order-history"
+      },
+      "chapter": "07 / MONEY",
+      "title": "Track the order",
+      "narration": "The confirmed transfer creates a recorded order and debits the source currency."
+    },
+    {
+      "id": "shot-32",
+      "start": 198.80000000000004,
+      "duration": 7.2,
+      "source": {
+        "path": "D:\\Qoder-project\\AI studyflow\\evidence\\demo-full-live-20261014\\take-07\\raw-video\\page@ffd872460111afa22eb236169884dbf3.webm",
+        "start": 568.6329741,
+        "available": 5.400000000000023,
+        "marker": "tuition-shortfall"
+      },
+      "chapter": "08 / BILLS",
+      "title": "Identify a shortfall",
+      "narration": "The Pay tab separates self-funded bills from loan-covered bills, and shows insufficient wallet funds."
+    },
+    {
+      "id": "shot-33",
+      "start": 206.00000000000003,
+      "duration": 4.6,
+      "source": {
+        "path": "D:\\Qoder-project\\AI studyflow\\evidence\\demo-full-live-20261014\\take-07\\raw-video\\page@ffd872460111afa22eb236169884dbf3.webm",
+        "start": 574.7186495000001,
+        "available": 5.400000000000023,
+        "marker": "bill-topup-review"
+      },
+      "chapter": "08 / BILLS",
+      "title": "Fund the bill",
+      "narration": "Top up the exact shortfall, then return to payment."
+    },
+    {
+      "id": "shot-34",
+      "start": 210.60000000000002,
+      "duration": 5.4,
+      "source": {
+        "path": "D:\\Qoder-project\\AI studyflow\\evidence\\demo-full-live-20261014\\take-07\\raw-video\\page@ffd872460111afa22eb236169884dbf3.webm",
+        "start": 581.0440041,
+        "available": 5.400000000000023,
+        "marker": "tuition-password"
+      },
+      "chapter": "08 / BILLS",
+      "title": "Authorize tuition",
+      "narration": "Review the tuition payment and enter the password to authorize the wallet debit."
+    },
+    {
+      "id": "shot-35",
+      "start": 216.00000000000003,
+      "duration": 5.7,
+      "source": {
+        "path": "D:\\Qoder-project\\AI studyflow\\evidence\\demo-full-live-20261014\\take-07\\raw-video\\page@ffd872460111afa22eb236169884dbf3.webm",
+        "start": 587.3167508,
+        "available": 5.400000000000023,
+        "marker": "tuition-paid"
+      },
+      "chapter": "08 / BILLS",
+      "title": "Verify the payment",
+      "narration": "The bill becomes paid. A loan-covered bill cannot be charged again."
+    },
+    {
+      "id": "shot-36",
+      "start": 221.70000000000002,
+      "duration": 6.466666666666667,
+      "source": {
+        "path": "D:\\Qoder-project\\AI studyflow\\evidence\\demo-full-live-20261014\\take-07\\raw-video\\page@ffd872460111afa22eb236169884dbf3.webm",
+        "start": 242.0705427,
+        "available": 6.399999999999994,
+        "marker": "password-check"
+      },
+      "chapter": "09 / REPAYMENT",
+      "title": "Repay a loan",
+      "narration": "For the first installment, we advance the demo date and confirm repayment with a password."
+    },
+    {
+      "id": "shot-37",
+      "start": 228.16666666666669,
+      "duration": 4.066666666666666,
+      "source": {
+        "path": "D:\\Qoder-project\\AI studyflow\\evidence\\demo-full-live-20261014\\take-07\\raw-video\\page@ffd872460111afa22eb236169884dbf3.webm",
+        "start": 252.3388503,
+        "available": 6.5,
+        "marker": "repaid"
+      },
+      "chapter": "09 / REPAYMENT",
+      "title": "Keep a repayment history",
+      "narration": "The installment is paid and appears in the loan history."
+    },
+    {
+      "id": "shot-38",
+      "start": 232.23333333333335,
+      "duration": 7.0,
+      "source": {
+        "path": "D:\\Qoder-project\\AI studyflow\\evidence\\demo-full-live-20261014\\take-07\\raw-video\\page@ffd872460111afa22eb236169884dbf3.webm",
+        "start": 601.7282768,
+        "available": 4.8,
+        "marker": "credit-used"
+      },
+      "chapter": "09 / REPAYMENT",
+      "title": "Use the demo credit line",
+      "narration": "A smaller bill can use the fixed demo credit line, creating an amount owed back within thirty days."
+    },
+    {
+      "id": "shot-39",
+      "start": 239.23333333333335,
+      "duration": 5.833333333333333,
+      "source": {
+        "path": "D:\\Qoder-project\\AI studyflow\\evidence\\demo-full-live-20261014\\take-07\\raw-video\\page@ffd872460111afa22eb236169884dbf3.webm",
+        "start": 613.6662592,
+        "available": 3.4000000000000226,
+        "marker": "credit-password"
+      },
+      "chapter": "09 / REPAYMENT",
+      "title": "Pay credit back",
+      "narration": "Credit repayment now requires a password and actually debits the simulated wallet."
+    },
+    {
+      "id": "shot-40",
+      "start": 245.0666666666667,
+      "duration": 5.966666666666667,
+      "source": {
+        "path": "D:\\Qoder-project\\AI studyflow\\evidence\\demo-full-live-20261014\\take-07\\raw-video\\page@ffd872460111afa22eb236169884dbf3.webm",
+        "start": 618.5355132999999,
+        "available": 3.4000000000000226,
+        "marker": "credit-restored"
+      },
+      "chapter": "09 / REPAYMENT",
+      "title": "Restore available credit",
+      "narration": "Repayment restores the available line and adds an on-time record when paid by the due date."
+    },
+    {
+      "id": "shot-41",
+      "start": 251.03333333333336,
+      "duration": 7.1,
+      "source": {
+        "path": "D:\\Qoder-project\\AI studyflow\\evidence\\demo-full-live-20261014\\take-07\\raw-video\\page@ffd872460111afa22eb236169884dbf3.webm",
+        "start": 561.3391609,
+        "available": 5.400000000000023,
+        "marker": "over-limit-blocked"
+      },
+      "chapter": "10 / TRUST",
+      "title": "Enforce the limit",
+      "narration": "The server blocks this over-limit transfer without operator approval, even after a correct password."
+    },
+    {
+      "id": "shot-42",
+      "start": 258.1333333333334,
+      "duration": 5.266666666666667,
+      "source": {
+        "path": "D:\\Qoder-project\\AI studyflow\\evidence\\demo-full-live-20261014\\take-07\\raw-video\\page@ffd872460111afa22eb236169884dbf3.webm",
+        "start": 675.5609914,
+        "available": 5.400000000000023,
+        "marker": "security-audit"
+      },
+      "chapter": "10 / TRUST",
+      "title": "Inspect the audit trail",
+      "narration": "The activity log records authorization attempts and confirmed actions."
+    },
+    {
+      "id": "shot-43",
+      "start": 263.40000000000003,
+      "duration": 7.533333333333333,
+      "source": {
+        "path": "D:\\Qoder-project\\AI studyflow\\evidence\\demo-full-live-20261014\\take-07\\raw-video\\page@ffd872460111afa22eb236169884dbf3.webm",
+        "start": 671.0649029,
+        "available": 3.8,
+        "marker": "on-time-record"
+      },
+      "chapter": "10 / TRUST",
+      "title": "Build an internal record",
+      "narration": "Eligible payments build StudyFlow's internal on-time record. This is not an external credit score."
+    },
+    {
+      "id": "shot-44",
+      "start": 270.9333333333334,
+      "duration": 4.7,
+      "source": {
+        "path": "D:\\Qoder-project\\AI studyflow\\evidence\\demo-full-live-20261014\\take-07\\raw-verifier\\page@170a65926f24e7de60a2ac2f09d8e694.webm",
+        "start": 0.6813981000001077,
+        "available": 5.4,
+        "marker": "statement-valid"
+      },
+      "chapter": "10 / TRUST",
+      "title": "Verify a signed statement",
+      "narration": "A separate visitor verifies the signed record without logging in."
+    },
+    {
+      "id": "shot-45",
+      "start": 275.6333333333334,
+      "duration": 4.366666666666666,
+      "source": {
+        "path": "D:\\Qoder-project\\AI studyflow\\evidence\\demo-full-live-20261014\\take-07\\raw-verifier\\page@170a65926f24e7de60a2ac2f09d8e694.webm",
+        "start": 6.785551600000007,
+        "available": 3.3999999999999995,
+        "marker": "statement-tampering-rejected"
+      },
+      "chapter": "10 / TRUST",
+      "title": "Detect a changed statement",
+      "narration": "Altering the signed statement makes verification fail."
+    },
+    {
+      "id": "shot-46",
+      "start": 280.00000000000006,
+      "duration": 10.0,
+      "source": null,
+      "chapter": "STUDYFLOW",
+      "title": "Clear costs. User control.",
+      "narration": "Live AI explains and proposes. The server calculates and enforces limits. The student authorizes financial actions."
+    }
+  ],
+  "audio_assembly": "Continuous PCM on exact scene boundaries, encoded to AAC once"
+}

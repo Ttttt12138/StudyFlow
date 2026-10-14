@@ -1,0 +1,25 @@
+[
+  {
+    "name": "Single-school full-course estimate with sourced and estimated lines",
+    "passed": true,
+    "total": "1013800.00"
+  },
+  {
+    "name": "Four-school comparison and THB/CNY/USD display",
+    "passed": true
+  },
+  {
+    "name": "Both repayment methods and full schedules",
+    "passed": true,
+    "studyMonths": 42,
+    "repaymentMonths": 60
+  },
+  {
+    "name": "Live AI reminder, persisted acknowledgement and completion",
+    "passed": true
+  },
+  {
+    "name": "Loan application, checklist, signing, school payouts and wallet repayment",
+    "passed": true
+  }
+]

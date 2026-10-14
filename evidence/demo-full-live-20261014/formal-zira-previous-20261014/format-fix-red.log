@@ -1,0 +1,82 @@
+Failed to find real location of C:\ProgramData\miniconda3\python.exe
+FFF                                                                      [100%]
+================================== FAILURES ===================================
+_ test_live_unstructured_prose_is_not_presented_as_a_successful_answer[\u4f59\u989d\u4e0d\u8db3\uff0c\u65e0\u6cd5\u6c47\u51fa 40,000 \u5143\u3002\u6240\u6709\u8d44\u91d1\u5747\u4e3a\u6a21\u62df\u3002] _
+
+text = '余额不足，无法汇出 40,000 元。所有资金均为模拟。'
+
+    @pytest.mark.parametrize("text", [
+        "余额不足，无法汇出 40,000 元。所有资金均为模拟。",
+        "Wait requirement tool. output toolcall. JSON args schema title required.",
+    ])
+    def test_live_unstructured_prose_is_not_presented_as_a_successful_answer(text):
+        fake = FakeOpenAI(failure=_unparsed(text))
+>       with pytest.raises(ProviderFailure) as raised:
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ProviderFailure
+
+studyflow-ai\auto_test\test_agent_planner.py:565: Failed
+_ test_live_unstructured_prose_is_not_presented_as_a_successful_answer[Wait requirement tool. output toolcall. JSON args schema title required.] _
+
+text = 'Wait requirement tool. output toolcall. JSON args schema title required.'
+
+    @pytest.mark.parametrize("text", [
+        "余额不足，无法汇出 40,000 元。所有资金均为模拟。",
+        "Wait requirement tool. output toolcall. JSON args schema title required.",
+    ])
+    def test_live_unstructured_prose_is_not_presented_as_a_successful_answer(text):
+        fake = FakeOpenAI(failure=_unparsed(text))
+>       with pytest.raises(ProviderFailure) as raised:
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ProviderFailure
+
+studyflow-ai\auto_test\test_agent_planner.py:565: Failed
+__ test_live_unstructured_reply_is_retried_without_executing_or_exposing_it ___
+
+    def test_live_unstructured_reply_is_retried_without_executing_or_exposing_it():
+        fake = FlakyOpenAI([_unparsed("Wait requirement tool. output toolcall.")])
+        step, record = AgentPlanner(LiveAgentProvider(fake)).next_step(ctx())
+>       assert step.tool == "get_balances" and len(fake.calls) == 2
+               ^^^^^^^^^
+
+studyflow-ai\auto_test\test_agent_planner.py:1010: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = FinalStep(kind='final', answer='Wait requirement tool. output toolcall.')
+item = 'tool'
+
+    def __getattr__(self, item: str) -> Any:
+        private_attributes = object.__getattribute__(self, '__private_attributes__')
+        if item in private_attributes:
+            attribute = private_attributes[item]
+            if hasattr(attribute, '__get__'):
+                return attribute.__get__(self, type(self))  # type: ignore
+    
+            try:
+                # Note: self.__pydantic_private__ cannot be None if self.__private_attributes__ has items
+                return self.__pydantic_private__[item]  # type: ignore
+            except KeyError as exc:
+                raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}') from exc
+        else:
+            # `__pydantic_extra__` can fail to be set if the model is not yet fully initialized.
+            # See `BaseModel.__repr_args__` for more details
+            try:
+                pydantic_extra = object.__getattribute__(self, '__pydantic_extra__')
+            except AttributeError:
+                pydantic_extra = None
+    
+            if pydantic_extra and item in pydantic_extra:
+                return pydantic_extra[item]
+            else:
+                if hasattr(self.__class__, item):
+                    return super().__getattribute__(item)  # Raises AttributeError if appropriate
+                else:
+                    # this is the current error
+>                   raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}')
+E                   AttributeError: 'FinalStep' object has no attribute 'tool'
+
+studyFlow\Lib\site-packages\pydantic\main.py:1042: AttributeError
+=========================== short test summary info ===========================
+FAILED studyflow-ai\auto_test\test_agent_planner.py::test_live_unstructured_prose_is_not_presented_as_a_successful_answer[\u4f59\u989d\u4e0d\u8db3\uff0c\u65e0\u6cd5\u6c47\u51fa 40,000 \u5143\u3002\u6240\u6709\u8d44\u91d1\u5747\u4e3a\u6a21\u62df\u3002]
+FAILED studyflow-ai\auto_test\test_agent_planner.py::test_live_unstructured_prose_is_not_presented_as_a_successful_answer[Wait requirement tool. output toolcall. JSON args schema title required.]
+FAILED studyflow-ai\auto_test\test_agent_planner.py::test_live_unstructured_reply_is_retried_without_executing_or_exposing_it

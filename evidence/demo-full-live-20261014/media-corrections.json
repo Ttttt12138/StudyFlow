@@ -1,0 +1,12 @@
+{
+  "historical_corrections": "formal-zira-previous-20261014/media-corrections.json",
+  "changes": [
+    "Replaced 46 independently synthesized Zira clips with 12 continuous Ava paragraphs",
+    "Rewrote operational instructions as connected product narration",
+    "Retained every original source range and mapped 46 cuts to new speech",
+    "Unified StudyFlow pronunciation as Study Flow, currency names and written-out numbers",
+    "Used approved 1.20 tempo, with five numeric sentences at 1.12",
+    "Rebuilt all English captions from provider word events and tempo transforms",
+    "Encoded one continuous PCM track to AAC once to prevent cumulative padding"
+  ]
+}

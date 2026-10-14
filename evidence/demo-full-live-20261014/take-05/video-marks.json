@@ -1,0 +1,146 @@
+[
+  {
+    "name": "opening",
+    "seconds": 0.6025292000000001
+  },
+  {
+    "name": "prompt-1",
+    "seconds": 7.6301578
+  },
+  {
+    "name": "answer-1",
+    "seconds": 19.5671001
+  },
+  {
+    "name": "single-school-total",
+    "seconds": 26.570649699999997
+  },
+  {
+    "name": "cost-tuition",
+    "seconds": 32.662009499999996
+  },
+  {
+    "name": "cost-living",
+    "seconds": 38.727688500000006
+  },
+  {
+    "name": "cost-essentials",
+    "seconds": 42.784082500000004
+  },
+  {
+    "name": "prompt-2",
+    "seconds": 47.220238300000005
+  },
+  {
+    "name": "answer-2",
+    "seconds": 57.86226310000001
+  },
+  {
+    "name": "comparison-CNY",
+    "seconds": 64.9325171
+  },
+  {
+    "name": "comparison-USD",
+    "seconds": 69.00437120000001
+  },
+  {
+    "name": "comparison-THB",
+    "seconds": 73.083663
+  },
+  {
+    "name": "comparison-cards",
+    "seconds": 77.2117837
+  },
+  {
+    "name": "prompt-3",
+    "seconds": 83.23908290000001
+  },
+  {
+    "name": "answer-3",
+    "seconds": 97.80736630000001
+  },
+  {
+    "name": "precheck",
+    "seconds": 105.3835001
+  },
+  {
+    "name": "adjust-cost-assumption",
+    "seconds": 112.7936516
+  },
+  {
+    "name": "adjusted-total",
+    "seconds": 116.0880992
+  },
+  {
+    "name": "forecast-and-sources",
+    "seconds": 122.1785474
+  },
+  {
+    "name": "prompt-4",
+    "seconds": 129.3559523
+  },
+  {
+    "name": "answer-4",
+    "seconds": 136.6936451
+  },
+  {
+    "name": "prompt-5",
+    "seconds": 143.7838106
+  },
+  {
+    "name": "answer-5",
+    "seconds": 150.3497767
+  },
+  {
+    "name": "loan-selection",
+    "seconds": 157.5102029
+  },
+  {
+    "name": "loan-custom",
+    "seconds": 160.4463218
+  },
+  {
+    "name": "loan-interest-only",
+    "seconds": 167.4075606
+  },
+  {
+    "name": "loan-quote",
+    "seconds": 174.3928146
+  },
+  {
+    "name": "confirm-plan",
+    "seconds": 183.46270130000002
+  },
+  {
+    "name": "documents",
+    "seconds": 190.3788317
+  },
+  {
+    "name": "document-3",
+    "seconds": 195.4132845
+  },
+  {
+    "name": "document-2",
+    "seconds": 196.4373142
+  },
+  {
+    "name": "document-1",
+    "seconds": 197.462519
+  },
+  {
+    "name": "sign-dialog",
+    "seconds": 198.4926302
+  },
+  {
+    "name": "signed",
+    "seconds": 204.8119455
+  },
+  {
+    "name": "prompt-6",
+    "seconds": 212.8854828
+  },
+  {
+    "name": "answer-6",
+    "seconds": 219.6018724
+  }
+]

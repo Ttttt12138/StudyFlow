@@ -1,0 +1,56 @@
+SHOT single-school-total
+SHOT cost-tuition
+SHOT cost-living
+SHOT cost-essentials
+PASS Single-school full-course estimate with sourced and estimated lines
+SHOT comparison-CNY
+SHOT comparison-USD
+SHOT comparison-THB
+PASS Four-school comparison and THB/CNY/USD display
+SHOT adjust-cost-assumption
+SHOT adjusted-total
+SHOT forecast-and-sources
+PASS Cost assumptions persist, recalculate totals, expose dated forecast and sources, and can be restored
+SHOT loan-custom
+SHOT loan-interest-only
+PASS Both repayment methods and full schedules
+SHOT preparation-reminder
+SHOT preparation-completed
+PASS Live AI reminder, persisted acknowledgement and completion
+PASS Loan application, checklist, signing, school payouts and wallet repayment
+SHOT family-request
+SHOT family-received
+PASS Family request, anonymous promise, operator receipt
+SHOT enrollment-proposal
+SHOT enrolled
+PASS Explicit enrollment with user confirmation; date alone did not enroll
+SHOT monthly-budget
+SHOT expense-recorded
+SHOT expense-undone
+PASS Budget edit, live AI expense, categories and undo
+SHOT multicurrency-wallet
+SHOT conversion-proposal
+SHOT wrong-password-refused
+SHOT money-password-confirm
+SHOT conversion-confirmed
+PASS Live AI conversion: quotes, proposal, wrong password refused, confirmed debit
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+
+  assert.ok(transfer.steps.some(s => s.tool === 'submit_remittance_order'))
+
+    at moneyJourney (file:///D:/Qoder-project/AI%20studyflow/output/full-demo-take-04/frontend/auto_test/full-demo-money.mjs:39:10)
+    at async Object.afterRepayment (file:///D:/Qoder-project/AI%20studyflow/output/full-demo-take-04/frontend/auto_test/full-demo.mjs:117:7)
+    at async file:///D:/Qoder-project/AI%20studyflow/output/full-demo-take-04/frontend/auto_test/short-planning.browser.mjs:263:16 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v25.5.0

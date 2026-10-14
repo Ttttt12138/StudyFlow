@@ -1,0 +1,282 @@
+{
+  "passed": true,
+  "reason": "Explicit 16 kHz output matches the installed Zira progress clock; default 22050 Hz gave invalid word times beyond WAV duration.",
+  "shots": [
+    {
+      "shot": "shot-01",
+      "sample_rate": 16000,
+      "duration": 8.49,
+      "last_word_start": 6.79
+    },
+    {
+      "shot": "shot-02",
+      "sample_rate": 16000,
+      "duration": 7.74,
+      "last_word_start": 6.25
+    },
+    {
+      "shot": "shot-03",
+      "sample_rate": 16000,
+      "duration": 4.235,
+      "last_word_start": 2.785
+    },
+    {
+      "shot": "shot-04",
+      "sample_rate": 16000,
+      "duration": 5.555,
+      "last_word_start": 4.285
+    },
+    {
+      "shot": "shot-05",
+      "sample_rate": 16000,
+      "duration": 5.985,
+      "last_word_start": 4.76
+    },
+    {
+      "shot": "shot-06",
+      "sample_rate": 16000,
+      "duration": 2.955,
+      "last_word_start": 1.675
+    },
+    {
+      "shot": "shot-07",
+      "sample_rate": 16000,
+      "duration": 7.425,
+      "last_word_start": 6.18
+    },
+    {
+      "shot": "shot-08",
+      "sample_rate": 16000,
+      "duration": 3.315,
+      "last_word_start": 2.055
+    },
+    {
+      "shot": "shot-09",
+      "sample_rate": 16000,
+      "duration": 4.535,
+      "last_word_start": 3.49
+    },
+    {
+      "shot": "shot-10",
+      "sample_rate": 16000,
+      "duration": 4.54,
+      "last_word_start": 3.205
+    },
+    {
+      "shot": "shot-11",
+      "sample_rate": 16000,
+      "duration": 7.845,
+      "last_word_start": 6.55
+    },
+    {
+      "shot": "shot-12",
+      "sample_rate": 16000,
+      "duration": 6.515,
+      "last_word_start": 5.28
+    },
+    {
+      "shot": "shot-13",
+      "sample_rate": 16000,
+      "duration": 4.545,
+      "last_word_start": 3.0
+    },
+    {
+      "shot": "shot-14",
+      "sample_rate": 16000,
+      "duration": 6.84,
+      "last_word_start": 5.385
+    },
+    {
+      "shot": "shot-15",
+      "sample_rate": 16000,
+      "duration": 5.02,
+      "last_word_start": 3.63
+    },
+    {
+      "shot": "shot-16",
+      "sample_rate": 16000,
+      "duration": 6.995,
+      "last_word_start": 5.83
+    },
+    {
+      "shot": "shot-17",
+      "sample_rate": 16000,
+      "duration": 4.08,
+      "last_word_start": 2.85
+    },
+    {
+      "shot": "shot-18",
+      "sample_rate": 16000,
+      "duration": 7.195,
+      "last_word_start": 5.87
+    },
+    {
+      "shot": "shot-19",
+      "sample_rate": 16000,
+      "duration": 5.4,
+      "last_word_start": 4.24
+    },
+    {
+      "shot": "shot-20",
+      "sample_rate": 16000,
+      "duration": 6.665,
+      "last_word_start": 5.715
+    },
+    {
+      "shot": "shot-21",
+      "sample_rate": 16000,
+      "duration": 6.07,
+      "last_word_start": 4.695
+    },
+    {
+      "shot": "shot-22",
+      "sample_rate": 16000,
+      "duration": 5.83,
+      "last_word_start": 4.7
+    },
+    {
+      "shot": "shot-23",
+      "sample_rate": 16000,
+      "duration": 5.315,
+      "last_word_start": 3.735
+    },
+    {
+      "shot": "shot-24",
+      "sample_rate": 16000,
+      "duration": 7.22,
+      "last_word_start": 6.03
+    },
+    {
+      "shot": "shot-25",
+      "sample_rate": 16000,
+      "duration": 3.265,
+      "last_word_start": 2.075
+    },
+    {
+      "shot": "shot-26",
+      "sample_rate": 16000,
+      "duration": 7.32,
+      "last_word_start": 6.225
+    },
+    {
+      "shot": "shot-27",
+      "sample_rate": 16000,
+      "duration": 6.51,
+      "last_word_start": 5.375
+    },
+    {
+      "shot": "shot-28",
+      "sample_rate": 16000,
+      "duration": 5.35,
+      "last_word_start": 3.84
+    },
+    {
+      "shot": "shot-29",
+      "sample_rate": 16000,
+      "duration": 6.03,
+      "last_word_start": 4.895
+    },
+    {
+      "shot": "shot-30",
+      "sample_rate": 16000,
+      "duration": 7.59,
+      "last_word_start": 5.985
+    },
+    {
+      "shot": "shot-31",
+      "sample_rate": 16000,
+      "duration": 4.86,
+      "last_word_start": 3.53
+    },
+    {
+      "shot": "shot-32",
+      "sample_rate": 16000,
+      "duration": 6.63,
+      "last_word_start": 5.34
+    },
+    {
+      "shot": "shot-33",
+      "sample_rate": 16000,
+      "duration": 4.02,
+      "last_word_start": 2.795
+    },
+    {
+      "shot": "shot-34",
+      "sample_rate": 16000,
+      "duration": 4.84,
+      "last_word_start": 3.68
+    },
+    {
+      "shot": "shot-35",
+      "sample_rate": 16000,
+      "duration": 5.12,
+      "last_word_start": 3.945
+    },
+    {
+      "shot": "shot-36",
+      "sample_rate": 16000,
+      "duration": 5.9,
+      "last_word_start": 4.495
+    },
+    {
+      "shot": "shot-37",
+      "sample_rate": 16000,
+      "duration": 3.5,
+      "last_word_start": 2.24
+    },
+    {
+      "shot": "shot-38",
+      "sample_rate": 16000,
+      "duration": 6.44,
+      "last_word_start": 5.24
+    },
+    {
+      "shot": "shot-39",
+      "sample_rate": 16000,
+      "duration": 5.27,
+      "last_word_start": 4.115
+    },
+    {
+      "shot": "shot-40",
+      "sample_rate": 16000,
+      "duration": 5.385,
+      "last_word_start": 4.26
+    },
+    {
+      "shot": "shot-41",
+      "sample_rate": 16000,
+      "duration": 6.52,
+      "last_word_start": 5.13
+    },
+    {
+      "shot": "shot-42",
+      "sample_rate": 16000,
+      "duration": 4.71,
+      "last_word_start": 3.375
+    },
+    {
+      "shot": "shot-43",
+      "sample_rate": 16000,
+      "duration": 6.955,
+      "last_word_start": 5.76
+    },
+    {
+      "shot": "shot-44",
+      "sample_rate": 16000,
+      "duration": 4.13,
+      "last_word_start": 3.085
+    },
+    {
+      "shot": "shot-45",
+      "sample_rate": 16000,
+      "duration": 3.785,
+      "last_word_start": 2.615
+    },
+    {
+      "shot": "shot-46",
+      "sample_rate": 16000,
+      "duration": 9.43,
+      "last_word_start": 8.09
+    }
+  ]
+}

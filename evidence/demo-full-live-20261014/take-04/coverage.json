@@ -1,0 +1,49 @@
+[
+  {
+    "name": "Single-school full-course estimate with sourced and estimated lines",
+    "passed": true,
+    "total": "1013800.00"
+  },
+  {
+    "name": "Four-school comparison and THB/CNY/USD display",
+    "passed": true
+  },
+  {
+    "name": "Cost assumptions persist, recalculate totals, expose dated forecast and sources, and can be restored",
+    "passed": true
+  },
+  {
+    "name": "Both repayment methods and full schedules",
+    "passed": true,
+    "studyMonths": 42,
+    "repaymentMonths": 60
+  },
+  {
+    "name": "Live AI reminder, persisted acknowledgement and completion",
+    "passed": true
+  },
+  {
+    "name": "Loan application, checklist, signing, school payouts and wallet repayment",
+    "passed": true
+  },
+  {
+    "name": "Family request, anonymous promise, operator receipt",
+    "passed": true,
+    "received": "6500.00",
+    "promiseMovedMoney": false
+  },
+  {
+    "name": "Explicit enrollment with user confirmation; date alone did not enroll",
+    "passed": true
+  },
+  {
+    "name": "Budget edit, live AI expense, categories and undo",
+    "passed": true,
+    "remaining": "6000.00"
+  },
+  {
+    "name": "Live AI conversion: quotes, proposal, wrong password refused, confirmed debit",
+    "passed": true,
+    "debitCNY": 500
+  }
+]

@@ -1,0 +1,21 @@
+[
+  {
+    "name": "Single-school full-course estimate with sourced and estimated lines",
+    "passed": true,
+    "total": "1013800.00"
+  },
+  {
+    "name": "Four-school comparison and THB/CNY/USD display",
+    "passed": true
+  },
+  {
+    "name": "Cost assumptions persist, recalculate totals, expose dated forecast and sources, and can be restored",
+    "passed": true
+  },
+  {
+    "name": "Both repayment methods and full schedules",
+    "passed": true,
+    "studyMonths": 42,
+    "repaymentMonths": 60
+  }
+]

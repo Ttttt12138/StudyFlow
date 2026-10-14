@@ -1,0 +1,29 @@
+SHOT single-school-total
+SHOT cost-tuition
+SHOT cost-living
+SHOT cost-essentials
+PASS Single-school full-course estimate with sourced and estimated lines
+SHOT comparison-CNY
+SHOT comparison-USD
+SHOT comparison-THB
+PASS Four-school comparison and THB/CNY/USD display
+SHOT adjust-cost-assumption
+SHOT adjusted-total
+SHOT forecast-and-sources
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+locator.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('.assessment-panel').getByRole('button', { name: 'Back', exact: true })[22m
+
+    at Object.planDetails (D:\Qoder-project\AI studyflow\output\full-demo-take-03\frontend\auto_test\full-demo.mjs:72:98)
+    at async file:///D:/Qoder-project/AI%20studyflow/output/full-demo-take-03/frontend/auto_test/short-planning.browser.mjs:136:16 {
+  log: [
+    "  - waiting for locator('.assessment-panel').getByRole('button', { name: 'Back', exact: true })"
+  ],
+  name: 'TimeoutError'
+}
+
+Node.js v25.5.0

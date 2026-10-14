@@ -1,0 +1,346 @@
+[
+  {
+    "name": "opening",
+    "seconds": 0.5632835000000002
+  },
+  {
+    "name": "prompt-1",
+    "seconds": 7.5787118
+  },
+  {
+    "name": "answer-1",
+    "seconds": 17.094985200000004
+  },
+  {
+    "name": "single-school-total",
+    "seconds": 24.1046596
+  },
+  {
+    "name": "cost-tuition",
+    "seconds": 30.1784788
+  },
+  {
+    "name": "cost-living",
+    "seconds": 36.2292719
+  },
+  {
+    "name": "cost-essentials",
+    "seconds": 40.2907402
+  },
+  {
+    "name": "prompt-2",
+    "seconds": 44.7270073
+  },
+  {
+    "name": "answer-2",
+    "seconds": 54.4426734
+  },
+  {
+    "name": "comparison-CNY",
+    "seconds": 61.496437400000005
+  },
+  {
+    "name": "comparison-USD",
+    "seconds": 65.5610386
+  },
+  {
+    "name": "comparison-THB",
+    "seconds": 69.6183247
+  },
+  {
+    "name": "comparison-cards",
+    "seconds": 73.6999017
+  },
+  {
+    "name": "prompt-3",
+    "seconds": 79.712146
+  },
+  {
+    "name": "answer-3",
+    "seconds": 92.323592
+  },
+  {
+    "name": "precheck",
+    "seconds": 99.8090477
+  },
+  {
+    "name": "adjust-cost-assumption",
+    "seconds": 107.2010546
+  },
+  {
+    "name": "adjusted-total",
+    "seconds": 110.39445690000001
+  },
+  {
+    "name": "forecast-and-sources",
+    "seconds": 116.4682154
+  },
+  {
+    "name": "prompt-4",
+    "seconds": 123.4441329
+  },
+  {
+    "name": "answer-4",
+    "seconds": 129.2081715
+  },
+  {
+    "name": "prompt-5",
+    "seconds": 136.2800564
+  },
+  {
+    "name": "answer-5",
+    "seconds": 145.37053659999998
+  },
+  {
+    "name": "loan-selection",
+    "seconds": 152.5098394
+  },
+  {
+    "name": "loan-custom",
+    "seconds": 155.34270310000002
+  },
+  {
+    "name": "loan-interest-only",
+    "seconds": 162.3052538
+  },
+  {
+    "name": "loan-quote",
+    "seconds": 169.24547339999998
+  },
+  {
+    "name": "confirm-plan",
+    "seconds": 178.300146
+  },
+  {
+    "name": "documents",
+    "seconds": 185.0985995
+  },
+  {
+    "name": "document-3",
+    "seconds": 190.122582
+  },
+  {
+    "name": "document-2",
+    "seconds": 191.1499546
+  },
+  {
+    "name": "document-1",
+    "seconds": 192.1753958
+  },
+  {
+    "name": "sign-dialog",
+    "seconds": 193.2092131
+  },
+  {
+    "name": "signed",
+    "seconds": 199.5194573
+  },
+  {
+    "name": "prompt-6",
+    "seconds": 207.5696557
+  },
+  {
+    "name": "answer-6",
+    "seconds": 217.7097836
+  },
+  {
+    "name": "preparation-reminder",
+    "seconds": 224.8943052
+  },
+  {
+    "name": "preparation-completed",
+    "seconds": 231.7621854
+  },
+  {
+    "name": "repayment-ready",
+    "seconds": 235.6402072
+  },
+  {
+    "name": "password-check",
+    "seconds": 241.6705427
+  },
+  {
+    "name": "repayment-result",
+    "seconds": 248.95472080000002
+  },
+  {
+    "name": "repaid",
+    "seconds": 251.93885029999998
+  },
+  {
+    "name": "family-request",
+    "seconds": 261.4713794
+  },
+  {
+    "name": "family-received",
+    "seconds": 285.8441517
+  },
+  {
+    "name": "prompt-7",
+    "seconds": 294.34404199999994
+  },
+  {
+    "name": "answer-7",
+    "seconds": 305.64281379999994
+  },
+  {
+    "name": "enrollment-proposal",
+    "seconds": 312.6528257
+  },
+  {
+    "name": "enrolled",
+    "seconds": 319.04115859999996
+  },
+  {
+    "name": "monthly-budget",
+    "seconds": 325.61035919999995
+  },
+  {
+    "name": "prompt-8",
+    "seconds": 331.7608633
+  },
+  {
+    "name": "answer-8",
+    "seconds": 347.16987869999997
+  },
+  {
+    "name": "expense-recorded",
+    "seconds": 354.7223362
+  },
+  {
+    "name": "expense-undone",
+    "seconds": 361.05894629999995
+  },
+  {
+    "name": "multicurrency-wallet",
+    "seconds": 364.2720412
+  },
+  {
+    "name": "prompt-9",
+    "seconds": 370.4052326
+  },
+  {
+    "name": "answer-9",
+    "seconds": 409.8357392
+  },
+  {
+    "name": "conversion-proposal",
+    "seconds": 416.86735439999995
+  },
+  {
+    "name": "wrong-password-refused",
+    "seconds": 423.05049529999997
+  },
+  {
+    "name": "money-password-confirm",
+    "seconds": 429.0996737
+  },
+  {
+    "name": "conversion-confirmed",
+    "seconds": 432.4919643
+  },
+  {
+    "name": "prompt-10",
+    "seconds": 438.5581294
+  },
+  {
+    "name": "answer-10",
+    "seconds": 476.38417789999994
+  },
+  {
+    "name": "remittance-proposal",
+    "seconds": 483.4230294999999
+  },
+  {
+    "name": "money-password-confirm",
+    "seconds": 489.5027839
+  },
+  {
+    "name": "remittance-submitted",
+    "seconds": 492.8977553
+  },
+  {
+    "name": "transfer-order-history",
+    "seconds": 499.0632642
+  },
+  {
+    "name": "wallet-ledger",
+    "seconds": 505.1575592
+  },
+  {
+    "name": "prompt-11",
+    "seconds": 511.2863627
+  },
+  {
+    "name": "answer-11",
+    "seconds": 550.6128776
+  },
+  {
+    "name": "money-password-confirm",
+    "seconds": 557.6504601
+  },
+  {
+    "name": "over-limit-blocked",
+    "seconds": 560.9391609
+  },
+  {
+    "name": "tuition-shortfall",
+    "seconds": 568.2329741
+  },
+  {
+    "name": "bill-topup-review",
+    "seconds": 574.3186495000001
+  },
+  {
+    "name": "tuition-password",
+    "seconds": 580.6440041000001
+  },
+  {
+    "name": "tuition-paid",
+    "seconds": 586.9167508
+  },
+  {
+    "name": "bill-payment-history",
+    "seconds": 594.0532544
+  },
+  {
+    "name": "credit-used",
+    "seconds": 600.7282768
+  },
+  {
+    "name": "credit-repayment",
+    "seconds": 607.0299333
+  },
+  {
+    "name": "credit-password",
+    "seconds": 613.2662592
+  },
+  {
+    "name": "credit-restored",
+    "seconds": 618.1355133
+  },
+  {
+    "name": "prompt-12",
+    "seconds": 622.3903017000001
+  },
+  {
+    "name": "answer-12",
+    "seconds": 661.941954
+  },
+  {
+    "name": "on-time-record",
+    "seconds": 669.0649029
+  },
+  {
+    "name": "security-audit",
+    "seconds": 675.1609914000001
+  },
+  {
+    "name": "signed-statement",
+    "seconds": 681.7040822
+  },
+  {
+    "name": "end",
+    "seconds": 698.81064
+  }
+]

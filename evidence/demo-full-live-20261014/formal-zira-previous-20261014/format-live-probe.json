@@ -1,0 +1,50 @@
+[
+  {
+    "case": 0,
+    "passed": false,
+    "step": {
+      "kind": "tool_call",
+      "tool": "estimate_total_cost",
+      "arguments_json": "{\"school_key\":\"psu-phuket\"}",
+      "rationale": "Get the full-course cost estimate for PSU Phuket before summarizing the funding gap and simulated loan options."
+    },
+    "call": {
+      "provider": "openai",
+      "purpose": "plan",
+      "model": "openai/gpt-6-luna",
+      "mode": "live",
+      "prompt_version": "planning-1.9",
+      "duration_ms": 15288.202099967748,
+      "input_tokens": 4574,
+      "output_tokens": 240,
+      "attempts": 3,
+      "error_code": null,
+      "request_id": null,
+      "http_status": null
+    }
+  },
+  {
+    "case": 1,
+    "passed": true,
+    "step": {
+      "kind": "tool_call",
+      "tool": "create_study_task",
+      "arguments_json": "{\"title\":\"Submit housing documents\",\"due_date\":\"2027-08-02\",\"source_text\":\"Remind me tomorrow to submit housing documents.\"}",
+      "rationale": "Create the requested in-app reminder for tomorrow, using the simulated study date."
+    },
+    "call": {
+      "provider": "openai",
+      "purpose": "plan",
+      "model": "openai/gpt-6-luna",
+      "mode": "live",
+      "prompt_version": "planning-1.9",
+      "duration_ms": 2951.922799984459,
+      "input_tokens": 4116,
+      "output_tokens": 117,
+      "attempts": 1,
+      "error_code": null,
+      "request_id": null,
+      "http_status": null
+    }
+  }
+]

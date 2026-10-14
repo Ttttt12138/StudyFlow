@@ -1,0 +1,110 @@
+{
+  "duration_seconds": 213.52,
+  "under_five_minutes": true,
+  "resolution": "1920x1080",
+  "fps": 30,
+  "video_codec": "H.264",
+  "audio_codec": "AAC",
+  "full_decode": "passed",
+  "mean_volume_db": -19.6,
+  "peak_volume_db": -4.4,
+  "bytes": 18723011,
+  "sha256": "ba9beff9164bc974ecad6e130f876c9c0345c7aaac51d264922df2721d444bc1",
+  "recorded_take": "take-04",
+  "journeys_passed": 2,
+  "live_user_turns": 8,
+  "live_model_calls": 15,
+  "english_model_calls": 7,
+  "models": [
+    "openai/gpt-6-luna"
+  ],
+  "prompts": [
+    "planning-1.7"
+  ],
+  "source_files_checked": 294,
+  "source_drift_at_first_postrun_check": [],
+  "later_workspace_changes": [
+    "backend/finance/credit.py",
+    "backend/finance/planning/in_school.py",
+    "backend/finance/planning/loan_stage.py",
+    "backend/finance/planning/models.py"
+  ],
+  "source_archive_missing_files": [
+    "backend/finance/planning/in_school.py",
+    "backend/finance/planning/loan_stage.py",
+    "backend/finance/planning/models.py"
+  ],
+  "visual_samples": [
+    {
+      "scene": "intro",
+      "second": 8.298333333333334,
+      "file": "output\\demo-video-20261014\\qa-00-intro.png"
+    },
+    {
+      "scene": "opening",
+      "second": 19.98166666666667,
+      "file": "output\\demo-video-20261014\\qa-01-opening.png"
+    },
+    {
+      "scene": "compare",
+      "second": 36.86666666666667,
+      "file": "output\\demo-video-20261014\\qa-02-compare.png"
+    },
+    {
+      "scene": "funds",
+      "second": 58.318333333333335,
+      "file": "output\\demo-video-20261014\\qa-03-funds.png"
+    },
+    {
+      "scene": "ceiling",
+      "second": 77.12833333333333,
+      "file": "output\\demo-video-20261014\\qa-04-ceiling.png"
+    },
+    {
+      "scene": "safety",
+      "second": 92.16666666666666,
+      "file": "output\\demo-video-20261014\\qa-05-safety.png"
+    },
+    {
+      "scene": "quote",
+      "second": 109.07,
+      "file": "output\\demo-video-20261014\\qa-06-quote.png"
+    },
+    {
+      "scene": "confirm",
+      "second": 124.02666666666667,
+      "file": "output\\demo-video-20261014\\qa-07-confirm.png"
+    },
+    {
+      "scene": "documents",
+      "second": 137.80833333333334,
+      "file": "output\\demo-video-20261014\\qa-08-documents.png"
+    },
+    {
+      "scene": "sign",
+      "second": 150.15499999999997,
+      "file": "output\\demo-video-20261014\\qa-09-sign.png"
+    },
+    {
+      "scene": "payout",
+      "second": 164.85833333333332,
+      "file": "output\\demo-video-20261014\\qa-10-payout.png"
+    },
+    {
+      "scene": "repay",
+      "second": 181.03333333333333,
+      "file": "output\\demo-video-20261014\\qa-11-repay.png"
+    },
+    {
+      "scene": "done",
+      "second": 194.67166666666665,
+      "file": "output\\demo-video-20261014\\qa-12-done.png"
+    },
+    {
+      "scene": "outro",
+      "second": 208.425,
+      "file": "output\\demo-video-20261014\\qa-13-outro.png"
+    }
+  ],
+  "visual_review": "Reviewed the 14-scene contact sheet and full-resolution loan schedule, checklist and paid-history frames; captions stay outside application footage."
+}

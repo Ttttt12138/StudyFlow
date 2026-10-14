@@ -1,0 +1,20 @@
+{
+  "reviewed": "2026-10-14",
+  "shots": 46,
+  "contact_sheets": 4,
+  "full_size_spot_checks": [
+    9,
+    28,
+    40,
+    44
+  ],
+  "checks": [
+    "Each scene shows the stated feature or recorded result",
+    "No editorial title or subtitle clipping",
+    "Simulation notice stays visible",
+    "Password refusal, completed credit payment, dated forecast and valid statement are legible"
+  ],
+  "source_alignment_checks": 36,
+  "all_36_mean_pixel_differences_below": 3,
+  "video_sha256": "33ca32b1e97aa9b5e52995ac0d292b86343d826ade79b6853746e828df9efe17"
+}

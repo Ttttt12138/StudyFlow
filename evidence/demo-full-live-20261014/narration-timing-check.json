@@ -1,0 +1,265 @@
+{
+  "provider": "Microsoft Edge online neural TTS",
+  "client": "edge-tts",
+  "client_version": "7.3.1",
+  "voice": "en-US-AvaNeural",
+  "rate": "-10%",
+  "pitch": "+0Hz",
+  "volume": "+0%",
+  "authorization": "User explicitly authorized sending the English script to Microsoft on 2026-10-14",
+  "outbound_content": "Only the English narration text; no credentials, screenshots or recordings",
+  "paragraph_count": 12,
+  "normal_post_tempo": 1.2,
+  "numeric_sentence_post_tempo": 1.12,
+  "brand_pronunciation": "Study Flow",
+  "currency_pronunciation": "Thai baht; Chinese yuan; U.S. dollars",
+  "numbers": "Written out in English; selected numeric sentences slightly slower",
+  "duration_seconds": 245.33333333333334,
+  "displayed_words": 627,
+  "caption_groups": 85,
+  "paragraphs": [
+    {
+      "id": "chapter-01",
+      "start": 0.0,
+      "duration": 7.5,
+      "audio_start": 0.12,
+      "tempo_regions": [
+        {
+          "raw_start": 0.0,
+          "raw_end": 8.64,
+          "tempo": 1.2,
+          "start": 0.0,
+          "duration": 7.185083333333333
+        }
+      ],
+      "mastered_sha256": "f3cad81066af87b8616ff47a1942c5254f3671b973158b11cdf7d5dd8818a8ae"
+    },
+    {
+      "id": "chapter-02",
+      "start": 7.5,
+      "duration": 23.4,
+      "audio_start": 7.62,
+      "tempo_regions": [
+        {
+          "raw_start": 0.0,
+          "raw_end": 27.72,
+          "tempo": 1.2,
+          "start": 0.0,
+          "duration": 23.082145833333332
+        }
+      ],
+      "mastered_sha256": "2dcf0f08ef40e65ae3e5006544302660999d8275863382b078d0212f604abc29"
+    },
+    {
+      "id": "chapter-03",
+      "start": 30.9,
+      "duration": 32.233333333333334,
+      "audio_start": 31.02,
+      "tempo_regions": [
+        {
+          "raw_start": 0.0,
+          "raw_end": 30.473603500000003,
+          "tempo": 1.2,
+          "start": 0.0,
+          "duration": 25.403541666666666
+        },
+        {
+          "raw_start": 30.473603500000003,
+          "raw_end": 37.8,
+          "tempo": 1.12,
+          "start": 25.403541666666666,
+          "duration": 6.5242708333333335
+        }
+      ],
+      "mastered_sha256": "8792c50afc0956fb56d16a52903a8bb60e9cc48b5cec8fe9d196417502c7e4b6"
+    },
+    {
+      "id": "chapter-04",
+      "start": 63.13333333333333,
+      "duration": 22.8,
+      "audio_start": 63.25333333333333,
+      "tempo_regions": [
+        {
+          "raw_start": 0.0,
+          "raw_end": 27.0,
+          "tempo": 1.2,
+          "start": 0.0,
+          "duration": 22.481604166666667
+        }
+      ],
+      "mastered_sha256": "cc18a439c40ee93be9688f38ce604304cccd9cc30c15512e76ddbcc66da49ea5"
+    },
+    {
+      "id": "chapter-05",
+      "start": 85.93333333333334,
+      "duration": 15.833333333333334,
+      "audio_start": 86.05333333333334,
+      "tempo_regions": [
+        {
+          "raw_start": 0.0,
+          "raw_end": 11.168061999999999,
+          "tempo": 1.2,
+          "start": 0.0,
+          "duration": 9.313729166666667
+        },
+        {
+          "raw_start": 11.168061999999999,
+          "raw_end": 18.12,
+          "tempo": 1.12,
+          "start": 9.313729166666667,
+          "duration": 6.188208333333334
+        }
+      ],
+      "mastered_sha256": "39b3d326125ddedf1e124cbc555666a9d3bf662e95c3545e154b53252b330808"
+    },
+    {
+      "id": "chapter-06",
+      "start": 101.76666666666667,
+      "duration": 16.366666666666667,
+      "audio_start": 101.88666666666667,
+      "tempo_regions": [
+        {
+          "raw_start": 0.0,
+          "raw_end": 19.272,
+          "tempo": 1.2,
+          "start": 0.0,
+          "duration": 16.042145833333333
+        }
+      ],
+      "mastered_sha256": "75b36ac359aabebcc7adb4f9be1f91b20f553d0101671109117f734eaac9fdbf"
+    },
+    {
+      "id": "chapter-07",
+      "start": 118.13333333333334,
+      "duration": 14.966666666666667,
+      "audio_start": 118.25333333333334,
+      "tempo_regions": [
+        {
+          "raw_start": 0.0,
+          "raw_end": 5.470833,
+          "tempo": 1.12,
+          "start": 0.0,
+          "duration": 4.8888541666666665
+        },
+        {
+          "raw_start": 5.470833,
+          "raw_end": 17.208,
+          "tempo": 1.2,
+          "start": 4.8888541666666665,
+          "duration": 9.765979166666666
+        }
+      ],
+      "mastered_sha256": "532e7cfadab29b25fdb6ee0765aeb9dd1ebe81d88bcc72afa92286fe023109fb"
+    },
+    {
+      "id": "chapter-08",
+      "start": 133.1,
+      "duration": 34.5,
+      "audio_start": 133.22,
+      "tempo_regions": [
+        {
+          "raw_start": 0.0,
+          "raw_end": 20.1602705,
+          "tempo": 1.2,
+          "start": 0.0,
+          "duration": 16.8088125
+        },
+        {
+          "raw_start": 20.1602705,
+          "raw_end": 26.191958000000003,
+          "tempo": 1.12,
+          "start": 16.8088125,
+          "duration": 5.3904375
+        },
+        {
+          "raw_start": 26.191958000000003,
+          "raw_end": 40.584,
+          "tempo": 1.2,
+          "start": 22.19925,
+          "duration": 11.977125
+        }
+      ],
+      "mastered_sha256": "378b99b6359705d50a5e5fe9f035b282847c4343f5525fae019d084bd8ee631b"
+    },
+    {
+      "id": "chapter-09",
+      "start": 167.6,
+      "duration": 18.033333333333335,
+      "audio_start": 167.72,
+      "tempo_regions": [
+        {
+          "raw_start": 0.0,
+          "raw_end": 21.288,
+          "tempo": 1.2,
+          "start": 0.0,
+          "duration": 17.72533333333333
+        }
+      ],
+      "mastered_sha256": "ff79d6bba7af90e5430e0474bea4ba8b3c47568a357ec4b418f6b6a404fa411b"
+    },
+    {
+      "id": "chapter-10",
+      "start": 185.63333333333333,
+      "duration": 25.333333333333332,
+      "audio_start": 185.75333333333333,
+      "tempo_regions": [
+        {
+          "raw_start": 0.0,
+          "raw_end": 11.793061999999999,
+          "tempo": 1.2,
+          "start": 0.0,
+          "duration": 9.831229166666667
+        },
+        {
+          "raw_start": 11.793061999999999,
+          "raw_end": 18.431936999999998,
+          "tempo": 1.12,
+          "start": 9.831229166666667,
+          "duration": 5.933854166666666
+        },
+        {
+          "raw_start": 18.431936999999998,
+          "raw_end": 29.568,
+          "tempo": 1.2,
+          "start": 15.765083333333333,
+          "duration": 9.263
+        }
+      ],
+      "mastered_sha256": "61b1718310a97d71790cf210579909f186c14eeb205d9f7889d0fd59cca1a075"
+    },
+    {
+      "id": "chapter-11",
+      "start": 210.96666666666667,
+      "duration": 23.966666666666665,
+      "audio_start": 211.08666666666667,
+      "tempo_regions": [
+        {
+          "raw_start": 0.0,
+          "raw_end": 28.392,
+          "tempo": 1.2,
+          "start": 0.0,
+          "duration": 23.643208333333334
+        }
+      ],
+      "mastered_sha256": "14daed672a4dc3597fe426e4daa482857dc8a048b502edb0a73c91ab2dbc8178"
+    },
+    {
+      "id": "chapter-12",
+      "start": 234.93333333333334,
+      "duration": 10.4,
+      "audio_start": 235.05333333333334,
+      "tempo_regions": [
+        {
+          "raw_start": 0.0,
+          "raw_end": 12.12,
+          "tempo": 1.2,
+          "start": 0.0,
+          "duration": 10.0848125
+        }
+      ],
+      "mastered_sha256": "63d0915042f5602d9a62989ab17db83d444de3fdaab1d7e42773ef98e3323a8e"
+    }
+  ],
+  "max_encoded_audio_offset_seconds": 0.0,
+  "timing_limit": "Audio placement is measured at 1 ms resolution; provider word events are not independent phonetic ground truth"
+}

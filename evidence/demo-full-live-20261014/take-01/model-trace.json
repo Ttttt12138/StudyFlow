@@ -1,0 +1,685 @@
+{
+  "planner": "live external model",
+  "turns": [
+    {
+      "id": "0ac081d6-9803-4430-bf4e-70e2bbec2947",
+      "type": "agentsession",
+      "created_at": "2026-10-14T14:02:24.743Z",
+      "goal": "What is the total cost of the full programme at PSU Phuket? Include tuition, housing and living costs, and essential costs.",
+      "locale": "en",
+      "mode": "live",
+      "status": "COMPLETED",
+      "final_answer": "The estimated total for PSU Phuket’s 3.5-year BBA in International Business is **THB 1,013,800**: tuition THB 430,000, housing and living costs THB 463,200, and essential costs THB 120,600. The estimate range is THB 848,300–1,179,300. These are sample estimates based on public-source data; all figures are simulated.",
+      "error_code": "",
+      "write_count": 0,
+      "updated_at": "2026-10-14T14:02:34.712Z",
+      "conversation": "73c9fa1b-f244-4289-9130-57bef5be2203",
+      "cards": [
+        {
+          "type": "cost",
+          "notes": [
+            {
+              "en": "Sample data from public sources; confirm with the school before paying.",
+              "zh": "示例数据，来自公开资料；付款前请向学校确认。"
+            },
+            {
+              "en": "Fees are the 2026 intake rates; the 2027 rates may change.",
+              "zh": "费用为 2026 级标准，2027 级可能调整。"
+            },
+            {
+              "en": "The BBA runs 10 semesters over 3.5 years; estimates count all 10 semesters and 42 living-cost months.",
+              "zh": "该 BBA 学制 3.5 年共 10 学期；按 10 学期及 42 个月生活费估算。"
+            },
+            {
+              "en": "2027 dates are projected from the 2026 Phuket calendar (10 Aug to 15 Dec 2026).",
+              "zh": "2027 年日期根据 2026 年普吉校区校历（2026 年 8 月 10 日至 12 月 15 日）推算。"
+            },
+            {
+              "en": "Food, transport, insurance, travel and supplies are estimates.",
+              "zh": "餐饮、交通、保险、旅行和学习用品为估算值。"
+            }
+          ],
+          "school": {
+            "key": "psu-phuket",
+            "name": {
+              "en": "Prince of Songkla University, Phuket Campus",
+              "zh": "宋卡王子大学（普吉校区）"
+            }
+          },
+          "estimate": {
+            "lines": [
+              {
+                "group": "tuition",
+                "label": {
+                  "en": "Tuition per semester",
+                  "zh": "每学期学费"
+                },
+                "lower": null,
+                "quote": "Tuition per semester: 41,000",
+                "total": "410000.00",
+                "upper": null,
+                "amount": "41000.00",
+                "period": "semester",
+                "status": "known",
+                "cost_id": "tuition_semester",
+                "category": "tuition",
+                "estimate": false,
+                "per_year": "123000.00",
+                "total_low": "410000.00",
+                "source_url": "https://sites.google.com/phuket.psu.ac.th/fispsuphuket/International-Students",
+                "total_high": "410000.00",
+                "observed_at": "2026-10-12",
+                "occurrences": 10,
+                "start_month": 0,
+                "period_amounts": [
+                  "41000.00",
+                  "41000.00",
+                  "41000.00",
+                  "41000.00",
+                  "41000.00",
+                  "41000.00",
+                  "41000.00",
+                  "41000.00",
+                  "41000.00",
+                  "41000.00"
+                ]
+              },
+              {
+                "group": "tuition",
+                "label": {
+                  "en": "Enrollment fee (one-time)",
+                  "zh": "入学注册费（一次性）"
+                },
+                "lower": null,
+                "quote": "Enrollment Fee: 20,000",
+                "total": "20000.00",
+                "upper": null,
+                "amount": "20000.00",
+                "period": "once",
+                "status": "known",
+                "cost_id": "enrollment_fee",
+                "category": "tuition",
+                "estimate": false,
+                "per_year": "20000.00",
+                "total_low": "20000.00",
+                "source_url": "https://sites.google.com/phuket.psu.ac.th/fispsuphuket/International-Students",
+                "total_high": "20000.00",
+                "observed_at": "2026-10-12",
+                "occurrences": 1,
+                "start_month": 0,
+                "period_amounts": [
+                  "20000.00"
+                ]
+              },
+              {
+                "group": "living",
+                "label": {
+                  "en": "On-campus air-conditioned dorm, 2 per room",
+                  "zh": "校内空调宿舍（双人间）"
+                },
+                "lower": null,
+                "quote": "Price/ Person : 11,250 THB",
+                "total": "112500.00",
+                "upper": null,
+                "amount": "11250.00",
+                "period": "semester",
+                "status": "known",
+                "cost_id": "dorm_shared",
+                "category": "housing",
+                "estimate": false,
+                "per_year": "33750.00",
+                "total_low": "112500.00",
+                "source_url": "https://sites.google.com/phuket.psu.ac.th/fispsuphuket/International-Students",
+                "total_high": "112500.00",
+                "observed_at": "2026-10-12",
+                "occurrences": 10,
+                "start_month": 0,
+                "period_amounts": [
+                  "11250.00",
+                  "11250.00",
+                  "11250.00",
+                  "11250.00",
+                  "11250.00",
+                  "11250.00",
+                  "11250.00",
+                  "11250.00",
+                  "11250.00",
+                  "11250.00"
+                ]
+              },
+              {
+                "group": "essentials",
+                "label": {
+                  "en": "Dorm deposit, charged once",
+                  "zh": "宿舍押金（一次性）"
+                },
+                "lower": null,
+                "quote": "3,000 THB",
+                "total": "3000.00",
+                "upper": null,
+                "amount": "3000.00",
+                "period": "once",
+                "status": "known",
+                "cost_id": "dorm_deposit",
+                "category": "deposit",
+                "estimate": false,
+                "per_year": "3000.00",
+                "total_low": "3000.00",
+                "source_url": "https://sites.google.com/phuket.psu.ac.th/fispsuphuket/International-Students",
+                "total_high": "3000.00",
+                "observed_at": "2026-10-12",
+                "occurrences": 1,
+                "start_month": 0,
+                "period_amounts": [
+                  "3000.00"
+                ]
+              },
+              {
+                "group": "living",
+                "label": {
+                  "en": "Food (canteen and local eateries)",
+                  "zh": "餐饮（食堂及周边小吃店）"
+                },
+                "lower": "4500.00",
+                "quote": null,
+                "total": "252000.00",
+                "upper": "7500.00",
+                "amount": "6000.00",
+                "period": "month",
+                "status": "estimated",
+                "cost_id": "food_monthly",
+                "category": "food",
+                "estimate": true,
+                "per_year": "72000.00",
+                "total_low": "189000.00",
+                "source_url": null,
+                "total_high": "315000.00",
+                "observed_at": "2026-10-12",
+                "occurrences": 42,
+                "start_month": 0,
+                "period_amounts": [
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00"
+                ]
+              },
+              {
+                "group": "living",
+                "label": {
+                  "en": "Local transport (songthaew, Grab or scooter rental)",
+                  "zh": "本地交通（双条车、Grab 或租摩托车）"
+                },
+                "lower": "800.00",
+                "quote": null,
+                "total": "79800.00",
+                "upper": "3000.00",
+                "amount": "1900.00",
+                "period": "month",
+                "status": "estimated",
+                "cost_id": "transport_monthly",
+                "category": "transport",
+                "estimate": true,
+                "per_year": "22800.00",
+                "total_low": "33600.00",
+                "source_url": null,
+                "total_high": "126000.00",
+                "observed_at": "2026-10-12",
+                "occurrences": 42,
+                "start_month": 0,
+                "period_amounts": [
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00"
+                ]
+              },
+              {
+                "group": "living",
+                "label": {
+                  "en": "Mobile plan with data",
+                  "zh": "手机套餐及流量"
+                },
+                "lower": "300.00",
+                "quote": null,
+                "total": "18900.00",
+                "upper": "600.00",
+                "amount": "450.00",
+                "period": "month",
+                "status": "estimated",
+                "cost_id": "phone_internet",
+                "category": "communications",
+                "estimate": true,
+                "per_year": "5400.00",
+                "total_low": "12600.00",
+                "source_url": null,
+                "total_high": "25200.00",
+                "observed_at": "2026-10-12",
+                "occurrences": 42,
+                "start_month": 0,
+                "period_amounts": [
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00"
+                ]
+              },
+              {
+                "group": "essentials",
+                "label": {
+                  "en": "Student health insurance",
+                  "zh": "学生医疗保险"
+                },
+                "lower": "4000.00",
+                "quote": null,
+                "total": "28000.00",
+                "upper": "10000.00",
+                "amount": "7000.00",
+                "period": "year",
+                "status": "estimated",
+                "cost_id": "health_insurance",
+                "category": "insurance",
+                "estimate": true,
+                "per_year": "7000.00",
+                "total_low": "16000.00",
+                "source_url": null,
+                "total_high": "40000.00",
+                "observed_at": "2026-10-12",
+                "occurrences": 4,
+                "start_month": 0,
+                "period_amounts": [
+                  "7000.00",
+                  "7000.00",
+                  "7000.00",
+                  "7000.00"
+                ]
+              },
+              {
+                "group": "essentials",
+                "label": {
+                  "en": "Non-Immigrant ED visa, single entry",
+                  "zh": "非移民教育签证（单次入境）"
+                },
+                "lower": null,
+                "quote": "2,000",
+                "total": "2000.00",
+                "upper": null,
+                "amount": "2000.00",
+                "period": "once",
+                "status": "known",
+                "cost_id": "visa_non_immigrant",
+                "category": "visa",
+                "estimate": false,
+                "per_year": "2000.00",
+                "total_low": "2000.00",
+                "source_url": "https://bangkok.immigration.go.th/en/fee_en/",
+                "total_high": "2000.00",
+                "observed_at": "2026-10-12",
+                "occurrences": 1,
+                "start_month": 0,
+                "period_amounts": [
+                  "2000.00"
+                ]
+              },
+              {
+                "group": "essentials",
+                "label": {
+                  "en": "Annual extension of stay",
+                  "zh": "每年居留延期费"
+                },
+                "lower": null,
+                "quote": "1,900",
+                "total": "7600.00",
+                "upper": null,
+                "amount": "1900.00",
+                "period": "year",
+                "status": "known",
+                "cost_id": "visa_extension",
+                "category": "visa",
+                "estimate": false,
+                "per_year": "1900.00",
+                "total_low": "7600.00",
+                "source_url": "https://bangkok.immigration.go.th/en/fee_en/",
+                "total_high": "7600.00",
+                "observed_at": "2026-10-12",
+                "occurrences": 4,
+                "start_month": 0,
+                "period_amounts": [
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00"
+                ]
+              },
+              {
+                "group": "essentials",
+                "label": {
+                  "en": "Return trip home (economy flight)",
+                  "zh": "回国往返机票（经济舱）"
+                },
+                "lower": "6000.00",
+                "quote": null,
+                "total": "52000.00",
+                "upper": "20000.00",
+                "amount": "13000.00",
+                "period": "year",
+                "status": "estimated",
+                "cost_id": "home_trip",
+                "category": "travel",
+                "estimate": true,
+                "per_year": "13000.00",
+                "total_low": "24000.00",
+                "source_url": null,
+                "total_high": "80000.00",
+                "observed_at": "2026-10-12",
+                "occurrences": 4,
+                "start_month": 0,
+                "period_amounts": [
+                  "13000.00",
+                  "13000.00",
+                  "13000.00",
+                  "13000.00"
+                ]
+              },
+              {
+                "group": "essentials",
+                "label": {
+                  "en": "Settling in (bedding, SIM, household items)",
+                  "zh": "安家费用（床品、电话卡、日用品）"
+                },
+                "lower": "3000.00",
+                "quote": null,
+                "total": "5500.00",
+                "upper": "8000.00",
+                "amount": "5500.00",
+                "period": "once",
+                "status": "estimated",
+                "cost_id": "settling_in",
+                "category": "settlement",
+                "estimate": true,
+                "per_year": "5500.00",
+                "total_low": "3000.00",
+                "source_url": null,
+                "total_high": "8000.00",
+                "observed_at": "2026-10-12",
+                "occurrences": 1,
+                "start_month": 0,
+                "period_amounts": [
+                  "5500.00"
+                ]
+              },
+              {
+                "group": "essentials",
+                "label": {
+                  "en": "Books, printing and supplies",
+                  "zh": "教材、打印及文具"
+                },
+                "lower": "1500.00",
+                "quote": null,
+                "total": "22500.00",
+                "upper": "3000.00",
+                "amount": "2250.00",
+                "period": "semester",
+                "status": "estimated",
+                "cost_id": "books_supplies",
+                "category": "study_materials",
+                "estimate": true,
+                "per_year": "6750.00",
+                "total_low": "15000.00",
+                "source_url": null,
+                "total_high": "30000.00",
+                "observed_at": "2026-10-12",
+                "occurrences": 10,
+                "start_month": 0,
+                "period_amounts": [
+                  "2250.00",
+                  "2250.00",
+                  "2250.00",
+                  "2250.00",
+                  "2250.00",
+                  "2250.00",
+                  "2250.00",
+                  "2250.00",
+                  "2250.00",
+                  "2250.00"
+                ]
+              }
+            ],
+            "total": "1013800.00",
+            "years": 3.5,
+            "groups": {
+              "living": "463200.00",
+              "tuition": "430000.00",
+              "essentials": "120600.00"
+            },
+            "sample": true,
+            "program": {
+              "en": "BBA in International Business (Faculty of International Studies)",
+              "zh": "国际商务工商管理学士（国际研究学院）"
+            },
+            "complete": true,
+            "currency": "THB",
+            "total_low": "848300.00",
+            "first_year": "316100.00",
+            "school_key": "psu-phuket",
+            "total_high": "1179300.00",
+            "observed_at": "2026-10-12",
+            "known_subtotal": "1013800.00",
+            "catalog_version": 3,
+            "duration_months": 42,
+            "estimated_share": "45.25",
+            "total_semesters": 10,
+            "missing_cost_ids": []
+          }
+        }
+      ],
+      "steps": [
+        {
+          "id": "2d14d8eb-9083-44a8-9db4-40e298ef449a",
+          "created_at": "2026-10-14T14:02:30.571Z",
+          "number": 1,
+          "tool": "estimate_total_cost",
+          "tier": "T0",
+          "arguments": {
+            "school_key": "psu-phuket"
+          },
+          "rationale": "Get the full-programme estimate, including tuition, living and essential costs, in THB.",
+          "status": "OK",
+          "result": {
+            "total": "1013800.00",
+            "years": 3.5,
+            "groups": {
+              "living": "463200.00",
+              "tuition": "430000.00",
+              "essentials": "120600.00"
+            },
+            "sample": true,
+            "program": {
+              "en": "BBA in International Business (Faculty of International Studies)",
+              "zh": "国际商务工商管理学士（国际研究学院）"
+            },
+            "complete": true,
+            "currency": "THB",
+            "total_low": "848300.00",
+            "first_year": "316100.00",
+            "line_count": 13,
+            "school_key": "psu-phuket",
+            "total_high": "1179300.00",
+            "observed_at": "2026-10-12",
+            "known_subtotal": "1013800.00",
+            "catalog_version": 3,
+            "duration_months": 42,
+            "estimated_share": "45.25",
+            "total_semesters": 10,
+            "missing_cost_ids": []
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 4485.034700017422,
+            "http_status": null,
+            "input_tokens": 4338,
+            "output_tokens": 69,
+            "prompt_version": "planning-1.7"
+          }
+        },
+        {
+          "id": "66f42534-e891-41c2-b858-56f6f8b82b1c",
+          "created_at": "2026-10-14T14:02:34.709Z",
+          "number": 2,
+          "tool": "",
+          "tier": "",
+          "arguments": {},
+          "rationale": "",
+          "status": "FINAL",
+          "result": {
+            "answer": "The estimated total for PSU Phuket’s 3.5-year BBA in International Business is **THB 1,013,800**: tuition THB 430,000, housing and living costs THB 463,200, and essential costs THB 120,600. The estimate range is THB 848,300–1,179,300. These are sample estimates based on public-source data; all figures are simulated."
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 4135.11189998826,
+            "http_status": null,
+            "input_tokens": 4534,
+            "output_tokens": 277,
+            "prompt_version": "planning-1.7"
+          }
+        }
+      ],
+      "pending_actions": [],
+      "is_simulated": true
+    }
+  ],
+  "model_calls": 2,
+  "all_calls_live": true,
+  "models": [
+    "openai/gpt-6-luna"
+  ],
+  "prompt_versions": [
+    "planning-1.7"
+  ]
+}

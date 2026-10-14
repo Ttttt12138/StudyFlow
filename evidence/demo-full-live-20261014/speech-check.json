@@ -1,0 +1,150 @@
+{
+  "method": "Offline SenseVoice ASR on all 12 mastered paragraphs; no audio uploaded",
+  "limitation": "Recognition differences are not a human listening or phonetic alignment score",
+  "word_error_rate": 0.0315955766192733,
+  "numbers_match": true,
+  "paragraphs": [
+    {
+      "id": "chapter-01",
+      "transcript": "Before studying abroad, every student faces the same question, can I afford the whole journey, this is study flow?\"",
+      "expected": "Before studying abroad, every student faces the same question: can I afford the whole journey? This is StudyFlow.",
+      "word_errors": 0,
+      "reference_words": 18,
+      "numbers_expected": [],
+      "numbers_observed": [],
+      "clipped_sample_ratio": 0.0
+    },
+    {
+      "id": "chapter-02",
+      "transcript": "Your first answer brings tuition, living costs and essential expenses into one full course total each line distinguishes source fees from estimates, so you can see what the total depends on with four universities side by side, course length and total cost become easier to compare the same comparison is available in Tbot and Chinese Yuuan or U dollars using reference exchange rates.",
+      "expected": "Your first answer brings tuition, living costs and essential expenses into one full-course total. Each line distinguishes sourced fees from estimates, so you can see what the total depends on. With four universities side by side, course length and total cost become easier to compare. The same comparison is available in Thai baht and Chinese yuan, or US dollars, using reference exchange rates.",
+      "word_errors": 5,
+      "reference_words": 64,
+      "numbers_expected": [],
+      "numbers_observed": [],
+      "clipped_sample_ratio": 0.0
+    },
+    {
+      "id": "chapter-03",
+      "transcript": "Your declared savings carry into a saved plan, making the funding gap clear the borrowing ceiling is simulated, not a bank offer If an assumption changes, updating one fee revises the estimate the forecast then connects those costs to payment dates and sources for the gap that remains custom and commercial loan examples show different repayment paths one def first principle during study with a full schedule available here we choose 20,000 bot over 60 months with principal, Interest paid from the start.",
+      "expected": "Your declared savings carry into a saved plan, making the funding gap clear. The borrowing ceiling is simulated, not a bank offer. If an assumption changes, updating one fee revises the estimate. The forecast then connects those costs to payment dates and sources. For the gap that remains, custom and commercial loan examples show different repayment paths. One defers principal during study, with the full schedule available. Here, we choose twenty thousand baht over sixty months, with principal and interest paid from the start.",
+      "word_errors": 6,
+      "reference_words": 83,
+      "numbers_expected": [
+        "20000",
+        "60"
+      ],
+      "numbers_observed": [
+        "20000",
+        "60"
+      ],
+      "clipped_sample_ratio": 0.0
+    },
+    {
+      "id": "chapter-04",
+      "transcript": "Once the student confirms the plan, it becomes a simulated loan application, the checklist records demo declarations, it does not verify uploaded documents, a separate signing step makes consent and the school recipient explicit, the signed agreement schedules payments directly to the school's account verified within this simulation without adding loan funds to the student's wallet.",
+      "expected": "Once the student confirms the plan, it becomes a simulated loan application. The checklist records demo declarations; it does not verify uploaded documents. A separate signing step makes consent and the school recipient explicit. The signed agreement schedules payments directly to the school's account, verified within this simulation, without adding loan funds to the student's wallet.",
+      "word_errors": 0,
+      "reference_words": 58,
+      "numbers_expected": [],
+      "numbers_observed": [],
+      "clipped_sample_ratio": 0.0
+    },
+    {
+      "id": "chapter-05",
+      "transcript": "Family support covers another part of the plan First month housing a private link lets a family member confirm the promise while the wallet stays unchanged, only when the operator records a simulated receipt does the wallet gain 6,500 bot.",
+      "expected": "Family support covers another part of the plan: first-month housing. A private link lets a family member confirm the promise, while the wallet stays unchanged. Only when the operator records a simulated receipt does the wallet gain six thousand five hundred baht.",
+      "word_errors": 1,
+      "reference_words": 40,
+      "numbers_expected": [
+        "6500"
+      ],
+      "numbers_observed": [
+        "6500"
+      ],
+      "clipped_sample_ratio": 0.0
+    },
+    {
+      "id": "chapter-06",
+      "transcript": "Preparation stays in the same conversation a dated reminder can be acknowledged, then completed when registration is finished, the student explicitly confirms enrollment that opens daily life tools the date alone neither enrolls the student nor pays a bill.",
+      "expected": "Preparation stays in the same conversation. A dated reminder can be acknowledged, then completed. When registration is finished, the student explicitly confirms enrollment. That opens daily-life tools; the date alone neither enrolls the student nor pays a bill.",
+      "word_errors": 0,
+      "reference_words": 39,
+      "numbers_expected": [],
+      "numbers_observed": [],
+      "clipped_sample_ratio": 0.0
+    },
+    {
+      "id": "chapter-07",
+      "transcript": "A monthly budget of 6000 bot keeps upcoming payments and shortfalls in view just tell study flow what you spent on lunch, it records the expense and updates your remaining budget made a mistake, undoing the entry restores the budget immediately.",
+      "expected": "A monthly budget of six thousand baht keeps upcoming payments and shortfalls in view. Just tell StudyFlow what you spent on lunch. It records the expense and updates your remaining budget. Made a mistake? Undoing the entry restores the budget immediately.",
+      "word_errors": 1,
+      "reference_words": 40,
+      "numbers_expected": [
+        "6000"
+      ],
+      "numbers_observed": [
+        "6000"
+      ],
+      "clipped_sample_ratio": 0.0
+    },
+    {
+      "id": "chapter-08",
+      "transcript": "Separate currency balances make spending easier to follow All funds shown here come from simulated top ups and receipts For an exchange, the assistant compares quotes and prepares a proposal awaiting your approval a wrong password stops the action and leaves balances unchanged with the correct password and confirmation 500 yuan is converted into Bot the same principle applies to remittances routes, fees and arrival estimates come before commitment once confirmed. The transfer debits the source balance and creates an order you can track.",
+      "expected": "Separate currency balances make spending easier to follow. All funds shown here come from simulated top-ups and receipts. For an exchange, the assistant compares quotes and prepares a proposal, awaiting your approval. A wrong password stops the action and leaves balances unchanged. With the correct password and confirmation, five hundred yuan is converted into baht. The same principle applies to remittances: routes, fees and arrival estimates come before commitment. Once confirmed, the transfer debits the source balance and creates an order you can track.",
+      "word_errors": 1,
+      "reference_words": 84,
+      "numbers_expected": [
+        "500"
+      ],
+      "numbers_observed": [
+        "500"
+      ],
+      "clipped_sample_ratio": 0.0
+    },
+    {
+      "id": "chapter-09",
+      "transcript": "When tuition is due, the pay tab separates your own bills from those covered by the loan, a visible shortfall leads to a top up for exactly the missing amount, reviewing the pay and entering the password authorizes payment the bill is marked paid while a loan covered bill is protected against a duplicate charge.",
+      "expected": "When tuition is due, the Pay tab separates your own bills from those covered by the loan. A visible shortfall leads to a top-up for exactly the missing amount. Reviewing the payee and entering the password authorizes payment. The bill is marked paid, while a loan-covered bill is protected against a duplicate charge.",
+      "word_errors": 1,
+      "reference_words": 55,
+      "numbers_expected": [],
+      "numbers_observed": [],
+      "clipped_sample_ratio": 0.0
+    },
+    {
+      "id": "chapter-10",
+      "transcript": "Repayment follows the same consent flow we advance the demo date then authorize the first installment with a password the paid installment appears in the loan history for smaller bills, the fixed demo credit line provides funds repayable within 30 days, repaying that credit requires a password and debits the simulated wallet, the available line is restored with an on time record when repayment meets the due date.",
+      "expected": "Repayment follows the same consent flow. We advance the demo date, then authorize the first installment with a password. The paid installment appears in the loan history. For smaller bills, the fixed demo credit line provides funds repayable within thirty days. Repaying that credit requires a password and debits the simulated wallet. The available line is restored, with an on-time record when repayment meets the due date.",
+      "word_errors": 0,
+      "reference_words": 68,
+      "numbers_expected": [
+        "30"
+      ],
+      "numbers_observed": [
+        "30"
+      ],
+      "clipped_sample_ratio": 0.0
+    },
+    {
+      "id": "chapter-11",
+      "transcript": "These safeguards also set boundaries, and over limitit transfer is blocked without operator approval, even with the correct password, the audit trail records, authorization attempts and completed actions eligibleible payments build study flow's internal on time record rather than an external credit score a signed statement can be checked by a separate visitor without logging in changing its contents makes verification fail.",
+      "expected": "These safeguards also set boundaries. An over-limit transfer is blocked without operator approval, even with the correct password. The audit trail records authorization attempts and completed actions. Eligible payments build StudyFlow's internal on-time record, rather than an external credit score. A signed statement can be checked by a separate visitor without logging in. Changing its contents makes verification fail.",
+      "word_errors": 3,
+      "reference_words": 62,
+      "numbers_expected": [],
+      "numbers_observed": [],
+      "clipped_sample_ratio": 0.0
+    },
+    {
+      "id": "chapter-12",
+      "transcript": "From the first cost comparison to student life, studyy flow keeps decisions connected, Live AI proposes, the server enforces, and the student authorizes.",
+      "expected": "From the first cost comparison to student life, StudyFlow keeps decisions connected: live AI proposes, the server enforces, and the student authorizes.",
+      "word_errors": 2,
+      "reference_words": 22,
+      "numbers_expected": [],
+      "numbers_observed": [],
+      "clipped_sample_ratio": 0.0
+    }
+  ]
+}

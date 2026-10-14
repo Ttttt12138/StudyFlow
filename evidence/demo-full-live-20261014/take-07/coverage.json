@@ -1,0 +1,82 @@
+[
+  {
+    "name": "Single-school full-course estimate with sourced and estimated lines",
+    "passed": true,
+    "total": "1013800.00"
+  },
+  {
+    "name": "Four-school comparison and THB/CNY/USD display",
+    "passed": true
+  },
+  {
+    "name": "Cost assumptions persist, recalculate totals, expose dated forecast and sources, and can be restored",
+    "passed": true
+  },
+  {
+    "name": "Both repayment methods and full schedules",
+    "passed": true,
+    "studyMonths": 42,
+    "repaymentMonths": 60
+  },
+  {
+    "name": "Live AI reminder, persisted acknowledgement and completion",
+    "passed": true
+  },
+  {
+    "name": "Loan application, checklist, signing, school payouts and wallet repayment",
+    "passed": true
+  },
+  {
+    "name": "Family request, anonymous promise, operator receipt",
+    "passed": true,
+    "received": "6500.00",
+    "promiseMovedMoney": false
+  },
+  {
+    "name": "Explicit enrollment with user confirmation; date alone did not enroll",
+    "passed": true
+  },
+  {
+    "name": "Budget edit, live AI expense, categories and undo",
+    "passed": true,
+    "remaining": "6000.00"
+  },
+  {
+    "name": "Live AI conversion: quotes, proposal, wrong password refused, confirmed debit",
+    "passed": true,
+    "debitCNY": 500
+  },
+  {
+    "name": "Live AI remittance: route comparison, confirmation and order debit",
+    "passed": true,
+    "debitCNY": 1000
+  },
+  {
+    "name": "Live AI over-limit proposal refused by server without operator approval",
+    "passed": true,
+    "walletUnchanged": true
+  },
+  {
+    "name": "Tuition shortfall, top-up, verified payee, password, paid state and wallet debit",
+    "passed": true,
+    "amount": "41000.00"
+  },
+  {
+    "name": "Loan-covered bill cannot be paid from wallet again",
+    "passed": true,
+    "response": {
+      "detail": "BILL_ALREADY_PAID",
+      "code": "BILL_ALREADY_PAID",
+      "message": "This bill is already marked as paid."
+    }
+  },
+  {
+    "name": "Fixed demo credit use, wallet repayment with password and an on-time record",
+    "passed": true,
+    "amount": "2000.00"
+  },
+  {
+    "name": "Internal on-time record, audit, signed statement, anonymous verification and tamper rejection",
+    "passed": true
+  }
+]

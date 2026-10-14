@@ -1,0 +1,35 @@
+SHOT single-school-total
+SHOT cost-tuition
+SHOT cost-living
+SHOT cost-essentials
+PASS Single-school full-course estimate with sourced and estimated lines
+SHOT comparison-CNY
+SHOT comparison-USD
+SHOT comparison-THB
+PASS Four-school comparison and THB/CNY/USD display
+SHOT adjust-cost-assumption
+SHOT adjusted-total
+SHOT forecast-and-sources
+PASS Cost assumptions persist, recalculate totals, expose dated forecast and sources, and can be restored
+SHOT loan-custom
+SHOT loan-interest-only
+PASS Both repayment methods and full schedules
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+
+  assert.ok(task)
+
+    at Object.preparation (file:///D:/Qoder-project/AI%20studyflow/output/full-demo-take-05/frontend/auto_test/full-demo.mjs:99:14)
+    at async file:///D:/Qoder-project/AI%20studyflow/output/full-demo-take-05/frontend/auto_test/short-planning.browser.mjs:223:16 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: undefined,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v25.5.0

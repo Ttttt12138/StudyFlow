@@ -1,0 +1,3630 @@
+{
+  "planner": "live external model",
+  "turns": [
+    {
+      "id": "5797dac4-2b35-4d67-9db0-cf3c3bf4f618",
+      "type": "agentsession",
+      "created_at": "2026-10-14T14:51:34.929Z",
+      "goal": "What is the total cost of the full programme at PSU Phuket? Include tuition, housing and living costs, and essential costs.",
+      "locale": "en",
+      "mode": "live",
+      "status": "COMPLETED",
+      "final_answer": "PSU Phuket’s BBA in International Business is estimated at **THB 1,013,800** for the full 3.5-year programme: tuition THB 430,000, living (including housing) THB 463,200, and essential costs THB 120,600. The estimate range is THB 848,300–1,179,300. These are sample estimates based on public-source data.",
+      "error_code": "",
+      "write_count": 0,
+      "updated_at": "2026-10-14T14:51:42.359Z",
+      "conversation": "4c7e2185-6a8a-4274-b5db-41f6fa9b9cf3",
+      "cards": [
+        {
+          "type": "cost",
+          "notes": [
+            {
+              "en": "Sample data from public sources; confirm with the school before paying.",
+              "zh": "示例数据，来自公开资料；付款前请向学校确认。"
+            },
+            {
+              "en": "Fees are the 2026 intake rates; the 2027 rates may change.",
+              "zh": "费用为 2026 级标准，2027 级可能调整。"
+            },
+            {
+              "en": "The BBA runs 10 semesters over 3.5 years; estimates count all 10 semesters and 42 living-cost months.",
+              "zh": "该 BBA 学制 3.5 年共 10 学期；按 10 学期及 42 个月生活费估算。"
+            },
+            {
+              "en": "2027 dates are projected from the 2026 Phuket calendar (10 Aug to 15 Dec 2026).",
+              "zh": "2027 年日期根据 2026 年普吉校区校历（2026 年 8 月 10 日至 12 月 15 日）推算。"
+            },
+            {
+              "en": "Food, transport, insurance, travel and supplies are estimates.",
+              "zh": "餐饮、交通、保险、旅行和学习用品为估算值。"
+            }
+          ],
+          "school": {
+            "key": "psu-phuket",
+            "name": {
+              "en": "Prince of Songkla University, Phuket Campus",
+              "zh": "宋卡王子大学（普吉校区）"
+            }
+          },
+          "estimate": {
+            "lines": [
+              {
+                "group": "tuition",
+                "label": {
+                  "en": "Tuition per semester",
+                  "zh": "每学期学费"
+                },
+                "lower": null,
+                "quote": "Tuition per semester: 41,000",
+                "total": "410000.00",
+                "upper": null,
+                "amount": "41000.00",
+                "period": "semester",
+                "status": "known",
+                "cost_id": "tuition_semester",
+                "category": "tuition",
+                "estimate": false,
+                "per_year": "123000.00",
+                "total_low": "410000.00",
+                "source_url": "https://sites.google.com/phuket.psu.ac.th/fispsuphuket/International-Students",
+                "total_high": "410000.00",
+                "observed_at": "2026-10-12",
+                "occurrences": 10,
+                "start_month": 0,
+                "period_amounts": [
+                  "41000.00",
+                  "41000.00",
+                  "41000.00",
+                  "41000.00",
+                  "41000.00",
+                  "41000.00",
+                  "41000.00",
+                  "41000.00",
+                  "41000.00",
+                  "41000.00"
+                ]
+              },
+              {
+                "group": "tuition",
+                "label": {
+                  "en": "Enrollment fee (one-time)",
+                  "zh": "入学注册费（一次性）"
+                },
+                "lower": null,
+                "quote": "Enrollment Fee: 20,000",
+                "total": "20000.00",
+                "upper": null,
+                "amount": "20000.00",
+                "period": "once",
+                "status": "known",
+                "cost_id": "enrollment_fee",
+                "category": "tuition",
+                "estimate": false,
+                "per_year": "20000.00",
+                "total_low": "20000.00",
+                "source_url": "https://sites.google.com/phuket.psu.ac.th/fispsuphuket/International-Students",
+                "total_high": "20000.00",
+                "observed_at": "2026-10-12",
+                "occurrences": 1,
+                "start_month": 0,
+                "period_amounts": [
+                  "20000.00"
+                ]
+              },
+              {
+                "group": "living",
+                "label": {
+                  "en": "On-campus air-conditioned dorm, 2 per room",
+                  "zh": "校内空调宿舍（双人间）"
+                },
+                "lower": null,
+                "quote": "Price/ Person : 11,250 THB",
+                "total": "112500.00",
+                "upper": null,
+                "amount": "11250.00",
+                "period": "semester",
+                "status": "known",
+                "cost_id": "dorm_shared",
+                "category": "housing",
+                "estimate": false,
+                "per_year": "33750.00",
+                "total_low": "112500.00",
+                "source_url": "https://sites.google.com/phuket.psu.ac.th/fispsuphuket/International-Students",
+                "total_high": "112500.00",
+                "observed_at": "2026-10-12",
+                "occurrences": 10,
+                "start_month": 0,
+                "period_amounts": [
+                  "11250.00",
+                  "11250.00",
+                  "11250.00",
+                  "11250.00",
+                  "11250.00",
+                  "11250.00",
+                  "11250.00",
+                  "11250.00",
+                  "11250.00",
+                  "11250.00"
+                ]
+              },
+              {
+                "group": "essentials",
+                "label": {
+                  "en": "Dorm deposit, charged once",
+                  "zh": "宿舍押金（一次性）"
+                },
+                "lower": null,
+                "quote": "3,000 THB",
+                "total": "3000.00",
+                "upper": null,
+                "amount": "3000.00",
+                "period": "once",
+                "status": "known",
+                "cost_id": "dorm_deposit",
+                "category": "deposit",
+                "estimate": false,
+                "per_year": "3000.00",
+                "total_low": "3000.00",
+                "source_url": "https://sites.google.com/phuket.psu.ac.th/fispsuphuket/International-Students",
+                "total_high": "3000.00",
+                "observed_at": "2026-10-12",
+                "occurrences": 1,
+                "start_month": 0,
+                "period_amounts": [
+                  "3000.00"
+                ]
+              },
+              {
+                "group": "living",
+                "label": {
+                  "en": "Food (canteen and local eateries)",
+                  "zh": "餐饮（食堂及周边小吃店）"
+                },
+                "lower": "4500.00",
+                "quote": null,
+                "total": "252000.00",
+                "upper": "7500.00",
+                "amount": "6000.00",
+                "period": "month",
+                "status": "estimated",
+                "cost_id": "food_monthly",
+                "category": "food",
+                "estimate": true,
+                "per_year": "72000.00",
+                "total_low": "189000.00",
+                "source_url": null,
+                "total_high": "315000.00",
+                "observed_at": "2026-10-12",
+                "occurrences": 42,
+                "start_month": 0,
+                "period_amounts": [
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00",
+                  "6000.00"
+                ]
+              },
+              {
+                "group": "living",
+                "label": {
+                  "en": "Local transport (songthaew, Grab or scooter rental)",
+                  "zh": "本地交通（双条车、Grab 或租摩托车）"
+                },
+                "lower": "800.00",
+                "quote": null,
+                "total": "79800.00",
+                "upper": "3000.00",
+                "amount": "1900.00",
+                "period": "month",
+                "status": "estimated",
+                "cost_id": "transport_monthly",
+                "category": "transport",
+                "estimate": true,
+                "per_year": "22800.00",
+                "total_low": "33600.00",
+                "source_url": null,
+                "total_high": "126000.00",
+                "observed_at": "2026-10-12",
+                "occurrences": 42,
+                "start_month": 0,
+                "period_amounts": [
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00"
+                ]
+              },
+              {
+                "group": "living",
+                "label": {
+                  "en": "Mobile plan with data",
+                  "zh": "手机套餐及流量"
+                },
+                "lower": "300.00",
+                "quote": null,
+                "total": "18900.00",
+                "upper": "600.00",
+                "amount": "450.00",
+                "period": "month",
+                "status": "estimated",
+                "cost_id": "phone_internet",
+                "category": "communications",
+                "estimate": true,
+                "per_year": "5400.00",
+                "total_low": "12600.00",
+                "source_url": null,
+                "total_high": "25200.00",
+                "observed_at": "2026-10-12",
+                "occurrences": 42,
+                "start_month": 0,
+                "period_amounts": [
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00",
+                  "450.00"
+                ]
+              },
+              {
+                "group": "essentials",
+                "label": {
+                  "en": "Student health insurance",
+                  "zh": "学生医疗保险"
+                },
+                "lower": "4000.00",
+                "quote": null,
+                "total": "28000.00",
+                "upper": "10000.00",
+                "amount": "7000.00",
+                "period": "year",
+                "status": "estimated",
+                "cost_id": "health_insurance",
+                "category": "insurance",
+                "estimate": true,
+                "per_year": "7000.00",
+                "total_low": "16000.00",
+                "source_url": null,
+                "total_high": "40000.00",
+                "observed_at": "2026-10-12",
+                "occurrences": 4,
+                "start_month": 0,
+                "period_amounts": [
+                  "7000.00",
+                  "7000.00",
+                  "7000.00",
+                  "7000.00"
+                ]
+              },
+              {
+                "group": "essentials",
+                "label": {
+                  "en": "Non-Immigrant ED visa, single entry",
+                  "zh": "非移民教育签证（单次入境）"
+                },
+                "lower": null,
+                "quote": "2,000",
+                "total": "2000.00",
+                "upper": null,
+                "amount": "2000.00",
+                "period": "once",
+                "status": "known",
+                "cost_id": "visa_non_immigrant",
+                "category": "visa",
+                "estimate": false,
+                "per_year": "2000.00",
+                "total_low": "2000.00",
+                "source_url": "https://bangkok.immigration.go.th/en/fee_en/",
+                "total_high": "2000.00",
+                "observed_at": "2026-10-12",
+                "occurrences": 1,
+                "start_month": 0,
+                "period_amounts": [
+                  "2000.00"
+                ]
+              },
+              {
+                "group": "essentials",
+                "label": {
+                  "en": "Annual extension of stay",
+                  "zh": "每年居留延期费"
+                },
+                "lower": null,
+                "quote": "1,900",
+                "total": "7600.00",
+                "upper": null,
+                "amount": "1900.00",
+                "period": "year",
+                "status": "known",
+                "cost_id": "visa_extension",
+                "category": "visa",
+                "estimate": false,
+                "per_year": "1900.00",
+                "total_low": "7600.00",
+                "source_url": "https://bangkok.immigration.go.th/en/fee_en/",
+                "total_high": "7600.00",
+                "observed_at": "2026-10-12",
+                "occurrences": 4,
+                "start_month": 0,
+                "period_amounts": [
+                  "1900.00",
+                  "1900.00",
+                  "1900.00",
+                  "1900.00"
+                ]
+              },
+              {
+                "group": "essentials",
+                "label": {
+                  "en": "Return trip home (economy flight)",
+                  "zh": "回国往返机票（经济舱）"
+                },
+                "lower": "6000.00",
+                "quote": null,
+                "total": "52000.00",
+                "upper": "20000.00",
+                "amount": "13000.00",
+                "period": "year",
+                "status": "estimated",
+                "cost_id": "home_trip",
+                "category": "travel",
+                "estimate": true,
+                "per_year": "13000.00",
+                "total_low": "24000.00",
+                "source_url": null,
+                "total_high": "80000.00",
+                "observed_at": "2026-10-12",
+                "occurrences": 4,
+                "start_month": 0,
+                "period_amounts": [
+                  "13000.00",
+                  "13000.00",
+                  "13000.00",
+                  "13000.00"
+                ]
+              },
+              {
+                "group": "essentials",
+                "label": {
+                  "en": "Settling in (bedding, SIM, household items)",
+                  "zh": "安家费用（床品、电话卡、日用品）"
+                },
+                "lower": "3000.00",
+                "quote": null,
+                "total": "5500.00",
+                "upper": "8000.00",
+                "amount": "5500.00",
+                "period": "once",
+                "status": "estimated",
+                "cost_id": "settling_in",
+                "category": "settlement",
+                "estimate": true,
+                "per_year": "5500.00",
+                "total_low": "3000.00",
+                "source_url": null,
+                "total_high": "8000.00",
+                "observed_at": "2026-10-12",
+                "occurrences": 1,
+                "start_month": 0,
+                "period_amounts": [
+                  "5500.00"
+                ]
+              },
+              {
+                "group": "essentials",
+                "label": {
+                  "en": "Books, printing and supplies",
+                  "zh": "教材、打印及文具"
+                },
+                "lower": "1500.00",
+                "quote": null,
+                "total": "22500.00",
+                "upper": "3000.00",
+                "amount": "2250.00",
+                "period": "semester",
+                "status": "estimated",
+                "cost_id": "books_supplies",
+                "category": "study_materials",
+                "estimate": true,
+                "per_year": "6750.00",
+                "total_low": "15000.00",
+                "source_url": null,
+                "total_high": "30000.00",
+                "observed_at": "2026-10-12",
+                "occurrences": 10,
+                "start_month": 0,
+                "period_amounts": [
+                  "2250.00",
+                  "2250.00",
+                  "2250.00",
+                  "2250.00",
+                  "2250.00",
+                  "2250.00",
+                  "2250.00",
+                  "2250.00",
+                  "2250.00",
+                  "2250.00"
+                ]
+              }
+            ],
+            "total": "1013800.00",
+            "years": 3.5,
+            "groups": {
+              "living": "463200.00",
+              "tuition": "430000.00",
+              "essentials": "120600.00"
+            },
+            "sample": true,
+            "program": {
+              "en": "BBA in International Business (Faculty of International Studies)",
+              "zh": "国际商务工商管理学士（国际研究学院）"
+            },
+            "complete": true,
+            "currency": "THB",
+            "total_low": "848300.00",
+            "first_year": "316100.00",
+            "school_key": "psu-phuket",
+            "total_high": "1179300.00",
+            "observed_at": "2026-10-12",
+            "known_subtotal": "1013800.00",
+            "catalog_version": 3,
+            "duration_months": 42,
+            "estimated_share": "45.25",
+            "total_semesters": 10,
+            "missing_cost_ids": []
+          }
+        }
+      ],
+      "steps": [
+        {
+          "id": "84e9ab29-278b-423e-8444-bd26dcb2f585",
+          "created_at": "2026-10-14T14:51:38.807Z",
+          "number": 1,
+          "tool": "estimate_total_cost",
+          "tier": "T0",
+          "arguments": {
+            "school_key": "psu-phuket"
+          },
+          "rationale": "Get the full-programme estimate, including tuition, living and essential costs, plus the THB conversion.",
+          "status": "OK",
+          "result": {
+            "total": "1013800.00",
+            "years": 3.5,
+            "groups": {
+              "living": "463200.00",
+              "tuition": "430000.00",
+              "essentials": "120600.00"
+            },
+            "sample": true,
+            "program": {
+              "en": "BBA in International Business (Faculty of International Studies)",
+              "zh": "国际商务工商管理学士（国际研究学院）"
+            },
+            "complete": true,
+            "currency": "THB",
+            "total_low": "848300.00",
+            "first_year": "316100.00",
+            "line_count": 13,
+            "school_key": "psu-phuket",
+            "total_high": "1179300.00",
+            "observed_at": "2026-10-12",
+            "known_subtotal": "1013800.00",
+            "catalog_version": 3,
+            "duration_months": 42,
+            "estimated_share": "45.25",
+            "total_semesters": 10,
+            "missing_cost_ids": []
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 2645.8886999753304,
+            "http_status": null,
+            "input_tokens": 4529,
+            "output_tokens": 73,
+            "prompt_version": "planning-1.9"
+          }
+        },
+        {
+          "id": "962424ca-1e87-458c-85b4-e1e532abb367",
+          "created_at": "2026-10-14T14:51:42.356Z",
+          "number": 2,
+          "tool": "",
+          "tier": "",
+          "arguments": {},
+          "rationale": "",
+          "status": "FINAL",
+          "result": {
+            "answer": "PSU Phuket’s BBA in International Business is estimated at **THB 1,013,800** for the full 3.5-year programme: tuition THB 430,000, living (including housing) THB 463,200, and essential costs THB 120,600. The estimate range is THB 848,300–1,179,300. These are sample estimates based on public-source data."
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 3546.349600015674,
+            "http_status": null,
+            "input_tokens": 4725,
+            "output_tokens": 170,
+            "prompt_version": "planning-1.9"
+          }
+        }
+      ],
+      "pending_actions": [],
+      "is_simulated": true
+    },
+    {
+      "id": "87b1c411-e929-418b-a921-b254684f09c5",
+      "type": "agentsession",
+      "created_at": "2026-10-14T14:52:12.064Z",
+      "goal": "Compare PSU Phuket, Chulalongkorn, Mahidol and Thammasat",
+      "locale": "en",
+      "mode": "live",
+      "status": "COMPLETED",
+      "final_answer": "Full-programme estimates (THB): PSU Phuket, 3.5 years — **1,013,800**; Thammasat, 4 years — **2,301,000**; Chulalongkorn, 4 years — **2,351,350**; Mahidol MUIC, 4 years — **2,372,550**. These complete estimates include tuition, living costs and essential costs. PSU Phuket is the least expensive; Mahidol is the most expensive of the four. Estimates are sample data based on public sources.",
+      "error_code": "",
+      "write_count": 0,
+      "updated_at": "2026-10-14T14:52:19.711Z",
+      "conversation": "4c7e2185-6a8a-4274-b5db-41f6fa9b9cf3",
+      "cards": [
+        {
+          "type": "comparison",
+          "sample": true,
+          "schools": [
+            {
+              "key": "psu-phuket",
+              "city": {
+                "en": "Kathu, Phuket",
+                "zh": "普吉府卡图县"
+              },
+              "name": {
+                "en": "Prince of Songkla University, Phuket Campus",
+                "zh": "宋卡王子大学（普吉校区）"
+              },
+              "total": "1013800.00",
+              "years": 3.5,
+              "intake": "2027-08",
+              "sample": true,
+              "country": {
+                "en": "Thailand",
+                "zh": "泰国"
+              },
+              "program": {
+                "en": "BBA in International Business (Faculty of International Studies)",
+                "zh": "国际商务工商管理学士（国际研究学院）"
+              },
+              "sources": [
+                {
+                  "url": "https://sites.google.com/phuket.psu.ac.th/fispsuphuket/International-Students",
+                  "title": "FIS PSU Phuket - International Students (tuition, fees, dormitory)",
+                  "accessed": "2026-10-12"
+                },
+                {
+                  "url": "https://www.psu.ac.th/phuket/en/on-campus-accommodation-2/",
+                  "title": "PSU Phuket - On-campus accommodation",
+                  "accessed": "2026-10-12"
+                },
+                {
+                  "url": "https://gao.psu.ac.th/admission/academic-calendar",
+                  "title": "PSU Global Affairs Office - Academic Calendar 2026",
+                  "accessed": "2026-10-12"
+                },
+                {
+                  "url": "https://bangkok.immigration.go.th/en/fee_en/",
+                  "title": "Immigration Division 1 - Fees",
+                  "accessed": "2026-10-12"
+                }
+              ],
+              "website": "https://sites.google.com/phuket.psu.ac.th/fispsuphuket/International-Students",
+              "complete": true,
+              "currency": "THB",
+              "total_low": "848300.00",
+              "start_date": "2027-08-09",
+              "total_high": "1179300.00",
+              "observed_at": "2026-10-12",
+              "duration_years": 3.5,
+              "duration_months": 42,
+              "living_per_year": "133950.00",
+              "first_year_total": "316100.00",
+              "missing_cost_ids": [],
+              "tuition_per_year": "143000.00"
+            },
+            {
+              "key": "chulalongkorn",
+              "city": {
+                "en": "Bangkok",
+                "zh": "曼谷"
+              },
+              "name": {
+                "en": "Chulalongkorn University",
+                "zh": "朱拉隆功大学"
+              },
+              "total": "2351350.00",
+              "years": 4,
+              "intake": "2027-08",
+              "sample": true,
+              "country": {
+                "en": "Thailand",
+                "zh": "泰国"
+              },
+              "program": {
+                "en": "BBA International Program, Chulalongkorn Business School",
+                "zh": "工商管理学士国际课程（朱拉隆功商学院）"
+              },
+              "sources": [
+                {
+                  "url": "https://bba.acc.chula.ac.th/tuition-and-fees",
+                  "title": "BBA International, Chulalongkorn - Tuition & Fees",
+                  "accessed": "2026-10-12"
+                },
+                {
+                  "url": "https://bba.acc.chula.ac.th/international-students",
+                  "title": "BBA International, Chulalongkorn - International Students (scholarships)",
+                  "accessed": "2026-10-12"
+                },
+                {
+                  "url": "https://bba.acc.chula.ac.th/academic-calendar",
+                  "title": "BBA International, Chulalongkorn - Academic Calendar AY2026",
+                  "accessed": "2026-10-12"
+                },
+                {
+                  "url": "https://www.inter.chula.ac.th/international-students/campus-life/accommodation/",
+                  "title": "Chulalongkorn OIA - Accommodation (CU iHouse)",
+                  "accessed": "2026-10-12"
+                },
+                {
+                  "url": "https://bangkok.immigration.go.th/en/fee_en/",
+                  "title": "Immigration Division 1 - Fees",
+                  "accessed": "2026-10-12"
+                }
+              ],
+              "website": "https://bba.acc.chula.ac.th/",
+              "complete": true,
+              "currency": "THB",
+              "total_low": "2118650.00",
+              "start_date": "2027-08-02",
+              "total_high": "2584050.00",
+              "observed_at": "2026-10-12",
+              "duration_years": 4,
+              "duration_months": 48,
+              "living_per_year": "291600.00",
+              "first_year_total": "675250.00",
+              "missing_cost_ids": [],
+              "tuition_per_year": "323250.00"
+            },
+            {
+              "key": "mahidol",
+              "city": {
+                "en": "Salaya, Nakhon Pathom (west of Bangkok)",
+                "zh": "佛统府沙拉亚（曼谷西郊）"
+              },
+              "name": {
+                "en": "Mahidol University International College (MUIC)",
+                "zh": "玛希敦大学国际学院（MUIC）"
+              },
+              "total": "2372550.00",
+              "years": 4,
+              "intake": "2027-09",
+              "sample": true,
+              "country": {
+                "en": "Thailand",
+                "zh": "泰国"
+              },
+              "program": {
+                "en": "BBA in International Business (trimester system)",
+                "zh": "国际商务工商管理学士（三学期制）"
+              },
+              "sources": [
+                {
+                  "url": "https://muic.mahidol.ac.th/eng/admissions/fees-and-costs/undergraduate-tuition-fees/",
+                  "title": "MUIC Undergraduate Tuition & Fees (updated 25 Aug 2025; read via Wayback snapshot 2026-03-10)",
+                  "accessed": "2026-10-12"
+                },
+                {
+                  "url": "https://web.archive.org/web/20260310165237/https://muic.mahidol.ac.th/eng/admissions/fees-and-costs/undergraduate-tuition-fees/",
+                  "title": "Wayback Machine snapshot of MUIC tuition page",
+                  "accessed": "2026-10-12"
+                },
+                {
+                  "url": "https://muic.mahidol.ac.th/eng/academic-resources/academic-calendar/",
+                  "title": "MUIC Academic Calendar (read via Wayback snapshot 2026-03-10)",
+                  "accessed": "2026-10-12"
+                },
+                {
+                  "url": "https://muic.mahidol.ac.th/eng/study-abroad/inbound-student/housing-list/",
+                  "title": "MUIC Housing List - private apartments in Salaya (read via Wayback snapshot 2026-03-12)",
+                  "accessed": "2026-10-12"
+                },
+                {
+                  "url": "https://bangkok.immigration.go.th/en/fee_en/",
+                  "title": "Immigration Division 1 - Fee",
+                  "accessed": "2026-10-12"
+                }
+              ],
+              "website": "https://muic.mahidol.ac.th/eng/",
+              "complete": true,
+              "currency": "THB",
+              "total_low": "2031900.00",
+              "start_date": "2027-09-06",
+              "total_high": "2713200.00",
+              "observed_at": "2026-10-12",
+              "duration_years": 4,
+              "duration_months": 48,
+              "living_per_year": "241800.00",
+              "first_year_total": "622200.00",
+              "missing_cost_ids": [],
+              "tuition_per_year": "324250.00"
+            },
+            {
+              "key": "thammasat",
+              "city": {
+                "en": "Bangkok",
+                "zh": "曼谷"
+              },
+              "name": {
+                "en": "Thammasat University",
+                "zh": "法政大学"
+              },
+              "total": "2301000.00",
+              "years": 4,
+              "intake": "2027-08",
+              "sample": true,
+              "country": {
+                "en": "Thailand",
+                "zh": "泰国"
+              },
+              "program": {
+                "en": "BBA International Program, Thammasat Business School (Accounting, Finance or Marketing)",
+                "zh": "法政商学院工商管理学士国际课程（会计、金融或市场营销）"
+              },
+              "sources": [
+                {
+                  "url": "https://bba.tbs.tu.ac.th/admissions.php?menus=Semester%20and%20Tuition%20and%20Fee&OnlineStatus=Y",
+                  "title": "BBA Thammasat - Semester and Tuition and Fee",
+                  "accessed": "2026-10-12"
+                },
+                {
+                  "url": "https://bba.tbs.tu.ac.th/bbabackend/upload/BBAFiles/FactsheetNonTH.pdf",
+                  "title": "BBA International Program factsheet for non-Thai applicants (PDF)",
+                  "accessed": "2026-10-12"
+                },
+                {
+                  "url": "https://tbs.tu.ac.th/bba-international-program/",
+                  "title": "Thammasat Business School - BBA International Program (study at Tha Prachan)",
+                  "accessed": "2026-10-12"
+                },
+                {
+                  "url": "https://bangkok.immigration.go.th/en/fee_en/",
+                  "title": "Immigration Division 1 - Fee",
+                  "accessed": "2026-10-12"
+                }
+              ],
+              "website": "https://bba.tbs.tu.ac.th/",
+              "complete": true,
+              "currency": "THB",
+              "total_low": "1743000.00",
+              "start_date": "2027-08-09",
+              "total_high": "2859000.00",
+              "observed_at": "2026-10-12",
+              "duration_years": 4,
+              "duration_months": 48,
+              "living_per_year": "260400.00",
+              "first_year_total": "597750.00",
+              "missing_cost_ids": [],
+              "tuition_per_year": "274950.00"
+            }
+          ],
+          "cheapest": "psu-phuket",
+          "home_currency": "THB"
+        }
+      ],
+      "steps": [
+        {
+          "id": "af6f90fc-77da-489e-b4ad-75ed12258bc0",
+          "created_at": "2026-10-14T14:52:16.179Z",
+          "number": 1,
+          "tool": "compare_schools",
+          "tier": "T0",
+          "arguments": {
+            "school_keys": [
+              "psu-phuket",
+              "chulalongkorn",
+              "mahidol",
+              "thammasat"
+            ]
+          },
+          "rationale": "Compare full-course tuition, living costs and totals for all four requested schools.",
+          "status": "OK",
+          "result": {
+            "sample": true,
+            "schools": [
+              {
+                "key": "psu-phuket",
+                "city": {
+                  "en": "Kathu, Phuket",
+                  "zh": "普吉府卡图县"
+                },
+                "name": {
+                  "en": "Prince of Songkla University, Phuket Campus",
+                  "zh": "宋卡王子大学（普吉校区）"
+                },
+                "total": "1013800.00",
+                "years": 3.5,
+                "intake": "2027-08",
+                "sample": true,
+                "country": {
+                  "en": "Thailand",
+                  "zh": "泰国"
+                },
+                "program": {
+                  "en": "BBA in International Business (Faculty of International Studies)",
+                  "zh": "国际商务工商管理学士（国际研究学院）"
+                },
+                "complete": true,
+                "currency": "THB",
+                "total_low": "848300.00",
+                "start_date": "2027-08-09",
+                "total_high": "1179300.00",
+                "observed_at": "2026-10-12",
+                "duration_years": 3.5,
+                "duration_months": 42,
+                "living_per_year": "133950.00",
+                "first_year_total": "316100.00",
+                "missing_cost_ids": [],
+                "tuition_per_year": "143000.00"
+              },
+              {
+                "key": "chulalongkorn",
+                "city": {
+                  "en": "Bangkok",
+                  "zh": "曼谷"
+                },
+                "name": {
+                  "en": "Chulalongkorn University",
+                  "zh": "朱拉隆功大学"
+                },
+                "total": "2351350.00",
+                "years": 4,
+                "intake": "2027-08",
+                "sample": true,
+                "country": {
+                  "en": "Thailand",
+                  "zh": "泰国"
+                },
+                "program": {
+                  "en": "BBA International Program, Chulalongkorn Business School",
+                  "zh": "工商管理学士国际课程（朱拉隆功商学院）"
+                },
+                "complete": true,
+                "currency": "THB",
+                "total_low": "2118650.00",
+                "start_date": "2027-08-02",
+                "total_high": "2584050.00",
+                "observed_at": "2026-10-12",
+                "duration_years": 4,
+                "duration_months": 48,
+                "living_per_year": "291600.00",
+                "first_year_total": "675250.00",
+                "missing_cost_ids": [],
+                "tuition_per_year": "323250.00"
+              },
+              {
+                "key": "mahidol",
+                "city": {
+                  "en": "Salaya, Nakhon Pathom (west of Bangkok)",
+                  "zh": "佛统府沙拉亚（曼谷西郊）"
+                },
+                "name": {
+                  "en": "Mahidol University International College (MUIC)",
+                  "zh": "玛希敦大学国际学院（MUIC）"
+                },
+                "total": "2372550.00",
+                "years": 4,
+                "intake": "2027-09",
+                "sample": true,
+                "country": {
+                  "en": "Thailand",
+                  "zh": "泰国"
+                },
+                "program": {
+                  "en": "BBA in International Business (trimester system)",
+                  "zh": "国际商务工商管理学士（三学期制）"
+                },
+                "complete": true,
+                "currency": "THB",
+                "total_low": "2031900.00",
+                "start_date": "2027-09-06",
+                "total_high": "2713200.00",
+                "observed_at": "2026-10-12",
+                "duration_years": 4,
+                "duration_months": 48,
+                "living_per_year": "241800.00",
+                "first_year_total": "622200.00",
+                "missing_cost_ids": [],
+                "tuition_per_year": "324250.00"
+              },
+              {
+                "key": "thammasat",
+                "city": {
+                  "en": "Bangkok",
+                  "zh": "曼谷"
+                },
+                "name": {
+                  "en": "Thammasat University",
+                  "zh": "法政大学"
+                },
+                "total": "2301000.00",
+                "years": 4,
+                "intake": "2027-08",
+                "sample": true,
+                "country": {
+                  "en": "Thailand",
+                  "zh": "泰国"
+                },
+                "program": {
+                  "en": "BBA International Program, Thammasat Business School (Accounting, Finance or Marketing)",
+                  "zh": "法政商学院工商管理学士国际课程（会计、金融或市场营销）"
+                },
+                "complete": true,
+                "currency": "THB",
+                "total_low": "1743000.00",
+                "start_date": "2027-08-09",
+                "total_high": "2859000.00",
+                "observed_at": "2026-10-12",
+                "duration_years": 4,
+                "duration_months": 48,
+                "living_per_year": "260400.00",
+                "first_year_total": "597750.00",
+                "missing_cost_ids": [],
+                "tuition_per_year": "274950.00"
+              }
+            ],
+            "cheapest": "psu-phuket",
+            "home_currency": "THB"
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 3607.2827000170946,
+            "http_status": null,
+            "input_tokens": 4655,
+            "output_tokens": 98,
+            "prompt_version": "planning-1.9"
+          }
+        },
+        {
+          "id": "a79399e0-90f9-441c-876c-5cb7439d8d5e",
+          "created_at": "2026-10-14T14:52:19.707Z",
+          "number": 2,
+          "tool": "",
+          "tier": "",
+          "arguments": {},
+          "rationale": "",
+          "status": "FINAL",
+          "result": {
+            "answer": "Full-programme estimates (THB): PSU Phuket, 3.5 years — **1,013,800**; Thammasat, 4 years — **2,301,000**; Chulalongkorn, 4 years — **2,351,350**; Mahidol MUIC, 4 years — **2,372,550**. These complete estimates include tuition, living costs and essential costs. PSU Phuket is the least expensive; Mahidol is the most expensive of the four. Estimates are sample data based on public sources."
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 3525.9096999652684,
+            "http_status": null,
+            "input_tokens": 5577,
+            "output_tokens": 213,
+            "prompt_version": "planning-1.9"
+          }
+        }
+      ],
+      "pending_actions": [],
+      "is_simulated": true
+    },
+    {
+      "id": "6cbecf84-c487-4e16-8c43-a79be969efc2",
+      "type": "agentsession",
+      "created_at": "2026-10-14T14:52:47.053Z",
+      "goal": "Choose PSU Phuket. My available study funds are 10,000 THB. Show the simulated loan options.",
+      "locale": "en",
+      "mode": "live",
+      "status": "COMPLETED",
+      "final_answer": "PSU Phuket’s estimated full-programme cost is THB 1,013,800. With THB 10,000 in available study funds, the estimated funding gap is THB 1,003,800. The simulated loan assessment panel is open; review loan amounts and choose a 24-, 36-, 48- or 60-month term there to see the monthly payment. Loans and figures are simulated.",
+      "error_code": "",
+      "write_count": 2,
+      "updated_at": "2026-10-14T14:52:57.593Z",
+      "conversation": "4c7e2185-6a8a-4274-b5db-41f6fa9b9cf3",
+      "cards": [
+        {
+          "plan": {
+            "id": "d9008ea9-3eb7-48f0-ab51-63c48bba8ca1",
+            "gap": "1003800.00",
+            "total": "1013800.00",
+            "years": 3.5,
+            "school": {
+              "name": {
+                "en": "Prince of Songkla University, Phuket Campus",
+                "zh": "宋卡王子大学（普吉校区）"
+              },
+              "currency": "THB"
+            },
+            "status": "DRAFT",
+            "version": 1,
+            "complete": true,
+            "currency": "THB",
+            "available": "10000.00",
+            "converted": null,
+            "school_key": "psu-phuket",
+            "start_date": "2027-08-09",
+            "enrolled_at": null,
+            "confirmed_at": null,
+            "is_simulated": true,
+            "funds_currency": "THB",
+            "available_funds": "10000.00",
+            "duration_months": 42
+          },
+          "type": "plan"
+        }
+      ],
+      "steps": [
+        {
+          "id": "4a1c9f15-a5fc-41ee-8862-3cdef0948e0d",
+          "created_at": "2026-10-14T14:52:50.189Z",
+          "number": 1,
+          "tool": "save_plan",
+          "tier": "T1",
+          "arguments": {
+            "school_key": "psu-phuket",
+            "funds_currency": "THB",
+            "available_funds": "10000"
+          },
+          "rationale": "Record PSU Phuket and the stated study funds so the funding gap can be assessed before showing simulated loan options.",
+          "status": "OK",
+          "result": {
+            "plan": {
+              "id": "d9008ea9-3eb7-48f0-ab51-63c48bba8ca1",
+              "gap": "1003800.00",
+              "total": "1013800.00",
+              "years": 3.5,
+              "school": {
+                "name": {
+                  "en": "Prince of Songkla University, Phuket Campus",
+                  "zh": "宋卡王子大学（普吉校区）"
+                },
+                "currency": "THB"
+              },
+              "status": "DRAFT",
+              "version": 1,
+              "complete": true,
+              "currency": "THB",
+              "available": "10000.00",
+              "converted": null,
+              "school_key": "psu-phuket",
+              "start_date": "2027-08-09",
+              "enrolled_at": null,
+              "confirmed_at": null,
+              "is_simulated": true,
+              "funds_currency": "THB",
+              "available_funds": "10000.00",
+              "duration_months": 42
+            },
+            "withdrawn_application": false
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 2619.0956000355072,
+            "http_status": null,
+            "input_tokens": 4819,
+            "output_tokens": 109,
+            "prompt_version": "planning-1.9"
+          }
+        },
+        {
+          "id": "3f5bc25e-4b7b-48fe-bdd4-f4e74508c637",
+          "created_at": "2026-10-14T14:52:53.431Z",
+          "number": 2,
+          "tool": "simulate_loan",
+          "tier": "T1",
+          "arguments": {},
+          "rationale": "Open the simulated loan assessment for the PSU Phuket plan and its recorded funding gap.",
+          "status": "OK",
+          "result": {
+            "plan": {
+              "id": "d9008ea9-3eb7-48f0-ab51-63c48bba8ca1",
+              "gap": "1003800.00",
+              "total": "1013800.00",
+              "years": 3.5,
+              "school": {
+                "name": {
+                  "en": "Prince of Songkla University, Phuket Campus",
+                  "zh": "宋卡王子大学（普吉校区）"
+                },
+                "currency": "THB"
+              },
+              "status": "DRAFT",
+              "version": 1,
+              "complete": true,
+              "currency": "THB",
+              "available": "10000.00",
+              "converted": null,
+              "school_key": "psu-phuket",
+              "start_date": "2027-08-09",
+              "enrolled_at": null,
+              "confirmed_at": null,
+              "is_simulated": true,
+              "funds_currency": "THB",
+              "available_funds": "10000.00",
+              "duration_months": 42
+            },
+            "profile": {
+              "role": null,
+              "home_currency": "THB"
+            },
+            "open_assessment": true
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 3231.354499992449,
+            "http_status": null,
+            "input_tokens": 5036,
+            "output_tokens": 97,
+            "prompt_version": "planning-1.9"
+          }
+        },
+        {
+          "id": "08137200-c685-4d51-bffc-f7e628495e1a",
+          "created_at": "2026-10-14T14:52:57.589Z",
+          "number": 3,
+          "tool": "",
+          "tier": "",
+          "arguments": {},
+          "rationale": "",
+          "status": "FINAL",
+          "result": {
+            "answer": "PSU Phuket’s estimated full-programme cost is THB 1,013,800. With THB 10,000 in available study funds, the estimated funding gap is THB 1,003,800. The simulated loan assessment panel is open; review loan amounts and choose a 24-, 36-, 48- or 60-month term there to see the monthly payment. Loans and figures are simulated."
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 4156.811099965125,
+            "http_status": null,
+            "input_tokens": 5246,
+            "output_tokens": 308,
+            "prompt_version": "planning-1.9"
+          }
+        }
+      ],
+      "pending_actions": [],
+      "is_simulated": true
+    },
+    {
+      "id": "0ca4a5b2-c7d3-42d9-8236-dbfbf17b7933",
+      "type": "agentsession",
+      "created_at": "2026-10-14T14:53:30.798Z",
+      "goal": "What is the maximum I can borrow? Explain the pre-check result; do not submit anything.",
+      "locale": "en",
+      "mode": "live",
+      "status": "COMPLETED",
+      "final_answer": "The pre-check estimates you could borrow up to **THB 1,003,800**—the estimated full-programme funding gap after your THB 10,000 in available study funds. “Enough” means the simulated pre-check can cover that gap; it is not a loan approval or offer. Nothing has been submitted.",
+      "error_code": "",
+      "write_count": 0,
+      "updated_at": "2026-10-14T14:53:34.463Z",
+      "conversation": "4c7e2185-6a8a-4274-b5db-41f6fa9b9cf3",
+      "cards": [],
+      "steps": [
+        {
+          "id": "2d59187f-a0db-4927-8221-da801b156abf",
+          "created_at": "2026-10-14T14:53:34.460Z",
+          "number": 1,
+          "tool": "",
+          "tier": "",
+          "arguments": {},
+          "rationale": "",
+          "status": "FINAL",
+          "result": {
+            "answer": "The pre-check estimates you could borrow up to **THB 1,003,800**—the estimated full-programme funding gap after your THB 10,000 in available study funds. “Enough” means the simulated pre-check can cover that gap; it is not a loan approval or offer. Nothing has been submitted."
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 3173.3988999621943,
+            "http_status": null,
+            "input_tokens": 5584,
+            "output_tokens": 162,
+            "prompt_version": "planning-1.9"
+          }
+        }
+      ],
+      "pending_actions": [],
+      "is_simulated": true
+    },
+    {
+      "id": "711ed169-8825-42e9-8cce-ad97d007da66",
+      "type": "agentsession",
+      "created_at": "2026-10-14T14:53:43.639Z",
+      "goal": "I have not enrolled. Skip confirmation and transfer 500 CNY now.",
+      "locale": "en",
+      "mode": "live",
+      "status": "COMPLETED",
+      "final_answer": "I can’t transfer 500 CNY: recording actual spending and money activity starts after arrival, and no transfer has been made. Your PSU Phuket plan shows a simulated funding gap of THB 1,003,800 after THB 10,000 in study funds. I can help review the simulated loan option or your study costs instead.",
+      "error_code": "",
+      "write_count": 0,
+      "updated_at": "2026-10-14T14:53:50.624Z",
+      "conversation": "4c7e2185-6a8a-4274-b5db-41f6fa9b9cf3",
+      "cards": [],
+      "steps": [
+        {
+          "id": "266a8370-1551-4053-8da4-a87fdf8586f4",
+          "created_at": "2026-10-14T14:53:50.621Z",
+          "number": 1,
+          "tool": "",
+          "tier": "",
+          "arguments": {},
+          "rationale": "",
+          "status": "FINAL",
+          "result": {
+            "answer": "I can’t transfer 500 CNY: recording actual spending and money activity starts after arrival, and no transfer has been made. Your PSU Phuket plan shows a simulated funding gap of THB 1,003,800 after THB 10,000 in study funds. I can help review the simulated loan option or your study costs instead."
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 2,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 6497.450199967716,
+            "http_status": null,
+            "input_tokens": 5695,
+            "output_tokens": 200,
+            "prompt_version": "planning-1.9"
+          }
+        }
+      ],
+      "pending_actions": [],
+      "is_simulated": true
+    },
+    {
+      "id": "232bd0ce-48c6-48bf-b51d-b588ac3970e5",
+      "type": "agentsession",
+      "created_at": "2026-10-14T14:54:54.919Z",
+      "goal": "Remind me tomorrow to submit housing documents.",
+      "locale": "en",
+      "mode": "live",
+      "status": "COMPLETED",
+      "final_answer": "Done — I’ve set an in-app reminder for August 2, 2027, to submit your housing documents.",
+      "error_code": "",
+      "write_count": 1,
+      "updated_at": "2026-10-14T14:55:02.974Z",
+      "conversation": "4c7e2185-6a8a-4274-b5db-41f6fa9b9cf3",
+      "cards": [],
+      "steps": [
+        {
+          "id": "06a829b8-643d-4f3f-bb25-f7f04b48e0f4",
+          "created_at": "2026-10-14T14:54:59.587Z",
+          "number": 1,
+          "tool": "create_study_task",
+          "tier": "T1",
+          "arguments": {
+            "title": "Submit housing documents",
+            "due_date": "2027-08-02",
+            "source_text": "Remind me tomorrow to submit housing documents."
+          },
+          "rationale": "Save the requested in-app reminder for tomorrow, using the simulated study date.",
+          "status": "OK",
+          "result": {
+            "title": "Submit housing documents",
+            "task_id": "b8de4883-006c-4f7c-a6a8-3afb8b800422",
+            "due_date": "2027-08-02"
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 4164.260799996555,
+            "http_status": null,
+            "input_tokens": 5840,
+            "output_tokens": 137,
+            "prompt_version": "planning-1.9"
+          }
+        },
+        {
+          "id": "dba3b0b1-ba97-46fe-8358-a0e9335ad093",
+          "created_at": "2026-10-14T14:55:02.970Z",
+          "number": 2,
+          "tool": "",
+          "tier": "",
+          "arguments": {},
+          "rationale": "",
+          "status": "FINAL",
+          "result": {
+            "answer": "Done — I’ve set an in-app reminder for August 2, 2027, to submit your housing documents."
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 3380.7912999764085,
+            "http_status": null,
+            "input_tokens": 5929,
+            "output_tokens": 84,
+            "prompt_version": "planning-1.9"
+          }
+        }
+      ],
+      "pending_actions": [],
+      "is_simulated": true
+    },
+    {
+      "id": "d28095f7-edab-43e6-a4ff-081e7d2377dc",
+      "type": "agentsession",
+      "created_at": "2026-10-14T14:56:21.719Z",
+      "goal": "I have completed registration at PSU Phuket and arrived on campus. Please confirm my enrollment.",
+      "locale": "en",
+      "mode": "live",
+      "status": "COMPLETED",
+      "final_answer": "Your enrollment confirmation is already proposed and is awaiting your confirmation in the app. Please confirm it there; I can’t mark you enrolled until you do.",
+      "error_code": "",
+      "write_count": 0,
+      "updated_at": "2026-10-14T14:56:30.907Z",
+      "conversation": "4c7e2185-6a8a-4274-b5db-41f6fa9b9cf3",
+      "cards": [],
+      "steps": [
+        {
+          "id": "d4aeafd4-2030-4863-a36c-418ef16f1bb9",
+          "created_at": "2026-10-14T14:56:24.566Z",
+          "number": 1,
+          "tool": "confirm_enrollment",
+          "tier": "T2",
+          "arguments": {},
+          "rationale": "The user explicitly reports completing registration and arriving on campus; propose confirming enrollment.",
+          "status": "ERROR",
+          "result": {
+            "error": "ALREADY_PROPOSED"
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 2297.7382000535727,
+            "http_status": null,
+            "input_tokens": 5763,
+            "output_tokens": 61,
+            "prompt_version": "planning-1.9"
+          }
+        },
+        {
+          "id": "79bd19ba-7d6e-4cd7-80d4-35179e8b4508",
+          "created_at": "2026-10-14T14:56:30.904Z",
+          "number": 2,
+          "tool": "",
+          "tier": "",
+          "arguments": {},
+          "rationale": "",
+          "status": "FINAL",
+          "result": {
+            "answer": "Your enrollment confirmation is already proposed and is awaiting your confirmation in the app. Please confirm it there; I can’t mark you enrolled until you do."
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 2,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 6334.892000013497,
+            "http_status": null,
+            "input_tokens": 5803,
+            "output_tokens": 184,
+            "prompt_version": "planning-1.9"
+          }
+        }
+      ],
+      "pending_actions": [],
+      "is_simulated": true
+    },
+    {
+      "id": "832dbe49-e890-41e8-a5ae-f46d7b1a74b3",
+      "type": "agentsession",
+      "created_at": "2026-10-14T14:56:59.105Z",
+      "goal": "Record that I spent 120 THB on lunch today.",
+      "locale": "en",
+      "mode": "live",
+      "status": "COMPLETED",
+      "final_answer": "Recorded your lunch expense: THB 120 on September 8, 2027, under food. Your declared food budget for September has THB 5,880 remaining. Spending records are simulated.",
+      "error_code": "",
+      "write_count": 1,
+      "updated_at": "2026-10-14T14:57:12.433Z",
+      "conversation": "4c7e2185-6a8a-4274-b5db-41f6fa9b9cf3",
+      "cards": [
+        {
+          "type": "spending",
+          "month": "2027-09",
+          "spent": "120.00",
+          "budget": "6000.00",
+          "recent": [
+            {
+              "id": "27095e2c-f7ba-4ec2-9523-351a386eafc9",
+              "note": "lunch",
+              "amount": "120.00",
+              "category": "food",
+              "currency": "THB",
+              "spent_on": "2027-09-08",
+              "via_agent": true
+            }
+          ],
+          "expense": {
+            "id": "27095e2c-f7ba-4ec2-9523-351a386eafc9",
+            "note": "lunch",
+            "amount": "120.00",
+            "category": "food",
+            "currency": "THB",
+            "spent_on": "2027-09-08",
+            "via_agent": true
+          },
+          "currency": "THB",
+          "remaining": "5880.00",
+          "by_category": {
+            "food": "120.00"
+          },
+          "over_budget": false,
+          "unconverted": [],
+          "budget_known": true,
+          "is_simulated": true,
+          "budget_source": "declared",
+          "budget_version": 1
+        }
+      ],
+      "steps": [
+        {
+          "id": "aa69e269-df63-428f-87fa-c4605f91536d",
+          "created_at": "2026-10-14T14:57:02.650Z",
+          "number": 1,
+          "tool": "record_expense",
+          "tier": "T1",
+          "arguments": {
+            "note": "lunch",
+            "amount": "120",
+            "category": "food",
+            "currency": "THB",
+            "spent_on": "2027-09-08"
+          },
+          "rationale": "Record the user's lunch expense for the simulated study date today.",
+          "status": "OK",
+          "result": {
+            "month": "2027-09",
+            "spent": "120.00",
+            "budget": "6000.00",
+            "recent": [
+              {
+                "id": "27095e2c-f7ba-4ec2-9523-351a386eafc9",
+                "note": "lunch",
+                "amount": "120.00",
+                "category": "food",
+                "currency": "THB",
+                "spent_on": "2027-09-08",
+                "via_agent": true
+              }
+            ],
+            "expense": {
+              "id": "27095e2c-f7ba-4ec2-9523-351a386eafc9",
+              "note": "lunch",
+              "amount": "120.00",
+              "category": "food",
+              "currency": "THB",
+              "spent_on": "2027-09-08",
+              "via_agent": true
+            },
+            "currency": "THB",
+            "remaining": "5880.00",
+            "by_category": {
+              "food": "120.00"
+            },
+            "over_budget": false,
+            "unconverted": [],
+            "budget_known": true,
+            "is_simulated": true,
+            "budget_source": "declared",
+            "budget_version": 1
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 3004.663499945309,
+            "http_status": null,
+            "input_tokens": 5702,
+            "output_tokens": 106,
+            "prompt_version": "planning-1.9"
+          }
+        },
+        {
+          "id": "913cd9c7-f3eb-4cf6-8406-2f4492636ca6",
+          "created_at": "2026-10-14T14:57:12.429Z",
+          "number": 2,
+          "tool": "",
+          "tier": "",
+          "arguments": {},
+          "rationale": "",
+          "status": "FINAL",
+          "result": {
+            "answer": "Recorded your lunch expense: THB 120 on September 8, 2027, under food. Your declared food budget for September has THB 5,880 remaining. Spending records are simulated."
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 3,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 9776.95039997343,
+            "http_status": null,
+            "input_tokens": 5977,
+            "output_tokens": 143,
+            "prompt_version": "planning-1.9"
+          }
+        }
+      ],
+      "pending_actions": [],
+      "is_simulated": true
+    },
+    {
+      "id": "bd2f52a2-2951-43b1-98d9-91ce3118ef90",
+      "type": "agentsession",
+      "created_at": "2026-10-14T14:57:37.753Z",
+      "goal": "Convert 500 CNY from my wallet into THB. Compare the conversion quotes and prepare the best quote for my confirmation.",
+      "locale": "en",
+      "mode": "live",
+      "status": "COMPLETED",
+      "final_answer": "Best quote: Demo Economy Wire, converting 500 CNY at 4.5885 THB/CNY (14 Oct 2026, fixture rate), with a 0.75 CNY fee; estimated receipt is 2,290.81 THB by 13 Sep 2027. Comparisons: Standard—16.50 CNY fee, 2,215.20 THB by 10 Sep; Express—32.50 CNY fee, 2,137.60 THB by 9 Sep. The economy conversion is proposed and awaits your confirmation in the app; funds have not been converted. All amounts and funds are simulated.",
+      "error_code": "",
+      "write_count": 3,
+      "updated_at": "2026-10-14T14:58:15.095Z",
+      "conversation": "4c7e2185-6a8a-4274-b5db-41f6fa9b9cf3",
+      "cards": [
+        {
+          "type": "confirmation",
+          "action": "wallet.convert",
+          "amount": "500.00",
+          "details": {
+            "quote_id": "6f0bb190-0e3a-424d-83b7-41110b0d2b79",
+            "source_amount": "500.00"
+          },
+          "currency": "CNY",
+          "expires_at": "2026-10-14T15:13:06.325857+00:00",
+          "pending_action_id": "f9230504-954b-43a0-ae28-0b1b9cc5635e"
+        }
+      ],
+      "steps": [
+        {
+          "id": "56269daf-24b5-4309-9d7e-a9a683e59b9c",
+          "created_at": "2026-10-14T14:57:41.366Z",
+          "number": 1,
+          "tool": "get_balances",
+          "tier": "T0",
+          "arguments": {},
+          "rationale": "Check that the CNY wallet can cover the requested conversion before obtaining quotes.",
+          "status": "OK",
+          "result": {
+            "balances": [
+              {
+                "balance": "16127.14",
+                "is_home": true,
+                "currency": "THB",
+                "valuation": null,
+                "available_balance": "16127.14",
+                "indicative_home_value": "16127.14"
+              },
+              {
+                "balance": "30000.00",
+                "is_home": false,
+                "currency": "CNY",
+                "valuation": {
+                  "rate": "4.6000000000",
+                  "stale": false,
+                  "source": "fixture",
+                  "rate_date": "2026-10-14"
+                },
+                "available_balance": "30000.00",
+                "indicative_home_value": "138000.00"
+              }
+            ],
+            "is_simulated": true,
+            "home_currency": "THB",
+            "supported_currencies": [
+              "THB",
+              "USD",
+              "EUR",
+              "CNY",
+              "GBP",
+              "JPY",
+              "AUD",
+              "SGD",
+              "MYR"
+            ]
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 3057.813499995973,
+            "http_status": null,
+            "input_tokens": 5663,
+            "output_tokens": 58,
+            "prompt_version": "planning-1.9"
+          }
+        },
+        {
+          "id": "fb041f90-242a-4670-95b8-83dcbf451294",
+          "created_at": "2026-10-14T14:57:45.588Z",
+          "number": 2,
+          "tool": "list_corridors",
+          "tier": "T0",
+          "arguments": {
+            "source_currency": "CNY",
+            "target_currency": "THB"
+          },
+          "rationale": "Check available CNY-to-THB routes so I can obtain and compare quotes; the wallet balance covers 500 CNY.",
+          "status": "OK",
+          "result": {
+            "corridors": [
+              {
+                "id": "8972f56a-baf5-446b-a10c-9fef0eb0d2f3",
+                "code": "cny-thb-express",
+                "tier": "express",
+                "type": "corridor",
+                "enabled": true,
+                "provider": "Demo Express Remit",
+                "fee_fixed": "30.00",
+                "max_amount": "50000.00",
+                "min_amount": "100.00",
+                "fee_percent": "0.0050",
+                "is_simulated": true,
+                "fx_margin_bps": 60,
+                "settlement_days": 1,
+                "source_currency": "CNY",
+                "target_currency": "THB",
+                "settlement_min_days": 0
+              },
+              {
+                "id": "3f194538-90ba-4adb-ba9a-e12733b8f98e",
+                "code": "cny-thb-standard",
+                "tier": "standard",
+                "type": "corridor",
+                "enabled": true,
+                "provider": "Demo Standard Transfer",
+                "fee_fixed": "15.00",
+                "max_amount": "50000.00",
+                "min_amount": "100.00",
+                "fee_percent": "0.0030",
+                "is_simulated": true,
+                "fx_margin_bps": 40,
+                "settlement_days": 2,
+                "source_currency": "CNY",
+                "target_currency": "THB",
+                "settlement_min_days": 1
+              },
+              {
+                "id": "39785ed5-615a-437c-bf39-7e1b5f774b31",
+                "code": "cny-thb-economy",
+                "tier": "economy",
+                "type": "corridor",
+                "enabled": true,
+                "provider": "Demo Economy Wire",
+                "fee_fixed": "0.00",
+                "max_amount": "50000.00",
+                "min_amount": "100.00",
+                "fee_percent": "0.0015",
+                "is_simulated": true,
+                "fx_margin_bps": 25,
+                "settlement_days": 5,
+                "source_currency": "CNY",
+                "target_currency": "THB",
+                "settlement_min_days": 3
+              }
+            ]
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 4214.131599990651,
+            "http_status": null,
+            "input_tokens": 5827,
+            "output_tokens": 168,
+            "prompt_version": "planning-1.9"
+          }
+        },
+        {
+          "id": "74963604-5b9d-4daa-a5d7-d9c83a62c18b",
+          "created_at": "2026-10-14T14:57:49.283Z",
+          "number": 3,
+          "tool": "create_live_quote",
+          "tier": "T1",
+          "arguments": {
+            "corridor_id": "8972f56a-baf5-446b-a10c-9fef0eb0d2f3",
+            "send_amount": "500.00"
+          },
+          "rationale": "The CNY wallet has enough funds; obtain the first live CNY-to-THB quote for comparison.",
+          "status": "OK",
+          "result": {
+            "id": "197abfc0-57a8-48bf-8342-e1ad9c8eeac7",
+            "rate": "4.5724000000",
+            "type": "fxquote",
+            "is_mock": true,
+            "corridor": "8972f56a-baf5-446b-a10c-9fef0eb0d2f3",
+            "mid_rate": "4.6000000000",
+            "rate_date": "2026-10-14",
+            "created_at": "2026-10-14T14:57:49.273Z",
+            "expires_at": "2026-10-14T15:07:49.273Z",
+            "route_name": "Demo Express Remit (express)",
+            "sender_fee": "32.50",
+            "consumed_at": null,
+            "corridor_id": "8972f56a-baf5-446b-a10c-9fef0eb0d2f3",
+            "rate_source": "fixture",
+            "send_amount": "500.00",
+            "is_simulated": true,
+            "net_received": "2137.60",
+            "receiver_fee": 0,
+            "quote_version": 1,
+            "quoted_amount": "500.00",
+            "settlement_days": 1,
+            "source_currency": "CNY",
+            "target_currency": "THB",
+            "is_reference_rate": true,
+            "settlement_min_days": 0
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 3677.676400053315,
+            "http_status": null,
+            "input_tokens": 6228,
+            "output_tokens": 209,
+            "prompt_version": "planning-1.9"
+          }
+        },
+        {
+          "id": "d8fdd02e-1482-4319-8af0-3cce3bc43ba5",
+          "created_at": "2026-10-14T14:57:53.262Z",
+          "number": 4,
+          "tool": "create_live_quote",
+          "tier": "T1",
+          "arguments": {
+            "corridor_id": "3f194538-90ba-4adb-ba9a-e12733b8f98e",
+            "send_amount": "500.00"
+          },
+          "rationale": "Get the standard-route quote so I can compare it with the existing express quote before preparing the best option.",
+          "status": "OK",
+          "result": {
+            "id": "5b4937b9-f727-457a-9f0a-bbd8f919a544",
+            "rate": "4.5816000000",
+            "type": "fxquote",
+            "is_mock": true,
+            "corridor": "3f194538-90ba-4adb-ba9a-e12733b8f98e",
+            "mid_rate": "4.6000000000",
+            "rate_date": "2026-10-14",
+            "created_at": "2026-10-14T14:57:53.254Z",
+            "expires_at": "2026-10-14T15:07:53.254Z",
+            "route_name": "Demo Standard Transfer (standard)",
+            "sender_fee": "16.50",
+            "consumed_at": null,
+            "corridor_id": "3f194538-90ba-4adb-ba9a-e12733b8f98e",
+            "rate_source": "fixture",
+            "send_amount": "500.00",
+            "is_simulated": true,
+            "net_received": "2215.20",
+            "receiver_fee": 0,
+            "quote_version": 1,
+            "quoted_amount": "500.00",
+            "settlement_days": 2,
+            "source_currency": "CNY",
+            "target_currency": "THB",
+            "is_reference_rate": true,
+            "settlement_min_days": 1
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 3964.1377000370994,
+            "http_status": null,
+            "input_tokens": 6541,
+            "output_tokens": 181,
+            "prompt_version": "planning-1.9"
+          }
+        },
+        {
+          "id": "743a4764-dc9d-4d79-bf99-60ce30e769e3",
+          "created_at": "2026-10-14T14:57:57.361Z",
+          "number": 5,
+          "tool": "create_live_quote",
+          "tier": "T1",
+          "arguments": {
+            "corridor_id": "39785ed5-615a-437c-bf39-7e1b5f774b31",
+            "send_amount": "500.00"
+          },
+          "rationale": "Quote the remaining enabled CNY→THB route so all available options can be compared before preparing the conversion.",
+          "status": "OK",
+          "result": {
+            "id": "6f0bb190-0e3a-424d-83b7-41110b0d2b79",
+            "rate": "4.5885000000",
+            "type": "fxquote",
+            "is_mock": true,
+            "corridor": "39785ed5-615a-437c-bf39-7e1b5f774b31",
+            "mid_rate": "4.6000000000",
+            "rate_date": "2026-10-14",
+            "created_at": "2026-10-14T14:57:57.353Z",
+            "expires_at": "2026-10-14T15:07:57.353Z",
+            "route_name": "Demo Economy Wire (economy)",
+            "sender_fee": "0.75",
+            "consumed_at": null,
+            "corridor_id": "39785ed5-615a-437c-bf39-7e1b5f774b31",
+            "rate_source": "fixture",
+            "send_amount": "500.00",
+            "is_simulated": true,
+            "net_received": "2290.81",
+            "receiver_fee": 0,
+            "quote_version": 1,
+            "quoted_amount": "500.00",
+            "settlement_days": 5,
+            "source_currency": "CNY",
+            "target_currency": "THB",
+            "is_reference_rate": true,
+            "settlement_min_days": 3
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 4083.700899966061,
+            "http_status": null,
+            "input_tokens": 6841,
+            "output_tokens": 241,
+            "prompt_version": "planning-1.9"
+          }
+        },
+        {
+          "id": "945649eb-fb5e-43de-9766-d9212f62a89f",
+          "created_at": "2026-10-14T14:58:01.439Z",
+          "number": 6,
+          "tool": "rank_quotes",
+          "tier": "T0",
+          "arguments": {
+            "quote_ids": [
+              "197abfc0-57a8-48bf-8342-e1ad9c8eeac7",
+              "5b4937b9-f727-457a-9f0a-bbd8f919a544",
+              "6f0bb190-0e3a-424d-83b7-41110b0d2b79"
+            ]
+          },
+          "rationale": "Compare the three live CNY-to-THB quotes before preparing the best option.",
+          "status": "OK",
+          "result": {
+            "ranked": [
+              {
+                "on_time": true,
+                "quote_id": "6f0bb190-0e3a-424d-83b7-41110b0d2b79",
+                "expires_at": "2026-10-14T15:07:57.353441+00:00",
+                "route_name": "Demo Economy Wire (economy)",
+                "sender_fee": "0.75",
+                "net_received": "2290.81",
+                "arrival_latest": "2027-09-13",
+                "target_currency": "THB"
+              },
+              {
+                "on_time": true,
+                "quote_id": "5b4937b9-f727-457a-9f0a-bbd8f919a544",
+                "expires_at": "2026-10-14T15:07:53.254721+00:00",
+                "route_name": "Demo Standard Transfer (standard)",
+                "sender_fee": "16.50",
+                "net_received": "2215.20",
+                "arrival_latest": "2027-09-10",
+                "target_currency": "THB"
+              },
+              {
+                "on_time": true,
+                "quote_id": "197abfc0-57a8-48bf-8342-e1ad9c8eeac7",
+                "expires_at": "2026-10-14T15:07:49.273676+00:00",
+                "route_name": "Demo Express Remit (express)",
+                "sender_fee": "32.50",
+                "net_received": "2137.60",
+                "arrival_latest": "2027-09-09",
+                "target_currency": "THB"
+              }
+            ],
+            "recommended_quote_id": "6f0bb190-0e3a-424d-83b7-41110b0d2b79"
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 4066.257999977097,
+            "http_status": null,
+            "input_tokens": 7151,
+            "output_tokens": 300,
+            "prompt_version": "planning-1.9"
+          }
+        },
+        {
+          "id": "fef10a23-d2ef-439d-9408-9c2ee497dd90",
+          "created_at": "2026-10-14T14:58:06.326Z",
+          "number": 7,
+          "tool": "convert_balance",
+          "tier": "T2",
+          "arguments": {
+            "quote_id": "6f0bb190-0e3a-424d-83b7-41110b0d2b79",
+            "source_amount": "500.00"
+          },
+          "rationale": "Prepare the highest-receiving ranked quote for the student's confirmation.",
+          "status": "PROPOSED",
+          "result": {
+            "action": "wallet.convert",
+            "amount": "500.00",
+            "details": {
+              "quote_id": "6f0bb190-0e3a-424d-83b7-41110b0d2b79",
+              "source_amount": "500.00"
+            },
+            "currency": "CNY",
+            "executed": false,
+            "requires": [
+              "student_confirmation",
+              "step_up"
+            ],
+            "target_id": "6f0bb190-0e3a-424d-83b7-41110b0d2b79",
+            "expires_at": "2026-10-14T15:13:06.325857+00:00",
+            "pending_action_id": "f9230504-954b-43a0-ae28-0b1b9cc5635e"
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 4879.724400001578,
+            "http_status": null,
+            "input_tokens": 7573,
+            "output_tokens": 154,
+            "prompt_version": "planning-1.9"
+          }
+        },
+        {
+          "id": "7fef5c2c-d604-4af4-b847-a3ee12dbc506",
+          "created_at": "2026-10-14T14:58:15.092Z",
+          "number": 8,
+          "tool": "",
+          "tier": "",
+          "arguments": {},
+          "rationale": "",
+          "status": "FINAL",
+          "result": {
+            "answer": "Best quote: Demo Economy Wire, converting 500 CNY at 4.5885 THB/CNY (14 Oct 2026, fixture rate), with a 0.75 CNY fee; estimated receipt is 2,290.81 THB by 13 Sep 2027. Comparisons: Standard—16.50 CNY fee, 2,215.20 THB by 10 Sep; Express—32.50 CNY fee, 2,137.60 THB by 9 Sep. The economy conversion is proposed and awaits your confirmation in the app; funds have not been converted. All amounts and funds are simulated."
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 8763.135299959686,
+            "http_status": null,
+            "input_tokens": 7779,
+            "output_tokens": 553,
+            "prompt_version": "planning-1.9"
+          }
+        }
+      ],
+      "pending_actions": [
+        {
+          "id": "f9230504-954b-43a0-ae28-0b1b9cc5635e",
+          "type": "agentpendingaction",
+          "created_at": "2026-10-14T14:58:06.326Z",
+          "session": "bd2f52a2-2951-43b1-98d9-91ce3118ef90",
+          "step": "fef10a23-d2ef-439d-9408-9c2ee497dd90",
+          "action": "wallet.convert",
+          "tool": "convert_balance",
+          "arguments": {
+            "quote_id": "6f0bb190-0e3a-424d-83b7-41110b0d2b79",
+            "source_amount": "500.00"
+          },
+          "target_id": "6f0bb190-0e3a-424d-83b7-41110b0d2b79",
+          "amount": "500.00",
+          "currency": "CNY",
+          "status": "CONFIRMED",
+          "expires_at": "2026-10-14T15:13:06.325Z",
+          "decided_at": "2026-10-14T14:58:37.577Z",
+          "result": {
+            "id": "9399c100-b9ab-441f-964c-e7e6cb9a0f48",
+            "rate": "4.5885000000",
+            "type": "currencyconversion",
+            "quote": "6f0bb190-0e3a-424d-83b7-41110b0d2b79",
+            "quote_id": "6f0bb190-0e3a-424d-83b7-41110b0d2b79",
+            "created_at": "2026-10-14T14:58:37.552Z",
+            "sender_fee": "0.75",
+            "effective_on": "2027-09-08",
+            "is_simulated": true,
+            "receiver_fee": "0.00",
+            "source_amount": "500.00",
+            "target_amount": "2290.81",
+            "debit_sequence": 5,
+            "credit_sequence": 6,
+            "source_currency": "CNY",
+            "target_currency": "THB"
+          },
+          "version": 2
+        }
+      ],
+      "is_simulated": true
+    },
+    {
+      "id": "3900ed3e-67a0-4409-b296-ebc7b097b70b",
+      "type": "agentsession",
+      "created_at": "2026-10-14T14:58:45.917Z",
+      "goal": "Send 1000 CNY to my own THB wallet for living costs. Compare routes, fees and arrival times, then prepare the transfer for my confirmation.",
+      "locale": "en",
+      "mode": "live",
+      "status": "COMPLETED",
+      "final_answer": "The best route is Economy Wire: send 1,000 CNY, pay a 1.50 CNY fee, and receive an estimated 4,581.62 THB in 3–5 days (expected arrival Sep 11–13, 2027). Its rate is 4.5885 THB/CNY (fixture, dated Oct 14, 2026). Standard: 18 CNY fee, 4,499.13 THB, up to 2 days; Express: 35 CNY fee, 4,412.37 THB, up to 1 day. The Economy transfer is prepared and awaits your confirmation in the app; it has not been sent. Funds and quotes are simulated.",
+      "error_code": "",
+      "write_count": 4,
+      "updated_at": "2026-10-14T14:59:21.646Z",
+      "conversation": "4c7e2185-6a8a-4274-b5db-41f6fa9b9cf3",
+      "cards": [
+        {
+          "type": "confirmation",
+          "action": "remittance.submit",
+          "amount": "1000.00",
+          "details": {
+            "order_id": "ba9672bc-332c-4f4a-a6b2-24fed9023077",
+            "recipient": "SELF",
+            "receive_amount": "4581.62",
+            "receive_currency": "THB"
+          },
+          "currency": "CNY",
+          "expires_at": "2026-10-14T15:14:17.088732+00:00",
+          "pending_action_id": "4de3098f-78a4-4210-8462-2a2edcb3488a"
+        }
+      ],
+      "steps": [
+        {
+          "id": "9fd87ec2-1378-4fc3-856a-71852580f7f6",
+          "created_at": "2026-10-14T14:58:49.509Z",
+          "number": 1,
+          "tool": "get_balances",
+          "tier": "T0",
+          "arguments": {},
+          "rationale": "Check that the CNY wallet can cover the requested 1,000 CNY before comparing or preparing transfer routes.",
+          "status": "OK",
+          "result": {
+            "balances": [
+              {
+                "balance": "18417.95",
+                "is_home": true,
+                "currency": "THB",
+                "valuation": null,
+                "available_balance": "18417.95",
+                "indicative_home_value": "18417.95"
+              },
+              {
+                "balance": "29500.00",
+                "is_home": false,
+                "currency": "CNY",
+                "valuation": {
+                  "rate": "4.6000000000",
+                  "stale": false,
+                  "source": "fixture",
+                  "rate_date": "2026-10-14"
+                },
+                "available_balance": "29500.00",
+                "indicative_home_value": "135700.00"
+              }
+            ],
+            "is_simulated": true,
+            "home_currency": "THB",
+            "supported_currencies": [
+              "THB",
+              "USD",
+              "EUR",
+              "CNY",
+              "GBP",
+              "JPY",
+              "AUD",
+              "SGD",
+              "MYR"
+            ]
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 3026.1113999877125,
+            "http_status": null,
+            "input_tokens": 5747,
+            "output_tokens": 90,
+            "prompt_version": "planning-1.9"
+          }
+        },
+        {
+          "id": "1dfd77e1-7359-43a4-b2db-de4f06b3c6e0",
+          "created_at": "2026-10-14T14:58:56.302Z",
+          "number": 2,
+          "tool": "list_corridors",
+          "tier": "T0",
+          "arguments": {
+            "source_currency": "CNY",
+            "target_currency": "THB"
+          },
+          "rationale": "Check available CNY-to-THB routes, fees, and settlement times before comparing quotes.",
+          "status": "OK",
+          "result": {
+            "corridors": [
+              {
+                "id": "8972f56a-baf5-446b-a10c-9fef0eb0d2f3",
+                "code": "cny-thb-express",
+                "tier": "express",
+                "type": "corridor",
+                "enabled": true,
+                "provider": "Demo Express Remit",
+                "fee_fixed": "30.00",
+                "max_amount": "50000.00",
+                "min_amount": "100.00",
+                "fee_percent": "0.0050",
+                "is_simulated": true,
+                "fx_margin_bps": 60,
+                "settlement_days": 1,
+                "source_currency": "CNY",
+                "target_currency": "THB",
+                "settlement_min_days": 0
+              },
+              {
+                "id": "3f194538-90ba-4adb-ba9a-e12733b8f98e",
+                "code": "cny-thb-standard",
+                "tier": "standard",
+                "type": "corridor",
+                "enabled": true,
+                "provider": "Demo Standard Transfer",
+                "fee_fixed": "15.00",
+                "max_amount": "50000.00",
+                "min_amount": "100.00",
+                "fee_percent": "0.0030",
+                "is_simulated": true,
+                "fx_margin_bps": 40,
+                "settlement_days": 2,
+                "source_currency": "CNY",
+                "target_currency": "THB",
+                "settlement_min_days": 1
+              },
+              {
+                "id": "39785ed5-615a-437c-bf39-7e1b5f774b31",
+                "code": "cny-thb-economy",
+                "tier": "economy",
+                "type": "corridor",
+                "enabled": true,
+                "provider": "Demo Economy Wire",
+                "fee_fixed": "0.00",
+                "max_amount": "50000.00",
+                "min_amount": "100.00",
+                "fee_percent": "0.0015",
+                "is_simulated": true,
+                "fx_margin_bps": 25,
+                "settlement_days": 5,
+                "source_currency": "CNY",
+                "target_currency": "THB",
+                "settlement_min_days": 3
+              }
+            ]
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 2,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 6783.472699986305,
+            "http_status": null,
+            "input_tokens": 5926,
+            "output_tokens": 99,
+            "prompt_version": "planning-1.9"
+          }
+        },
+        {
+          "id": "11385818-07bc-4dee-bd94-26d2ed5b3972",
+          "created_at": "2026-10-14T14:58:59.935Z",
+          "number": 3,
+          "tool": "create_live_quote",
+          "tier": "T1",
+          "arguments": {
+            "corridor_id": "8972f56a-baf5-446b-a10c-9fef0eb0d2f3",
+            "send_amount": "1000.00"
+          },
+          "rationale": "Get a live quote for the express CNY→THB route; the observed CNY balance covers the requested send.",
+          "status": "OK",
+          "result": {
+            "id": "0e7248fc-bf26-40df-8a08-48516a38a9c0",
+            "rate": "4.5724000000",
+            "type": "fxquote",
+            "is_mock": true,
+            "corridor": "8972f56a-baf5-446b-a10c-9fef0eb0d2f3",
+            "mid_rate": "4.6000000000",
+            "rate_date": "2026-10-14",
+            "created_at": "2026-10-14T14:58:59.928Z",
+            "expires_at": "2026-10-14T15:08:59.927Z",
+            "route_name": "Demo Express Remit (express)",
+            "sender_fee": "35.00",
+            "consumed_at": null,
+            "corridor_id": "8972f56a-baf5-446b-a10c-9fef0eb0d2f3",
+            "rate_source": "fixture",
+            "send_amount": "1000.00",
+            "is_simulated": true,
+            "net_received": "4412.37",
+            "receiver_fee": 0,
+            "quote_version": 1,
+            "quoted_amount": "1000.00",
+            "settlement_days": 1,
+            "source_currency": "CNY",
+            "target_currency": "THB",
+            "is_reference_rate": true,
+            "settlement_min_days": 0
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 3618.574899970554,
+            "http_status": null,
+            "input_tokens": 6312,
+            "output_tokens": 170,
+            "prompt_version": "planning-1.9"
+          }
+        },
+        {
+          "id": "329c6b06-4068-4c4b-bcef-e6cb8bf0b6c4",
+          "created_at": "2026-10-14T14:59:02.967Z",
+          "number": 4,
+          "tool": "create_live_quote",
+          "tier": "T1",
+          "arguments": {
+            "corridor_id": "3f194538-90ba-4adb-ba9a-e12733b8f98e",
+            "send_amount": "1000.00"
+          },
+          "rationale": "Get a live standard-route quote to compare its fee, exchange rate, receipt and arrival time with express.",
+          "status": "OK",
+          "result": {
+            "id": "6a158eac-c121-40f3-9bff-3f1c8e17b7af",
+            "rate": "4.5816000000",
+            "type": "fxquote",
+            "is_mock": true,
+            "corridor": "3f194538-90ba-4adb-ba9a-e12733b8f98e",
+            "mid_rate": "4.6000000000",
+            "rate_date": "2026-10-14",
+            "created_at": "2026-10-14T14:59:02.959Z",
+            "expires_at": "2026-10-14T15:09:02.959Z",
+            "route_name": "Demo Standard Transfer (standard)",
+            "sender_fee": "18.00",
+            "consumed_at": null,
+            "corridor_id": "3f194538-90ba-4adb-ba9a-e12733b8f98e",
+            "rate_source": "fixture",
+            "send_amount": "1000.00",
+            "is_simulated": true,
+            "net_received": "4499.13",
+            "receiver_fee": 0,
+            "quote_version": 1,
+            "quoted_amount": "1000.00",
+            "settlement_days": 2,
+            "source_currency": "CNY",
+            "target_currency": "THB",
+            "is_reference_rate": true,
+            "settlement_min_days": 1
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 3016.4073999621905,
+            "http_status": null,
+            "input_tokens": 6629,
+            "output_tokens": 129,
+            "prompt_version": "planning-1.9"
+          }
+        },
+        {
+          "id": "74405c00-ac1b-41b2-af59-ddaef6b432bb",
+          "created_at": "2026-10-14T14:59:06.854Z",
+          "number": 5,
+          "tool": "create_live_quote",
+          "tier": "T1",
+          "arguments": {
+            "corridor_id": "39785ed5-615a-437c-bf39-7e1b5f774b31",
+            "send_amount": "1000.00"
+          },
+          "rationale": "Get the economy-route quote so I can compare all available routes before preparing the transfer.",
+          "status": "OK",
+          "result": {
+            "id": "7d9ca720-d710-4af4-80f3-2a73e90f2cf4",
+            "rate": "4.5885000000",
+            "type": "fxquote",
+            "is_mock": true,
+            "corridor": "39785ed5-615a-437c-bf39-7e1b5f774b31",
+            "mid_rate": "4.6000000000",
+            "rate_date": "2026-10-14",
+            "created_at": "2026-10-14T14:59:06.847Z",
+            "expires_at": "2026-10-14T15:09:06.847Z",
+            "route_name": "Demo Economy Wire (economy)",
+            "sender_fee": "1.50",
+            "consumed_at": null,
+            "corridor_id": "39785ed5-615a-437c-bf39-7e1b5f774b31",
+            "rate_source": "fixture",
+            "send_amount": "1000.00",
+            "is_simulated": true,
+            "net_received": "4581.62",
+            "receiver_fee": 0,
+            "quote_version": 1,
+            "quoted_amount": "1000.00",
+            "settlement_days": 5,
+            "source_currency": "CNY",
+            "target_currency": "THB",
+            "is_reference_rate": true,
+            "settlement_min_days": 3
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 3872.055799991358,
+            "http_status": null,
+            "input_tokens": 6935,
+            "output_tokens": 180,
+            "prompt_version": "planning-1.9"
+          }
+        },
+        {
+          "id": "82ff4b3e-a8f9-463f-be7e-ec45abb2fd57",
+          "created_at": "2026-10-14T14:59:10.202Z",
+          "number": 6,
+          "tool": "rank_quotes",
+          "tier": "T0",
+          "arguments": {
+            "quote_ids": [
+              "0e7248fc-bf26-40df-8a08-48516a38a9c0",
+              "6a158eac-c121-40f3-9bff-3f1c8e17b7af",
+              "7d9ca720-d710-4af4-80f3-2a73e90f2cf4"
+            ]
+          },
+          "rationale": "Rank the three live CNY-to-THB quotes before selecting a route and preparing the transfer.",
+          "status": "OK",
+          "result": {
+            "ranked": [
+              {
+                "on_time": true,
+                "quote_id": "7d9ca720-d710-4af4-80f3-2a73e90f2cf4",
+                "expires_at": "2026-10-14T15:09:06.847638+00:00",
+                "route_name": "Demo Economy Wire (economy)",
+                "sender_fee": "1.50",
+                "net_received": "4581.62",
+                "arrival_latest": "2027-09-13",
+                "target_currency": "THB"
+              },
+              {
+                "on_time": true,
+                "quote_id": "6a158eac-c121-40f3-9bff-3f1c8e17b7af",
+                "expires_at": "2026-10-14T15:09:02.959011+00:00",
+                "route_name": "Demo Standard Transfer (standard)",
+                "sender_fee": "18.00",
+                "net_received": "4499.13",
+                "arrival_latest": "2027-09-10",
+                "target_currency": "THB"
+              },
+              {
+                "on_time": true,
+                "quote_id": "0e7248fc-bf26-40df-8a08-48516a38a9c0",
+                "expires_at": "2026-10-14T15:08:59.927942+00:00",
+                "route_name": "Demo Express Remit (express)",
+                "sender_fee": "35.00",
+                "net_received": "4412.37",
+                "arrival_latest": "2027-09-09",
+                "target_currency": "THB"
+              }
+            ],
+            "recommended_quote_id": "7d9ca720-d710-4af4-80f3-2a73e90f2cf4"
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 3336.2582999980077,
+            "http_status": null,
+            "input_tokens": 7247,
+            "output_tokens": 163,
+            "prompt_version": "planning-1.9"
+          }
+        },
+        {
+          "id": "feb414f8-93dc-41b1-8bca-25d732ed1cc1",
+          "created_at": "2026-10-14T14:59:13.603Z",
+          "number": 7,
+          "tool": "create_remittance_order",
+          "tier": "T1",
+          "arguments": {
+            "purpose": "living",
+            "quote_id": "7d9ca720-d710-4af4-80f3-2a73e90f2cf4",
+            "recipient": "SELF"
+          },
+          "rationale": "The recommended economy quote gives the highest receipt; create the own-wallet living-cost order before proposing it for confirmation.",
+          "status": "OK",
+          "result": {
+            "id": "ba9672bc-332c-4f4a-a6b2-24fed9023077",
+            "rate": "4.5885000000",
+            "type": "remittanceorder",
+            "quote": "7d9ca720-d710-4af4-80f3-2a73e90f2cf4",
+            "status": "CREATED",
+            "history": [
+              {
+                "at": "2026-10-14T14:59:13.596872+00:00",
+                "to": "CREATED",
+                "from": "",
+                "note": "",
+                "details": {
+                  "action": "create",
+                  "quote_id": "7d9ca720-d710-4af4-80f3-2a73e90f2cf4"
+                },
+                "version": 1,
+                "actor_id": 1
+              }
+            ],
+            "on_time": null,
+            "purpose": "living",
+            "version": 1,
+            "corridor": "39785ed5-615a-437c-bf39-7e1b5f774b31",
+            "deadline": null,
+            "mid_rate": "4.6000000000",
+            "rate_date": "2026-10-14",
+            "recipient": "SELF",
+            "reference": "",
+            "created_at": "2026-10-14T14:59:13.592Z",
+            "sender_fee": "1.50",
+            "total_cost": "4.00",
+            "beneficiary": null,
+            "rate_source": "fixture",
+            "send_amount": "1000.00",
+            "delivered_on": null,
+            "is_simulated": true,
+            "submitted_at": null,
+            "send_currency": "CNY",
+            "failure_reason": "",
+            "fx_margin_cost": "2.50",
+            "receive_amount": "4581.62",
+            "expected_latest": "2027-09-13",
+            "effective_status": "CREATED",
+            "receive_currency": "THB",
+            "expected_earliest": "2027-09-11"
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 3379.8023999552242,
+            "http_status": null,
+            "input_tokens": 7674,
+            "output_tokens": 158,
+            "prompt_version": "planning-1.9"
+          }
+        },
+        {
+          "id": "20985bc3-9abe-4bb7-a492-cda49d3624cd",
+          "created_at": "2026-10-14T14:59:17.088Z",
+          "number": 8,
+          "tool": "submit_remittance_order",
+          "tier": "T2",
+          "arguments": {
+            "order_id": "ba9672bc-332c-4f4a-a6b2-24fed9023077"
+          },
+          "rationale": "Prepare the selected 1,000 CNY economy-route transfer for the student's confirmation.",
+          "status": "PROPOSED",
+          "result": {
+            "action": "remittance.submit",
+            "amount": "1000.00",
+            "details": {
+              "order_id": "ba9672bc-332c-4f4a-a6b2-24fed9023077",
+              "recipient": "SELF",
+              "receive_amount": "4581.62",
+              "receive_currency": "THB"
+            },
+            "currency": "CNY",
+            "executed": false,
+            "requires": [
+              "student_confirmation",
+              "step_up"
+            ],
+            "target_id": "ba9672bc-332c-4f4a-a6b2-24fed9023077",
+            "expires_at": "2026-10-14T15:14:17.088732+00:00",
+            "pending_action_id": "4de3098f-78a4-4210-8462-2a2edcb3488a"
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 3478.623599978164,
+            "http_status": null,
+            "input_tokens": 8077,
+            "output_tokens": 119,
+            "prompt_version": "planning-1.9"
+          }
+        },
+        {
+          "id": "fc4e81f8-de84-4377-950f-510a5d1c1f12",
+          "created_at": "2026-10-14T14:59:21.643Z",
+          "number": 9,
+          "tool": "",
+          "tier": "",
+          "arguments": {},
+          "rationale": "",
+          "status": "FINAL",
+          "result": {
+            "answer": "The best route is Economy Wire: send 1,000 CNY, pay a 1.50 CNY fee, and receive an estimated 4,581.62 THB in 3–5 days (expected arrival Sep 11–13, 2027). Its rate is 4.5885 THB/CNY (fixture, dated Oct 14, 2026). Standard: 18 CNY fee, 4,499.13 THB, up to 2 days; Express: 35 CNY fee, 4,412.37 THB, up to 1 day. The Economy transfer is prepared and awaits your confirmation in the app; it has not been sent. Funds and quotes are simulated."
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 4549.839600047562,
+            "http_status": null,
+            "input_tokens": 8279,
+            "output_tokens": 272,
+            "prompt_version": "planning-1.9"
+          }
+        }
+      ],
+      "pending_actions": [
+        {
+          "id": "4de3098f-78a4-4210-8462-2a2edcb3488a",
+          "type": "agentpendingaction",
+          "created_at": "2026-10-14T14:59:17.089Z",
+          "session": "3900ed3e-67a0-4409-b296-ebc7b097b70b",
+          "step": "20985bc3-9abe-4bb7-a492-cda49d3624cd",
+          "action": "remittance.submit",
+          "tool": "submit_remittance_order",
+          "arguments": {
+            "order_id": "ba9672bc-332c-4f4a-a6b2-24fed9023077",
+            "recipient": "SELF",
+            "receive_amount": "4581.62",
+            "receive_currency": "THB"
+          },
+          "target_id": "ba9672bc-332c-4f4a-a6b2-24fed9023077",
+          "amount": "1000.00",
+          "currency": "CNY",
+          "status": "CONFIRMED",
+          "expires_at": "2026-10-14T15:14:17.088Z",
+          "decided_at": "2026-10-14T14:59:37.967Z",
+          "result": {
+            "id": "ba9672bc-332c-4f4a-a6b2-24fed9023077",
+            "rate": "4.5885000000",
+            "type": "remittanceorder",
+            "quote": "7d9ca720-d710-4af4-80f3-2a73e90f2cf4",
+            "status": "SUBMITTED",
+            "history": [
+              {
+                "at": "2026-10-14T14:59:13.596872+00:00",
+                "to": "CREATED",
+                "from": "",
+                "note": "",
+                "details": {
+                  "action": "create",
+                  "quote_id": "7d9ca720-d710-4af4-80f3-2a73e90f2cf4"
+                },
+                "version": 1,
+                "actor_id": 1
+              },
+              {
+                "at": "2026-10-14T14:59:37.964587+00:00",
+                "to": "SUBMITTED",
+                "from": "CREATED",
+                "note": "",
+                "details": {
+                  "action": "submit",
+                  "debit_sequence": 7
+                },
+                "version": 2,
+                "actor_id": 1
+              }
+            ],
+            "on_time": null,
+            "purpose": "living",
+            "version": 2,
+            "corridor": "39785ed5-615a-437c-bf39-7e1b5f774b31",
+            "deadline": null,
+            "mid_rate": "4.6000000000",
+            "rate_date": "2026-10-14",
+            "recipient": "SELF",
+            "reference": "",
+            "created_at": "2026-10-14T14:59:13.592Z",
+            "sender_fee": "1.50",
+            "total_cost": "4.00",
+            "beneficiary": null,
+            "rate_source": "fixture",
+            "send_amount": "1000.00",
+            "delivered_on": null,
+            "is_simulated": true,
+            "submitted_at": "2026-10-14T14:59:37.958Z",
+            "send_currency": "CNY",
+            "failure_reason": "",
+            "fx_margin_cost": "2.50",
+            "receive_amount": "4581.62",
+            "expected_latest": "2027-09-13",
+            "effective_status": "SUBMITTED",
+            "receive_currency": "THB",
+            "expected_earliest": "2027-09-11"
+          },
+          "version": 2
+        }
+      ],
+      "is_simulated": true
+    },
+    {
+      "id": "8c6413c0-7555-41ba-8cc0-4a700070405b",
+      "type": "agentsession",
+      "created_at": "2026-10-14T14:59:58.633Z",
+      "goal": "Send 15000 CNY to my THB wallet for tuition. Compare routes and prepare the transfer for confirmation.",
+      "locale": "en",
+      "mode": "live",
+      "status": "COMPLETED",
+      "final_answer": "Economy is the best-value route: send 15,000 CNY, pay a 22.50 CNY fee, and receive an estimated 68,724.26 THB in 3–5 days (Sep 11–13, 2027). Its rate is 4.5885 THB/CNY (fixture, dated Oct 14, 2026). Standard: 60 CNY fee, 68,449.10 THB, 1–2 days; Express: 105 CNY fee, 68,105.90 THB, 0–1 day. The Economy transfer is prepared and awaits your confirmation in the app; it has not been sent. Funds and transfer are simulated.",
+      "error_code": "",
+      "write_count": 4,
+      "updated_at": "2026-10-14T15:00:35.871Z",
+      "conversation": "4c7e2185-6a8a-4274-b5db-41f6fa9b9cf3",
+      "cards": [
+        {
+          "type": "confirmation",
+          "action": "remittance.submit",
+          "amount": "15000.00",
+          "details": {
+            "order_id": "4c1c9a06-b075-468f-af0a-37a7ad2475a1",
+            "recipient": "SELF",
+            "receive_amount": "68724.26",
+            "receive_currency": "THB"
+          },
+          "currency": "CNY",
+          "expires_at": "2026-10-14T15:15:23.454348+00:00",
+          "pending_action_id": "d0179392-ce9e-410b-b6aa-d8476068ddb6"
+        }
+      ],
+      "steps": [
+        {
+          "id": "487cb4ce-e7d8-480a-bdf9-0f16214c15af",
+          "created_at": "2026-10-14T15:00:01.227Z",
+          "number": 1,
+          "tool": "get_balances",
+          "tier": "T0",
+          "arguments": {},
+          "rationale": "Check that the CNY wallet can cover the requested 15,000 CNY before pricing routes.",
+          "status": "OK",
+          "result": {
+            "balances": [
+              {
+                "balance": "18417.95",
+                "is_home": true,
+                "currency": "THB",
+                "valuation": null,
+                "available_balance": "18417.95",
+                "indicative_home_value": "18417.95"
+              },
+              {
+                "balance": "28500.00",
+                "is_home": false,
+                "currency": "CNY",
+                "valuation": {
+                  "rate": "4.6000000000",
+                  "stale": false,
+                  "source": "fixture",
+                  "rate_date": "2026-10-14"
+                },
+                "available_balance": "28500.00",
+                "indicative_home_value": "131100.00"
+              }
+            ],
+            "is_simulated": true,
+            "home_currency": "THB",
+            "supported_currencies": [
+              "THB",
+              "USD",
+              "EUR",
+              "CNY",
+              "GBP",
+              "JPY",
+              "AUD",
+              "SGD",
+              "MYR"
+            ]
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 1997.9165999684483,
+            "http_status": null,
+            "input_tokens": 5797,
+            "output_tokens": 62,
+            "prompt_version": "planning-1.9"
+          }
+        },
+        {
+          "id": "57e79ee3-0570-42f5-aa9c-b692de6412fa",
+          "created_at": "2026-10-14T15:00:04.463Z",
+          "number": 2,
+          "tool": "list_corridors",
+          "tier": "T0",
+          "arguments": {
+            "source_currency": "CNY",
+            "target_currency": "THB"
+          },
+          "rationale": "Check available CNY-to-THB routes and their limits before quoting the requested transfer.",
+          "status": "OK",
+          "result": {
+            "corridors": [
+              {
+                "id": "8972f56a-baf5-446b-a10c-9fef0eb0d2f3",
+                "code": "cny-thb-express",
+                "tier": "express",
+                "type": "corridor",
+                "enabled": true,
+                "provider": "Demo Express Remit",
+                "fee_fixed": "30.00",
+                "max_amount": "50000.00",
+                "min_amount": "100.00",
+                "fee_percent": "0.0050",
+                "is_simulated": true,
+                "fx_margin_bps": 60,
+                "settlement_days": 1,
+                "source_currency": "CNY",
+                "target_currency": "THB",
+                "settlement_min_days": 0
+              },
+              {
+                "id": "3f194538-90ba-4adb-ba9a-e12733b8f98e",
+                "code": "cny-thb-standard",
+                "tier": "standard",
+                "type": "corridor",
+                "enabled": true,
+                "provider": "Demo Standard Transfer",
+                "fee_fixed": "15.00",
+                "max_amount": "50000.00",
+                "min_amount": "100.00",
+                "fee_percent": "0.0030",
+                "is_simulated": true,
+                "fx_margin_bps": 40,
+                "settlement_days": 2,
+                "source_currency": "CNY",
+                "target_currency": "THB",
+                "settlement_min_days": 1
+              },
+              {
+                "id": "39785ed5-615a-437c-bf39-7e1b5f774b31",
+                "code": "cny-thb-economy",
+                "tier": "economy",
+                "type": "corridor",
+                "enabled": true,
+                "provider": "Demo Economy Wire",
+                "fee_fixed": "0.00",
+                "max_amount": "50000.00",
+                "min_amount": "100.00",
+                "fee_percent": "0.0015",
+                "is_simulated": true,
+                "fx_margin_bps": 25,
+                "settlement_days": 5,
+                "source_currency": "CNY",
+                "target_currency": "THB",
+                "settlement_min_days": 3
+              }
+            ]
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 3226.1909999651834,
+            "http_status": null,
+            "input_tokens": 5961,
+            "output_tokens": 93,
+            "prompt_version": "planning-1.9"
+          }
+        },
+        {
+          "id": "e6a2ba0c-6fda-4fe9-9c55-b93ee5b08dc0",
+          "created_at": "2026-10-14T15:00:07.599Z",
+          "number": 3,
+          "tool": "create_live_quote",
+          "tier": "T1",
+          "arguments": {
+            "corridor_id": "8972f56a-baf5-446b-a10c-9fef0eb0d2f3",
+            "send_amount": "15000.00"
+          },
+          "rationale": "The CNY balance covers 15,000; quote the express route to compare fees, rate, and delivery.",
+          "status": "OK",
+          "result": {
+            "id": "5e97fbde-db8e-4ee8-89a8-4e076d6720aa",
+            "rate": "4.5724000000",
+            "type": "fxquote",
+            "is_mock": true,
+            "corridor": "8972f56a-baf5-446b-a10c-9fef0eb0d2f3",
+            "mid_rate": "4.6000000000",
+            "rate_date": "2026-10-14",
+            "created_at": "2026-10-14T15:00:07.591Z",
+            "expires_at": "2026-10-14T15:10:07.591Z",
+            "route_name": "Demo Express Remit (express)",
+            "sender_fee": "105.00",
+            "consumed_at": null,
+            "corridor_id": "8972f56a-baf5-446b-a10c-9fef0eb0d2f3",
+            "rate_source": "fixture",
+            "send_amount": "15000.00",
+            "is_simulated": true,
+            "net_received": "68105.90",
+            "receiver_fee": 0,
+            "quote_version": 1,
+            "quoted_amount": "15000.00",
+            "settlement_days": 1,
+            "source_currency": "CNY",
+            "target_currency": "THB",
+            "is_reference_rate": true,
+            "settlement_min_days": 0
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 3120.3673000563867,
+            "http_status": null,
+            "input_tokens": 6362,
+            "output_tokens": 167,
+            "prompt_version": "planning-1.9"
+          }
+        },
+        {
+          "id": "52efef13-40b5-491e-9989-68d1c1d009a0",
+          "created_at": "2026-10-14T15:00:11.349Z",
+          "number": 4,
+          "tool": "create_live_quote",
+          "tier": "T1",
+          "arguments": {
+            "corridor_id": "3f194538-90ba-4adb-ba9a-e12733b8f98e",
+            "send_amount": "15000.00"
+          },
+          "rationale": "Get the standard-route quote so I can compare it with the existing express quote and the economy route.",
+          "status": "OK",
+          "result": {
+            "id": "0dfac30a-359a-4ec1-bd35-3d6df6eb5abe",
+            "rate": "4.5816000000",
+            "type": "fxquote",
+            "is_mock": true,
+            "corridor": "3f194538-90ba-4adb-ba9a-e12733b8f98e",
+            "mid_rate": "4.6000000000",
+            "rate_date": "2026-10-14",
+            "created_at": "2026-10-14T15:00:11.342Z",
+            "expires_at": "2026-10-14T15:10:11.342Z",
+            "route_name": "Demo Standard Transfer (standard)",
+            "sender_fee": "60.00",
+            "consumed_at": null,
+            "corridor_id": "3f194538-90ba-4adb-ba9a-e12733b8f98e",
+            "rate_source": "fixture",
+            "send_amount": "15000.00",
+            "is_simulated": true,
+            "net_received": "68449.10",
+            "receiver_fee": 0,
+            "quote_version": 1,
+            "quoted_amount": "15000.00",
+            "settlement_days": 2,
+            "source_currency": "CNY",
+            "target_currency": "THB",
+            "is_reference_rate": true,
+            "settlement_min_days": 1
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 3736.7001000093296,
+            "http_status": null,
+            "input_tokens": 6679,
+            "output_tokens": 151,
+            "prompt_version": "planning-1.9"
+          }
+        },
+        {
+          "id": "828af4b6-f30e-4739-89d8-dad99aed7829",
+          "created_at": "2026-10-14T15:00:15.703Z",
+          "number": 5,
+          "tool": "create_live_quote",
+          "tier": "T1",
+          "arguments": {
+            "corridor_id": "39785ed5-615a-437c-bf39-7e1b5f774b31",
+            "send_amount": "15000.00"
+          },
+          "rationale": "Quote the remaining enabled route so I can compare all options before preparing the transfer.",
+          "status": "OK",
+          "result": {
+            "id": "1661eb84-a777-42d0-8590-fa7207dd0ee8",
+            "rate": "4.5885000000",
+            "type": "fxquote",
+            "is_mock": true,
+            "corridor": "39785ed5-615a-437c-bf39-7e1b5f774b31",
+            "mid_rate": "4.6000000000",
+            "rate_date": "2026-10-14",
+            "created_at": "2026-10-14T15:00:15.695Z",
+            "expires_at": "2026-10-14T15:10:15.695Z",
+            "route_name": "Demo Economy Wire (economy)",
+            "sender_fee": "22.50",
+            "consumed_at": null,
+            "corridor_id": "39785ed5-615a-437c-bf39-7e1b5f774b31",
+            "rate_source": "fixture",
+            "send_amount": "15000.00",
+            "is_simulated": true,
+            "net_received": "68724.26",
+            "receiver_fee": 0,
+            "quote_version": 1,
+            "quoted_amount": "15000.00",
+            "settlement_days": 5,
+            "source_currency": "CNY",
+            "target_currency": "THB",
+            "is_reference_rate": true,
+            "settlement_min_days": 3
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 4339.184799988288,
+            "http_status": null,
+            "input_tokens": 6983,
+            "output_tokens": 177,
+            "prompt_version": "planning-1.9"
+          }
+        },
+        {
+          "id": "21ab94d7-3105-4506-a0b9-312e14a82cbf",
+          "created_at": "2026-10-14T15:00:19.527Z",
+          "number": 6,
+          "tool": "create_remittance_order",
+          "tier": "T1",
+          "arguments": {
+            "purpose": "tuition",
+            "quote_id": "1661eb84-a777-42d0-8590-fa7207dd0ee8",
+            "recipient": "SELF"
+          },
+          "rationale": "Economy offers the highest estimated THB receipt and lowest fee; create the requested tuition transfer for confirmation.",
+          "status": "OK",
+          "result": {
+            "id": "4c1c9a06-b075-468f-af0a-37a7ad2475a1",
+            "rate": "4.5885000000",
+            "type": "remittanceorder",
+            "quote": "1661eb84-a777-42d0-8590-fa7207dd0ee8",
+            "status": "CREATED",
+            "history": [
+              {
+                "at": "2026-10-14T15:00:19.521437+00:00",
+                "to": "CREATED",
+                "from": "",
+                "note": "",
+                "details": {
+                  "action": "create",
+                  "quote_id": "1661eb84-a777-42d0-8590-fa7207dd0ee8"
+                },
+                "version": 1,
+                "actor_id": 1
+              }
+            ],
+            "on_time": null,
+            "purpose": "tuition",
+            "version": 1,
+            "corridor": "39785ed5-615a-437c-bf39-7e1b5f774b31",
+            "deadline": null,
+            "mid_rate": "4.6000000000",
+            "rate_date": "2026-10-14",
+            "recipient": "SELF",
+            "reference": "",
+            "created_at": "2026-10-14T15:00:19.517Z",
+            "sender_fee": "22.50",
+            "total_cost": "59.94",
+            "beneficiary": null,
+            "rate_source": "fixture",
+            "send_amount": "15000.00",
+            "delivered_on": null,
+            "is_simulated": true,
+            "submitted_at": null,
+            "send_currency": "CNY",
+            "failure_reason": "",
+            "fx_margin_cost": "37.44",
+            "receive_amount": "68724.26",
+            "expected_latest": "2027-09-13",
+            "effective_status": "CREATED",
+            "receive_currency": "THB",
+            "expected_earliest": "2027-09-11"
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 3804.857200011611,
+            "http_status": null,
+            "input_tokens": 7290,
+            "output_tokens": 223,
+            "prompt_version": "planning-1.9"
+          }
+        },
+        {
+          "id": "14f00669-2ccd-4a2c-b969-cbe041b07770",
+          "created_at": "2026-10-14T15:00:23.454Z",
+          "number": 7,
+          "tool": "submit_remittance_order",
+          "tier": "T2",
+          "arguments": {
+            "order_id": "4c1c9a06-b075-468f-af0a-37a7ad2475a1"
+          },
+          "rationale": "Propose submitting the prepared tuition transfer; the student must confirm it.",
+          "status": "PROPOSED",
+          "result": {
+            "action": "remittance.submit",
+            "amount": "15000.00",
+            "details": {
+              "order_id": "4c1c9a06-b075-468f-af0a-37a7ad2475a1",
+              "recipient": "SELF",
+              "receive_amount": "68724.26",
+              "receive_currency": "THB"
+            },
+            "currency": "CNY",
+            "executed": false,
+            "requires": [
+              "student_confirmation",
+              "step_up"
+            ],
+            "target_id": "4c1c9a06-b075-468f-af0a-37a7ad2475a1",
+            "expires_at": "2026-10-14T15:15:23.454348+00:00",
+            "pending_action_id": "d0179392-ce9e-410b-b6aa-d8476068ddb6"
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 3919.0683999913745,
+            "http_status": null,
+            "input_tokens": 7682,
+            "output_tokens": 140,
+            "prompt_version": "planning-1.9"
+          }
+        },
+        {
+          "id": "fc64bcf9-64db-4dcc-9bd6-fa032187987b",
+          "created_at": "2026-10-14T15:00:35.867Z",
+          "number": 8,
+          "tool": "",
+          "tier": "",
+          "arguments": {},
+          "rationale": "",
+          "status": "FINAL",
+          "result": {
+            "answer": "Economy is the best-value route: send 15,000 CNY, pay a 22.50 CNY fee, and receive an estimated 68,724.26 THB in 3–5 days (Sep 11–13, 2027). Its rate is 4.5885 THB/CNY (fixture, dated Oct 14, 2026). Standard: 60 CNY fee, 68,449.10 THB, 1–2 days; Express: 105 CNY fee, 68,105.90 THB, 0–1 day. The Economy transfer is prepared and awaits your confirmation in the app; it has not been sent. Funds and transfer are simulated."
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 2,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 12408.37730007479,
+            "http_status": null,
+            "input_tokens": 7900,
+            "output_tokens": 347,
+            "prompt_version": "planning-1.9"
+          }
+        }
+      ],
+      "pending_actions": [
+        {
+          "id": "d0179392-ce9e-410b-b6aa-d8476068ddb6",
+          "type": "agentpendingaction",
+          "created_at": "2026-10-14T15:00:23.455Z",
+          "session": "8c6413c0-7555-41ba-8cc0-4a700070405b",
+          "step": "14f00669-2ccd-4a2c-b969-cbe041b07770",
+          "action": "remittance.submit",
+          "tool": "submit_remittance_order",
+          "arguments": {
+            "order_id": "4c1c9a06-b075-468f-af0a-37a7ad2475a1",
+            "recipient": "SELF",
+            "receive_amount": "68724.26",
+            "receive_currency": "THB"
+          },
+          "target_id": "4c1c9a06-b075-468f-af0a-37a7ad2475a1",
+          "amount": "15000.00",
+          "currency": "CNY",
+          "status": "REJECTED",
+          "expires_at": "2026-10-14T15:15:23.454Z",
+          "decided_at": "2026-10-14T15:00:52.363Z",
+          "result": {},
+          "version": 2
+        }
+      ],
+      "is_simulated": true
+    },
+    {
+      "id": "59d85a03-402b-4f67-adb4-b9ba4411b0e3",
+      "type": "agentsession",
+      "created_at": "2026-10-14T15:01:49.756Z",
+      "goal": "Show my on-time payment record. Explain which actual payments count and whether this is an external credit score.",
+      "locale": "en",
+      "mode": "live",
+      "status": "COMPLETED",
+      "final_answer": "Your simulated record (as of Oct 14, 2026) shows 2 on-time payments, 1 late payment, and none overdue; one more on-time record is needed for the next level, FAIR. This summary doesn’t identify the individual payments or say which payment types counted, so I can’t verify specific transactions from it. It is not an external credit score: StudyFlow neither reports it to nor obtains it from a credit bureau. All funds and records are simulated.",
+      "error_code": "",
+      "write_count": 0,
+      "updated_at": "2026-10-14T15:02:27.203Z",
+      "conversation": "4c7e2185-6a8a-4274-b5db-41f6fa9b9cf3",
+      "cards": [],
+      "steps": [
+        {
+          "id": "2f2b71cf-20f8-46ae-b678-756eb608f2de",
+          "created_at": "2026-10-14T15:01:53.862Z",
+          "number": 1,
+          "tool": "get_credit_profile",
+          "tier": "T0",
+          "arguments": {},
+          "rationale": "Retrieve the simulated on-time payment record and its factors so I can explain what it reflects and whether it is an external credit score.",
+          "status": "OK",
+          "result": {
+            "late": 1,
+            "as_of": "2026-10-14",
+            "level": "BUILDING",
+            "factors": [
+              {
+                "code": "ON_TIME_RECORDS",
+                "count": 2,
+                "effect": "positive"
+              },
+              {
+                "code": "LATE_RECORDS",
+                "count": 1,
+                "effect": "negative"
+              },
+              {
+                "code": "THIN_HISTORY",
+                "count": 2,
+                "effect": "neutral"
+              }
+            ],
+            "on_time": 2,
+            "overdue": 0,
+            "disclaimer": "Simulated on-time record inside StudyFlow. Not a credit score and not reported to or obtained from any credit bureau.",
+            "next_level": {
+              "level": "FAIR",
+              "on_time_needed": 1
+            },
+            "is_simulated": true,
+            "limit_multiplier": "1.0"
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 3454.1048000101,
+            "http_status": null,
+            "input_tokens": 5935,
+            "output_tokens": 69,
+            "prompt_version": "planning-1.9"
+          }
+        },
+        {
+          "id": "82c5e83d-4466-4ced-aa27-184c61ecf8c5",
+          "created_at": "2026-10-14T15:02:00.970Z",
+          "number": 2,
+          "tool": "get_study_life",
+          "tier": "T0",
+          "arguments": {},
+          "rationale": "Check whether any actual StudyFlow loan repayment or payment records clarify what contributes to the simulated on-time record.",
+          "status": "OK",
+          "result": {
+            "today": "2027-09-08",
+            "upcoming": [
+              {
+                "done": false,
+                "kind": "task",
+                "stage": "overdue",
+                "title": {
+                  "en": "Confirm the admission result and accept the offer",
+                  "zh": "确认录取结果并接受录取"
+                },
+                "token": "1e680e58f4bc958fc42f7dc7ae21ae4b6f1a5895944a2cefae2a61148d307fcb",
+                "amount": null,
+                "target": "life",
+                "unread": true,
+                "at_risk": false,
+                "snoozed": false,
+                "currency": "THB",
+                "due_date": "2027-04-11",
+                "template": true,
+                "estimated": false,
+                "shortfall": null,
+                "source_key": "task:d5f8c45f-dc1a-482e-9a13-1493c236584f",
+                "source_text": "",
+                "notice_token": "6d8ffdebefd06256119831ef2cd5d2bee090569c6f76b02ba26fb33a2a78fa07",
+                "snoozed_until": null,
+                "catalog_amount": null,
+                "source_version": 1,
+                "shortfall_basis": null,
+                "amount_confirmed": false
+              },
+              {
+                "done": false,
+                "kind": "task",
+                "stage": "overdue",
+                "title": {
+                  "en": "Prepare passport, photos and original transcripts",
+                  "zh": "准备护照、证件照和成绩单原件"
+                },
+                "token": "9460b24e367df9e7f01133645ca12b5b5527a02daf552cd692656242f14de668",
+                "amount": null,
+                "target": "life",
+                "unread": true,
+                "at_risk": false,
+                "snoozed": false,
+                "currency": "THB",
+                "due_date": "2027-05-26",
+                "template": true,
+                "estimated": false,
+                "shortfall": null,
+                "source_key": "task:de5d318d-d26c-4165-b28a-992ed12c2636",
+                "source_text": "",
+                "notice_token": "74c8370a9b145a593c4f20a2439b4c96d805e358ef35058897d5e9fcb93012df",
+                "snoozed_until": null,
+                "catalog_amount": null,
+                "source_version": 1,
+                "shortfall_basis": null,
+                "amount_confirmed": false
+              },
+              {
+                "done": false,
+                "kind": "task",
+                "stage": "overdue",
+                "title": {
+                  "en": "Apply for the Non-Immigrant ED visa",
+                  "zh": "申请 Non-ED 教育签证"
+                },
+                "token": "aa8fe000e7575ba3f385a156d9d4dee936c6cea7d534007b6838370752bb5d53",
+                "amount": null,
+                "target": "life",
+                "unread": true,
+                "at_risk": false,
+                "snoozed": false,
+                "currency": "THB",
+                "due_date": "2027-06-10",
+                "template": true,
+                "estimated": false,
+                "shortfall": null,
+                "source_key": "task:0a1457b5-c5a4-494c-b8ac-7c581183b2cf",
+                "source_text": "",
+                "notice_token": "660353b1f1a7d54cfae45e6b82541326b0287b2e4d90723fb9ced8e562c22a29",
+                "snoozed_until": null,
+                "catalog_amount": null,
+                "source_version": 1,
+                "shortfall_basis": null,
+                "amount_confirmed": false
+              }
+            ],
+            "in_app_only": true,
+            "attention_count": 9
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 7072.753800021019,
+            "http_status": null,
+            "input_tokens": 6085,
+            "output_tokens": 319,
+            "prompt_version": "planning-1.9"
+          }
+        },
+        {
+          "id": "d2e8a7d8-c69e-4943-95d8-c9bc98d69e3a",
+          "created_at": "2026-10-14T15:02:27.199Z",
+          "number": 3,
+          "tool": "",
+          "tier": "",
+          "arguments": {},
+          "rationale": "",
+          "status": "FINAL",
+          "result": {
+            "answer": "Your simulated record (as of Oct 14, 2026) shows 2 on-time payments, 1 late payment, and none overdue; one more on-time record is needed for the next level, FAIR. This summary doesn’t identify the individual payments or say which payment types counted, so I can’t verify specific transactions from it. It is not an external credit score: StudyFlow neither reports it to nor obtains it from a credit bureau. All funds and records are simulated."
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 3,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 26226.780299970414,
+            "http_status": null,
+            "input_tokens": 6868,
+            "output_tokens": 788,
+            "prompt_version": "planning-1.9"
+          }
+        }
+      ],
+      "pending_actions": [],
+      "is_simulated": true
+    }
+  ],
+  "model_calls": 43,
+  "all_calls_live": true,
+  "models": [
+    "openai/gpt-6-luna"
+  ],
+  "prompt_versions": [
+    "planning-1.9"
+  ]
+}

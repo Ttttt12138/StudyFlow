@@ -1,0 +1,307 @@
+1
+00:00:00,340 --> 00:00:04,670
+StudyFlow connects study costs, funding and student life, with
+
+2
+00:00:04,670 --> 00:00:08,730
+live AI guidance and simulated financial transactions.
+
+3
+00:00:09,407 --> 00:00:12,322
+Ask for a school's full-course cost.
+
+4
+00:00:12,322 --> 00:00:17,047
+The answer combines tuition, living costs and essential expenses.
+
+5
+00:00:17,707 --> 00:00:21,842
+Open the line items to distinguish sourced fees from estimates.
+
+6
+00:00:22,507 --> 00:00:27,962
+Compare four universities, with course duration and total cost visible together.
+
+7
+00:00:28,640 --> 00:00:32,315
+Switch the display between baht, yuan and dollars, using
+
+8
+00:00:32,315 --> 00:00:34,525
+reference exchange rates.
+
+9
+00:00:35,207 --> 00:00:38,062
+Here is the same comparison in dollars.
+
+10
+00:00:38,740 --> 00:00:41,925
+The assistant reuses the declared savings.
+
+11
+00:00:41,925 --> 00:00:46,065
+My plan shows the funding gap and a simulated borrowing ceiling.
+
+12
+00:00:46,740 --> 00:00:49,955
+Edit a fee and save the revised cost estimate.
+
+13
+00:00:50,607 --> 00:00:55,042
+Inspect the dated cash-flow forecast and the sources behind each fee.
+
+14
+00:00:55,707 --> 00:01:00,147
+Compare a custom simulated loan with the commercial study-loan example.
+
+15
+00:01:00,807 --> 00:01:04,467
+This option pays interest during study, followed by principal
+
+16
+00:01:04,467 --> 00:01:08,552
+and interest. The complete schedule is available.
+
+17
+00:01:09,207 --> 00:01:12,337
+Here we choose twenty thousand baht over sixty months,
+
+18
+00:01:12,337 --> 00:01:15,622
+repaying principal and interest from the start.
+
+19
+00:01:16,273 --> 00:01:20,718
+The student explicitly confirms the plan and simulated application.
+
+20
+00:01:21,373 --> 00:01:24,993
+The document checklist records demo declarations.
+
+21
+00:01:24,993 --> 00:01:28,113
+These are not verified document uploads.
+
+22
+00:01:28,773 --> 00:01:33,693
+Signing requires another confirmation, including the school recipient.
+
+23
+00:01:34,373 --> 00:01:37,208
+The signed loan schedules payments to the verified school
+
+24
+00:01:37,208 --> 00:01:41,268
+account. It does not credit the student's wallet.
+
+25
+00:01:41,940 --> 00:01:45,920
+The student requests family support for first-month housing.
+
+26
+00:01:46,573 --> 00:01:49,978
+A family member confirms through a private link.
+
+27
+00:01:49,978 --> 00:01:53,668
+A promise alone does not increase the wallet balance.
+
+28
+00:01:54,340 --> 00:01:57,625
+Only the operator's simulated receipt adds six thousand five
+
+29
+00:01:57,625 --> 00:01:59,640
+hundred baht to the wallet.
+
+30
+00:02:00,307 --> 00:02:04,077
+A natural-language request creates a dated reminder.
+
+31
+00:02:04,077 --> 00:02:06,872
+The student can acknowledge and complete it.
+
+32
+00:02:07,540 --> 00:02:13,510
+Arrival is explicit: the student reports completed registration and confirms enrollment.
+
+33
+00:02:14,173 --> 00:02:17,698
+Enrollment opens the wallet and daily-life tools.
+
+34
+00:02:17,698 --> 00:02:19,903
+It does not pay any bill.
+
+35
+00:02:20,573 --> 00:02:25,788
+Set a six-thousand-baht monthly budget and see upcoming payments and shortfalls.
+
+36
+00:02:26,440 --> 00:02:28,920
+Tell the assistant about lunch.
+
+37
+00:02:28,920 --> 00:02:31,805
+The expense appears in the category totals and reduces
+
+38
+00:02:31,805 --> 00:02:33,560
+the remaining budget.
+
+39
+00:02:34,240 --> 00:02:37,405
+Undoing the entry restores the remaining budget.
+
+40
+00:02:38,073 --> 00:02:41,313
+The wallet holds separate currency balances.
+
+41
+00:02:41,313 --> 00:02:45,293
+Demo top-ups provide the simulated funds shown here.
+
+42
+00:02:45,973 --> 00:02:48,888
+The live assistant compares conversion quotes and prepares a
+
+43
+00:02:48,888 --> 00:02:52,383
+proposal. No money moves yet.
+
+44
+00:02:53,040 --> 00:02:55,925
+An incorrect password is refused.
+
+45
+00:02:55,925 --> 00:02:58,290
+The balance stays unchanged.
+
+46
+00:02:58,940 --> 00:03:02,530
+After the correct password and confirmation, the server converts
+
+47
+00:03:02,530 --> 00:03:04,870
+five hundred yuan into baht.
+
+48
+00:03:05,540 --> 00:03:09,185
+For a remittance, the assistant compares routes, fees and
+
+49
+00:03:09,185 --> 00:03:13,030
+arrival estimates, then requests confirmation.
+
+50
+00:03:13,707 --> 00:03:16,697
+The confirmed transfer creates a recorded order and debits
+
+51
+00:03:16,697 --> 00:03:18,467
+the source currency.
+
+52
+00:03:19,140 --> 00:03:22,905
+The Pay tab separates self-funded bills from loan-covered bills,
+
+53
+00:03:22,905 --> 00:03:25,670
+and shows insufficient wallet funds.
+
+54
+00:03:26,340 --> 00:03:30,260
+Top up the exact shortfall, then return to payment.
+
+55
+00:03:30,940 --> 00:03:33,470
+Review the tuition payment and enter the password to
+
+56
+00:03:33,470 --> 00:03:35,680
+authorize the wallet debit.
+
+57
+00:03:36,340 --> 00:03:38,325
+The bill becomes paid.
+
+58
+00:03:38,325 --> 00:03:41,360
+A loan-covered bill cannot be charged again.
+
+59
+00:03:42,040 --> 00:03:45,110
+For the first installment, we advance the demo date
+
+60
+00:03:45,110 --> 00:03:47,840
+and confirm repayment with a password.
+
+61
+00:03:48,507 --> 00:03:51,907
+The installment is paid and appears in the loan history.
+
+62
+00:03:52,573 --> 00:03:54,938
+A smaller bill can use the fixed demo credit
+
+63
+00:03:54,938 --> 00:03:58,913
+line, creating an amount owed back within thirty days.
+
+64
+00:03:59,573 --> 00:04:02,898
+Credit repayment now requires a password and actually debits
+
+65
+00:04:02,898 --> 00:04:04,743
+the simulated wallet.
+
+66
+00:04:05,407 --> 00:04:08,317
+Repayment restores the available line and adds an on-time
+
+67
+00:04:08,317 --> 00:04:10,692
+record when paid by the due date.
+
+68
+00:04:11,373 --> 00:04:15,368
+The server blocks this over-limit transfer without operator approval,
+
+69
+00:04:15,368 --> 00:04:17,793
+even after a correct password.
+
+70
+00:04:18,473 --> 00:04:23,083
+The activity log records authorization attempts and confirmed actions.
+
+71
+00:04:23,740 --> 00:04:27,870
+Eligible payments build StudyFlow's internal on-time record.
+
+72
+00:04:27,870 --> 00:04:30,595
+This is not an external credit score.
+
+73
+00:04:31,273 --> 00:04:35,303
+A separate visitor verifies the signed record without logging in.
+
+74
+00:04:35,973 --> 00:04:39,658
+Altering the signed statement makes verification fail.
+
+75
+00:04:40,340 --> 00:04:43,220
+Live AI explains and proposes.
+
+76
+00:04:43,220 --> 00:04:46,475
+The server calculates and enforces limits.
+
+77
+00:04:46,475 --> 00:04:49,670
+The student authorizes financial actions.

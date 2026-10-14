@@ -1,0 +1,478 @@
+{
+  "single-school-total": {
+    "offset": 0.4,
+    "mean_pixel_difference": 1.8992541152263376,
+    "role": "student",
+    "screenshot": "single-school-total.png",
+    "candidates": [
+      {
+        "offset": 0.4,
+        "mean_pixel_difference": 1.8992541152263376
+      }
+    ]
+  },
+  "cost-living": {
+    "offset": 0.4,
+    "mean_pixel_difference": 1.8396810699588475,
+    "role": "student",
+    "screenshot": "cost-living.png",
+    "candidates": [
+      {
+        "offset": 0.4,
+        "mean_pixel_difference": 1.8396810699588475
+      }
+    ]
+  },
+  "comparison-THB": {
+    "offset": 0.4,
+    "mean_pixel_difference": 1.6452078189300412,
+    "role": "student",
+    "screenshot": "comparison-THB.png",
+    "candidates": [
+      {
+        "offset": 0.4,
+        "mean_pixel_difference": 1.6452078189300412
+      }
+    ]
+  },
+  "comparison-CNY": {
+    "offset": 0.4,
+    "mean_pixel_difference": 1.62905658436214,
+    "role": "student",
+    "screenshot": "comparison-CNY.png",
+    "candidates": [
+      {
+        "offset": 0.4,
+        "mean_pixel_difference": 1.62905658436214
+      }
+    ]
+  },
+  "comparison-USD": {
+    "offset": 0.4,
+    "mean_pixel_difference": 1.609985596707819,
+    "role": "student",
+    "screenshot": "comparison-USD.png",
+    "candidates": [
+      {
+        "offset": 0.4,
+        "mean_pixel_difference": 1.609985596707819
+      }
+    ]
+  },
+  "adjust-cost-assumption": {
+    "offset": 0.4,
+    "mean_pixel_difference": 1.6387520576131687,
+    "role": "student",
+    "screenshot": "adjust-cost-assumption.png",
+    "candidates": [
+      {
+        "offset": 0.4,
+        "mean_pixel_difference": 1.6387520576131687
+      }
+    ]
+  },
+  "forecast-and-sources": {
+    "offset": 0.4,
+    "mean_pixel_difference": 1.591349794238683,
+    "role": "student",
+    "screenshot": "forecast-and-sources.png",
+    "candidates": [
+      {
+        "offset": 0.4,
+        "mean_pixel_difference": 1.591349794238683
+      }
+    ]
+  },
+  "loan-custom": {
+    "offset": 0.4,
+    "mean_pixel_difference": 0.7905123456790123,
+    "role": "student",
+    "screenshot": "loan-custom.png",
+    "candidates": [
+      {
+        "offset": 0.4,
+        "mean_pixel_difference": 0.7905123456790123
+      }
+    ]
+  },
+  "loan-interest-only": {
+    "offset": 0.4,
+    "mean_pixel_difference": 0.5900617283950618,
+    "role": "student",
+    "screenshot": "loan-interest-only.png",
+    "candidates": [
+      {
+        "offset": 0.4,
+        "mean_pixel_difference": 0.5900617283950618
+      }
+    ]
+  },
+  "family-request": {
+    "offset": 1.0,
+    "mean_pixel_difference": 1.9376388888888887,
+    "role": "student",
+    "screenshot": "family-request.png",
+    "candidates": [
+      {
+        "offset": 0.4,
+        "mean_pixel_difference": 5.85395061728395
+      },
+      {
+        "offset": 1.0,
+        "mean_pixel_difference": 1.9376388888888887
+      }
+    ]
+  },
+  "family-confirms": {
+    "offset": 0.4,
+    "mean_pixel_difference": 1.6548343621399175,
+    "role": "family",
+    "screenshot": "family-confirms.png",
+    "candidates": [
+      {
+        "offset": 0.4,
+        "mean_pixel_difference": 1.6548343621399175
+      }
+    ]
+  },
+  "family-received": {
+    "offset": 1.0,
+    "mean_pixel_difference": 2.3529969135802467,
+    "role": "student",
+    "screenshot": "family-received.png",
+    "candidates": [
+      {
+        "offset": 0.4,
+        "mean_pixel_difference": 6.034169753086419
+      },
+      {
+        "offset": 1.0,
+        "mean_pixel_difference": 2.3529969135802467
+      }
+    ]
+  },
+  "preparation-reminder": {
+    "offset": 1.0,
+    "mean_pixel_difference": 2.1752798353909464,
+    "role": "student",
+    "screenshot": "preparation-reminder.png",
+    "candidates": [
+      {
+        "offset": 0.4,
+        "mean_pixel_difference": 12.532335390946502
+      },
+      {
+        "offset": 1.0,
+        "mean_pixel_difference": 2.1752798353909464
+      }
+    ]
+  },
+  "enrollment-proposal": {
+    "offset": 0.4,
+    "mean_pixel_difference": 1.629543209876543,
+    "role": "student",
+    "screenshot": "enrollment-proposal.png",
+    "candidates": [
+      {
+        "offset": 0.4,
+        "mean_pixel_difference": 1.629543209876543
+      }
+    ]
+  },
+  "enrolled": {
+    "offset": 0.4,
+    "mean_pixel_difference": 2.0806738683127572,
+    "role": "student",
+    "screenshot": "enrolled.png",
+    "candidates": [
+      {
+        "offset": 0.4,
+        "mean_pixel_difference": 2.0806738683127572
+      }
+    ]
+  },
+  "monthly-budget": {
+    "offset": 1.0,
+    "mean_pixel_difference": 2.0445030864197533,
+    "role": "student",
+    "screenshot": "monthly-budget.png",
+    "candidates": [
+      {
+        "offset": 0.4,
+        "mean_pixel_difference": 7.883552469135803
+      },
+      {
+        "offset": 1.0,
+        "mean_pixel_difference": 2.0445030864197533
+      }
+    ]
+  },
+  "expense-recorded": {
+    "offset": 1.0,
+    "mean_pixel_difference": 2.261135802469136,
+    "role": "student",
+    "screenshot": "expense-recorded.png",
+    "candidates": [
+      {
+        "offset": 0.4,
+        "mean_pixel_difference": 9.036946502057612
+      },
+      {
+        "offset": 1.0,
+        "mean_pixel_difference": 2.261135802469136
+      }
+    ]
+  },
+  "expense-undone": {
+    "offset": 0.4,
+    "mean_pixel_difference": 1.8390874485596707,
+    "role": "student",
+    "screenshot": "expense-undone.png",
+    "candidates": [
+      {
+        "offset": 0.4,
+        "mean_pixel_difference": 1.8390874485596707
+      }
+    ]
+  },
+  "multicurrency-wallet": {
+    "offset": 1.0,
+    "mean_pixel_difference": 2.0786491769547326,
+    "role": "student",
+    "screenshot": "multicurrency-wallet.png",
+    "candidates": [
+      {
+        "offset": 0.4,
+        "mean_pixel_difference": 10.924450617283952
+      },
+      {
+        "offset": 1.0,
+        "mean_pixel_difference": 2.0786491769547326
+      }
+    ]
+  },
+  "conversion-proposal": {
+    "offset": 0.4,
+    "mean_pixel_difference": 1.819164609053498,
+    "role": "student",
+    "screenshot": "conversion-proposal.png",
+    "candidates": [
+      {
+        "offset": 0.4,
+        "mean_pixel_difference": 1.819164609053498
+      }
+    ]
+  },
+  "wrong-password-refused": {
+    "offset": 0.4,
+    "mean_pixel_difference": 1.039292181069959,
+    "role": "student",
+    "screenshot": "wrong-password-refused.png",
+    "candidates": [
+      {
+        "offset": 0.4,
+        "mean_pixel_difference": 1.039292181069959
+      }
+    ]
+  },
+  "conversion-confirmed": {
+    "offset": 0.4,
+    "mean_pixel_difference": 1.8463611111111111,
+    "role": "student",
+    "screenshot": "conversion-confirmed.png",
+    "candidates": [
+      {
+        "offset": 0.4,
+        "mean_pixel_difference": 1.8463611111111111
+      }
+    ]
+  },
+  "remittance-proposal": {
+    "offset": 0.4,
+    "mean_pixel_difference": 1.9015185185185184,
+    "role": "student",
+    "screenshot": "remittance-proposal.png",
+    "candidates": [
+      {
+        "offset": 0.4,
+        "mean_pixel_difference": 1.9015185185185184
+      }
+    ]
+  },
+  "transfer-order-history": {
+    "offset": 2.0,
+    "mean_pixel_difference": 1.6812479423868314,
+    "role": "student",
+    "screenshot": "transfer-order-history.png",
+    "candidates": [
+      {
+        "offset": 0.4,
+        "mean_pixel_difference": 13.759996913580247
+      },
+      {
+        "offset": 1.0,
+        "mean_pixel_difference": 7.759180041152263
+      },
+      {
+        "offset": 2.0,
+        "mean_pixel_difference": 1.6812479423868314
+      }
+    ]
+  },
+  "tuition-shortfall": {
+    "offset": 0.4,
+    "mean_pixel_difference": 2.769145061728395,
+    "role": "student",
+    "screenshot": "tuition-shortfall.png",
+    "candidates": [
+      {
+        "offset": 0.4,
+        "mean_pixel_difference": 2.769145061728395
+      }
+    ]
+  },
+  "bill-topup-review": {
+    "offset": 0.4,
+    "mean_pixel_difference": 1.8533744855967076,
+    "role": "student",
+    "screenshot": "bill-topup-review.png",
+    "candidates": [
+      {
+        "offset": 0.4,
+        "mean_pixel_difference": 1.8533744855967076
+      }
+    ]
+  },
+  "tuition-password": {
+    "offset": 0.4,
+    "mean_pixel_difference": 1.575456790123457,
+    "role": "student",
+    "screenshot": "tuition-password.png",
+    "candidates": [
+      {
+        "offset": 0.4,
+        "mean_pixel_difference": 1.575456790123457
+      }
+    ]
+  },
+  "tuition-paid": {
+    "offset": 0.4,
+    "mean_pixel_difference": 1.7222860082304525,
+    "role": "student",
+    "screenshot": "tuition-paid.png",
+    "candidates": [
+      {
+        "offset": 0.4,
+        "mean_pixel_difference": 1.7222860082304525
+      }
+    ]
+  },
+  "credit-used": {
+    "offset": 1.0,
+    "mean_pixel_difference": 1.8160473251028808,
+    "role": "student",
+    "screenshot": "credit-used.png",
+    "candidates": [
+      {
+        "offset": 0.4,
+        "mean_pixel_difference": 13.47700514403292
+      },
+      {
+        "offset": 1.0,
+        "mean_pixel_difference": 1.8160473251028808
+      }
+    ]
+  },
+  "credit-password": {
+    "offset": 0.4,
+    "mean_pixel_difference": 1.577212962962963,
+    "role": "student",
+    "screenshot": "credit-password.png",
+    "candidates": [
+      {
+        "offset": 0.4,
+        "mean_pixel_difference": 1.577212962962963
+      }
+    ]
+  },
+  "credit-restored": {
+    "offset": 0.4,
+    "mean_pixel_difference": 1.4541018518518518,
+    "role": "student",
+    "screenshot": "credit-restored.png",
+    "candidates": [
+      {
+        "offset": 0.4,
+        "mean_pixel_difference": 1.4541018518518518
+      }
+    ]
+  },
+  "over-limit-blocked": {
+    "offset": 0.4,
+    "mean_pixel_difference": 1.102190329218107,
+    "role": "student",
+    "screenshot": "over-limit-blocked.png",
+    "candidates": [
+      {
+        "offset": 0.4,
+        "mean_pixel_difference": 1.102190329218107
+      }
+    ]
+  },
+  "security-audit": {
+    "offset": 0.4,
+    "mean_pixel_difference": 1.9736553497942388,
+    "role": "student",
+    "screenshot": "security-audit.png",
+    "candidates": [
+      {
+        "offset": 0.4,
+        "mean_pixel_difference": 1.9736553497942388
+      }
+    ]
+  },
+  "on-time-record": {
+    "offset": 2.0,
+    "mean_pixel_difference": 2.497633744855967,
+    "role": "student",
+    "screenshot": "on-time-record.png",
+    "candidates": [
+      {
+        "offset": 0.4,
+        "mean_pixel_difference": 6.327509259259259
+      },
+      {
+        "offset": 1.0,
+        "mean_pixel_difference": 13.696170781893004
+      },
+      {
+        "offset": 2.0,
+        "mean_pixel_difference": 2.497633744855967
+      }
+    ]
+  },
+  "statement-valid": {
+    "offset": 0.4,
+    "mean_pixel_difference": 1.591255144032922,
+    "role": "verifier",
+    "screenshot": "statement-valid.png",
+    "candidates": [
+      {
+        "offset": 0.4,
+        "mean_pixel_difference": 1.591255144032922
+      }
+    ]
+  },
+  "statement-tampering-rejected": {
+    "offset": 0.4,
+    "mean_pixel_difference": 0.8869043209876543,
+    "role": "verifier",
+    "screenshot": "statement-tampering-rejected.png",
+    "candidates": [
+      {
+        "offset": 0.4,
+        "mean_pixel_difference": 0.8869043209876543
+      }
+    ]
+  }
+}
