@@ -23,7 +23,9 @@ export function LoanStage({ data, quote, client, refresh }: {
   const stage = data.loan_stage ?? { documents: [], payouts: [], signed: false };
   const left = stage.documents.filter(d => !d.done).length;
   const loanTotal = stage.payouts.reduce((sum, p) => sum + Number(p.amount), 0);
-  const canSign = application.status === "APPROVED" && !stage.signed && left === 0;
+  const payee = stage.school_payee;
+  const held = payee?.verified === false;
+  const canSign = application.status === "APPROVED" && !stage.signed && left === 0 && !held;
   async function run(action: () => Promise<unknown>) {
     setBusy(true); setError("");
     try { await action(); await refresh(); return true; }
@@ -39,6 +41,9 @@ export function LoanStage({ data, quote, client, refresh }: {
   return <section className="loan-stage" aria-label={t("stage.title")}>
     <h3 className="panel-section-title">{t("stage.title")}</h3>
     {status && <p className={stage.signed ? "plan-visual-gap" : "panel-muted"} role="status">{status}</p>}
+    {payee && <p className="panel-muted loan-stage-payee">{t("stage.payee", { name: payee.name, account: payee.account })}
+      {!held && <> · <span className="panel-tag">{t("stage.payeeVerified")}</span></>}</p>}
+    {held && <p className="life-warning" role="alert">{t("stage.payeeUnverified")}</p>}
     {!stage.signed && stage.documents.length > 0 && <fieldset className="loan-stage-docs" disabled={busy}>
       <legend>{t("stage.docs")}{left > 0 && ` · ${t("stage.docsLeft", { n: left })}`}</legend>
       {stage.documents.map(d => <label key={d.id}>

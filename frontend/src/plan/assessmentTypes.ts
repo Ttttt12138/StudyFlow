@@ -30,6 +30,8 @@ export type LoanPreview = { principal: string; months: number; monthly_payment: 
   /** Interest-only months while studying (0 for equal installments from the start) and the most paid in one. */
   method?: LoanMethod; interest_only_months?: number; interest_only_payment?: string | null;
   schedule: { number: number; due_date: string; amount: string; principal: string; interest: string; remaining_principal: string }[] };
+/** The school's tuition account; money goes to the school only while it is verified. */
+export type SchoolPayee = { id: string; name: string; account: string; verified: boolean };
 export type LoanDocument = { id: string; key: string; title: Text | null; done: boolean; due_date: string | null; version: number };
 export type LoanPayout = { id: string; amount: string; bill_amount: string; bill_currency: string; bill_label: Text | string;
   due_date: string; status: "SCHEDULED" | "PAID"; paid_on: string | null; kind: string };
@@ -40,5 +42,5 @@ export type Projection = { horizon: number; as_of: string; end_date: string; com
 export type PlanningAssessment = { version: number; plan_version: number; plan: Plan | null; inputs: AssessmentInputs | null;
   quotes: PlanningQuote[]; stale?: boolean; draft?: boolean; estimate?: Estimate; suggested_principal?: string | null;
   forecast?: Projection; conditional_forecast?: Projection; prequal?: Prequal;
-  loan_stage?: { documents: LoanDocument[]; payouts: LoanPayout[]; signed: boolean };
+  loan_stage?: { documents: LoanDocument[]; payouts: LoanPayout[]; signed: boolean; school_payee?: SchoolPayee | null };
   lifecycle?: { applications: LoanApplication[]; accounts: LoanAccount[]; disbursements: Disbursement[] } };

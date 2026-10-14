@@ -252,6 +252,7 @@ def save_plan(user, data):
     else:
         if plan.school_key != entry.key:
             plan.loan = None  # a loan sized for another school no longer applies
+            plan.school_payee = None  # nor does the other school's account
             withdrawn = _withdraw_applications(user, plan)
             plan.years = default_years(entry)  # another school's length does not carry over
         plan.school_key, plan.catalog_version = entry.key, entry.version
@@ -340,8 +341,11 @@ def confirm_plan(user, plan):
     from . import checklist
     from .in_school import generate_bills
 
+    from .payees import school_payee
+
     generate_bills(user, plan)
     checklist.seed(user, plan)
+    school_payee(plan)
     audit(user, user, "planning.plan_confirmed", plan, {"version": plan.version})
     return plan_record(plan)
 

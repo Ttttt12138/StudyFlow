@@ -13,6 +13,7 @@ from .remittance_models import RemittanceOrder
 from .workflow_models import DemoWallet, Payment
 
 WINDOW_DAYS = 365
+PREPAY_DAYS = 366  # as remittance deadlines (remittance_orders.create)
 STATEMENT_SALT = "studyflow-credit-statement-v1"
 STATEMENT_MAX_AGE = 90 * 24 * 3600
 MULTIPLIERS = {"AT_RISK": Decimal("0.5"), "BUILDING": Decimal("1.0"),
@@ -57,8 +58,22 @@ def _remittances(owner, as_of, start):
                "status": "ON_TIME" if row.delivered_on <= row.deadline else "LATE"}
 
 
+def _plan_bills(owner, as_of, start):
+    # Only bills the student paid from the wallet: marked paid by hand or paid by the loan proves nothing.
+    # Like remittance deadlines, a bill counts only when paid within a year of its due date, so prepaying
+    # every future term cannot raise the level at once.
+    from .planning.models import PlanBill
+
+    rows = PlanBill.objects.filter(owner=owner, status="PAID", ledger_entry__isnull=False, paid_on__isnull=False)
+    for row in rows.order_by("due_date", "id"):
+        if row.due_date > row.paid_on + timedelta(days=PREPAY_DAYS):
+            continue
+        yield {"source": "plan_bill", "id": str(row.id), "due_on": row.due_date, "completed_on": row.paid_on,
+               "status": "ON_TIME" if row.paid_on <= row.due_date else "LATE"}
+
+
 # Each source yields evidence dicts for one owner; profile() applies the window.
-EVIDENCE_SOURCES = [_installments, _payments, _remittances]
+EVIDENCE_SOURCES = [_installments, _payments, _remittances, _plan_bills]
 
 
 def _in_window(item, start):

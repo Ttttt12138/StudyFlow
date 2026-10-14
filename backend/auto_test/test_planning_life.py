@@ -300,6 +300,20 @@ class PlanningCreditTests(LifeCase):
         self.assertEqual(self.credit()["available"], f"{limit:.2f}")
         self.assertTrue(next(i for i in self.read()["items"] if i["kind"] == "credit")["done"])
 
+    def test_credit_pays_tuition_only_to_a_verified_school_account(self):
+        from finance.planning.payees import school_payee
+
+        payee = school_payee(self.plan)
+        payee.verified = False
+        payee.save(update_fields=["verified"])
+        bill = self.bill("1000")
+        response = self.pay(next(i for i in self.read()["items"] if i["kind"] == "bill"))
+        self.assertEqual(response.status_code, 400, response.data)
+        self.assertIn("SCHOOL_PAYEE_NOT_VERIFIED", str(response.data))
+        bill.refresh_from_db()
+        self.assertEqual(bill.status, "DUE")
+        self.assertEqual(self.credit()["used"], "0.00")
+
     def test_over_limit_foreign_currency_and_stale_tokens_are_refused(self):
         self.bill(f"{self.limit() + 1:.2f}", source="big")
         item = next(i for i in self.read()["items"] if i["kind"] == "bill")
@@ -360,6 +374,60 @@ class WalletBillPaymentTests(APITestCase):
         events = FinancialState.objects.filter(owner=self.user).order_by("-version").first().snapshot["events"]
         self.assertEqual(next(e for e in events if e["id"] == f"bill:{self.bill.id}")["settled_sequence"], entry.sequence)
 
+    def test_tuition_goes_only_to_a_verified_school_account(self):
+        from finance.planning.payees import school_payee
+        from finance.workflow_models import DemoWallet
+
+        listed = self.client.get("/api/v2/planning/wallet-bills/").data["data"]
+        self.assertIsNone(listed["school_payee"])  # a draft plan can still change school
+        payee = school_payee(self.plan)
+        payee.verified = False
+        payee.save(update_fields=["verified"])
+        listed = self.client.get("/api/v2/planning/wallet-bills/").data["data"]
+        self.assertEqual((listed["school_payee"]["id"], listed["school_payee"]["verified"]), (str(payee.id), False))
+        refused = self.pay(self.bill, self.token(self.bill))
+        self.assertEqual(refused.status_code, 400, refused.data)
+        self.assertIn("SCHOOL_PAYEE_NOT_VERIFIED", str(refused.data))
+        self.bill.refresh_from_db()
+        self.assertEqual(self.bill.status, "DUE")
+        self.assertEqual(DemoWallet.objects.get(owner=self.user).balance, Decimal("30000.00"))
+        # Bills that are not tuition need not go to the school.
+        visa = PlanBill.objects.create(owner=self.user, plan=self.plan, kind="visa", source_id="visa:once",
+            label={"en": "Visa", "zh": "签证"}, due_date=date(2027, 8, 8), amount=Decimal("2000.00"), currency="THB")
+        self.assertEqual(self.pay(visa, self.token(visa)).status_code, 201)
+        payee.verified = True
+        payee.save(update_fields=["verified"])
+        self.assertEqual(self.pay(self.bill, self.token(self.bill)).status_code, 201)
+
+    def test_wallet_bill_payments_build_the_credit_record(self):
+        from finance.workflow_models import DemoWallet
+
+        def bill(source, due, amount="1000.00"):
+            return PlanBill.objects.create(owner=self.user, plan=self.plan, kind="housing", source_id=source,
+                label={"en": "Housing", "zh": "住宿"}, due_date=due, amount=Decimal(amount), currency="THB")
+
+        def evidence():
+            response = self.client.get("/api/v2/credit/profile/")
+            self.assertEqual(response.status_code, 200, response.data)
+            return {(e["id"], e["status"]) for e in response.data["data"]["evidence"] if e["source"] == "plan_bill"}
+
+        DemoWallet.objects.filter(owner=self.user).update(clock=date(2027, 8, 1))
+        self.assertEqual(self.pay(self.bill, self.token(self.bill)).status_code, 201)
+        self.bill.refresh_from_db()
+        self.assertEqual(self.bill.paid_on, date(2027, 8, 1))
+        # Prepaid more than a year ahead: paid, but not evidence.
+        ahead = bill("housing:y2", date(2028, 9, 1))
+        self.assertEqual(self.pay(ahead, self.token(ahead)).status_code, 201)
+        # Marked paid by hand: no money moved through the wallet.
+        manual = bill("housing:manual", date(2027, 8, 20))
+        marked = self.client.post(f"/api/v2/planning/bills/{manual.id}/pay/", {}, format="json",
+                                  HTTP_IDEMPOTENCY_KEY=str(uuid4()))
+        self.assertEqual(marked.status_code, 201, marked.data)
+        late = bill("housing:late", date(2027, 8, 5))
+        DemoWallet.objects.filter(owner=self.user).update(clock=date(2027, 8, 10))
+        self.assertEqual(self.pay(late, self.token(late)).status_code, 201)
+        self.assertEqual(evidence(), {(str(self.bill.id), "ON_TIME"), (str(late.id), "LATE")})
+
     def test_short_balance_and_loan_paid_bills_are_refused(self):
         big = PlanBill.objects.create(owner=self.user, plan=self.plan, kind="housing", source_id="housing:y1s1",
             label={"en": "Housing", "zh": "住宿"}, due_date=date(2027, 8, 8), amount=Decimal("40000.00"), currency="THB")
@@ -391,3 +459,22 @@ class WalletBillPaymentTests(APITestCase):
                                         format="json", HTTP_IDEMPOTENCY_KEY=str(uuid4()))
             self.assertEqual(response.status_code, 400, response.data)
             self.assertIn("BILL_PAID_BY_LOAN", str(response.data))
+
+
+class SchoolPayeeSeedTests(APITestCase):
+    def test_every_catalog_school_has_a_verified_seeded_account(self):
+        from finance.planning import catalog
+        from finance.planning.payees import VERIFIED
+
+        self.assertEqual({entry.key for entry in catalog.schools()}, set(VERIFIED))
+
+    def test_switching_school_drops_the_old_account(self):
+        from finance.planning.payees import school_payee
+
+        user = get_user_model().objects.create_user("payee-switch")
+        services.save_plan(user, {"school_key": "psu-phuket"})
+        first = school_payee(services.plan_for(user))
+        services.save_plan(user, {"school_key": "malaya"})
+        second = school_payee(services.plan_for(user))
+        self.assertNotEqual(first.id, second.id)
+        self.assertEqual(second.name, "Universiti Malaya (Faculty of Business and Economics)")

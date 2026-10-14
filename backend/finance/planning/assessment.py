@@ -87,6 +87,7 @@ def read(user):
         entry = costs.declared_entry(services.entry_or_404(plan.school_key), item.inputs if item else {})
         data["estimate"] = services.estimate(entry, plan.years, services.home_currency(user))
     from . import loan_stage, products
+    from .payees import payee_record
 
     stored = (data.get("prequal") or {}).get("products") if isinstance(data.get("prequal"), dict) else None
     if isinstance(data.get("prequal"), dict) and item and (stored is None or any("methods" not in o for o in stored)):
@@ -96,7 +97,7 @@ def read(user):
                   "done": t.done, "due_date": t.due_date.isoformat() if t.due_date else None, "version": t.version}
                  for t in StudyTask.objects.filter(plan=plan, template_key__startswith=loan_stage.PREFIX).order_by("created_at")]
     data["loan_stage"] = {"documents": documents, "payouts": loan_stage.payout_records(plan),
-                          "signed": loan_stage.signed(plan)}
+                          "signed": loan_stage.signed(plan), "school_payee": payee_record(plan)}
     return {**data, "plan": services.plan_record(plan, services.home_currency(user))["plan"],
             "inputs": with_necessary_expenses(deepcopy(item.inputs), plan) if item else defaults(user, plan),
             "version": item.version if item else 0, "plan_version": plan.version,

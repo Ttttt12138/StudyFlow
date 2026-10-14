@@ -15,8 +15,11 @@ function bill(id, label, amount, currency = "THB") {
   return { id, kind: "tuition", label: { en: label, zh: label }, due_date: "2026-11-01", amount, currency, status: "DUE", paid_at: null, paid_by_loan: false };
 }
 
+const SCHOOL = { id: "00000000-0000-4000-8000-0000000000a1", name: "Prince of Songkla University, Phuket Campus",
+  account: "Tuition account (simulated)", verified: true };
+
 /** Mocked Django for the money hub: balances, bills and the commands of one test, recorded in `posts`. */
-async function wallet(page, { bills, balance, commands }) {
+async function wallet(page, { bills, balance, commands, payee = SCHOOL }) {
   const posts = [];
   await page.route("**/api/auth/session/", route => route.fulfill({ json: { authenticated: true, username: "student", csrf_token: "test-csrf" } }));
   await page.route("**/api/v2/**", async route => {
@@ -27,7 +30,7 @@ async function wallet(page, { bills, balance, commands }) {
       posts.push(path);
       return commands(route, path, request);
     }
-    if (path === "planning/wallet-bills/") return json(route, 200, { data: { bills, is_simulated: true } });
+    if (path === "planning/wallet-bills/") return json(route, 200, { data: { bills, school_payee: payee, is_simulated: true } });
     if (path === "demo/wallets/balances/") return json(route, 200, { data: { home_currency: "THB", is_simulated: true, supported_currencies: ["THB", "CNY", "USD"],
       balances: [{ currency: "THB", balance: balance.value, available_balance: balance.value, is_home: true, indicative_home_value: balance.value, valuation: null }] } });
     if (["beneficiaries/", "remittance-orders/", "approvals/", "ledger/", "conversions/"].includes(path)) return json(route, 200, page_([]));
@@ -130,6 +133,27 @@ test.describe("wallet bill payments", () => {
     await page.getByText("Paid Housing deposit: THB 90,000.00 (simulated).").waitFor();
     assert.deepEqual(posts, [`planning/bills/${rows[0].id}/pay-from-wallet/`, "approvals/", "approvals/ap1/simulate/", "auth/step-up/",
       `planning/bills/${rows[0].id}/pay-from-wallet/`]);
+    assert.deepEqual(errors, []);
+  });
+
+  test("tuition waits while the school's account is not verified; other bills can still be paid", async ({ page }) => {
+    const errors = [];
+    page.on("pageerror", error => errors.push(error.message));
+    const rows = [bill("00000000-0000-4000-8000-0000000000b3", "Tuition per semester", "41000.00"),
+      { ...bill("00000000-0000-4000-8000-0000000000b4", "Student visa", "2000.00"), kind: "visa" }];
+    const posts = await wallet(page, { bills: rows, balance: { value: "60000.00" }, payee: { ...SCHOOL, verified: false },
+      commands: (route, path) => json(route, 500, { detail: `unexpected POST ${path}` }) });
+    await page.goto(`${base}/?tool=wallet&section=pay`);
+    const pay = page.locator(".plan-bills-pay").first();
+    await pay.getByText("Tuition goes to Prince of Songkla University, Phuket Campus · Tuition account (simulated)").waitFor();
+    await pay.getByRole("alert").filter({ hasText: "The school's tuition account is not verified" }).waitFor();
+    const tuition = pay.locator(".plan-bills-list li", { hasText: "Tuition per semester" });
+    assert.equal(await tuition.getByRole("button", { name: "Awaiting verification" }).isDisabled(), true);
+    assert.equal(await tuition.getByRole("button", { name: "Pay from wallet" }).count(), 0);
+    const visa = pay.locator(".plan-bills-list li", { hasText: "Student visa" });
+    assert.equal(await visa.getByRole("button", { name: "Pay from wallet" }).isEnabled(), true);
+    await page.screenshot({ path: screenshot("wallet-bill-school-unverified-390.png") });
+    assert.deepEqual(posts, []);
     assert.deepEqual(errors, []);
   });
 });

@@ -444,6 +444,48 @@ class ShortPlanningTests(APITestCase):
         with self.assertRaises(Exception):
             services.save_plan(self.user, {"school_key": "malaya"})
 
+    def test_loan_pays_the_school_only_while_its_account_is_verified(self):
+        from finance.planning import loan_stage
+        from finance.planning.models import LoanPayout, StudyPlan, StudyTask
+
+        inputs = self.inputs()
+        inputs["loan"]["principal"] = "30000.00"
+        result = self.save(inputs)
+        data = self.confirm(result, result["quotes"][0]["id"]).data["data"]
+        payee = data["loan_stage"]["school_payee"]
+        self.assertEqual((payee["name"], payee["verified"]), ("Prince of Songkla University, Phuket Campus", True))
+        self.assertEqual(str(StudyPlan.objects.get(owner=self.user).school_payee_id), payee["id"])
+        operator = get_user_model().objects.create_user("ops-payee", password="ops-pass-17", is_staff=True)
+
+        def verify(flag):
+            self.client.force_authenticate(operator)
+            response = self.client.post(f"/api/v2/beneficiaries/{payee['id']}/verify/", {"verified": flag},
+                                        format="json", HTTP_IDEMPOTENCY_KEY=str(uuid4()))
+            self.assertEqual(response.status_code, 201, response.data)
+            self.client.force_authenticate(self.user)
+
+        application = SimulatedApplication.objects.get(owner=self.user)
+        StudyTask.objects.filter(template_key__startswith=loan_stage.PREFIX).update(done=True)
+        sign = {"application_id": str(application.id), "expected_version": application.version}
+        verify(False)
+        refused = self.post("loan/sign/", sign)
+        self.assertEqual(refused.status_code, 400, refused.data)
+        self.assertIn("SCHOOL_PAYEE_NOT_VERIFIED", str(refused.data))
+        self.assertFalse(LoanPayout.objects.exists())
+        verify(True)
+        self.assertEqual(self.post("loan/sign/", sign).status_code, 201)
+        first = LoanPayout.objects.filter(application=application).order_by("due_date").first()
+        # Revoked after signing: the tranche waits, scheduled, and the school's bill stays due.
+        verify(False)
+        clock = {"date": first.due_date.isoformat()}
+        self.assertEqual(self.post("life/clock/", clock).status_code, 201)
+        first.refresh_from_db()
+        self.assertEqual((first.status, first.bill.status), ("SCHEDULED", "DUE"))
+        verify(True)
+        self.assertEqual(self.post("life/clock/", clock).status_code, 201)
+        first.refresh_from_db()
+        self.assertEqual((first.status, first.bill.status), ("PAID", "PAID"))
+
     def test_sufficient_funds_skip_loans_even_with_nonzero_fee(self):
         data = self.inputs()
         data["available_funds"] = "3000000.00"

@@ -129,8 +129,8 @@ def bills(user, upcoming_only=False, limit=None):
 def pay_bill(user, data, bill):
     """Records a bill as paid. Money moves through payments or remittances, not here."""
     require(bill.status == "DUE", "BILL_ALREADY_PAID")
-    bill.status, bill.paid_at = "PAID", timezone.now()
-    bill.save(update_fields=["status", "paid_at"])
+    bill.status, bill.paid_at, bill.paid_on = "PAID", timezone.now(), data.get("paid_on") or services.today_for(user)
+    bill.save(update_fields=["status", "paid_at", "paid_on"])
     audit(user, user, "planning.bill_paid", bill, {"amount": str(bill.amount), "currency": bill.currency})
     return bill_record(bill)
 
@@ -228,8 +228,8 @@ def summary(user, detail=True):
 def pay_from_wallet(user, data, bill):
     """Pays one plan bill from the demo wallet in the bill's currency, then records it as paid.
 
-    A bill the signed loan pays to the school is not paid again. Home-currency payments also settle a confirmed
-    expense in the financial state, as other wallet payments do."""
+    A bill the signed loan pays to the school is not paid again, and tuition goes only to a verified school account.
+    Home-currency payments also settle a confirmed expense in the financial state, as other wallet payments do."""
     from copy import deepcopy
 
     from finance import money
@@ -238,9 +238,12 @@ def pay_from_wallet(user, data, bill):
     from finance.workflow_common import append_state, current
 
     from .models import LoanPayout
+    from .payees import require_verified
 
     require(bill.status == "DUE", "BILL_ALREADY_PAID")
     require(not LoanPayout.objects.filter(bill=bill).exists(), "BILL_PAID_BY_LOAN")
+    if bill.kind == "tuition":
+        require_verified(bill.plan)
     item = wallet(user)
     home = bill.currency == money.home_currency()
     require((available(item) if home else balance_of(item, bill.currency)) >= bill.amount, "WALLET_BALANCE_TOO_LOW")
@@ -252,20 +255,21 @@ def pay_from_wallet(user, data, bill):
                                    "amount": money.fmt(bill.amount, bill.currency), "date": item.clock.isoformat(),
                                    "certainty": "confirmed", "settled_sequence": entry.sequence})
         append_state(user, snapshot, user, "state.plan_bill_paid")
-    pay_bill(user, {}, bill)
+    pay_bill(user, {"paid_on": item.clock}, bill)
     bill.refresh_from_db()
     return {"bill": bill_record(bill), "balance": money.fmt(balance_of(item, bill.currency), bill.currency),
             "currency": bill.currency, "is_simulated": True}
 
 
 def wallet_bills(user):
-    """The plan's bills for the wallet's pay tab: unpaid first, each with who pays it."""
+    """The plan's bills for the wallet's pay tab: unpaid first, each with who pays it, and the school's account."""
     from .models import LoanPayout
+    from .payees import payee_record
 
     plan = services.plan_for(user)
     if plan is None:
-        return {"bills": [], "is_simulated": True}
+        return {"bills": [], "school_payee": None, "is_simulated": True}
     loan = set(LoanPayout.objects.filter(plan=plan).values_list("bill_id", flat=True))
     rows = [{**bill_record(b), "paid_by_loan": b.id in loan}
             for b in PlanBill.objects.filter(owner=user, plan=plan).exclude(kind="loan").order_by("status", "due_date")]
-    return {"bills": rows, "is_simulated": True}
+    return {"bills": rows, "school_payee": payee_record(plan), "is_simulated": True}

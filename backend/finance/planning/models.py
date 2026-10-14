@@ -32,6 +32,9 @@ class StudyPlan(OwnedRecord):
     available_funds = models.DecimalField(max_digits=16, decimal_places=2, null=True, blank=True)
     funds_currency = models.CharField(max_length=3, blank=True)
     loan = models.ForeignKey("finance.LoanSimulation", null=True, blank=True, on_delete=models.PROTECT)
+    # The school's tuition account (planning/payees.py); payments to the school need it verified.
+    school_payee = models.ForeignKey("finance.Beneficiary", null=True, blank=True, on_delete=models.PROTECT,
+                                     related_name="+")
     status = models.CharField(max_length=10, default="DRAFT",
                               choices=[(s, s.title()) for s in PLAN_STATUSES])
     # Cost breakdown frozen when the plan is confirmed; the catalog may change later.
@@ -104,6 +107,8 @@ class PlanBill(OwnedRecord):
     currency = models.CharField(max_length=3)
     status = models.CharField(max_length=4, default="DUE", choices=[(s, s.title()) for s in BILL_STATUSES])
     paid_at = models.DateTimeField(null=True, blank=True)
+    # The demo date it was paid on; the credit record compares it with `due_date`.
+    paid_on = models.DateField(null=True, blank=True)
 
     class Meta:
         ordering = ["due_date", "kind", "source_id"]

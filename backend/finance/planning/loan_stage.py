@@ -99,24 +99,35 @@ def _allocate(user, plan, application, total):
 
 
 def settle_payouts(user, today=None):
-    """Pays the school every scheduled tranche whose bill has fallen due by the demo date."""
+    """Pays the school every scheduled tranche whose bill has fallen due by the demo date.
+
+    A tranche waits, still scheduled, while the school's account is not verified."""
+    from .payees import school_payee
+
     today = today or services.today_for(user)
-    paid = 0
-    for payout in LoanPayout.objects.filter(owner=user, status="SCHEDULED", due_date__lte=today).select_related("bill"):
+    paid, verified = 0, {}
+    for payout in LoanPayout.objects.filter(owner=user, status="SCHEDULED", due_date__lte=today).select_related(
+            "bill", "plan__school_payee"):
+        if payout.plan_id not in verified:
+            verified[payout.plan_id] = school_payee(payout.plan).verified
+        if not verified[payout.plan_id]:
+            continue
         payout.status, payout.paid_on = "PAID", today
         payout.save(update_fields=["status", "paid_on"])
         if payout.bill.status == "DUE":
-            payout.bill.status, payout.bill.paid_at = "PAID", timezone.now()
-            payout.bill.save(update_fields=["status", "paid_at"])
+            payout.bill.status, payout.bill.paid_at, payout.bill.paid_on = "PAID", timezone.now(), today
+            payout.bill.save(update_fields=["status", "paid_at", "paid_on"])
         paid += 1
     return paid
 
 
 def sign(user, data, obj=None):
     from .assessment import plan_loans, read
+    from .payees import require_verified
 
     plan = services.plan_for(user)
     require(plan is not None and plan.status in ("CONFIRMED", "ENROLLED"), "LOAN_SIGN_NEEDS_CONFIRMED_PLAN")
+    require_verified(plan)
     application = owned(SimulatedApplication, user, data["application_id"])
     require(str(application.loan_id) in plan_loans(plan), "LOAN_NOT_IN_PLAN")
     check_version(application, data)

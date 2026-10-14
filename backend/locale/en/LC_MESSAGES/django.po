@@ -74,7 +74,7 @@ msgstr "Simulated approval is turned off here; an operator will decide this requ
 msgid "APPROVAL_STILL_IN_REVIEW"
 msgstr "Operations is still reviewing this request. Try again in a few seconds."
 
-#: finance/planning/services.py:310
+#: finance/planning/services.py:311
 msgid "AVAILABLE_FUNDS_REQUIRED"
 msgstr "Tell us the available funds first."
 
@@ -102,7 +102,7 @@ msgstr "The signed loan pays this bill to the school; it does not need paying ag
 msgid "BILL_REOPEN_NOT_SUPPORTED"
 msgstr "A paid bill cannot be reopened."
 
-#: finance/planning/services.py:398
+#: finance/planning/services.py:402
 msgid "CANNOT_LINK_OWN_ACCOUNT"
 msgstr "An account cannot be linked to itself."
 
@@ -196,7 +196,7 @@ msgstr "The coverage end date cannot be earlier than the start date."
 msgid "COVERAGE_REQUIRES_SELECTED_ACCOUNT"
 msgstr "Each account in the coverage list needs at least one selected row."
 
-#: finance/planning/credit.py:72
+#: finance/planning/credit.py:75
 msgid "CREDIT_ALREADY_REPAID"
 msgstr "This credit payment has already been paid back."
 
@@ -204,7 +204,7 @@ msgstr "This credit payment has already been paid back."
 msgid "CREDIT_BILL_REQUIRED"
 msgstr "Only an unpaid bill can be paid with credit."
 
-#: finance/planning/credit.py:60
+#: finance/planning/credit.py:63
 msgid "CREDIT_LIMIT_EXCEEDED"
 msgstr "The amount is more than the credit you have available."
 
@@ -448,11 +448,11 @@ msgstr "A loan installment follows the contract; its amount cannot be changed he
 msgid "LOAN_CLOSED"
 msgstr "This loan is already closed."
 
-#: finance/planning/loan_stage.py:124
+#: finance/planning/loan_stage.py:135
 msgid "LOAN_DOCUMENTS_MISSING"
 msgstr "Tick off all loan documents in This month before signing."
 
-#: finance/planning/loan_stage.py:153
+#: finance/planning/loan_stage.py:164
 msgid "LOAN_DOCUMENT_UNKNOWN"
 msgstr "This document is not part of your loan."
 
@@ -464,11 +464,11 @@ msgstr "A loan installment follows the contract; its due date cannot be changed 
 msgid "LOAN_FEES_EXCEED_PRINCIPAL"
 msgstr "The amount borrowed must exceed the withheld fee."
 
-#: finance/planning/loan_stage.py:123
+#: finance/planning/loan_stage.py:134
 msgid "LOAN_NOT_APPROVED"
 msgstr "This loan is not approved yet, so it cannot be signed."
 
-#: finance/planning/loan_stage.py:121
+#: finance/planning/loan_stage.py:132
 msgid "LOAN_NOT_IN_PLAN"
 msgstr "This loan does not belong to your current plan."
 
@@ -476,7 +476,7 @@ msgstr "This loan does not belong to your current plan."
 msgid "LOAN_REQUIRES_EXACT_NET_PROCEEDS_QUOTE"
 msgstr "Allocate exactly the net proceeds from the loan quote."
 
-#: finance/planning/loan_stage.py:119
+#: finance/planning/loan_stage.py:129
 msgid "LOAN_SIGN_NEEDS_CONFIRMED_PLAN"
 msgstr "Confirm the plan first; the loan is signed after that."
 
@@ -508,7 +508,7 @@ msgstr "Installment and spending-reduction sources must be applied as cost actio
 msgid "NO_ACTIVE_SEMESTER"
 msgstr "No active semester was found. Create a semester first."
 
-#: finance/planning/services.py:311
+#: finance/planning/services.py:312
 msgid "NO_FUNDING_GAP"
 msgstr "Available funds already cover the plan; no loan is needed."
 
@@ -560,11 +560,11 @@ msgstr "Your financial state changed after this payment was created. Create a ne
 msgid "PENDING_ACTION_CLOSED"
 msgstr "This proposed action is no longer pending."
 
-#: finance/planning/assessment.py:119
+#: finance/planning/assessment.py:120
 msgid "PLANNING_ACTIVE_APPLICATION"
 msgstr "This plan already has an active application. Review it in your plan."
 
-#: finance/planning/assessment.py:113
+#: finance/planning/assessment.py:114
 msgid "PLANNING_ASSESSMENT_STALE"
 msgstr "Details changed. Recalculate the plan before submitting."
 
@@ -582,11 +582,11 @@ msgstr "The plan is already enrolled and can no longer be changed here."
 msgid "PLAN_LOAN_SIGNED"
 msgstr "The loan for this plan is signed, so the school and plan can no longer change."
 
-#: finance/planning/services.py:359
+#: finance/planning/services.py:363
 msgid "PLAN_NOT_CONFIRMED"
 msgstr "Confirm the plan before enrolling."
 
-#: finance/planning/assessment.py:197
+#: finance/planning/assessment.py:198
 msgid "PLAN_NOT_DRAFT"
 msgstr "Only a draft plan can be confirmed."
 
@@ -594,7 +594,7 @@ msgstr "Only a draft plan can be confirmed."
 msgid "PLAN_NOT_DRAFT_FOR_SWITCH"
 msgstr "Your plan is confirmed, so it cannot be switched to another draft."
 
-#: finance/planning/assessment.py:154
+#: finance/planning/assessment.py:155
 msgid "PLAN_REQUIRED"
 msgstr "Choose a school for the plan first."
 
@@ -642,7 +642,7 @@ msgstr "This quote is already linked to a remittance order."
 msgid "QUOTE_NOT_EXECUTABLE"
 msgstr "This quote cannot be executed. Request a live quote for a specific amount."
 
-#: finance/planning/assessment.py:235
+#: finance/planning/assessment.py:236
 msgid "QUOTE_NOT_IN_CURRENT_ASSESSMENT"
 msgstr "Select a loan from the current plan."
 
@@ -730,6 +730,10 @@ msgstr "A different scenario from this run has already been applied."
 msgid "SCENARIO_NOT_FOUND"
 msgstr "The scenario was not found."
 
+#: finance/planning/payees.py:39
+msgid "SCHOOL_PAYEE_NOT_VERIFIED"
+msgstr "The school's tuition account is not verified, so no money can be paid to the school yet."
+
 #: finance/remittance_orders.py:105
 msgid "SELF_RECIPIENT_HAS_NO_BENEFICIARY"
 msgstr "Do not provide beneficiary_id when sending to yourself."
@@ -770,7 +774,7 @@ msgstr "Choose a date after today to be reminded again."
 msgid "SPONSOR_CONFIRMATION_REQUIRED"
 msgstr "Family support can be received only after the sponsor confirms it."
 
-#: finance/planning/services.py:397
+#: finance/planning/services.py:401
 msgid "SPONSOR_LINK_NOT_CONFIRMED"
 msgstr "Confirm the sponsor link before linking accounts."
 
@@ -878,7 +882,7 @@ msgstr "A verified obligation cannot be reduced."
 msgid "VERIFIED_TUITION_INVOICE_REQUIRED"
 msgstr "This payment needs a tuition cost backed by a verified invoice."
 
-#: finance/planning/in_school.py:246
+#: finance/planning/in_school.py:249
 msgid "WALLET_BALANCE_TOO_LOW"
 msgstr "Not enough in the wallet in this bill's currency. Top up or exchange first."
 

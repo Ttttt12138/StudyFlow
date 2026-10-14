@@ -56,6 +56,9 @@ def pay(user, data, obj=None):
     require(item["currency"] == CURRENCY, "CREDIT_THB_ONLY")
     bill = PlanBill.objects.select_for_update().get(owner=user, pk=item["source_key"].split(":", 1)[1])
     require(bill.status == "DUE", "BILL_ALREADY_PAID")
+    if bill.kind == "tuition":
+        from .payees import require_verified
+        require_verified(bill.plan)
     amount = Decimal(item["amount"])
     require(amount <= Decimal(line(user)["available"]), "CREDIT_LIMIT_EXCEEDED")
     today = services.today_for(user)

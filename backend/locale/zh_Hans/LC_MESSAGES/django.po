@@ -78,7 +78,7 @@ msgstr "这里没有开启模拟审批，将由运营人员审核这笔申请。
 msgid "APPROVAL_STILL_IN_REVIEW"
 msgstr "运营还在审核这笔申请，请几秒后再试。"
 
-#: finance/planning/services.py:310
+#: finance/planning/services.py:311
 msgid "AVAILABLE_FUNDS_REQUIRED"
 msgstr "请先告诉我们已有资金。"
 
@@ -178,7 +178,7 @@ msgstr "C 模块的完整性判断必须与 B 模块一致"
 msgid "C reallocates received funds"
 msgstr "C 模块重新分配了已到账资金"
 
-#: finance/planning/services.py:398
+#: finance/planning/services.py:402
 msgid "CANNOT_LINK_OWN_ACCOUNT"
 msgstr "不能关联自己的账号。"
 
@@ -266,7 +266,7 @@ msgstr "覆盖期间的结束日期不能早于开始日期。"
 msgid "COVERAGE_REQUIRES_SELECTED_ACCOUNT"
 msgstr "覆盖列表中的每个账户至少需要选择一行交易。"
 
-#: finance/planning/credit.py:72
+#: finance/planning/credit.py:75
 msgid "CREDIT_ALREADY_REPAID"
 msgstr "这笔信用支付已经还清。"
 
@@ -274,7 +274,7 @@ msgstr "这笔信用支付已经还清。"
 msgid "CREDIT_BILL_REQUIRED"
 msgstr "只有未支付的账单可以用信用支付。"
 
-#: finance/planning/credit.py:60
+#: finance/planning/credit.py:63
 msgid "CREDIT_LIMIT_EXCEEDED"
 msgstr "金额超过了可用信用额度。"
 
@@ -722,11 +722,11 @@ msgstr "贷款还款金额以合同为准，不能在这里修改。"
 msgid "LOAN_CLOSED"
 msgstr "该贷款已结清。"
 
-#: finance/planning/loan_stage.py:124
+#: finance/planning/loan_stage.py:135
 msgid "LOAN_DOCUMENTS_MISSING"
 msgstr "请先在「本月」里补齐全部贷款材料，再签约。"
 
-#: finance/planning/loan_stage.py:153
+#: finance/planning/loan_stage.py:164
 msgid "LOAN_DOCUMENT_UNKNOWN"
 msgstr "这项材料不属于你的贷款。"
 
@@ -738,11 +738,11 @@ msgstr "贷款还款日期以合同为准，不能在这里修改。"
 msgid "LOAN_FEES_EXCEED_PRINCIPAL"
 msgstr "拟借金额必须大于预扣手续费。"
 
-#: finance/planning/loan_stage.py:123
+#: finance/planning/loan_stage.py:134
 msgid "LOAN_NOT_APPROVED"
 msgstr "这笔贷款还没有获批，暂时不能签约。"
 
-#: finance/planning/loan_stage.py:121
+#: finance/planning/loan_stage.py:132
 msgid "LOAN_NOT_IN_PLAN"
 msgstr "这笔贷款不属于你当前的方案。"
 
@@ -750,7 +750,7 @@ msgstr "这笔贷款不属于你当前的方案。"
 msgid "LOAN_REQUIRES_EXACT_NET_PROCEEDS_QUOTE"
 msgstr "分配金额必须与贷款报价的净到手金额完全一致。"
 
-#: finance/planning/loan_stage.py:119
+#: finance/planning/loan_stage.py:129
 msgid "LOAN_SIGN_NEEDS_CONFIRMED_PLAN"
 msgstr "请先确认方案，再签约贷款。"
 
@@ -858,7 +858,7 @@ msgstr "分期和削减支出类来源需作为费用调整操作使用，不能
 msgid "NO_ACTIVE_SEMESTER"
 msgstr "没有进行中的学期，请先创建学期。"
 
-#: finance/planning/services.py:311
+#: finance/planning/services.py:312
 msgid "NO_FUNDING_GAP"
 msgstr "已有资金足以覆盖计划，无需贷款。"
 
@@ -978,11 +978,11 @@ msgstr "创建该付款后财务状况已变化，请重新创建付款。"
 msgid "PENDING_ACTION_CLOSED"
 msgstr "该提议的操作已不再处于待处理状态。"
 
-#: finance/planning/assessment.py:119
+#: finance/planning/assessment.py:120
 msgid "PLANNING_ACTIVE_APPLICATION"
 msgstr "该方案已有进行中的申请，请在方案中查看。"
 
-#: finance/planning/assessment.py:113
+#: finance/planning/assessment.py:114
 msgid "PLANNING_ASSESSMENT_STALE"
 msgstr "资料已变化，请重新计算方案后提交。"
 
@@ -998,11 +998,11 @@ msgstr "计划已进入在校阶段，不能再在这里修改。"
 msgid "PLAN_LOAN_SIGNED"
 msgstr "这份方案的贷款已经签约，学校和方案不能再修改。"
 
-#: finance/planning/services.py:359
+#: finance/planning/services.py:363
 msgid "PLAN_NOT_CONFIRMED"
 msgstr "请先确认计划，再确认入学。"
 
-#: finance/planning/assessment.py:197
+#: finance/planning/assessment.py:198
 msgid "PLAN_NOT_DRAFT"
 msgstr "只有草稿状态的计划可以确认。"
 
@@ -1010,7 +1010,7 @@ msgstr "只有草稿状态的计划可以确认。"
 msgid "PLAN_NOT_DRAFT_FOR_SWITCH"
 msgstr "方案已经确认，不能切换到其他草稿。"
 
-#: finance/planning/assessment.py:154
+#: finance/planning/assessment.py:155
 msgid "PLAN_REQUIRED"
 msgstr "请先为计划选定学校。"
 
@@ -1090,7 +1090,7 @@ msgstr "该报价已关联到一个汇款订单。"
 msgid "QUOTE_NOT_EXECUTABLE"
 msgstr "该报价无法执行，请针对具体金额获取实时报价。"
 
-#: finance/planning/assessment.py:235
+#: finance/planning/assessment.py:236
 msgid "QUOTE_NOT_IN_CURRENT_ASSESSMENT"
 msgstr "请选择当前方案中的贷款报价。"
 
@@ -1226,6 +1226,10 @@ msgstr "本次运行中已应用了另一个情景。"
 msgid "SCENARIO_NOT_FOUND"
 msgstr "未找到该情景。"
 
+#: finance/planning/payees.py:39
+msgid "SCHOOL_PAYEE_NOT_VERIFIED"
+msgstr "学校的学费收款账户尚未核验，暂时不能向学校付款。"
+
 #: finance/remittance_orders.py:105
 msgid "SELF_RECIPIENT_HAS_NO_BENEFICIARY"
 msgstr "汇款给自己时，请勿提供 beneficiary_id。"
@@ -1266,7 +1270,7 @@ msgstr "再次提醒的日期必须晚于今天。"
 msgid "SPONSOR_CONFIRMATION_REQUIRED"
 msgstr "家庭资助需经资助人确认后才能入账。"
 
-#: finance/planning/services.py:397
+#: finance/planning/services.py:401
 msgid "SPONSOR_LINK_NOT_CONFIRMED"
 msgstr "请先确认赞助链接，再关联账号。"
 
@@ -1458,7 +1462,7 @@ msgstr "已验证的应付款项不能削减。"
 msgid "VERIFIED_TUITION_INVOICE_REQUIRED"
 msgstr "此付款需要对应一项有已验证发票支持的学费。"
 
-#: finance/planning/in_school.py:246
+#: finance/planning/in_school.py:249
 msgid "WALLET_BALANCE_TOO_LOW"
 msgstr "钱包里这个币种的余额不够，请先充值或换汇。"
 
