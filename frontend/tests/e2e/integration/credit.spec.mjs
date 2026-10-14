@@ -4,13 +4,14 @@ import { test } from '@playwright/test';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
-import { backend, python, screenshot } from '../../support.mjs';
+import { backend, python, screenshot, enroll } from '../../support.mjs';
 
 test('real Django credit statement: snapshot, issue, anonymous verify, tamper detection.', async ({ browser }) => {
   const origin = process.env.TEST_URL || 'http://127.0.0.1:5173';
   const username = `credit-uat-${randomUUID()}`, password = randomUUID();
   execFileSync(python, ['manage.py', 'shell', '-c', 'import os; from django.contrib.auth import get_user_model; get_user_model().objects.create_user(username=os.environ["UAT_NAME"], password=os.environ["UAT_PASSWORD"])'],
     { cwd: backend, env: { ...process.env, UAT_NAME: username, UAT_PASSWORD: password }, stdio: 'pipe' });
+  enroll(username);
   const errors = [];
   const student = await browser.newContext({ locale: 'en-US', viewport: { width: 1360, height: 900 } });
   const landlord = await browser.newContext({ locale: 'en-US', viewport: { width: 390, height: 844 } });

@@ -6,7 +6,7 @@ import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
 import { readFileSync, rmSync } from 'node:fs';
-import { backend, python, root, screenshot } from '../../support.mjs';
+import { backend, python, root, screenshot, enroll } from '../../support.mjs';
 
 test('real Django payment: create, authorize, password step-up, sandbox settlement, invoice reconciliation, receipt and audit.', async ({ browser, playwright }) => {
   const origin = process.env.TEST_URL || 'http://127.0.0.1:5173';
@@ -14,6 +14,7 @@ test('real Django payment: create, authorize, password step-up, sandbox settleme
   execFileSync(python, ['manage.py', 'demo_payment_ready', '--output', file], { cwd: backend, stdio: 'pipe', timeout: 240_000 });
   const ready = JSON.parse(readFileSync(file, 'utf-8'));
   rmSync(file);
+  enroll(ready.student.username);
   const errors = [], endpoints = new Set();
   const context = await browser.newContext({ locale: 'en-US', viewport: { width: 1440, height: 1000 } });
   const operator = await playwright.request.newContext({ baseURL: `${origin}/api/v2/`, extraHTTPHeaders: { Authorization: `Token ${ready.operator.token}` } });

@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
 import { mkdirSync, writeFileSync } from 'node:fs';
-import { root, outputDir, backend, python } from '../../support.mjs';
+import { root, outputDir, backend, python, enroll } from '../../support.mjs';
 
 const SNAPSHOT = { currency: 'THB', as_of: new Date().toISOString().slice(0, 10), opening_balance: '80000.00', reserve: '15000.00', events: [] };
 
@@ -14,6 +14,7 @@ test('real Django agent: plan, T2 proposal with step-up, T3 proposal through a s
   const passwords = { student: randomUUID(), operator: randomUUID(), approver: randomUUID() };
   execFileSync(python, ['manage.py', 'shell', '-c', 'import os,json; from django.contrib.auth import get_user_model; from finance.corridors import ensure_default_corridors; from finance.policy_defaults import ensure_default_limits; names=json.loads(os.environ["UAT_NAMES"]); passwords=json.loads(os.environ["UAT_PASSWORDS"]); [get_user_model().objects.create_user(username=n,password=passwords[k],is_staff=k!="student") for k,n in names.items()]; ensure_default_corridors(); ensure_default_limits()'],
     { cwd: backend, env: { ...process.env, UAT_NAMES: JSON.stringify(names), UAT_PASSWORDS: JSON.stringify(passwords) }, stdio: 'pipe' });
+  enroll(names.student);
   const contexts = {}, errors = [], endpoints = new Set();
   async function login(kind, next = '/?agent=1') {
     const context = await browser.newContext({ locale: 'en-US', viewport: { width: 1440, height: 1000 } });
