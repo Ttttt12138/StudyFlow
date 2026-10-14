@@ -171,10 +171,10 @@ The limitations behind these numbers are stated plainly in [docs/security-self-a
 
 ## Demo video
 
-[**Watch the English demo — live AI planning to first repayment**](evidence/demo-live-20261014/StudyFlow_Demo_EN.mp4)
+[**Watch the English demo — complete updated study journey**](evidence/demo-live-20261014/StudyFlow_Demo_EN.mp4)
 
-The current formal demo is 3 minutes 34 seconds, in 1080p, with English narration and burned-in English subtitles. It follows school-cost comparison, the funding gap, loan selection, explicit confirmation, signing, school-directed payouts and password-authorized repayment. AI calls are live; all financial transactions are simulated.
+The current formal demo is 4 minutes 05 seconds, in 1080p, with Microsoft Ava neural narration and newly timed English subtitles. Twelve continuous narrative paragraphs connect all 46 retained shots: school costs and funding, loan selection/signing, family support, preparation/enrollment, budgeting, currency conversion/remittance, tuition, loan/credit repayment and record verification. The footage retains the accepted twelve live-AI turns and sixteen feature checks; this narration revision is not a new AI acceptance run. All financial transactions are simulated.
 
 [English subtitles](evidence/demo-live-20261014/StudyFlow_Demo_EN.srt) · [Timed narration and reproduction](docs/demo-video-en.md) · [Recording evidence](evidence/demo-live-20261014/README.md)
 
-This version replaces the October 12–13 multi-role recordings as the formal demonstration. Those recordings remain archived as historical evidence.
+This version replaces the earlier formal film at the same link. [Full original recordings, source snapshots and synchronization checks](evidence/demo-full-live-20261014/README.md) are retained; the [previous formal version](evidence/demo-live-20261014/formal-previous-20261014/README.md) is archived unchanged.

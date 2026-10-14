@@ -1,6 +1,6 @@
 # StudyFlow 演示脚本
 
-> **当前正式版本已替换为新版英文真实 AI 主流程视频：** [观看 MP4](../evidence/demo-live-20261014/StudyFlow_Demo_EN.mp4) · [英文旁白与时间轴](demo-video-en.md) · [录制证据](../evidence/demo-live-20261014/README.md)。时长少于 5 分钟。以下为历史多角色演示稿，保留作参考；旧录屏不再作为正式提交视频。
+> **当前正式版本已替换为新版完整功能英文真实 AI 演示视频（4 分 05 秒）：** [观看 MP4](../evidence/demo-live-20261014/StudyFlow_Demo_EN.mp4) · [英文旁白与时间轴](demo-video-en.md) · [录制证据](../evidence/demo-full-live-20261014/README.md)。时长少于 5 分钟。以下为历史多角色演示稿，保留作参考；旧录屏不再作为正式提交视频。
 
 > 所有资金均为模拟。本脚本覆盖学生侧、运营侧（含双人审批）和家人匿名确认三种角色，约 15 分钟。
 > 自动化版本：`frontend/tests/e2e/demo/rehearsal.spec.mjs`，在 compose 演示栈上连续完整跑 3 次并留存录像（见文末）。

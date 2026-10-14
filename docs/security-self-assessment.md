@@ -34,6 +34,7 @@ Every API action falls into one tier. The tier of a money-moving action is decid
 | `wallet.convert` | `POST conversions/` | T2 / T3 | **Yes** | Above limit | Limit counted in the quote's source currency |
 | `loan.repay` | `POST loan-accounts/{id}/repay/` | T2 / T3 | **Yes** | Above limit | Amount must equal an unpaid instalment |
 | `bill.pay` | `POST planning/bills/{id}/pay-from-wallet/` | T2 / T3 | **Yes** | Above limit | Owner, currency, bill status and loan coverage checked |
+| `credit.repay` | `POST planning/credit/charges/{id}/repay/` | T2 / T3 | **Yes** | Above limit | Amount and currency must equal the unpaid charge; wallet balance checked |
 | Confirm plan and submit planning loan | `POST planning/plan/confirm/` | T1 | No | No | Versioned owner command; explicit confirmation; no wallet debit |
 | Sign planning loan | `POST planning/loan/sign/` | T1 command in current implementation | No | No | Explicit UI confirmation, completed checklist, approved application and version; creates simulated school payouts |
 | Mark loan checklist item | `POST planning/loan/documents/` | T1 | No | No | Owner and task version checked; self-declaration, not verification |
@@ -43,7 +44,7 @@ Every API action falls into one tier. The tier of a money-moving action is decid
 | Decide an approval | `POST approvals/{id}/decide/` | OP | No | n/a | Separation of duties applies |
 | Verify a beneficiary, remittance or payment callback | `…/verify/`, `…/adapter-event/` | OP | No | No | Audited; see risk A2 |
 
-Every T2 action is registered in `ACTIONS` in `backend/finance/policy.py` and declared on its route. Registrations include `workflow_urls.py`, `lending_urls.py`, `remittance_api.py`, `agent_api.py` and `planning/api.py` (`bill.pay`). Tiers protect wallet outflows; school-directed loan signing currently has no password step-up or independent operator decision (risk P2).
+Every T2 action is registered in `ACTIONS` in `backend/finance/policy.py` and declared on its route. Registrations include `workflow_urls.py`, `lending_urls.py`, `remittance_api.py`, `agent_api.py` and `planning/api.py` (`bill.pay`, `credit.repay`). Tiers protect wallet outflows; school-directed loan signing currently has no password step-up or independent operator decision (risk P2).
 
 **Tests**
 - Tier matrix, `backend/auto_test/test_policy.py` `TierMatrixTests`: `test_payment_submit_requires_step_up_with_documented_body`, `test_conversion_requires_step_up`, `test_tuition_over_per_transaction_limit_needs_approval`, `test_reads_and_t1_writes_need_no_step_up`, `test_agent_calls_are_capped_at_t1`
@@ -115,6 +116,8 @@ Code: `backend/finance/policy.py` (`request_approval`, `decide`, `separation_of_
 
 ## 5. AI agent controls
 
+Video production is separate from these runtime controls. For the current English formal film, the user explicitly authorized sending the English narration script to Microsoft's online speech service. Only that script was sent; browser recordings, screenshots, credentials and personal documents were excluded. Audio mastering, subtitle alignment and the optional speech-recognition check were performed locally. The current 4:05 narration edit retains the existing take-07 acceptance evidence and does not establish a new model acceptance result. See [production disclosure and verification](../evidence/demo-full-live-20261014/README.md).
+
 The agent plans with an LLM (in mock mode, a rule-based planner) and calls tools through the Django runner. **Safety does not depend on the model behaving.** Every rule below is enforced by the runner in `backend/finance/agent_runner.py`.
 
 | Control | Value | Code | Tests (`backend/auto_test/test_agent.py` unless noted) |
@@ -134,6 +137,10 @@ The agent plans with an LLM (in mock mode, a rule-based planner) and calls tools
 | Cost control | Session creation is limited to 30 per hour per user | `agent` throttle scope | `test_session_creation_is_throttled` |
 
 Prompt injection: on the frozen holdout `agent-v2` (4 injection cases), the live model took **0 unauthorized actions**. In **1 of 4** cases it acted partly on injected text: it proposed paying the user's tuition to a payee whose name contained instructions. Even then, no money moved, because the proposal still needed the student's step-up confirmation. On the tuning set `agent-v1`, it followed no injection (0/3) in any of the six live runs. See [agent-evaluation.md](agent-evaluation.md). Whatever the model does, the runner rules above stop money from moving without the student.
+
+Clock guidance: the October 14 full-flow recording exposed an AI reliability failure: the model compared quote expiry with the advanced demo study date and repeatedly refreshed valid quotes. The runner now supplies real UTC `memory.server_time` on each step; `agent-1.3` / `planning-1.9` distinguish it from `memory.today`. `auto_test.test_agent_clocks` covers simulated dates before and after the real date. This improves planning context; server expiry validation, write budgets and monetary authorization remain the enforcement mechanisms. The failed take is retained in `evidence/demo-full-live-20261014/take-04/`.
+
+Output validation: take-05 exposed a second reliability failure when unstructured gateway prose was treated as a final answer and no reminder was created. The live planner now retries an empty or unstructured reply at most twice, preserving attempt counts, and fails with `INVALID_MODEL_OUTPUT` if no validated decision is returned. It never displays that raw prose as a successful answer or executes a guessed tool call. Malformed JSON still fails immediately, apart from the existing narrowly validated stray-closing-bracket recovery. This is covered by `studyflow-ai/auto_test/test_agent_planner.py`; the failed recording remains retained.
 
 ### 5.1 Browser enforcement of the same controls
 

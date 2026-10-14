@@ -22,6 +22,8 @@ Agent（W4）发起的调用最高 T1；T2 及以上只能生成待确认动作�
 | `wallet.convert` | `POST conversions/` | 报价 id（`quote_id`） | `source_amount`，报价源币种 |
 | `loan.repay` | `POST loan-accounts/{id}/repay/` | 借款账户 id | 当期 `installment_number` 的应还金额，本币 |
 | `remittance.submit` | W3 汇款订单提交 | 订单 id | 发送金额与币种 |
+| `bill.pay` | `POST planning/bills/{id}/pay-from-wallet/` | 方案账单 id | 账单金额与币种 |
+| `credit.repay` | `POST planning/credit/charges/{id}/repay/` | 信用支付记录 id | 待还金额，THB |
 
 新增 T2 动作必须登记到 `backend/finance/policy.py` 的动作目录（`ACTIONS`：目标模型、主体解析、申请校验），并在路由上声明（`command(..., policy="payment.submit")`、`resource(..., "wallet.convert")`）。`remittance.submit` 已在 `backend/finance/remittance_api.py` 的提交路由上声明；Agent 提议的确认路由声明为 `agent.confirm`，按其代理的底层动作检查。
 

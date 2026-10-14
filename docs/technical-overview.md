@@ -83,7 +83,7 @@ Signing creates a loan account and school-directed disbursement without creditin
 
 This month groups tasks, upcoming payments, monthly spending and expenses. Reminder changes do not alter original contract or bill dates; completing a task does not repay a loan. Reminders refresh while the app is open and send no email or system push. Budget and expense records do not themselves move funds.
 
-After enrollment, Wallet and payments groups balances, conversion, remittance, school bills and history. `planning/bills/{id}/pay-from-wallet/` deducts the bill currency through `wallets.post`, under `bill.pay`, with password step-up and T3 approval when above a limit. Loan-funded bills cannot be paid again. Owner-only `demo/wallets/top-up/` creates simulated money and a funding-source ledger entry, capped at 1,000,000 per request; it is not a bank deposit. The fixed simulated 2,000 CNY-equivalent planning credit facility is distinct from the payment-record multiplier in section 5.
+After enrollment, Wallet and payments groups balances, conversion, remittance, school bills and history. `planning/bills/{id}/pay-from-wallet/` deducts the bill currency through `wallets.post`, under `bill.pay`, with password step-up and T3 approval when above a limit. Loan-funded bills cannot be paid again. Owner-only `demo/wallets/top-up/` creates simulated money and a funding-source ledger entry, capped at 1,000,000 per request; it is not a bank deposit. The fixed simulated 2,000 CNY-equivalent planning credit facility is distinct from the payment-record multiplier in section 5. A bill paid with it is owed back within 30 days through `planning/credit/charges/{id}/repay/` under `credit.repay`: the THB amount leaves the wallet through `wallets.post` (ledger origin `credit_charge`) after a password step-up. Ticking the reminder off is refused, so a repayment is never only a declaration.
 
 ### Directory map
 
@@ -179,7 +179,8 @@ Source: `backend/finance/credit.py`. The credit level is a simulated on-time rec
   - loan instalments;
   - settled bill payments;
   - delivered remittance orders that have a deadline and go to a **verified** beneficiary;
-  - plan bills paid from the wallet (not those marked paid by hand or paid by the loan), compared by the demo date paid; a bill due more than a year after it was paid does not count.
+  - plan bills paid from the wallet (not those marked paid by hand or paid by the loan), compared by the demo date paid; a bill due more than a year after it was paid does not count;
+  - pay-later charges repaid from the wallet (on time or late), or still unpaid past their 30-day due date (overdue).
 
   Self-transfers never count, so the level cannot be inflated cheaply.
 - **Window.** Only the last **365 days** count, measured in **real** dates. Moving the demo clock forward can only make obligations overdue sooner; it can never age a late record out. Unresolved overdue items never age out.
@@ -236,7 +237,7 @@ flowchart TD
 | T2 execution by the agent | **none**: it can only propose | `_propose`; `confirm_pending` runs only for the student, under policy `agent.confirm` |
 | Sessions per user | 30 per hour | `agent` throttle |
 
-The finance prompt is `agent-1.1`; the main conversation uses `planning-1.7`. Each message becomes an audited `AgentSession`, with up to 12 history messages and server memory containing the plan, catalog and pre-check. Greetings, card-button school selection and date-driven enrollment proposals are deterministic system turns. Opening the loan panel does not submit an application. Plan confirmation and enrollment require explicit confirmation; monetary proposals additionally require the underlying authorization. Prompts treat tool/document content as untrusted data. Authorization and exact calculations do not depend on model compliance. Live failure never falls back to the rule provider.
+The finance prompt is `agent-1.3`; the main conversation uses `planning-1.9`. Each message becomes an audited `AgentSession`, with up to 12 history messages and server memory containing the plan, catalog and pre-check. The runner refreshes `memory.server_time` on every step for real-time quote/proposal expiry, separately from the simulated study date in `memory.today`. Greetings, card-button school selection and date-driven enrollment proposals are deterministic system turns. Opening the loan panel does not submit an application. Plan confirmation and enrollment require explicit confirmation; monetary proposals additionally require the underlying authorization. Prompts treat tool/document content as untrusted data. Authorization and exact calculations do not depend on model compliance. Live failure never falls back to the rule provider.
 
 ## 8. Internationalization
 
@@ -246,11 +247,12 @@ API error responses carry a stable `code` and a localized `message` in Chinese o
 
 | Check | Command or evidence | Recorded result and boundary |
 |---|---|---|
+| Updated full-flow live acceptance | [Full recording and evidence](../evidence/demo-full-live-20261014/README.md) | 12 completed live turns, 43 decisions / 51 provider attempts, 16 feature checks; updated credit wallet repayment; retained take-07 footage re-edited into a 4:05 Ava-narrated film; one existing-enrollment-proposal guard, simulated funds |
 | Historical complete gates | `python scripts/run_gates.py` | 17/17 on 2026-10-07 ([evidence/gates](../evidence/gates/summary.txt)); not acceptance of later changes |
 | Simplified planning | [2026-10-13 record](../evidence/short-planning-20261013/verification.json) | 121 focused backend tests, 165 frontend units, 23 rule tests, five offline browser cases; dated results |
 | Current loan/browser journey | [2026-10-14 record](../evidence/short-planning-20261014/browser.json) | English desktop and Chinese phone: signing, school payout and repayment; real local HTTP/PostgreSQL, rule planner, simulated funds |
-| Current planning flow with real AI | [2026-10-14 live acceptance](verification-planning-live-20261014.md) | Two browser journeys, eight live user turns and fifteen recorded live planner calls; explicit user signing/repayment; simulated money |
-| Current focused safeguards | [Baseline log](../evidence/planning-live-20261014/backend-baseline.log) | 155 related backend/browser checks passed before live acceptance |
+| Earlier planning-only live acceptance | [2026-10-14 live acceptance](verification-planning-live-20261014.md) | Two browser journeys, eight live user turns and fifteen recorded live planner calls; explicit user signing/repayment; simulated money |
+| Earlier focused safeguards | [Baseline log](../evidence/planning-live-20261014/backend-baseline.log) | 155 related backend/browser checks passed before live acceptance |
 | Live FX pricing | see [verification-live-20261007.md](verification-live-20261007.md) | 4 pairs, 12 quotes match the formula |
 | Live agent, frozen holdout | see [agent-evaluation.md](agent-evaluation.md) | 18/24, 0 unauthorized actions |
 | CI | `.github/workflows/django.yml`, `c-module.yml` | runs on every push and pull request |
