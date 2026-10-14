@@ -1,7 +1,7 @@
 import { chromium } from '@playwright/test';
 import assert from 'node:assert/strict';
 import { mkdirSync, writeFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { randomUUID } from 'node:crypto';
 import { demoRecording } from './demo-recording.mjs';
 
@@ -11,13 +11,15 @@ import { demoRecording } from './demo-recording.mjs';
 // Run through backend/auto_test/test_short_planning_browser.py (RUN_SHORT_PLANNING_BROWSER=1).
 const origin = process.env.SHORT_TEST_URL;
 if (!origin || !process.env.SHORT_TEST_PASSWORD) throw new Error('Run through the isolated Django browser test.');
-const output = new URL(`../../evidence/${process.env.SHORT_TEST_EVIDENCE || 'short-planning-20261013'}/`, import.meta.url);
+const output = process.env.FULL_DEMO_OUTPUT ? pathToFileURL(process.env.FULL_DEMO_OUTPUT + '/')
+  : new URL(`../../evidence/${process.env.SHORT_TEST_EVIDENCE || 'short-planning-20261013'}/`, import.meta.url);
 mkdirSync(output, { recursive: true });
 const recording = demoRecording(output);
 const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || undefined });
 const live = process.env.SHORT_TEST_MODE === 'live';
 const evidence = { backend: 'real local Django/PostgreSQL in isolated test database',
   planner: live ? 'live external model' : 'deterministic rule provider', journeys: [], turns: [] };
+const full = process.env.FULL_DEMO === '1' ? await import('./full-demo.mjs') : null;
 
 const LABELS = {
   en: { funds: 'Available study funds', precheck: 'See how much I can borrow', result: 'Pre-check result', amount: 'How much', product: 'Loan product',
@@ -35,6 +37,7 @@ async function signIn(name, locale, viewport) {
   const context = await browser.newContext({ locale,
     viewport: recordOptions.recordVideo ? recordOptions.recordVideo.size : viewport, ...recordOptions });
   const page = await context.newPage();
+  page.setDefaultTimeout(30000);
   recording.start(page, name);
   await page.goto(`${origin}/api/auth/login/?next=${encodeURIComponent(origin + '/')}`);
   await page.locator('input[name=username]').fill(name);
@@ -77,7 +80,7 @@ async function say(page, text) {
 }
 
 try {
-  for (const mobile of [false, true]) {
+  for (const mobile of full ? [false] : [false, true]) {
     const name = mobile ? 'short-mobile' : 'short-desktop';
     const L = LABELS[mobile ? 'zh' : 'en'];
     const { page, context } = await signIn(name, mobile ? 'zh-CN' : 'en-US', mobile ? { width: 390, height: 844 } : { width: 1440, height: 1000 });
@@ -85,6 +88,8 @@ try {
     page.on('pageerror', e => errors.push(e.message));
     await page.locator('#plan-chat textarea').waitFor();
     await recording.mark(page, 'opening', 7);
+    const extra = full?.configure({ page, context, browser, origin, output, recording, get, post, say, evidence });
+    if (extra) await extra.cost();
 
     // The catalog: ten sample schools, each with dated lines and its public sources.
     const schools = (await get(context, 'planning/schools/')).schools;
@@ -99,6 +104,7 @@ try {
       'Compare PSU Phuket, Chulalongkorn, Mahidol and Thammasat');
     assert.ok(comparison.cards.some(c => c.type === 'comparison' && c.schools.length === 4), 'Four sourced school estimates');
     assert.equal((await get(context, 'planning/profile/')).plan, null);
+    if (extra) await extra.currencies();
     await page.screenshot({ path: fileURLToPath(new URL(`${name}-prices.png`, output)), fullPage: true });
     if (process.env.SHORT_TEST_RECORD_VIDEO === '1' && !mobile) {
       await page.locator('.price-card').filter({ has: page.locator('.compare-grid') }).first().scrollIntoViewIfNeeded();
@@ -127,6 +133,7 @@ try {
     assert.ok(max > 20000, `max ${max}`);
     assert.deepEqual(checked.prequal.products.map(p => p.key).sort(), ['commercial_student_demo', 'custom']);
     await recording.mark(page, 'precheck', 7);
+    if (extra) await extra.planDetails();
 
     if (live) {
       await page.getByRole('button', { name: /^(Close tool|关闭工具)$/ }).click();
@@ -157,6 +164,7 @@ try {
       await chooser.locator('.loan-chooser-pay.is-study').waitFor();
     } else await chooser.locator('.loan-chooser-pay').filter({ hasText: L.monthly }).waitFor();
     await chooser.locator('.loan-chooser-table tbody tr').nth(59).waitFor({ state: 'attached' });
+    if (extra) await extra.loanMethods(chooser);
     const studyRows = await chooser.locator('.loan-chooser-table tbody tr.is-study').count();
     assert.equal(studyRows > 0, studyFirst);
     assert.equal(await chooser.locator('.loan-chooser-table tbody tr').count(), 60 + studyRows);
@@ -212,6 +220,7 @@ try {
     await recording.focus(page, panel.locator('.loan-stage'));
     await page.screenshot({ path: fileURLToPath(new URL(`${name}-signed.png`, output)) });
     await recording.mark(page, 'signed', 8);
+    if (extra) await extra.preparation();
 
     // The first installment: move the demo clock to its date, add money to the wallet, repay with the password.
     const account = signed.lifecycle.accounts[0];
@@ -251,6 +260,8 @@ try {
       await page.screenshot({ path: fileURLToPath(new URL(`${name}-paid-history.png`, output)) });
     }
     await recording.mark(page, 'repaid', 9);
+    if (extra) await extra.afterRepayment();
+    assert.deepEqual(errors, []);
     evidence.journeys.push({ viewport: `${page.viewportSize().width}x${page.viewportSize().height}`, language: mobile ? 'zh-CN' : 'en-US', schoolCount: schools.length,
       schoolsHaveSources: true, prequalMax: checked.prequal.max_principal, product: 'commercial_student_demo', months: 60, principal: '20000.00',
       applicationId: application.id, oneApplication: true, studentDisbursementRefused: true, signed: true,
