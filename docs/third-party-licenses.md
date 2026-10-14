@@ -1,8 +1,26 @@
 # Third-Party Components and Licenses
 
-Generated on 2026-10-07 from the installed package metadata (`importlib.metadata`), starting from `backend/requirements.lock.txt` and `studyflow-ai/pyproject.toml` and following every transitive runtime dependency. Versions are the pinned ones the project runs and tests with.
+Updated 2026-10-14 from installed Python metadata, `backend/requirements.lock.txt`, `studyflow-ai/pyproject.toml`, `frontend/package-lock.json` and installed frontend license files. Frontend versions are exact lockfile versions rather than `package.json` ranges. Python rows describe the local environment; container versions must be checked against the built image. This inventory records license identifiers and notices; it does not grant rights to external data, branding or service accounts.
 
-> **Project licence.** This repository does not yet contain a `LICENSE` file for StudyFlow's own code. The team must choose one before publishing. Every third-party licence below permits use in a closed or open project, subject to the notes at the end.
+> **Project code.** StudyFlow has no repository `LICENSE` file. Third-party licenses do not license the team's code. The team retains responsibility for its distribution terms; this inventory does not choose those terms.
+
+## Frontend packages distributed with the app
+
+| Package | Locked version | License | Use |
+|---|---|---|---|
+| react | 19.3.0 | MIT | Student and operations UI |
+| react-dom | 19.3.0 | MIT | Browser rendering |
+| scheduler | 0.28.0 | MIT | React runtime dependency |
+| three | 0.180.0 | MIT | Introduction-page 3D rendering |
+| postprocessing | 6.39.5 | Zlib | Rendering effects |
+| @phosphor-icons/react | 2.1.10 | MIT | UI icons |
+| @fontsource-variable/space-grotesk | 5.3.0 | OFL-1.1 | Bundled Space Grotesk font |
+| @fontsource/chakra-petch | 5.3.0 | OFL-1.1 | Bundled Chakra Petch font |
+| @fontsource/jetbrains-mono | 5.3.0 | OFL-1.1 | Bundled JetBrains Mono font |
+
+Fonts are imported by `frontend/src/main.tsx` and `frontend/src/intro/IntroApp.tsx`. License copies in [`third-party-notices/frontend/`](third-party-notices/frontend/) preserve original copyright and permission notices. Keep these with distributed app artifacts. The fonts are used without modifying their source files; font names and any reserved names are governed by the corresponding OFL text.
+
+`@fontsource/instrument-serif` 5.3.0 (OFL-1.1) is a development dependency and is not imported by the current app. Its notice is retained for future use. Vite, TypeScript, Vitest, Playwright, `@types/*` and `opentype.js` are development/build tools recorded in the lockfile. A development label does not prove that assets cannot enter a build; recheck imports when usage changes.
 
 ## Runtime Python packages
 
@@ -54,6 +72,9 @@ Generated on 2026-10-07 from the installed package metadata (`importlib.metadata
 |---|---|---|
 | `python:3.13-slim` | PSF-2.0 (Python) plus Debian package licences | Application image base |
 | `postgres:17` | PostgreSQL License (permissive) plus Debian package licences | Database |
+| `nginx:1.27-alpine` | BSD-2-Clause ([nginx license](https://nginx.org/LICENSE)) plus Alpine package licenses | Static frontend and same-origin proxy |
+
+`gunicorn==23.0.0` is installed by `backend/Dockerfile`; it is not installed in the current Windows environment. Image tags are not immutable digests. The Python/npm inventory does not enumerate every Debian or Alpine package in built images; preserve base-image notices and verify the container inventory before redistribution.
 
 ## Loaded at runtime from a CDN (not redistributed)
 
@@ -69,6 +90,19 @@ Generated on 2026-10-07 from the installed package metadata (`importlib.metadata
 | OpenAI-compatible LLM gateway | Agent planner and copilot (`STUDYFLOW_MODE=live`) | Operator's own account and terms |
 | Typesafe API | Copilot classification (live mode) | Operator's own account and terms |
 | Google Gemini API | Optional document OCR (off by default) | Google's paid-service terms; see [gemini-ocr.md](gemini-ocr.md) |
+
+## School data and visual assets
+
+School JSON files under `backend/finance/planning/catalog/` contain short factual values, source URLs, observation dates, bilingual descriptions and estimates, marked `sample: true`. A public source URL supplies attribution, not a blanket reuse license. School names identify institutions and imply no affiliation or endorsement. Source-specific data and website permission review remains open for wider publication.
+
+The introduction uses code-authored SVG and Three.js graphics. No external stock-photo or school-logo package is declared by the current frontend. Legacy files under `frontend/public/images/` remain in the repository; npm metadata does not establish their authorship or provenance. Review or exclude them from publication artifacts before asserting that all imagery has cleared rights. Newly added images, icons or fonts must carry their source and license.
+
+## Redistribution checks
+
+- Retain third-party copyright, permission and license texts, using the local frontend notices, Python distribution licenses and container notices together.
+- Preserve sample-data/reference-rate labels and obtain any required rights for external materials separately.
+- Review the delivered build: minified frontend libraries and fonts are still shipped components.
+- Exclude API keys and private environment files. Service access depends on the team's account and provider terms, not the client-library license.
 
 ## Notes on copyleft components
 

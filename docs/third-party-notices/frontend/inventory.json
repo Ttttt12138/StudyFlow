@@ -1,0 +1,96 @@
+{
+  "recorded_date": "2026-10-14",
+  "source_lock_sha256": "eced4e71a3ce65c3cd2113ae17f75e51e7edc5c9aa48b344781e4ad45256d62f",
+  "packages": [
+    {
+      "name": "@fontsource-variable/space-grotesk",
+      "version": "5.3.0",
+      "license": "OFL-1.1",
+      "source": "frontend/node_modules/@fontsource-variable/space-grotesk/LICENSE",
+      "notice": "docs/third-party-notices/frontend/fontsource-variable--space-grotesk--LICENSE",
+      "sha256": "18a4de52385f6b988782639d5d0cc1326e5a8c2de9a7f01d7b20d9aedcc60943",
+      "development_only": false
+    },
+    {
+      "name": "@fontsource/chakra-petch",
+      "version": "5.3.0",
+      "license": "OFL-1.1",
+      "source": "frontend/node_modules/@fontsource/chakra-petch/LICENSE",
+      "notice": "docs/third-party-notices/frontend/fontsource--chakra-petch--LICENSE",
+      "sha256": "8f32c96ea465c5916489845361238b31b365414228bc2e4e45e3ae98ba1d311a",
+      "development_only": false
+    },
+    {
+      "name": "@fontsource/instrument-serif",
+      "version": "5.3.0",
+      "license": "OFL-1.1",
+      "source": "frontend/node_modules/@fontsource/instrument-serif/LICENSE",
+      "notice": "docs/third-party-notices/frontend/fontsource--instrument-serif--LICENSE",
+      "sha256": "b6106a757902d2d412e09d94dc4a226fe3da80485208a98003969f1b8b6b1d74",
+      "development_only": true
+    },
+    {
+      "name": "@fontsource/jetbrains-mono",
+      "version": "5.3.0",
+      "license": "OFL-1.1",
+      "source": "frontend/node_modules/@fontsource/jetbrains-mono/LICENSE",
+      "notice": "docs/third-party-notices/frontend/fontsource--jetbrains-mono--LICENSE",
+      "sha256": "403581b69dac5cff4079205e01c6b467e56af449ecbd7247693ddb1baafa005b",
+      "development_only": false
+    },
+    {
+      "name": "@phosphor-icons/react",
+      "version": "2.1.10",
+      "license": "MIT",
+      "source": "frontend/node_modules/@phosphor-icons/react/LICENSE",
+      "notice": "docs/third-party-notices/frontend/phosphor-icons--react--LICENSE",
+      "sha256": "6918b72504641180600cbbd4a86b0dfa9dfccf788775694325b71b9a029f6eb4",
+      "development_only": false
+    },
+    {
+      "name": "postprocessing",
+      "version": "6.39.5",
+      "license": "Zlib",
+      "source": "frontend/node_modules/postprocessing/LICENSE.md",
+      "notice": "docs/third-party-notices/frontend/postprocessing--LICENSE.md",
+      "sha256": "b7650918449bd5fb011ce30ce0e5bcda27aa9639db1fb3aef8c67c32945237f2",
+      "development_only": false
+    },
+    {
+      "name": "react",
+      "version": "19.3.0",
+      "license": "MIT",
+      "source": "frontend/node_modules/react/LICENSE",
+      "notice": "docs/third-party-notices/frontend/react--LICENSE",
+      "sha256": "da6d3703ed11cbe42bd212c725957c98da23cbff1998c05fa4b3d976d1a58e93",
+      "development_only": false
+    },
+    {
+      "name": "react-dom",
+      "version": "19.3.0",
+      "license": "MIT",
+      "source": "frontend/node_modules/react-dom/LICENSE",
+      "notice": "docs/third-party-notices/frontend/react-dom--LICENSE",
+      "sha256": "da6d3703ed11cbe42bd212c725957c98da23cbff1998c05fa4b3d976d1a58e93",
+      "development_only": false
+    },
+    {
+      "name": "scheduler",
+      "version": "0.28.0",
+      "license": "MIT",
+      "source": "frontend/node_modules/scheduler/LICENSE",
+      "notice": "docs/third-party-notices/frontend/scheduler--LICENSE",
+      "sha256": "da6d3703ed11cbe42bd212c725957c98da23cbff1998c05fa4b3d976d1a58e93",
+      "development_only": false
+    },
+    {
+      "name": "three",
+      "version": "0.180.0",
+      "license": "MIT",
+      "source": "frontend/node_modules/three/LICENSE",
+      "notice": "docs/third-party-notices/frontend/three--LICENSE",
+      "sha256": "bfe119ea4fd413f5f7ca3fcd63adb0c4a073ed39daa2fe7d3e6b769e21272601",
+      "development_only": false
+    }
+  ]
+}

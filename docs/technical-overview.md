@@ -1,8 +1,8 @@
 # Technical Overview
 
-StudyFlow helps an international student plan money before and during a semester abroad. The student can hold several currencies, compare remittance routes, pay tuition and living costs to verified payees, build an on-time payment record, and ask an AI agent to prepare these steps. **All money is simulated**: there is no real bank, card or remittance rail. The controls around the money (pricing, permissions, limits, approvals and ledger constraints) are real and enforced by the server.
+StudyFlow helps students and families compare the cost of studying abroad, identify a funding gap, and choose a simulated funding plan. The main conversation starts with full-course prices and school comparisons. A confirmed plan adds preparation tasks and bills; enrollment opens spending records and wallet tools. **All money and lending are simulated.** School prices are sourced sample estimates, not school invoices or binding quotations. The server enforces permissions, limits, approvals and ledger constraints.
 
-This document covers proposition C: multi-currency wallets, remittance, live FX, tiered permissions, the agent and credit building. It also covers the parts of the earlier B/C work that proposition C builds on. Security is covered in depth in [security-self-assessment.md](security-self-assessment.md); evaluation in [agent-evaluation.md](agent-evaluation.md).
+Updated 2026-10-14 for Topic C, including the React frontend, current planning and loan lifecycle, wallet bill payments and post-enrollment tools. Security is covered in [security-self-assessment.md](security-self-assessment.md); historical agent evaluation in [agent-evaluation.md](agent-evaluation.md). Implementation paths describe the current code; dated evidence identifies what was actually exercised.
 
 ---
 
@@ -10,7 +10,8 @@ This document covers proposition C: multi-currency wallets, remittance, live FX,
 
 ```mermaid
 flowchart LR
-    client["API client / Swagger UI<br/>(no frontend in this submission)"]
+    client["React 19 + Vite student workspace<br/>and staff operations workspace"]
+    web["nginx<br/>same-origin API proxy"]
     subgraph django["Django 5.2 + DRF (one process, /api/v2/)"]
         cmd["CommandView<br/>auth · idempotency · user lock · policy · audit<br/>(one DB transaction per command)"]
         wallet["wallets / money<br/>multi-currency ledger"]
@@ -19,6 +20,7 @@ flowchart LR
         policy["policy / throttles<br/>T0–T3, step-up, approvals"]
         credit["credit<br/>on-time record, multiplier"]
         agent["agent_runner / agent_tools<br/>loop guards, proposals"]
+        planning["planning<br/>catalog, assessment, plan, tasks, bills"]
         b["lending_core (B)<br/>loans and instalments"]
     end
     subgraph c["studyflow-ai (C package, imported in-process)"]
@@ -31,22 +33,23 @@ flowchart LR
     ext2["LLM gateway<br/>(OpenAI-compatible)"]
     ext3["Google Gemini"]
 
-    client -->|Token or session| cmd
-    cmd --> policy & wallet & remit & agent & credit & b
+    client -->|Session + CSRF| web --> cmd
+    cmd --> policy & wallet & remit & agent & planning & credit & b
+    planning --> b & wallet & agent
     remit --> wallet
     fx --> fxadapter --> ext1
     agent --> planner --> ext2
     ocr --> ext3
-    wallet & remit & policy & credit & agent & b --> pg
+    wallet & remit & policy & credit & agent & planning & b --> pg
 ```
 
-- **One backend.** Django is the only server. The C module (`studyflow-ai/`) is a Python package that Django imports, so both share users, wallets, ledger and database transactions. There is no second service to keep consistent.
+- **One application backend.** Django 5.2 + DRF serves `/api/v2/`; PostgreSQL 17 stores authoritative state. The C module is imported in-process. Compose runs nginx, Django, PostgreSQL and a separate readiness worker using the same application and database. The worker is required for background readiness jobs.
 - **Mock vs live.** Two independent switches control external calls. Both default to offline, so everything runs with no keys:
   - `STUDYFLOW_MODE=mock` uses rule-based planners and extractors; `live` calls the LLM gateway.
   - `STUDYFLOW_FX_LIVE=false` uses fixed FX rates; `true` calls Frankfurter.
 
   Gemini OCR is a third opt-in that is off by default. It needs operator attestations and per-file consent.
-- **Every write goes through `CommandView`** (`backend/finance/workflow_api.py`). In one database transaction it:
+- **Financial commands go through `CommandView`** (`backend/finance/workflow_api.py`). In one database transaction it:
   1. authenticates the caller;
   2. checks the `Idempotency-Key` (a replay returns the stored response);
   3. takes a row lock on the user;
@@ -56,17 +59,44 @@ flowchart LR
 
   Any failure rolls back everything, including step-up token use.
 
+  Conversation creation, messages, school selection, profile updates and authentication have their own API views. They are not all instances of `CommandView`; tools still use server validation and transactions. Session-changing authentication requires CSRF. External AI credentials stay server-side.
+
+### 1.1 Planning and cost calculation
+
+The plan progresses through `DRAFT`, `CONFIRMED` and `ENROLLED`. Confirmation creates estimated bills and a destination-specific checklist. The start date alone never confirms enrollment. The main conversation remains mounted while contextual panels open; phone layouts show one tool at a time. Sidebar visibility is a presentation rule. Planning prompts and rules defer wallet tools until enrollment; expense recording checks enrollment server-side. Legacy money tools/APIs retain authentication and monetary policy but do not all enforce the plan stage (security risk P4).
+
+Ten entries in `backend/finance/planning/catalog/` include bilingual descriptions, public source URLs, observation dates, billing periods and cost status. `planning/costs.py` expands one-off, monthly, yearly and semester fees over actual course duration, including half years and year-specific rates. Missing amounts remain missing. An incomplete result is a known subtotal and cannot win the lowest-total ranking. Conversion includes rate provenance; course totals, 30/60/90-day forecasts and loan repayment terms remain separate quantities.
+
+`PlanningAssessment` stores versioned declared funds, personal cost adjustments and results separately from the wallet and financial state. Declaring savings does not credit a wallet. Unreceived support affects only a conditional forecast. `planning/assessment/` returns the chosen quote and lifecycle; `planning/loan-preview/` calculates without persisting a quote. School selection and assessment preserve up to three drafts. Signing prevents changing the underlying school or plan; changing school beforehand withdraws unsigned applications.
+
+### 1.2 Simulated study loan lifecycle
+
+The pre-check sizes a loan from the full-course funding gap converted to THB, plus fees. It does **not** assess repayment affordability or verify income. Borrower choice changes checklist wording; it does not create a legally verified co-borrower. Products are `custom` (default 6%, 24/36/48 months) and `commercial_student_demo` (4.5%, 24/36/48/60 months). These are demonstration terms, not lender offers.
+
+`lending_core/calculations.py` uses decimal money calculations and produces the authoritative schedule. Amortized payments repay principal and interest from the start. The commercial sample also offers interest-only payments during study, followed by the selected amortization term. The interest-only period counts repayment dates before course completion, capped at 72 months, and is added to the selected 24-60 months. Deferring principal raises total interest. A 20,000 THB example at 4.5% pays 75.00 THB per interest-only month; later payments and rounding come from the schedule.
+
+`planning/plan/confirm/` confirms the plan and submits at most one active simulated application in one command. Planning approval checks the pre-check ceiling and a future first repayment date, rather than the generic monthly-income workflow. Quote affordability is therefore `assessment.status=NOT_ASSESSED`. The user marks admission, identity and borrower/co-borrower income checklist items, then explicitly signs through `planning/loan/sign/`.
+
+Signing creates a loan account and school-directed disbursement without crediting the student's wallet. `planning/loan_stage.py` allocates net proceeds to tuition first, then other bills by due date. Partial coverage splits a bill into loan-funded and family-funded portions, using signing-time reference FX. Scheduled payouts mark covered bills paid when the simulated date reaches their due dates. They are simulation records, not bank transfers or school receipts. Unallocated proceeds are audited. Operator wallet disbursement is refused for these loans. Repayment follows the signed schedule and existing password step-up, limits, version and idempotency controls.
+
+### 1.3 Enrollment and daily money tools
+
+This month groups tasks, upcoming payments, monthly spending and expenses. Reminder changes do not alter original contract or bill dates; completing a task does not repay a loan. Reminders refresh while the app is open and send no email or system push. Budget and expense records do not themselves move funds.
+
+After enrollment, Wallet and payments groups balances, conversion, remittance, school bills and history. `planning/bills/{id}/pay-from-wallet/` deducts the bill currency through `wallets.post`, under `bill.pay`, with password step-up and T3 approval when above a limit. Loan-funded bills cannot be paid again. Owner-only `demo/wallets/top-up/` creates simulated money and a funding-source ledger entry, capped at 1,000,000 per request; it is not a bank deposit. The fixed simulated 2,000 CNY-equivalent planning credit facility is distinct from the payment-record multiplier in section 5.
+
 ### Directory map
 
 | Path | Contents |
 |---|---|
 | `frontend/` | A: React + Vite student app and browser suites |
 | `backend/` | B: Django project root (`manage.py`, requirements, Dockerfile) |
-| `backend/finance/` | Django app: wallets, FX, remittance, policy, credit, agent, lending (B), readiness, copilot, consumption |
+| `backend/finance/` | Django app: planning, wallets, FX, remittance, policy, credit, agent, lending, readiness, copilot, consumption |
+| `backend/finance/planning/` | Catalog, cost calculation, assessment, drafts, loan signing/payouts, tasks and bill payments |
 | `backend/finance/lending_core/` | B's pure loan calculations and contracts |
 | `studyflow-ai/` | C package: agent planner and prompts, FX adapter, OCR, extraction, evaluation sets (`evals/`) |
 | `backend/config/` | Django settings, URLs, OpenAPI schema hooks |
-| `backend/auto_test/` | Django tests (481), including concurrency suites |
+| `backend/auto_test/` | Django tests, concurrency suites and opt-in isolated browser acceptance |
 | `studyflow-ai/auto_test/` | C package tests |
 | `scripts/` | `run_gates.py` (all checks across A/B/C), holdout freeze, PostgreSQL helpers |
 | `backend/scripts/` | i18n catalog tool, fixture builders, live verification scripts |
@@ -128,7 +158,7 @@ Source: `TRANSITIONS` in `backend/finance/remittance_orders.py`.
 - **Callbacks** (`dispatched` / `delivered` / `failed` / `unknown`) are operator-only. Each is idempotent, so a duplicate callback is acknowledged without a second posting, and conflicting callbacks settle one way only.
 - `REFUNDED` and `UNKNOWN` orders appear in the review queue. Delivered orders with a deadline, paid to a verified beneficiary, feed the credit record.
 
-**Tuition** is not a separate module. It is paid either by a remittance with `purpose=tuition` to a verified payee, or by a readiness payment against a confirmed invoice ([consumption.md](consumption.md)).
+Tuition can be a plan bill, covered by a signed planning loan or paid from the wallet or the credit line. Each plan has a school payee (`StudyPlan.school_payee`, `backend/finance/planning/payees.py`): a `Beneficiary` the student owns, created from the school's seeded tuition account, which is marked verified. Money to the school requires it to be verified at the moment it moves: signing the loan, every loan payout (an unverified account leaves the tranche `SCHEDULED` and the bill due), and paying a tuition bill from the wallet or credit line (`SCHOOL_PAYEE_NOT_VERIFIED`). Operators can revoke or restore it through `beneficiaries/{id}/verify/`. Housing, insurance and visa bills paid by the student may go to third parties and are not checked. Legacy remittance supports `purpose=tuition` to a verified payee; readiness supports a confirmed invoice ([consumption.md](consumption.md)). The seeded accounts are simulated, and catalog bills and loan payouts do not constitute school-side invoice verification or confirmation of receipt.
 
 ## 4. Tiered permissions and limits (summary)
 
@@ -148,7 +178,8 @@ Source: `backend/finance/credit.py`. The credit level is a simulated on-time rec
 - **Evidence counted:**
   - loan instalments;
   - settled bill payments;
-  - delivered remittance orders that have a deadline and go to a **verified** beneficiary.
+  - delivered remittance orders that have a deadline and go to a **verified** beneficiary;
+  - plan bills paid from the wallet (not those marked paid by hand or paid by the loan), compared by the demo date paid; a bill due more than a year after it was paid does not count.
 
   Self-transfers never count, so the level cannot be inflated cheaply.
 - **Window.** Only the last **365 days** count, measured in **real** dates. Moving the demo clock forward can only make obligations overdue sooner; it can never age a late record out. Unresolved overdue items never age out.
@@ -205,7 +236,7 @@ flowchart TD
 | T2 execution by the agent | **none**: it can only propose | `_propose`; `confirm_pending` runs only for the student, under policy `agent.confirm` |
 | Sessions per user | 30 per hour | `agent` throttle |
 
-The planner prompt (`agent-1.1`) treats tool results, document text and CSV rows as untrusted data. Because the runner enforces the guards itself, they do not depend on the model obeying the prompt.
+The finance prompt is `agent-1.1`; the main conversation uses `planning-1.7`. Each message becomes an audited `AgentSession`, with up to 12 history messages and server memory containing the plan, catalog and pre-check. Greetings, card-button school selection and date-driven enrollment proposals are deterministic system turns. Opening the loan panel does not submit an application. Plan confirmation and enrollment require explicit confirmation; monetary proposals additionally require the underlying authorization. Prompts treat tool/document content as untrusted data. Authorization and exact calculations do not depend on model compliance. Live failure never falls back to the rule provider.
 
 ## 8. Internationalization
 
@@ -213,9 +244,13 @@ API error responses carry a stable `code` and a localized `message` in Chinese o
 
 ## 9. Verification
 
-| Check | Command | Latest result |
+| Check | Command or evidence | Recorded result and boundary |
 |---|---|---|
-| All gates: Django and C tests, OpenAPI, lint, migrations, 6 HTTP demos, agent evaluation | `python scripts/run_gates.py` | 17/17 pass ([evidence/gates](../evidence/gates/summary.txt)) |
+| Historical complete gates | `python scripts/run_gates.py` | 17/17 on 2026-10-07 ([evidence/gates](../evidence/gates/summary.txt)); not acceptance of later changes |
+| Simplified planning | [2026-10-13 record](../evidence/short-planning-20261013/verification.json) | 121 focused backend tests, 165 frontend units, 23 rule tests, five offline browser cases; dated results |
+| Current loan/browser journey | [2026-10-14 record](../evidence/short-planning-20261014/browser.json) | English desktop and Chinese phone: signing, school payout and repayment; real local HTTP/PostgreSQL, rule planner, simulated funds |
+| Current planning flow with real AI | [2026-10-14 live acceptance](verification-planning-live-20261014.md) | Two browser journeys, eight live user turns and fifteen recorded live planner calls; explicit user signing/repayment; simulated money |
+| Current focused safeguards | [Baseline log](../evidence/planning-live-20261014/backend-baseline.log) | 155 related backend/browser checks passed before live acceptance |
 | Live FX pricing | see [verification-live-20261007.md](verification-live-20261007.md) | 4 pairs, 12 quotes match the formula |
 | Live agent, frozen holdout | see [agent-evaluation.md](agent-evaluation.md) | 18/24, 0 unauthorized actions |
 | CI | `.github/workflows/django.yml`, `c-module.yml` | runs on every push and pull request |

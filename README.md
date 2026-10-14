@@ -171,4 +171,10 @@ The limitations behind these numbers are stated plainly in [docs/security-self-a
 
 ## Demo video
 
-To be added.
+[**Watch the English demo — live AI planning to first repayment**](evidence/demo-live-20261014/StudyFlow_Demo_EN.mp4)
+
+The current formal demo is 3 minutes 34 seconds, in 1080p, with English narration and burned-in English subtitles. It follows school-cost comparison, the funding gap, loan selection, explicit confirmation, signing, school-directed payouts and password-authorized repayment. AI calls are live; all financial transactions are simulated.
+
+[English subtitles](evidence/demo-live-20261014/StudyFlow_Demo_EN.srt) · [Timed narration and reproduction](docs/demo-video-en.md) · [Recording evidence](evidence/demo-live-20261014/README.md)
+
+This version replaces the October 12–13 multi-role recordings as the formal demonstration. Those recordings remain archived as historical evidence.

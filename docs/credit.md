@@ -15,6 +15,9 @@
 |---|---|---|---|
 | 借款分期（`LoanInstallment`） | `paid_on ≤ due_on` | `paid_on > due_on` | 未还且 `due_on <` 当前日期 |
 | 账单付款（`Payment`，状态 settled / reconciled / reconciliation_exception） | 回执 `settled_on ≤ due_on` | `settled_on > due_on` | — |
+| 方案账单钱包缴费（`PlanBill`，`source: plan_bill`） | 付款演示日期 `paid_on ≤ due_date` | `paid_on > due_date` | — |
+
+方案账单只统计**从钱包实际扣款**的（有钱包分录）：手动标记已付、由贷款付给学校的不计入，它们不是学生本人的履约。与汇款截止日期一样，到期日比付款日晚一年以上的账单不计入，避免一次预付多个学期直接刷高等级。未付的方案账单不记为逾期：它们可能在平台外付清或由贷款支付。
 
 汇款订单通过同一个来源注册表接入：只统计汇给已核验收款人（按收款人当前的核验状态，事后取消核验的不再计入）、带截止日期、并已送达（DELIVERED 或 RECONCILED）的订单，`delivered_on ≤ deadline` 为准时，否则为逾期完成。汇给自己的订单成本很低，也不代表对外履约，所以不计入（安全审查发现，学生曾可用 6 笔小额自汇，花约 12 THB 把等级刷到 GOOD）。
 

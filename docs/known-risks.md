@@ -37,7 +37,7 @@
 
 | ID | 风险 | 等级 | 现有缓解 | 状态 | 证据 |
 |---|---|---|---|---|---|
-| S1 | 学费不是独立模块：通过两条现有资金流程支付（汇款订单 `purpose=tuition`、基于已确认发票的 readiness 付款），没有与学校对接的分期或学校侧确认 | 低 | 两条流程在创建和提交时都校验收款人已核验 | 设计范围 | `docs/proposition-c.md` §2 |
+| S1 | 学费没有学校侧确认：方案账单和贷款分配不是学校开具的发票或收据；学校学费账户是种子数据预核验的模拟账户，没有与学校核对 | 中 | 每个方案有学校收款方（`StudyPlan.school_payee`）：贷款签约、每笔放款、钱包或信用额度缴学费都要求该收款方在付款时已核验，未核验时报 `SCHOOL_PAYEE_NOT_VERIFIED`，放款保持待付；运营可撤销核验。旧汇款订单 `purpose=tuition` 和 readiness 发票付款在创建和提交时都校验收款人 | 部分缓解 | `backend/finance/planning/payees.py`、`docs/technical-overview.md` §3 |
 
 ## 部署与配置
 

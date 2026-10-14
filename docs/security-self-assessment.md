@@ -1,12 +1,12 @@
 # Security Self-Assessment
 
-StudyFlow, proposition C. Assessment date: 2026-10-07; frontend controls (section 5.1, risk D4) updated 2026-10-11.
+StudyFlow, Topic C. Updated 2026-10-14 for the conversation-led cost planner, study-loan lifecycle and wallet bill payments.
 
-This report covers two things: how permission tiers are implemented, and which risks are still known. Every control below names the code that enforces it and the tests that prove it. File paths are relative to the repository root. Tests live in `backend/auto_test/` (Django) and `studyflow-ai/auto_test/` (C package). The full suite runs with `scripts/run_gates.py`; logs from the latest run are in [`evidence/gates/`](../evidence/gates/).
+This report maps controls to code and tests and records remaining risks. Test names identify coverage, not a claim that every suite was rerun on this date. Dated evidence separates rule-based integration from real model calls. `evidence/gates/` is the historical 2026-10-07 run; current planning evidence is linked below. Paths are relative to the repository root.
 
 > **Scope.** All money in StudyFlow is simulated. There is no real bank, card or remittance rail. Wallets, ledgers and payouts are database models, and delivery or failure of a transfer is triggered by an operator callback. The access controls, limits, approvals and ledger constraints described here are nevertheless **really enforced** by the server, and they are what this report assesses.
 
-The Chinese documents [permissions.md](permissions.md) and [known-risks.md](known-risks.md) contain the same material in more detail. Where they differ, this English report is authoritative.
+The Chinese documents [permissions.md](permissions.md) and [known-risks.md](known-risks.md) retain earlier control detail. This English report describes current scope where those notes are older.
 
 ---
 
@@ -33,12 +33,17 @@ Every API action falls into one tier. The tier of a money-moving action is decid
 | `payment.submit` | `POST payments/{id}/submit/` | T2 / T3 | **Yes** | Above limit | Home currency (THB) |
 | `wallet.convert` | `POST conversions/` | T2 / T3 | **Yes** | Above limit | Limit counted in the quote's source currency |
 | `loan.repay` | `POST loan-accounts/{id}/repay/` | T2 / T3 | **Yes** | Above limit | Amount must equal an unpaid instalment |
+| `bill.pay` | `POST planning/bills/{id}/pay-from-wallet/` | T2 / T3 | **Yes** | Above limit | Owner, currency, bill status and loan coverage checked |
+| Confirm plan and submit planning loan | `POST planning/plan/confirm/` | T1 | No | No | Versioned owner command; explicit confirmation; no wallet debit |
+| Sign planning loan | `POST planning/loan/sign/` | T1 command in current implementation | No | No | Explicit UI confirmation, completed checklist, approved application and version; creates simulated school payouts |
+| Mark loan checklist item | `POST planning/loan/documents/` | T1 | No | No | Owner and task version checked; self-declaration, not verification |
+| Demo wallet top-up | `POST demo/wallets/top-up/` | T1 demo command | No | No | Creates simulated funds for owner, maximum 1,000,000 per request |
 | `remittance.submit` | `POST remittance-orders/{id}/submit/` | T2 / T3 | **Yes** | Above limit | Debits the send amount |
 | `agent.confirm` | `POST agent/pending-actions/{id}/confirm/` | as the proposed action | **Yes** | If the proposed action is T3 | Cleared exactly like the action it proposes |
 | Decide an approval | `POST approvals/{id}/decide/` | OP | No | n/a | Separation of duties applies |
 | Verify a beneficiary, remittance or payment callback | `…/verify/`, `…/adapter-event/` | OP | No | No | Audited; see risk A2 |
 
-Every T2 action must be registered in `ACTIONS` in `backend/finance/policy.py` and declared on its route (`policy="…"`). The registrations are in `backend/finance/workflow_urls.py` (`payment.submit`, `wallet.convert`), `backend/finance/lending_urls.py` (`loan.repay`), `backend/finance/remittance_api.py` (`remittance.submit`) and `backend/finance/agent_api.py` (`agent.confirm`).
+Every T2 action is registered in `ACTIONS` in `backend/finance/policy.py` and declared on its route. Registrations include `workflow_urls.py`, `lending_urls.py`, `remittance_api.py`, `agent_api.py` and `planning/api.py` (`bill.pay`). Tiers protect wallet outflows; school-directed loan signing currently has no password step-up or independent operator decision (risk P2).
 
 **Tests**
 - Tier matrix, `backend/auto_test/test_policy.py` `TierMatrixTests`: `test_payment_submit_requires_step_up_with_documented_body`, `test_conversion_requires_step_up`, `test_tuition_over_per_transaction_limit_needs_approval`, `test_reads_and_t1_writes_need_no_step_up`, `test_agent_calls_are_capped_at_t1`
@@ -60,6 +65,9 @@ Limits apply to outflows, summed per currency across all T2 actions. Days and mo
 | EUR | 1,400 | 2,800 | 8,400 |
 | GBP | 1,200 | 2,400 | 7,200 |
 | JPY | 200,000 | 400,000 | 1,200,000 |
+| MYR | 6,500 | 13,000 | 39,000 |
+| AUD | 2,300 | 4,600 | 13,800 |
+| SGD | 2,000 | 4,000 | 12,000 |
 
 - Defaults are stored in the `PolicyLimit` table, where an administrator can edit them. `ensure_default_limits()` only adds missing rows and never overwrites edited ones.
 - A currency with no enabled limit row makes **every** T2 action in that currency T3.
@@ -133,13 +141,29 @@ The React frontend (`frontend/`) exposes the agent and the permission model to s
 
 | Control in the browser | Behaviour | Code | Tests |
 |---|---|---|---|
-| Agent proposals | Every step is listed with its tier badge (T0–T3). A T2 proposal shows amount, recipient and expiry, and says it has not been executed. Confirm and reject are separate explicit buttons. | `frontend/src/agent/AgentApp.tsx` | `frontend/tests/e2e/mocked/agent.spec.mjs`, `frontend/tests/e2e/integration/agent.spec.mjs` |
-| Step-up | Confirming asks for the password, requests a grant for the **underlying** action (`remittance.submit` / `wallet.convert`) with the proposal's exact target, amount and currency, and sends it once as `X-Step-Up-Token`. Password and grant live only in the call stack, never in React state, browser storage or the URL. A wrong password is refused and nothing is confirmed. | `AgentApp.tsx`, `frontend/src/wallet/client.ts` | The mocked spec asserts the step-up body and header and that neither value reaches storage or the URL; the integration spec checks the CNY balance before and after each step |
-| T3 | `APPROVAL_REQUIRED` opens an approval request form; the student cannot approve. After a separate staff user approves, the student confirms again with a fresh password check. | `AgentApp.tsx`, `frontend/src/wallet/WalletApp.tsx` | `integration/agent.spec.mjs` (the approver decides through the API), `integration/wallet.spec.mjs` |
+| Agent proposals | The main planning conversation renders pending proposals. Plan/enrollment confirmation is a separate explicit action; monetary proposals show details and expiry and have not executed. | `frontend/src/plan/PlanApp.tsx`, `MoneyConfirm.tsx` | `mocked/agent.spec.mjs`, `integration/agent.spec.mjs` |
+| Step-up | Monetary confirmation binds the underlying action, target, amount and currency, then sends `X-Step-Up-Token`. Wrong passwords prevent execution. Password entry is transient in the dialog and is not persisted to browser storage or the URL. | `MoneyConfirm.tsx`, `frontend/src/wallet/client.ts`, `frontend/src/plan/LoanStage.tsx` | Agent/browser specs and dated planning repayment evidence |
+| T3 | Normal operation requires a different staff approver and another password check. A separately enabled demo shortcut can simulate approval (risk A9). | `MoneyConfirm.tsx`, `WalletApp.tsx`, `finance/policy_api.py` | Agent/wallet integration specs; `auto_test.test_policy.SimulatedApprovalTests` |
+| Stage and continuity | Money tools are hidden until enrollment; prompts/rules defer them and expense recording checks enrollment. Legacy money tools/APIs do not all enforce that stage (P4). The conversation survives tool navigation. | `frontend/src/workspace/navigation.ts`, `finance/agent_tools.py`, `finance/planning/in_school.py` | `auto_test.test_planning`, `auto_test.test_planning_life`, planning browser specs |
 | Limits and audit | "Permissions & activity" shows the tier rules, the credit level and limit multiplier, effective limits with usage (`GET policy/limits/`), approval requests and the audit log (`GET audit/`), read-only. | `frontend/src/trust/TrustApp.tsx`, `backend/finance/policy.py` (`limits_summary`) | `frontend/tests/e2e/mocked/trust.spec.mjs`, `backend/auto_test/test_policy.py` (`test_limits_view_reports_effective_limits_and_usage`) |
 | Simulation notice | A strip on every screen states that all money is simulated. | `frontend/src/services/SimulatedStrip.tsx` | agent and trust specs |
 
-Evidence from the 2026-10-11 run (reports, screenshots, results): [`evidence/frontend-20261011/`](../evidence/frontend-20261011/).
+Historical controls: [`evidence/frontend-20261011/`](../evidence/frontend-20261011/). Current signing and repayment: [`evidence/short-planning-20261014/browser.json`](../evidence/short-planning-20261014/browser.json), English desktop and Chinese phone, real local Django/PostgreSQL with the rule planner. This is simulated money and browser emulation, not physical-device or live-model acceptance.
+
+The [2026-10-14 live planning acceptance](verification-planning-live-20261014.md) separately passed two browser journeys and eight live user turns, including pre-enrollment refusal, user-confirmed signing and password-authorized repayment. Fifteen recorded planner calls used the live provider; there were no tool errors or rule fallbacks. The refusal checks are two observed model outcomes, not a server guarantee closing P4. The [baseline log](../evidence/planning-live-20261014/backend-baseline.log) records 155 related passing checks, including OTP/CSRF and monetary policy. The failed first harness attempt is retained.
+
+### 5.2 Planning and loan safeguards
+
+| Control | Enforcement and remaining boundary | Code and coverage |
+|---|---|---|
+| Declared funds | Savings/support declarations do not credit wallets; unreceived support only affects a conditional forecast | `planning/assessment.py`; `test_planning_assessment` |
+| Versioned confirmation | Assessment/plan versions bind the quote; at most one active application; stale/foreign quotes refused; aggregate failures roll back | `planning/assessment.py`; `ShortPlanningTests`, `ShortPlanningConcurrencyTests` |
+| Gap ceiling | Approval checks principal against the pre-check and a future first repayment; monthly affordability is not assessed | `planning/assessment_loans.py`, `assessment.py` `planning_decision`; P1 |
+| Signing gate | Owner, approved application, version and completed checklist required; no actual file/identity verification | `planning/loan_stage.py`; `test_signing_pays_the_school_bill_by_bill_from_the_loan`; P2 |
+| School payouts | No wallet credit; partial bill coverage split; loan-funded bills cannot be paid again; generic operator disbursement refused | `planning/loan_stage.py`, `lending_applications.py`, `planning/in_school.py`; planning and wallet-bill tests |
+| Contract continuity | Signing locks school/plan changes. Simulated date advancement settles scheduled payouts; reminder changes leave contract dates unchanged | `planning/services.py`, `life_commands.py`; `test_planning_assessment`, `test_life_loans` |
+| Wallet bill payment | `bill.pay` binds the target, amount/currency; checks ownership, balance, limits and paid status; uses the ledger entry point | `planning/in_school.py`, `policy.py`; `WalletBillPaymentTests` |
+| Session authentication | Password/OTP session changes require CSRF; newer OTPs retire older challenges; wrong-code budgets span challenges | `finance/auth_api.py`; `test_email_otp_auth` |
 
 ---
 
@@ -155,7 +179,8 @@ Evidence from the 2026-10-11 run (reports, screenshots, results): [`evidence/fro
 | Remittance state machine: version-checked transitions, append-only history, at most one debit, refund or credit leg per order | `backend/finance/remittance_orders.py` | `test_transition_matrix_from_every_status`, `test_status_history_is_append_only`, `test_database_allows_one_leg_per_kind_per_order` |
 | Duplicate or conflicting payout callbacks settle exactly once | same | `test_remittance_concurrency.py` `test_duplicate_failed_callbacks_refund_once`, `test_conflicting_delivered_and_failed_callbacks_settle_one_way` |
 | Idempotency keys: a replay returns the stored response and never posts twice | `backend/finance/workflow_api.py` | `test_policy.py` `test_replay_returns_stored_response_without_policy`; `test_multicurrency_concurrency.py` `test_same_idempotency_key_concurrent_conversion_posts_once` |
-| Credit gaming: only deadline-bearing transfers to **verified** beneficiaries count; the credit window uses real dates, so moving the demo clock cannot erase late records | `backend/finance/credit.py` | `test_credit.py` `test_self_remittances_never_count`, `test_remittance_to_unverified_beneficiary_does_not_count`, `test_advancing_demo_clock_400_days_drops_nothing` |
+| Tuition reaches the school only through a **verified** school account: loan signing, every loan payout (held while unverified) and wallet/credit tuition payments check it when money moves | `backend/finance/planning/payees.py` | `test_planning_assessment.py` `test_loan_pays_the_school_only_while_its_account_is_verified`; `test_planning_life.py` `test_tuition_goes_only_to_a_verified_school_account`, `test_credit_pays_tuition_only_to_a_verified_school_account` |
+| Credit gaming: only deadline-bearing transfers to **verified** beneficiaries count; plan bills count only when paid from the wallet within a year of their due date; the credit window uses real dates, so moving the demo clock cannot erase late records | `backend/finance/credit.py` | `test_credit.py` `test_self_remittances_never_count`, `test_remittance_to_unverified_beneficiary_does_not_count`, `test_advancing_demo_clock_400_days_drops_nothing`; `test_planning_life.py` `test_wallet_bill_payments_build_the_credit_record` |
 
 ---
 
@@ -174,7 +199,7 @@ Throttle counters are kept in a shared database cache, so the limits also hold a
 
 Setting `DJANGO_SECURE=true` enables an HTTPS redirect, HSTS, secure cookies and 8-hour sessions. `nosniff`, `Referrer-Policy: same-origin` and `X-Frame-Options: DENY` are always on. CI runs `manage.py check --deploy --fail-level WARNING` with `DJANGO_SECURE=true` (`.github/workflows/django.yml`). Tests: `DeploymentSettingsTests.test_check_deploy_passes_only_when_secure`, `test_secure_settings_and_throttle_overrides`.
 
-Secrets: API keys are read only from server-side environment files, which are excluded by `.gitignore`. The full git history was scanned for Google, OpenAI-style, GitHub and AWS keys, private keys and tokens before publication, and none were found. The published evidence files were scanned the same way ([`evidence/README.md`](../evidence/README.md)).
+Secrets: API keys remain in server-side environment files excluded by `.gitignore`. The historical publication scan in [`evidence/README.md`](../evidence/README.md) does not cover every later working-tree change. Acceptance evidence must exclude keys, authorization headers and session cookies, and use synthetic student data.
 
 ---
 
@@ -196,6 +221,7 @@ The IDs match [known-risks.md](known-risks.md), which also lists items already m
 | A4 | The DRF browsable-API session login page (`/api/auth/login/`) is not covered by the DRF throttles. There is no account lockout. Behind a reverse proxy, per-IP limits need `DJANGO_NUM_PROXIES`. | Medium | Token login and step-up are throttled; failures are audited | Partially mitigated | `backend/config/urls.py`, `backend/config/settings.py` |
 | A5 | API tokens never expire and cannot be rotated through the API | Low | Token login is throttled | Partially mitigated | `backend/finance/policy_api.py` |
 | A3 | A sponsor's identity is not verified: whoever holds the link counts as the sponsor | Medium | Links store only a digest, expire after 72 hours, are compared in constant time and are bound to the terms version | Partially mitigated | `backend/finance/sponsorship.py` |
+| A9 | Positive `STUDYFLOW_SIMULATED_APPROVAL_SECONDS` enables simulated T3 approval without a human decision; DEBUG defaults to 10 seconds | High outside an isolated demo | Compose defaults to 0; keep 0 in shared deployments. Password step-up remains, but this is not independent human approval | By design for demo | `config/settings.py`, `finance/policy_api.py`, `SimulatedApprovalTests` |
 
 ### 8.2 Data, OCR and AI
 
@@ -208,18 +234,23 @@ The IDs match [known-risks.md](known-risks.md), which also lists items already m
 | M7 | **The Chinese and English API messages were translated by AI and have not been reviewed by a native speaker.** Briefing and notification text assembled from parts is still English only. | Low | Error codes never change, so clients can rely on the code; a CI gate checks that the catalogs are complete and compiled | Open; awaiting human review | `docs/i18n.md`, `backend/scripts/i18n_messages.py` |
 | M8 | When confirming an agent proposal the student sees the payee only in `details`; with several verified payees, the rule-based planner picks the earliest one | Low | The proposal details show the recipient type and payee; step-up is required to confirm | Partially mitigated | `test_agent.py` `test_remittance_proposal_details_show_beneficiary` |
 | O3 | Imported bank CSV files are not verified against a bank | Medium | Balance confirmation; every row is labelled with its source | Partially mitigated | `docs/consumption.md` |
+| P1 | Planning approval does not assess income, existing debts or repayment affordability; a gap ceiling can exceed a family's ability to repay | High if presented as real lending advice | Simulated product; quote affordability `NOT_ASSESSED`; monthly payment and total interest disclosed | Open; demo scope | `planning/assessment_loans.py`, `planning/assessment.py` |
+| P2 | Documents are checklist declarations; signing creates simulated school payouts without identity verification, password step-up or an independent lender decision | High outside simulation | Owner/version checks, explicit signing dialog, completed checklist, no wallet credit; no claim of real lender approval | Open; demo scope | `planning/loan_stage.py`, `planning/api.py` |
+| P3 | School costs are sample estimates, may be incomplete/stale, and converted totals use reference FX. Source URLs do not verify invoices or payees | Medium | Line-level dates/status/sources; missing costs remain missing; incomplete totals not ranked cheapest | Partially mitigated | `planning/catalog.py`, `planning/costs.py`, `test_planning_assessment` |
+| P4 | Enrollment-based tool visibility is not a universal server access rule. Legacy wallet tools/APIs can be called by an authenticated owner before enrollment | Medium | Prompts/rules and UI stage gating; expense enrollment check; monetary policy still protects outflows | Open | `finance/agent_tools.py`, `planning/in_school.py`, `frontend/src/workspace/navigation.ts` |
 
 ### 8.3 Money flows and scope
 
 | ID | Risk | Severity | Mitigation in place | Status | Evidence |
 |---|---|---|---|---|---|
 | F3 / F9 | All rails are simulated. Delivery, failure and "unknown" outcomes are triggered by operator callbacks; there are no real receipts or settlement files. | Medium | Append-only status history; a failure is refunded in full automatically; unknown outcomes go to the review queue; duplicate callbacks settle once | By design | `docs/remittance.md`, §6 |
-| S1 | **Tuition is not a separate module.** Tuition is paid through two existing flows, both of which require a verified payee: a remittance order with `purpose=tuition`, and a readiness payment against a confirmed invoice. There is no tuition-specific workflow such as instalment plans with the school or school-side confirmation. | Low | Both flows enforce beneficiary verification when the order is created and again when it is submitted | By design | `backend/finance/remittance_orders.py`, `backend/finance/execution_services.py`, `docs/proposition-c.md` §2 |
+| S1 | Plan bills and loan allocations are not school-confirmed invoices/receipts. The school's tuition account is seeded as verified rather than checked with the school | Medium | Each plan has a school payee; loan signing, every loan payout and wallet/credit tuition payments require it verified when money moves, and operators can revoke it; catalog/loan-coverage labels and simulated scope; legacy remittance/readiness retain their own verification | Partially mitigated | `planning/payees.py`, `test_planning_assessment` `test_loan_pays_the_school_only_while_its_account_is_verified`, `test_planning_life` `test_tuition_goes_only_to_a_verified_school_account` |
 | F5 | FX rates are reference rates (Frankfurter aggregates central-bank rates), not executable market prices. The fixed rate used in CI is about 8% below market for CNY/THB. | Medium | Each response states `rate_source` and `rate_date`; rates older than 7 days are refused; live fetching is off by default | Partially mitigated | `docs/fx-rates.md`, [`evidence/fx/`](../evidence/fx/) |
 | F2 | Serialization relies on locking the user row. A future write path that forgets the lock could race. | Medium | `CommandView` takes the lock for every command; concurrency test suites | Partially mitigated | `backend/finance/workflow_api.py`, `backend/auto_test/test_*_concurrency.py` |
 | E3 | Credit building counts only simulated on-platform records. It is not a credit score and proves nothing about credit elsewhere. | Medium | Clearly labelled as simulated; the signed statement contains only summaries; the multiplier is capped at 1.5× | By design | `docs/credit.md` |
 | D1 | The hardened configuration has not been tested on a real HTTPS deployment; HSTS starts at 1 hour and is not preloaded | Medium | `check --deploy` runs in CI | Partially mitigated | `backend/config/settings.py` |
 | D4 | Browser tests cover Chromium only, at desktop and phone widths; the integration specs run against a local Django and PostgreSQL in mock mode, not a deployed HTTPS site | Low | Mocked and real-Django Playwright suites cover the journey, wallet, agent (T2 step-up and T3 approval) and trust center (section 5.1) | Partially mitigated | [`evidence/frontend-20261011/`](../evidence/frontend-20261011/) |
+| F12 | Demo top-up creates money without a real receipt. Fixed planning-credit limits have no underwriting | High outside simulation | Demo labeling; top-up cap, owner, ledger and idempotency; never represent these as bank deposits/credit | By design | `finance/execution_services.py`, `planning/credit.py`, `test_wallet_top_up`, `PlanningCreditTests` |
 
 ---
 
