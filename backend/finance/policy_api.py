@@ -48,7 +48,8 @@ class ApprovalInput(Input):
     target_id = s.UUIDField()
     amount = CurrencyAmountField()
     currency = s.ChoiceField(choices=CURRENCIES)
-    reason = s.CharField(max_length=500)
+    # Optional: the student may explain the payment; operations may contact them either way.
+    reason = s.CharField(max_length=500, required=False, allow_blank=True, default="")
 
 
 class ApprovalDecisionInput(Input):
@@ -132,6 +133,14 @@ class ApprovalDecisionView(APIView):
         return Response({"data": approval_record(approval)})
 
 
+class ApprovalSimulateView(APIView):
+    """Demo: the requester's own pending approval is approved by a simulated operator after a short wait."""
+
+    @extend_schema(request=None, responses=CommandResponse)
+    def post(self, request, pk):
+        return Response({"data": approval_record(policy.simulate_approval(request.user, pk))})
+
+
 class LimitsView(APIView):
     """T0: the student's effective outflow limits (base x credit multiplier) and usage."""
 
@@ -147,4 +156,5 @@ urlpatterns = [
     path("approvals/", ApprovalListView.as_view()),
     path("approvals/<uuid:pk>/", ApprovalDetailView.as_view()),
     path("approvals/<uuid:pk>/decide/", ApprovalDecisionView.as_view()),
+    path("approvals/<uuid:pk>/simulate/", ApprovalSimulateView.as_view()),
 ]

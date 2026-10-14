@@ -60,8 +60,9 @@ Agent（W4）发起的调用最高 T1；T2 及以上只能生成待确认动作�
 
 ## 4. 审批（T3）
 
-- `POST /api/v2/approvals/`（学生，T1）：`{"action", "target_id", "amount", "currency", "reason"}`。校验同 step-up 申请（目标属于本人、金额币种与目标一致）。创建 `PENDING`，返回 201 `{"data": {...}}`。同一 `(owner, action, target_id)` 同时只能有一张 `PENDING` 或 `APPROVED` 的单，否则 409 `APPROVAL_ALREADY_OPEN`。
+- `POST /api/v2/approvals/`（学生，T1）：`{"action", "target_id", "amount", "currency", "reason"}`，`reason` 选填（可为空）。校验同 step-up 申请（目标属于本人、金额币种与目标一致）。创建 `PENDING`，返回 201 `{"data": {...}}`。同一 `(owner, action, target_id)` 同时只能有一张 `PENDING` 或 `APPROVED` 的单，否则 409 `APPROVAL_ALREADY_OPEN`。
 - `POST /api/v2/approvals/{id}/decide/`（OP）：`{"decision": "approve"|"reject", "note", "expected_version"}`，返回 200 `{"data": {...}}`。非运营 403；版本不符 409；单据不是 `PENDING`（含已过期）409 `APPROVAL_NOT_PENDING`。
+- `POST /api/v2/approvals/{id}/simulate/`（学生，仅演示）：本人 `PENDING` 的单在创建满 `STUDYFLOW_SIMULATED_APPROVAL_SECONDS`（默认 10 秒）后，由系统内置的模拟运营账号 `studyflow-simulated-operator`（运营身份、不可登录）批准，审计记 `approval.approved` 且 `simulated: true`。未满时间 409 `APPROVAL_STILL_IN_REVIEW`；非 `PENDING` 409 `APPROVAL_NOT_PENDING`；设为 0 关闭，返回 403 `APPROVAL_SIMULATION_OFF`。批准后仍需本人 step-up 输入密码才能执行。前端审批面板提交后显示“运营人员可能会联系你确认信息”和 10 秒倒计时，倒计时结束自动调用本接口，再进入密码确认。
 - 审批单自创建起 24 小时过期，对 `PENDING` 和 `APPROVED` 都适用；过期的单在读取、申请或决定时标为 `EXPIRED`，之后可以重新申请。
 - 执行 T3 动作时，除 step-up 令牌外还需要一张匹配 `(action, target_id, amount, currency)`、状态为 `APPROVED`、未过期的审批单；动作成功后在同一事务内标为 `USED`（版本号加 1）。只按 T2 执行的动作不消耗审批单。
 - `GET approvals/`（分页，可按 `?status=` 过滤）、`GET approvals/{id}/`：学生看本人的，运营看全部；记录含 `owner`、`requested_by`、`decided_by`。

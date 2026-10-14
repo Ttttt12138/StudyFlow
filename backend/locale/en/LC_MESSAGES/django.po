@@ -66,6 +66,14 @@ msgstr "This approval request has already been decided or has expired."
 msgid "APPROVAL_REQUIRED"
 msgstr "This action needs operator approval. Submit an approval request first."
 
+#: finance/policy.py:463
+msgid "APPROVAL_SIMULATION_OFF"
+msgstr "Simulated approval is turned off here; an operator will decide this request."
+
+#: finance/policy.py:470
+msgid "APPROVAL_STILL_IN_REVIEW"
+msgstr "Operations is still reviewing this request. Try again in a few seconds."
+
 #: finance/planning/services.py:304
 msgid "AVAILABLE_FUNDS_REQUIRED"
 msgstr "Tell us the available funds first."

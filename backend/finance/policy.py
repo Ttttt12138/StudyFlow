@@ -449,3 +449,33 @@ def decide(staff, pk, data):
         audit(approval.owner, staff, "approval." + approval.status.lower(), approval.id,
               {"action": approval.action, "target_id": str(approval.target_id)})
     return approval
+
+
+SIMULATED_OPERATOR = "studyflow-simulated-operator"
+
+
+def simulate_approval(actor, pk):
+    """Demo shortcut for a student's own pending approval: once STUDYFLOW_SIMULATED_APPROVAL_SECONDS have passed,
+    a simulated operator (never the requester) approves it. The student still confirms with the password after."""
+    from django.conf import settings
+    wait = settings.STUDYFLOW_SIMULATED_APPROVAL_SECONDS
+    if wait <= 0:
+        raise PolicyDenied("APPROVAL_SIMULATION_OFF")
+    expire_stale(ApprovalRequest.objects.filter(pk=pk, owner=actor))
+    with transaction.atomic():
+        approval = get_object_or_404(ApprovalRequest.objects.select_for_update(), pk=pk, owner=actor)
+        if approval.status != "PENDING":
+            raise Conflict("APPROVAL_NOT_PENDING")
+        if timezone.now() < approval.created_at + timedelta(seconds=wait):
+            raise Conflict("APPROVAL_STILL_IN_REVIEW")
+        operator, _ = get_user_model().objects.get_or_create(username=SIMULATED_OPERATOR, defaults={"is_staff": True})
+        if operator.has_usable_password():
+            operator.set_unusable_password()
+            operator.save(update_fields=["password"])
+        approval.status, approval.decided_by, approval.decided_at = "APPROVED", operator, timezone.now()
+        approval.decision_note = "Simulated approval (demo)"
+        approval.version += 1
+        approval.save(update_fields=["status", "decided_by", "decided_at", "decision_note", "version"])
+        audit(approval.owner, operator, "approval.approved", approval.id,
+              {"action": approval.action, "target_id": str(approval.target_id), "simulated": True})
+    return approval

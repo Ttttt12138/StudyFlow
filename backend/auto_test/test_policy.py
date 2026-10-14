@@ -715,3 +715,43 @@ class DeploymentSettingsTests(SimpleTestCase):
         result = self.run_python(["manage.py", "check"], STUDYFLOW_THROTTLE_MONEY="lots")
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("Invalid throttle rate", result.stderr)
+
+
+@override_settings(**FX_SETTINGS)
+class SimulatedApprovalTests(PolicyHarness, APITestCase):
+    """Demo: approvals/<id>/simulate/ lets a simulated operator approve the student's own request after a wait."""
+
+    def setUp(self):
+        super().setUp()
+        self.tuition = self.payment("tuition")
+
+    def test_reason_is_optional(self):
+        response = self.api("approvals", {"action": "payment.submit", "target_id": self.tuition["id"],
+                                          "amount": "65000.00", "currency": HOME}, None)
+        self.assertEqual(response.status_code, 201, response.data)
+        self.assertEqual(response.data["data"]["reason"], "")
+
+    def test_waits_then_a_simulated_operator_approves_and_the_password_still_applies(self):
+        approval = self.ask("payment.submit", self.tuition["id"], "65000.00")
+        early = self.api("approvals/" + approval["id"] + "/simulate", {})
+        self.assertEqual((early.status_code, early.data["detail"]), (409, "APPROVAL_STILL_IN_REVIEW"))
+        ApprovalRequest.objects.filter(pk=approval["id"]).update(created_at=timezone.now() - timedelta(seconds=11))
+        self.assertEqual(self.read("approvals/" + approval["id"], user=self.other).status_code, 404)
+        self.assertEqual(self.api("approvals/" + approval["id"] + "/simulate", {}, self.other).status_code, 404)
+        done = self.api("approvals/" + approval["id"] + "/simulate", {})
+        self.assertEqual(done.status_code, 200, done.data)
+        stored = ApprovalRequest.objects.get(pk=approval["id"])
+        self.assertEqual(stored.status, "APPROVED")
+        self.assertNotIn(stored.decided_by_id, (self.user.pk, None))
+        self.assertTrue(stored.decided_by.is_staff and not stored.decided_by.has_usable_password())
+        self.assertEqual(self.api("approvals/" + approval["id"] + "/simulate", {}).status_code, 409)
+        route = "payments/" + self.tuition["id"] + "/submit"
+        self.denial(self.raw(route), "STEP_UP_REQUIRED")
+        token = self.step_up("payment.submit", self.tuition["id"], "65000.00")
+        self.assertEqual(self.raw(route, token=token).status_code, 201)
+
+    @override_settings(STUDYFLOW_SIMULATED_APPROVAL_SECONDS=0)
+    def test_can_be_turned_off(self):
+        approval = self.ask("payment.submit", self.tuition["id"], "65000.00")
+        self.denial(self.api("approvals/" + approval["id"] + "/simulate", {}), "APPROVAL_SIMULATION_OFF")
+        self.assertEqual(ApprovalRequest.objects.get(pk=approval["id"]).status, "PENDING")

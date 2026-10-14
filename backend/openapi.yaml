@@ -810,6 +810,30 @@ paths:
               schema:
                 $ref: '#/components/schemas/CommandResponse'
           description: ''
+  /api/v2/approvals/{id}/simulate/:
+    post:
+      operationId: post_api_v2_approvals_id_simulate
+      description: 'Demo: the requester''s own pending approval is approved by a simulated
+        operator after a short wait.'
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
   /api/v2/audit/:
     get:
       operationId: get_api_v2_audit
@@ -1309,6 +1333,40 @@ paths:
       operationId: get_api_v2_demo_wallets_balances
       tags:
       - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
+  /api/v2/demo/wallets/top-up/:
+    post:
+      operationId: post_api_v2_demo_wallets_top_up
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TopUpInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TopUpInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TopUpInput'
+        required: true
       security:
       - tokenAuth: []
       - cookieAuth: []
@@ -5109,12 +5167,12 @@ components:
           $ref: '#/components/schemas/SupportedCurrencyEnum'
         reason:
           type: string
+          default: ''
           maxLength: 500
       required:
       - action
       - amount
       - currency
-      - reason
       - target_id
     AssessmentDetails:
       type: object
@@ -7140,6 +7198,17 @@ components:
           type: string
       required:
       - token
+    TopUpInput:
+      type: object
+      properties:
+        currency:
+          $ref: '#/components/schemas/SupportedCurrencyEnum'
+        amount:
+          type: string
+          format: decimal
+      required:
+      - amount
+      - currency
     TransactionRevisionInput:
       type: object
       properties:
