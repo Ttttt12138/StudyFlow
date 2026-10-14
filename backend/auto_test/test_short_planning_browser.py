@@ -8,19 +8,27 @@ from unittest import skipUnless
 from urllib.request import urlopen
 
 from django.contrib.auth import get_user_model
-from django.test import LiveServerTestCase
-
+from django.test import LiveServerTestCase, override_settings
 from finance import execution_services
 from finance.services import save_state
 
 
-@skipUnless(os.environ.get("RUN_SHORT_PLANNING_BROWSER") == "1", "Opt-in browser acceptance")
+@skipUnless(os.environ.get("RUN_SHORT_PLANNING_BROWSER") == "1"
+            or os.environ.get("RUN_PLANNING_LIVE_ACCEPTANCE") == "1", "Opt-in browser acceptance")
 class ShortPlanningBrowserTests(LiveServerTestCase):
     def test_desktop_and_mobile_real_api(self):
+        mode = "live" if os.environ.get("RUN_PLANNING_LIVE_ACCEPTANCE") == "1" else "mock"
+        with override_settings(STUDYFLOW_AI_MODE=mode, STUDYFLOW_SIMULATED_APPROVAL_SECONDS=0):
+            self.run_browser(mode)
+
+    def run_browser(self, mode):
         from finance.policy_defaults import ensure_default_limits
         ensure_default_limits()
         root = Path(__file__).resolve().parents[2]
         output = root / "evidence" / os.environ.get("SHORT_TEST_EVIDENCE", "short-planning-20261013")
+        if mode == "live":
+            self.assertIn("SHORT_TEST_EVIDENCE", os.environ, "Live acceptance needs a new evidence folder")
+            self.assertFalse((output / "model-trace.json").exists(), "Never overwrite a live attempt")
         output.mkdir(parents=True, exist_ok=True)
         users = get_user_model().objects
         password = "isolated-planning-browser-17"
@@ -29,12 +37,14 @@ class ShortPlanningBrowserTests(LiveServerTestCase):
             state = save_state(user, 0, {"currency": "THB", "as_of": "2027-08-01",
                 "opening_balance": "0.00", "reserve": "0.00", "events": []})
             execution_services.initialize(user, {"state_version": state.version})
-        env = {**os.environ, "STUDYFLOW_API_URL": self.live_server_url,
-               "SHORT_TEST_URL": "http://127.0.0.1:5193", "SHORT_TEST_PASSWORD": password}
+        port = os.environ.get("SHORT_TEST_PORT", "5193")
+        env = {**os.environ, "STUDYFLOW_API_URL": self.live_server_url, "SHORT_TEST_MODE": mode,
+               "SHORT_TEST_URL": f"http://127.0.0.1:{port}", "SHORT_TEST_PASSWORD": password}
         flags = subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0
+        frontend = root / os.environ.get("SHORT_TEST_FRONTEND_ROOT", "frontend")
         with (output / "vite.log").open("w", encoding="utf-8") as log:
-            server = subprocess.Popen(["node", "node_modules/vite/bin/vite.js", "--port", "5193"],
-                cwd=root / "frontend", env=env, stdout=log, stderr=log, creationflags=flags)
+            server = subprocess.Popen(["node", str(root / "frontend/node_modules/vite/bin/vite.js"), "--port", port],
+                cwd=frontend, env=env, stdout=log, stderr=log, creationflags=flags)
             try:
                 for _ in range(60):
                     try:
@@ -45,11 +55,25 @@ class ShortPlanningBrowserTests(LiveServerTestCase):
                             self.fail("Isolated Vite failed; see evidence/short-planning-20261013/vite.log")
                         time.sleep(0.5)
                 run = subprocess.run(["node", "auto_test/short-planning.browser.mjs"], cwd=root / "frontend",
-                    env=env, capture_output=True, text=True, encoding="utf-8", timeout=240, creationflags=flags, check=False)
+                    env=env, capture_output=True, text=True, encoding="utf-8",
+                    timeout=900 if mode == "live" else 240, creationflags=flags, check=False)
                 (output / "browser.log").write_text(run.stdout + run.stderr, encoding="utf-8")
                 self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
                 evidence = json.loads((output / "browser.json").read_text(encoding="utf-8"))
                 self.assertEqual(len(evidence["journeys"]), 2)
             finally:
+                if mode == "live":
+                    self.record_model_trace(output)
                 server.terminate()
                 server.wait(timeout=15)
+
+    def record_model_trace(self, output):
+        from finance.agent_models import AgentSession
+        from finance.agent_runner import session_record
+        turns = [session_record(t) for t in AgentSession.objects.filter(mode="live").order_by("created_at")]
+        calls = [step["call"] for turn in turns for step in turn["steps"]]
+        trace = {"planner": "live external model", "turns": turns, "model_calls": len(calls),
+                 "all_calls_live": bool(calls) and all(c.get("mode") == "live" for c in calls),
+                 "models": sorted({c.get("model", "") for c in calls}),
+                 "prompt_versions": sorted({c.get("prompt_version", "") for c in calls})}
+        (output / "model-trace.json").write_text(json.dumps(trace, indent=2, ensure_ascii=False), encoding="utf-8")
