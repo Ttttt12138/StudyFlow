@@ -8,7 +8,7 @@ export function Heading({ level: Tag = "h2", text, className, id, ready = true }
   return (
     <Tag ref={ref} className={className} id={id}>
       <span className="intro-visually-hidden">{text}</span>
-      <span aria-hidden="true">{shown}</span>
+      <span aria-hidden="true" translate="no">{shown}</span>
     </Tag>
   );
 }

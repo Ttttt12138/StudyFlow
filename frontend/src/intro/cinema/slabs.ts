@@ -1,6 +1,6 @@
 import { CanvasTexture, Mesh, ShaderMaterial, Vector3, type Raycaster, type Scene, type WebGLRenderer } from "three";
 import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
-import { CARD_H, CARD_W, drawCard, loadScreen, type CardContent } from "../wall/cards";
+import { CARD_H, CARD_W, drawCard, type CardContent } from "../wall/cards";
 
 // Slabs sit on a descending helix around the strands' axis, facing outwards.
 export const SLAB_RADIUS = 4.2;
@@ -23,7 +23,7 @@ const slabVertex = /* glsl */ `
     gl_Position = projectionMatrix * viewMatrix * world;
   }`;
 
-// A thick glass slab. The front face holds the app screen under the glass: frosted and dim
+// A thick glass slab. The front face holds the feature artwork under the glass: frosted and dim
 // when out of focus, sharp in focus, with blocky glitches while it changes state. Rounded
 // edges and sides are glass, lit by the same analytic strip-light studio as the monogram.
 const slabFragment = /* glsl */ `
@@ -79,7 +79,7 @@ const slabFragment = /* glsl */ `
   }`;
 
 /**
- * The seven feature slabs: thick glass with the app screen under it, on a helix whose axis
+ * The seven feature slabs: thick glass with the feature artwork under it, on a helix whose axis
  * passes through `axis` (x, z) and whose first slab sits at height `top`.
  */
 export function createSlabs(renderer: WebGLRenderer, scene: Scene, count: number, axis: Vector3, top: number) {
@@ -105,7 +105,6 @@ export function createSlabs(renderer: WebGLRenderer, scene: Scene, count: number
     scene.add(mesh);
     return { mesh, material, texture, art, home, hover: 0, focus: 0, glitch: 0 };
   });
-  let cardsVersion = 0;
 
   return {
     meshes: slabs.map((slab) => slab.mesh),
@@ -139,19 +138,12 @@ export function createSlabs(renderer: WebGLRenderer, scene: Scene, count: number
       return hit ? (hit.object.userData.index as number) : null;
     },
     setCards(cards: CardContent[]) {
-      const version = ++cardsVersion;
       cards.forEach((card, i) => {
         const slab = slabs[i];
         if (!slab) return;
         slab.material.uniforms.uColor.value.set(...hexToRgb(card.color));
-        // Draw the title straight away, then again once the screen image has loaded.
-        drawCard(slab.art, card, null);
+        drawCard(slab.art, card);
         slab.texture.needsUpdate = true;
-        loadScreen(card.id, card.lang).then((image) => {
-          if (version !== cardsVersion || !image) return;
-          drawCard(slab.art, card, image);
-          slab.texture.needsUpdate = true;
-        });
       });
     },
     dispose() {

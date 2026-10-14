@@ -72,7 +72,7 @@ export function Loader({ onDone }: { onDone: () => void }) {
     };
     const tick = (now: number) => {
       // Time-based (ease-out cubic) so throttled frames cannot slow the loader down.
-      const elapsed = Math.min(1, (now - start) / FILL_MS);
+      const elapsed = Math.min(1, Math.max(0, (now - start) / FILL_MS));
       value = Math.min(ready ? 100 : 86, (1 - (1 - elapsed) ** 3) * 100);
       if (now - last > FRAME_MS) { last = now; draw(); setProgress(Math.floor(value)); }
       if (value >= 100) finish();
@@ -90,7 +90,7 @@ export function Loader({ onDone }: { onDone: () => void }) {
       <div className="intro-loader-meta" aria-hidden="true">
         <span className="intro-loader-label">{t("intro.loaderLabel")}</span>
         <span className={`intro-loader-count${done ? " is-done" : ""}`}>
-          {done ? t("intro.loaderReady") : <>{String(progress).padStart(3, "0")}<small> / 100</small></>}
+          {done ? <span>{t("intro.loaderReady")}</span> : <>{String(progress).padStart(3, "0")}<small> / 100</small></>}
         </span>
       </div>
       <button type="button" className="intro-loader-skip" onClick={() => finishRef.current()}>{t("intro.skip")}</button>

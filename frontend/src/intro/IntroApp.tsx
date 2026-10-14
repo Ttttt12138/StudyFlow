@@ -3,7 +3,7 @@ import "@fontsource/jetbrains-mono/400.css";
 import "@fontsource/chakra-petch/400.css";
 import "@fontsource/chakra-petch/500.css";
 import "./intro.css";
-import { useEffect, useState } from "react";
+import { Component, useEffect, useState, type ReactNode } from "react";
 import { useI18n } from "../i18n";
 import { IntroNav } from "./IntroNav";
 import { WorldCanvas, WorldContext, type WorldState } from "./WorldCanvas";
@@ -14,6 +14,20 @@ import { Heading } from "./ui";
 
 const LOADED_KEY = "studyflow.introLoaded";
 
+/**
+ * Catches a runtime error anywhere in the intro so the page drops to its static version instead
+ * of unmounting (which would leave the app's blank light background). The error is still logged.
+ */
+class IntroBoundary extends Component<{ onError(): void; children: ReactNode }, { failed: boolean }> {
+  state = { failed: false };
+  static getDerivedStateFromError() { return { failed: true }; }
+  componentDidCatch(error: unknown) {
+    console.error("[intro] render error, switching to the static page", error);
+    this.props.onError();
+  }
+  render() { return this.state.failed ? null : this.props.children; }
+}
+
 function loadedThisSession(): boolean {
   try { return sessionStorage.getItem(LOADED_KEY) === "1"; } catch { return false; }
 }
@@ -22,6 +36,8 @@ export function IntroApp() {
   const { t } = useI18n();
   const [loading, setLoading] = useState(() => !loadedThisSession());
   const [world, setWorld] = useState<WorldState>({ world: null, failed: false });
+  const [crashed, setCrashed] = useState(false);
+  const shownWorld: WorldState = crashed ? { world: null, failed: true } : world;
 
   useEffect(() => {
     document.documentElement.classList.add("intro-page");
@@ -51,9 +67,9 @@ export function IntroApp() {
 
 
   return (
-    <WorldContext.Provider value={world}>
+    <WorldContext.Provider value={shownWorld}>
     <div className="intro" id="top">
-      <WorldCanvas active={!loading} onChange={setWorld} />
+      {!crashed && <WorldCanvas active={!loading} onChange={setWorld} />}
       <div className="intro-atmosphere" aria-hidden="true"><span className="intro-glow intro-glow-a" /><span className="intro-glow intro-glow-b" /><span className="intro-grain" /></div>
       <div className="intro-scrollbar" aria-hidden="true"><span /></div>
       {loading && <Loader onDone={finishLoading} />}
@@ -72,10 +88,11 @@ export function IntroApp() {
           </div>
         </section>
 
-        <Features />
-
-        <Safety />
-        <Start />
+        <IntroBoundary key={crashed ? "static" : "cinema"} onError={() => setCrashed(true)}>
+          <Features />
+          <Safety />
+          <Start />
+        </IntroBoundary>
       </main>
       <footer className="intro-footer">
         <span>{t("intro.footer")}</span>

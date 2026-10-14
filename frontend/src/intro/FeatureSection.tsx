@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { useI18n } from "../i18n";
-import { featureKey, features } from "./features";
+import { featureKey, features, type FeatureId } from "./features";
 import { prefersReducedMotion, supportsWebGL2, useScramble } from "./motion";
 import { Heading, Reveal, trackPointer } from "./ui";
+import { ART_H, ART_W, drawIllustration } from "./wall/illustrations";
 import { useWorld } from "./WorldCanvas";
 
 /**
@@ -25,6 +26,7 @@ function FeatureGrid() {
         {features.map((feature, i) => (
           <Reveal as="li" key={feature.id} className="intro-feature" style={{ "--accent": feature.color, transitionDelay: `${(i % 3) * 80}ms` } as CSSProperties}>
             <a href={feature.href} onPointerMove={trackPointer}>
+              <FeatureArt id={feature.id} color={feature.color} />
               <span className="intro-feature-index">{String(i + 1).padStart(2, "0")}</span>
               <span className="intro-feature-tags">{t(featureKey(feature.id, "tags"))}</span>
               <strong className="intro-feature-title">{t(featureKey(feature.id, "title"))}</strong>
@@ -36,6 +38,26 @@ function FeatureGrid() {
       </ol>
     </section>
   );
+}
+
+/** The feature's drawn artwork as a static picture, for the grid that stands in for the helix. */
+function FeatureArt({ id, color }: { id: FeatureId; color: string }) {
+  const ref = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const canvas = ref.current;
+    if (!canvas) return;
+    const draw = () => {
+      canvas.width = ART_W + 48;
+      canvas.height = ART_H + 72;
+      const ctx = canvas.getContext("2d");
+      if (ctx) drawIllustration(ctx, id, color, 24, 48);
+    };
+    draw();
+    let current = true;
+    document.fonts?.ready.then(() => { if (current) draw(); });
+    return () => { current = false; };
+  }, [id, color]);
+  return <canvas ref={ref} className="intro-feature-art" aria-hidden="true" />;
 }
 
 const pad = (n: number) => String(n).padStart(2, "0");
@@ -121,7 +143,7 @@ function FeatureWall() {
             <span className="intro-feature-tags">{t(featureKey(feature.id, "tags"))}</span>
             <h3 className="intro-wall-feature">
               <span className="intro-visually-hidden">{title}</span>
-              <span aria-hidden="true">{shownTitle}</span>
+              <span aria-hidden="true" translate="no">{shownTitle}</span>
             </h3>
             <p key={feature.id} className="intro-wall-body">{t(featureKey(feature.id, "body"))}</p>
             <a className="intro-button" href={feature.href}>{t("intro.features.open")} <span aria-hidden="true">→</span></a>

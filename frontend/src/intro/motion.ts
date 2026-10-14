@@ -15,7 +15,7 @@ export function useScramble(text: string, active: boolean, duration = 700): stri
     const start = performance.now();
     let frame = 0;
     const tick = (now: number) => {
-      const settled = Math.floor(Math.min(1, (now - start) / duration) * chars.length);
+      const settled = Math.floor(Math.min(1, Math.max(0, (now - start) / duration)) * chars.length);
       setShown(chars.map((ch, i) => i < settled || ch === " " ? ch : GLYPHS[(Math.random() * GLYPHS.length) | 0]).join(""));
       if (settled < chars.length) frame = requestAnimationFrame(tick);
     };

@@ -209,6 +209,11 @@ html.intro-page body { background: var(--i-bg); }
 }
 .intro-feature a:hover, .intro-feature a:focus-visible { border-color: color-mix(in srgb, var(--accent) 55%, transparent); transform: translateY(-4px); }
 .intro-feature a:hover::after, .intro-feature a:focus-visible::after { transform: scaleX(1); }
+.intro-feature-art {
+  display: block; width: calc(100% + 28px); margin: -6px -14px 4px; aspect-ratio: 1200 / 512; height: auto;
+  opacity: 0.86; transition: opacity 0.4s;
+}
+.intro-feature a:hover .intro-feature-art, .intro-feature a:focus-visible .intro-feature-art { opacity: 1; }
 .intro-feature-index { position: absolute; top: 22px; right: 26px; font: 500 44px/1 var(--i-mono); letter-spacing: -0.05em; color: rgba(238, 246, 242, 0.08); }
 .intro-feature-tags { font: 11px var(--i-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); padding-right: 64px; }
 .intro-feature-title { font-size: clamp(22px, 2vw, 27px); font-weight: 500; line-height: 1.12; letter-spacing: -0.025em; margin-top: auto; }

@@ -32,7 +32,8 @@ function useProgress(running: boolean, ms: number) {
     const start = performance.now();
     let frame = 0;
     const tick = (now: number) => {
-      const t = Math.min(1, (now - start) / ms);
+      // rAF timestamps can be slightly earlier than performance.now(), so clamp at 0 too.
+      const t = Math.min(1, Math.max(0, (now - start) / ms));
       setValue(t);
       if (t < 1) frame = requestAnimationFrame(tick);
     };
@@ -45,10 +46,14 @@ function useProgress(running: boolean, ms: number) {
 const money = (lang: string, currency: string, amount: number) =>
   `${currency} ${new Intl.NumberFormat(lang === "zh" ? "zh-CN" : "en", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(amount)}`;
 
-/** A short looping illustration of one safety point; decorative, the card text carries the meaning. */
+/**
+ * A short looping illustration of one safety point; decorative, the card text carries the meaning.
+ * Marked translate="no": page-translation extensions swap text nodes, and React then fails to
+ * remove the ones it put there as the demo changes state.
+ */
 export function SafetyDemo({ kind, active }: { kind: DemoKind; active: boolean }) {
   return (
-    <div className={`intro-demo intro-demo-${kind.toLowerCase()}`} aria-hidden="true">
+    <div className={`intro-demo intro-demo-${kind.toLowerCase()}`} aria-hidden="true" translate="no">
       {kind === "SIM" ? <SimDemo active={active} /> : kind === "AI" ? <AgentDemo active={active} /> : <TierDemo active={active} />}
     </div>
   );
@@ -87,7 +92,7 @@ function AgentDemo({ active }: { active: boolean }) {
     <>
       <div className="intro-demo-row">
         <span className="intro-demo-bot">AI</span>
-        <span className="intro-demo-bubble">{shown}{phase === 0 && <b className="intro-demo-caret" />}</span>
+        <span className="intro-demo-bubble"><span>{shown}</span>{phase === 0 && <b className="intro-demo-caret" />}</span>
       </div>
       <span className={`intro-demo-status${confirmed ? " is-ok" : ""}`}>{t(confirmed ? "intro.demo.agent.confirmed" : "intro.demo.agent.proposed")}</span>
       <div className="intro-demo-row">
@@ -120,9 +125,9 @@ function TierDemo({ active }: { active: boolean }) {
             <span className="intro-demo-tier">{row.tier}</span>
             <span className="intro-demo-tier-label">{t(row.key)}</span>
             <span className="intro-demo-tier-state">
-              {i === 2 && lit && !done ? <span className="intro-demo-dots">{"●".repeat(dots)}<s>{"●".repeat(6 - dots)}</s></span>
+              {i === 2 && lit && !done ? <span className="intro-demo-dots"><span>{"●".repeat(dots)}</span><s>{"●".repeat(6 - dots)}</s></span>
                 : i === 3 && phase === 3 ? <span className="intro-demo-wait">{t("intro.demo.tiers.pending")}</span>
-                : done ? "✓" : ""}
+                : done ? <span>✓</span> : null}
             </span>
           </li>
         );

@@ -70,7 +70,7 @@ function SafetyVault() {
           <p className="intro-eyebrow">{t("intro.safety.eyebrow")}</p>
           <h2 id="intro-safety-title" className="intro-vault-title">
             <span className="intro-visually-hidden">{title}</span>
-            <span aria-hidden="true"><span className="intro-vault-slash">\ </span>{shown}<span className="intro-vault-arrow"> →</span></span>
+            <span aria-hidden="true" translate="no"><span className="intro-vault-slash">\ </span>{shown}<span className="intro-vault-arrow"> →</span></span>
           </h2>
           <p className="intro-vault-statement">{t("intro.safety.statement")}</p>
         </div>
