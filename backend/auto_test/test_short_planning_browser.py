@@ -24,7 +24,6 @@ class ShortPlanningBrowserTests(LiveServerTestCase):
         output.mkdir(parents=True, exist_ok=True)
         users = get_user_model().objects
         password = "isolated-planning-browser-17"
-        users.create_user("short-operator", password=password, is_staff=True)
         for name in ("short-desktop", "short-mobile"):
             user = users.create_user(name, password=password)
             state = save_state(user, 0, {"currency": "THB", "as_of": "2027-08-01",
