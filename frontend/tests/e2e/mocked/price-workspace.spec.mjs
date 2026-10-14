@@ -7,7 +7,9 @@ import { screenshot } from '../../support.mjs';
 const tools = page => page.getByRole('navigation', { name: 'Tools' });
 // "Funding & loan" may carry a "Funding gap" dot in its name, so items match on the start of their name.
 const item = (page, name) => tools(page).getByRole('button', { name: new RegExp(`^${name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`) });
-const PRICE_TOOLS = ['School comparison', 'My plan', 'My loans'];
+const PRICE_TOOLS = ['School comparison', 'My plan'];
+// My loans is listed once enrolled; before that the loan is chosen and signed in My plan.
+const LOANS = 'My loans';
 const TODO = 'This month', WALLET = 'Wallet & payments';
 // The credit record is not a daily tool: it is in the settings menu once enrolled.
 const EXTRAS = ['Credit record'];
@@ -25,7 +27,7 @@ test('the sidebar adds This month once the plan is confirmed and the wallet once
   await expect(page.locator('.workspace-stage')).toHaveText('Comparing prices');
   await expect(tools(page).getByRole('button', { name: 'New price question' })).toBeVisible();
   for (const name of PRICE_TOOLS) await expect(item(page, name)).toBeVisible();
-  for (const name of [TODO, WALLET, ...EXTRAS]) await expect(tools(page).getByRole('button', { name, exact: true })).toHaveCount(0);
+  for (const name of [TODO, WALLET, LOANS, ...EXTRAS]) await expect(tools(page).getByRole('button', { name, exact: true })).toHaveCount(0);
   await expect(tools(page).getByText('This month appears here once the plan is confirmed.')).toBeVisible();
 
   await page.goto('/?plan=preview&stage=prepare');
@@ -47,7 +49,7 @@ test('the sidebar adds This month once the plan is confirmed and the wallet once
 
   await page.goto('/?plan=preview&stage=school');
   await expect(page.locator('.workspace-stage')).toHaveText('Enrolled');
-  for (const name of [...PRICE_TOOLS, TODO, WALLET]) await expect(item(page, name)).toBeVisible();
+  for (const name of [...PRICE_TOOLS, LOANS, TODO, WALLET]) await expect(item(page, name)).toBeVisible();
   for (const name of EXTRAS) await expect(item(page, name)).toHaveCount(0);
   // While a tool is open the sidebar is icon-only but every item keeps its accessible name.
   await item(page, TODO).click();

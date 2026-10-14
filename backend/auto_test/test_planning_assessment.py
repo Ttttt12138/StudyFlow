@@ -85,6 +85,55 @@ class ShortPlanningTests(APITestCase):
         self.assertEqual(cheap["annual_rate"], "0.045")
         self.assertLess(Decimal(cheap["monthly_payment"]), Decimal(normal["monthly_payment"]))
 
+    def test_study_loan_pays_interest_only_while_studying_then_equal_installments(self):
+        from finance.lending_core.calculations import calculate
+        from finance.lending_core.schemas import QuoteInput
+
+        # Arithmetic: interest-only rows carry no principal; the equal installments that follow repay all of it.
+        terms = QuoteInput(principal=Decimal("12000.00"), annual_rate=Decimal("0.06"), fees=Decimal("0.00"), months=12,
+                           first_due_date=date(2027, 9, 1), grace_months=3)
+        rows, plain = calculate(terms)["repayments"], calculate(terms.model_copy(update={"grace_months": 0}))["repayments"]
+        self.assertEqual(len(rows), 15)
+        self.assertEqual({(r["principal"], r["amount"], r["remaining_principal"]) for r in rows[:3]}, {("0.00", "60.00", "12000.00")})
+        self.assertEqual([r["amount"] for r in rows[3:]], [r["amount"] for r in plain])
+        self.assertEqual((rows[3]["due_date"], rows[-1]["remaining_principal"]), ("2027-12-01", "0.00"))
+        self.assertEqual(sum(Decimal(r["principal"]) for r in rows), Decimal("12000.00"))
+
+        # Product rules: only the study loan offers it; the custom loan is refused.
+        body = {"principal": "20000.00", "months": 48, "method": "interest_only"}
+        refused = self.client.post("/api/v2/planning/loan-preview/", {**body, "product": "custom"}, format="json")
+        self.assertEqual((refused.status_code, refused.data["code"]), (400, "METHOD_NOT_OFFERED"))
+        self.save()
+        preview = self.client.post("/api/v2/planning/loan-preview/", {**body, "product": "commercial_student_demo"},
+                                   format="json").data["data"]
+        # PSU Phuket runs 42 months from 2027-08-09; with the first payment on 2027-09-01 every one of them is interest only.
+        self.assertEqual((preview["method"], preview["interest_only_months"]), ("interest_only", 42))
+        self.assertEqual(len(preview["schedule"]), 42 + 48)
+        self.assertEqual(preview["interest_only_payment"], "75.00")
+        self.assertEqual(preview["schedule"][42]["due_date"], "2031-03-01")
+        self.assertGreater(Decimal(preview["monthly_payment"]), Decimal(preview["interest_only_payment"]))
+        offers = {o["key"]: o["methods"] for o in self.save(version=1)["prequal"]["products"]}
+        self.assertEqual(offers, {"custom": ["amortized"], "commercial_student_demo": ["amortized", "interest_only"]})
+
+        # The quote, the signed account and its installments follow the same schedule.
+        inputs = self.inputs()
+        inputs["loan"].update(product="commercial_student_demo", months=48, method="interest_only")
+        result = self.save(inputs, version=2)
+        quote = result["quotes"][0]
+        self.assertEqual((quote["inputs"]["grace_months"], len(quote["result"]["schedule"])), (42, 90))
+        self.assertEqual({r["phase"] for r in quote["result"]["schedule"][:42]}, {"interest_only"})
+        self.assertEqual(self.confirm(result, quote["id"]).status_code, 201)
+        from finance.planning import loan_stage
+        from finance.planning.models import StudyTask
+        StudyTask.objects.filter(template_key__startswith=loan_stage.PREFIX).update(done=True)
+        application = SimulatedApplication.objects.get(owner=self.user)
+        signed = self.post("loan/sign/", {"application_id": str(application.id), "expected_version": application.version})
+        self.assertEqual(signed.status_code, 201, signed.data)
+        account = signed.data["data"]["lifecycle"]["accounts"][0]
+        self.assertEqual(len(account["installments"]), 90)
+        self.assertEqual((account["installments"][0]["principal"], account["installments"][0]["amount"]), ("0.00", "75.00"))
+        self.assertEqual(account["outstanding_principal"], "20000.00")
+
     def test_loan_product_defaults_and_validation(self):
         result = self.save()
         self.assertEqual(result["quotes"][0]["inputs"]["product"], "custom")
@@ -380,6 +429,12 @@ class ShortPlanningTests(APITestCase):
         self.assertEqual((payouts[0].status, payouts[0].bill.status), ("PAID", "PAID"))
         rest.refresh_from_db()
         self.assertEqual(rest.status, "DUE")
+        # The loans tool moves the same demo date (demo/clock/): it settles the next tranche just the same.
+        later = max(payouts[1].due_date, payouts[0].due_date)
+        moved = self.client.post("/api/v2/demo/clock/", {"date": later.isoformat()}, format="json", HTTP_IDEMPOTENCY_KEY=str(uuid4()))
+        self.assertEqual(moved.status_code, 201, moved.data)
+        payouts[1].refresh_from_db()
+        self.assertEqual((payouts[1].status, payouts[1].bill.status), ("PAID", "PAID"))
         operator = get_user_model().objects.create_user("ops-plan", password="ops-pass-17", is_staff=True)
         self.client.force_authenticate(operator)
         wired = self.client.post(f"/api/v2/applications/{application.id}/disburse/", {"expected_version": application.version},

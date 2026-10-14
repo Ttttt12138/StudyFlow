@@ -88,8 +88,9 @@ def read(user):
         data["estimate"] = services.estimate(entry, plan.years, services.home_currency(user))
     from . import loan_stage, products
 
-    if isinstance(data.get("prequal"), dict) and "products" not in data["prequal"] and item:
-        # Assessments saved before the product catalog still show each product's rate and terms.
+    stored = (data.get("prequal") or {}).get("products") if isinstance(data.get("prequal"), dict) else None
+    if isinstance(data.get("prequal"), dict) and item and (stored is None or any("methods" not in o for o in stored)):
+        # Assessments saved before the product catalog (or its repayment methods) still show every product's offer.
         data["prequal"]["products"] = products.offers(item.inputs["loan"]["annual_rate"])
     documents = [{"id": str(t.id), "key": t.template_key, "title": loan_stage.document_title(t.template_key),
                   "done": t.done, "due_date": t.due_date.isoformat() if t.due_date else None, "version": t.version}
@@ -163,7 +164,7 @@ def save(user, data, obj=None):
         plan.save(update_fields=["available_funds", "funds_currency", "updated_at"])
         projection = projections(entry, inputs, plan.years, plan.start_date)
         check = prequal.prequalify(inputs, projection["suggested_principal"])
-        result.update(**projection, prequal=check, quotes=create_quotes(user, inputs, check),
+        result.update(**projection, prequal=check, quotes=create_quotes(user, inputs, check, plan),
                       estimate=services.estimate(entry, plan.years, services.home_currency(user)))
     item = PlanningAssessment.objects.create(owner=user, plan=plan, version=data["expected_version"] + 1,
              plan_version=plan.version, inputs=inputs, result=json_value(result))

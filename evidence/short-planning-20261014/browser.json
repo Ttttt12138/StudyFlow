@@ -1,0 +1,50 @@
+{
+  "backend": "real local Django/PostgreSQL in isolated test database",
+  "planner": "deterministic rule provider",
+  "journeys": [
+    {
+      "viewport": "1440x1000",
+      "language": "en-US",
+      "schoolCount": 10,
+      "schoolsHaveSources": true,
+      "prequalMax": "1003800.00",
+      "product": "commercial_student_demo",
+      "months": 60,
+      "principal": "20000.00",
+      "applicationId": "a070b6d9-fe8f-4b4a-a03e-dd7d72347a1a",
+      "oneApplication": true,
+      "studentDisbursementRefused": true,
+      "signed": true,
+      "payouts": 1,
+      "payoutsPaidByFirstInstallment": true,
+      "walletTopUp": "10000.00",
+      "firstInstallment": "PAID",
+      "method": "amortized",
+      "interestOnlyMonths": 0,
+      "firstAmount": "372.86",
+      "pageErrors": []
+    },
+    {
+      "viewport": "390x844",
+      "language": "zh-CN",
+      "schoolCount": 10,
+      "schoolsHaveSources": true,
+      "prequalMax": "1003800.00",
+      "product": "commercial_student_demo",
+      "months": 60,
+      "principal": "20000.00",
+      "applicationId": "fd50335b-1773-4994-a736-e8715b9ec68e",
+      "oneApplication": true,
+      "studentDisbursementRefused": true,
+      "signed": true,
+      "payouts": 1,
+      "payoutsPaidByFirstInstallment": true,
+      "walletTopUp": "10000.00",
+      "firstInstallment": "PAID",
+      "method": "interest_only",
+      "interestOnlyMonths": 42,
+      "firstAmount": "75.00",
+      "pageErrors": []
+    }
+  ]
+}

@@ -127,7 +127,8 @@ export function PlanApp({ preview, initialStage = "plan" }: { account?: string; 
       client.get<PlanHistory>("planning/history/")]);
     if (school.status === "fulfilled") setInSchool(school.value);
     if (links.status === "fulfilled") setFamily(links.value);
-    if (past.status === "fulfilled") setHistory(past.value);
+    // Only a well-formed answer replaces the sidebar history; anything else leaves it empty rather than breaking the page.
+    if (past.status === "fulfilled" && Array.isArray(past.value?.prices) && Array.isArray(past.value?.drafts)) setHistory(past.value);
     if (school.status === "rejected" || links.status === "rejected") throw new Error(t("ws.stale"));
   }, [client, t]);
 

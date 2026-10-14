@@ -33,10 +33,14 @@ test.describe("Planner preview", () => {
     await chat.getByRole("heading", { name: "Confirm the study plan" }).waitFor();
     assert.equal(await chat.getByRole("button", { name: "Confirm", exact: true }).count(), 0, "preview never offers a decision");
     assert.ok(await chat.getByText("Sample data", { exact: true }).count() > 0, "school figures are labelled as sample data");
-    // The plan card opens the funding panel with its 90-day forecast; the sidebar item carries a funding-gap dot.
+    // The plan card opens the funding panel; its 90-day forecast is on the details page. The sidebar item carries a funding-gap dot.
     await chat.getByRole("button", { name: "View my plan" }).click();
-    await page.locator(".workspace-dock").getByRole("heading", { name: "Where the money goes" }).waitFor();
-    await page.locator(".workspace-dock").getByText("Short from 2027-08-02", { exact: false }).waitFor();
+    const dock = page.locator(".workspace-dock");
+    await dock.getByRole("heading", { name: "Where the money goes" }).waitFor();
+    await dock.getByRole("button", { name: /^Details and sources/ }).click();
+    await dock.getByText("Short from 2027-08-02", { exact: false }).waitFor();
+    await dock.getByRole("button", { name: "Back to the list" }).click();
+    await dock.getByRole("heading", { name: "Where the money goes" }).waitFor();
     await tools(page).getByRole("button", { name: /^My plan/ }).getByRole("img", { name: "Funding gap" }).waitFor();
     await page.getByRole("button", { name: "Close tool" }).click();
     await page.screenshot({ path: screenshot("plan-preview-desktop-en.png"), fullPage: true });

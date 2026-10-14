@@ -59,7 +59,10 @@ class ApprovalDecisionInput(Input):
 
 
 def approval_record(item):
-    return {**record(item), "owner": item.owner_id}
+    from django.conf import settings
+    # 0 when the demo's simulated operator is off: the page then waits for real staff instead of counting down.
+    return {**record(item), "owner": item.owner_id,
+            "simulated_after_seconds": max(0, settings.STUDYFLOW_SIMULATED_APPROVAL_SECONDS)}
 
 
 def visible(user):

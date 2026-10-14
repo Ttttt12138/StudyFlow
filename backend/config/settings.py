@@ -40,8 +40,9 @@ STUDYFLOW_OTP_TTL_SECONDS = int(os.getenv("STUDYFLOW_OTP_TTL_SECONDS", "600"))
 STUDYFLOW_OTP_RESEND_SECONDS = int(os.getenv("STUDYFLOW_OTP_RESEND_SECONDS", "60"))
 STUDYFLOW_OTP_MAX_ATTEMPTS = int(os.getenv("STUDYFLOW_OTP_MAX_ATTEMPTS", "5"))
 # Demo only: a student's pending T3 approval may be approved by a simulated operator this many seconds after it
-# was requested (approvals/<id>/simulate/). 0 turns the shortcut off, so only real staff decide.
-STUDYFLOW_SIMULATED_APPROVAL_SECONDS = int(os.getenv("STUDYFLOW_SIMULATED_APPROVAL_SECONDS", "10"))
+# was requested (approvals/<id>/simulate/). 0 turns the shortcut off, so only real staff decide. Off unless
+# DJANGO_DEBUG is on or the variable is set: a deployed site must never approve its own over-limit payments.
+STUDYFLOW_SIMULATED_APPROVAL_SECONDS = int(os.getenv("STUDYFLOW_SIMULATED_APPROVAL_SECONDS", "10" if DEBUG else "0"))
 # Wrong codes per address across every challenge; reaching it locks OTP for that address.
 STUDYFLOW_OTP_MAX_FAILURES_PER_WINDOW = int(os.getenv("STUDYFLOW_OTP_MAX_FAILURES_PER_WINDOW", "20"))
 STUDYFLOW_OTP_LOCKOUT_WINDOW_SECONDS = int(os.getenv("STUDYFLOW_OTP_LOCKOUT_WINDOW_SECONDS", "86400"))

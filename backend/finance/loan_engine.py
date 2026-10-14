@@ -13,7 +13,7 @@ def budget_rows(result):
             {
                 **row,
                 "payment": row["amount"],
-                "phase": "repayment",
+                "phase": "interest_only" if Decimal(row["principal"]) == 0 else "repayment",
                 "opening_balance": format(opening, ".2f"),
                 "closing_balance": row["remaining_principal"],
             }

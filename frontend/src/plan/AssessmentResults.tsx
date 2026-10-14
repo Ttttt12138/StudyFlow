@@ -12,8 +12,10 @@ export function QuoteFacts({ quote, showProduct = true, toSchool = false }: {
 }) {
   const { t, lang } = useI18n();
   const r = quote.result;
+  const study = quote.inputs.grace_months ?? 0;
   const facts: [MessageKey, string][] = [["simple.principalLabel", r.principal], [toSchool ? "stage.toSchool" : "simple.net", r.net_proceeds],
-    ["simple.monthly", r.maximum_installment ?? r.repayments[0]?.amount], ["simple.interest", r.total_interest],
+    ...(study > 0 ? [["choose.studyMonthly", r.repayments[0]?.amount] as [MessageKey, string]] : []),
+    [study > 0 ? "choose.afterMonthly" : "simple.monthly", r.maximum_installment ?? r.repayments[0]?.amount], ["simple.interest", r.total_interest],
     ["simple.fees", r.fees], ["simple.totalRepay", r.total_repayment]];
   return <>{showProduct && <LoanProductNotice product={quote.inputs.product} />}<dl className="assessment-facts">{facts.map(([key, value]) => <div key={key}><dt>{t(key)}</dt><dd>{formatMoney(value, "THB", lang)}</dd></div>)}
     <div><dt>{t("simple.rate")}</dt><dd>{Number(quote.inputs.annual_rate) * 100}%</dd></div>

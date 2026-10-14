@@ -74,7 +74,7 @@ msgstr "Simulated approval is turned off here; an operator will decide this requ
 msgid "APPROVAL_STILL_IN_REVIEW"
 msgstr "Operations is still reviewing this request. Try again in a few seconds."
 
-#: finance/planning/services.py:304
+#: finance/planning/services.py:310
 msgid "AVAILABLE_FUNDS_REQUIRED"
 msgstr "Tell us the available funds first."
 
@@ -102,7 +102,7 @@ msgstr "The signed loan pays this bill to the school; it does not need paying ag
 msgid "BILL_REOPEN_NOT_SUPPORTED"
 msgstr "A paid bill cannot be reopened."
 
-#: finance/planning/services.py:392
+#: finance/planning/services.py:398
 msgid "CANNOT_LINK_OWN_ACCOUNT"
 msgstr "An account cannot be linked to itself."
 
@@ -256,7 +256,7 @@ msgstr "Each account can appear only once in the coverage list."
 msgid "DUPLICATE_INSTALLMENT_DATE"
 msgstr "Each installment must have a different date."
 
-#: finance/planning/assessment_inputs.py:85
+#: finance/planning/assessment_inputs.py:87
 msgid "DUPLICATE_OR_EXCESS_PLANNING_ITEMS"
 msgstr "Remove duplicate items and keep no more than 40 per group."
 
@@ -276,7 +276,7 @@ msgstr "Confirm enrollment first; spending records start after enrollment."
 msgid "ERROR_ROWS_PREVENT_COMPLETE_COVERAGE"
 msgstr "The file has rows with errors, so coverage cannot be marked complete."
 
-#: finance/workflow_serializers.py:123
+#: finance/workflow_serializers.py:127
 msgid "EXACTLY_ONE_PAYMENT_PLAN_REQUIRED"
 msgstr "Provide exactly one of plan_id or readiness_plan_id."
 
@@ -304,7 +304,7 @@ msgstr "This funding is already included in your financial state."
 msgid "FUNDING_DATE_IN_PAST"
 msgstr "The funding date cannot be in the past."
 
-#: finance/planning/services.py:239
+#: finance/planning/services.py:245
 msgid "FUNDS_MUST_BE_NONNEGATIVE"
 msgstr "Available funds cannot be negative."
 
@@ -316,11 +316,11 @@ msgstr "Exchange rates are temporarily unavailable. Try again later."
 msgid "HISTORICAL_OVERRIDE_FORBIDDEN"
 msgstr "New planned changes cannot take effect in the past."
 
-#: finance/execution_services.py:200
+#: finance/execution_services.py:203
 msgid "HOLD_REQUIRES_FOREIGN_CURRENCY"
 msgstr "Only foreign-currency funding can be held in its original currency."
 
-#: finance/execution_services.py:201
+#: finance/execution_services.py:204
 msgid "HOLD_WITHOUT_QUOTE"
 msgstr "Do not send fx_quote_id when holding funds in the source currency."
 
@@ -492,6 +492,10 @@ msgstr "This cost is locked and cannot be reduced."
 msgid "MANUAL_INPUT_NOT_REQUESTED"
 msgstr "This document does not need manual input."
 
+#: finance/planning/products.py:31
+msgid "METHOD_NOT_OFFERED"
+msgstr "Interest only while studying is offered with the study loan only."
+
 #: finance/planning/in_school.py:174
 msgid "MONTH_INVALID"
 msgstr "Use a month in YYYY-MM format."
@@ -504,7 +508,7 @@ msgstr "Installment and spending-reduction sources must be applied as cost actio
 msgid "NO_ACTIVE_SEMESTER"
 msgstr "No active semester was found. Create a semester first."
 
-#: finance/planning/services.py:305
+#: finance/planning/services.py:311
 msgid "NO_FUNDING_GAP"
 msgstr "Available funds already cover the plan; no loan is needed."
 
@@ -556,11 +560,11 @@ msgstr "Your financial state changed after this payment was created. Create a ne
 msgid "PENDING_ACTION_CLOSED"
 msgstr "This proposed action is no longer pending."
 
-#: finance/planning/assessment.py:118
+#: finance/planning/assessment.py:119
 msgid "PLANNING_ACTIVE_APPLICATION"
 msgstr "This plan already has an active application. Review it in your plan."
 
-#: finance/planning/assessment.py:112
+#: finance/planning/assessment.py:113
 msgid "PLANNING_ASSESSMENT_STALE"
 msgstr "Details changed. Recalculate the plan before submitting."
 
@@ -570,19 +574,19 @@ msgstr ""
 "A study-plan loan is paid to the school after the student signs; it is not disbursed to the "
 "wallet."
 
-#: finance/planning/services.py:234
+#: finance/planning/services.py:240
 msgid "PLAN_ALREADY_ENROLLED"
 msgstr "The plan is already enrolled and can no longer be changed here."
 
-#: finance/planning/services.py:235
+#: finance/planning/services.py:241
 msgid "PLAN_LOAN_SIGNED"
 msgstr "The loan for this plan is signed, so the school and plan can no longer change."
 
-#: finance/planning/services.py:353
+#: finance/planning/services.py:359
 msgid "PLAN_NOT_CONFIRMED"
 msgstr "Confirm the plan before enrolling."
 
-#: finance/planning/assessment.py:196
+#: finance/planning/assessment.py:197
 msgid "PLAN_NOT_DRAFT"
 msgstr "Only a draft plan can be confirmed."
 
@@ -590,7 +594,7 @@ msgstr "Only a draft plan can be confirmed."
 msgid "PLAN_NOT_DRAFT_FOR_SWITCH"
 msgstr "Your plan is confirmed, so it cannot be switched to another draft."
 
-#: finance/planning/assessment.py:153
+#: finance/planning/assessment.py:154
 msgid "PLAN_REQUIRED"
 msgstr "Choose a school for the plan first."
 
@@ -638,7 +642,7 @@ msgstr "This quote is already linked to a remittance order."
 msgid "QUOTE_NOT_EXECUTABLE"
 msgstr "This quote cannot be executed. Request a live quote for a specific amount."
 
-#: finance/planning/assessment.py:234
+#: finance/planning/assessment.py:235
 msgid "QUOTE_NOT_IN_CURRENT_ASSESSMENT"
 msgstr "Select a loan from the current plan."
 
@@ -762,11 +766,11 @@ msgstr "A similar cost already exists. Choose how to handle it in conflict_resol
 msgid "SNOOZE_MUST_BE_FUTURE"
 msgstr "Choose a date after today to be reminded again."
 
-#: finance/execution_services.py:193
+#: finance/execution_services.py:196
 msgid "SPONSOR_CONFIRMATION_REQUIRED"
 msgstr "Family support can be received only after the sponsor confirms it."
 
-#: finance/planning/services.py:391
+#: finance/planning/services.py:397
 msgid "SPONSOR_LINK_NOT_CONFIRMED"
 msgstr "Confirm the sponsor link before linking accounts."
 
@@ -810,7 +814,7 @@ msgstr ""
 msgid "SUPPORT_NOT_EDITABLE"
 msgstr "Only family support in THB that has not been received can be changed in a scenario."
 
-#: finance/planning/products.py:23
+#: finance/planning/products.py:27
 msgid "TERM_NOT_OFFERED"
 msgstr "This term is not offered for this loan. 60 months is only for the study loan."
 
@@ -818,7 +822,7 @@ msgstr "This term is not offered for this loan. 60 months is only for the study 
 msgid "TOO_MANY_SCHEDULED_EVENTS"
 msgstr "The plan has too many scheduled items (maximum 1000)."
 
-#: finance/execution_services.py:242
+#: finance/execution_services.py:245
 msgid "TOP_UP_AMOUNT_OUT_OF_RANGE"
 msgstr "A single top-up must be more than 0 and at most 1,000,000."
 

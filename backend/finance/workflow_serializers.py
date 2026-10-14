@@ -67,9 +67,13 @@ class LoanInput(Input):
     fees = MoneyField()
     months = s.IntegerField(min_value=1, max_value=60)
     first_due_date = s.DateField()
+    # Interest-only months before the equal installments; only the study loan offers them.
+    grace_months = s.IntegerField(min_value=0, max_value=72, default=0)
 
     def validate(self, data):
         from .lending_core.schemas import QuoteInput
+        if data.get("grace_months") and data.get("product") != "commercial_student_demo":
+            raise s.ValidationError("METHOD_NOT_OFFERED")
         from pydantic import ValidationError
         try:
             QuoteInput.model_validate(data)

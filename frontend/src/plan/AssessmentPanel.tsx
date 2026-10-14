@@ -44,8 +44,10 @@ export function AssessmentPanel({ plan, client, preview, onConfirmed }: {
     const product = terms.product ?? "custom";
     const allowed = check.products?.find(o => o.key === product)?.terms ?? [24, 36, 48, 60];
     const months = terms.months ?? terms.periods?.[0] ?? 48;
+    const ways = check.products?.find(o => o.key === product)?.methods ?? ["amortized"];
     setChoice({ principal: Math.min(Number(terms.principal ?? check.max_principal ?? 0), max),
-      months: (allowed.includes(months) ? months : Math.max(...allowed)) as Term, product });
+      months: (allowed.includes(months) ? months : Math.max(...allowed)) as Term, product,
+      method: terms.method && ways.includes(terms.method) ? terms.method : "amortized" });
   }, [data?.version, check?.max_principal]);
   const borrowing = canBorrow && !!choice && choice.principal > 0;
   const hasResult = !!data?.forecast && !data.draft && !data.stale && !dirty;
@@ -53,6 +55,8 @@ export function AssessmentPanel({ plan, client, preview, onConfirmed }: {
   const needsEssentials = !!data && !data.inputs?.available_funds;
   // Stays up while typing (drafts autosave underneath) until the gap is worked out.
   const [asking, setAsking] = useState(false);
+  // The read-only preview still lets a visitor compare the recorded options; nothing is saved.
+  const [previewPick, setPreviewPick] = useState("");
   useEffect(() => { if (needsEssentials) setAsking(true); }, [needsEssentials]);
   // No form up front: an unevaluated draft is evaluated once from what the conversation already knows.
   const evaluated = useRef(0);
@@ -74,7 +78,8 @@ export function AssessmentPanel({ plan, client, preview, onConfirmed }: {
     try {
       let version = data.version, quoteId: string | null = null;
       if (borrowing && choice) {
-        edit({ ...inputs, loan: { ...inputs.loan, principal: choice.principal.toFixed(2), months: choice.months, product: choice.product } });
+        edit({ ...inputs, loan: { ...inputs.loan, principal: choice.principal.toFixed(2), months: choice.months, product: choice.product,
+          method: choice.method } });
         const next = await persist(false);
         if (!next?.quotes[0]) throw new Error(t("simple.needAmount"));
         version = next.version; quoteId = next.quotes[0].id;
@@ -88,14 +93,15 @@ export function AssessmentPanel({ plan, client, preview, onConfirmed }: {
   if (!plan) return <ToolPanel label={t("simple.plan")}><PanelEmpty title={t("simple.empty")} /></ToolPanel>;
   const back = () => setPage("main");
   // The plan is pictures on the main page; sources and the hand-edit form are pages of their own (no folding).
+  const picked = preview ? data?.quotes.find(q => q.id === previewPick) ?? data?.quotes[0] : quote;
   const details = data && <PanelPage title={t("simple.details")} onBack={back}><BalanceForecast data={data} /><AssessmentResults data={data} />
-    {(hasResult || preview) && <PlanSummary data={data} quote={quote} />}</PanelPage>;
+    {(hasResult || preview) && <PlanSummary data={data} quote={picked} />}</PanelPage>;
   const links = data && <div className="assessment-links">
     <PanelLink onClick={() => setPage("details")} note={t("simple.detailsNote")}>{t("simple.details")}</PanelLink>
     {!preview && <PanelLink onClick={() => setPage("edit")} note={t("simple.manualNote")}>{t("simple.manual")}</PanelLink>}</div>;
   if (preview) return <ToolPanel label={t("simple.plan")}><div className="assessment-panel">
     {page === "details" && details ? details : <><p>{t("simple.preview")}</p>
-      {data ? <><PlanVisual data={data} selected={data.quotes[0]?.id ?? ""} onSelect={() => undefined} showQuotes />{links}</> : <PanelSkeleton />}</>}
+      {data ? <><PlanVisual data={data} selected={picked?.id ?? ""} onSelect={setPreviewPick} showQuotes />{links}</> : <PanelSkeleton />}</>}
     {error && <PanelAlert message={error} />}</div></ToolPanel>;
   return <ToolPanel label={t("simple.plan")} notices={stale}><div className="assessment-panel">
     {error && <PanelAlert message={error} onRetry={() => void refresh().catch(e => setError(String(e)))} />}
@@ -131,8 +137,10 @@ export function AssessmentPanel({ plan, client, preview, onConfirmed }: {
       {borrowing && choice ? <><p>{t("simple.withLoan")}</p>
         <dl className="assessment-facts">
           <div><dt>{t("choose.amount")}</dt><dd>{show(choice.principal, "THB", lang).main}</dd></div>
-          <div><dt>{t("choose.term")}</dt><dd>{t("simple.months", { n: choice.months })}</dd></div>
-          {figures && <div><dt>{t("simple.monthly")}</dt><dd>{show(figures.monthly_payment, "THB", lang).main}</dd></div>}
+          <div><dt>{t("choose.term")}</dt><dd>{figures?.interest_only_months
+            ? t("choose.termWithStudy", { study: figures.interest_only_months, n: choice.months }) : t("simple.months", { n: choice.months })}</dd></div>
+          {figures?.interest_only_months ? <div><dt>{t("choose.studyMonthly")}</dt><dd>{show(figures.interest_only_payment, "THB", lang).main}</dd></div> : null}
+          {figures && <div><dt>{t(figures.interest_only_months ? "choose.afterMonthly" : "simple.monthly")}</dt><dd>{show(figures.monthly_payment, "THB", lang).main}</dd></div>}
           {figures && <div><dt>{t("simple.firstDue")}</dt><dd>{figures.first_due_date}</dd></div>}
         </dl>
         <p>{t("simple.nextSteps")}</p><p className="panel-muted">{t("simple.confirmHint")}</p></>
