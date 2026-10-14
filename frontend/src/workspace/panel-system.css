@@ -173,3 +173,8 @@
 /* The title never truncates for the preview tag; the tag shrinks instead. */
 .student-workspace .dock-title h2 { flex:none; max-width:100%; }
 .student-workspace .dock-title .workspace-preview { flex:0 1 auto; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+/* T3 demo review: the bar fills while the simulated operator decides */
+.policy-countdown { height: 6px; border-radius: 999px; background: var(--surface-2, #eef1f6); overflow: hidden; }
+.policy-countdown span { display: block; height: 100%; background: var(--accent, #1f6feb); transition: width .25s linear; }
+@media (prefers-reduced-motion: reduce) { .policy-countdown span { transition: none; } }

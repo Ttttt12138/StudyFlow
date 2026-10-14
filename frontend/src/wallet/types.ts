@@ -38,7 +38,7 @@ export type Order = {
 };
 export type Approval = {
   id: string; action: string; target_id: string; amount: string; currency: string;
-  status: string; expires_at: string; version: number;
+  status: string; expires_at: string; version: number; created_at?: string;
 };
 export type Page<T> = { count: number; next: string | null; previous: string | null; results: T[] };
 export type PolicyError = { detail?: string; code?: string; message?: string; policy?: { tier?: string; requires?: string[] } };

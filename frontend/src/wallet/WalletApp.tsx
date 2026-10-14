@@ -75,6 +75,27 @@ export function WalletApp({ preview, onExit, tab: shownTab, onTab, historyView: 
   const selectedQuote = quotes.find((item) => item.id === selectedQuoteId) ?? null;
   const selectedCorridor = snapshot.corridors.find((item) => item.id === corridorId);
   const approval = selectedOrder ? orderApproval(selectedOrder, snapshot.approvals) : null;
+  // Demo review of a pending T3 request: a simulated operator approves it 10 s after it was asked, then the password step.
+  const [now, setNow] = useState(() => Date.now());
+  // The browser's own request time when known; the server's created_at (plus a second for clock skew) otherwise.
+  const [askedAt, setAskedAt] = useState<{ id: string; at: number } | null>(null);
+  const reviewing = policy === "APPROVAL_REQUIRED" && approval?.status === "PENDING" ? approval : null;
+  const readyAt = !reviewing ? 0 : askedAt?.id === reviewing.id ? askedAt.at + 10_000
+    : (reviewing.created_at ? Date.parse(reviewing.created_at) + 1_000 : now) + 10_000;
+  const reviewLeft = reviewing ? Math.max(0, Math.ceil((readyAt - now) / 1000)) : 0;
+  useEffect(() => {
+    if (!reviewing) return;
+    const timer = window.setInterval(() => setNow(Date.now()), 250);
+    return () => window.clearInterval(timer);
+  }, [reviewing?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    if (!reviewing || reviewLeft > 0 || busy || preview) return;
+    void perform(async () => {
+      try { await client.post<Approval>(`approvals/${reviewing.id}/simulate/`, {}, `approval-simulate:${reviewing.id}`); }
+      catch (reason) { if (reason instanceof WalletApiError && reason.code === "APPROVAL_SIMULATION_OFF") { setPolicy(""); setNotice(t("wallet.notice.approvalRequested")); return; } throw reason; }
+      await refresh(); setNotice(t("shell.policy.approved")); setPolicy("STEP_UP_REQUIRED");
+    });
+  }, [reviewing?.id, reviewLeft]); // eslint-disable-line react-hooks/exhaustive-deps
   const unauthenticated = !preview && /^HTTP (401|403):/.test(snapshot.errors.balances ?? "") && !snapshot.balances;
 
   const requested = workspace?.target?.kind === "wallet" ? workspace.target.section : undefined;
@@ -200,8 +221,8 @@ export function WalletApp({ preview, onExit, tab: shownTab, onTab, historyView: 
     if (preview || !selectedOrder) return;
     const order = selectedOrder;
     await perform(async () => {
-      await client.post<Approval>("approvals/", { action: "remittance.submit", target_id: order.id, amount: order.send_amount, currency: order.send_currency, reason: approvalReason }, `approval:${order.id}`);
-      setPolicy(""); await refresh(); setNotice(t("wallet.notice.approvalRequested"));
+      const created = await client.post<Approval>("approvals/", { action: "remittance.submit", target_id: order.id, amount: order.send_amount, currency: order.send_currency, reason: approvalReason }, `approval:${order.id}`);
+      setAskedAt({ id: created.id, at: Date.now() }); setNow(Date.now()); await refresh();
     });
   }
   async function stepUpAndSubmit() {
@@ -273,7 +294,7 @@ export function WalletApp({ preview, onExit, tab: shownTab, onTab, historyView: 
     {selectedOrder.failure_reason && <p className="error">{t("wallet.order.failure", { reason: selectedOrder.failure_reason })}</p>}
     {selectedOrder.effective_status === "CREATED" && <label className="panel-check"><input type="checkbox" checked={confirmed} onChange={(event) => setConfirmed(event.target.checked)}/>{t("wallet.order.confirmCheck")}</label>}
     {retrySubmit && selectedOrder.effective_status === "CREATED" && <div className="panel-note is-warn"><p>{t("wallet.order.retryText")}</p><button className="secondary" disabled={busy || preview} onClick={() => void submitOrder("", true)}>{t("wallet.order.retry")}</button></div>}
-    {policy === "APPROVAL_REQUIRED" && selectedOrder.effective_status === "CREATED" && <FocusDialog title={t("ws.confirm")} busy={busy} onClose={() => setPolicy("")}><p>{money(selectedOrder.send_amount, selectedOrder.send_currency)} · {selectedOrder.id.slice(0, 8)}</p>{error && <p role="alert" className="error">{error}</p>}<div className="wallet-policy" ref={policyRef} tabIndex={-1}><h4><TierBadge tier="T3"/> {t("wallet.policy.approvalTitle")}</h4><p>{t("wallet.policy.approvalText")}</p>{approval && <p>{t("wallet.policy.approvalStatus")} <strong>{approval.status}</strong> · {t("wallet.policy.expires", { date: stamp(approval.expires_at) })}</p>}{(!approval || ["REJECTED", "EXPIRED"].includes(approval.status)) && <><label>{t("wallet.policy.reason")}<input value={approvalReason} maxLength={500} onChange={(event) => setApprovalReason(event.target.value)}/></label><button className="secondary" disabled={busy || preview || !approvalReason.trim()} onClick={() => void requestApproval()}>{t("wallet.policy.request")}</button></>}</div>{retrySubmit && <button className="secondary" disabled={busy} onClick={() => void loadOrder(selectedOrder.id)}>{t("wallet.order.refresh")}</button>}<button className="secondary" disabled={busy} onClick={() => setPolicy("")}>{t("common.cancel")}</button></FocusDialog>}
+    {policy === "APPROVAL_REQUIRED" && selectedOrder.effective_status === "CREATED" && <FocusDialog title={t("ws.confirm")} busy={busy} onClose={() => setPolicy("")}><p>{money(selectedOrder.send_amount, selectedOrder.send_currency)} · {selectedOrder.id.slice(0, 8)}</p>{error && <p role="alert" className="error">{error}</p>}<div className="wallet-policy" ref={policyRef} tabIndex={-1}><h4><TierBadge tier="T3"/> {t("wallet.policy.approvalTitle")}</h4><p>{t("wallet.policy.approvalText")}</p>{approval && <p>{t("wallet.policy.approvalStatus")} <strong>{approval.status}</strong> · {t("wallet.policy.expires", { date: stamp(approval.expires_at) })}</p>}{reviewing && <div role="status" aria-live="polite"><p>{t("shell.policy.contact")}</p><div className="policy-countdown" aria-hidden="true"><span style={{ width: `${(10 - reviewLeft) * 10}%` }} /></div><p className="panel-muted">{reviewLeft > 0 ? t("shell.policy.countdown", { n: reviewLeft }) : t("shell.policy.approving")}</p></div>}{(!approval || ["REJECTED", "EXPIRED"].includes(approval.status)) && <><label>{t("wallet.policy.reason")}<input value={approvalReason} maxLength={500} onChange={(event) => setApprovalReason(event.target.value)}/></label><button className="secondary" disabled={busy || preview} onClick={() => void requestApproval()}>{t("wallet.policy.request")}</button></>}</div>{retrySubmit && <button className="secondary" disabled={busy} onClick={() => void loadOrder(selectedOrder.id)}>{t("wallet.order.refresh")}</button>}<button className="secondary" disabled={busy} onClick={() => setPolicy("")}>{t("common.cancel")}</button></FocusDialog>}
     {policy === "STEP_UP_REQUIRED" && selectedOrder.effective_status === "CREATED" && <FocusDialog title={t("ws.confirm")} busy={busy} onClose={() => setPolicy("")}><p>{money(selectedOrder.send_amount, selectedOrder.send_currency)} · {selectedOrder.id.slice(0, 8)}</p>{error && <p role="alert" className="error">{error}</p>}<div className="wallet-policy"><h4><TierBadge tier="T2"/> {t("wallet.policy.stepUpTitle")}</h4><p>{t("wallet.policy.stepUpText")}</p><form onSubmit={(event) => { event.preventDefault(); void stepUpAndSubmit(); }}><label>{t("wallet.policy.password")}<input ref={passwordRef} type="password" autoComplete="current-password"/></label><button type="submit" className="primary" disabled={preview || busy}>{t("wallet.policy.submit")}</button></form></div>{retrySubmit && <button className="secondary" disabled={busy} onClick={() => void loadOrder(selectedOrder.id)}>{t("wallet.order.refresh")}</button>}<button className="secondary" disabled={busy} onClick={() => setPolicy("")}>{t("common.cancel")}</button></FocusDialog>}
   </div>;
   // Exchange and transfers start from the balance: two centred actions instead of extra tabs.
