@@ -1,3 +1,4 @@
+import { SchoolSources } from "./SchoolSources";
 import { useState } from "react";
 import { useI18n, type MessageKey } from "../i18n";
 import { PanelFacts, PanelHero, PanelPager, ToolPanel, usePage } from "../workspace/ToolPanel";
@@ -42,6 +43,7 @@ function SchoolPager({ schools, actions, compare }: { schools: SchoolBrief[]; ac
       <PanelHero label={t("plan.card.firstYear")} value={money(item.first_year_total, item.currency, lang)}>
         {item.first_year_converted && <span className="panel-muted">≈ {money(item.first_year_converted.amount, item.first_year_converted.currency, lang)}</span>}</PanelHero>
       <PanelFacts items={[[t("plan.card.tuitionYear"), money(item.tuition_per_year, item.currency, lang)], [t("plan.card.livingYear"), money(item.living_per_year, item.currency, lang)]]} />
+      <SchoolSources schoolKey={item.key} info={item} />
     </article>)}
     <ol className="panel-dots" aria-hidden="true">{schools.map((item, n) => <li key={item.key} className={n === index ? "is-active" : ""} />)}</ol>
   </ToolPanel>;
@@ -67,6 +69,7 @@ function SchoolDetail({ school, actions }: { school: CatalogEntry; actions: Card
       <span><strong>{pick(place.name, lang)}</strong><small>{pick(place.note, lang)}</small></span>
       <span className="panel-muted">{[place.distance_km != null ? t("plan.card.km", { km: place.distance_km }) : "", place.typical_cost ? `~${place.typical_cost}` : ""].filter(Boolean).join(" · ")}</span>
     </li>)}</ul>
+    <SchoolSources schoolKey={school.key} info={school} />
   </ToolPanel>;
 }
 

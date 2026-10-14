@@ -10,6 +10,8 @@ export type SchoolBrief = {
   /** Whole course over `years` (default duration); absent on results recorded before course totals were added. */
   years?: number; total?: string; total_low?: string; total_high?: string; total_converted?: Converted;
   complete?: boolean; missing_cost_ids?: string[]; duration_months?: number; observed_at?: string;
+  /** Public pages the figures come from (school list, comparison and planning/schools/ only). */
+  website?: string; sources?: { url: string; title: string; accessed: string }[];
 };
 
 export type Place = { name: Text; kind: string; note: Text; distance_km: number | null; typical_cost: string | null; source_url: string | null };

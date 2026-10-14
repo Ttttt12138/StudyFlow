@@ -1,3 +1,4 @@
+import { SchoolSources } from "./SchoolSources";
 import { useI18n, type MessageKey } from "../i18n";
 import { day, money, percent, pick } from "./format";
 import { useShow } from "./currency";
@@ -49,6 +50,7 @@ function SchoolList({ schools, actions, compare }: { schools: SchoolBrief[]; act
           <div><dt>{t("plan.card.firstYear")}</dt><dd>{money(school.first_year_total, school.currency, lang)}
             {school.first_year_converted && <small> ≈ {money(school.first_year_converted.amount, school.first_year_converted.currency, lang)}</small>}</dd></div>
         </dl>
+        <SchoolSources schoolKey={school.key} info={school} compact />
         {!actions.readOnly && <div className="plan-card-actions">
           <button type="button" className="chip" disabled={actions.busy} onClick={() => ask("plan.card.costOf", school)}>{t("plan.card.costOf")}</button>
           <button type="button" className="chip" disabled={actions.busy} onClick={() => ask("plan.card.campusOf", school)}>{t("plan.card.campusOf")}</button>
@@ -86,6 +88,7 @@ function School({ school, actions }: { school: CatalogEntry; actions: CardAction
       <Places title={t("plan.card.food")} rows={school.food} />
       <Places title={t("plan.card.attractions")} rows={school.attractions} />
     </div>
+    <SchoolSources schoolKey={school.key} info={school} />
     <div className="plan-card-actions">
       <a className="link-button" href={school.school.website} target="_blank" rel="noreferrer">{t("plan.card.website")}</a>
       {!actions.readOnly && <>

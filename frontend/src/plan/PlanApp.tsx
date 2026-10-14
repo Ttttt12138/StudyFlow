@@ -1,3 +1,4 @@
+import { SchoolSourcesContext } from "./SchoolSources";
 import { CardSummary } from "./CardSummary";
 import { useStudyLife } from "./useStudyLife";
 import { UpcomingReminders, StudyLifePanel } from "./StudyLife";
@@ -101,6 +102,8 @@ export function PlanApp({ preview, initialStage = "plan" }: { account?: string; 
   const [rates, setRates] = useState<DisplayRates | null>(preview ? PREVIEW_RATES : null);
   const [currency, setCurrency] = useState<DisplayCurrency>("THB");
   const [schools, setSchools] = useState<SchoolBrief[]>([]);
+  // Older cards carry no sources; they find their school's here.
+  const sourcesByKey = useMemo(() => Object.fromEntries(schools.map(s => [s.key, s])), [schools]);
   const [draft, setDraft] = useState("");
   const [sending, setSending] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -311,7 +314,7 @@ export function PlanApp({ preview, initialStage = "plan" }: { account?: string; 
     </div>
   </form>;
 
-  return <DisplayContext.Provider value={{ currency, rates }}><div className={`plan-app${fresh ? " is-fresh" : ""}`}>
+  return <DisplayContext.Provider value={{ currency, rates }}><SchoolSourcesContext.Provider value={sourcesByKey}><div className={`plan-app${fresh ? " is-fresh" : ""}`}>
     {stale}
     {error && <p className="error service-alert" role="alert">{error} <button className="chip" onClick={() => void (conversation ? refresh() : load()).catch(fail)}>{t("common.refresh")}</button></p>}
     {notice && <p className="service-notice" role="status">{notice}</p>}
@@ -374,7 +377,7 @@ export function PlanApp({ preview, initialStage = "plan" }: { account?: string; 
       <button className="primary" disabled={sending} onClick={() => void commitChoice(replacing.key, replacing.name, replacing.years)}>{t("plan.choose.replace")}</button>
       <button className="secondary" disabled={sending} onClick={() => setReplacing(null)}>{t("common.cancel")}</button>
     </FocusDialog>}
-  </div></DisplayContext.Provider>;
+  </div></SchoolSourcesContext.Provider></DisplayContext.Provider>;
 
 }
 
