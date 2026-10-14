@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, timedelta
 from decimal import Decimal
 from uuid import uuid4
 
@@ -260,7 +260,36 @@ class PlanningLifeChecklistTests(LifeCase):
 
 
 class PlanningCreditTests(LifeCase):
-    """Pay-later line: a fixed 2,000 CNY (in THB), used by paying a bill, freed by repaying it."""
+    """Pay-later line: a fixed 2,000 CNY (in THB), used by paying a bill, freed by repaying it from the wallet."""
+    PASSWORD = "credit-line-pass-17"
+
+    def setUp(self):
+        from finance.planning.assessment import ensure_demo_state
+        from finance.workflow_models import DemoWallet
+
+        super().setUp()
+        cache.clear()
+        self.user.set_password(self.PASSWORD)
+        self.user.save()
+        ensure_demo_state(self.user)
+        DemoWallet.objects.filter(owner=self.user).update(balance=Decimal("5000.00"), clock=date(2027, 8, 1))
+
+    def repay(self, charge_id, token=None):
+        headers = {"HTTP_IDEMPOTENCY_KEY": str(uuid4())}
+        if token:
+            headers["HTTP_X_STEP_UP_TOKEN"] = token
+        return self.client.post(f"/api/v2/planning/credit/charges/{charge_id}/repay/", {}, format="json", **headers)
+
+    def token(self, charge):
+        response = self.client.post("/api/v2/auth/step-up/", {"password": self.PASSWORD, "action": "credit.repay",
+            "target_id": str(charge.id), "amount": f"{charge.amount:.2f}", "currency": charge.currency}, format="json")
+        self.assertEqual(response.status_code, 200, response.data)
+        return response.data["token"]
+
+    def evidence(self):
+        response = self.client.get("/api/v2/credit/profile/")
+        self.assertEqual(response.status_code, 200, response.data)
+        return [(e["source"], e["status"]) for e in response.data["data"]["evidence"]]
 
     def bill(self, amount, currency="THB", source="credit-bill"):
         return PlanBill.objects.create(owner=self.user, plan=self.plan, kind="tuition", source_id=source,
@@ -296,9 +325,39 @@ class PlanningCreditTests(LifeCase):
         owed = next(i for i in self.read()["items"] if i["kind"] == "credit")
         self.assertEqual((owed["amount"], owed["done"]), ("1000.00", False))
         self.assertEqual(self.act(owed, "reschedule", date="2027-12-01").status_code, 400)
-        self.assertEqual(self.act(owed, "complete").status_code, 201)
+        # Ticking it off is not a repayment: the money comes back from the wallet, after the password.
+        self.assertEqual(self.act(owed, "complete").status_code, 400)
+        from finance.planning.models import CreditCharge
+        from finance.workflow_models import DemoLedgerEntry, DemoWallet
+        charge = CreditCharge.objects.get(owner=self.user)
+        self.assertEqual(self.repay(charge.id).status_code, 403)
+        self.assertEqual(self.repay(charge.id, self.token(charge)).status_code, 201)
+        self.assertEqual(DemoWallet.objects.get(owner=self.user).balance, Decimal("4000.00"))
+        self.assertEqual(DemoLedgerEntry.objects.get(credit_charge=charge).amount, Decimal("-1000.00"))
         self.assertEqual(self.credit()["available"], f"{limit:.2f}")
         self.assertTrue(next(i for i in self.read()["items"] if i["kind"] == "credit")["done"])
+        self.assertIn(("credit_charge", "ON_TIME"), self.evidence())
+        self.assertEqual(self.repay(charge.id, "any").status_code, 400)
+
+    def test_repayments_count_on_time_late_or_overdue_by_the_demo_date(self):
+        from finance.planning.models import CreditCharge
+        from finance.workflow_models import DemoWallet
+
+        for source in ("a", "b"):
+            self.bill("500", source=source)
+        for item in [i for i in self.read()["items"] if i["kind"] == "bill"]:
+            self.assertEqual(self.pay(item).status_code, 201)
+        first, second = CreditCharge.objects.filter(owner=self.user).order_by("created_at")
+        self.assertEqual(self.evidence(), [])
+        # Past the 30-day term, unpaid: overdue. Paid back then: late.
+        DemoWallet.objects.filter(owner=self.user).update(clock=first.due_date + timedelta(days=1))
+        self.assertEqual(sorted(self.evidence()), [("credit_charge", "OVERDUE")] * 2)
+        self.assertEqual(self.repay(first.id, self.token(first)).status_code, 201)
+        self.assertEqual(sorted(self.evidence()), [("credit_charge", "LATE"), ("credit_charge", "OVERDUE")])
+        DemoWallet.objects.filter(owner=self.user).update(balance=Decimal("100.00"))
+        short = self.repay(second.id, self.token(second))
+        self.assertEqual(short.status_code, 400, short.data)
+        self.assertIn("WALLET_BALANCE_TOO_LOW", str(short.data))
 
     def test_credit_pays_tuition_only_to_a_verified_school_account(self):
         from finance.planning.payees import school_payee

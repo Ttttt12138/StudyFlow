@@ -199,6 +199,9 @@ class DemoLedgerEntry(OwnedRecord):
                                          related_name="legs")
     # A study-plan bill paid from the demo wallet (planning/in_school.pay_from_wallet).
     plan_bill = models.OneToOneField("finance.PlanBill", null=True, on_delete=models.PROTECT, related_name="ledger_entry")
+    # A credit-line charge paid back from the demo wallet (planning/credit.repay).
+    credit_charge = models.OneToOneField("finance.CreditCharge", null=True, on_delete=models.PROTECT,
+                                         related_name="ledger_entry")
     remittance_leg = models.CharField(max_length=10, null=True, blank=True,
                                       choices=[("debit", "Debit"), ("refund", "Refund"), ("credit", "Credit")])
     currency = models.CharField(max_length=3, default="THB")
@@ -208,7 +211,7 @@ class DemoLedgerEntry(OwnedRecord):
         constraints = [models.CheckConstraint(
             condition=_exactly_one_origin(disbursement=Q(amount__gt=0), payment=Q(amount__lt=0),
                 funding_source=Q(amount__gt=0), installment=Q(amount__lt=0), conversion=~Q(amount=0),
-                plan_bill=Q(amount__lt=0),
+                plan_bill=Q(amount__lt=0), credit_charge=Q(amount__lt=0),
                 remittance_order=Q(remittance_leg="debit", amount__lt=0)
                     | Q(remittance_leg__in=["refund", "credit"], amount__gt=0)),
             name="ledger_origin_and_sign",

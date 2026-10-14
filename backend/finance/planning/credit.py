@@ -8,8 +8,6 @@ paid, nothing moves in the demo wallet here.
 from datetime import timedelta
 from decimal import ROUND_DOWN, Decimal
 
-from django.shortcuts import get_object_or_404
-
 from finance.services import VersionConflict
 from finance.workflow_common import audit, require
 
@@ -70,12 +68,32 @@ def pay(user, data, obj=None):
     return life.read(user)
 
 
-def repay(user, charge_id):
-    charge = get_object_or_404(CreditCharge.objects.select_for_update(), owner=user, pk=charge_id)
+def repay(user, data, charge):
+    """Pays one charge back from the demo wallet (THB) after a step-up; only this frees the line and builds the
+    on-time record (finance/credit.py), so a repayment is never just a declaration."""
+    from copy import deepcopy
+
+    from finance import money
+    from finance.execution_services import available
+    from finance.wallets import post, wallet
+    from finance.workflow_common import append_state, current
+
+    charge = CreditCharge.objects.select_for_update().get(pk=charge.pk)
     require(charge.repaid_on is None, "CREDIT_ALREADY_REPAID")
-    charge.repaid_on, charge.version = services.today_for(user), charge.version + 1
+    item = wallet(user)
+    require(available(item) >= charge.amount, "WALLET_BALANCE_TOO_LOW")
+    entry = post(item, CURRENCY, -charge.amount, {"credit_charge": charge})
+    snapshot = deepcopy(current(user).snapshot)
+    label = charge.bill.label.get("en") if isinstance(charge.bill.label, dict) else str(charge.bill.label)
+    snapshot["events"].append({"id": f"credit:{charge.id}", "label": f"Credit repayment · {label or 'Plan bill'}"[:120],
+                               "kind": "expense", "amount": money.fmt(charge.amount, CURRENCY),
+                               "date": item.clock.isoformat(), "certainty": "confirmed", "settled_sequence": entry.sequence})
+    append_state(user, snapshot, user, "state.credit_repaid")
+    charge.repaid_on, charge.version = item.clock, charge.version + 1
     charge.save(update_fields=["repaid_on", "version"])
     audit(user, user, "planning.credit_repaid", charge, {"amount": str(charge.amount)})
+    from . import life
+    return life.read(user)
 
 
 def rows(user):

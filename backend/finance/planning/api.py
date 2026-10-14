@@ -300,7 +300,7 @@ def _commands():
     from finance.workflow_serializers import EmptyInput
     from finance.workflow_urls import command
 
-    from .models import PlanBill, PlanDraft
+    from .models import CreditCharge, PlanBill, PlanDraft
     from .tools import ExpenseInput
     from . import life_commands
     from . import credit
@@ -312,6 +312,8 @@ def _commands():
             command("planning/life/budget/", "StudyBudgetSave", StudyBudgetInput, life_commands.save_budget),
             command("planning/life/undo-expense/", "StudyExpenseUndo", UndoExpenseInput, life_commands.undo_expense),
             command("planning/credit/pay/", "PlanningCreditPay", CreditPayInput, credit.pay),
+            command("planning/credit/charges/<uuid:pk>/repay/", "PlanningCreditRepay", EmptyInput, credit.repay, CreditCharge,
+                    policy="credit.repay"),
             command("planning/loan-applications/", "PlanningLoanSubmit", SubmitPlanningLoan, assessment.submit),
             command("planning/plan/confirm/", "PlanningPlanConfirm", ConfirmPlanningPlan, assessment.confirm),
             command("planning/loan/sign/", "PlanningLoanSign", SignPlanningLoan, _sign),

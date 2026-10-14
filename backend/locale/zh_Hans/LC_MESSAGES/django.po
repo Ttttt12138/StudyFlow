@@ -22,7 +22,7 @@ msgstr ""
 msgid "A valid FX quote is required for foreign currency."
 msgstr "外币金额需要提供有效的汇率报价。"
 
-#: finance/policy.py:181
+#: finance/policy.py:195
 msgid "ACTION_NOT_AVAILABLE"
 msgstr "此操作不支持二次验证或审批请求。"
 
@@ -34,7 +34,7 @@ msgstr "请将该复核分配给一名有效的运营人员。"
 msgid "ACTIVE_SEMESTER_EXISTS"
 msgstr "已有进行中的学期，请更新该学期，而不是新建学期。"
 
-#: finance/policy.py:298
+#: finance/policy.py:312
 msgid "AGENT_TIER_EXCEEDED"
 msgstr "此操作需要您本人验证，AI 助手无法直接执行。"
 
@@ -58,23 +58,23 @@ msgstr "请输入大于零的金额。"
 msgid "AMOUNT_PRECISION_INVALID"
 msgstr "金额的小数位数超过了该币种允许的位数。"
 
-#: finance/policy.py:397
+#: finance/policy.py:411
 msgid "APPROVAL_ALREADY_OPEN"
 msgstr "此操作已有待处理或已通过的审批请求。"
 
-#: finance/policy.py:442
+#: finance/policy.py:456
 msgid "APPROVAL_NOT_PENDING"
 msgstr "该审批请求已处理或已过期。"
 
-#: finance/policy.py:310
+#: finance/policy.py:324
 msgid "APPROVAL_REQUIRED"
 msgstr "此操作需要运营人员审批，请先提交审批请求。"
 
-#: finance/policy.py:463
+#: finance/policy.py:477
 msgid "APPROVAL_SIMULATION_OFF"
 msgstr "这里没有开启模拟审批，将由运营人员审核这笔申请。"
 
-#: finance/policy.py:470
+#: finance/policy.py:484
 msgid "APPROVAL_STILL_IN_REVIEW"
 msgstr "运营还在审核这笔申请，请几秒后再试。"
 
@@ -146,15 +146,15 @@ msgstr "汇款给收款人时，请提供 beneficiary_id。"
 msgid "BENEFICIARY_VERIFICATION_REVOKED"
 msgstr "收款人验证已被撤销，此付款无法继续。"
 
-#: finance/planning/credit.py:58
+#: finance/planning/credit.py:57
 msgid "BILL_ALREADY_PAID"
 msgstr "这笔账单已经标记为已付。"
 
-#: finance/planning/credit.py:55
+#: finance/planning/credit.py:54
 msgid "BILL_PAID_BY_LOAN"
 msgstr "这笔账单由已签约的贷款付给学校，不用再付。"
 
-#: finance/planning/life_commands.py:36
+#: finance/planning/life_commands.py:33
 msgid "BILL_REOPEN_NOT_SUPPORTED"
 msgstr "已支付的账单不能撤销。"
 
@@ -266,23 +266,19 @@ msgstr "覆盖期间的结束日期不能早于开始日期。"
 msgid "COVERAGE_REQUIRES_SELECTED_ACCOUNT"
 msgstr "覆盖列表中的每个账户至少需要选择一行交易。"
 
-#: finance/planning/credit.py:75
+#: finance/planning/credit.py:83
 msgid "CREDIT_ALREADY_REPAID"
 msgstr "这笔信用支付已经还清。"
 
-#: finance/planning/credit.py:54
+#: finance/planning/credit.py:53
 msgid "CREDIT_BILL_REQUIRED"
 msgstr "只有未支付的账单可以用信用支付。"
 
-#: finance/planning/credit.py:63
+#: finance/planning/credit.py:62
 msgid "CREDIT_LIMIT_EXCEEDED"
 msgstr "金额超过了可用信用额度。"
 
-#: finance/planning/life_commands.py:27
-msgid "CREDIT_REOPEN_NOT_SUPPORTED"
-msgstr "已还清的信用支付不能撤销。"
-
-#: finance/planning/credit.py:56
+#: finance/planning/credit.py:55
 msgid "CREDIT_THB_ONLY"
 msgstr "信用支付仅适用于泰铢账单。"
 
@@ -358,7 +354,7 @@ msgstr "请为每个包含所选行的账户声明覆盖期间。"
 msgid "DECLARE_PLANNING_FUNDS_AND_DATE"
 msgstr "开始规划前，请提供 opening_balance 和 as_of。"
 
-#: finance/planning/life_commands.py:101
+#: finance/planning/life_commands.py:98
 msgid "DEMO_DATE_MUST_ADVANCE_WITHIN_730_DAYS"
 msgstr "模拟日期只能向后调整，且不超过 730 天。"
 
@@ -714,7 +710,7 @@ msgstr "账本中没有该汇款订单对应的扣款记录，无法对账。"
 msgid "LEGACY_LOAN_UNSUPPORTED"
 msgstr "该贷款由旧版模拟生成，请创建新的贷款报价。"
 
-#: finance/planning/life_commands.py:50
+#: finance/planning/life_commands.py:47
 msgid "LOAN_AMOUNT_IS_CONTRACTUAL"
 msgstr "贷款还款金额以合同为准，不能在这里修改。"
 
@@ -730,7 +726,7 @@ msgstr "请先在「本月」里补齐全部贷款材料，再签约。"
 msgid "LOAN_DOCUMENT_UNKNOWN"
 msgstr "这项材料不属于你的贷款。"
 
-#: finance/planning/life_commands.py:49
+#: finance/planning/life_commands.py:46
 msgid "LOAN_DUE_DATE_IS_CONTRACTUAL"
 msgstr "贷款还款日期以合同为准，不能在这里修改。"
 
@@ -1122,15 +1118,15 @@ msgstr "退款总额不能超过原消费金额。"
 msgid "REFUND_LINK_REQUIRED"
 msgstr "请通过 refund_of 将退款关联到原消费。"
 
-#: finance/planning/life_commands.py:51
+#: finance/planning/life_commands.py:48
 msgid "REMINDER_AMOUNT_REQUIRED"
 msgstr "请填写金额，或清空以恢复方案估算。"
 
-#: finance/planning/life_commands.py:47
+#: finance/planning/life_commands.py:44
 msgid "REMINDER_DATE_REQUIRED"
 msgstr "请选择日期。"
 
-#: finance/planning/credit.py:51
+#: finance/planning/credit.py:50
 msgid "REMINDER_NOT_FOUND"
 msgstr "该提醒已不存在，请刷新后重试。"
 
@@ -1238,7 +1234,7 @@ msgstr "汇款给自己时，请勿提供 beneficiary_id。"
 msgid "SEMESTER_NOT_ACTIVE"
 msgstr "该学期已结束，或结束日期过远，无法规划。"
 
-#: finance/policy.py:438
+#: finance/policy.py:452
 msgid "SEPARATION_OF_DUTIES"
 msgstr "您不能处理此审批，因为该审批由您发起、属于您或其收款人由您验证。"
 
@@ -1262,7 +1258,7 @@ msgstr "settlement_min_days 不能大于 settlement_days。"
 msgid "SIMILAR_INVOICE_REQUIRES_EXPLICIT_REVIEW"
 msgstr "已存在相似的费用，请在 conflict_resolutions 中选择处理方式。"
 
-#: finance/planning/life_commands.py:48
+#: finance/planning/life_commands.py:45
 msgid "SNOOZE_MUST_BE_FUTURE"
 msgstr "再次提醒的日期必须晚于今天。"
 
@@ -1294,15 +1290,15 @@ msgstr "该资助人链接已失效，因为请求已被修改或撤回。"
 msgid "SPONSOR_TOKEN_USED"
 msgstr "该资助人链接已被使用。"
 
-#: finance/policy.py:359
+#: finance/policy.py:373
 msgid "STEP_UP_FAILED"
 msgstr "密码不正确，二次验证失败。"
 
-#: finance/policy.py:304
+#: finance/policy.py:318
 msgid "STEP_UP_INVALID"
 msgstr "X-Step-Up-Token 无效、已过期或与此操作不匹配，请重新进行二次验证。"
 
-#: finance/policy.py:312
+#: finance/policy.py:326
 msgid "STEP_UP_REQUIRED"
 msgstr "此操作需要二次验证，请重新输入密码并在请求头中附带 X-Step-Up-Token。"
 
@@ -1418,7 +1414,7 @@ msgstr "金额请使用十进制字符串，例如 1250.00。"
 msgid "USE_IMPORT_CONFIRMATION_TO_VERIFY"
 msgstr "已验证的费用只能通过确认导入文件来设置或修改。"
 
-#: finance/planning/life_commands.py:25
+#: finance/planning/life_commands.py:26
 msgid "USE_ORIGINAL_ENROLLMENT_OR_REPAYMENT_ACTION"
 msgstr "请使用该事项自己的报到或还款按钮。"
 
@@ -1462,7 +1458,7 @@ msgstr "已验证的应付款项不能削减。"
 msgid "VERIFIED_TUITION_INVOICE_REQUIRED"
 msgstr "此付款需要对应一项有已验证发票支持的学费。"
 
-#: finance/planning/in_school.py:249
+#: finance/planning/credit.py:85
 msgid "WALLET_BALANCE_TOO_LOW"
 msgstr "钱包里这个币种的余额不够，请先充值或换汇。"
 

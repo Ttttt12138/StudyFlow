@@ -37,6 +37,6 @@ export function useStudyLife(client: WalletClient, scope: string, preview: boole
     catch (reason) { await refresh(); setError(reason instanceof Error ? reason.message : String(reason)); throw reason; }
     finally { writing.current = false; setBusy(false); }
   };
-  return { data, error, busy, refresh, run };
+  return { data, error, busy, refresh, run, client };
 }
 export type LifeControl = ReturnType<typeof useStudyLife>;

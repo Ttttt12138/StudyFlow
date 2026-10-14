@@ -22,12 +22,9 @@ def create_task(user, data, obj=None):
 
 def _complete(user, item, done):
     kind, pk = item["source_key"].split(":", 1)
-    require(kind in ("task", "bill", "credit"), "USE_ORIGINAL_ENROLLMENT_OR_REPAYMENT_ACTION")
-    if kind == "credit":
-        require(done, "CREDIT_REOPEN_NOT_SUPPORTED")
-        from .credit import repay
-        repay(user, pk)
-    elif kind == "task":
+    # Credit is paid back from the wallet (planning/credit/charges/{id}/repay/), not ticked off.
+    require(kind in ("task", "bill"), "USE_ORIGINAL_ENROLLMENT_OR_REPAYMENT_ACTION")
+    if kind == "task":
         task = get_object_or_404(StudyTask, owner=user, pk=pk)
         task.done, task.version = done, task.version + 1
         task.save(update_fields=["done", "version"])

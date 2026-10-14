@@ -2,6 +2,7 @@ import { CaretRight } from "@phosphor-icons/react/dist/csr/CaretRight";
 import { useState } from "react";
 import { useI18n, type Lang, type MessageKey } from "../i18n";
 import { formatMoney } from "../backend/presenters";
+import { usePolicyAction } from "../services/usePolicyAction";
 import { useWorkspace } from "../workspace/context";
 import type { LifeControl } from "./useStudyLife";
 import type { LifeItem } from "./lifeTypes";
@@ -67,6 +68,20 @@ export function LifeItemDetail({ item, control, preview, onOpen }: {
   const payWithCredit = async () => {
     try { await control.run("planning/credit/pay/", { source_key: item.source_key, expected_token: item.token }); } catch { /* shown by control */ }
   };
+  // Credit is paid back from the wallet after the password; that repayment is what counts toward the on-time record.
+  const policy = usePolicyAction(control.client, preview);
+  const [repaying, setRepaying] = useState(false), [repayError, setRepayError] = useState("");
+  const repay = async () => {
+    const id = item.source_key.split(":", 2)[1];
+    setRepaying(true); setRepayError("");
+    try {
+      await policy.run({ action: "credit.repay", target_id: id, amount: item.amount ?? "0", currency: item.currency }, async token => {
+        await control.client.post(`planning/credit/charges/${id}/repay/`, {}, `credit-repay:${id}`, token ? { "X-Step-Up-Token": token } : {});
+        await control.refresh();
+      });
+    } catch (e) { setRepayError(e instanceof Error ? e.message : String(e)); }
+    finally { setRepaying(false); }
+  };
   return <div className={`life-detail is-${item.done ? "done" : item.stage}`} data-source={item.source_key}>
     <div className="life-detail-head">
       {item.amount !== null && <strong className="life-detail-amount">{formatMoney(item.amount, item.currency, lang)}</strong>}
@@ -85,8 +100,10 @@ export function LifeItemDetail({ item, control, preview, onOpen }: {
         onClick={() => onOpen(item)}>{t(item.kind === "loan" ? "life.repay" : "life.enroll")}</button>}
       {canPay && <button className="primary" disabled={preview} onClick={() => workspace?.open({ kind: "wallet", section: "pay" })}>{t("life.payNow")}</button>}
       {canCredit && <button className="secondary" disabled={disabled || !enoughCredit} onClick={() => void payWithCredit()}>{t("life.creditPay")}</button>}
-      {!item.done && !byLoan && ["task", "bill", "credit"].includes(item.kind) && <button className={item.kind === "credit" ? "primary" : "secondary"} disabled={disabled}
-        onClick={() => void act("complete")}>{t(item.kind === "bill" ? "life.paid" : item.kind === "credit" ? "life.repaid" : "life.done")}</button>}
+      {!item.done && item.kind === "credit" && <button className="primary" disabled={disabled || repaying || policy.pending}
+        onClick={() => void repay()}>{t("life.repaid")}</button>}
+      {!item.done && !byLoan && ["task", "bill"].includes(item.kind) && <button className="secondary" disabled={disabled}
+        onClick={() => void act("complete")}>{t(item.kind === "bill" ? "life.paid" : "life.done")}</button>}
       {item.done && item.kind === "task" && <button className="secondary" disabled={disabled} onClick={() => void act("reopen")}>{t("life.reopen")}</button>}
       {!item.done && <>
         <button className="link-button" disabled={disabled} onClick={() => { setMode("snooze"); setDate(""); }}>{t("life.snooze")}</button>
@@ -98,6 +115,8 @@ export function LifeItemDetail({ item, control, preview, onOpen }: {
     {canCredit && <small className={enoughCredit ? "panel-muted" : "life-warning"}>{t(enoughCredit ? "life.creditHint" : "life.creditShort",
       { available: formatMoney(credit.available, credit.currency, lang), days: credit.term_days })}</small>}
     {item.kind === "credit" && !item.done && <small className="panel-muted">{t("life.creditRepayHint")}</small>}
+    {repayError && <p role="alert">{repayError}</p>}
+    {policy.panel}
     {item.kind === "bill" && !item.done && !byLoan && <small className="panel-muted">{t("life.paidHint")}</small>}
     {mode === "amount" ? <form className="life-form" onSubmit={e => { e.preventDefault(); void act("set_amount", { amount: Number(amount).toFixed(2) }); }}>
       <label>{t("life.amountActual")} ({item.currency})<input required inputMode="decimal" value={amount}

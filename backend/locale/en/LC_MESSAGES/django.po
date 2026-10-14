@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
 
-#: finance/policy.py:181
+#: finance/policy.py:195
 msgid "ACTION_NOT_AVAILABLE"
 msgstr "This action does not support step-up or approval requests."
 
@@ -30,7 +30,7 @@ msgstr "Assign the review to an active operator."
 msgid "ACTIVE_SEMESTER_EXISTS"
 msgstr "You already have an active semester. Update it instead of creating a new one."
 
-#: finance/policy.py:298
+#: finance/policy.py:312
 msgid "AGENT_TIER_EXCEEDED"
 msgstr "This action needs your own verification and cannot be performed by the AI agent."
 
@@ -54,23 +54,23 @@ msgstr "Enter an amount greater than zero."
 msgid "AMOUNT_PRECISION_INVALID"
 msgstr "The amount has more decimal places than this currency allows."
 
-#: finance/policy.py:397
+#: finance/policy.py:411
 msgid "APPROVAL_ALREADY_OPEN"
 msgstr "An approval request for this action is already pending or approved."
 
-#: finance/policy.py:442
+#: finance/policy.py:456
 msgid "APPROVAL_NOT_PENDING"
 msgstr "This approval request has already been decided or has expired."
 
-#: finance/policy.py:310
+#: finance/policy.py:324
 msgid "APPROVAL_REQUIRED"
 msgstr "This action needs operator approval. Submit an approval request first."
 
-#: finance/policy.py:463
+#: finance/policy.py:477
 msgid "APPROVAL_SIMULATION_OFF"
 msgstr "Simulated approval is turned off here; an operator will decide this request."
 
-#: finance/policy.py:470
+#: finance/policy.py:484
 msgid "APPROVAL_STILL_IN_REVIEW"
 msgstr "Operations is still reviewing this request. Try again in a few seconds."
 
@@ -90,15 +90,15 @@ msgstr "Provide a beneficiary_id when sending to a beneficiary."
 msgid "BENEFICIARY_VERIFICATION_REVOKED"
 msgstr "The beneficiary's verification was revoked, so this payment cannot proceed."
 
-#: finance/planning/credit.py:58
+#: finance/planning/credit.py:57
 msgid "BILL_ALREADY_PAID"
 msgstr "This bill is already marked as paid."
 
-#: finance/planning/credit.py:55
+#: finance/planning/credit.py:54
 msgid "BILL_PAID_BY_LOAN"
 msgstr "The signed loan pays this bill to the school; it does not need paying again."
 
-#: finance/planning/life_commands.py:36
+#: finance/planning/life_commands.py:33
 msgid "BILL_REOPEN_NOT_SUPPORTED"
 msgstr "A paid bill cannot be reopened."
 
@@ -196,23 +196,19 @@ msgstr "The coverage end date cannot be earlier than the start date."
 msgid "COVERAGE_REQUIRES_SELECTED_ACCOUNT"
 msgstr "Each account in the coverage list needs at least one selected row."
 
-#: finance/planning/credit.py:75
+#: finance/planning/credit.py:83
 msgid "CREDIT_ALREADY_REPAID"
 msgstr "This credit payment has already been paid back."
 
-#: finance/planning/credit.py:54
+#: finance/planning/credit.py:53
 msgid "CREDIT_BILL_REQUIRED"
 msgstr "Only an unpaid bill can be paid with credit."
 
-#: finance/planning/credit.py:63
+#: finance/planning/credit.py:62
 msgid "CREDIT_LIMIT_EXCEEDED"
 msgstr "The amount is more than the credit you have available."
 
-#: finance/planning/life_commands.py:27
-msgid "CREDIT_REOPEN_NOT_SUPPORTED"
-msgstr "A repaid credit payment cannot be reopened."
-
-#: finance/planning/credit.py:56
+#: finance/planning/credit.py:55
 msgid "CREDIT_THB_ONLY"
 msgstr "Credit payment is only for bills in THB."
 
@@ -232,7 +228,7 @@ msgstr "Declare a coverage period for every account that has selected rows."
 msgid "DECLARE_PLANNING_FUNDS_AND_DATE"
 msgstr "Provide opening_balance and as_of to start planning."
 
-#: finance/planning/life_commands.py:101
+#: finance/planning/life_commands.py:98
 msgid "DEMO_DATE_MUST_ADVANCE_WITHIN_730_DAYS"
 msgstr "The demo date can only move forward, by at most 730 days."
 
@@ -440,7 +436,7 @@ msgstr "The ledger has no matching debit for this order, so it cannot be reconci
 msgid "LEGACY_LOAN_UNSUPPORTED"
 msgstr "This loan was simulated with an older version. Create a new loan quote."
 
-#: finance/planning/life_commands.py:50
+#: finance/planning/life_commands.py:47
 msgid "LOAN_AMOUNT_IS_CONTRACTUAL"
 msgstr "A loan installment follows the contract; its amount cannot be changed here."
 
@@ -456,7 +452,7 @@ msgstr "Tick off all loan documents in This month before signing."
 msgid "LOAN_DOCUMENT_UNKNOWN"
 msgstr "This document is not part of your loan."
 
-#: finance/planning/life_commands.py:49
+#: finance/planning/life_commands.py:46
 msgid "LOAN_DUE_DATE_IS_CONTRACTUAL"
 msgstr "A loan installment follows the contract; its due date cannot be changed here."
 
@@ -670,15 +666,15 @@ msgstr "Total refunds cannot exceed the original purchase amount."
 msgid "REFUND_LINK_REQUIRED"
 msgstr "Link the refund to the original purchase using refund_of."
 
-#: finance/planning/life_commands.py:51
+#: finance/planning/life_commands.py:48
 msgid "REMINDER_AMOUNT_REQUIRED"
 msgstr "Enter the amount, or clear it to use the plan estimate."
 
-#: finance/planning/life_commands.py:47
+#: finance/planning/life_commands.py:44
 msgid "REMINDER_DATE_REQUIRED"
 msgstr "Choose a date."
 
-#: finance/planning/credit.py:51
+#: finance/planning/credit.py:50
 msgid "REMINDER_NOT_FOUND"
 msgstr "This reminder no longer exists. Refresh and try again."
 
@@ -742,7 +738,7 @@ msgstr "Do not provide beneficiary_id when sending to yourself."
 msgid "SEMESTER_NOT_ACTIVE"
 msgstr "The semester has ended or ends too far in the future to plan."
 
-#: finance/policy.py:438
+#: finance/policy.py:452
 msgid "SEPARATION_OF_DUTIES"
 msgstr "You cannot decide this approval because you requested it, own it or verified its beneficiary."
 
@@ -766,7 +762,7 @@ msgstr "settlement_min_days cannot be greater than settlement_days."
 msgid "SIMILAR_INVOICE_REQUIRES_EXPLICIT_REVIEW"
 msgstr "A similar cost already exists. Choose how to handle it in conflict_resolutions."
 
-#: finance/planning/life_commands.py:48
+#: finance/planning/life_commands.py:45
 msgid "SNOOZE_MUST_BE_FUTURE"
 msgstr "Choose a date after today to be reminded again."
 
@@ -798,17 +794,17 @@ msgstr "This sponsor link is no longer valid because the request was changed or 
 msgid "SPONSOR_TOKEN_USED"
 msgstr "This sponsor link has already been used."
 
-#: finance/policy.py:359
+#: finance/policy.py:373
 msgid "STEP_UP_FAILED"
 msgstr "The password is incorrect, so step-up verification failed."
 
-#: finance/policy.py:304
+#: finance/policy.py:318
 msgid "STEP_UP_INVALID"
 msgstr ""
 "The X-Step-Up-Token is invalid, expired or does not match this action. Complete step-up "
 "verification again."
 
-#: finance/policy.py:312
+#: finance/policy.py:326
 msgid "STEP_UP_REQUIRED"
 msgstr ""
 "This action requires step-up verification. Re-enter your password and send the X-Step-Up-Token "
@@ -866,7 +862,7 @@ msgstr "Send the amount as a decimal string, such as 1250.00."
 msgid "USE_IMPORT_CONFIRMATION_TO_VERIFY"
 msgstr "Verified costs can be set or changed only by confirming an imported document."
 
-#: finance/planning/life_commands.py:25
+#: finance/planning/life_commands.py:26
 msgid "USE_ORIGINAL_ENROLLMENT_OR_REPAYMENT_ACTION"
 msgstr "Use the enrollment or repayment button for this item."
 
@@ -882,7 +878,7 @@ msgstr "A verified obligation cannot be reduced."
 msgid "VERIFIED_TUITION_INVOICE_REQUIRED"
 msgstr "This payment needs a tuition cost backed by a verified invoice."
 
-#: finance/planning/in_school.py:249
+#: finance/planning/credit.py:85
 msgid "WALLET_BALANCE_TOO_LOW"
 msgstr "Not enough in the wallet in this bill's currency. Top up or exchange first."
 
