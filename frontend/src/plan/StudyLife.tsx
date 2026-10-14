@@ -110,7 +110,10 @@ export function StudyLifePanel({ control, preview, ask }: { control: LifeControl
   const currency = budget?.currency ?? open7.find(item => item.amount !== null)?.currency ?? "THB";
   const dueSoon = open7.filter(item => item.amount !== null && item.stage !== "unknown" && item.currency === currency);
   const dueSum = dueSoon.reduce((sum, item) => sum + Number(item.amount), 0);
-  const short = data ? data.items.filter(item => !item.done && item.at_risk) : [];
+  // Shortfalls use today's balance only, so only the next 7 days earn the warning banner; later ones get a quiet
+  // line on their own tab, oldest due date first, saying what the check is based on.
+  const short = groups.soon.filter(item => item.at_risk);
+  const shortLater = groups.later.filter(item => item.at_risk).sort((a, b) => (a.due_date ?? "9999").localeCompare(b.due_date ?? "9999"));
   const walletChecked = data?.items.some(item => !item.done && item.shortfall_basis === "wallet");
   const used = budget && budget.budget_known && Number(budget.budget) > 0 ? Math.min(100, Number(budget.spent) / Number(budget.budget) * 100) : 0;
   const money = (value: string | number, cur = currency) => formatMoney(String(value), cur, lang);
@@ -144,7 +147,9 @@ export function StudyLifePanel({ control, preview, ask }: { control: LifeControl
             {t("life.notEnough", { title: titleOf(short[0], lang), n: short.length })} →</button>
           : data.funding.current && Number(data.funding.gap) > 0 ? <button type="button" className="life-gap" onClick={() => workspace?.open({ kind: "funding" })}>
             {t("life.gapLine", { date: gapDate ?? data.funding.as_of ?? "", amount: money(data.funding.gap ?? "0", "THB") })} →</button>
-          : walletChecked && <p className="life-ok">{t("life.enough")}</p>}
+          : filter === "later" && shortLater.length > 0 ? <button type="button" className="life-summary-line" onClick={() => setView({ page: "item", key: shortLater[0].source_key })}>
+            {t("life.laterShort", { title: titleOf(shortLater[0], lang), date: shortLater[0].due_date ?? "", n: shortLater.length })}</button>
+          : walletChecked && !shortLater.length && <p className="life-ok">{t("life.enough")}</p>}
         <div className="life-list">{groups[filter].map(item => <LifeItemRow key={item.source_key} item={item} gapDate={gapDate}
           onSelect={row => setView({ page: "item", key: row.source_key })} />)}
           {!groups[filter].length && <p className="life-empty">{t(filter === "soon" ? "life.nothingSoon" : filter === "later" ? "life.nothingLater" : "life.nothingDone")}</p>}</div>

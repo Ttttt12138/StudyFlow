@@ -13,6 +13,7 @@ const titleOf = (item: LifeItem, lang: Lang) => typeof item.title === "string" ?
 function MoneyCheck({ item, gapDate }: { item: LifeItem; gapDate: string | null }) {
   const { t, lang } = useI18n();
   if (item.done || item.amount === null) return null;
+  if (item.paid_by_loan) return <p className="panel-muted">{t("life.loanCovers")}</p>;
   if (item.shortfall_basis === "wallet") return Number(item.shortfall) > 0
     ? <p className="life-warning">{t("life.short", { amount: formatMoney(item.shortfall, item.currency, lang) })}</p>
     : <p className="panel-muted">{t("life.covered")}</p>;
@@ -55,11 +56,13 @@ export function LifeItemDetail({ item, control, preview, onOpen }: {
   };
   const disabled = preview || control.busy;
   // The month's budget is only reported once the plan is ENROLLED, which is also when the wallet can pay.
-  const canPay = item.kind === "bill" && !item.done && !!control.data?.budget;
-  const editable = !item.done && (item.kind === "bill" || item.kind === "task");
+  // The signed loan pays this bill to the school on its date, so the student has nothing to pay or change.
+  const byLoan = item.kind === "bill" && !item.done && !!item.paid_by_loan;
+  const canPay = item.kind === "bill" && !item.done && !byLoan && !!control.data?.budget;
+  const editable = !item.done && !byLoan && (item.kind === "bill" || item.kind === "task");
   // Pay later: an unpaid bill in the credit line's currency can be paid from the line if enough of it is available.
   const credit = control.data?.credit;
-  const canCredit = !!credit && item.kind === "bill" && !item.done && item.amount !== null && item.currency === credit.currency;
+  const canCredit = !!credit && item.kind === "bill" && !item.done && !byLoan && item.amount !== null && item.currency === credit.currency;
   const enoughCredit = canCredit && Number(credit.available) >= Number(item.amount);
   const payWithCredit = async () => {
     try { await control.run("planning/credit/pay/", { source_key: item.source_key, expected_token: item.token }); } catch { /* shown by control */ }
@@ -71,7 +74,8 @@ export function LifeItemDetail({ item, control, preview, onOpen }: {
       <MoneyCheck item={item} gapDate={control.data?.funding.first_gap_date ?? null} />
     </div>
     {item.amount_confirmed && item.catalog_amount && <p className="panel-muted">{t("life.amountFrom", { amount: formatMoney(item.catalog_amount, item.currency, lang) })}</p>}
-    {item.paid_by_loan && <p className="plan-visual-gap">{t("life.paidByLoan", { amount: formatMoney(item.paid_by_loan, "THB", lang) })}</p>}
+    {item.paid_by_loan && <p className="plan-visual-gap">{t(item.done ? "life.paidByLoan" : "life.loanWillPay", {
+      amount: formatMoney(item.paid_by_loan, "THB", lang), date: item.due_date ?? "" })}</p>}
     {item.estimated && <p className="panel-muted">{t("life.estimate")}</p>}
     {item.template && !item.done && <p className="panel-muted">{t("life.template")}</p>}
     {item.snoozed && <p>{t("life.snoozed", { date: item.snoozed_until ?? "" })}</p>}
@@ -81,12 +85,12 @@ export function LifeItemDetail({ item, control, preview, onOpen }: {
         onClick={() => onOpen(item)}>{t(item.kind === "loan" ? "life.repay" : "life.enroll")}</button>}
       {canPay && <button className="primary" disabled={preview} onClick={() => workspace?.open({ kind: "wallet", section: "pay" })}>{t("life.payNow")}</button>}
       {canCredit && <button className="secondary" disabled={disabled || !enoughCredit} onClick={() => void payWithCredit()}>{t("life.creditPay")}</button>}
-      {!item.done && ["task", "bill", "credit"].includes(item.kind) && <button className={item.kind === "credit" ? "primary" : "secondary"} disabled={disabled}
+      {!item.done && !byLoan && ["task", "bill", "credit"].includes(item.kind) && <button className={item.kind === "credit" ? "primary" : "secondary"} disabled={disabled}
         onClick={() => void act("complete")}>{t(item.kind === "bill" ? "life.paid" : item.kind === "credit" ? "life.repaid" : "life.done")}</button>}
       {item.done && item.kind === "task" && <button className="secondary" disabled={disabled} onClick={() => void act("reopen")}>{t("life.reopen")}</button>}
       {!item.done && <>
         <button className="link-button" disabled={disabled} onClick={() => { setMode("snooze"); setDate(""); }}>{t("life.snooze")}</button>
-        {item.kind !== "loan" && item.kind !== "credit" && <button className="link-button" disabled={disabled} onClick={() => { setMode("reschedule"); setDate(item.due_date ?? ""); }}>{t("life.reschedule")}</button>}
+        {item.kind !== "loan" && item.kind !== "credit" && !byLoan && <button className="link-button" disabled={disabled} onClick={() => { setMode("reschedule"); setDate(item.due_date ?? ""); }}>{t("life.reschedule")}</button>}
         {editable && <button className="link-button" disabled={disabled} onClick={() => { setMode("amount"); setAmount(item.amount ?? ""); }}>{t("life.setAmount")}</button>}
         {item.unread && <button className="link-button" disabled={disabled} onClick={() => void act("acknowledge")}>{t("life.ack")}</button>}
       </>}
@@ -94,7 +98,7 @@ export function LifeItemDetail({ item, control, preview, onOpen }: {
     {canCredit && <small className={enoughCredit ? "panel-muted" : "life-warning"}>{t(enoughCredit ? "life.creditHint" : "life.creditShort",
       { available: formatMoney(credit.available, credit.currency, lang), days: credit.term_days })}</small>}
     {item.kind === "credit" && !item.done && <small className="panel-muted">{t("life.creditRepayHint")}</small>}
-    {item.kind === "bill" && !item.done && <small className="panel-muted">{t("life.paidHint")}</small>}
+    {item.kind === "bill" && !item.done && !byLoan && <small className="panel-muted">{t("life.paidHint")}</small>}
     {mode === "amount" ? <form className="life-form" onSubmit={e => { e.preventDefault(); void act("set_amount", { amount: Number(amount).toFixed(2) }); }}>
       <label>{t("life.amountActual")} ({item.currency})<input required inputMode="decimal" value={amount}
         onChange={e => setAmount(e.target.value.replace(/[^\d.]/g, ""))} /></label>

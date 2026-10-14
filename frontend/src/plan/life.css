@@ -99,3 +99,6 @@
 .life-form-pair { display: grid; grid-template-columns: minmax(0, 1fr) 110px; gap: 10px; }
 .life-spending .monthly-distribution { display: grid; grid-template-columns: 112px minmax(0, 1fr); align-items: center; gap: 16px; margin: 0; }
 .life-spending .monthly-pie { width: 112px; height: 112px; aspect-ratio: 1; -webkit-mask: radial-gradient(circle, transparent 34px, #000 35px); mask: radial-gradient(circle, transparent 34px, #000 35px); }
+/* Later shortfalls: a quiet line that opens the first bill, not the warning banner */
+button.life-summary-line { padding: 0; border: 0; background: none; text-align: left; line-height: 1.55; cursor: pointer; }
+button.life-summary-line:hover { color: var(--text); text-decoration: underline; }

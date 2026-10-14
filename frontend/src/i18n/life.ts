@@ -1,7 +1,7 @@
 export const en = {
   "life.title": "This month", "ws.sub.life": "What is due, whether the money is there, and what you spent",
   "life.summary": "Month at a glance", "life.spentOf": "Spent {spent} of {budget}", "life.remainingLine": "{amount} left this month",
-  "life.dueSoon": "{n} payments due within 7 days · {amount}", "life.notEnough": "Not enough money for {title} ({n} short)",
+  "life.dueSoon": "{n} payments due within 7 days · {amount}", "life.laterShort": "With today's wallet balance, bills from {title} ({date}) on are not covered ({n} in all). Money arriving later, such as family support, is not counted.", "life.notEnough": "Not enough money for {title} ({n} short)",
   "life.enough": "The wallet covers every upcoming payment", "life.todo": "To do", "life.spending": "Spending this month",
   "life.filter.soon": "Soon", "guide.items": "{n} items", "life.creditPay": "Pay with credit", "life.repaid": "Record as repaid",
   "life.creditHint": "Credit available {available}; pay it back within {days} days.", "life.creditShort": "Not enough credit: {available} available.",
@@ -43,7 +43,7 @@ export const en = {
 export const zh: Record<keyof typeof en, string> = {
   "life.title": "本月", "ws.sub.life": "要办的事、到期时钱够不够、这个月花了多少",
   "life.summary": "本月概览", "life.spentOf": "已花 {spent} / 预算 {budget}", "life.remainingLine": "本月还剩 {amount}",
-  "life.dueSoon": "7 天内要付 {n} 笔 · 共 {amount}", "life.notEnough": "{title} 到期时钱不够（共 {n} 项）",
+  "life.dueSoon": "7 天内要付 {n} 笔 · 共 {amount}", "life.laterShort": "按当前钱包余额，从「{title}」（{date}）起不够付，共 {n} 项。之后到账的钱（如家人资助）未计入。", "life.notEnough": "{title} 到期时钱不够（共 {n} 项）",
   "life.enough": "按钱包余额，近期付款都够", "life.todo": "要办的事", "life.spending": "本月开销",
   "life.filter.soon": "近期", "guide.items": "{n} 项", "life.creditPay": "用信用支付", "life.repaid": "记录已还款",
   "life.creditHint": "信用可用 {available}，{days} 天内还款。", "life.creditShort": "信用额度不足，当前可用 {available}。",

@@ -223,3 +223,33 @@ def receive_funding(actor,data,obj):
     audit(obj.owner,actor,"funding.mock_received",obj,{"is_simulated":True,"currency":currency,
         "amount":money.fmt(amount,currency),"held_in_source_currency":hold})
     return record(obj)
+
+
+TOP_UP_MAX = Decimal("1000000.00")
+
+
+def top_up(actor,data,obj=None):
+    """Adds simulated money to the student's own demo wallet in one currency (a card or bank top-up, no real funds).
+
+    It is recorded as a received funding source, so the ledger keeps one origin per row; home-currency top-ups also
+    enter the financial state as confirmed income, as received funding does."""
+    from uuid import uuid4
+    from .wallets import balance_of
+    from .workflow_models import FundingSource
+    currency = data["currency"]
+    money.require_supported(currency)
+    amount = money.require_precision(data["amount"],currency)
+    require(Decimal(0) < amount <= TOP_UP_MAX,"TOP_UP_AMOUNT_OUT_OF_RANGE")
+    item = wallet(actor)
+    require(balance_of(item,currency)+amount <= money.MAX_BALANCE,"Wallet precision limit exceeded.")
+    source = FundingSource.objects.create(owner=actor,economic_key=f"top_up:{uuid4().hex}",kind="top_up",currency=currency,
+        amount=amount,available_on=item.clock,certainty="confirmed",received=True)
+    sequence = post(item,currency,amount,{"funding_source":source}).sequence
+    if currency == money.home_currency():
+        snapshot = deepcopy(current(actor).snapshot)
+        snapshot["events"].append({"id":"received:"+str(source.id),"label":"Simulated top-up","kind":"income",
+            "amount":money.fmt(amount,currency),"date":item.clock.isoformat(),"certainty":"confirmed","settled_sequence":sequence})
+        append_state(actor,snapshot,actor,"state.wallet_top_up")
+    audit(actor,actor,"wallet.top_up",source,{"is_simulated":True,"currency":currency,"amount":money.fmt(amount,currency)})
+    return {"id":str(source.id),"currency":currency,"amount":money.fmt(amount,currency),
+        "balance":money.fmt(balance_of(item,currency),currency),"is_simulated":True}

@@ -138,11 +138,11 @@ msgstr "汇款给收款人时，请提供 beneficiary_id。"
 msgid "BENEFICIARY_VERIFICATION_REVOKED"
 msgstr "收款人验证已被撤销，此付款无法继续。"
 
-#: finance/planning/credit.py:57
+#: finance/planning/credit.py:58
 msgid "BILL_ALREADY_PAID"
 msgstr "这笔账单已经标记为已付。"
 
-#: finance/planning/in_school.py:243
+#: finance/planning/credit.py:55
 msgid "BILL_PAID_BY_LOAN"
 msgstr "这笔账单由已签约的贷款付给学校，不用再付。"
 
@@ -258,7 +258,7 @@ msgstr "覆盖期间的结束日期不能早于开始日期。"
 msgid "COVERAGE_REQUIRES_SELECTED_ACCOUNT"
 msgstr "覆盖列表中的每个账户至少需要选择一行交易。"
 
-#: finance/planning/credit.py:71
+#: finance/planning/credit.py:72
 msgid "CREDIT_ALREADY_REPAID"
 msgstr "这笔信用支付已经还清。"
 
@@ -266,7 +266,7 @@ msgstr "这笔信用支付已经还清。"
 msgid "CREDIT_BILL_REQUIRED"
 msgstr "只有未支付的账单可以用信用支付。"
 
-#: finance/planning/credit.py:59
+#: finance/planning/credit.py:60
 msgid "CREDIT_LIMIT_EXCEEDED"
 msgstr "金额超过了可用信用额度。"
 
@@ -274,7 +274,7 @@ msgstr "金额超过了可用信用额度。"
 msgid "CREDIT_REOPEN_NOT_SUPPORTED"
 msgstr "已还清的信用支付不能撤销。"
 
-#: finance/planning/credit.py:55
+#: finance/planning/credit.py:56
 msgid "CREDIT_THB_ONLY"
 msgstr "信用支付仅适用于泰铢账单。"
 
@@ -350,7 +350,7 @@ msgstr "请为每个包含所选行的账户声明覆盖期间。"
 msgid "DECLARE_PLANNING_FUNDS_AND_DATE"
 msgstr "开始规划前，请提供 opening_balance 和 as_of。"
 
-#: finance/planning/life_commands.py:99
+#: finance/planning/life_commands.py:101
 msgid "DEMO_DATE_MUST_ADVANCE_WITHIN_730_DAYS"
 msgstr "模拟日期只能向后调整，且不超过 730 天。"
 
@@ -1361,6 +1361,10 @@ msgstr "这个期限不适用于所选贷款，60 期仅限助学贷款。"
 #: finance/readiness/services.py:173
 msgid "TOO_MANY_SCHEDULED_EVENTS"
 msgstr "计划中的排期事项过多（最多 1000 项）。"
+
+#: finance/execution_services.py:242
+msgid "TOP_UP_AMOUNT_OUT_OF_RANGE"
+msgstr "单次充值金额需大于 0，且不超过 1,000,000。"
 
 #: finance/consumption/imports.py:135
 msgid "TRANSACTION_ID_CONFLICT"

@@ -1,6 +1,6 @@
 import { useEffect, useId, useState } from "react";
 import { useI18n, type MessageKey } from "../i18n";
-import { PlanBillsPay } from "./PlanBillsPay";
+import { PlanBillsPay, type ExchangeWant } from "./PlanBillsPay";
 import { useToolActive, useWorkspace } from "../workspace/context";
 import { WalletApp, type WalletTab } from "./WalletApp";
 
@@ -38,6 +38,7 @@ export function MoneyHub({ preview, onExit }: { preview: boolean; onExit: () => 
   const target = workspace?.target;
   const [tab, setTab] = useState<Tab>(() => tabFor(target?.kind, target?.section));
   const [records, setRecords] = useState<Records>("orders");
+  const [want, setWant] = useState<ExchangeWant | null>(null);
   useEffect(() => {
     if (active && target && (target.kind === "wallet" || target.kind === "payments")) setTab(tabFor(target.kind, target.section));
   }, [active, target?.kind, target?.section]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -57,10 +58,10 @@ export function MoneyHub({ preview, onExit }: { preview: boolean; onExit: () => 
     </div>}
     <div className="money-body" id={`${id}-body`} role="tabpanel" aria-labelledby={`${id}-${tabOf(tab)}`}>
       <div className="money-part" hidden={tab !== "pay"}>
-        <PlanBillsPay preview={preview} />
+        <PlanBillsPay preview={preview} onExchange={next => { setWant(next); setTab("convert"); }} />
       </div>
       <div className="money-part" hidden={paymentsShown || tab === "pay"}>
-        <WalletApp preview={preview} onExit={onExit} bare tab={walletTab} historyView={records === "ledger" ? "ledger" : "orders"}
+        <WalletApp preview={preview} onExit={onExit} bare tab={walletTab} want={tab === "convert" ? want : null} historyView={records === "ledger" ? "ledger" : "orders"}
           onTab={next => setTab(next)} />
       </div>
       <div className="money-part" hidden={!paymentsShown}>

@@ -63,7 +63,8 @@ def money_check(rows, held, plan_funding):
     first_gap = plan_funding.get("first_gap_date")
     for row in sorted(rows, key=lambda r: (r["due_date"] or "9999", r["source_key"])):
         row["shortfall"], row["shortfall_basis"], row["at_risk"] = None, None, False
-        if row["done"] or row["amount"] is None or row["due_date"] is None:
+        # A bill the signed loan pays to the school needs no money from the wallet.
+        if row["done"] or row["amount"] is None or row["due_date"] is None or row.get("paid_by_loan"):
             continue
         amount, currency = Decimal(row["amount"]), row["currency"]
         if held is not None and currency in held:

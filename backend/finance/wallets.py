@@ -71,7 +71,7 @@ def balances(item, available_home):
         rows.append({"currency": row.currency, "balance": money.fmt(row.balance, row.currency),
                      "available_balance": money.fmt(row.balance, row.currency), "is_home": False,
                      "indicative_home_value": value, "valuation": basis})
-    return {"home_currency": home, "balances": rows, "is_simulated": True}
+    return {"home_currency": home, "balances": rows, "supported_currencies": money.supported_currencies(), "is_simulated": True}
 
 
 def quote_result(quote, amount, source_currency, target_currency):

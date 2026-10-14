@@ -82,11 +82,11 @@ msgstr "Provide a beneficiary_id when sending to a beneficiary."
 msgid "BENEFICIARY_VERIFICATION_REVOKED"
 msgstr "The beneficiary's verification was revoked, so this payment cannot proceed."
 
-#: finance/planning/credit.py:57
+#: finance/planning/credit.py:58
 msgid "BILL_ALREADY_PAID"
 msgstr "This bill is already marked as paid."
 
-#: finance/planning/in_school.py:243
+#: finance/planning/credit.py:55
 msgid "BILL_PAID_BY_LOAN"
 msgstr "The signed loan pays this bill to the school; it does not need paying again."
 
@@ -188,7 +188,7 @@ msgstr "The coverage end date cannot be earlier than the start date."
 msgid "COVERAGE_REQUIRES_SELECTED_ACCOUNT"
 msgstr "Each account in the coverage list needs at least one selected row."
 
-#: finance/planning/credit.py:71
+#: finance/planning/credit.py:72
 msgid "CREDIT_ALREADY_REPAID"
 msgstr "This credit payment has already been paid back."
 
@@ -196,7 +196,7 @@ msgstr "This credit payment has already been paid back."
 msgid "CREDIT_BILL_REQUIRED"
 msgstr "Only an unpaid bill can be paid with credit."
 
-#: finance/planning/credit.py:59
+#: finance/planning/credit.py:60
 msgid "CREDIT_LIMIT_EXCEEDED"
 msgstr "The amount is more than the credit you have available."
 
@@ -204,7 +204,7 @@ msgstr "The amount is more than the credit you have available."
 msgid "CREDIT_REOPEN_NOT_SUPPORTED"
 msgstr "A repaid credit payment cannot be reopened."
 
-#: finance/planning/credit.py:55
+#: finance/planning/credit.py:56
 msgid "CREDIT_THB_ONLY"
 msgstr "Credit payment is only for bills in THB."
 
@@ -224,7 +224,7 @@ msgstr "Declare a coverage period for every account that has selected rows."
 msgid "DECLARE_PLANNING_FUNDS_AND_DATE"
 msgstr "Provide opening_balance and as_of to start planning."
 
-#: finance/planning/life_commands.py:99
+#: finance/planning/life_commands.py:101
 msgid "DEMO_DATE_MUST_ADVANCE_WITHIN_730_DAYS"
 msgstr "The demo date can only move forward, by at most 730 days."
 
@@ -809,6 +809,10 @@ msgstr "This term is not offered for this loan. 60 months is only for the study 
 #: finance/readiness/services.py:173
 msgid "TOO_MANY_SCHEDULED_EVENTS"
 msgstr "The plan has too many scheduled items (maximum 1000)."
+
+#: finance/execution_services.py:242
+msgid "TOP_UP_AMOUNT_OUT_OF_RANGE"
+msgstr "A single top-up must be more than 0 and at most 1,000,000."
 
 #: finance/consumption/imports.py:135
 msgid "TRANSACTION_ID_CONFLICT"

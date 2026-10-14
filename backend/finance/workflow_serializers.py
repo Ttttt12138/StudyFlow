@@ -142,6 +142,10 @@ class HistoryResponse(s.Serializer):
     previous = s.URLField(allow_null=True)
     results = s.ListField(child=s.JSONField())
 
+class TopUpInput(Input):
+    currency = s.ChoiceField(choices=CURRENCIES)
+    amount = CurrencyAmountField()
+
 class ReceiveInput(Input):
     fx_quote_id = s.UUIDField(required=False,allow_null=True)
     hold_in_source_currency = s.BooleanField(default=False)

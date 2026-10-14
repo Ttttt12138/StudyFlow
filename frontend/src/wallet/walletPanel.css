@@ -55,3 +55,8 @@
 .plan-bills-list li button { grid-column: 1 / -1; justify-self: end; }
 .plan-bills-amount { font-weight: 700; font-variant-numeric: tabular-nums; }
 .plan-bills-list.is-quiet li { background: var(--surface-2); border-color: transparent; }
+
+/* Top-up: inline under a short plan bill, or in the balance view's sheet */
+.plan-bills-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.plan-bills-list li > .plan-bills-topup { grid-column: 1 / -1; padding: 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-2); }
+.top-up-actions { display: flex; justify-content: flex-end; gap: 8px; }

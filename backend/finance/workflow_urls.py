@@ -52,6 +52,7 @@ urlpatterns += [
     path("forecasts/history/",ReadView.as_view(model=CalculationRun)),
     command("demo/initialize/","DemoInitialize",s.InitializeInput,e.initialize),
     command("demo/clock/","DemoClock",s.ClockInput,e.advance_clock),
+    command("demo/wallets/top-up/","DemoWalletTopUp",s.TopUpInput,e.top_up),
     command("applications/<uuid:pk>/action/","ApplicationAction",s.ApplicationAction,lending.application_action,m.SimulatedApplication),
     command("applications/<uuid:pk>/decision/","ApplicationDecision",s.DecisionInput,lending.application_decision,m.SimulatedApplication,True),
     command("beneficiaries/<uuid:pk>/verify/","BeneficiaryVerify",s.VerifyInput,e.verify_beneficiary,m.Beneficiary,True),

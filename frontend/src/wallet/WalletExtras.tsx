@@ -1,3 +1,4 @@
+import type { ExchangeWant } from "./PlanBillsPay";
 import { useToolActive, useToolRefresh } from "../workspace/context";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { formatDate, formatMoney, formatRate } from "../backend/presenters";
@@ -20,7 +21,9 @@ const POLICY_CODES = ["STEP_UP_REQUIRED", "STEP_UP_INVALID", "APPROVAL_REQUIRED"
 const REQUOTE_CODES = ["QUOTE_EXPIRED", "QUOTE_CONSUMED", "QUOTE_IN_USE", "QUOTE_NOT_EXECUTABLE", "QUOTE_AMOUNT_MISMATCH", "CORRIDOR_DISABLED", "CORRIDOR_AMOUNT_OUT_OF_RANGE"];
 
 /** Currency conversion between wallet balances (T2) and the append-only ledger, below the transfer form. */
-export function WalletExtras({ client, preview, onChanged, view = "all", balances }: { client: WalletClient; preview: boolean; onChanged: () => void;
+export function WalletExtras({ client, preview, onChanged, view = "all", balances, want = null }: { client: WalletClient; preview: boolean; onChanged: () => void;
+  /** A plan bill short of money in this currency: preset the exchange to it and say how much is missing. */
+  want?: ExchangeWant | null;
   /** Balances WalletApp already loaded; used to show the effect of a conversion before it runs. */
   balances?: WalletBalances | null;
   /** Which section is on screen; both stay mounted so a quote in progress survives switching views. */
@@ -107,6 +110,13 @@ export function WalletExtras({ client, preview, onChanged, view = "all", balance
       setHeld(balances.balances.filter(row => Number(row.balance) > 0).map(row => row.currency));
     }
   });
+  // A bill asked for this currency: debit a currency that can convert into it, the home currency first.
+  useEffect(() => {
+    if (!want) return;
+    const from = [home, ...sources].find(code => code && code !== want.currency && sources.includes(code) && targetCurrencies(list, code).includes(want.currency));
+    if (from) { setSource(from); setTarget(want.currency); resetQuotes(); }
+  }, [want, sources.join(), home]); // eslint-disable-line react-hooks/exhaustive-deps
+  const wantSource = want && sources.some(code => code !== want.currency && targetCurrencies(list, code).includes(want.currency));
   // Keep the pickers on a seeded direction the student can debit.
   useEffect(() => { if (!sources.includes(source)) setSource(sources[0] ?? ""); }, [sources.join(), source]);
   useEffect(() => { if (!targets.includes(target)) setTarget(targets[0] ?? ""); }, [targets.join(), target]);
@@ -201,6 +211,8 @@ export function WalletExtras({ client, preview, onChanged, view = "all", balance
     <section id="wallet-convert" className="card wallet-panel walletx" hidden={view !== "all" && view !== "convert"}>
       <div className="wallet-heading"><div><span className="eyebrow">{t("walletx.convert.eyebrow")}</span><h2>{t("walletx.convert.title")}</h2></div><TierBadge tier="T2" withLabel /></div>
       <p>{t("walletx.convert.text")}</p>
+      {want && <p className="service-notice" role="status">{t(wantSource ? "walletx.convert.forBill" : "walletx.convert.forBillNone",
+        { name: want.name, amount: money(want.short, want.currency), currency: want.currency })}</p>}
       {(["corridors", "balances"] as const).map((key) => errors[key] && <PanelAlert key={key} message={errors[key]!} />)}
       {list.length ? <>
         <div className="fx-card">

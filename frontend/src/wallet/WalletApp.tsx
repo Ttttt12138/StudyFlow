@@ -1,3 +1,5 @@
+import { TopUpForm } from "./TopUpForm";
+import type { ExchangeWant } from "./PlanBillsPay";
 import { FocusDialog } from "../workspace/FocusDialog";
 import { useToolRefresh, useToolActive, useClearWhenHidden, useWorkspace, useEmbedded } from "../workspace/context";
 import { ModulePresentation } from "../workspace/ModulePresentation";
@@ -31,8 +33,9 @@ function orderApproval(order: Order, approvals: Approval[]) {
 export type WalletTab = "balances" | "convert" | "remit" | "history";
 
 /** Balances, exchange, transfers and their records. Inside the money tool (MoneyHub) the hub owns the tabs: `bare` hides this panel's own tab bar. */
-export function WalletApp({ preview, onExit, tab: shownTab, onTab, historyView: shownHistory, bare = false }: {
+export function WalletApp({ preview, onExit, tab: shownTab, onTab, historyView: shownHistory, bare = false, want = null }: {
   preview: boolean; onExit: () => void; tab?: WalletTab; onTab?: (tab: WalletTab) => void; historyView?: "orders" | "ledger"; bare?: boolean;
+  want?: ExchangeWant | null;
 }) {
   const { lang, t } = useI18n();
   const toolActive = useToolActive();
@@ -51,6 +54,7 @@ export function WalletApp({ preview, onExit, tab: shownTab, onTab, historyView: 
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
+  const [topUpOpen, setTopUpOpen] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState("");
   const [quotes, setQuotes] = useState<Quote[]>(preview ? previewQuotes() : []);
   const [selectedQuoteId, setSelectedQuoteId] = useState("");
@@ -273,7 +277,8 @@ export function WalletApp({ preview, onExit, tab: shownTab, onTab, historyView: 
     {policy === "STEP_UP_REQUIRED" && selectedOrder.effective_status === "CREATED" && <FocusDialog title={t("ws.confirm")} busy={busy} onClose={() => setPolicy("")}><p>{money(selectedOrder.send_amount, selectedOrder.send_currency)} · {selectedOrder.id.slice(0, 8)}</p>{error && <p role="alert" className="error">{error}</p>}<div className="wallet-policy"><h4><TierBadge tier="T2"/> {t("wallet.policy.stepUpTitle")}</h4><p>{t("wallet.policy.stepUpText")}</p><form onSubmit={(event) => { event.preventDefault(); void stepUpAndSubmit(); }}><label>{t("wallet.policy.password")}<input ref={passwordRef} type="password" autoComplete="current-password"/></label><button type="submit" className="primary" disabled={preview || busy}>{t("wallet.policy.submit")}</button></form></div>{retrySubmit && <button className="secondary" disabled={busy} onClick={() => void loadOrder(selectedOrder.id)}>{t("wallet.order.refresh")}</button>}<button className="secondary" disabled={busy} onClick={() => setPolicy("")}>{t("common.cancel")}</button></FocusDialog>}
   </div>;
   // Exchange and transfers start from the balance: two centred actions instead of extra tabs.
-  const footer = tab === "balances" ? <div className="panel-footer-center"><button type="button" className="secondary" onClick={() => setTab("convert")}>{t("wp.tab.convert")}</button>
+  const footer = tab === "balances" ? <div className="panel-footer-center"><button type="button" className="secondary" disabled={preview} onClick={() => setTopUpOpen(true)}>{t("topup.title")}</button>
+      <button type="button" className="secondary" onClick={() => setTab("convert")}>{t("wp.tab.convert")}</button>
       <button type="button" className="primary" onClick={() => setTab("remit")}>{t("wp.tab.remit")}</button></div>
     : tab === "remit" ? showOrder && selectedOrder ? <>
       <button type="button" className="panel-link panel-footer-note" onClick={() => setRemitView("quote")}>{t("wp.newRemit")}</button>
@@ -283,6 +288,12 @@ export function WalletApp({ preview, onExit, tab: shownTab, onTab, historyView: 
         <button className="primary" disabled={!preview && (busy || !selectedQuote)} onClick={() => setRecipientOpen(true)}>{t("wp.recipientStep")} →</button></>
     : null;
 
+  const topUpCurrencies = snapshot.balances ? [snapshot.balances.home_currency, ...(snapshot.balances.supported_currencies ?? balances.map(row => row.currency))
+    .filter(code => code !== snapshot.balances!.home_currency)] : [];
+  const topUpSheet = topUpOpen && tab === "balances" && <PanelSheet title={t("topup.title")} onClose={() => setTopUpOpen(false)}>
+    <TopUpForm client={client} preview={preview} currencies={topUpCurrencies} onCancel={() => setTopUpOpen(false)}
+      onDone={result => { setTopUpOpen(false); setNotice(t("topup.done", { amount: money(result.amount, result.currency), balance: money(result.balance, result.currency) })); void refresh(); }} />
+  </PanelSheet>;
   // Recipient and purpose open over the remit card, so routes and quotes fit on one screen.
   const recipientSheet = recipientOpen && tab === "remit" && !showOrder && <PanelSheet title={t("wp.recipientStep")} onClose={() => setRecipientOpen(false)}
     footer={<button className="primary" disabled={preview || busy || !selectedQuote} onClick={() => void createOrder()}>{t("wallet.order.create")}</button>}>
@@ -299,7 +310,7 @@ export function WalletApp({ preview, onExit, tab: shownTab, onTab, historyView: 
   </PanelSheet>;
   const content = <ToolPanel label={t("wallet.title")} numbered={false} active={tab} onSelect={(key) => { setTab(key); if (key === "remit" && selectedOrder?.effective_status === "CREATED") setRemitView("order"); }}
     steps={bare ? [] : [{ key: "balances", label: t("wp.tab.balances") }, { key: "convert", label: t("wp.tab.convert") }, { key: "remit", label: t("wp.tab.remit") }, { key: "history", label: t("wp.tab.history") }]}
-    notices={notices} footer={footer} sheet={recipientSheet} tools={menu}>
+    notices={notices} footer={footer} sheet={recipientSheet || topUpSheet} tools={menu}>
     {/* In the dock the header already names the tool; a second heading would duplicate it. */}
     {!embedded && <h1 className="sr-only">{t("wallet.title")}</h1>}
     {unauthenticated && <section className="panel-note" role="alert"><h2>{t("wallet.signIn.title")}</h2><p>{t("wallet.signIn.text")}</p><a className="primary" href={signInUrl}>{t("wallet.signIn.link")}</a></section>}
@@ -342,7 +353,7 @@ export function WalletApp({ preview, onExit, tab: shownTab, onTab, historyView: 
       {!selectedQuote && !preview && <small className="panel-muted">{t("wallet.order.chooseQuote")}</small>}
     </section>
     <section className="panel-view" hidden={tab !== "remit" || !showOrder}>{orderReview}</section>
-    <WalletExtras client={client} preview={preview} balances={snapshot.balances} onChanged={() => void refresh()} view={tab === "convert" ? "convert" : tab === "history" && historyView === "ledger" ? "ledger" : "none"} />
+    <WalletExtras client={client} preview={preview} balances={snapshot.balances} want={want} onChanged={() => void refresh()} view={tab === "convert" ? "convert" : tab === "history" && historyView === "ledger" ? "ledger" : "none"} />
     <section id="wallet-history" className="panel-view" hidden={tab !== "history"}>
       <div className="panel-card-head">{bare ? <span /> : <div className="panel-chips" role="group" aria-label={t("wp.tab.history")}>
         <button type="button" aria-pressed={historyView === "orders"} onClick={() => setHistoryView("orders")}>{t("wp.orders")}</button>

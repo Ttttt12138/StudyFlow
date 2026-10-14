@@ -6,7 +6,9 @@ export type WalletBalance = {
   indicative_home_value: string | null;
   valuation: unknown;
 };
-export type WalletBalances = { home_currency: string; balances: WalletBalance[]; is_simulated: boolean };
+export type WalletBalances = { home_currency: string; balances: WalletBalance[];
+  /** Every currency the wallet can hold, for top-ups (absent from older responses). */
+  supported_currencies?: string[]; is_simulated: boolean };
 export type Corridor = {
   id: string; code: string; provider: string; tier: string;
   source_currency: string; target_currency: string;

@@ -374,3 +374,20 @@ class WalletBillPaymentTests(APITestCase):
         listed = self.client.get("/api/v2/planning/wallet-bills/").data["data"]["bills"]
         self.assertTrue(next(b for b in listed if b["id"] == str(self.bill.id))["paid_by_loan"])
         self.assertEqual(self.pay(self.bill, self.token(self.bill)).status_code, 400)
+
+    def test_loan_paid_bill_needs_nothing_from_the_student(self):
+        from finance.planning.models import LoanPayout
+        from finance.workflow_models import LoanSimulation, SimulatedApplication
+        loan = LoanSimulation.objects.create(owner=self.user, inputs={}, result={})
+        application = SimulatedApplication.objects.create(owner=self.user, loan=loan, status="DISBURSED")
+        LoanPayout.objects.create(owner=self.user, plan=self.plan, application=application, bill=self.bill,
+                                  amount=self.bill.amount, bill_amount=self.bill.amount, due_date=self.bill.due_date)
+        items = self.client.get("/api/v2/planning/life/").data["data"]["items"]
+        item = next(i for i in items if i["source_key"] == f"bill:{self.bill.id}")
+        self.assertEqual(item["paid_by_loan"], "20000.00")
+        self.assertIsNone(item["shortfall"])
+        for path, body in (("planning/life/actions/", {"action": "complete"}), ("planning/credit/pay/", {})):
+            response = self.client.post("/api/v2/" + path, {"source_key": item["source_key"], "expected_token": item["token"], **body},
+                                        format="json", HTTP_IDEMPOTENCY_KEY=str(uuid4()))
+            self.assertEqual(response.status_code, 400, response.data)
+            self.assertIn("BILL_PAID_BY_LOAN", str(response.data))

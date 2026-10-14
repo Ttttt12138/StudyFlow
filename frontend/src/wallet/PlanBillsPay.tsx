@@ -6,7 +6,11 @@ import type { Text } from "../plan/types";
 import { usePolicyAction } from "../services/usePolicyAction";
 import { useToolRefresh, useWorkspace } from "../workspace/context";
 import { PanelAlert, PanelEmpty, PanelSkeleton } from "../workspace/ToolPanel";
+import { TopUpForm } from "./TopUpForm";
 import { SessionWalletClient, type WalletBalances, type WalletClient } from "./client";
+
+/** What a bill still needs, handed to the exchange view. */
+export type ExchangeWant = { currency: string; short: string; name: string };
 
 type PlanBillRow = { id: string; kind: string; label: Text | string; due_date: string; amount: string; currency: string;
   status: "DUE" | "PAID"; paid_at: string | null; paid_by_loan: boolean };
@@ -15,7 +19,9 @@ type PlanBillRow = { id: string; kind: string; label: Text | string; due_date: s
  * The wallet's pay tab: the study plan's bills (tuition, housing, insurance, visa), paid from the demo wallet in the
  * bill's currency after a password step-up. Bills the signed loan pays to the school are shown but not paid again.
  */
-export function PlanBillsPay({ preview, mode = "pay" }: { preview: boolean;
+export function PlanBillsPay({ preview, mode = "pay", onExchange }: { preview: boolean;
+  /** Opens the wallet's exchange for a bill the balance does not cover. */
+  onExchange?: (want: ExchangeWant) => void;
   /** "history" lists only what was paid (from the wallet or by the loan), for the wallet's records. */
   mode?: "pay" | "history" }) {
   const { t, lang } = useI18n();
@@ -25,6 +31,7 @@ export function PlanBillsPay({ preview, mode = "pay" }: { preview: boolean;
   const [bills, setBills] = useState<PlanBillRow[] | null>(null);
   const [balances, setBalances] = useState<WalletBalances | null>(null);
   const [error, setError] = useState(""), [notice, setNotice] = useState(""), [busy, setBusy] = useState("");
+  const [topUp, setTopUp] = useState<string | null>(null);
   const load = useCallback(async () => {
     if (preview) { setBills([]); return; }
     const [rows, money] = await Promise.all([client.get<{ bills: PlanBillRow[] }>("planning/wallet-bills/"),
@@ -34,6 +41,7 @@ export function PlanBillsPay({ preview, mode = "pay" }: { preview: boolean;
   useEffect(() => { void load().catch(e => setError(e instanceof Error ? e.message : String(e))); }, [load]);
   const stale = useToolRefresh(load);
   const label = (row: PlanBillRow) => typeof row.label === "string" ? row.label : pick(row.label, lang);
+  const missing = (row: PlanBillRow) => Math.max(0, Number(row.amount) - Number(balance(row.currency))).toFixed(2);
   const balance = (currency: string) => balances?.balances.find(b => b.currency === currency)?.available_balance ?? "0";
   async function pay(row: PlanBillRow) {
     setBusy(row.id); setError(""); setNotice("");
@@ -68,9 +76,17 @@ export function PlanBillsPay({ preview, mode = "pay" }: { preview: boolean;
           <span><strong>{label(row)}</strong><small>{t("billpay.dueOn", { date: row.due_date })}</small>
             <small className={short ? "life-warning" : "panel-muted"}>{t("billpay.balance", { amount: formatMoney(balance(row.currency), row.currency, lang) })}</small></span>
           <span className="plan-bills-amount">{formatMoney(row.amount, row.currency, lang)}</span>
-          {short ? <button type="button" className="secondary" onClick={() => workspace?.open({ kind: "wallet" })}>{t("billpay.topUp")}</button>
+          {short ? <span className="plan-bills-actions">
+            <button type="button" className="primary" disabled={preview} aria-expanded={topUp === row.id}
+              onClick={() => setTopUp(topUp === row.id ? null : row.id)}>{t("topup.title")}</button>
+            <button type="button" className="secondary" onClick={() => onExchange ? onExchange({ currency: row.currency, name: label(row), short: missing(row) })
+              : workspace?.open({ kind: "wallet", section: "convert" })}>{t("billpay.topUp")}</button></span>
             : <button type="button" className="primary" disabled={preview || !!busy || policy.pending} onClick={() => void pay(row)}>
               {busy === row.id ? t("billpay.paying") : t("billpay.pay")}</button>}
+          {short && topUp === row.id && <div className="plan-bills-topup">
+            <TopUpForm client={client} preview={preview} currencies={[row.currency]} currency={row.currency} amount={missing(row)}
+              onCancel={() => setTopUp(null)}
+              onDone={result => { setTopUp(null); setNotice(t("topup.doneBill", { amount: formatMoney(result.amount, result.currency, lang), name: label(row) })); void load(); }} /></div>}
         </li>; })}</ul>}
       {loan.length > 0 && <><h3 className="panel-section-title">{t("billpay.loan", { n: loan.length })}</h3>
         <ul className="plan-bills-list is-quiet">{loan.map(row => <li key={row.id}><span><strong>{label(row)}</strong>

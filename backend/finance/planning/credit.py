@@ -52,6 +52,7 @@ def pay(user, data, obj=None):
     if item["token"] != data["expected_token"]:
         raise VersionConflict()
     require(item["kind"] == "bill" and not item["done"], "CREDIT_BILL_REQUIRED")
+    require(not item.get("paid_by_loan"), "BILL_PAID_BY_LOAN")
     require(item["currency"] == CURRENCY, "CREDIT_THB_ONLY")
     bill = PlanBill.objects.select_for_update().get(owner=user, pk=item["source_key"].split(":", 1)[1])
     require(bill.status == "DUE", "BILL_ALREADY_PAID")
