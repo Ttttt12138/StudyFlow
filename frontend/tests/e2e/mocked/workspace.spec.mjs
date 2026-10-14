@@ -51,7 +51,7 @@ test('preview tools preserve chat and wallet drafts, history and all student too
   await page.getByRole('button', { name: 'Restore width' }).click();
   await openTool(page, 'This month');
   await expect(page.locator('.tool-content:not([hidden]) .life-spending')).toBeVisible();
-  await page.getByRole('button', { name: 'Previous tool' }).click();
+  await page.getByRole('button', { name: 'Back to Wallet & payments' }).click();
   await expect(page.locator('#wallet-quote input').first()).toHaveValue('1234');
   await page.getByRole('button', { name: 'Close tool' }).click();
   await expect(conversation.locator('.plan-turn')).toHaveCount(messageCount);

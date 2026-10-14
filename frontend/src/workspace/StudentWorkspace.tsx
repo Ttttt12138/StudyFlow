@@ -63,7 +63,7 @@ export function StudentWorkspace({ preview, onExternal }: { preview: boolean; on
 function WorkspaceBody({ username, preview, onExternal }: { username: string; preview: boolean; onExternal: (kind: Module, preview: boolean) => void }) {
   const { t } = useI18n();
   const control = useWorkspaceNavigation(preview);
-  const { route, stack, menu, setMenu, expanded, setExpanded, open, close, back } = control;
+  const { route, menu, setMenu, expanded, setExpanded, open, close, back, backTarget, registerBack } = control;
   const [host, setHost] = useState<HTMLDivElement | null>(null);
   const [bellHost, setBellHost] = useState<HTMLDivElement | null>(null);
   const [guideHost, setGuideHost] = useState<HTMLElement | null>(null);
@@ -122,8 +122,9 @@ function WorkspaceBody({ username, preview, onExternal }: { username: string; pr
     onOpen={open} onClose={close} onToggle={drawer ? () => setMenu(false) : toggleCollapsed}
     onNewChat={() => { setMenu(false); close(); window.dispatchEvent(new Event("studyflow:new-conversation")); }}
     onStage={stage => { setMenu(false); control.setStage(stage); }} onSignOut={() => void signOut()} />;
-  return <ModuleNavContext.Provider value={nav}><WorkspaceContext.Provider value={{ target: tool, host, bellHost, guideHost, open, close,
-    setStage: control.setStage, account: username, reportPlan }}>
+  const backLabel = backTarget === "page" ? t("ws.backToList") : backTarget ? t("ws.backTo", { name: t(labels[backTarget.kind]) }) : undefined;
+  return <ModuleNavContext.Provider value={nav}><WorkspaceContext.Provider value={{ target: tool, host, bellHost, guideHost, open: target => open(target), close,
+    setStage: control.setStage, account: username, reportPlan, registerBack }}>
     <div ref={frame} className={`student-workspace${tool ? " has-tool" : ""}${expanded ? " tool-expanded" : ""}`}>
       {!small && sidebar(false)}
       {small && menu && <><div className="side-overlay" aria-hidden="true" />{sidebar(true)}</>}
@@ -150,7 +151,7 @@ function WorkspaceBody({ username, preview, onExternal }: { username: string; pr
       <section ref={dock} className="workspace-dock" hidden={!tool} role={small || expanded ? "dialog" : "region"}
         aria-modal={small || expanded ? true : undefined} aria-labelledby="workspace-tool-title">
         <DockHeader kind={tool?.kind ?? null} title={tool ? t(labels[tool.kind]) : ""} preview={route.preview}
-          canBack={stack.length > 1} onBack={back} small={small} expanded={expanded} onExpand={() => setExpanded(!expanded)} onClose={close} />
+          canBack={backTarget !== null} backLabel={backLabel} onBack={back} small={small} expanded={expanded} onExpand={() => setExpanded(!expanded)} onClose={close} />
         <div className="workspace-tool-host" ref={setHost} />
       </section>
       {studentTools.map(kind => { const Component = components[kind]; return Component && <ToolSlot key={kind} kind={kind}>

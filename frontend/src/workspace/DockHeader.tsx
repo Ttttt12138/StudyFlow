@@ -31,15 +31,17 @@ const ICONS: Record<ToolKind, ComponentType<{ size?: number; weight?: "light" | 
  * Tool header: icon, title with a one-line purpose, a quiet preview tag and icon actions.
  * Refresh broadcasts the same event a write does, so whichever tool is open reloads its records.
  */
-export function DockHeader({ kind, title, preview, canBack, onBack, small, expanded, onExpand, onClose }: {
+export function DockHeader({ kind, title, preview, canBack, backLabel, onBack, small, expanded, onExpand, onClose }: {
   kind: ToolKind | null; title: string; preview: boolean; canBack: boolean; onBack: () => void;
+  /** Where back goes, e.g. "Back to the list" or "Back to Wallet"; shown as the tooltip and read out. */
+  backLabel?: string;
   small: boolean; expanded: boolean; onExpand: () => void; onClose: () => void;
 }) {
   const { t } = useI18n();
   const [spin, setSpin] = useState(0);
   const Icon = kind ? ICONS[kind] : null;
   return <div className="workspace-dock-header">
-    {canBack && <button className="secondary" onClick={onBack} aria-label={t("ws.back")}><ArrowLeft size={16} aria-hidden="true" /></button>}
+    {canBack && <button className="secondary" onClick={onBack} aria-label={backLabel ?? t("ws.back")} title={backLabel ?? t("ws.back")}><ArrowLeft size={16} aria-hidden="true" /></button>}
     {Icon && <span className="dock-icon" aria-hidden="true"><Icon size={20} weight="light" /></span>}
     <div className="dock-title">
       <div className="dock-title-row"><h2 id="workspace-tool-title">{title}</h2>

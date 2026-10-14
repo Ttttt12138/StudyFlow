@@ -38,10 +38,10 @@ test('the sidebar adds This month once the plan is confirmed and the wallet once
   await item(page, TODO).click();
   await expect(page.locator('#workspace-tool-title')).toHaveText(TODO);
   await expect(page.locator('.life-spending')).toHaveCount(0);
-  // A row opens its own page with a back button; a checklist item shows its note there.
+  // A row opens its own page; the header arrow goes back to the list; a checklist item shows its note there.
   await page.locator('.life-panel .life-item-main').filter({ hasText: 'Register at the university' }).click();
   await expect(page.locator('.life-panel').getByText('General checklist item', { exact: false })).toBeVisible();
-  await page.locator('.life-panel').getByRole('button', { name: 'Back' }).click();
+  await page.locator('.workspace-dock-header').getByRole('button', { name: 'Back to the list' }).click();
   await expect(page.locator('.life-panel .life-todo')).toBeVisible();
   await expect(page.locator('.life-panel details')).toHaveCount(0);
 
@@ -107,7 +107,7 @@ test('the short-plan preview offers the commercial example alongside two terms w
   await example.check();
   await expect(example).toBeChecked();
   // The family summary is on the "Details and sources" page.
-  const summary = async (text, open = /^Details and sources/, back = 'Back') => {
+  const summary = async (text, open = /^Details and sources/, back = 'Back to the list') => {
     await dock.getByRole('button', { name: open }).click();
     await expect(dock.locator('.assessment-summary')).toContainText(text);
     await dock.getByRole('button', { name: back }).click();
@@ -119,7 +119,7 @@ test('the short-plan preview offers the commercial example alongside two terms w
   await page.setViewportSize({ width: 390, height: 844 });
   await page.getByRole('button', { name: '中文', exact: true }).click();
   await dock.getByRole('radio', { name: '商业助学贷款（示例）', exact: true }).check();
-  await summary('商业助学贷款（示例）', /^明细与来源/, '返回');
+  await summary('商业助学贷款（示例）', /^明细与来源/, '返回列表');
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await expect(dock.getByRole('button', { name: 'Review application' })).toHaveCount(0);
   expect(apiCalls).toEqual([]);

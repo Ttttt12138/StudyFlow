@@ -1,5 +1,5 @@
 export const en = {
-  "ws.tools": "Tools", "ws.close": "Close tool", "ws.back": "Previous tool", "ws.expand": "Expand tool", "ws.restore": "Restore width",
+  "ws.tools": "Tools", "ws.close": "Close tool", "ws.back": "Previous tool", "ws.backToList": "Back to the list", "ws.backTo": "Back to {name}", "ws.expand": "Expand tool", "ws.restore": "Restore width",
   "ws.details": "View details", "ws.plan": "My plan", "ws.bills": "Bills & spending", "ws.record": "Record expense",
   "ws.recordShort": "Expense", "ws.statusShort": "Status",
   "ws.family": "Family links", "ws.pending": "{n} awaiting your decision", "ws.noSchool": "Choose your school",
@@ -11,7 +11,7 @@ export const en = {
   "ws.planTools": "Planning", "ws.moneyTools": "Money & records", "ws.accountTools": "Account & family",
 };
 export const zh: Record<keyof typeof en, string> = {
-  "ws.tools": "工具", "ws.close": "关闭工具", "ws.back": "返回上一工具", "ws.expand": "扩大工具", "ws.restore": "恢复宽度",
+  "ws.tools": "工具", "ws.close": "关闭工具", "ws.back": "返回上一工具", "ws.backToList": "返回列表", "ws.backTo": "返回{name}", "ws.expand": "扩大工具", "ws.restore": "恢复宽度",
   "ws.details": "查看详情", "ws.plan": "我的计划", "ws.bills": "账单与开销", "ws.record": "记一笔",
   "ws.recordShort": "记一笔", "ws.statusShort": "进度与状态",
   "ws.family": "家庭关联", "ws.pending": "{n} 项待你确认", "ws.noSchool": "选择你的学校",
