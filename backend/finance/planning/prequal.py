@@ -45,16 +45,23 @@ def preview(user, data):
 
     principal, months = Decimal(data["principal"]), int(data["months"])
     product = data.get("product") or "custom"
+    method = data.get("method") or "amortized"
     products.check_term(product, months)
+    products.check_method(product, method)
+    grace = products.grace_months(plan, terms["first_due_date"], method)
     rate = products.rate(product, terms["annual_rate"])
     cap = check.get("max_principal")
     require(cap is None or principal <= Decimal(cap), "AMOUNT_ABOVE_PREQUAL")
     require(principal > Decimal(terms["fees"]), "LOAN_FEES_EXCEED_PRINCIPAL")
     result = calculate(QuoteInput(product=product, principal=principal,
                                   annual_rate=rate, fees=Decimal(terms["fees"]), months=months,
-                                  first_due_date=date.fromisoformat(terms["first_due_date"])))
+                                  first_due_date=date.fromisoformat(terms["first_due_date"]), grace_months=grace))
     payment = max(Decimal(r["amount"]) for r in result["repayments"])
+    during = [Decimal(r["amount"]) for r in result["repayments"][:grace]]
     return {"principal": result["principal"], "months": months, "monthly_payment": money(payment),
+            # Interest only while studying: how many months, and the most paid in one of them.
+            "method": method, "interest_only_months": grace,
+            "interest_only_payment": money(max(during)) if during else None,
             "annual_rate": format(rate.normalize(), "f"), "fees": result["fees"], "net_proceeds": result["net_proceeds"],
             "product": product,
             "total_interest": result["total_interest"], "total_repayment": result["total_repayment"],

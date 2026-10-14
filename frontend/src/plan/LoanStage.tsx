@@ -65,7 +65,8 @@ export function LoanStage({ data, quote, client, refresh }: {
     {error && <p role="alert">{error}</p>}
     {signing && quote && <FocusDialog title={t("stage.signTitle")} busy={busy} onClose={() => setSigning(false)}>
       <h2>{t("stage.signTitle")}</h2>
-      <p>{t("simple.months", { n: quote.inputs.months })}</p><QuoteFacts quote={quote} toSchool />
+      <p>{quote.inputs.grace_months ? t("choose.termWithStudy", { study: quote.inputs.grace_months, n: quote.inputs.months })
+        : t("simple.months", { n: quote.inputs.months })}</p><QuoteFacts quote={quote} toSchool />
       <p>{t("stage.signHint")}</p>{error && <p role="alert">{error}</p>}
       <button className="primary" disabled={busy} onClick={sign}>{t("stage.sign")}</button>
       <button className="secondary" disabled={busy} onClick={() => setSigning(false)}>{t("simple.cancel")}</button>

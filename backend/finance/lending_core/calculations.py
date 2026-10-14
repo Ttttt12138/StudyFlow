@@ -33,14 +33,19 @@ def scheduled_payment(terms, rate):
 
 
 def repayment_rows(terms):
+    """`grace_months` rows of interest only, then `months` equal installments that repay the principal."""
     balance, rows = terms.principal, []
     rate = terms.annual_rate / 12
     payment = scheduled_payment(terms, rate)
-    for offset in range(terms.months):
+    grace, last = terms.grace_months, terms.grace_months + terms.months - 1
+    for offset in range(last + 1):
         interest = money(balance * rate)
-        principal = balance if offset == terms.months - 1 else payment - interest
-        if principal <= 0 or principal > balance:
-            raise ValueError("INSTALLMENT_TOO_SMALL")
+        if offset < grace:
+            principal = ZERO
+        else:
+            principal = balance if offset == last else payment - interest
+            if principal <= 0 or principal > balance:
+                raise ValueError("INSTALLMENT_TOO_SMALL")
         balance = money(balance - principal)
         rows.append(
             {

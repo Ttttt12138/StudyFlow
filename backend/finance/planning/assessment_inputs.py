@@ -52,6 +52,8 @@ class LoanTermsInput(Input):
     first_due_date = s.DateField()
     # The one term the family picked; principal null means "as much as the pre-check allows".
     months = s.ChoiceField(choices=TERMS, default=48)
+    # "interest_only": interest only while studying, then `months` equal installments (study loan only).
+    method = s.ChoiceField(choices=["amortized", "interest_only"], default="amortized")
     # Kept so stored inputs from before single-term quotes still validate; no longer read.
     periods = s.ListField(child=s.IntegerField(min_value=1, max_value=60), min_length=1,
                          max_length=3, required=False)
@@ -104,6 +106,7 @@ class LoanPreviewInput(Input):
     principal = amount()
     months = s.ChoiceField(choices=TERMS)
     product = s.ChoiceField(choices=["custom", "commercial_student_demo"], default="custom")
+    method = s.ChoiceField(choices=["amortized", "interest_only"], default="amortized")
 
 
 class LoanDocumentInput(Input):

@@ -120,3 +120,8 @@
 .loan-chooser .loan-chooser-product { display: inline-grid; gap: 2px; height: auto; padding: 6px 12px; text-align: left; }
 .loan-chooser .loan-chooser-product small { color: var(--text-2); font-size: 11px; }
 .loan-chooser .chip:disabled { opacity: .45; cursor: not-allowed; }
+
+/* Interest only while studying: two payment phases, and the study months shaded in the schedule */
+.loan-chooser-phases { display: grid; gap: 4px; }
+.loan-chooser-pay.is-study { color: var(--text-2); font-size: 15px; }
+.loan-chooser-table tr.is-study td { background: var(--surface-2); color: var(--text-2); }

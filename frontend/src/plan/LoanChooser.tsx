@@ -3,11 +3,11 @@ import { useI18n, type MessageKey } from "../i18n";
 import { loanProductLabel, type LoanProduct } from "../loans/products";
 import type { WalletClient } from "../wallet/client";
 import { AssessmentEssentials } from "./AssessmentForm";
-import { TERMS, type AssessmentInputs, type Borrower, type LoanPreview, type Prequal, type Term } from "./assessmentTypes";
+import { TERMS, type AssessmentInputs, type Borrower, type LoanMethod, type LoanPreview, type Prequal, type Term } from "./assessmentTypes";
 import { useShow } from "./currency";
 
-/** What the family picked: an amount within the pre-check (0 = no loan), a term and a product. */
-export type LoanChoice = { principal: number; months: Term; product: LoanProduct };
+/** What the family picked: an amount within the pre-check (0 = no loan), a term, a product and how to repay. */
+export type LoanChoice = { principal: number; months: Term; product: LoanProduct; method: LoanMethod };
 
 const BORROWERS: Borrower[] = ["student_with_parent", "parent"];
 const PRODUCTS: LoanProduct[] = ["custom", "commercial_student_demo"];
@@ -75,21 +75,25 @@ export function LoanChooser({ client, check, choice, onChange, onPreview }: {
     if (choice.principal <= 0) { setPreview(null); onPreview?.(null); return; }
     let live = true;
     const timer = setTimeout(() => {
-      client.post<LoanPreview>("planning/loan-preview/", { principal: choice.principal.toFixed(2), months: choice.months, product: choice.product },
-        `loan-preview:${choice.principal}:${choice.months}:${choice.product}`)
+      client.post<LoanPreview>("planning/loan-preview/", { principal: choice.principal.toFixed(2), months: choice.months, product: choice.product,
+        method: choice.method }, `loan-preview:${choice.principal}:${choice.months}:${choice.product}:${choice.method}`)
         .then(next => { if (live) { setPreview(next); setError(""); onPreview?.(next); } })
         .catch(e => { if (live) { setPreview(null); onPreview?.(null); setError(e instanceof Error ? e.message : String(e)); } });
     }, 300);
     return () => { live = false; clearTimeout(timer); };
-  }, [client, choice.principal, choice.months, choice.product]);
+  }, [client, choice.principal, choice.months, choice.product, choice.method]);
   const set = (patch: Partial<LoanChoice>) => onChange({ ...choice, ...patch });
   const offer = (product: LoanProduct) => check.products?.find(o => o.key === product);
   const terms = offer(choice.product)?.terms ?? [...TERMS];
-  // A term the new product does not offer (60 months outside the study loan) falls back to its longest one.
+  const methods = offer(choice.product)?.methods ?? ["amortized"];
+  // A term or method the new product does not offer (60 months, interest only) falls back to what it does offer.
   const pickProduct = (product: LoanProduct) => {
     const allowed = offer(product)?.terms ?? [...TERMS];
-    set({ product, months: (allowed.includes(choice.months) ? choice.months : Math.max(...allowed)) as Term });
+    const ways = offer(product)?.methods ?? ["amortized"];
+    set({ product, months: (allowed.includes(choice.months) ? choice.months : Math.max(...allowed)) as Term,
+      method: ways.includes(choice.method) ? choice.method : "amortized" });
   };
+  const study = preview?.interest_only_months ?? 0;
   const amount = (value: number) => Math.max(0, Math.min(max, Math.round(value / STEP) * STEP));
   return <section className="loan-chooser" aria-label={t("choose.title")}>
     <h3 className="panel-section-title">{t("choose.title")}</h3>
@@ -120,20 +124,27 @@ export function LoanChooser({ client, check, choice, onChange, onPreview }: {
         {!terms.includes(60) && <small className="panel-muted">{t("choose.onlyStudy")}</small>}
       </div>
       <fieldset className="loan-chooser-method"><legend>{t("choose.method")}</legend>
-        <label><input type="radio" name="method" checked readOnly />{t("choose.method.amortized")}</label>
-        <label className="is-disabled"><input type="radio" name="method" disabled />{t("choose.method.interestOnly")}
-          <span className="panel-tag">{t("choose.soon")}</span></label>
+        <label><input type="radio" name="method" checked={choice.method === "amortized"} onChange={() => set({ method: "amortized" })} />
+          {t("choose.method.amortized")}</label>
+        <label className={methods.includes("interest_only") ? undefined : "is-disabled"}>
+          <input type="radio" name="method" checked={choice.method === "interest_only"} disabled={!methods.includes("interest_only")}
+            onChange={() => set({ method: "interest_only" })} />{t("choose.method.interestOnly")}
+          {!methods.includes("interest_only") && <span className="panel-tag">{t("choose.method.studyOnly")}</span>}</label>
+        {choice.method === "interest_only" && <small className="panel-muted">{t("choose.method.note")}</small>}
       </fieldset>
       <p className="panel-muted">{t("choose.hint")}</p>
       <div className="loan-chooser-plan" role="status" aria-live="polite">
         <h4>{t("choose.schedule")}</h4>
         {preview ? <>
-          <p className="loan-chooser-pay">{t("choose.monthly", { amount: thb(preview.monthly_payment) })}</p>
+          {study > 0 ? <div className="loan-chooser-phases">
+            <p className="loan-chooser-pay is-study">{t("choose.studyPay", { n: study, amount: thb(preview.interest_only_payment) })}</p>
+            <p className="loan-chooser-pay">{t("choose.afterPay", { n: preview.months, amount: thb(preview.monthly_payment) })}</p>
+          </div> : <p className="loan-chooser-pay">{t("choose.monthly", { amount: thb(preview.monthly_payment) })}</p>}
           <dl className="assessment-facts loan-chooser-facts">
             <div><dt>{t("choose.product")}</dt><dd>{t(loanProductLabel(preview.product))}</dd></div>
             <div><dt>{t("choose.amount")}</dt><dd>{thb(preview.principal)}</dd></div>
             <div><dt>{t("simple.rate")}</dt><dd>{(Number(preview.annual_rate) * 100).toFixed(2).replace(/\.?0+$/, "")}%</dd></div>
-            <div><dt>{t("choose.term")}</dt><dd>{t("simple.months", { n: preview.months })}</dd></div>
+            <div><dt>{t("choose.term")}</dt><dd>{study > 0 ? t("choose.termWithStudy", { study, n: preview.months }) : t("simple.months", { n: preview.months })}</dd></div>
             <div><dt>{t("simple.fees")}</dt><dd>{thb(preview.fees)}</dd></div>
             <div><dt>{t("stage.toSchool")}</dt><dd>{thb(preview.net_proceeds)}</dd></div>
             <div><dt>{t("choose.firstDue")}</dt><dd>{preview.first_due_date}</dd></div>
@@ -146,11 +157,11 @@ export function LoanChooser({ client, check, choice, onChange, onPreview }: {
               <caption>{t("choose.table")}</caption>
               <thead><tr><th scope="col">{t("choose.col.no")}</th><th scope="col">{t("choose.col.date")}</th><th scope="col">{t("choose.col.pay")}</th>
                 <th scope="col">{t("choose.col.principal")}</th><th scope="col">{t("choose.col.interest")}</th><th scope="col">{t("choose.col.left")}</th></tr></thead>
-              <tbody>{preview.schedule.map(r => <tr key={r.number}><td>{r.number}</td><td>{r.due_date}</td><td>{num(r.amount)}</td>
+              <tbody>{preview.schedule.map(r => <tr key={r.number} className={r.number <= study ? "is-study" : undefined}><td>{r.number}</td><td>{r.due_date}</td><td>{num(r.amount)}</td>
                 <td>{num(r.principal)}</td><td>{num(r.interest)}</td><td>{num(r.remaining_principal)}</td></tr>)}</tbody>
             </table>
           </div>
-          <p className="panel-muted">{t("choose.tableNote")}</p>
+          <p className="panel-muted">{t(study > 0 ? "choose.tableNoteStudy" : "choose.tableNote", { n: study })}</p>
         </> : error ? <p role="alert">{error}</p> : <p className="panel-muted">{t("simple.saving")}</p>}
       </div>
     </>}

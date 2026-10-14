@@ -16,7 +16,7 @@ export function AssessmentEssentials({ value: v, onChange }: { value: Assessment
   const set = (patch: Partial<AssessmentInputs>) => onChange({ ...v, ...patch });
   return <div className="assessment-essentials">
       <label className="assessment-money">{t("simple.funds")}<span>
-        <input type="number" min="0" step="0.01" inputMode="decimal" value={v.available_funds ?? ""}
+        <input type="number" min="0" step="0.01" inputMode="decimal" aria-label={t("simple.funds")} value={v.available_funds ?? ""}
           onChange={e => set({ available_funds: e.target.value || null })} />
         <select aria-label={t("simple.currency")} value={v.funds_currency} onChange={e => set({ funds_currency: e.target.value })}>
           {["THB", "CNY", "USD", "GBP", "AUD", "SGD", "JPY", "MYR", "EUR"].map(c => <option key={c}>{c}</option>)}</select></span></label>

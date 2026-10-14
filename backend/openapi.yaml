@@ -6002,6 +6002,11 @@ components:
         first_due_date:
           type: string
           format: date
+        grace_months:
+          type: integer
+          maximum: 72
+          minimum: 0
+          default: 0
       required:
       - annual_rate
       - fees
@@ -6023,6 +6028,10 @@ components:
           allOf:
           - $ref: '#/components/schemas/ProductEnum'
           default: custom
+        method:
+          allOf:
+          - $ref: '#/components/schemas/MethodEnum'
+          default: amortized
       required:
       - months
       - principal
@@ -6055,6 +6064,10 @@ components:
           allOf:
           - $ref: '#/components/schemas/MonthsEnum'
           default: 48
+        method:
+          allOf:
+          - $ref: '#/components/schemas/MethodEnum'
+          default: amortized
         periods:
           type: array
           items:
@@ -6081,6 +6094,14 @@ components:
           maxLength: 2000
       required:
       - text
+    MethodEnum:
+      enum:
+      - amortized
+      - interest_only
+      type: string
+      description: |-
+        * `amortized` - amortized
+        * `interest_only` - interest_only
     MonthInput:
       type: object
       properties:

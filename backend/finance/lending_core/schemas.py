@@ -49,6 +49,8 @@ class QuoteInput(Input):
     fees: Amount
     months: int = Field(ge=1, le=60, strict=True)
     first_due_date: date
+    # Interest-only months before the equal installments start (the study years of a student loan).
+    grace_months: int = Field(default=0, ge=0, le=72, strict=True)
 
     @model_validator(mode="after")
     def validate_terms(self):

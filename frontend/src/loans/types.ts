@@ -9,7 +9,9 @@ export type Repayment = { number: number; due_date: string; principal: string; i
 export type LoanQuote = {
   id: string;
   created_at: string;
-  inputs: { product?: LoanProduct; currency?: string; principal: string; annual_rate: string; fees: string; months: number; first_due_date: string };
+  inputs: { product?: LoanProduct; currency?: string; principal: string; annual_rate: string; fees: string; months: number; first_due_date: string;
+    /** Interest-only months before the equal installments (a study loan repaid after the course). */
+    grace_months?: number };
   result: {
     currency: string; principal: string; net_proceeds: string; fees: string; total_interest: string; total_repayment: string;
     repayments: Repayment[]; total_cost_over_net_proceeds?: string; maximum_installment?: string;

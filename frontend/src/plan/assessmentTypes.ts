@@ -11,19 +11,24 @@ export type AssessmentInputs = {
   repayment: RepaymentValues & { from_month: string; to_month: string; changes: ({ month: string } & Partial<RepaymentValues>)[] };
   loan: { product?: LoanProduct; principal: string | null; annual_rate: string; fees: string; first_due_date: string;
     /** The one term picked; `periods` is kept on older stored inputs only. */
-    months?: Term; periods?: number[] };
+    months?: Term; periods?: number[];
+    /** "interest_only": interest only while studying, then `months` equal installments (study loan only). */
+    method?: LoanMethod };
   borrower?: Borrower;
 };
 export const TERMS = [24, 36, 48, 60] as const;
 export type Term = typeof TERMS[number];
+export type LoanMethod = "amortized" | "interest_only";
 export type Borrower = "student_with_parent" | "parent";
 /** The simulated pre-check: the most that can be borrowed is the full-course gap plus fees (THB); income is not asked. */
 export type Prequal = { status: "enough" | "no_gap" | "unknown"; currency: "THB"; annual_rate: string;
   longest_term: number; gap: string | null; max_principal: string | null;
   /** Each product's rate and terms: the study loan has a lower fixed rate and is the only one over 60 months. */
-  products?: { key: LoanProduct; annual_rate: string; terms: number[] }[] };
+  products?: { key: LoanProduct; annual_rate: string; terms: number[]; methods?: LoanMethod[] }[] };
 export type LoanPreview = { principal: string; months: number; monthly_payment: string; total_interest: string; total_repayment: string;
   first_due_date: string; last_due_date: string; annual_rate: string; fees: string; net_proceeds: string; product: LoanProduct;
+  /** Interest-only months while studying (0 for equal installments from the start) and the most paid in one. */
+  method?: LoanMethod; interest_only_months?: number; interest_only_payment?: string | null;
   schedule: { number: number; due_date: string; amount: string; principal: string; interest: string; remaining_principal: string }[] };
 export type LoanDocument = { id: string; key: string; title: Text | null; done: boolean; due_date: string | null; version: number };
 export type LoanPayout = { id: string; amount: string; bill_amount: string; bill_currency: string; bill_label: Text | string;

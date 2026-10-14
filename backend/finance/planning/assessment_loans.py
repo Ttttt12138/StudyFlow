@@ -6,7 +6,7 @@ from finance.workflow_common import require
 from . import products
 
 
-def create_quotes(user, inputs, check):
+def create_quotes(user, inputs, check, plan=None):
     """One quote for the amount, term and product the family picked, within the pre-check's maximum.
 
     No amount picked means the pre-check's maximum. A planning loan is approved by the pre-check (planning_decision),
@@ -25,10 +25,13 @@ def create_quotes(user, inputs, check):
     require(Decimal(principal) > Decimal(terms["fees"]), "LOAN_FEES_EXCEED_PRINCIPAL")
     months = int(terms.get("months") or (terms.get("periods") or [48])[0])
     product = terms.get("product") or "custom"
+    method = terms.get("method") or "amortized"
     products.check_term(product, months)
+    products.check_method(product, method)
     body = {"product": product, "currency": "THB", "principal": str(principal),
             "annual_rate": str(products.rate(product, terms["annual_rate"])), "fees": terms["fees"], "months": months,
-            "first_due_date": date.fromisoformat(terms["first_due_date"])}
+            "first_due_date": date.fromisoformat(terms["first_due_date"]),
+            "grace_months": products.grace_months(plan, terms["first_due_date"], method) if plan is not None else 0}
     quote = budget_services.create_loan(user, body)
     quote["assessment"] = {"status": "NOT_ASSESSED", "missing_inputs": [], "shortfall_months": []}
     return [quote]
