@@ -4,7 +4,7 @@ import { test } from '@playwright/test';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
-import { backend, python, screenshot } from '../../support.mjs';
+import { backend, python, screenshot, enroll } from '../../support.mjs';
 
 const TODAY = new Date().toISOString().slice(0, 10);
 const SNAPSHOT = { currency: 'THB', as_of: TODAY, opening_balance: '80000.00', reserve: '15000.00', events: [] };
@@ -15,6 +15,7 @@ test('real Django conversion: quotes for every tier, password step-up, balances 
   const passwords = { student: randomUUID(), operator: randomUUID() };
   execFileSync(python, ['manage.py', 'shell', '-c', 'import os,json; from django.contrib.auth import get_user_model; from finance.corridors import ensure_default_corridors; from finance.policy_defaults import ensure_default_limits; names=json.loads(os.environ["UAT_NAMES"]); passwords=json.loads(os.environ["UAT_PASSWORDS"]); [get_user_model().objects.create_user(username=n,password=passwords[k],is_staff=k!="student") for k,n in names.items()]; ensure_default_corridors(); ensure_default_limits()'],
     { cwd: backend, env: { ...process.env, UAT_NAMES: JSON.stringify(names), UAT_PASSWORDS: JSON.stringify(passwords) }, stdio: 'pipe' });
+  enroll(names.student);
   const contexts = {}, errors = [];
   async function login(kind, next) {
     const context = await browser.newContext({ locale: 'en-US', viewport: { width: 1440, height: 1000 } });
@@ -47,9 +48,10 @@ test('real Django conversion: quotes for every tier, password step-up, balances 
     const thbBefore = Number(await balance('THB'));
 
     await wallet.reload();
-    // Currency exchange is its own tab in the wallet panel.
-    await wallet.getByRole('tab', { name: 'Exchange' }).click();
-    const section = wallet.locator('section').filter({ has: wallet.getByRole('heading', { name: 'Convert between currencies' }) });
+    // Exchange opens from the balance view of the wallet panel.
+    await wallet.locator('.panel-footer-center').getByRole('button', { name: 'Exchange', exact: true }).click();
+    const section = wallet.locator('#wallet-convert');
+    await section.getByRole('heading', { name: 'Convert between currencies' }).waitFor();
     await section.getByLabel('Convert from').selectOption('CNY');
     await section.getByLabel('Convert to').selectOption('THB');
     await section.getByLabel('Amount to convert (CNY)').fill('2000');
@@ -61,7 +63,7 @@ test('real Django conversion: quotes for every tier, password step-up, balances 
     // wallet.convert is T2: the password panel opens, then the retry carries the single-use grant.
     await wallet.getByRole('dialog', { name: 'Review and confirm' }).getByLabel('Password', { exact: true }).fill(passwords.student);
     await wallet.getByRole('dialog', { name: 'Review and confirm' }).getByRole('button', { name: 'Confirm', exact: true }).click();
-    await wallet.getByText('Conversion recorded. Balances and the ledger were refreshed.').waitFor();
+    await section.getByRole('heading', { name: 'Conversion recorded' }).waitFor();
     await wallet.screenshot({ path: screenshot('wallet-conversion.png'), fullPage: true });
 
     assert.equal(await balance('CNY'), '8000.00');

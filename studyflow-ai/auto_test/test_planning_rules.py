@@ -2,8 +2,15 @@
 
 import json
 
-from studyflow_ai.agent import AgentContext, AgentPlanner, FinalStep, Observation, RuleAgentProvider, ToolSpec
-from studyflow_ai.agent import prompts
+from studyflow_ai.agent import (
+    AgentContext,
+    AgentPlanner,
+    FinalStep,
+    Observation,
+    RuleAgentProvider,
+    ToolSpec,
+    prompts,
+)
 
 PLANNING_TOOLS = ["list_schools", "get_school_profile", "compare_schools", "estimate_total_cost",
                   "get_plan", "save_plan", "simulate_loan", "confirm_plan", "confirm_enrollment", "list_bills",
