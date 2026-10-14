@@ -1,0 +1,20 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ 'custom'
+- 'commercial_student_demo'
+
+    at file:///D:/Qoder-project/AI%20studyflow/frontend/auto_test/short-planning.browser.mjs:181:12 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 'custom',
+  expected: 'commercial_student_demo',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v25.5.0

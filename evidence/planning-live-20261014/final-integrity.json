@@ -1,0 +1,15 @@
+{
+  "backend_tests": 155,
+  "ai_focused_tests": 136,
+  "browser_journeys": 2,
+  "live_turns": 8,
+  "live_model_calls": 15,
+  "model_tool_errors": 0,
+  "sensitive_keys_or_headers_found": false,
+  "runner_ast_unchanged_after_spacing_cleanup": true,
+  "post_run_source_changes": [
+    "backend/auto_test/test_short_planning_browser.py"
+  ],
+  "executed_runner_sha256": "ab7bc4b8dd7a75f4e935373e73fc5af2446352b57541e902955974c748f0c56d",
+  "current_runner_sha256": "b10cdd5d9963e354663abb35d63a687506d8e6a3f9a4d20b58f4b989b586d406"
+}

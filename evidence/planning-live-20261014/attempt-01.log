@@ -1,0 +1,65 @@
+Using existing test database for alias 'default'...
+
+F
+======================================================================
+FAIL: test_desktop_and_mobile_real_api (auto_test.test_short_planning_browser.ShortPlanningBrowserTests.test_desktop_and_mobile_real_api)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\Qoder-project\AI studyflow\backend\auto_test\test_short_planning_browser.py", line 23, in test_desktop_and_mobile_real_api
+    self.run_browser(mode)
+    ~~~~~~~~~~~~~~~~^^^^^^
+  File "D:\Qoder-project\AI studyflow\backend\auto_test\test_short_planning_browser.py", line 61, in run_browser
+    self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+locator.fill: Timeout 30000ms exceeded.
+Call log:
+  - waiting for locator('.assessment-panel').locator('form.assessment-quick').getByLabel('Available study funds', { exact: true })
+    - locator resolved to <input min="0" step="0.01" type="number" value="10000.00" inputmode="decimal" aria-label="Available study funds"/>
+    - fill("10000")
+  - attempting fill action
+    2 × waiting for element to be visible, enabled and editable
+      - element is not enabled
+    - retrying fill action
+    - waiting 20ms
+    - waiting for element to be visible, enabled and editable
+    - element is not enabled
+  - retrying fill action
+    - waiting 100ms
+    - waiting for element to be visible, enabled and editable
+  - element was detached from the DOM, retrying
+
+    at D:\Qoder-project\AI studyflow\frontend\auto_test\short-planning.browser.mjs:107:59 {
+  log: [
+    "  - waiting for locator('.assessment-panel').locator('form.assessment-quick').getByLabel('Available study funds', { exact: true })",
+    '    - locator resolved to <input min="0" step="0.01" type="number" value="10000.00" inputmode="decimal" aria-label="Available study funds"/>',
+    '    - fill("10000")',
+    '  - attempting fill action',
+    '    2 × waiting for element to be visible, enabled and editable',
+    '      - element is not enabled',
+    '    - retrying fill action',
+    '    - waiting 20ms',
+    '    - waiting for element to be visible, enabled and editable',
+    '    - element is not enabled',
+    '  - retrying fill action',
+    '    - waiting 100ms',
+    '    - waiting for element to be visible, enabled and editable',
+    '  - element was detached from the DOM, retrying'
+  ],
+  name: 'TimeoutError'
+}
+
+Node.js v25.5.0
+
+
+----------------------------------------------------------------------
+Ran 1 test in 57.060s
+
+FAILED (failures=1)
+Preserving test database for alias 'default'...
+
+Found 1 test(s).
+System check identified no issues (0 silenced).

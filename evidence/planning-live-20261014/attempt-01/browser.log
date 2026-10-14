@@ -1,0 +1,42 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+locator.fill: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('.assessment-panel').locator('form.assessment-quick').getByLabel('Available study funds', { exact: true })[22m
+[2m    - locator resolved to <input min="0" step="0.01" type="number" value="10000.00" inputmode="decimal" aria-label="Available study funds"/>[22m
+[2m    - fill("10000")[22m
+[2m  - attempting fill action[22m
+[2m    2 × waiting for element to be visible, enabled and editable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying fill action[22m
+[2m    - waiting 20ms[22m
+[2m    - waiting for element to be visible, enabled and editable[22m
+[2m    - element is not enabled[22m
+[2m  - retrying fill action[22m
+[2m    - waiting 100ms[22m
+[2m    - waiting for element to be visible, enabled and editable[22m
+[2m  - element was detached from the DOM, retrying[22m
+
+    at D:\Qoder-project\AI studyflow\frontend\auto_test\short-planning.browser.mjs:107:59 {
+  log: [
+    "  - waiting for locator('.assessment-panel').locator('form.assessment-quick').getByLabel('Available study funds', { exact: true })",
+    '    - locator resolved to <input min="0" step="0.01" type="number" value="10000.00" inputmode="decimal" aria-label="Available study funds"/>',
+    '    - fill("10000")',
+    '  - attempting fill action',
+    '    2 × waiting for element to be visible, enabled and editable',
+    '      - element is not enabled',
+    '    - retrying fill action',
+    '    - waiting 20ms',
+    '    - waiting for element to be visible, enabled and editable',
+    '    - element is not enabled',
+    '  - retrying fill action',
+    '    - waiting 100ms',
+    '    - waiting for element to be visible, enabled and editable',
+    '  - element was detached from the DOM, retrying'
+  ],
+  name: 'TimeoutError'
+}
+
+Node.js v25.5.0

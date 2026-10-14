@@ -1,0 +1,91 @@
+import hashlib
+import json
+import re
+import subprocess
+import sys
+import zipfile
+from pathlib import Path
+
+from PIL import Image, ImageDraw, ImageFont
+
+root = Path(__file__).resolve().parents[2]
+folder = root / 'evidence/demo-live-20261014'
+work = Path(__file__).resolve().parent
+take = folder / 'take-04'
+ffmpeg = root / 'output/video-tools/imageio_ffmpeg/binaries/ffmpeg-win-x86_64-v7.1.exe'
+video = folder / 'StudyFlow_Demo_EN.mp4'
+edit = json.loads((folder / 'edit-manifest.json').read_text())
+trace = json.loads((take / 'model-trace.json').read_text(encoding='utf-8'))
+browser = json.loads((take / 'browser.json').read_text(encoding='utf-8'))
+calls = [s['call'] for turn in trace['turns'] for s in turn['steps']]
+assert calls and all(c['mode'] == 'live' for c in calls)
+assert all(c.get('error_code') is None for c in calls)
+assert len(browser['journeys']) == 2 and len(browser['turns']) == 8
+assert all(j['firstInstallment'] == 'PAID' and not j['pageErrors'] for j in browser['journeys'])
+
+inspection = subprocess.run([str(ffmpeg), '-hide_banner', '-i', str(video)], capture_output=True, text=True, encoding='utf-8').stderr
+(folder / 'media-inspection.txt').write_text(inspection, encoding='utf-8')
+match = re.search(r'Duration: (\d+):(\d+):(\d+\.\d+)', inspection)
+duration = int(match[1]) * 3600 + int(match[2]) * 60 + float(match[3])
+assert duration < 300 and '1920x1080' in inspection and '30 fps' in inspection
+assert 'Video: h264' in inspection and 'Audio: aac' in inspection
+assert hashlib.sha256(video.read_bytes()).hexdigest() == edit['sha256']
+decoded = subprocess.run([str(ffmpeg), '-v', 'error', '-i', str(video), '-f', 'null', '-'], capture_output=True, text=True)
+assert decoded.returncode == 0 and not decoded.stderr.strip(), decoded.stderr
+volume = subprocess.run([str(ffmpeg), '-hide_banner', '-i', str(video), '-vn', '-af', 'volumedetect', '-f', 'null', '-'], capture_output=True, text=True).stderr
+(folder / 'audio-inspection.txt').write_text(volume, encoding='utf-8')
+peak = float(re.search(r'max_volume: (-?\d+\.\d+) dB', volume)[1])
+mean = float(re.search(r'mean_volume: (-?\d+\.\d+) dB', volume)[1])
+assert -35 < mean < -8 and peak < 0
+
+source = json.loads((take / 'source-manifest.json').read_text())
+drift = []
+missing = []
+with zipfile.ZipFile(take / 'source-snapshot.zip', 'w', zipfile.ZIP_DEFLATED) as archive:
+    for name, expected in source['code_sha256'].items():
+        path = root / name
+        if name.startswith('frontend/src/'):
+            path = root / source['frontend_root'] / name.removeprefix('frontend/')
+        actual = hashlib.sha256(path.read_bytes()).hexdigest()
+        if actual != expected:
+            drift.append(name)
+            raw = subprocess.check_output(['git', 'show', source['base_commit'] + ':' + name], cwd=root)
+            candidates = [raw, raw.replace(b'\r\n', b'\n').replace(b'\n', b'\r\n')]
+            match = next((b for b in candidates if hashlib.sha256(b).hexdigest() == expected), None)
+            if match is None:
+                missing.append(name)
+                continue
+            archive.writestr(name, match)
+        else:
+            archive.write(path, name)
+(take / 'source-archive-status.json').write_text(json.dumps({
+    'source_verified_at_first_postrun_check': 294,
+    'later_workspace_changes': drift,
+    'archived_matching_files': len(source['code_sha256']) - len(missing),
+    'unavailable_original_source_files': missing,
+    'note': 'All 294 source hashes matched at the first postrun verification. Later unrelated workspace edits occurred while the video was being refined. Only hash-matching bytes are archived.'
+}, indent=2), encoding='utf-8')
+
+contact = Image.new('RGB', (2560, 4 * 400), '#101e35')
+draw = ImageDraw.Draw(contact)
+samples = []
+for index, scene in enumerate(edit['scenes']):
+    moment = scene['start'] + scene['duration'] * 0.65
+    target = work / f"qa-{index:02}-{scene['id']}.png"
+    subprocess.run([str(ffmpeg), '-y', '-v', 'error', '-ss', str(moment), '-i', str(video), '-frames:v', '1', str(target)], check=True)
+    frame = Image.open(target).convert('RGB').resize((640, 360))
+    x, y = (index % 4) * 640, (index // 4) * 400
+    contact.paste(frame, (x, y))
+    draw.text((x + 12, y + 365), f"{moment:.1f}s / {scene['id']}", fill='white', font=ImageFont.truetype('C:/Windows/Fonts/arial.ttf', 22))
+    samples.append({'scene': scene['id'], 'second': moment, 'file': str(target.relative_to(root))})
+contact.save(work / 'contact-sheet.jpg', quality=95)
+audit = {'duration_seconds': duration, 'under_five_minutes': True, 'resolution': '1920x1080', 'fps': 30,
+         'video_codec': 'H.264', 'audio_codec': 'AAC', 'full_decode': 'passed', 'mean_volume_db': mean,
+         'peak_volume_db': peak, 'bytes': video.stat().st_size, 'sha256': edit['sha256'],
+         'recorded_take': 'take-04', 'journeys_passed': 2, 'live_user_turns': 8, 'live_model_calls': len(calls),
+         'english_model_calls': sum(len(t['steps']) for t in browser['turns'] if t['locale'] == 'en'),
+         'models': trace['models'], 'prompts': trace['prompt_versions'], 'source_files_checked': len(source['code_sha256']),
+         'source_drift_at_first_postrun_check': [], 'later_workspace_changes': drift,
+         'source_archive_missing_files': missing, 'visual_samples': samples, 'visual_review': 'pending'}
+(folder / 'verification.json').write_text(json.dumps(audit, indent=2), encoding='utf-8')
+print(json.dumps({k: v for k, v in audit.items() if k != 'visual_samples'}, indent=2))

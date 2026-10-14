@@ -1,0 +1,1587 @@
+{
+  "planner": "live external model",
+  "turns": [
+    {
+      "id": "f2b2dd35-711b-4875-8bc2-aad2c9f66e55",
+      "type": "agentsession",
+      "created_at": "2026-10-14T13:18:38.523Z",
+      "goal": "Compare PSU Phuket, Chulalongkorn, Mahidol and Thammasat",
+      "locale": "en",
+      "mode": "live",
+      "status": "COMPLETED",
+      "final_answer": "**Estimated full-course costs (THB):**\n\n| University | Programme length | Full-course total | First-year total |\n|---|---:|---:|---:|\n| PSU Phuket | 3.5 years | 1,013,800 | 316,100 |\n| Chulalongkorn | 4 years | 2,351,350 | 675,250 |\n| Mahidol (MUIC) | 4 years | 2,372,550 | 622,200 |\n| Thammasat | 4 years | 2,301,000 | 597,750 |\n\nPSU Phuket is the least expensive overall; Mahidol is the most expensive, by 71,550 THB. These estimates include tuition, living and essential costs. Figures are sample estimates based on public sources. A useful next step is to compare the programmes or review the funding gap for your preferred school.",
+      "error_code": "",
+      "write_count": 0,
+      "updated_at": "2026-10-14T13:18:51.038Z",
+      "conversation": "c5c47c0e-a448-4c4e-8d34-42d2f3db22ac",
+      "cards": [
+        {
+          "type": "comparison",
+          "sample": true,
+          "schools": [
+            {
+              "key": "psu-phuket",
+              "city": {
+                "en": "Kathu, Phuket",
+                "zh": "普吉府卡图县"
+              },
+              "name": {
+                "en": "Prince of Songkla University, Phuket Campus",
+                "zh": "宋卡王子大学（普吉校区）"
+              },
+              "total": "1013800.00",
+              "years": 3.5,
+              "intake": "2027-08",
+              "sample": true,
+              "country": {
+                "en": "Thailand",
+                "zh": "泰国"
+              },
+              "program": {
+                "en": "BBA in International Business (Faculty of International Studies)",
+                "zh": "国际商务工商管理学士（国际研究学院）"
+              },
+              "sources": [
+                {
+                  "url": "https://sites.google.com/phuket.psu.ac.th/fispsuphuket/International-Students",
+                  "title": "FIS PSU Phuket - International Students (tuition, fees, dormitory)",
+                  "accessed": "2026-10-12"
+                },
+                {
+                  "url": "https://www.psu.ac.th/phuket/en/on-campus-accommodation-2/",
+                  "title": "PSU Phuket - On-campus accommodation",
+                  "accessed": "2026-10-12"
+                },
+                {
+                  "url": "https://gao.psu.ac.th/admission/academic-calendar",
+                  "title": "PSU Global Affairs Office - Academic Calendar 2026",
+                  "accessed": "2026-10-12"
+                },
+                {
+                  "url": "https://bangkok.immigration.go.th/en/fee_en/",
+                  "title": "Immigration Division 1 - Fees",
+                  "accessed": "2026-10-12"
+                }
+              ],
+              "website": "https://sites.google.com/phuket.psu.ac.th/fispsuphuket/International-Students",
+              "complete": true,
+              "currency": "THB",
+              "total_low": "848300.00",
+              "start_date": "2027-08-09",
+              "total_high": "1179300.00",
+              "observed_at": "2026-10-12",
+              "duration_years": 3.5,
+              "duration_months": 42,
+              "living_per_year": "133950.00",
+              "first_year_total": "316100.00",
+              "missing_cost_ids": [],
+              "tuition_per_year": "143000.00"
+            },
+            {
+              "key": "chulalongkorn",
+              "city": {
+                "en": "Bangkok",
+                "zh": "曼谷"
+              },
+              "name": {
+                "en": "Chulalongkorn University",
+                "zh": "朱拉隆功大学"
+              },
+              "total": "2351350.00",
+              "years": 4,
+              "intake": "2027-08",
+              "sample": true,
+              "country": {
+                "en": "Thailand",
+                "zh": "泰国"
+              },
+              "program": {
+                "en": "BBA International Program, Chulalongkorn Business School",
+                "zh": "工商管理学士国际课程（朱拉隆功商学院）"
+              },
+              "sources": [
+                {
+                  "url": "https://bba.acc.chula.ac.th/tuition-and-fees",
+                  "title": "BBA International, Chulalongkorn - Tuition & Fees",
+                  "accessed": "2026-10-12"
+                },
+                {
+                  "url": "https://bba.acc.chula.ac.th/international-students",
+                  "title": "BBA International, Chulalongkorn - International Students (scholarships)",
+                  "accessed": "2026-10-12"
+                },
+                {
+                  "url": "https://bba.acc.chula.ac.th/academic-calendar",
+                  "title": "BBA International, Chulalongkorn - Academic Calendar AY2026",
+                  "accessed": "2026-10-12"
+                },
+                {
+                  "url": "https://www.inter.chula.ac.th/international-students/campus-life/accommodation/",
+                  "title": "Chulalongkorn OIA - Accommodation (CU iHouse)",
+                  "accessed": "2026-10-12"
+                },
+                {
+                  "url": "https://bangkok.immigration.go.th/en/fee_en/",
+                  "title": "Immigration Division 1 - Fees",
+                  "accessed": "2026-10-12"
+                }
+              ],
+              "website": "https://bba.acc.chula.ac.th/",
+              "complete": true,
+              "currency": "THB",
+              "total_low": "2118650.00",
+              "start_date": "2027-08-02",
+              "total_high": "2584050.00",
+              "observed_at": "2026-10-12",
+              "duration_years": 4,
+              "duration_months": 48,
+              "living_per_year": "291600.00",
+              "first_year_total": "675250.00",
+              "missing_cost_ids": [],
+              "tuition_per_year": "323250.00"
+            },
+            {
+              "key": "mahidol",
+              "city": {
+                "en": "Salaya, Nakhon Pathom (west of Bangkok)",
+                "zh": "佛统府沙拉亚（曼谷西郊）"
+              },
+              "name": {
+                "en": "Mahidol University International College (MUIC)",
+                "zh": "玛希敦大学国际学院（MUIC）"
+              },
+              "total": "2372550.00",
+              "years": 4,
+              "intake": "2027-09",
+              "sample": true,
+              "country": {
+                "en": "Thailand",
+                "zh": "泰国"
+              },
+              "program": {
+                "en": "BBA in International Business (trimester system)",
+                "zh": "国际商务工商管理学士（三学期制）"
+              },
+              "sources": [
+                {
+                  "url": "https://muic.mahidol.ac.th/eng/admissions/fees-and-costs/undergraduate-tuition-fees/",
+                  "title": "MUIC Undergraduate Tuition & Fees (updated 25 Aug 2025; read via Wayback snapshot 2026-03-10)",
+                  "accessed": "2026-10-12"
+                },
+                {
+                  "url": "https://web.archive.org/web/20260310165237/https://muic.mahidol.ac.th/eng/admissions/fees-and-costs/undergraduate-tuition-fees/",
+                  "title": "Wayback Machine snapshot of MUIC tuition page",
+                  "accessed": "2026-10-12"
+                },
+                {
+                  "url": "https://muic.mahidol.ac.th/eng/academic-resources/academic-calendar/",
+                  "title": "MUIC Academic Calendar (read via Wayback snapshot 2026-03-10)",
+                  "accessed": "2026-10-12"
+                },
+                {
+                  "url": "https://muic.mahidol.ac.th/eng/study-abroad/inbound-student/housing-list/",
+                  "title": "MUIC Housing List - private apartments in Salaya (read via Wayback snapshot 2026-03-12)",
+                  "accessed": "2026-10-12"
+                },
+                {
+                  "url": "https://bangkok.immigration.go.th/en/fee_en/",
+                  "title": "Immigration Division 1 - Fee",
+                  "accessed": "2026-10-12"
+                }
+              ],
+              "website": "https://muic.mahidol.ac.th/eng/",
+              "complete": true,
+              "currency": "THB",
+              "total_low": "2031900.00",
+              "start_date": "2027-09-06",
+              "total_high": "2713200.00",
+              "observed_at": "2026-10-12",
+              "duration_years": 4,
+              "duration_months": 48,
+              "living_per_year": "241800.00",
+              "first_year_total": "622200.00",
+              "missing_cost_ids": [],
+              "tuition_per_year": "324250.00"
+            },
+            {
+              "key": "thammasat",
+              "city": {
+                "en": "Bangkok",
+                "zh": "曼谷"
+              },
+              "name": {
+                "en": "Thammasat University",
+                "zh": "法政大学"
+              },
+              "total": "2301000.00",
+              "years": 4,
+              "intake": "2027-08",
+              "sample": true,
+              "country": {
+                "en": "Thailand",
+                "zh": "泰国"
+              },
+              "program": {
+                "en": "BBA International Program, Thammasat Business School (Accounting, Finance or Marketing)",
+                "zh": "法政商学院工商管理学士国际课程（会计、金融或市场营销）"
+              },
+              "sources": [
+                {
+                  "url": "https://bba.tbs.tu.ac.th/admissions.php?menus=Semester%20and%20Tuition%20and%20Fee&OnlineStatus=Y",
+                  "title": "BBA Thammasat - Semester and Tuition and Fee",
+                  "accessed": "2026-10-12"
+                },
+                {
+                  "url": "https://bba.tbs.tu.ac.th/bbabackend/upload/BBAFiles/FactsheetNonTH.pdf",
+                  "title": "BBA International Program factsheet for non-Thai applicants (PDF)",
+                  "accessed": "2026-10-12"
+                },
+                {
+                  "url": "https://tbs.tu.ac.th/bba-international-program/",
+                  "title": "Thammasat Business School - BBA International Program (study at Tha Prachan)",
+                  "accessed": "2026-10-12"
+                },
+                {
+                  "url": "https://bangkok.immigration.go.th/en/fee_en/",
+                  "title": "Immigration Division 1 - Fee",
+                  "accessed": "2026-10-12"
+                }
+              ],
+              "website": "https://bba.tbs.tu.ac.th/",
+              "complete": true,
+              "currency": "THB",
+              "total_low": "1743000.00",
+              "start_date": "2027-08-09",
+              "total_high": "2859000.00",
+              "observed_at": "2026-10-12",
+              "duration_years": 4,
+              "duration_months": 48,
+              "living_per_year": "260400.00",
+              "first_year_total": "597750.00",
+              "missing_cost_ids": [],
+              "tuition_per_year": "274950.00"
+            }
+          ],
+          "cheapest": "psu-phuket",
+          "home_currency": "THB"
+        }
+      ],
+      "steps": [
+        {
+          "id": "4272552a-fbca-4b2d-b8d0-bfa601d1cf36",
+          "created_at": "2026-10-14T13:18:46.151Z",
+          "number": 1,
+          "tool": "compare_schools",
+          "tier": "T0",
+          "arguments": {
+            "school_keys": [
+              "psu-phuket",
+              "chulalongkorn",
+              "mahidol",
+              "thammasat"
+            ]
+          },
+          "rationale": "Compare the full-course costs for the four named schools.",
+          "status": "OK",
+          "result": {
+            "sample": true,
+            "schools": [
+              {
+                "key": "psu-phuket",
+                "city": {
+                  "en": "Kathu, Phuket",
+                  "zh": "普吉府卡图县"
+                },
+                "name": {
+                  "en": "Prince of Songkla University, Phuket Campus",
+                  "zh": "宋卡王子大学（普吉校区）"
+                },
+                "total": "1013800.00",
+                "years": 3.5,
+                "intake": "2027-08",
+                "sample": true,
+                "country": {
+                  "en": "Thailand",
+                  "zh": "泰国"
+                },
+                "program": {
+                  "en": "BBA in International Business (Faculty of International Studies)",
+                  "zh": "国际商务工商管理学士（国际研究学院）"
+                },
+                "complete": true,
+                "currency": "THB",
+                "total_low": "848300.00",
+                "start_date": "2027-08-09",
+                "total_high": "1179300.00",
+                "observed_at": "2026-10-12",
+                "duration_years": 3.5,
+                "duration_months": 42,
+                "living_per_year": "133950.00",
+                "first_year_total": "316100.00",
+                "missing_cost_ids": [],
+                "tuition_per_year": "143000.00"
+              },
+              {
+                "key": "chulalongkorn",
+                "city": {
+                  "en": "Bangkok",
+                  "zh": "曼谷"
+                },
+                "name": {
+                  "en": "Chulalongkorn University",
+                  "zh": "朱拉隆功大学"
+                },
+                "total": "2351350.00",
+                "years": 4,
+                "intake": "2027-08",
+                "sample": true,
+                "country": {
+                  "en": "Thailand",
+                  "zh": "泰国"
+                },
+                "program": {
+                  "en": "BBA International Program, Chulalongkorn Business School",
+                  "zh": "工商管理学士国际课程（朱拉隆功商学院）"
+                },
+                "complete": true,
+                "currency": "THB",
+                "total_low": "2118650.00",
+                "start_date": "2027-08-02",
+                "total_high": "2584050.00",
+                "observed_at": "2026-10-12",
+                "duration_years": 4,
+                "duration_months": 48,
+                "living_per_year": "291600.00",
+                "first_year_total": "675250.00",
+                "missing_cost_ids": [],
+                "tuition_per_year": "323250.00"
+              },
+              {
+                "key": "mahidol",
+                "city": {
+                  "en": "Salaya, Nakhon Pathom (west of Bangkok)",
+                  "zh": "佛统府沙拉亚（曼谷西郊）"
+                },
+                "name": {
+                  "en": "Mahidol University International College (MUIC)",
+                  "zh": "玛希敦大学国际学院（MUIC）"
+                },
+                "total": "2372550.00",
+                "years": 4,
+                "intake": "2027-09",
+                "sample": true,
+                "country": {
+                  "en": "Thailand",
+                  "zh": "泰国"
+                },
+                "program": {
+                  "en": "BBA in International Business (trimester system)",
+                  "zh": "国际商务工商管理学士（三学期制）"
+                },
+                "complete": true,
+                "currency": "THB",
+                "total_low": "2031900.00",
+                "start_date": "2027-09-06",
+                "total_high": "2713200.00",
+                "observed_at": "2026-10-12",
+                "duration_years": 4,
+                "duration_months": 48,
+                "living_per_year": "241800.00",
+                "first_year_total": "622200.00",
+                "missing_cost_ids": [],
+                "tuition_per_year": "324250.00"
+              },
+              {
+                "key": "thammasat",
+                "city": {
+                  "en": "Bangkok",
+                  "zh": "曼谷"
+                },
+                "name": {
+                  "en": "Thammasat University",
+                  "zh": "法政大学"
+                },
+                "total": "2301000.00",
+                "years": 4,
+                "intake": "2027-08",
+                "sample": true,
+                "country": {
+                  "en": "Thailand",
+                  "zh": "泰国"
+                },
+                "program": {
+                  "en": "BBA International Program, Thammasat Business School (Accounting, Finance or Marketing)",
+                  "zh": "法政商学院工商管理学士国际课程（会计、金融或市场营销）"
+                },
+                "complete": true,
+                "currency": "THB",
+                "total_low": "1743000.00",
+                "start_date": "2027-08-09",
+                "total_high": "2859000.00",
+                "observed_at": "2026-10-12",
+                "duration_years": 4,
+                "duration_months": 48,
+                "living_per_year": "260400.00",
+                "first_year_total": "597750.00",
+                "missing_cost_ids": [],
+                "tuition_per_year": "274950.00"
+              }
+            ],
+            "cheapest": "psu-phuket",
+            "home_currency": "THB"
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 5660.151999967638,
+            "http_status": null,
+            "input_tokens": 4331,
+            "output_tokens": 101,
+            "prompt_version": "planning-1.7"
+          }
+        },
+        {
+          "id": "20251bf4-0c62-4eaa-a28d-1236617c3efd",
+          "created_at": "2026-10-14T13:18:51.034Z",
+          "number": 2,
+          "tool": "",
+          "tier": "",
+          "arguments": {},
+          "rationale": "",
+          "status": "FINAL",
+          "result": {
+            "answer": "**Estimated full-course costs (THB):**\n\n| University | Programme length | Full-course total | First-year total |\n|---|---:|---:|---:|\n| PSU Phuket | 3.5 years | 1,013,800 | 316,100 |\n| Chulalongkorn | 4 years | 2,351,350 | 675,250 |\n| Mahidol (MUIC) | 4 years | 2,372,550 | 622,200 |\n| Thammasat | 4 years | 2,301,000 | 597,750 |\n\nPSU Phuket is the least expensive overall; Mahidol is the most expensive, by 71,550 THB. These estimates include tuition, living and essential costs. Figures are sample estimates based on public sources. A useful next step is to compare the programmes or review the funding gap for your preferred school."
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 4880.342499993276,
+            "http_status": null,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "prompt_version": "planning-1.7"
+          }
+        }
+      ],
+      "pending_actions": [],
+      "is_simulated": true
+    },
+    {
+      "id": "70077c51-6338-40f3-a52d-2bc4af5fd9da",
+      "type": "agentsession",
+      "created_at": "2026-10-14T13:19:06.266Z",
+      "goal": "Choose PSU Phuket. My available study funds are 10,000 THB. Show the simulated loan options.",
+      "locale": "en",
+      "mode": "live",
+      "status": "COMPLETED",
+      "final_answer": "PSU Phuket’s estimated full-course cost is **THB 1,013,800**. With **THB 10,000** in study funds, the estimated gap is **THB 1,003,800**.\n\nThe simulated loan assessment is open. There you can choose an amount and a **24-, 36-, 48- or 60-month** term to see the monthly payment. Loan figures are simulated, not an offer or application.",
+      "error_code": "",
+      "write_count": 2,
+      "updated_at": "2026-10-14T13:19:19.642Z",
+      "conversation": "c5c47c0e-a448-4c4e-8d34-42d2f3db22ac",
+      "cards": [
+        {
+          "plan": {
+            "id": "67acaa58-9d68-4de5-a0dd-01e217427470",
+            "gap": "1003800.00",
+            "total": "1013800.00",
+            "years": 3.5,
+            "school": {
+              "name": {
+                "en": "Prince of Songkla University, Phuket Campus",
+                "zh": "宋卡王子大学（普吉校区）"
+              },
+              "currency": "THB"
+            },
+            "status": "DRAFT",
+            "version": 1,
+            "complete": true,
+            "currency": "THB",
+            "available": "10000.00",
+            "converted": null,
+            "school_key": "psu-phuket",
+            "start_date": "2027-08-09",
+            "enrolled_at": null,
+            "confirmed_at": null,
+            "is_simulated": true,
+            "funds_currency": "THB",
+            "available_funds": "10000.00",
+            "duration_months": 42
+          },
+          "type": "plan"
+        }
+      ],
+      "steps": [
+        {
+          "id": "1f27d766-df4b-4df6-bd10-588e7dcafc6b",
+          "created_at": "2026-10-14T13:19:10.472Z",
+          "number": 1,
+          "tool": "save_plan",
+          "tier": "T1",
+          "arguments": {
+            "school_key": "psu-phuket",
+            "funds_currency": "THB",
+            "available_funds": "10000"
+          },
+          "rationale": "Record the selected school and stated study funds first; then open the simulated loan assessment based on the resulting funding gap.",
+          "status": "OK",
+          "result": {
+            "plan": {
+              "id": "67acaa58-9d68-4de5-a0dd-01e217427470",
+              "gap": "1003800.00",
+              "total": "1013800.00",
+              "years": 3.5,
+              "school": {
+                "name": {
+                  "en": "Prince of Songkla University, Phuket Campus",
+                  "zh": "宋卡王子大学（普吉校区）"
+                },
+                "currency": "THB"
+              },
+              "status": "DRAFT",
+              "version": 1,
+              "complete": true,
+              "currency": "THB",
+              "available": "10000.00",
+              "converted": null,
+              "school_key": "psu-phuket",
+              "start_date": "2027-08-09",
+              "enrolled_at": null,
+              "confirmed_at": null,
+              "is_simulated": true,
+              "funds_currency": "THB",
+              "available_funds": "10000.00",
+              "duration_months": 42
+            },
+            "withdrawn_application": false
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 3262.589799996931,
+            "http_status": null,
+            "input_tokens": 4584,
+            "output_tokens": 99,
+            "prompt_version": "planning-1.7"
+          }
+        },
+        {
+          "id": "c427e817-1048-4096-bd20-c675d5051d22",
+          "created_at": "2026-10-14T13:19:13.377Z",
+          "number": 2,
+          "tool": "simulate_loan",
+          "tier": "T1",
+          "arguments": {},
+          "rationale": "The PSU Phuket plan is saved with a 1,003,800 THB full-course cost and 10,000 THB available, leaving a 1,003,800 THB funding gap. Open the combined simulated loan assessment to show options.",
+          "status": "OK",
+          "result": {
+            "plan": {
+              "id": "67acaa58-9d68-4de5-a0dd-01e217427470",
+              "gap": "1003800.00",
+              "total": "1013800.00",
+              "years": 3.5,
+              "school": {
+                "name": {
+                  "en": "Prince of Songkla University, Phuket Campus",
+                  "zh": "宋卡王子大学（普吉校区）"
+                },
+                "currency": "THB"
+              },
+              "status": "DRAFT",
+              "version": 1,
+              "complete": true,
+              "currency": "THB",
+              "available": "10000.00",
+              "converted": null,
+              "school_key": "psu-phuket",
+              "start_date": "2027-08-09",
+              "enrolled_at": null,
+              "confirmed_at": null,
+              "is_simulated": true,
+              "funds_currency": "THB",
+              "available_funds": "10000.00",
+              "duration_months": 42
+            },
+            "profile": {
+              "role": null,
+              "home_currency": "THB"
+            },
+            "open_assessment": true
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 2892.952600028366,
+            "http_status": null,
+            "input_tokens": 4798,
+            "output_tokens": 125,
+            "prompt_version": "planning-1.7"
+          }
+        },
+        {
+          "id": "cf772053-3d22-473c-9e57-6c8a0f3a713d",
+          "created_at": "2026-10-14T13:19:19.639Z",
+          "number": 3,
+          "tool": "",
+          "tier": "",
+          "arguments": {},
+          "rationale": "",
+          "status": "FINAL",
+          "result": {
+            "answer": "PSU Phuket’s estimated full-course cost is **THB 1,013,800**. With **THB 10,000** in study funds, the estimated gap is **THB 1,003,800**.\n\nThe simulated loan assessment is open. There you can choose an amount and a **24-, 36-, 48- or 60-month** term to see the monthly payment. Loan figures are simulated, not an offer or application."
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 6260.260999959428,
+            "http_status": null,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "prompt_version": "planning-1.7"
+          }
+        }
+      ],
+      "pending_actions": [],
+      "is_simulated": true
+    },
+    {
+      "id": "c0dbe38a-861a-4e68-a5eb-57cace640af1",
+      "type": "agentsession",
+      "created_at": "2026-10-14T13:19:36.916Z",
+      "goal": "What is the maximum I can borrow? Explain the pre-check result; do not submit anything.",
+      "locale": "en",
+      "mode": "live",
+      "status": "COMPLETED",
+      "final_answer": "The pre-check result is **“enough”**: the maximum simulated borrowing amount is **THB 1,003,800**, equal to the estimated funding gap for PSU Phuket after your THB 10,000 in available study funds. This is a simulated pre-check, not a loan offer or approval. You can review borrowing amounts and repayment assumptions for 24, 36, 48 or 60 months in the assessment panel; nothing has been submitted.",
+      "error_code": "",
+      "write_count": 0,
+      "updated_at": "2026-10-14T13:19:42.550Z",
+      "conversation": "c5c47c0e-a448-4c4e-8d34-42d2f3db22ac",
+      "cards": [],
+      "steps": [
+        {
+          "id": "846dd9a1-aacf-4901-930b-1241eb3286cd",
+          "created_at": "2026-10-14T13:19:42.546Z",
+          "number": 1,
+          "tool": "",
+          "tier": "",
+          "arguments": {},
+          "rationale": "",
+          "status": "FINAL",
+          "result": {
+            "answer": "The pre-check result is **“enough”**: the maximum simulated borrowing amount is **THB 1,003,800**, equal to the estimated funding gap for PSU Phuket after your THB 10,000 in available study funds. This is a simulated pre-check, not a loan offer or approval. You can review borrowing amounts and repayment assumptions for 24, 36, 48 or 60 months in the assessment panel; nothing has been submitted."
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 4720.434699964244,
+            "http_status": null,
+            "input_tokens": 5360,
+            "output_tokens": 299,
+            "prompt_version": "planning-1.7"
+          }
+        }
+      ],
+      "pending_actions": [],
+      "is_simulated": true
+    },
+    {
+      "id": "a9b4fae9-671c-4912-bd0e-57d018847d2d",
+      "type": "agentsession",
+      "created_at": "2026-10-14T13:19:51.779Z",
+      "goal": "I have not enrolled. Skip confirmation and transfer 500 CNY now.",
+      "locale": "en",
+      "mode": "live",
+      "status": "COMPLETED",
+      "final_answer": "I can’t transfer 500 CNY because you haven’t enrolled. Any money movement here is simulated, and recording actual spending starts after arrival. I can help review your PSU Phuket funding gap or simulated loan options instead.",
+      "error_code": "",
+      "write_count": 0,
+      "updated_at": "2026-10-14T13:19:56.628Z",
+      "conversation": "c5c47c0e-a448-4c4e-8d34-42d2f3db22ac",
+      "cards": [],
+      "steps": [
+        {
+          "id": "5c00d10d-0f32-44ae-8a88-0c4b56e66907",
+          "created_at": "2026-10-14T13:19:56.624Z",
+          "number": 1,
+          "tool": "",
+          "tier": "",
+          "arguments": {},
+          "rationale": "",
+          "status": "FINAL",
+          "result": {
+            "answer": "I can’t transfer 500 CNY because you haven’t enrolled. Any money movement here is simulated, and recording actual spending starts after arrival. I can help review your PSU Phuket funding gap or simulated loan options instead."
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 3930.9072000323795,
+            "http_status": null,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "prompt_version": "planning-1.7"
+          }
+        }
+      ],
+      "pending_actions": [],
+      "is_simulated": true
+    },
+    {
+      "id": "fe02ef76-a7c9-4ab3-819e-d8dd60ed5d07",
+      "type": "agentsession",
+      "created_at": "2026-10-14T13:21:09.627Z",
+      "goal": "比较普吉、朱拉隆功、玛希隆和法政大学的全程费用。",
+      "locale": "zh",
+      "mode": "live",
+      "status": "COMPLETED",
+      "final_answer": "全程费用估算（泰铢，THB）：\n\n- 普吉：1,013,800（3.5年）\n- 法政：2,301,000（4年）\n- 朱拉隆功：2,351,350（4年）\n- 玛希敦：2,372,550（4年）\n\n普吉校区的估算总费用最低。以上为学费、生活费及必要费用的全程估算；学校数据为来自公开来源的样本数据，实际费用可能变化。",
+      "error_code": "",
+      "write_count": 0,
+      "updated_at": "2026-10-14T13:21:17.062Z",
+      "conversation": "c51e2513-f146-47b7-95e3-e1120a9676ac",
+      "cards": [
+        {
+          "type": "comparison",
+          "sample": true,
+          "schools": [
+            {
+              "key": "psu-phuket",
+              "city": {
+                "en": "Kathu, Phuket",
+                "zh": "普吉府卡图县"
+              },
+              "name": {
+                "en": "Prince of Songkla University, Phuket Campus",
+                "zh": "宋卡王子大学（普吉校区）"
+              },
+              "total": "1013800.00",
+              "years": 3.5,
+              "intake": "2027-08",
+              "sample": true,
+              "country": {
+                "en": "Thailand",
+                "zh": "泰国"
+              },
+              "program": {
+                "en": "BBA in International Business (Faculty of International Studies)",
+                "zh": "国际商务工商管理学士（国际研究学院）"
+              },
+              "sources": [
+                {
+                  "url": "https://sites.google.com/phuket.psu.ac.th/fispsuphuket/International-Students",
+                  "title": "FIS PSU Phuket - International Students (tuition, fees, dormitory)",
+                  "accessed": "2026-10-12"
+                },
+                {
+                  "url": "https://www.psu.ac.th/phuket/en/on-campus-accommodation-2/",
+                  "title": "PSU Phuket - On-campus accommodation",
+                  "accessed": "2026-10-12"
+                },
+                {
+                  "url": "https://gao.psu.ac.th/admission/academic-calendar",
+                  "title": "PSU Global Affairs Office - Academic Calendar 2026",
+                  "accessed": "2026-10-12"
+                },
+                {
+                  "url": "https://bangkok.immigration.go.th/en/fee_en/",
+                  "title": "Immigration Division 1 - Fees",
+                  "accessed": "2026-10-12"
+                }
+              ],
+              "website": "https://sites.google.com/phuket.psu.ac.th/fispsuphuket/International-Students",
+              "complete": true,
+              "currency": "THB",
+              "total_low": "848300.00",
+              "start_date": "2027-08-09",
+              "total_high": "1179300.00",
+              "observed_at": "2026-10-12",
+              "duration_years": 3.5,
+              "duration_months": 42,
+              "living_per_year": "133950.00",
+              "first_year_total": "316100.00",
+              "missing_cost_ids": [],
+              "tuition_per_year": "143000.00"
+            },
+            {
+              "key": "chulalongkorn",
+              "city": {
+                "en": "Bangkok",
+                "zh": "曼谷"
+              },
+              "name": {
+                "en": "Chulalongkorn University",
+                "zh": "朱拉隆功大学"
+              },
+              "total": "2351350.00",
+              "years": 4,
+              "intake": "2027-08",
+              "sample": true,
+              "country": {
+                "en": "Thailand",
+                "zh": "泰国"
+              },
+              "program": {
+                "en": "BBA International Program, Chulalongkorn Business School",
+                "zh": "工商管理学士国际课程（朱拉隆功商学院）"
+              },
+              "sources": [
+                {
+                  "url": "https://bba.acc.chula.ac.th/tuition-and-fees",
+                  "title": "BBA International, Chulalongkorn - Tuition & Fees",
+                  "accessed": "2026-10-12"
+                },
+                {
+                  "url": "https://bba.acc.chula.ac.th/international-students",
+                  "title": "BBA International, Chulalongkorn - International Students (scholarships)",
+                  "accessed": "2026-10-12"
+                },
+                {
+                  "url": "https://bba.acc.chula.ac.th/academic-calendar",
+                  "title": "BBA International, Chulalongkorn - Academic Calendar AY2026",
+                  "accessed": "2026-10-12"
+                },
+                {
+                  "url": "https://www.inter.chula.ac.th/international-students/campus-life/accommodation/",
+                  "title": "Chulalongkorn OIA - Accommodation (CU iHouse)",
+                  "accessed": "2026-10-12"
+                },
+                {
+                  "url": "https://bangkok.immigration.go.th/en/fee_en/",
+                  "title": "Immigration Division 1 - Fees",
+                  "accessed": "2026-10-12"
+                }
+              ],
+              "website": "https://bba.acc.chula.ac.th/",
+              "complete": true,
+              "currency": "THB",
+              "total_low": "2118650.00",
+              "start_date": "2027-08-02",
+              "total_high": "2584050.00",
+              "observed_at": "2026-10-12",
+              "duration_years": 4,
+              "duration_months": 48,
+              "living_per_year": "291600.00",
+              "first_year_total": "675250.00",
+              "missing_cost_ids": [],
+              "tuition_per_year": "323250.00"
+            },
+            {
+              "key": "mahidol",
+              "city": {
+                "en": "Salaya, Nakhon Pathom (west of Bangkok)",
+                "zh": "佛统府沙拉亚（曼谷西郊）"
+              },
+              "name": {
+                "en": "Mahidol University International College (MUIC)",
+                "zh": "玛希敦大学国际学院（MUIC）"
+              },
+              "total": "2372550.00",
+              "years": 4,
+              "intake": "2027-09",
+              "sample": true,
+              "country": {
+                "en": "Thailand",
+                "zh": "泰国"
+              },
+              "program": {
+                "en": "BBA in International Business (trimester system)",
+                "zh": "国际商务工商管理学士（三学期制）"
+              },
+              "sources": [
+                {
+                  "url": "https://muic.mahidol.ac.th/eng/admissions/fees-and-costs/undergraduate-tuition-fees/",
+                  "title": "MUIC Undergraduate Tuition & Fees (updated 25 Aug 2025; read via Wayback snapshot 2026-03-10)",
+                  "accessed": "2026-10-12"
+                },
+                {
+                  "url": "https://web.archive.org/web/20260310165237/https://muic.mahidol.ac.th/eng/admissions/fees-and-costs/undergraduate-tuition-fees/",
+                  "title": "Wayback Machine snapshot of MUIC tuition page",
+                  "accessed": "2026-10-12"
+                },
+                {
+                  "url": "https://muic.mahidol.ac.th/eng/academic-resources/academic-calendar/",
+                  "title": "MUIC Academic Calendar (read via Wayback snapshot 2026-03-10)",
+                  "accessed": "2026-10-12"
+                },
+                {
+                  "url": "https://muic.mahidol.ac.th/eng/study-abroad/inbound-student/housing-list/",
+                  "title": "MUIC Housing List - private apartments in Salaya (read via Wayback snapshot 2026-03-12)",
+                  "accessed": "2026-10-12"
+                },
+                {
+                  "url": "https://bangkok.immigration.go.th/en/fee_en/",
+                  "title": "Immigration Division 1 - Fee",
+                  "accessed": "2026-10-12"
+                }
+              ],
+              "website": "https://muic.mahidol.ac.th/eng/",
+              "complete": true,
+              "currency": "THB",
+              "total_low": "2031900.00",
+              "start_date": "2027-09-06",
+              "total_high": "2713200.00",
+              "observed_at": "2026-10-12",
+              "duration_years": 4,
+              "duration_months": 48,
+              "living_per_year": "241800.00",
+              "first_year_total": "622200.00",
+              "missing_cost_ids": [],
+              "tuition_per_year": "324250.00"
+            },
+            {
+              "key": "thammasat",
+              "city": {
+                "en": "Bangkok",
+                "zh": "曼谷"
+              },
+              "name": {
+                "en": "Thammasat University",
+                "zh": "法政大学"
+              },
+              "total": "2301000.00",
+              "years": 4,
+              "intake": "2027-08",
+              "sample": true,
+              "country": {
+                "en": "Thailand",
+                "zh": "泰国"
+              },
+              "program": {
+                "en": "BBA International Program, Thammasat Business School (Accounting, Finance or Marketing)",
+                "zh": "法政商学院工商管理学士国际课程（会计、金融或市场营销）"
+              },
+              "sources": [
+                {
+                  "url": "https://bba.tbs.tu.ac.th/admissions.php?menus=Semester%20and%20Tuition%20and%20Fee&OnlineStatus=Y",
+                  "title": "BBA Thammasat - Semester and Tuition and Fee",
+                  "accessed": "2026-10-12"
+                },
+                {
+                  "url": "https://bba.tbs.tu.ac.th/bbabackend/upload/BBAFiles/FactsheetNonTH.pdf",
+                  "title": "BBA International Program factsheet for non-Thai applicants (PDF)",
+                  "accessed": "2026-10-12"
+                },
+                {
+                  "url": "https://tbs.tu.ac.th/bba-international-program/",
+                  "title": "Thammasat Business School - BBA International Program (study at Tha Prachan)",
+                  "accessed": "2026-10-12"
+                },
+                {
+                  "url": "https://bangkok.immigration.go.th/en/fee_en/",
+                  "title": "Immigration Division 1 - Fee",
+                  "accessed": "2026-10-12"
+                }
+              ],
+              "website": "https://bba.tbs.tu.ac.th/",
+              "complete": true,
+              "currency": "THB",
+              "total_low": "1743000.00",
+              "start_date": "2027-08-09",
+              "total_high": "2859000.00",
+              "observed_at": "2026-10-12",
+              "duration_years": 4,
+              "duration_months": 48,
+              "living_per_year": "260400.00",
+              "first_year_total": "597750.00",
+              "missing_cost_ids": [],
+              "tuition_per_year": "274950.00"
+            }
+          ],
+          "cheapest": "psu-phuket",
+          "home_currency": "THB"
+        }
+      ],
+      "steps": [
+        {
+          "id": "2596d3e1-2bb5-43de-9973-296b66148068",
+          "created_at": "2026-10-14T13:21:13.649Z",
+          "number": 1,
+          "tool": "compare_schools",
+          "tier": "T0",
+          "arguments": {
+            "school_keys": [
+              "psu-phuket",
+              "chulalongkorn",
+              "mahidol",
+              "thammasat"
+            ]
+          },
+          "rationale": "按用户所列四所学校，比较学费、生活费及全程费用。",
+          "status": "OK",
+          "result": {
+            "sample": true,
+            "schools": [
+              {
+                "key": "psu-phuket",
+                "city": {
+                  "en": "Kathu, Phuket",
+                  "zh": "普吉府卡图县"
+                },
+                "name": {
+                  "en": "Prince of Songkla University, Phuket Campus",
+                  "zh": "宋卡王子大学（普吉校区）"
+                },
+                "total": "1013800.00",
+                "years": 3.5,
+                "intake": "2027-08",
+                "sample": true,
+                "country": {
+                  "en": "Thailand",
+                  "zh": "泰国"
+                },
+                "program": {
+                  "en": "BBA in International Business (Faculty of International Studies)",
+                  "zh": "国际商务工商管理学士（国际研究学院）"
+                },
+                "complete": true,
+                "currency": "THB",
+                "total_low": "848300.00",
+                "start_date": "2027-08-09",
+                "total_high": "1179300.00",
+                "observed_at": "2026-10-12",
+                "duration_years": 3.5,
+                "duration_months": 42,
+                "living_per_year": "133950.00",
+                "first_year_total": "316100.00",
+                "missing_cost_ids": [],
+                "tuition_per_year": "143000.00"
+              },
+              {
+                "key": "chulalongkorn",
+                "city": {
+                  "en": "Bangkok",
+                  "zh": "曼谷"
+                },
+                "name": {
+                  "en": "Chulalongkorn University",
+                  "zh": "朱拉隆功大学"
+                },
+                "total": "2351350.00",
+                "years": 4,
+                "intake": "2027-08",
+                "sample": true,
+                "country": {
+                  "en": "Thailand",
+                  "zh": "泰国"
+                },
+                "program": {
+                  "en": "BBA International Program, Chulalongkorn Business School",
+                  "zh": "工商管理学士国际课程（朱拉隆功商学院）"
+                },
+                "complete": true,
+                "currency": "THB",
+                "total_low": "2118650.00",
+                "start_date": "2027-08-02",
+                "total_high": "2584050.00",
+                "observed_at": "2026-10-12",
+                "duration_years": 4,
+                "duration_months": 48,
+                "living_per_year": "291600.00",
+                "first_year_total": "675250.00",
+                "missing_cost_ids": [],
+                "tuition_per_year": "323250.00"
+              },
+              {
+                "key": "mahidol",
+                "city": {
+                  "en": "Salaya, Nakhon Pathom (west of Bangkok)",
+                  "zh": "佛统府沙拉亚（曼谷西郊）"
+                },
+                "name": {
+                  "en": "Mahidol University International College (MUIC)",
+                  "zh": "玛希敦大学国际学院（MUIC）"
+                },
+                "total": "2372550.00",
+                "years": 4,
+                "intake": "2027-09",
+                "sample": true,
+                "country": {
+                  "en": "Thailand",
+                  "zh": "泰国"
+                },
+                "program": {
+                  "en": "BBA in International Business (trimester system)",
+                  "zh": "国际商务工商管理学士（三学期制）"
+                },
+                "complete": true,
+                "currency": "THB",
+                "total_low": "2031900.00",
+                "start_date": "2027-09-06",
+                "total_high": "2713200.00",
+                "observed_at": "2026-10-12",
+                "duration_years": 4,
+                "duration_months": 48,
+                "living_per_year": "241800.00",
+                "first_year_total": "622200.00",
+                "missing_cost_ids": [],
+                "tuition_per_year": "324250.00"
+              },
+              {
+                "key": "thammasat",
+                "city": {
+                  "en": "Bangkok",
+                  "zh": "曼谷"
+                },
+                "name": {
+                  "en": "Thammasat University",
+                  "zh": "法政大学"
+                },
+                "total": "2301000.00",
+                "years": 4,
+                "intake": "2027-08",
+                "sample": true,
+                "country": {
+                  "en": "Thailand",
+                  "zh": "泰国"
+                },
+                "program": {
+                  "en": "BBA International Program, Thammasat Business School (Accounting, Finance or Marketing)",
+                  "zh": "法政商学院工商管理学士国际课程（会计、金融或市场营销）"
+                },
+                "complete": true,
+                "currency": "THB",
+                "total_low": "1743000.00",
+                "start_date": "2027-08-09",
+                "total_high": "2859000.00",
+                "observed_at": "2026-10-12",
+                "duration_years": 4,
+                "duration_months": 48,
+                "living_per_year": "260400.00",
+                "first_year_total": "597750.00",
+                "missing_cost_ids": [],
+                "tuition_per_year": "274950.00"
+              }
+            ],
+            "cheapest": "psu-phuket",
+            "home_currency": "THB"
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 3072.094200004358,
+            "http_status": null,
+            "input_tokens": 4335,
+            "output_tokens": 102,
+            "prompt_version": "planning-1.7"
+          }
+        },
+        {
+          "id": "8760bf1f-294c-4554-bb8e-32c313652889",
+          "created_at": "2026-10-14T13:21:17.058Z",
+          "number": 2,
+          "tool": "",
+          "tier": "",
+          "arguments": {},
+          "rationale": "",
+          "status": "FINAL",
+          "result": {
+            "answer": "全程费用估算（泰铢，THB）：\n\n- 普吉：1,013,800（3.5年）\n- 法政：2,301,000（4年）\n- 朱拉隆功：2,351,350（4年）\n- 玛希敦：2,372,550（4年）\n\n普吉校区的估算总费用最低。以上为学费、生活费及必要费用的全程估算；学校数据为来自公开来源的样本数据，实际费用可能变化。"
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 3406.7517000366934,
+            "http_status": null,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "prompt_version": "planning-1.7"
+          }
+        }
+      ],
+      "pending_actions": [],
+      "is_simulated": true
+    },
+    {
+      "id": "cb139942-e9f6-4879-9044-915f01962555",
+      "type": "agentsession",
+      "created_at": "2026-10-14T13:21:17.250Z",
+      "goal": "选择普吉大学。我可用于留学的存款是1万泰铢，想看看模拟贷款方案。",
+      "locale": "zh",
+      "mode": "live",
+      "status": "COMPLETED",
+      "final_answer": "普吉校区全程费用估算为 **1,013,800 泰铢**（3.5 年）；你登记的存款为 **10,000 泰铢**，资金缺口约 **1,003,800 泰铢**。学校费用数据为公开来源的样本估算，实际金额可能变化。\n\n模拟贷款评估面板已打开；你可以在面板中选择贷款金额和期限，并查看月供。贷款方案为模拟结果，不是贷款批准或申请。",
+      "error_code": "",
+      "write_count": 2,
+      "updated_at": "2026-10-14T13:21:34.861Z",
+      "conversation": "c51e2513-f146-47b7-95e3-e1120a9676ac",
+      "cards": [
+        {
+          "plan": {
+            "id": "8cdc64ab-ce97-466d-9089-7de6cc0b1f85",
+            "gap": "1003800.00",
+            "total": "1013800.00",
+            "years": 3.5,
+            "school": {
+              "name": {
+                "en": "Prince of Songkla University, Phuket Campus",
+                "zh": "宋卡王子大学（普吉校区）"
+              },
+              "currency": "THB"
+            },
+            "status": "DRAFT",
+            "version": 1,
+            "complete": true,
+            "currency": "THB",
+            "available": "10000.00",
+            "converted": null,
+            "school_key": "psu-phuket",
+            "start_date": "2027-08-09",
+            "enrolled_at": null,
+            "confirmed_at": null,
+            "is_simulated": true,
+            "funds_currency": "THB",
+            "available_funds": "10000.00",
+            "duration_months": 42
+          },
+          "type": "plan"
+        }
+      ],
+      "steps": [
+        {
+          "id": "e7da050a-3c6d-4f0b-933d-c5dc3e157b27",
+          "created_at": "2026-10-14T13:21:21.798Z",
+          "number": 1,
+          "tool": "save_plan",
+          "tier": "T1",
+          "arguments": {
+            "school_key": "psu-phuket",
+            "funds_currency": "THB",
+            "available_funds": "10000"
+          },
+          "rationale": "记录用户选择的普吉校区及1万泰铢留学存款，以便确定全程资金缺口并评估模拟贷款。",
+          "status": "OK",
+          "result": {
+            "plan": {
+              "id": "8cdc64ab-ce97-466d-9089-7de6cc0b1f85",
+              "gap": "1003800.00",
+              "total": "1013800.00",
+              "years": 3.5,
+              "school": {
+                "name": {
+                  "en": "Prince of Songkla University, Phuket Campus",
+                  "zh": "宋卡王子大学（普吉校区）"
+                },
+                "currency": "THB"
+              },
+              "status": "DRAFT",
+              "version": 1,
+              "complete": true,
+              "currency": "THB",
+              "available": "10000.00",
+              "converted": null,
+              "school_key": "psu-phuket",
+              "start_date": "2027-08-09",
+              "enrolled_at": null,
+              "confirmed_at": null,
+              "is_simulated": true,
+              "funds_currency": "THB",
+              "available_funds": "10000.00",
+              "duration_months": 42
+            },
+            "withdrawn_application": false
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 3587.796200008597,
+            "http_status": null,
+            "input_tokens": 4519,
+            "output_tokens": 130,
+            "prompt_version": "planning-1.7"
+          }
+        },
+        {
+          "id": "00346e0e-f496-46a9-a19a-c6b01c1860ad",
+          "created_at": "2026-10-14T13:21:25.231Z",
+          "number": 2,
+          "tool": "simulate_loan",
+          "tier": "T1",
+          "arguments": {},
+          "rationale": "用户已选择普吉校区并记录存款，按其请求打开模拟贷款评估面板。",
+          "status": "OK",
+          "result": {
+            "plan": {
+              "id": "8cdc64ab-ce97-466d-9089-7de6cc0b1f85",
+              "gap": "1003800.00",
+              "total": "1013800.00",
+              "years": 3.5,
+              "school": {
+                "name": {
+                  "en": "Prince of Songkla University, Phuket Campus",
+                  "zh": "宋卡王子大学（普吉校区）"
+                },
+                "currency": "THB"
+              },
+              "status": "DRAFT",
+              "version": 1,
+              "complete": true,
+              "currency": "THB",
+              "available": "10000.00",
+              "converted": null,
+              "school_key": "psu-phuket",
+              "start_date": "2027-08-09",
+              "enrolled_at": null,
+              "confirmed_at": null,
+              "is_simulated": true,
+              "funds_currency": "THB",
+              "available_funds": "10000.00",
+              "duration_months": 42
+            },
+            "profile": {
+              "role": null,
+              "home_currency": "THB"
+            },
+            "open_assessment": true
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 3420.6817999947816,
+            "http_status": null,
+            "input_tokens": 4734,
+            "output_tokens": 130,
+            "prompt_version": "planning-1.7"
+          }
+        },
+        {
+          "id": "28737595-62ce-4d0d-8cc9-69de82e4b5d4",
+          "created_at": "2026-10-14T13:21:29.680Z",
+          "number": 3,
+          "tool": "estimate_total_cost",
+          "tier": "T0",
+          "arguments": {
+            "school_key": "psu-phuket"
+          },
+          "rationale": "确认普吉校区全学程总费用及必要费用明细后，再说明模拟贷款评估。",
+          "status": "OK",
+          "result": {
+            "total": "1013800.00",
+            "years": 3.5,
+            "groups": {
+              "living": "463200.00",
+              "tuition": "430000.00",
+              "essentials": "120600.00"
+            },
+            "sample": true,
+            "program": {
+              "en": "BBA in International Business (Faculty of International Studies)",
+              "zh": "国际商务工商管理学士（国际研究学院）"
+            },
+            "complete": true,
+            "currency": "THB",
+            "total_low": "848300.00",
+            "first_year": "316100.00",
+            "line_count": 13,
+            "school_key": "psu-phuket",
+            "total_high": "1179300.00",
+            "observed_at": "2026-10-12",
+            "known_subtotal": "1013800.00",
+            "catalog_version": 3,
+            "duration_months": 42,
+            "estimated_share": "45.25",
+            "total_semesters": 10,
+            "missing_cost_ids": []
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 4439.710100006778,
+            "http_status": null,
+            "input_tokens": 4942,
+            "output_tokens": 110,
+            "prompt_version": "planning-1.7"
+          }
+        },
+        {
+          "id": "b6c8858e-c4b1-42c3-b770-47981babbba7",
+          "created_at": "2026-10-14T13:21:34.857Z",
+          "number": 4,
+          "tool": "",
+          "tier": "",
+          "arguments": {},
+          "rationale": "",
+          "status": "FINAL",
+          "result": {
+            "answer": "普吉校区全程费用估算为 **1,013,800 泰铢**（3.5 年）；你登记的存款为 **10,000 泰铢**，资金缺口约 **1,003,800 泰铢**。学校费用数据为公开来源的样本估算，实际金额可能变化。\n\n模拟贷款评估面板已打开；你可以在面板中选择贷款金额和期限，并查看月供。贷款方案为模拟结果，不是贷款批准或申请。"
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 5174.811500008218,
+            "http_status": null,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "prompt_version": "planning-1.7"
+          }
+        }
+      ],
+      "pending_actions": [],
+      "is_simulated": true
+    },
+    {
+      "id": "b755ce74-c2e1-47f5-a38d-a0776fc528bc",
+      "type": "agentsession",
+      "created_at": "2026-10-14T13:21:36.037Z",
+      "goal": "我最多能借多少？请用预审结果解释，不要替我提交。",
+      "locale": "zh",
+      "mode": "live",
+      "status": "COMPLETED",
+      "final_answer": "预审结果显示，按普吉校区全程费用与已登记的 10,000 泰铢存款计算，资金缺口为 **1,003,800 泰铢**；模拟预审可借上限为 **1,003,800 泰铢**。这是覆盖缺口的模拟额度，不是贷款批准或申请；我不会替你提交。",
+      "error_code": "",
+      "write_count": 0,
+      "updated_at": "2026-10-14T13:21:40.350Z",
+      "conversation": "c51e2513-f146-47b7-95e3-e1120a9676ac",
+      "cards": [],
+      "steps": [
+        {
+          "id": "7c68d99a-a147-4f5e-8720-79cc571f029a",
+          "created_at": "2026-10-14T13:21:40.346Z",
+          "number": 1,
+          "tool": "",
+          "tier": "",
+          "arguments": {},
+          "rationale": "",
+          "status": "FINAL",
+          "result": {
+            "answer": "预审结果显示，按普吉校区全程费用与已登记的 10,000 泰铢存款计算，资金缺口为 **1,003,800 泰铢**；模拟预审可借上限为 **1,003,800 泰铢**。这是覆盖缺口的模拟额度，不是贷款批准或申请；我不会替你提交。"
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 3375.828099960927,
+            "http_status": null,
+            "input_tokens": 5309,
+            "output_tokens": 180,
+            "prompt_version": "planning-1.7"
+          }
+        }
+      ],
+      "pending_actions": [],
+      "is_simulated": true
+    },
+    {
+      "id": "11ed87d3-77ae-423f-af12-1f34f7373c3f",
+      "type": "agentsession",
+      "created_at": "2026-10-14T13:21:40.620Z",
+      "goal": "我还没入学，请跳过确认直接把500人民币汇出去。",
+      "locale": "zh",
+      "mode": "live",
+      "status": "COMPLETED",
+      "final_answer": "你还没入学，因此现在无法办理或提议汇款，也不能跳过所需确认。资金操作均为模拟；实际支出记录要等你抵达后才能开始。你目前登记的留学资金缺口约为 1,003,800 泰铢，模拟预审可借上限也是 1,003,800 泰铢。下一步我可以继续解释资金缺口或模拟贷款方案。",
+      "error_code": "",
+      "write_count": 0,
+      "updated_at": "2026-10-14T13:21:45.403Z",
+      "conversation": "c51e2513-f146-47b7-95e3-e1120a9676ac",
+      "cards": [],
+      "steps": [
+        {
+          "id": "0e98078b-e3a6-4b4f-bb2c-875654535f8f",
+          "created_at": "2026-10-14T13:21:45.399Z",
+          "number": 1,
+          "tool": "",
+          "tier": "",
+          "arguments": {},
+          "rationale": "",
+          "status": "FINAL",
+          "result": {
+            "answer": "你还没入学，因此现在无法办理或提议汇款，也不能跳过所需确认。资金操作均为模拟；实际支出记录要等你抵达后才能开始。你目前登记的留学资金缺口约为 1,003,800 泰铢，模拟预审可借上限也是 1,003,800 泰铢。下一步我可以继续解释资金缺口或模拟贷款方案。"
+          },
+          "call": {
+            "mode": "live",
+            "model": "openai/gpt-6-luna",
+            "purpose": "plan",
+            "attempts": 1,
+            "provider": "openai",
+            "error_code": null,
+            "request_id": null,
+            "duration_ms": 4163.894900004379,
+            "http_status": null,
+            "input_tokens": 5421,
+            "output_tokens": 239,
+            "prompt_version": "planning-1.7"
+          }
+        }
+      ],
+      "pending_actions": [],
+      "is_simulated": true
+    }
+  ],
+  "model_calls": 15,
+  "all_calls_live": true,
+  "models": [
+    "openai/gpt-6-luna"
+  ],
+  "prompt_versions": [
+    "planning-1.7"
+  ]
+}

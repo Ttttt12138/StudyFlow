@@ -1,0 +1,12 @@
+Using existing test database for alias 'default'...
+
+.
+----------------------------------------------------------------------
+Ran 1 test in 83.055s
+
+OK
+Preserving test database for alias 'default'...
+
+Found 1 test(s).
+Cache table 'studyflow_cache' already exists.
+System check identified no issues (0 silenced).
