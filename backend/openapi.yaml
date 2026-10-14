@@ -2422,6 +2422,40 @@ paths:
               schema:
                 $ref: '#/components/schemas/CommandResponse'
           description: ''
+  /api/v2/planning/credit/charges/{id}/repay/:
+    post:
+      operationId: post_api_v2_planning_credit_charges_id_repay
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        schema:
+          type: string
+        description: Unique action key; reuse the same key and body when retrying.
+        required: true
+      - in: header
+        name: X-Step-Up-Token
+        schema:
+          type: string
+        description: T2 step-up token from POST auth/step-up/ (docs/permissions.md);
+          T3 also needs an approved approval. Denials are 403 with detail and policy.
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+          description: ''
   /api/v2/planning/credit/pay/:
     post:
       operationId: post_api_v2_planning_credit_pay
@@ -6408,6 +6442,7 @@ components:
       - loan.repay
       - remittance.submit
       - bill.pay
+      - credit.repay
       - agent.confirm
       type: string
       description: |-
@@ -6416,6 +6451,7 @@ components:
         * `loan.repay` - loan.repay
         * `remittance.submit` - remittance.submit
         * `bill.pay` - bill.pay
+        * `credit.repay` - credit.repay
         * `agent.confirm` - agent.confirm
     PreviewInput:
       type: object
