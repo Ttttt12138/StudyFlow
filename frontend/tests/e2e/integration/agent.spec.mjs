@@ -139,7 +139,9 @@ test('real Django agent: plan, T2 proposal with step-up, T3 proposal through a s
     await page.getByRole('heading', { name: 'Credit record' }).waitFor();
     await page.getByRole('tab', { name: 'Limits' }).click();
     const limits = page.locator('#trust-limits');
-    if (await limits.getByRole('button', { name: 'CNY', exact: true }).count()) await limits.getByRole('button', { name: 'CNY', exact: true }).click();
+    const cnyButton = limits.getByRole('button', { name: 'CNY', exact: true });
+    await cnyButton.waitFor();
+    await cnyButton.click();
     await limits.locator('.panel-hero', { hasText: 'CNY 10,000.00' }).waitFor();
     await limits.getByText(/CNY 20,000\.00 of CNY 20,000\.00/).first().waitFor();
     await page.locator('#trust-approvals li', { hasText: /Submit transfer.*CNY 15,000\.00.*Used/ }).waitFor();
