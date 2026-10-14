@@ -86,6 +86,12 @@ def estimate(entry, years=None, home_currency=None):
     return result
 
 
+def school_sources(entry):
+    """Where a catalog school's figures come from, for the cards and the school list (not for the model)."""
+    return {"website": str(entry.school.website), "observed_at": entry.observed_at.isoformat(),
+            "sources": [{"url": str(s.url), "title": s.title, "accessed": s.accessed.isoformat()} for s in entry.sources]}
+
+
 def school_brief(entry, home_currency=None):
     """Compact summary for tool results and lists: first-year figures and the full-course total."""
     first = estimate(entry, 1)

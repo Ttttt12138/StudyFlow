@@ -27,12 +27,15 @@ def build(user, tool, arguments, result, status):
         from .tools import filtered_schools
 
         home = services.home_currency(user)
-        return {"type": "school_list", "schools": [services.school_brief(e, home) for e in filtered_schools(arguments)],
+        return {"type": "school_list", "schools": [{**services.school_brief(e, home), **services.school_sources(e)}
+                                                   for e in filtered_schools(arguments)],
                 "sample": True}
     if tool == "get_school_profile":
         return {"type": "school", "school": _school(arguments.get("school_key")), "sample": True}
     if tool == "compare_schools":
-        return {"type": "comparison", **result}
+        # The planner saw totals only; the card also says where each school's figures come from.
+        schools = [{**row, **services.school_sources(services.entry_or_404(row["key"]))} for row in result["schools"]]
+        return {"type": "comparison", **result, "schools": schools}
     if tool == "estimate_total_cost":
         entry = services.entry_or_404(arguments["school_key"])
         estimate = services.estimate(entry, arguments.get("years"), services.home_currency(user))

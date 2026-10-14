@@ -39,6 +39,25 @@ class CatalogTests(APITestCase):
                 if not cost.estimate:
                     self.assertTrue(cost.source_url and cost.quote, (entry.key, cost.cost_id))
 
+    def test_school_list_and_cards_say_where_the_figures_come_from(self):
+        from finance.planning import cards, tools
+
+        user = get_user_model().objects.create_user("sources-check", password="planning-pass-8")
+        self.client.force_authenticate(user)
+        listed = self.client.get(API + "planning/schools/").data["data"]["schools"]
+        self.assertEqual(len(listed), len(catalog.schools()))
+        for row in listed:
+            entry = catalog.school(row["key"])
+            self.assertEqual([s["url"] for s in row["sources"]], [str(s.url) for s in entry.sources])
+            self.assertTrue(row["observed_at"] and row["website"] and all(s["title"] and s["accessed"] for s in row["sources"]))
+        keys = [e.key for e in catalog.schools()]
+        listing = cards.build(user, "list_schools", {}, tools._schools(user, {}), "OK")
+        self.assertTrue(all(row["sources"] for row in listing["schools"]))
+        result = tools._compare(user, {"school_keys": keys[:2]})
+        compared = cards.build(user, "compare_schools", {"school_keys": keys[:2]}, result, "OK")
+        self.assertTrue(all(row["sources"] for row in compared["schools"]))
+        self.assertNotIn("sources", result["schools"][0])  # the planner's own result stays compact
+
     def test_estimate_counts_one_off_costs_once_and_recurring_costs_every_year(self):
         entry = catalog.school(SCHOOL)
         one, two = services.estimate(entry, 1), services.estimate(entry, 2)

@@ -67,7 +67,7 @@ class SchoolListView(APIView):
     @extend_schema(responses=CommandResponse)
     def get(self, request):
         home = services.home_currency(request.user)
-        return Response({"data": {"schools": [services.school_brief(e, home) for e in catalog.schools()],
+        return Response({"data": {"schools": [{**services.school_brief(e, home), **services.school_sources(e)} for e in catalog.schools()],
                                   "sample": True}})
 
 
