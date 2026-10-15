@@ -1,8 +1,8 @@
 # Technical Overview
 
-StudyFlow helps students and families compare the cost of studying abroad, identify a funding gap, and choose a simulated funding plan. The main conversation starts with full-course prices and school comparisons. A confirmed plan adds preparation tasks and bills; enrollment opens spending records and wallet tools. **All money and lending are simulated.** School prices are sourced sample estimates, not school invoices or binding quotations. The server enforces permissions, limits, approvals and ledger constraints.
+StudyFlow helps students compare the full cost of studying abroad, choose a school and get a simulated study-loan recommendation for an amount they enter. The main conversation starts with full-course prices and school comparisons. Submitting the loan application confirms the plan and opens to-dos, bills and the wallet, exchange and remittance tools. **All money and lending are simulated.** School prices are sourced sample estimates, not school invoices or binding quotations. The server enforces permissions, limits, approvals and ledger constraints.
 
-Updated 2026-10-14 for Topic C, including the React frontend, current planning and loan lifecycle, wallet bill payments and post-enrollment tools. Security is covered in [security-self-assessment.md](security-self-assessment.md); historical agent evaluation in [agent-evaluation.md](agent-evaluation.md). Implementation paths describe the current code; dated evidence identifies what was actually exercised.
+Updated 2026-10-15 for Topic C, including the React frontend, current planning and loan lifecycle, wallet bill payments and post-application tools. Security is covered in [security-self-assessment.md](security-self-assessment.md); historical agent evaluation in [agent-evaluation.md](agent-evaluation.md). Implementation paths describe the current code; dated evidence identifies what was actually exercised.
 
 ---
 
@@ -63,27 +63,31 @@ flowchart LR
 
 ### 1.1 Planning and cost calculation
 
-The plan progresses through `DRAFT`, `CONFIRMED` and `ENROLLED`. Confirmation creates estimated bills and a destination-specific checklist. The start date alone never confirms enrollment. The main conversation remains mounted while contextual panels open; phone layouts show one tool at a time. Sidebar visibility is a presentation rule. Planning prompts and rules defer wallet tools until enrollment; expense recording checks enrollment server-side. Legacy money tools/APIs retain authentication and monetary policy but do not all enforce the plan stage (security risk P4).
+The plan has two states: `DRAFT` and `CONFIRMED`. Submitting the loan application confirms it and creates estimated bills and a destination-specific checklist. The main conversation remains mounted while contextual panels open; phone layouts show one tool at a time. Sidebar visibility is a presentation rule. In a planning conversation the server refuses wallet, exchange and remittance tools (`APPLICATION_REQUIRED`) until the plan is `CONFIRMED`, whatever the model asks for. The direct wallet APIs retain authentication and monetary policy but do not check the plan stage (security risk P4).
 
 Ten entries in `backend/finance/planning/catalog/` include bilingual descriptions, public source URLs, observation dates, billing periods and cost status. `planning/costs.py` expands one-off, monthly, yearly and semester fees over actual course duration, including half years and year-specific rates. Missing amounts remain missing. An incomplete result is a known subtotal and cannot win the lowest-total ranking. Conversion includes rate provenance; course totals, 30/60/90-day forecasts and loan repayment terms remain separate quantities.
 
-`PlanningAssessment` stores versioned declared funds, personal cost adjustments and results separately from the wallet and financial state. Declaring savings does not credit a wallet. Unreceived support affects only a conditional forecast. `planning/assessment/` returns the chosen quote and lifecycle; `planning/loan-preview/` calculates without persisting a quote. School selection and assessment preserve up to three drafts. Signing prevents changing the underlying school or plan; changing school beforehand withdraws unsigned applications.
+`PlanningAssessment` stores the versioned loan inputs (the amount the user typed, product, term and method) and results separately from the wallet and financial state. `planning/assessment/` returns the chosen quote and lifecycle; `planning/loan-preview/` calculates without persisting a quote. School selection and assessment preserve up to three drafts. Signing prevents changing the underlying school or plan; changing school beforehand withdraws unsigned applications.
 
 ### 1.2 Simulated study loan lifecycle
 
-The pre-check sizes a loan from the full-course funding gap converted to THB, plus fees. It does **not** assess repayment affordability or verify income. Borrower choice changes checklist wording; it does not create a legally verified co-borrower. Products are `custom` (default 6%, 24/36/48 months) and `commercial_student_demo` (4.5%, 24/36/48/60 months). These are demonstration terms, not lender offers.
+The user enters the loan amount. The server caps it at the chosen school's full-course total converted to THB (its known part while cost lines are missing); fees are not added to the cap. It does **not** assess repayment affordability or verify income. Borrower choice changes checklist wording; it does not create a legally verified co-borrower. Products are `custom` (default 6%, 24/36/48 months) and `commercial_student_demo` (4.5%, 24/36/48/60 months). These are demonstration terms, not lender offers.
 
 `lending_core/calculations.py` uses decimal money calculations and produces the authoritative schedule. Amortized payments repay principal and interest from the start. The commercial sample also offers interest-only payments during study, followed by the selected amortization term. The interest-only period counts repayment dates before course completion, capped at 72 months, and is added to the selected 24-60 months. Deferring principal raises total interest. A 20,000 THB example at 4.5% pays 75.00 THB per interest-only month; later payments and rounding come from the schedule.
 
 `planning/plan/confirm/` confirms the plan and submits at most one active simulated application in one command. Planning approval checks the pre-check ceiling and a future first repayment date, rather than the generic monthly-income workflow. Quote affordability is therefore `assessment.status=NOT_ASSESSED`. The user marks admission, identity and borrower/co-borrower income checklist items, then explicitly signs through `planning/loan/sign/`.
 
-Signing creates a loan account and school-directed disbursement without crediting the student's wallet. `planning/loan_stage.py` allocates net proceeds to tuition first, then other bills by due date. Partial coverage splits a bill into loan-funded and family-funded portions, using signing-time reference FX. Scheduled payouts mark covered bills paid when the simulated date reaches their due dates. They are simulation records, not bank transfers or school receipts. Unallocated proceeds are audited. Operator wallet disbursement is refused for these loans. Repayment follows the signed schedule and existing password step-up, limits, version and idempotency controls.
+Signing creates a loan account and school-directed disbursement without crediting the student's wallet. `planning/loan_stage.py` allocates net proceeds to tuition first, then other bills by due date. Partial coverage splits a bill into a loan-funded part and a part the student pays, using signing-time reference FX. Scheduled payouts mark covered bills paid when the simulated date reaches their due dates. They are simulation records, not bank transfers or school receipts. Unallocated proceeds are audited. Operator wallet disbursement is refused for these loans. Repayment follows the signed schedule and existing password step-up, limits, version and idempotency controls.
 
-### 1.3 Enrollment and daily money tools
+### 1.3 Money tools after the application
 
-This month groups tasks, upcoming payments, monthly spending and expenses. Reminder changes do not alter original contract or bill dates; completing a task does not repay a loan. Reminders refresh while the app is open and send no email or system push. Budget and expense records do not themselves move funds.
+To-dos group preparation tasks, reminders and upcoming payments. Reminder changes do not alter original contract or bill dates; completing a task does not repay a loan. Reminders refresh while the app is open and send no email or system push. Day-to-day spending is not recorded.
 
-After enrollment, Wallet and payments groups balances, conversion, remittance, school bills and history. `planning/bills/{id}/pay-from-wallet/` deducts the bill currency through `wallets.post`, under `bill.pay`, with password step-up and T3 approval when above a limit. Loan-funded bills cannot be paid again. Owner-only `demo/wallets/top-up/` creates simulated money and a funding-source ledger entry, capped at 1,000,000 per request; it is not a bank deposit. The fixed simulated 2,000 CNY-equivalent planning credit facility is distinct from the payment-record multiplier in section 5. A bill paid with it is owed back within 30 days through `planning/credit/charges/{id}/repay/` under `credit.repay`: the THB amount leaves the wallet through `wallets.post` (ledger origin `credit_charge`) after a password step-up. Ticking the reminder off is refused, so a repayment is never only a declaration.
+After the application is submitted, Wallet and payments groups balances, conversion, remittance, school bills and history. `planning/bills/{id}/pay-from-wallet/` deducts the bill currency through `wallets.post`, under `bill.pay`, with password step-up and T3 approval when above a limit. Loan-funded bills cannot be paid again. Owner-only `demo/wallets/top-up/` creates simulated money and a funding-source ledger entry, capped at 1,000,000 per request; it is not a bank deposit. The earlier planning credit facility is retired; ledger rows from it keep their origin (`retired_credit_charge`).
+
+### 1.4 Retired features kept in the backend
+
+Family support, budgets and bookkeeping, the independent credit record, enrollment confirmation and funding-gap calculation are removed from the product. Their backend services, tables and APIs (credit, sponsor requests, budget scenarios, funding sources/plans, readiness budgets, consumption imports) remain only for existing contracts, demo gates and the frozen agent evaluations, which include one on-time-record case each. Nothing in the student app or operations console reaches them, and the planning conversation cannot call them. They will be deleted after the competition; see the [deletion boundary](student-loan-contract.md#deletion-boundary).
 
 ### Directory map
 
@@ -173,6 +177,8 @@ Limits are kept per currency in the `PolicyLimit` table and multiplied by the cr
 
 ## 5. Credit level and limit multiplier
 
+> Retired from the product (§1.4): kept in the backend for the remittance demo gate and the frozen agent evaluations; no student-facing entry.
+
 Source: `backend/finance/credit.py`. The credit level is a simulated on-time record, not a credit score.
 
 - **Evidence counted:**
@@ -237,7 +243,7 @@ flowchart TD
 | T2 execution by the agent | **none**: it can only propose | `_propose`; `confirm_pending` runs only for the student, under policy `agent.confirm` |
 | Sessions per user | 30 per hour | `agent` throttle |
 
-The finance prompt is `agent-1.3`; the main conversation uses `planning-1.9`. Each message becomes an audited `AgentSession`, with up to 12 history messages and server memory containing the plan, catalog and pre-check. The runner refreshes `memory.server_time` on every step for real-time quote/proposal expiry, separately from the simulated study date in `memory.today`. Greetings, card-button school selection and date-driven enrollment proposals are deterministic system turns. Opening the loan panel does not submit an application. Plan confirmation and enrollment require explicit confirmation; monetary proposals additionally require the underlying authorization. Prompts treat tool/document content as untrusted data. Authorization and exact calculations do not depend on model compliance. Live failure never falls back to the rule provider.
+The finance prompt is `agent-1.3`; the main conversation uses `planning-2.6`. Each message becomes an audited `AgentSession`, with up to 12 history messages and server memory containing the plan, catalog and pre-check. The runner refreshes `memory.server_time` on every step for real-time quote/proposal expiry, separately from the simulated study date in `memory.today`. Greetings and card-button school selection are deterministic system turns. Opening the loan panel does not submit an application; the student submits it explicitly. Monetary proposals additionally require the underlying authorization. Prompts treat tool/document content as untrusted data. Authorization and exact calculations do not depend on model compliance. Live failure never falls back to the rule provider.
 
 ## 8. Internationalization
 
@@ -247,7 +253,7 @@ API error responses carry a stable `code` and a localized `message` in Chinese o
 
 | Check | Command or evidence | Recorded result and boundary |
 |---|---|---|
-| Updated full-flow live acceptance | [Full recording and evidence](../evidence/demo-full-live-20261014/README.md) | 12 completed live turns, 43 decisions / 51 provider attempts, 16 feature checks; updated credit wallet repayment; retained take-07 footage re-edited into a 4:05 Ava-narrated film; one existing-enrollment-proposal guard, simulated funds |
+| Current full-flow live acceptance | [October 15 recording and evidence](../evidence/demo-current-live-20261015/README.md) | 19 completed live user turns; 48 recorded live decisions / 55 provider attempts, 10 deterministic replies and one system step; 13 scenario checks; current conversational loan flow and independent operations approval; new 4:25 Ava film with 54 shots. No rule/mock fallback; fixture FX and simulated funds |
 | Historical complete gates | `python scripts/run_gates.py` | 17/17 on 2026-10-07 ([evidence/gates](../evidence/gates/summary.txt)); not acceptance of later changes |
 | Simplified planning | [2026-10-13 record](../evidence/short-planning-20261013/verification.json) | 121 focused backend tests, 165 frontend units, 23 rule tests, five offline browser cases; dated results |
 | Current loan/browser journey | [2026-10-14 record](../evidence/short-planning-20261014/browser.json) | English desktop and Chinese phone: signing, school payout and repayment; real local HTTP/PostgreSQL, rule planner, simulated funds |

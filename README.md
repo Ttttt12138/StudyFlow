@@ -24,7 +24,7 @@ The [shared student-flow contract](docs/student-loan-contract.md) defines interf
 | FX quoting | Reference rates from Frankfurter (central-bank blend) or fixtures; corridor fees and margins applied by the server; quotes are single-use and expire after 10 minutes | [§2](docs/technical-overview.md#2-server-side-fx-quoting) |
 | Remittance | 9-state order machine; full refund on failure; idempotent payout callbacks; tuition is paid to verified payees | [§3](docs/technical-overview.md#3-remittance-order-state-machine) |
 | Permissions | T0–T3 tiers, per-currency daily and monthly limits, password step-up, T3 approval by a different operator, rate limiting | [security-self-assessment](docs/security-self-assessment.md) |
-| Historical platform services | Legacy credit/readiness APIs retain their own contracts; excluded from the current student loan decision and UI | [deletion boundary](docs/student-loan-contract.md#deletion-boundary) |
+| Historical platform services | Retired features (credit record, family support, budgets, bookkeeping, readiness) remain in the backend only, for existing contracts, demo gates and frozen evaluations; no entry in the app or operations console; deletion planned after the competition | [deletion boundary](docs/student-loan-contract.md#deletion-boundary) |
 | AI agent | Tool-calling planner (LLM or rule-based) with runner-enforced guards: at most 10 steps and 4 writes; T2 tools only create proposals that expire after 15 minutes | [§7](docs/technical-overview.md#7-agent-loop-and-guardrails), [evaluation](docs/agent-evaluation.md) |
 | Chinese and English | Localized API error messages with stable error codes | [§8](docs/technical-overview.md#8-internationalization) |
 | Earlier B/C work | Loans and repayment (B), budget readiness, consumption learning, financial copilot, optional Gemini OCR | [docs/README.zh.md](docs/README.zh.md) |
@@ -116,7 +116,7 @@ One command runs all 17 gates: Django and C tests, migrations, OpenAPI validatio
 studyFlow/Scripts/python.exe scripts/run_gates.py
 ```
 
-Latest run: **17/17 pass. Django: 481 tests. C package: 298 tests.** Logs are in [evidence/gates/](evidence/gates/). CI runs the same suites on every push ([django.yml](.github/workflows/django.yml), [c-module.yml](.github/workflows/c-module.yml)), plus the frontend build and browser suites ([frontend.yml](.github/workflows/frontend.yml)).
+Recorded gate run (2026-10-07): **17/17 pass, Django 481 tests, C package 298 tests**; logs are in [evidence/gates/](evidence/gates/). Current suites (2026-10-15): **Django 634 tests (4 opt-in recordings skipped), C package 481 tests, frontend 79 unit and 54 mocked browser tests.** CI runs the same suites on every push ([django.yml](.github/workflows/django.yml), [c-module.yml](.github/workflows/c-module.yml)), plus the frontend build and browser suites ([frontend.yml](.github/workflows/frontend.yml)).
 
 | Area | Test files | Test functions* | What they prove |
 |---|---|---:|---|
@@ -175,8 +175,8 @@ The limitations behind these numbers are stated plainly in [docs/security-self-a
 
 [**Watch the English demo — complete updated study journey**](evidence/demo-live-20261014/StudyFlow_Demo_EN.mp4)
 
-The current formal demo is 4 minutes 05 seconds, in 1080p, with Microsoft Ava neural narration and newly timed English subtitles. Twelve continuous narrative paragraphs connect all 46 retained shots: school costs and funding, loan selection/signing, family support, preparation/enrollment, budgeting, currency conversion/remittance, tuition, loan/credit repayment and record verification. The footage retains the accepted twelve live-AI turns and sixteen feature checks; this narration revision is not a new AI acceptance run. All financial transactions are simulated.
+The current formal demo is **4 minutes 25 seconds**, in 1080p, with the approved Microsoft Ava voice and pace. Eight continuous narration paragraphs connect 54 shots of the current cost comparison, conversational loan recommendations, application and signing, reminders, tuition, currency exchange, remittance, repayment and independent operations approval. The new October 15 browser acceptance completed 19 live-AI user turns and 13 scenario checks without rule or mock fallback. English subtitles and recorded actions are aligned to the new narration. All financial transactions are simulated.
 
 [English subtitles](evidence/demo-live-20261014/StudyFlow_Demo_EN.srt) · [Timed narration and reproduction](docs/demo-video-en.md) · [Recording evidence](evidence/demo-live-20261014/README.md)
 
-This version replaces the earlier formal film at the same link. [Full original recordings, source snapshots and synchronization checks](evidence/demo-full-live-20261014/README.md) are retained; the [previous formal version](evidence/demo-live-20261014/formal-previous-20261014/README.md) is archived unchanged.
+This version replaces the earlier formal film at the same link. [Current uncut recordings, source snapshots and synchronization checks](evidence/demo-current-live-20261015/README.md) are retained; the [previous 4:05 Ava film and metadata](evidence/demo-current-live-20261015/previous-formal-ava-20261014.zip) are archived unchanged.

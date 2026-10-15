@@ -1,10 +1,18 @@
+# 2026-10-15 晚：全项目检查后的修复
+
+- 规划对话里，方案未 `CONFIRMED`（贷款申请未提交）时，服务端拒绝钱包/换汇/汇款工具及其确认（`APPLICATION_REQUIRED`，`finance/agent_runner.py::_locked`），不再只靠提示词。
+- 删除已下线功能的前端残留：运营台「家庭资助」组、`family_support` 汇款用途、入学/预算卡片渲染（旧卡片不再显示）、约 150 条无用文案，以及 10-12 的 `demo` 排练用例。后端去掉不可达的卡片分支和 `set_role` 别名。
+- 补齐 OCR 与 `INSTALLMENT_TOO_SMALL` 等 7 个错误码的中英文；`scripts/i18n_messages.py` 现在也提取 `InputError`/`VersionConflict`。
+- 正式演示证据只保留成功的 take-07；录制脚本改为保存完整审计日志、记录实际报价利率。`docs/technical-overview.md`、`docs/security-self-assessment.md` 已按当前主线更新。
+- 仍保留（已决定比赛后再删）：后端信用、记账、预算、家庭资助等旧子系统和独立 agent 的 `get_credit_profile`（demo 门禁和冻结评测集依赖），前端和运营台已无入口；已在 `docs/student-loan-contract.md` 删除边界、`docs/technical-overview.md` §1.4 和 README 注明。
+
 # 2026-10-15：Agent 主动推荐贷款、回应顾虑并引导申请
 
 最新流程以 [前后端统一契约](docs/student-loan-contract.md) 为准：选学校后主动介绍贷款产品，只补问需要借款的金额；根据实际测算推荐一个方案，展示完整费用；用户提出月供高、利息多或想少借时，重新测算并说明与上一方案的变化。明确选择的产品和还款方式会保留，拒绝推荐会持久保存暂停状态。
 
 对话推荐卡上的「按此方案申请」和对话中的申请意图打开同一个确认窗口，核对计划、评估版本和报价。只有用户明确确认才提交，随后进入材料和签约面板。Agent 不自动提交、签约或放款。手动方案面板保留，所有贷款仍为模拟。
 
-`simulate_loan` 复用现有计算器，成功后由服务端生成与报价一致的回复并结束本轮，避免模型重复测算同一顾虑。提示词为 `planning-2.2`，日志区分 live 模型决策和确定性最终回复。中英文只读预览已通过真实规则模式 API 重录。
+`simulate_loan` 复用现有计算器，成功后由服务端生成与报价一致的回复并结束本轮，避免模型重复测算同一顾虑。提示词当时为 `planning-2.2`（现为 `planning-2.6`），日志区分 live 模型决策和确定性最终回复。中英文只读预览已通过真实规则模式 API 重录。
 
 验证：后端 625 项（622 通过、3 个历史录制用例按条件跳过），AI 468 项，前端单测 78 项、模拟浏览器 54 项、真实后端浏览器 8 项通过；类型/构建、Ruff、迁移漂移和 OpenAPI 检查通过。另有七轮 live Agent 修复后回归通过，原始失败记录保留；这不是独立冻结验收。详情及环境修复说明见 [本次验证](docs/verification-loan-advice-20261015.md)。
 
@@ -222,7 +230,7 @@
 - 分支：`feature/bc-integration`（当前也是 PR 基准分支）。最新提交 `4b32e41`（合并 PR #8）。
 - Python 虚拟环境：仓库根目录 `studyFlow/`（Windows：`studyFlow/Scripts/python.exe`），Django 命令在 `backend/` 下运行。
 - 本地数据库：`docker compose up -d --wait db` → `127.0.0.1:55433`（容器 `studyflow-django-db-1` 目前在跑）。
-- 全量门禁：`studyFlow/Scripts/python.exe scripts/run_gates.py`（17 个门禁；上次已提交记录 17/17，Django 481 测试、C 298 测试，日志在 `evidence/gates/`）。
+- 全量门禁：`studyFlow/Scripts/python.exe scripts/run_gates.py`（17 个门禁；`evidence/gates/` 存的是 10-07 的 17/17 记录：Django 481、C 298。2026-10-15 当前：Django 634、C 481）。
 
 ## 2. 已完成（已提交）
 
