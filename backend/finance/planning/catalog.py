@@ -1,4 +1,4 @@
-"""School catalog for the planning conversation (product docs: docs/agent-first.md).
+"""School catalog for the planning conversation (product docs: docs/student-loan-contract.md).
 
 Each school is one JSON file in ``catalog/``. Figures are real-school references taken from
 public sources and shown to users as sample data: they are not a quote or an invoice.
