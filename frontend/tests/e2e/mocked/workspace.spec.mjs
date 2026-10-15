@@ -36,7 +36,7 @@ test('preview tools preserve chat and wallet drafts, history and all student too
   await page.route('**/api/**', route => { calls++; return route.abort(); });
   await page.setViewportSize({ width: 1440, height: 1000 });
   // The money tools belong to the enrolled stage of the recorded preview.
-  await page.goto('/?plan=preview&stage=school');
+  await page.goto('/?plan=preview&stage=prepare');
   const conversation = page.locator('#plan-chat');
   await expect(conversation.locator('.plan-turn').first()).toBeVisible();
   const messageCount = await conversation.locator('.plan-turn').count();
@@ -49,8 +49,8 @@ test('preview tools preserve chat and wallet drafts, history and all student too
   await page.getByRole('button', { name: 'Expand tool' }).click();
   await expect(page.locator('.workspace-dock')).toHaveAttribute('aria-modal', 'true');
   await page.getByRole('button', { name: 'Restore width' }).click();
-  await openTool(page, 'This month');
-  await expect(page.locator('.tool-content:not([hidden]) .life-spending')).toBeVisible();
+  await openTool(page, 'To-dos and bills');
+  await expect(page.locator('.tool-content:not([hidden]) .life-list')).toBeVisible();
   await page.getByRole('button', { name: 'Back to Wallet & payments' }).click();
   await expect(page.locator('#wallet-quote input').first()).toHaveValue('1234');
   await page.getByRole('button', { name: 'Close tool' }).click();
@@ -59,7 +59,7 @@ test('preview tools preserve chat and wallet drafts, history and all student too
   expect(await page.locator('.plan-messages').evaluate(element => Math.abs(element.scrollTop - 100))).toBeLessThanOrEqual(32);
   await page.goBack();
   await expect(page.locator('#wallet-quote input').first()).toHaveValue('1234');
-  for (const [label, selector, setting] of [['My loans', '.loans-app'], ['This month', '.life-panel'], ['Wallet & payments', '#wallet-balances'], ['Credit record', '.trust-app', true]]) {
+  for (const [label, selector, setting] of [['My plan', '.assessment-panel'], ['To-dos and bills', '.life-panel'], ['Wallet & payments', '#wallet-balances']]) {
     await (setting ? openSetting : openTool)(page, label);
     await expect(page.locator('#workspace-tool-title')).toHaveText(label);
     await expect(page.locator(`.tool-content:not([hidden]) ${selector}`)).toBeVisible();
@@ -118,7 +118,7 @@ test('live conversation drafts survive tools and a confirmed account change clea
     const path = new URL(route.request().url()).pathname;
     const result = path.endsWith('/agent/conversations/') ? [{ id: data.conversation.id }]
       : path.includes('/agent/conversations/') ? data.conversation
-      : path.endsWith('/planning/in-school/') ? data.in_school
+      : path.endsWith('/planning/history/') ? { prices: [], drafts: [], draft_limit: 3 }
       : path.endsWith('/planning/life/') ? recording('life.plan') : [];
     return route.fulfill({ json: { data: result } });
   });
@@ -141,40 +141,6 @@ test('live conversation drafts survive tools and a confirmed account change clea
 });
 
 
-
-test('reopened tools refresh records, preserve expense drafts, clear sponsor tokens and show mobile API failures', async ({ page }) => {
-  const data = recording('school');
-  let reads = 0;
-  await page.route('**/api/auth/session/', route => route.fulfill({ json: { authenticated: true, username: 'student', csrf_token: 'mock' } }));
-  await page.route('**/api/v2/**', route => {
-    const path = new URL(route.request().url()).pathname;
-    if (path.endsWith('/planning/expenses/record/')) return route.fulfill({ status: 503, json: { message: 'Expense service unavailable' } });
-    if (path.endsWith('/planning/in-school/')) return route.fulfill({ json: { data: data.in_school } });
-    if (path.endsWith('/planning/life/')) { reads++; return route.fulfill({ json: { data: recording('life.school') } }); }
-    const result = path.endsWith('/agent/conversations/') ? [{ id: data.conversation.id }]
-      : path.includes('/agent/conversations/') ? data.conversation : [];
-    return route.fulfill({ json: { data: result } });
-  });
-  await page.setViewportSize({ width: 375, height: 900 });
-  await page.goto('/');
-  await expect(page.locator('.plan-composer textarea')).toBeEnabled();
-  // The recorded conversation's plan is enrolled, so the life tools are offered once it has loaded.
-  await expect(page.locator('.workspace-stage')).toHaveText('Enrolled');
-  await expect(page.locator('#plan-chat .plan-turn').first()).toBeVisible();
-  await openRecord(page);
-  const amount = page.locator('.life-panel').getByLabel(/^Amount/);
-  await amount.fill('222');
-  await openSetting(page, 'Link a family account');
-  await page.locator('[data-sensitive]').fill('a'.repeat(64));
-  const before = reads;
-  await openRecord(page);
-  await expect.poll(() => reads).toBeGreaterThan(before);
-  await expect(amount).toHaveValue('222');
-  await page.locator('.life-panel').getByRole('button', { name: 'Save', exact: true }).click();
-  await expect(page.locator('.life-panel').getByRole('alert')).toContainText('Expense service unavailable');
-  await openSetting(page, 'Link a family account');
-  await expect(page.locator('[data-sensitive]')).toHaveValue('');
-});
 
 test('signed-in students can sign out from the account menu in the top bar', async ({ page }) => {
   let signedIn = true;
@@ -210,5 +176,5 @@ test('signed-in students can sign out from the account menu in the top bar', asy
   await sidebar(page).getByRole('button', { name: 'Settings', exact: true }).click();
   await expect(page.locator('#side-settings')).toBeVisible();
   await expect(page.locator('#side-settings').getByRole('button', { name: 'Sign out' })).toHaveCount(0);
-  await expect(page).toHaveURL(/127\.0\.0\.1:5173\/$|localhost:5173\/$/);
+  await expect(page).toHaveURL(`${process.env.TEST_URL || 'http://127.0.0.1:5173'}/`);
 });

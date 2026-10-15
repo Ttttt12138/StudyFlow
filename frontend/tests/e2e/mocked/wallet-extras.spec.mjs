@@ -1,4 +1,4 @@
-import { test } from "@playwright/test";
+import { test, expect } from "@playwright/test";
 import assert from "node:assert/strict";
 import { screenshot } from "../../support.mjs";
 import { enrolledPlanner } from "../plannerMock.mjs";
@@ -19,13 +19,13 @@ test.describe("wallet conversion and ledger preview", () => {
     await page.locator(".panel-footer-center").getByRole("button", { name: "Exchange", exact: true }).click();
     const convert = page.locator("#wallet-convert");
     await convert.getByRole("heading", { name: "Convert between currencies" }).waitFor();
-    await convert.locator("article").getByText("Example route (standard)").waitFor();
+    await expect(convert.getByLabel("Conversion quote")).toHaveValue("px-quote-standard");
     await convert.getByText(/\d:\d\d left/).first().waitFor();
     await convert.getByRole("heading", { name: "Review the conversion" }).waitFor();
-    assert.equal(await convert.getByRole("button", { name: "Get conversion quotes" }).isDisabled(), true);
+    assert.equal(await convert.getByRole("button", { name: "Change amount or currencies" }).isDisabled(), true);
+    assert.equal(await convert.getByLabel("Conversion quote").isDisabled(), true);
     assert.equal(await convert.getByRole("button", { name: "Convert now" }).isDisabled(), true);
     assert.equal(await convert.getByLabel("I reviewed these exact amounts").isDisabled(), true);
-    await convert.getByText("USD 150.00 → THB 4,893.00").waitFor();
     await page.getByRole("tab", { name: "History" }).click();
     await page.getByRole("button", { name: "Ledger", exact: true }).click();
     const ledger = page.locator("#wallet-ledger");
@@ -38,8 +38,8 @@ test.describe("wallet conversion and ledger preview", () => {
     await ledger.getByText("append-only").waitFor();
     // WalletApp's own preview still renders around this section.
     await page.getByRole("tab", { name: "Balances" }).click();
-    // The balance is the left loop of the wallet/credit figure (available balance; holds are listed below it).
-    await page.locator(".credit-loop .is-wallet").getByText("THB 47,500.00").waitFor();
+    // Available home balance remains visible after the independent credit line was removed.
+    await page.locator("#wallet-balances").getByText("THB 47,500.00", { exact: true }).waitFor();
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
     await page.screenshot({ path: screenshot("wallet-extras-preview-mobile.png"), fullPage: true });
     await page.getByRole("button", { name: "中文" }).click();
@@ -52,6 +52,33 @@ test.describe("wallet conversion and ledger preview", () => {
     assert.equal(apiCalls, 0);
     assert.deepEqual(errors, []);
   });
+
+  for (const [width, height, expanded] of [[320, 740, false], [390, 844, false], [1024, 768, false], [1440, 900, true]]) {
+    test(`conversion review stays inside its panel at ${width}x${height}${expanded ? " expanded" : ""}`, async ({ page }) => {
+      await page.setViewportSize({ width, height });
+      await page.route("**/api/**", route => route.abort());
+      await page.goto(`${base}/?wallet=preview`);
+      if (expanded) await page.getByRole("button", { name: "Expand tool", exact: true }).click();
+      await page.locator(".panel-footer-center").getByRole("button", { name: "Exchange", exact: true }).click();
+      const convert = page.locator("#wallet-convert");
+      const body = page.locator(".tool-content[data-tool=wallet] .tool-panel .panel-body");
+      for (const language of ["English", "中文"]) {
+        await page.getByRole("button", { name: language, exact: true }).click();
+        await body.evaluate(node => node.scrollTo({ top: 0 }));
+        await expect(convert.getByRole("heading", { name: language === "English" ? "Convert between currencies" : "币种兑换", exact: true })).toBeInViewport({ ratio: 1 });
+        await expect(convert.getByLabel(language === "English" ? "Conversion quote" : "报价方案", { exact: true })).toBeInViewport({ ratio: 1 });
+        expect(await convert.evaluate(node => node.scrollWidth <= node.clientWidth + 1)).toBe(true);
+        const name = `conversion-layout-${width}-${language === "English" ? "en" : "zh"}`;
+        await page.locator(".workspace-dock").screenshot({ path: screenshot(`${name}-top.png`) });
+        const submit = convert.getByRole("button", { name: language === "English" ? "Convert now" : "立即兑换", exact: true });
+        await submit.scrollIntoViewIfNeeded();
+        // Allow subpixel rounding when the scroll position lands at the panel's bottom edge.
+        await expect(submit).toBeInViewport({ ratio: 0.99 });
+        expect(await page.locator(".tool-content[data-tool=wallet]").evaluate(node => node.scrollTop === 0 && node.scrollHeight <= node.clientHeight + 1)).toBe(true);
+        await page.locator(".workspace-dock").screenshot({ path: screenshot(`${name}-action.png`) });
+      }
+    });
+  }
 });
 
 function mockDjango(page, { conversionReply }) {
@@ -122,7 +149,8 @@ test.describe("wallet conversion with mocked Django", () => {
     await page.route("**/api/auth/session/", route => route.fulfill({ json: { authenticated: true, username: "student", csrf_token: "t" } }));
   });
 
-  test("quotes every tier, converts after a password step-up, and pages the ledger", async ({ page }) => {
+  for (const width of [1360, 390]) test(`quotes every tier, converts after a password step-up, and pages the ledger at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
     const errors = [];
     page.on("pageerror", error => errors.push(error.message));
     const mock = mockDjango(page, { conversionReply: (headers) => headers["x-step-up-token"]
@@ -158,11 +186,22 @@ test.describe("wallet conversion with mocked Django", () => {
     await convert.getByLabel("Amount to convert (USD)").fill("200.00");
     await convert.getByRole("button", { name: "Get conversion quotes" }).click();
     await convert.getByText("2 quote(s) returned").waitFor();
+    await expect(convert.getByRole("heading", { name: "Convert between currencies", exact: true })).toBeInViewport({ ratio: 1 });
+    expect(await convert.evaluate(root => [root, ...root.querySelectorAll("*")].filter(node =>
+      ["auto", "scroll"].includes(getComputedStyle(node).overflowX) && node.scrollWidth > node.clientWidth + 1
+    ).map(node => node.className))).toEqual([]);
+    await expect(convert.getByRole("button", { name: "Convert now", exact: true })).toBeInViewport();
     assert.deepEqual(mock.posts.map((item) => item.body).sort((a, b) => a.corridor_id.localeCompare(b.corridor_id)),
       [{ corridor_id: "usd-express", send_amount: "200.00" }, { corridor_id: "usd-standard", send_amount: "200.00" }]);
     await convert.getByText(/(9|10):\d\d left/).first().waitFor();
-    const standard = convert.locator("article", { hasText: "Mock (standard)" });
-    await standard.getByRole("button", { name: "Use this quote" }).click();
+    await convert.getByLabel("Conversion quote").selectOption("q-standard");
+    await expect(convert.getByRole("button", { name: "Convert now", exact: true })).toBeInViewport();
+    await page.getByRole("button", { name: "中文", exact: true }).click();
+    await expect(convert.getByRole("heading", { name: "币种兑换", exact: true })).toBeInViewport({ ratio: 1 });
+    await expect(convert.getByLabel("报价方案", { exact: true })).toBeInViewport({ ratio: 1 });
+    await expect(convert.getByRole("button", { name: "立即兑换", exact: true })).toBeInViewport();
+    await page.locator(".workspace-dock").screenshot({ path: screenshot(`conversion-review-${width}-zh.png`) });
+    await page.getByRole("button", { name: "English", exact: true }).click();
     const review = convert.locator(".wallet-review", { hasText: "Review the conversion" });
     await review.getByText("THB 6,560.43").waitFor();
     assert.equal(await review.getByText("home currency").count(), 0);
@@ -173,6 +212,9 @@ test.describe("wallet conversion with mocked Django", () => {
     await page.getByLabel("Password").fill("student-pass");
     await page.getByRole("dialog", { name: "Review and confirm" }).getByRole("button", { name: "Confirm", exact: true }).click();
     await convert.getByRole("heading", { name: "Conversion recorded" }).waitFor();
+    await expect(convert.getByRole("heading", { name: "Conversion recorded", exact: true })).toBeInViewport();
+    await expect(convert.getByRole("status", { name: "Conversion recorded", exact: true })).toBeFocused();
+    await page.locator(".workspace-dock").screenshot({ path: screenshot(`conversion-completed-${width}.png`) });
     await convert.getByText("#4 / #5").waitFor();
     await convert.getByText("USD 200.00 → THB 6,560.43").waitFor();
     await page.getByRole("tab", { name: "History" }).click();
@@ -190,8 +232,26 @@ test.describe("wallet conversion with mocked Django", () => {
     // onChanged refreshed WalletApp's balances (StrictMode reads twice on mount).
     for (let attempt = 0; attempt < 30 && mock.balanceReads() < 3; attempt++) await page.waitForTimeout(100);
     assert.ok(mock.balanceReads() >= 3);
-    await page.screenshot({ path: screenshot("wallet-extras-mocked-desktop.png"), fullPage: true });
+    await page.screenshot({ path: screenshot(`wallet-extras-mocked-${width}.png`), fullPage: true });
     assert.deepEqual(errors, []);
+  });
+
+  test("editing a quote preserves entered amounts and requires a fresh confirmation", async ({ page }) => {
+    const mock = mockDjango(page, { conversionReply: () => ({ status: 201 }) });
+    await page.route("**/api/v2/**", mock.route);
+    await enrolledPlanner(page);
+    await page.goto(`${base}/?wallet=1`);
+    await page.locator(".panel-footer-center").getByRole("button", { name: "Exchange", exact: true }).click();
+    const convert = page.locator("#wallet-convert");
+    await convert.getByLabel("Amount to convert (USD)").fill("200.00");
+    await convert.getByRole("button", { name: "Get conversion quotes" }).click();
+    await convert.getByLabel("I reviewed these exact amounts and want to convert").check();
+    await convert.getByLabel("Conversion quote").selectOption("q-standard");
+    await expect(convert.getByLabel("I reviewed these exact amounts and want to convert")).not.toBeChecked();
+    await convert.getByRole("button", { name: "Change amount or currencies" }).click();
+    await expect(convert.getByLabel("Amount to convert (USD)")).toHaveValue("200.00");
+    await expect(convert.getByRole("button", { name: "Convert now", exact: true })).toHaveCount(0);
+    expect(mock.posts.filter(row => row.path === "conversions/")).toHaveLength(0);
   });
 
   test("explains a state change and a reserve refusal on a home-currency conversion", async ({ page }) => {

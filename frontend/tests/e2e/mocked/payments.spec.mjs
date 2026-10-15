@@ -1,4 +1,4 @@
-import { test } from "@playwright/test";
+import { test, expect } from "@playwright/test";
 import assert from "node:assert/strict";
 import { screenshot } from "../../support.mjs";
 import { enrolledPlanner } from "../plannerMock.mjs";
@@ -12,7 +12,8 @@ const page_ = results => ({ count: results.length, next: null, previous: null, r
 const denied = code => ({ detail: code, code, message: code, policy: { tier: code === "APPROVAL_REQUIRED" ? "T3" : "T2" } });
 
 function bill(id, label, amount, currency = "THB") {
-  return { id, kind: "tuition", label: { en: label, zh: label }, due_date: "2026-11-01", amount, currency, status: "DUE", paid_at: null, paid_by_loan: false };
+  return { id, kind: "tuition", label: typeof label === "string" ? { en: label, zh: label } : label,
+    due_date: "2026-11-01", amount, currency, status: "DUE", paid_at: null, paid_by_loan: false };
 }
 
 const SCHOOL = { id: "00000000-0000-4000-8000-0000000000a1", name: "Prince of Songkla University, Phuket Campus",
@@ -43,6 +44,70 @@ async function wallet(page, { bills, balance, commands, payee = SCHOOL }) {
 
 test.describe("wallet bill payments", () => {
   test.use({ viewport: { width: 390, height: 844 } });
+
+  for (const [width, height, expanded] of [[320, 740, false], [390, 844, false], [1440, 900, false], [1440, 900, true]]) {
+    test(`all bill details remain reachable at ${width}x${height}${expanded ? " expanded" : ""}`, async ({ page }) => {
+      await page.setViewportSize({ width, height });
+      const rows = Array.from({ length: 10 }, (_, index) => ({
+        ...bill(`tuition-${index}`, { en: `Semester ${index + 1} tuition`, zh: `第 ${index + 1} 学期学费` }, "41000.00"),
+        loan_pending: { amount: index === 9 ? "9000.00" : "41000.00", status: "APPROVED" },
+      }));
+      rows.push({ ...bill("housing", { en: "Housing deposit", zh: "住宿押金" }, "90000.00"), kind: "housing" });
+      const posts = await wallet(page, { bills: rows, balance: { value: "7000.00" },
+        commands: route => json(route, 500, { detail: "No payment should be submitted" }) });
+      await page.goto(`${base}/?tool=wallet&section=pay`);
+      if (expanded) await page.getByRole("button", { name: "Expand tool", exact: true }).click();
+      const pay = page.locator(".plan-bills-pay").first();
+      for (const language of ["English", "中文"]) {
+        await page.getByRole("button", { name: language, exact: true }).click();
+        await pay.evaluate(node => node.scrollTo({ top: 0 }));
+        await expect(pay.getByRole("heading", { name: language === "English" ? "Plan bills" : "方案账单", exact: true })).toBeInViewport({ ratio: 1 });
+        const last = pay.locator(".plan-bills-list li").last();
+        await last.scrollIntoViewIfNeeded();
+        await expect(last).toBeInViewport({ ratio: 0.99 });
+        expect(await pay.evaluate(node => node.scrollTop > 0)).toBe(true);
+        expect(await page.locator(".tool-content[data-tool=wallet]").evaluate(node =>
+          node.scrollTop === 0 && node.scrollHeight <= node.clientHeight + 1)).toBe(true);
+        const name = `bill-layout-${width}-${expanded ? "expanded" : "dock"}-${language === "English" ? "en" : "zh"}`;
+        await page.locator(".workspace-dock").screenshot({ path: screenshot(`${name}-last.png`) });
+        const housing = pay.locator(".plan-bills-list li", { hasText: language === "English" ? "Housing deposit" : "住宿押金" });
+        await housing.getByRole("button", { name: language === "English" ? "Top up" : "充值", exact: true }).click();
+        const amount = housing.getByLabel(language === "English" ? "Amount (THB)" : "金额（THB）", { exact: true });
+        await expect(amount).toHaveValue("83000.00");
+        const cancel = housing.getByRole("button", { name: language === "English" ? "Cancel" : "取消", exact: true });
+        await cancel.scrollIntoViewIfNeeded();
+        await expect(cancel).toBeInViewport({ ratio: 0.99 });
+        expect(await pay.evaluate(node => node.scrollWidth <= node.clientWidth + 1)).toBe(true);
+        await page.locator(".workspace-dock").screenshot({ path: screenshot(`${name}-topup.png`) });
+        await cancel.click();
+      }
+      expect(posts).toEqual([]);
+    });
+  }
+
+  for (const [status, amount] of [["APPROVED", "41000.00"], ["UNDER_REVIEW", "41000.00"], ["APPROVED", "9000.00"]]) test(`unsigned ${status} loan funds ${amount} of tuition directly`, async ({ page }) => {
+    const tuition = { ...bill("00000000-0000-4000-8000-0000000000c1", "Tuition per semester", "41000.00"),
+      loan_pending: { amount, status } };
+    const rows = [tuition, { ...bill("00000000-0000-4000-8000-0000000000c2", "Insurance", "2000.00"), kind: "insurance" }];
+    const posts = await wallet(page, { bills: rows, balance: { value: "60000.00" },
+      commands: route => json(route, 500, { detail: "No payment should be submitted" }) });
+    await page.goto(`${base}/?tool=wallet&section=pay`);
+    const pay = page.locator(".plan-bills-pay").first();
+    const row = pay.locator(".plan-bills-list li", { hasText: "Tuition per semester" });
+    await expect(row).toBeVisible();
+    await expect(row.getByRole("button", { name: "Pay from wallet", exact: true })).toHaveCount(0);
+    await expect(pay.getByRole("button", { name: "Continue loan application", exact: true })).toBeVisible();
+    await expect(pay).toContainText(status === "APPROVED" ? "Loan approved" : "under review");
+    await expect(row).toContainText("THB 41,000.00");
+    await expect(row).toContainText(status === "APPROVED" ? "awaiting documents and signing" : "awaiting loan approval/signing");
+    if (amount === "9000.00") await expect(row).toContainText("Self-funded remainder: THB 32,000.00, payable after signing.");
+    const insurance = pay.locator(".plan-bills-list li", { hasText: "Insurance" });
+    await expect(insurance.getByRole("button", { name: "Pay from wallet", exact: true })).toBeEnabled();
+    await page.getByRole("button", { name: "中文", exact: true }).click();
+    await expect(pay.getByRole("button", { name: "继续贷款流程", exact: true })).toBeVisible();
+    await page.locator(".workspace-dock").screenshot({ path: screenshot(`tuition-loan-${status.toLowerCase()}-${amount}-390-zh.png`) });
+    expect(posts).toEqual([]);
+  });
 
   test("a short bill is topped up in place, then paid after the password", async ({ page }) => {
     const errors = [];

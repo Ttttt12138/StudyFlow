@@ -1,130 +1,76 @@
-// Real Django/PostgreSQL with the rule planner (STUDYFLOW_MODE=mock); disposable users.
-import { test } from '@playwright/test';
+// Real API, deterministic planner, isolated PostgreSQL: user-entered amount through signing and repayment.
+import { test, expect } from '@playwright/test';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
 import { backend, python, screenshot } from '../../support.mjs';
 
-const shell = (code, env = {}) => execFileSync(python, ['manage.py', 'shell', '-c', code],
-  { cwd: backend, env: { ...process.env, ...env }, stdio: 'pipe' }).toString();
-
-test('real Django planner: parent plans a school with a loan, enrolls three days before start, records spending, links the student', async ({ browser }) => {
+test('real loan journey: amount, estimate, application, automatic notice, signing and repayment', async ({ browser }) => {
   const origin = process.env.TEST_URL || 'http://127.0.0.1:5173';
-  const names = { parent: `plan-parent-${randomUUID()}`, student: `plan-student-${randomUUID()}`, operator: `plan-operator-${randomUUID()}` };
-  const passwords = { parent: randomUUID(), student: randomUUID(), operator: randomUUID() };
-  shell('import os,json; from django.contrib.auth import get_user_model; names=json.loads(os.environ["UAT_NAMES"]); passwords=json.loads(os.environ["UAT_PASSWORDS"]); [get_user_model().objects.create_user(username=n,password=passwords[k],is_staff=k=="operator") for k,n in names.items()]',
-    { UAT_NAMES: JSON.stringify(names), UAT_PASSWORDS: JSON.stringify(passwords) });
-  const errors = [];
-  const contexts = {};
-  async function login(kind, next = '/') {
-    const context = await browser.newContext({ locale: 'en-US', viewport: { width: 1440, height: 1000 } });
-    contexts[kind] = context;
-    const page = await context.newPage();
-    page.on('pageerror', error => errors.push(error.message));
-    await page.goto(`${origin}/api/auth/login/?next=${encodeURIComponent(origin + next)}`);
-    await page.getByLabel('Username').fill(names[kind]);
-    await page.getByLabel('Password').fill(passwords[kind]);
-    await page.getByRole('button', { name: 'Log in', exact: true }).click();
-    return page;
-  }
-  async function get(kind, path) {
-    const response = await contexts[kind].request.get(`${origin}/api/v2/${path}`);
-    assert.equal(response.status(), 200, `${path}: ${await response.text()}`);
-    return (await response.json()).data;
-  }
-  async function post(kind, path, body, headers = {}) {
-    const identity = await (await contexts[kind].request.get(`${origin}/api/auth/session/`)).json();
-    const response = await contexts[kind].request.post(`${origin}/api/v2/${path}`,
-      { data: body, headers: { 'X-CSRFToken': identity.csrf_token, 'Idempotency-Key': randomUUID(), ...headers } });
-    assert.ok([200, 201].includes(response.status()), `${path}: ${await response.text()}`);
-    return (await response.json()).data;
-  }
-
+  const username = `loan-flow-${randomUUID()}`, password = randomUUID();
+  execFileSync(python, ['manage.py', 'shell', '-c',
+    'import os; from django.contrib.auth import get_user_model; from finance.policy_defaults import ensure_default_limits; get_user_model().objects.create_user(os.environ["UAT_USER"],password=os.environ["UAT_PASS"]); ensure_default_limits()'],
+    { cwd: backend, env: { ...process.env, UAT_USER: username, UAT_PASS: password }, stdio: 'pipe' });
+  const context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, locale: 'en-US' });
+  const page = await context.newPage(), errors = [];
+  page.on('pageerror', error => errors.push(error.message));
+  const get = async path => {
+    const r = await context.request.get(`${origin}/api/v2/${path}`);
+    assert.equal(r.status(), 200, await r.text()); return (await r.json()).data;
+  };
+  const post = async (path, body) => {
+    const session = await (await context.request.get(`${origin}/api/auth/session/`)).json();
+    const r = await context.request.post(`${origin}/api/v2/${path}`, { data: body,
+      headers: { 'X-CSRFToken': session.csrf_token, 'Idempotency-Key': randomUUID() } });
+    assert.ok([200, 201].includes(r.status()), await r.text()); return (await r.json()).data;
+  };
   try {
-    const page = await login('parent');
-    const chat = page.locator('#plan-chat');
-    const say = async (text, expect) => {
-      await chat.getByLabel('Message the assistant').fill(text);
-      await chat.getByLabel('Message the assistant').press('Enter');
-      await chat.getByText(expect, { exact: false }).last().waitFor();
-    };
-    // The first screen leads with the price question; nobody is asked whether they are a parent or the student.
-    await chat.getByRole('heading', { name: 'Know what studying abroad costs before you go' }).waitFor();
-    await say('What does 4 years at Chulalongkorn cost in total?', '4 year(s) total about');
-    await say('We have savings of 200000 CNY, choose Chulalongkorn', 'status: draft');
-    // The pre-check uses the declared savings; the whole gap can be borrowed with the study loan example.
+    await page.goto(`${origin}/api/auth/login/?next=${encodeURIComponent(origin + '/')}`);
+    await page.getByLabel('Username').fill(username); await page.getByLabel('Password').fill(password);
+    await page.getByRole('button', { name: 'Log in', exact: true }).click();
+    await expect(page.locator('.plan-composer textarea')).toBeEnabled();
+    await expect.poll(async () => (await get('agent/conversations/')).length).toBeGreaterThan(0);
+    const conversation = (await get('agent/conversations/'))[0];
+    await post(`agent/conversations/${conversation.id}/choose/`, { school_key: 'psu-phuket' });
     await page.goto(`${origin}/?tool=funding`);
     const panel = page.locator('.assessment-panel');
-    await panel.getByRole('region', { name: 'Pre-check result' }).waitFor();
-    const checked = (await get('parent', 'planning/assessment/')).prequal;
-    assert.equal(checked.status, 'enough');
-    const chooser = panel.locator('.loan-chooser');
-    await chooser.getByRole('radio', { name: /Commercial study loan .example./ }).click();
-    await chooser.getByRole('spinbutton', { name: 'How much' }).fill(String(Math.round(Number(checked.max_principal))));
-    await chooser.getByRole('radio', { name: '48 months', exact: true }).click();
-    await chooser.locator('.loan-chooser-table tbody tr').nth(47).waitFor({ state: 'attached' });
-    // One confirmation: the plan and the simulated loan application together.
+    await expect(panel.getByRole('button', { name: 'Estimate repayments', exact: true })).toBeDisabled();
+    await panel.getByRole('spinbutton', { name: 'Loan amount', exact: true }).fill('48000');
+    await panel.getByRole('radio', { name: /Commercial study loan/ }).click();
+    await panel.getByRole('button', { name: 'Estimate repayments', exact: true }).click();
     await panel.getByRole('button', { name: 'Confirm plan and apply', exact: true }).click();
-    await page.getByRole('dialog', { name: 'Confirm your plan' }).getByRole('button', { name: 'Confirm plan and apply', exact: true }).click();
-    await panel.locator('.loan-stage').waitFor();
-    assert.equal((await get('parent', 'planning/profile/')).plan.status, 'CONFIRMED');
-    await page.getByRole('button', { name: 'Close tool' }).click();
-    await chat.getByText("Let's start preparing for enrollment.", { exact: false }).waitFor();
-    await page.locator('#plan-journey-guide').getByRole('button', { name: 'Departure preparation' }).click();
-    await chat.getByText('Do you have an offer', { exact: false }).waitFor();
-
-    // Three days before classes the assistant speaks first and proposes enrollment.
-    shell('import os; from datetime import date, timedelta; from finance.planning.models import StudyPlan; p=StudyPlan.objects.get(owner__username=os.environ["UAT_PARENT"]); p.start_date=date.today()+timedelta(days=3); p.save(update_fields=["start_date"])',
-      { UAT_PARENT: names.parent });
-    await page.getByRole('navigation', { name: 'Tools' }).getByRole('button', { name: 'New price question' }).click();
-    await chat.getByText('Classes start in 3 day(s).', { exact: false }).waitFor();
-    await page.locator('#plan-journey-guide').getByRole('button', { name: 'Still preparing' }).click();
-    await chat.getByText('I will not confirm enrollment', { exact: false }).waitFor();
-    assert.equal((await get('parent', 'planning/profile/')).plan.status, 'CONFIRMED');
-    await page.locator('#plan-journey-guide').getByRole('button', { name: 'Registration completed' }).click();
-    await page.getByRole('dialog', { name: 'Review and confirm' }).getByRole('button', { name: 'Confirm', exact: true }).click();
-    // Enrolled: the sidebar gains the life tools.
-    await page.locator('.workspace-stage').getByText('Enrolled').waitFor();
-    await page.getByRole('navigation', { name: 'Tools' }).getByRole('button', { name: 'Wallet & payments' }).waitFor();
-    await chat.getByText("let's settle into daily life", { exact: false }).waitFor();
-    await page.locator('#plan-journey-guide').getByRole('button', { name: 'Campus life', exact: true }).click();
-    await chat.locator('.workspace-card-summary').getByRole('heading', { name: 'Chulalongkorn University' }).last().waitFor();
-    // Enrolled: the plan's bills are paid from the wallet's Pay tab.
-    await page.getByRole('navigation', { name: 'Tools' }).getByRole('button', { name: 'Wallet & payments' }).click();
-    await page.getByRole('tab', { name: 'Pay bills' }).click();
-    await page.locator('.plan-bills-pay .plan-bills-list li').first().waitFor();
-    assert.ok((await get('parent', 'planning/wallet-bills/')).bills.length > 0);
-    await page.getByRole('button', { name: 'Close tool' }).click();
-    await say('I spent 120 THB on lunch today', 'Recorded:');
-    await page.screenshot({ path: screenshot('plan-integration-in-school.png'), fullPage: true });
-    await say('How much have I spent this month?', '120');
-    // The monthly question opens This month: one category, so the pie is 100%, and the entry is listed.
-    await page.locator('#workspace-tool-title').getByText('This month', { exact: true }).waitFor();
-    const spending = page.locator('.life-spending');
-    await spending.getByRole('img', { name: 'Spending by category' }).waitFor();
-    await spending.locator('.monthly-legend').getByText('100%', { exact: true }).waitFor();
-    await spending.locator('.panel-rows li', { hasText: '120' }).first().waitFor();
-    await page.screenshot({ path: screenshot('plan-integration-monthly.png'), fullPage: true });
-
-    // The student asks for support; the operator issues the link; the parent confirms it, then links accounts.
-    await login('student', '/?family=1');
-    const request = await post('student', 'sponsor-requests/', { economic_key: `fam-${randomUUID()}`, currency: 'CNY',
-      amount: '50000.00', available_on: '2027-07-01', purpose: 'Tuition support' });
-    await login('operator', '/?ops=1');
-    const link = await post('operator', `sponsor-requests/${request.id}/issue-link/`, { terms_version: request.terms_version });
-    const confirmed = await contexts.parent.request.post(`${origin}/api/v2/sponsor-confirmation/`, {
-      data: { decision: 'confirm', terms_version: request.terms_version },
-      headers: { 'X-Sponsor-Token': link.token, 'Idempotency-Key': randomUUID() } });
-    assert.equal(confirmed.status(), 200, await confirmed.text());
-    await page.getByRole('navigation', { name: 'Tools' }).getByRole('button', { name: 'Settings' }).click();
-    await page.locator('#side-settings').getByRole('button', { name: 'Link a family account' }).click();
-    const family = page.locator('#plan-family');
-    await family.getByLabel('Sponsor link token').fill(link.token);
-    await family.getByRole('button', { name: 'Link accounts' }).click();
-    await page.getByText('Accounts linked.').waitFor();
-    await family.getByText(`Student account ${names.student}`).waitFor();
+    await page.getByRole('dialog').getByRole('button', { name: 'Confirm plan and apply', exact: true }).click();
+    const notice = panel.getByRole('checkbox', { name: /Simulated admission notice/ });
+    await expect(notice).toBeChecked(); await expect(notice).toBeDisabled();
+    let data = await get('planning/assessment/');
+    assert.equal(data.plan.status, 'CONFIRMED'); assert.equal(data.lifecycle.applications.length, 1);
+    assert.equal(data.lifecycle.applications[0].status, 'APPROVED');
+    assert.equal(data.quotes[0].inputs.principal, '48000.00');
+    const tools = page.getByRole('navigation', { name: 'Tools' });
+    await expect(tools.getByRole('button', { name: 'Wallet & payments', exact: true })).toBeVisible();
+    for (const doc of data.loan_stage.documents.filter(d => !d.auto)) {
+      await post('planning/loan/documents/', { task_id: doc.id, expected_version: doc.version, done: true });
+    }
+    await page.reload();
+    await panel.getByRole('button', { name: 'Sign the loan', exact: true }).click();
+    await page.getByRole('dialog').getByRole('button', { name: 'Sign the loan', exact: true }).click();
+    await expect(panel.locator('.loan-stage-payouts')).toBeVisible();
+    data = await get('planning/assessment/');
+    assert.equal(data.loan_stage.signed, true);
+    assert.equal(data.lifecycle.accounts.length, 1);
+    const first = data.lifecycle.accounts[0].installments[0];
+    await post('demo/wallets/top-up/', { currency: 'THB', amount: '10000.00' });
+    await post('planning/life/clock/', { date: first.due_on });
+    await page.reload();
+    await panel.getByRole('button', { name: 'Confirm repayment', exact: true }).click();
+    await page.getByRole('dialog').getByRole('button', { name: 'Confirm repayment', exact: true }).click();
+    await page.getByRole('dialog').getByLabel('Password').fill(password);
+    await page.getByRole('dialog').getByRole('button', { name: 'Confirm', exact: true }).click();
+    await expect.poll(async () => (await get('planning/assessment/')).lifecycle.accounts[0].installments[0].status).toBe('PAID');
+    await page.screenshot({ path: screenshot('simplified-real-loan-repayment.png') });
+    for (const path of ['family-links/', 'in-school/', 'expenses/', 'credit/']) {
+      assert.equal((await context.request.get(`${origin}/api/v2/planning/${path}`)).status(), 404);
+    }
     assert.deepEqual(errors, []);
-  } finally {
-    await Promise.all(Object.values(contexts).map(context => context.close()));
-  }
+  } finally { await context.close(); }
 });

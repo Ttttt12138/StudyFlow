@@ -18,7 +18,7 @@ test.describe("wallet preview", () => {
     await preview.getByRole("heading", { name: "Wallet & payments" }).waitFor();
     await preview.reload();
     await preview.getByRole("heading", { name: "Wallet & payments" }).waitFor();
-    await preview.locator(".credit-loop .is-wallet").getByText("THB 47,500.00").waitFor();
+    await preview.locator("#wallet-balances").getByText("THB 47,500.00", { exact: true }).waitFor();
     // Remittance routes and the current order live on the remit tab.
     await preview.locator(".panel-footer-center").getByRole("button", { name: "Remit", exact: true }).click();
     assert.match(await preview.locator(".tool-content[data-tool=wallet]").innerText(), /Fixture-priced demo route/);

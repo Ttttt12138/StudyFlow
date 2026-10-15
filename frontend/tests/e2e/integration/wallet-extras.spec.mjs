@@ -4,7 +4,7 @@ import { test } from '@playwright/test';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
-import { backend, python, screenshot, enroll } from '../../support.mjs';
+import { backend, python, screenshot, submittedPlan } from '../../support.mjs';
 
 const TODAY = new Date().toISOString().slice(0, 10);
 const SNAPSHOT = { currency: 'THB', as_of: TODAY, opening_balance: '80000.00', reserve: '15000.00', events: [] };
@@ -15,7 +15,7 @@ test('real Django conversion: quotes for every tier, password step-up, balances 
   const passwords = { student: randomUUID(), operator: randomUUID() };
   execFileSync(python, ['manage.py', 'shell', '-c', 'import os,json; from django.contrib.auth import get_user_model; from finance.corridors import ensure_default_corridors; from finance.policy_defaults import ensure_default_limits; names=json.loads(os.environ["UAT_NAMES"]); passwords=json.loads(os.environ["UAT_PASSWORDS"]); [get_user_model().objects.create_user(username=n,password=passwords[k],is_staff=k!="student") for k,n in names.items()]; ensure_default_corridors(); ensure_default_limits()'],
     { cwd: backend, env: { ...process.env, UAT_NAMES: JSON.stringify(names), UAT_PASSWORDS: JSON.stringify(passwords) }, stdio: 'pipe' });
-  enroll(names.student);
+  submittedPlan(names.student);
   const contexts = {}, errors = [];
   async function login(kind, next) {
     const context = await browser.newContext({ locale: 'en-US', viewport: { width: 1440, height: 1000 } });
@@ -57,7 +57,7 @@ test('real Django conversion: quotes for every tier, password step-up, balances 
     await section.getByLabel('Amount to convert (CNY)').fill('2000');
     await section.getByRole('button', { name: 'Get conversion quotes' }).click();
     await wallet.getByText(/quote\(s\) returned/).waitFor();
-    await section.getByRole('button', { name: 'Use this quote' }).first().click();
+    await section.getByLabel('Conversion quote').selectOption({ index: 0 });
     await section.getByLabel(/I reviewed these exact amounts/).check();
     await section.getByRole('button', { name: 'Convert now' }).click();
     // wallet.convert is T2: the password panel opens, then the retry carries the single-use grant.

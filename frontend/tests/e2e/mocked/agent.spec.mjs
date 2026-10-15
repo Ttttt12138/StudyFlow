@@ -16,10 +16,10 @@ test.describe("money in the conversation, preview", () => {
     page.on("pageerror", error => errors.push(error.message));
     await page.route("**/api/v2/**", route => { apiCalls++; return route.abort(); });
     await page.goto(`${base}/?agent=preview`);
-    await page.getByText("Transfers and currency exchange are now asked and confirmed right here in the conversation.").waitFor();
+    await page.locator("#plan-chat").waitFor();
     assert.equal(await page.locator(".workspace-dock").isVisible(), false);
     const tools = page.getByRole("navigation", { name: "Tools" });
-    await tools.getByRole("button", { name: "This month" }).waitFor();
+    await tools.getByRole("button", { name: "To-dos and bills" }).waitFor();
     assert.equal(await tools.getByRole("button", { name: "Finance assistant" }).count(), 0);
     await page.locator(".plan-composer textarea").waitFor();
     assert.equal(apiCalls, 0);
@@ -48,7 +48,7 @@ test.describe("money in the conversation with mocked Django", () => {
     };
     const conversation = {
       id: "00000000-0000-4000-8000-00000000c0a1", locale: "en", profile: { role: null, home_currency: "THB" },
-      plan: { id: "p1", status: "ENROLLED", school_key: "chulalongkorn", years: 4, start_date: "2026-08-02", version: 3, available_funds: null,
+      plan: { id: "p1", status: "CONFIRMED", school_key: "chulalongkorn", years: 4, start_date: "2026-08-02", version: 3, available_funds: null,
         funds_currency: "THB", school: { name: { en: "Chulalongkorn University", zh: "朱拉隆功大学" }, currency: "THB" }, total: "2351350.00", currency: "THB" },
       turns: [proposal(1, "5000.00"), proposal(2, "15000.00")],
     };
