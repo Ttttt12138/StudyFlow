@@ -9,6 +9,7 @@ from types import SimpleNamespace
 
 from django.conf import settings
 from django.db import transaction
+from studyflow_ai.agent import funnel
 
 from finance import agent_runner
 from finance.agent_models import AgentSession
@@ -19,6 +20,14 @@ from . import catalog, services
 from .models import AgentConversation
 
 HISTORY_TURNS = 12
+# What the sample catalog can answer, so the planner states a gap once instead of searching for it.
+DATA_COVERAGE = {
+    "available": ["full-course costs: tuition, housing, living, insurance, visa, deposit, travel",
+                  "programme, campus, language and duration", "intake and academic calendar",
+                  "campus facilities", "food nearby", "places to visit", "official website and sources"],
+    "not_available": ["university rankings (QS, THE or any other)", "admission requirements and deadlines",
+                      "visa rules", "scholarships", "acceptance rates", "graduate employment"],
+}
 
 
 def _memory(conversation):
@@ -36,21 +45,50 @@ def _memory(conversation):
             plan_info["known_planning_inputs"] = current_inputs(assessment.inputs, user, plan)
             plan_info["loan_advice"] = {k: v for k, v in assessment.result.get("loan_advice", {}).items()
                                         if k in ("status", "intent")}
-    recent = []
+    recent, shown = [], set()
     for turn in conversation.turns.order_by("-created_at")[:6]:
         for step in turn.steps.order_by("-number"):
             for key in [step.arguments.get("school_key"), *(step.arguments.get("school_keys") or [])]:
                 if key and key not in recent:
                     recent.append(key)
-    return {
+        for card in turn.cards or []:
+            if card.get("type") in ("school_list", "comparison"):
+                shown.update(row.get("key") for row in card.get("schools", []))
+            elif card.get("type") == "cost":
+                shown.add((card.get("school") or {}).get("key"))
+    shown.discard(None)
+    memory = {
         "home_currency": services.home_currency(user),
         "today": services.today_for(user).isoformat(),
         "plan": plan_info,
         "recent_schools": recent[:4],
+        "shown_schools": sorted(shown),
         "schools": [{"key": e.key, "name_en": e.school.name.en, "name_zh": e.school.name.zh,
                      "country_code": e.school.country_code, "country_en": e.school.country.en,
-                     "country_zh": e.school.country.zh} for e in catalog.schools()],
+                     "country_zh": e.school.country.zh, "website": str(e.school.website)}
+                    for e in catalog.schools()],
+        "data_coverage": DATA_COVERAGE,
     }
+    stage = funnel.base_stage(memory)
+    memory["funnel"] = {"stage": stage, "invite": funnel.invite(stage, conversation.locale)}
+    return memory
+
+
+# Loans and money are simulated: said once per conversation, on the first reply that works with them
+# (a loan calculation, balances, rates, transfers or bills), not on a reply that merely mentions loans.
+MONEY_TOOLS = {"simulate_loan", "list_bills", "get_balances", "get_fx_rate", "list_corridors", "rank_quotes",
+               "create_live_quote", "create_remittance_order", "submit_remittance_order", "convert_balance",
+               "list_remittance_orders"}
+
+
+def _disclose_once(conversation, turn):
+    note = funnel.DISCLOSURE[conversation.locale]
+    answer = turn.final_answer or ""
+    about_money = turn.steps.filter(tool__in=MONEY_TOOLS).exists()
+    if not about_money or note in answer or conversation.turns.exclude(pk=turn.pk).filter(
+            final_answer__contains=note).exists():
+        return
+    turn.final_answer = answer + ("" if conversation.locale == "zh" else " ") + note
 
 
 def turn_record(turn):
@@ -114,21 +152,23 @@ def send(conversation, text, key):
         owner=conversation.owner, conversation=conversation, idempotency_key=key, goal=text,
         locale=conversation.locale, mode=settings.STUDYFLOW_AI_MODE)
     agent_runner.run(turn, history=_history_before(conversation, turn), memory=_memory(conversation))
+    _disclose_once(conversation, turn)
+    turn.save(update_fields=["final_answer", "updated_at"])
     conversation.save(update_fields=["updated_at"])
     return turn, True
 
 
 CHOSEN = {
     "zh": ("选这所学校：{name}",
-           "已选{name}，按 {years} 年计划，全程约 {total} {currency}。"),
+           "好，就定{name}了！按 {years} 年算，全程约 {total} {currency}。"),
     "en": ("Choose this school: {name}",
-           "{name} is in your plan for {years} years, about {total} {currency} in total. "),
+           "Great, {name} it is! Over {years} years it comes to about {total} {currency}. "),
 }
 
 
 WITHDRAWN = {
-    "zh": "原来按上一所学校申请的模拟贷款已撤回，请在「我的方案」里按新学校重新选择。",
-    "en": " The simulated loan applied for the previous school has been withdrawn; choose again for this school in My plan.",
+    "zh": "之前按上一所学校做的贷款申请已经撤回，换成这所后我们重新算一遍就好。",
+    "en": "The loan application for the previous school has been withdrawn; we'll work it out again for this one. ",
 }
 
 
@@ -160,6 +200,9 @@ def choose(conversation, school_key, years, key):
             advice = agent_runner._execute(turn, 2, step, {"provider": "system", "purpose": "loan_advice"}, {})
             if advice.status == "OK":
                 turn.final_answer += advice_reply(advice.result["advice"], conversation.locale)
+            else:
+                turn.final_answer += funnel.invite("amount", conversation.locale)
+        _disclose_once(conversation, turn)
         turn.save()
     conversation.save(update_fields=["updated_at"])
     return turn, True

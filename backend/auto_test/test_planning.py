@@ -6,13 +6,14 @@ The conversation tests drive the real /api/v2/ routes with the deterministic rul
 import json
 from datetime import timedelta
 from decimal import Decimal
+from types import SimpleNamespace
 from unittest.mock import patch
 from uuid import uuid4
 
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
 from rest_framework.test import APITestCase
-from studyflow_ai.agent import AgentPlanner, RuleAgentProvider
+from studyflow_ai.agent import AgentPlanner, RuleAgentProvider, funnel
 
 from finance import agent_runner
 from finance.agent_models import AgentPendingAction, AgentSession
@@ -193,6 +194,70 @@ class ProfileTests(ConversationHarness):
 
 
 class ConversationTests(ConversationHarness):
+    def test_memory_tells_the_planner_what_the_school_data_does_not_cover(self):
+        from finance.planning.conversation import _memory
+        from finance.planning.models import AgentConversation
+
+        self.start()
+        memory = _memory(AgentConversation.objects.get(owner=self.user))
+        self.assertTrue(any("ranking" in item for item in memory["data_coverage"]["not_available"]))
+        self.assertTrue(all(row["website"].startswith("http") for row in memory["schools"]))
+
+    def test_the_memory_says_where_the_user_is_in_the_flow(self):
+        from finance.planning.conversation import _memory
+        from finance.planning.models import AgentConversation
+
+        conversation = self.start()
+        memory = _memory(AgentConversation.objects.get(owner=self.user))
+        self.assertEqual(memory["funnel"], {"stage": "price", "invite": funnel.invite("price", "zh")})
+        self.say(conversation, "就选朱拉隆功")
+        memory = _memory(AgentConversation.objects.get(owner=self.user))
+        self.assertEqual(memory["funnel"]["stage"], "amount")
+
+    def test_simulated_money_is_mentioned_once_per_conversation(self):
+        note = funnel.DISCLOSURE["zh"]
+        conversation = self.start()
+        self.assertNotIn(note, self.say(conversation, "朱拉隆功读4年一共多少钱？")["final_answer"])
+        first = self.say(conversation, "就选朱拉隆功")["final_answer"]
+        self.assertTrue(first.endswith(note), first)
+        second = self.say(conversation, "我想借30万泰铢")["final_answer"]
+        self.assertNotIn(note, second)
+        self.assertNotIn("均为模拟", second)
+
+    def test_choosing_a_school_in_words_continues_to_the_loan_recommendation(self):
+        # Observed live (planning-2.4): the model saved the plan and stopped, so no loan card appeared.
+        from finance.planning import guidance
+
+        conversation = self.start()
+        session = AgentSession.objects.create(owner=self.user, conversation_id=conversation["id"], goal="就选朱拉隆功",
+                                              locale="zh", idempotency_key=str(uuid4()))
+        saved = agent_runner._execute(session, 1, SimpleNamespace(tool="save_plan", rationale="", arguments_json=""),
+                                      {}, {"school_key": SCHOOL})
+        self.assertTrue(guidance.advance_after_choice(session, saved, 1))
+        self.assertTrue(session.final_answer.startswith("好，就定朱拉隆功大学了！按 4 年算"), session.final_answer)
+        self.assertTrue(session.final_answer.endswith(funnel.invite("amount", "zh")), session.final_answer)
+        self.assertEqual([c["type"] for c in session.cards][-1], "loan_advice")
+
+    def test_a_failed_turn_in_a_conversation_still_points_to_the_next_step(self):
+        from types import SimpleNamespace
+
+        session = SimpleNamespace(conversation_id=uuid4(), locale="zh")
+        answer = agent_runner._fallback(session, {"plan": {"status": "DRAFT"}})
+        self.assertTrue(answer.endswith(funnel.invite("amount", "zh")), answer)
+        self.assertNotIn("请稍后再试", answer)
+        self.assertIn("请稍后再试", agent_runner._fallback(SimpleNamespace(conversation_id=None, locale="zh"), {}))
+
+    def test_a_link_the_server_never_provided_is_dropped_from_the_answer(self):
+        # Observed live (planning-2.3): the catalog's chula.ac.th came back as chula.edu.
+        memory = {"schools": [{"key": "chulalongkorn", "website": "https://bba.acc.chula.ac.th/"}]}
+        clean = agent_runner._known_urls_only
+        self.assertEqual(clean("请看官网：https://bba.acc.chula.ac.th/。", memory, []),
+                         "请看官网：https://bba.acc.chula.ac.th/。")
+        self.assertEqual(clean("请看官网：https://bba.acc.chula.edu/。", memory, []), "请看官网。")
+        self.assertEqual(clean("从朱拉隆功大学 https://bba.acc.chula.edu/、玛希敦大学进入。", memory, []),
+                         "从朱拉隆功大学、玛希敦大学进入。")
+        self.assertEqual(clean("See https://bad.example/ for details.", memory, []), "See for details.")
+
     def test_greeting_leads_with_price_and_never_asks_for_a_role(self):
         for locale in ("zh", "en"):
             conversation = self.start(locale)
@@ -216,6 +281,29 @@ class ConversationTests(ConversationHarness):
         agent_runner._add_card(session, "estimate_total_cost", {"school_key": "chulalongkorn"}, {}, "OK")
         self.assertEqual([c["school"]["key"] for c in session.cards], ["psu-phuket", "chulalongkorn"])
         self.assertEqual(session.cards[0]["estimate"]["years"], 3.5)
+
+    def test_a_comparison_of_listed_schools_does_not_repeat_the_school_list(self):
+        # Observed live: "比较一下泰国的大学" listed 5 Thai schools, then compared 4 of them in a second card.
+        from types import SimpleNamespace
+
+        def compare(keys):
+            arguments = {"school_keys": keys}
+            result = CONVERSATION_TOOLS["compare_schools"].handler(self.user, arguments)
+            agent_runner._add_card(session, "compare_schools", arguments, json.loads(json.dumps(result, default=str)), "OK")
+
+        session = SimpleNamespace(conversation_id=uuid4(), owner=self.user, cards=[])
+        thai = ["chulalongkorn", "mahidol", "psu-hatyai", "psu-phuket"]
+        agent_runner._add_card(session, "list_schools", {"country_code": "TH"}, {}, "OK")
+        compare(thai)
+        self.assertEqual([c["type"] for c in session.cards], ["school_list"])
+        # A comparison that includes a school outside the list is still shown.
+        compare(["chulalongkorn", "waseda"])
+        self.assertEqual([c["type"] for c in session.cards], ["school_list", "comparison"])
+        # A list shown after a comparison of its schools replaces that comparison.
+        session.cards = []
+        compare(thai)
+        agent_runner._add_card(session, "list_schools", {"country_code": "TH"}, {}, "OK")
+        self.assertEqual([c["type"] for c in session.cards], ["school_list"])
 
     def test_choosing_a_school_shows_its_plan_instead_of_repeating_the_cost_card(self):
         from types import SimpleNamespace
@@ -306,7 +394,7 @@ class ConversationTests(ConversationHarness):
         conversation = self.start()
         turn = self.say(conversation, "人民币兑泰铢汇率是多少")
         self.assertFalse(turn["steps"][0].get("tool"))
-        self.assertIn("提交贷款申请", turn["final_answer"])
+        self.assertIn("贷款申请提交后才会开放", turn["final_answer"])
 
     def test_journey_from_price_to_user_entered_loan(self):
         conversation = self.start()

@@ -1,6 +1,7 @@
 """Agent execution loop: plan one step, execute it, record it (docs/agent.md)."""
 import json
 import logging
+import re
 from datetime import timedelta
 from uuid import uuid4
 
@@ -28,6 +29,17 @@ PENDING_SECONDS = 900
 FALLBACK = {"zh": "智能助手暂时无法完成这个请求，请稍后再试，或直接使用对应功能。所有资金均为模拟。",
             "en": "The assistant could not complete this request. Try again later or use the features "
                   "directly. All funds are simulated."}
+# In a planning conversation a failed turn still says what to do next in the flow.
+CONVERSATION_FALLBACK = {"zh": "抱歉，这条消息我刚才没处理好，可以换个说法再发一次。",
+                         "en": "Sorry, I didn't manage to handle that message. Try saying it another way. "}
+
+
+def _fallback(session, memory):
+    if not session.conversation_id:
+        return FALLBACK[session.locale]
+    from studyflow_ai.agent import funnel
+
+    return CONVERSATION_FALLBACK[session.locale] + funnel.invite(funnel.base_stage(memory), session.locale)
 
 
 def planner():
@@ -164,7 +176,33 @@ def _add_card(session, tool, arguments, result, status):
         # A retried estimate for the same school replaces the earlier one instead of stacking a duplicate.
         session.cards = [old for old in session.cards
                          if not (old.get("type") == "cost" and old.get("school", {}).get("key") == school)]
+    elif card.get("type") in ("comparison", "school_list"):
+        # A school list already shows each school's total and the price gap, so a comparison of schools it
+        # contains repeats it (observed: "比较一下泰国的大学" listed 5 schools, then compared 4 of them).
+        def keys(item):
+            return {row.get("key") for row in item.get("schools", [])}
+
+        listed = set().union(*(keys(old) for old in session.cards if old.get("type") == "school_list"))
+        if card["type"] == "comparison" and keys(card) <= listed:
+            return
+        if card["type"] == "school_list":
+            session.cards = [old for old in session.cards
+                             if not (old.get("type") == "comparison" and keys(old) <= keys(card))]
     session.cards = [*session.cards, json_value(card)]
+
+
+URL = re.compile(r"https?://[^\s，。；、！？）】」>\"')]+")
+LEAD_IN = re.compile(r"\s*[：:]?\s*\x00")
+
+
+def _known_urls_only(answer, memory, observations):
+    """Observed live (planning-2.3): the model rewrote a catalog website (chula.ac.th -> chula.edu).
+
+    A link that came from neither the server's facts nor a tool result is dropped with its lead-in colon.
+    """
+    known = set(URL.findall(json.dumps([memory, [o.result for o in observations]], ensure_ascii=False)))
+    marked = URL.sub(lambda m: m.group(0) if m.group(0).rstrip(".,;") in known else "\x00", answer)
+    return LEAD_IN.sub("", marked)
 
 
 def _context_memory(memory):
@@ -189,13 +227,14 @@ def run(session, history=None, memory=None):
                 AgentStep.objects.create(owner=session.owner, session=session, number=number, status="ERROR",
                                          result={"error": exc.code}, call=exc.record.model_dump(mode="json"))
                 session.status, session.error_code = "FAILED", exc.code
-                session.final_answer = FALLBACK[session.locale]
+                session.final_answer = _fallback(session, memory)
                 break
             call = call_record.model_dump(mode="json")
             if step.kind == "final":
                 AgentStep.objects.create(owner=session.owner, session=session, number=number, status="FINAL",
                                          result={"answer": step.answer}, call=call)
-                session.status, session.final_answer = "COMPLETED", step.answer
+                session.status = "COMPLETED"
+                session.final_answer = _known_urls_only(step.answer, memory, observations)
                 break
             arguments = _arguments(step, catalog)
             if remaining == 0 or arguments is None:
@@ -204,11 +243,12 @@ def run(session, history=None, memory=None):
                 AgentStep.objects.create(owner=session.owner, session=session, number=number, status="ERROR",
                                          result={"error": code, "refused_tool": step.tool[:40]}, call=call)
                 session.status, session.error_code = "FAILED", code
-                session.final_answer = FALLBACK[session.locale]
+                session.final_answer = _fallback(session, memory)
                 break
             observations.append(_execute(session, number, step, call, arguments))
-            from .planning.guidance import finish_loan_advice
-            if finish_loan_advice(session, observations[-1], number):
+            from .planning.guidance import advance_after_choice, finish_loan_advice
+            if finish_loan_advice(session, observations[-1], number) or advance_after_choice(
+                    session, observations[-1], number):
                 break
     finally:
         brain.close()

@@ -2,7 +2,7 @@
  "draft": false,
  "quotes": [
   {
-   "id": "ce46018e-5813-4865-bc63-7d216b7b20e7",
+   "id": "8fb0bf1b-49d2-4c0b-b65e-d4feb19ab08f",
    "type": "loansimulation",
    "inputs": {
     "fees": "0.00",
@@ -1007,7 +1007,7 @@
     "missing_inputs": [],
     "shortfall_months": []
    },
-   "created_at": "2026-10-15T13:19:58.439Z",
+   "created_at": "2026-10-15T15:01:01.187Z",
    "is_simulated": true,
    "engine_version": "b-monthly-amortization-v1"
   }
@@ -1708,7 +1708,7 @@
   "change": null,
   "intent": "recommend",
   "status": "recommended",
-  "quote_id": "ce46018e-5813-4865-bc63-7d216b7b20e7",
+  "quote_id": "8fb0bf1b-49d2-4c0b-b65e-d4feb19ab08f",
   "selected": {
    "fees": "0.00",
    "method": "amortized",
@@ -1757,7 +1757,7 @@
   "school_payee": null
  },
  "plan": {
-  "id": "11fff2e6-50fd-470d-a10b-75b502d2e12f",
+  "id": "1bcbabc7-425b-461d-941a-efe71331b72a",
   "status": "DRAFT",
   "school_key": "chulalongkorn",
   "years": 4,

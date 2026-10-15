@@ -1,15 +1,15 @@
 {
  "conversation": {
-  "id": "55f5db4f-a907-4137-9662-b4d5f60de21c",
+  "id": "785bb3c7-40a1-4bbc-a533-384c39cfcd8a",
   "locale": "en",
-  "created_at": "2026-10-15T13:19:58.232730+00:00",
-  "updated_at": "2026-10-15T13:19:58.471886+00:00",
+  "created_at": "2026-10-15T15:01:00.960879+00:00",
+  "updated_at": "2026-10-15T15:01:01.225526+00:00",
   "profile": {
    "role": null,
    "home_currency": "THB"
   },
   "plan": {
-   "id": "11fff2e6-50fd-470d-a10b-75b502d2e12f",
+   "id": "1bcbabc7-425b-461d-941a-efe71331b72a",
    "status": "DRAFT",
    "school_key": "chulalongkorn",
    "years": 4,
@@ -32,9 +32,9 @@
   },
   "turns": [
    {
-    "id": "9e4855c0-2eab-437e-8569-6d38a35be4c7",
+    "id": "4a9b0532-9ed9-43ee-ac63-399a57981a3b",
     "type": "agentsession",
-    "created_at": "2026-10-15T13:19:58.238Z",
+    "created_at": "2026-10-15T15:01:00.965Z",
     "goal": "",
     "locale": "en",
     "mode": "system",
@@ -42,8 +42,8 @@
     "final_answer": "Hi, I'm StudyFlow. Not knowing what studying abroad will cost is the hardest part. Tell me the school you have in mind and I'll work out the full cost, or compare a few. If you're still short, tell me how much you'd like to borrow and I'll find a suitable loan with a clear monthly payment.",
     "error_code": "",
     "write_count": 0,
-    "updated_at": "2026-10-15T13:19:58.238Z",
-    "conversation": "55f5db4f-a907-4137-9662-b4d5f60de21c",
+    "updated_at": "2026-10-15T15:01:00.965Z",
+    "conversation": "785bb3c7-40a1-4bbc-a533-384c39cfcd8a",
     "cards": [],
     "steps": [],
     "pending_actions": [],
@@ -51,18 +51,18 @@
     "kind": "assistant"
    },
    {
-    "id": "200a4060-c84c-417b-91cb-ad66c9a2da86",
+    "id": "63d033e3-882a-4a8a-817b-2ccf570abce9",
     "type": "agentsession",
-    "created_at": "2026-10-15T13:19:58.255Z",
+    "created_at": "2026-10-15T15:01:00.982Z",
     "goal": "What does 4 years at Chulalongkorn cost in total?",
     "locale": "en",
     "mode": "mock",
     "status": "COMPLETED",
-    "final_answer": "4 year(s) total about 2,351,350 THB: tuition 1,028,850 THB, living 1,166,400 THB, essentials 156,100 THB; range 2,118,650 THB-2,584,050 THB, about 29% estimated. (Sample data from public sources; confirm with the school before paying.)",
+    "final_answer": "Over 4 year(s) it comes to about 2,351,350 THB: tuition 1,028,850 THB, living 1,166,400 THB, essentials 156,100 THB. (Sample data from public sources; please confirm with the school before paying.)Want to put another school next to it? If this is the one, just tap “Choose” on its card.",
     "error_code": "",
     "write_count": 0,
-    "updated_at": "2026-10-15T13:19:58.278Z",
-    "conversation": "55f5db4f-a907-4137-9662-b4d5f60de21c",
+    "updated_at": "2026-10-15T15:01:01.009Z",
+    "conversation": "785bb3c7-40a1-4bbc-a533-384c39cfcd8a",
     "cards": [
      {
       "type": "cost",
@@ -791,8 +791,8 @@
     ],
     "steps": [
      {
-      "id": "a8788e94-b7fe-4d45-a112-507fff9cb92f",
-      "created_at": "2026-10-15T13:19:58.276Z",
+      "id": "ba0d294c-cd96-4322-8f3e-d09f8072304f",
+      "created_at": "2026-10-15T15:01:01.005Z",
       "number": 1,
       "tool": "estimate_total_cost",
       "tier": "T0",
@@ -840,14 +840,15 @@
        "request_id": null,
        "duration_ms": 0.0,
        "http_status": null,
+       "raw_excerpt": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-2.2"
+       "prompt_version": "planning-2.4"
       }
      },
      {
-      "id": "7acb4d9d-45b1-4bb9-91ae-468d4bfd2805",
-      "created_at": "2026-10-15T13:19:58.277Z",
+      "id": "8fe9f1c3-b3d8-4d16-9b5a-4e3bc4ea7419",
+      "created_at": "2026-10-15T15:01:01.006Z",
       "number": 2,
       "tool": "",
       "tier": "",
@@ -855,7 +856,7 @@
       "rationale": "",
       "status": "FINAL",
       "result": {
-       "answer": "4 year(s) total about 2,351,350 THB: tuition 1,028,850 THB, living 1,166,400 THB, essentials 156,100 THB; range 2,118,650 THB-2,584,050 THB, about 29% estimated. (Sample data from public sources; confirm with the school before paying.)"
+       "answer": "Over 4 year(s) it comes to about 2,351,350 THB: tuition 1,028,850 THB, living 1,166,400 THB, essentials 156,100 THB. (Sample data from public sources; please confirm with the school before paying.)Want to put another school next to it? If this is the one, just tap “Choose” on its card."
       },
       "call": {
        "mode": "mock",
@@ -867,9 +868,10 @@
        "request_id": null,
        "duration_ms": 0.0,
        "http_status": null,
+       "raw_excerpt": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-2.2"
+       "prompt_version": "planning-2.4"
       }
      }
     ],
@@ -878,18 +880,18 @@
     "kind": "user"
    },
    {
-    "id": "d7b7a203-1a86-4b36-98e2-e9bc0d95f5e3",
+    "id": "8f2be085-784e-41fd-ac05-637667583d60",
     "type": "agentsession",
-    "created_at": "2026-10-15T13:19:58.292Z",
+    "created_at": "2026-10-15T15:01:01.025Z",
     "goal": "Compare Manchester and Melbourne",
     "locale": "en",
     "mode": "mock",
     "status": "COMPLETED",
-    "final_answer": "Comparison: The University of Manchester (Alliance Manchester Business School) 3 year(s) total about 148,643 GBP (≈6,243,006 THB); The University of Melbourne 3 year(s) total about 303,082 AUD (≈6,516,252 THB). Lowest full-course total: The University of Manchester (Alliance Manchester Business School), about 273,246 THB less than the most expensive. (Sample data from public sources; confirm with the school before paying.)",
+    "final_answer": "Side by side, The University of Manchester (Alliance Manchester Business School) costs the least overall, about 273,246 THB less than the most expensive; the details are in the card below. (Sample data from public sources; please confirm with the school before paying.)Which one feels right? Tap “Choose” on its card and we'll look at loan options next.",
     "error_code": "",
     "write_count": 0,
-    "updated_at": "2026-10-15T13:19:58.314Z",
-    "conversation": "55f5db4f-a907-4137-9662-b4d5f60de21c",
+    "updated_at": "2026-10-15T15:01:01.051Z",
+    "conversation": "785bb3c7-40a1-4bbc-a533-384c39cfcd8a",
     "cards": [
      {
       "type": "comparison",
@@ -1076,8 +1078,8 @@
     ],
     "steps": [
      {
-      "id": "027bae2f-f1ec-442f-b9df-2fc77bf7652e",
-      "created_at": "2026-10-15T13:19:58.312Z",
+      "id": "db9328c7-d834-4f05-a7b4-2d9fca8f2df7",
+      "created_at": "2026-10-15T15:01:01.047Z",
       "number": 1,
       "tool": "compare_schools",
       "tier": "T0",
@@ -1204,14 +1206,15 @@
        "request_id": null,
        "duration_ms": 0.0,
        "http_status": null,
+       "raw_excerpt": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-2.2"
+       "prompt_version": "planning-2.4"
       }
      },
      {
-      "id": "c665edc9-16e0-468e-9aa1-327c0304ea81",
-      "created_at": "2026-10-15T13:19:58.313Z",
+      "id": "83c98b00-d616-4f97-962b-7c64a70e523a",
+      "created_at": "2026-10-15T15:01:01.048Z",
       "number": 2,
       "tool": "",
       "tier": "",
@@ -1219,7 +1222,7 @@
       "rationale": "",
       "status": "FINAL",
       "result": {
-       "answer": "Comparison: The University of Manchester (Alliance Manchester Business School) 3 year(s) total about 148,643 GBP (≈6,243,006 THB); The University of Melbourne 3 year(s) total about 303,082 AUD (≈6,516,252 THB). Lowest full-course total: The University of Manchester (Alliance Manchester Business School), about 273,246 THB less than the most expensive. (Sample data from public sources; confirm with the school before paying.)"
+       "answer": "Side by side, The University of Manchester (Alliance Manchester Business School) costs the least overall, about 273,246 THB less than the most expensive; the details are in the card below. (Sample data from public sources; please confirm with the school before paying.)Which one feels right? Tap “Choose” on its card and we'll look at loan options next."
       },
       "call": {
        "mode": "mock",
@@ -1231,9 +1234,10 @@
        "request_id": null,
        "duration_ms": 0.0,
        "http_status": null,
+       "raw_excerpt": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-2.2"
+       "prompt_version": "planning-2.4"
       }
      }
     ],
@@ -1242,22 +1246,22 @@
     "kind": "user"
    },
    {
-    "id": "2289b578-a429-4699-b8e7-12ff41bd2c98",
+    "id": "20ed0dc9-d2cc-439b-a142-50e7eaf61577",
     "type": "agentsession",
-    "created_at": "2026-10-15T13:19:58.327Z",
+    "created_at": "2026-10-15T15:01:01.064Z",
     "goal": "Choose Chulalongkorn",
     "locale": "en",
     "mode": "mock",
     "status": "COMPLETED",
-    "final_answer": "I recommend starting with the commercial study loan example at 4.5% annual interest. How much would you like to borrow? I'll prepare a plan with monthly payments and all costs, then guide you to apply. Loans are simulated.",
+    "final_answer": "Great, Chulalongkorn University it is! Over 4 years it comes to about 2,351,350 THB. For the loan, I'd start with the commercial study loan example: 4.5% a year in this example, repaid in monthly installments. If you're still short, tell me how much you'd like to borrow and I'll find a plan and work out the monthly payment. Just so you know: loans and money here are simulated.",
     "error_code": "",
     "write_count": 2,
-    "updated_at": "2026-10-15T13:19:58.380Z",
-    "conversation": "55f5db4f-a907-4137-9662-b4d5f60de21c",
+    "updated_at": "2026-10-15T15:01:01.123Z",
+    "conversation": "785bb3c7-40a1-4bbc-a533-384c39cfcd8a",
     "cards": [
      {
       "plan": {
-       "id": "11fff2e6-50fd-470d-a10b-75b502d2e12f",
+       "id": "1bcbabc7-425b-461d-941a-efe71331b72a",
        "total": "2351350.00",
        "years": 4,
        "school": {
@@ -1304,14 +1308,14 @@
        "ready_to_apply": false,
        "assessment_version": 1
       },
-      "plan_id": "11fff2e6-50fd-470d-a10b-75b502d2e12f",
+      "plan_id": "1bcbabc7-425b-461d-941a-efe71331b72a",
       "is_simulated": true
      }
     ],
     "steps": [
      {
-      "id": "a9b01352-498f-4789-9a8f-064c0b7156e9",
-      "created_at": "2026-10-15T13:19:58.356Z",
+      "id": "e9a1b96d-a00c-4517-affc-76dba117b71c",
+      "created_at": "2026-10-15T15:01:01.095Z",
       "number": 1,
       "tool": "save_plan",
       "tier": "T1",
@@ -1322,7 +1326,7 @@
       "status": "OK",
       "result": {
        "plan": {
-        "id": "11fff2e6-50fd-470d-a10b-75b502d2e12f",
+        "id": "1bcbabc7-425b-461d-941a-efe71331b72a",
         "total": "2351350.00",
         "years": 4,
         "school": {
@@ -1356,19 +1360,20 @@
        "request_id": null,
        "duration_ms": 0.0,
        "http_status": null,
+       "raw_excerpt": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-2.2"
+       "prompt_version": "planning-2.4"
       }
      },
      {
-      "id": "4321fa3e-a2e6-46ba-b130-68b0efd88427",
-      "created_at": "2026-10-15T13:19:58.378Z",
+      "id": "1be1696e-1d57-489f-8cb7-93e4e8ac3a6f",
+      "created_at": "2026-10-15T15:01:01.118Z",
       "number": 2,
       "tool": "simulate_loan",
       "tier": "T1",
       "arguments": {},
-      "rationale": "Recommend a loan for the chosen school",
+      "rationale": "Recommend after choosing a school",
       "status": "OK",
       "result": {
        "advice": {
@@ -1393,27 +1398,17 @@
         "ready_to_apply": false,
         "assessment_version": 1
        },
-       "plan_id": "11fff2e6-50fd-470d-a10b-75b502d2e12f",
+       "plan_id": "1bcbabc7-425b-461d-941a-efe71331b72a",
        "is_simulated": true
       },
       "call": {
-       "mode": "mock",
-       "model": "agent-rules",
-       "purpose": "plan",
-       "attempts": 1,
-       "provider": "rules",
-       "error_code": null,
-       "request_id": null,
-       "duration_ms": 0.0,
-       "http_status": null,
-       "input_tokens": 0,
-       "output_tokens": 0,
-       "prompt_version": "planning-2.2"
+       "purpose": "loan_advice",
+       "provider": "system"
       }
      },
      {
-      "id": "27de3d4a-3e5c-4d5a-98cd-37e00feb0bba",
-      "created_at": "2026-10-15T13:19:58.380Z",
+      "id": "39735d30-adbd-4dce-80c3-cb6e92331240",
+      "created_at": "2026-10-15T15:01:01.119Z",
       "number": 3,
       "tool": "",
       "tier": "",
@@ -1421,7 +1416,7 @@
       "rationale": "",
       "status": "FINAL",
       "result": {
-       "answer": "I recommend starting with the commercial study loan example at 4.5% annual interest. How much would you like to borrow? I'll prepare a plan with monthly payments and all costs, then guide you to apply. Loans are simulated."
+       "answer": "Great, Chulalongkorn University it is! Over 4 years it comes to about 2,351,350 THB. For the loan, I'd start with the commercial study loan example: 4.5% a year in this example, repaid in monthly installments. If you're still short, tell me how much you'd like to borrow and I'll find a plan and work out the monthly payment."
       },
       "call": {
        "mode": "deterministic",
@@ -1435,18 +1430,18 @@
     "kind": "user"
    },
    {
-    "id": "8c6431a9-4f71-4ac9-8134-5b84ca4f22f2",
+    "id": "b90b493b-15f3-44dd-b722-043ab5baadef",
     "type": "agentsession",
-    "created_at": "2026-10-15T13:19:58.392Z",
+    "created_at": "2026-10-15T15:01:01.138Z",
     "goal": "I want to borrow 200000 THB",
     "locale": "en",
     "mode": "mock",
     "status": "COMPLETED",
-    "final_answer": "I recommend the commercial study loan example based on the available product costs: 200,000.00 THB, 48 installments at 4.5% annually. Monthly payment up to 4,560.70 THB; interest 18,913.45 THB; fees 0.00 THB; total repayment 218,913.45 THB. Choose Apply with this plan to review and submit; a simulated admission notice is attached on submission. All loans are simulated.",
+    "final_answer": "After comparing the available loans, I recommend the commercial study loan example: 200,000.00 THB over 48 installments at 4.5% a year. You'd pay at most 4,560.70 THB a month, 18,913.45 THB in interest and 0.00 THB in fees, 218,913.45 THB in total. If this plan works for you, tap “Apply with this plan”; if the monthly payment or interest feels high, just tell me.",
     "error_code": "",
     "write_count": 1,
-    "updated_at": "2026-10-15T13:19:58.471Z",
-    "conversation": "55f5db4f-a907-4137-9662-b4d5f60de21c",
+    "updated_at": "2026-10-15T15:01:01.224Z",
+    "conversation": "785bb3c7-40a1-4bbc-a533-384c39cfcd8a",
     "cards": [
      {
       "type": "loan_advice",
@@ -1454,7 +1449,7 @@
        "change": null,
        "intent": "recommend",
        "status": "recommended",
-       "quote_id": "ce46018e-5813-4865-bc63-7d216b7b20e7",
+       "quote_id": "8fb0bf1b-49d2-4c0b-b65e-d4feb19ab08f",
        "selected": {
         "fees": "0.00",
         "method": "amortized",
@@ -1496,14 +1491,14 @@
        "ready_to_apply": false,
        "assessment_version": 2
       },
-      "plan_id": "11fff2e6-50fd-470d-a10b-75b502d2e12f",
+      "plan_id": "1bcbabc7-425b-461d-941a-efe71331b72a",
       "is_simulated": true
      }
     ],
     "steps": [
      {
-      "id": "4bb6fd9e-14ee-46a7-94ef-813ee56eb55a",
-      "created_at": "2026-10-15T13:19:58.469Z",
+      "id": "550bfd22-a04e-4bd8-9c14-f2a6413d75a1",
+      "created_at": "2026-10-15T15:01:01.220Z",
       "number": 1,
       "tool": "simulate_loan",
       "tier": "T1",
@@ -1518,7 +1513,7 @@
         "change": null,
         "intent": "recommend",
         "status": "recommended",
-        "quote_id": "ce46018e-5813-4865-bc63-7d216b7b20e7",
+        "quote_id": "8fb0bf1b-49d2-4c0b-b65e-d4feb19ab08f",
         "selected": {
          "fees": "0.00",
          "method": "amortized",
@@ -1560,7 +1555,7 @@
         "ready_to_apply": false,
         "assessment_version": 2
        },
-       "plan_id": "11fff2e6-50fd-470d-a10b-75b502d2e12f",
+       "plan_id": "1bcbabc7-425b-461d-941a-efe71331b72a",
        "is_simulated": true
       },
       "call": {
@@ -1573,14 +1568,15 @@
        "request_id": null,
        "duration_ms": 0.0,
        "http_status": null,
+       "raw_excerpt": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-2.2"
+       "prompt_version": "planning-2.4"
       }
      },
      {
-      "id": "37b12552-e18a-48c4-a76c-cad396b91f54",
-      "created_at": "2026-10-15T13:19:58.470Z",
+      "id": "7a8ca046-e10a-446a-91e4-7ca358ff35ca",
+      "created_at": "2026-10-15T15:01:01.221Z",
       "number": 2,
       "tool": "",
       "tier": "",
@@ -1588,7 +1584,7 @@
       "rationale": "",
       "status": "FINAL",
       "result": {
-       "answer": "I recommend the commercial study loan example based on the available product costs: 200,000.00 THB, 48 installments at 4.5% annually. Monthly payment up to 4,560.70 THB; interest 18,913.45 THB; fees 0.00 THB; total repayment 218,913.45 THB. Choose Apply with this plan to review and submit; a simulated admission notice is attached on submission. All loans are simulated."
+       "answer": "After comparing the available loans, I recommend the commercial study loan example: 200,000.00 THB over 48 installments at 4.5% a year. You'd pay at most 4,560.70 THB a month, 18,913.45 THB in interest and 0.00 THB in fees, 218,913.45 THB in total. If this plan works for you, tap “Apply with this plan”; if the monthly payment or interest feels high, just tell me."
       },
       "call": {
        "mode": "deterministic",
@@ -1608,7 +1604,7 @@
   "draft": false,
   "quotes": [
    {
-    "id": "ce46018e-5813-4865-bc63-7d216b7b20e7",
+    "id": "8fb0bf1b-49d2-4c0b-b65e-d4feb19ab08f",
     "type": "loansimulation",
     "inputs": {
      "fees": "0.00",
@@ -2613,7 +2609,7 @@
      "missing_inputs": [],
      "shortfall_months": []
     },
-    "created_at": "2026-10-15T13:19:58.439Z",
+    "created_at": "2026-10-15T15:01:01.187Z",
     "is_simulated": true,
     "engine_version": "b-monthly-amortization-v1"
    }
@@ -3314,7 +3310,7 @@
    "change": null,
    "intent": "recommend",
    "status": "recommended",
-   "quote_id": "ce46018e-5813-4865-bc63-7d216b7b20e7",
+   "quote_id": "8fb0bf1b-49d2-4c0b-b65e-d4feb19ab08f",
    "selected": {
     "fees": "0.00",
     "method": "amortized",
@@ -3363,7 +3359,7 @@
    "school_payee": null
   },
   "plan": {
-   "id": "11fff2e6-50fd-470d-a10b-75b502d2e12f",
+   "id": "1bcbabc7-425b-461d-941a-efe71331b72a",
    "status": "DRAFT",
    "school_key": "chulalongkorn",
    "years": 4,
