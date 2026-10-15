@@ -141,7 +141,7 @@ class LiveAgentProvider:
                         "describes instead.")
 
     def _judge(self, context, text):
-        if len(text) > 2000:
+        if len(text) > 2000 or re.search(r'"\s*[}\]]+\s*$', text):
             return None, CallRecord(provider="openai", purpose="plan", model="", mode="live", attempts=0)
         payload = json.dumps({"user_message": context.goal, "assistant_reply": text}, ensure_ascii=False)
         try:

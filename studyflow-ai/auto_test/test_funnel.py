@@ -173,3 +173,13 @@ def test_a_finished_answer_in_plain_text_is_used_after_a_short_check():
     provider = Replies(["Need tool list_schools first."], user_facing=False)
     step, _ = AgentPlanner(LiveAgentProvider(provider)).next_step(context("有哪些学校"))
     assert step.answer == "好的" and len(provider.calls) == 3 and "<<<" in provider.calls[2]
+
+
+def test_prose_with_a_broken_json_tail_is_retried_even_if_the_judge_would_accept_it():
+    for tail in ('"}', '\\"}', '"}}'):
+        provider = Replies(["Choose a school to continue." + tail], final="Choose a school to continue.",
+                           user_facing=True)
+        step, record = AgentPlanner(LiveAgentProvider(provider)).next_step(context("Compare Thai schools"))
+        assert step.answer == "Choose a school to continue."
+        assert record.mode == "live" and len(provider.calls) == 2
+        assert prompts.PROSE_VERDICT not in provider.calls

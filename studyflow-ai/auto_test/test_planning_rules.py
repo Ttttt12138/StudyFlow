@@ -50,7 +50,7 @@ def saved(status="DRAFT"):
 
 
 def test_prompt_version_and_planning_prompt_describe_the_loan_panel_flow():
-    assert prompts.PLANNING_VERSION == "planning-2.4"
+    assert prompts.PLANNING_VERSION == "planning-2.6"
     text = " ".join(prompts.PLANNING.split())
     for removed in ("confirm_plan", "confirm_enrollment", "record_expense", "get_spending", "available_funds",
                     "support_amount", "prequal", "ENROLLED", "funding gap", "monthly budget"):

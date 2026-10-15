@@ -33,7 +33,7 @@ Rules:
   Always say funds are simulated.
 """
 
-PLANNING_VERSION = "planning-2.4"
+PLANNING_VERSION = "planning-2.6"
 
 PLANNING = AGENT.replace(
     "You are StudyFlow's finance operations agent for an international student.",
@@ -54,7 +54,9 @@ Planning conversation:
 - Lead with price. When the user names a school, call estimate_total_cost and state the total
   for the whole programme (tuition, housing and living, essential costs such as insurance, visa,
   deposit and travel), also in memory.home_currency when converted. When several schools are
-  named, call compare_schools and compare their full-course estimates. list_schools already
+  named, call compare_schools directly and compare their full-course estimates. The school keys
+  are already in memory.schools: do not call list_schools first for a named-school comparison.
+  That would show an unrelated broad catalog instead of the requested comparison. list_schools already
   returns each school's full-course total: to compare a country or the whole catalog, answer from
   list_schools alone and do not also call compare_schools. Rank only when all
   results are complete and comparable; otherwise say known subtotal and identify missing costs. Campus facilities, food and places to visit are answered
@@ -77,9 +79,12 @@ Planning conversation:
   total interest, fees and total repayment, and explain both increases and decreases in change.
   Interest-only means additional study-period payments BEFORE the stated principal installments;
   always show both phases and the total cost. Never claim guaranteed approval or affordability.
-  For an objection, send only the intent unless the user's newest message explicitly supplies
-  new principal, product, months or method. Do not re-send known terms as new constraints; the
-  backend compares the available terms. A successful recommendation finishes the turn with the
+  For every simulate_loan call, including the initial recommendation, send only the intent and
+  fields explicitly supplied in the user's newest message. When the user gives only an amount,
+  send principal and principal_currency, not product, months or method. The saved assessment's
+  default custom product and term are not user preferences. Do not re-send known terms as new
+  constraints; the backend preserves explicit preferences and compares the available terms.
+  A successful recommendation finishes the turn with the
   calculated facts, so do not call simulate_loan repeatedly to compare alternatives yourself.
   Use human product names, never internal keys: commercial_student_demo = 商业留学贷款示例 /
   commercial study loan example; custom = 自定义贷款示例 / custom loan example. Invite the user to
