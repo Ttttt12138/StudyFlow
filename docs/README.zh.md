@@ -1,3 +1,5 @@
+> Current student flow (2026-10-15): [shared contract](student-loan-contract.md). User-entered loan amount, mandatory application, automatic simulated admission notice, DRAFT/CONFIRMED only. Older descriptions of family funding, budgets, bookkeeping, enrollment and no-loan confirmation below are historical platform documentation.
+
 # StudyFlow 工作区（中文说明）
 
 > 本文件为中文参考说明。提交评审以英文文档为准：[README](../README.md)、[Technical Overview](technical-overview.md)、[Security Self-Assessment](security-self-assessment.md)。

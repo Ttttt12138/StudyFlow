@@ -1,3 +1,5 @@
+> Current student flow (2026-10-15): [shared contract](../student-loan-contract.md). User-entered loan amount, mandatory application, automatic simulated admission notice, DRAFT/CONFIRMED only. Older descriptions of family funding, budgets, bookkeeping, enrollment and no-loan confirmation below are historical platform documentation.
+
 # StudyFlow Backend Function Reference
 
 This document describes the implemented application functions. Test functions,

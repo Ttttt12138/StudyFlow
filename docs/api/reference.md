@@ -4,19 +4,13 @@ This is the concise endpoint reference for frontend and extraction-service
 integration. For detailed workflow explanations, see [guide.md](guide.md). The generated
 machine-readable contract is [openapi.yaml](../../backend/openapi.yaml).
 
-## Short planning workspace
+## Student planning workspace
 
-All routes below require an authenticated session. POST also requires CSRF and an `Idempotency-Key`.
+The authoritative [shared contract](../student-loan-contract.md) lists fields, routes, migration and removed endpoints. `inputs` contains `borrower` and `loan`; `loan.principal` is entered by the user. `GET planning/assessment/` returns products, full-course cap, quotes, documents and loan lifecycle. `POST planning/plan/confirm/` requires a current `quote_id` and submits the application atomically with plan confirmation. There is no no-loan branch, savings input or gap forecast.
 
-| Route | Purpose |
-| --- | --- |
-| `GET /api/v2/planning/assessment/` | Current declaration, revision, missing data, course estimate, short-term forecast, loan quotes and linked application/account progress. Read-only; creates no quote or wallet. |
-| `POST /api/v2/planning/assessment/` | `{expected_version, plan_version, inputs, draft}`. Draft saves declarations; evaluation creates THB quotes from explicit principal or a complete forecast shortfall. Default terms: 48/24 months, 6%, no fee. |
-| `POST /api/v2/planning/loan-applications/` | `{expected_version, plan_version, quote_id}`. Atomically creates and submits the selected current quote; repeats return the same application. |
+`POST planning/loan-preview/` performs a read-only calculation. Automatic approval compares principal with the course cost in THB; fees do not increase the maximum. The simulated admission notice arrives completed with `auto: true`. Other documents and signing remain explicit. To-dos and wallet tools open when plan status is `CONFIRMED`; `ENROLLED` was removed.
 
-`inputs` contains available funds/currency/reserve, as-of date, 30/60/90-day horizon, fee payment dates/overrides, expected support, recurring monthly repayment budget with month range/change points, and adjustable loan terms. See the generated schema for exact fields. Missing amounts remain unknown. Declarations never credit the wallet. Application submission preserves existing permission, version and affordability checks. Existing operator disbursement and step-up-protected repayment routes remain authoritative. Old application routes also reject superseded planning quotes.
-
-Planning comparison returns the requested custom terms (48/24 months by default) plus one separate `commercial_student_demo` quote at 48 months. This fictional study-loan example uses the same principal, annual rate, fees and due date for comparison; defaults remain THB, 6%, zero fees. Select its card directly alongside the other quotes. The older `inputs.loan.product` field remains accepted for compatibility but no longer relabels every planning quote. `POST /api/v2/loans/` still accepts `product: "custom" | "commercial_student_demo"` (default `custom`) for standalone quotes. The product is saved with its original quote ID and follows that ID into applications, without changing calculation, eligibility or disbursement rules. Old quotes without a product identifier remain custom simulations.
+The remaining sections document retained platform APIs, including legacy modules not mounted in the student app.
 
 ## Connection
 

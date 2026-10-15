@@ -1,12 +1,14 @@
 # StudyFlow
 
-**A study-abroad finance assistant that starts with the price.** Before departure, a student or family names a school and sees the **whole-course total** (tuition, housing, living costs, insurance and visa) in THB, CNY or USD, then **compares schools** on totals and yearly cost. When savings fall short, the assistant shows the **funding gap and a simulated loan** (monthly payment, total interest) or family support. Wallets, FX, remittance, bills and expense tracking stay in the product but **only appear after enrollment**, behind the same server-enforced permissions, limits, approvals and ledger rules.
+**A study-abroad finance assistant that starts with the price.** Look up whole-course costs, compare schools in THB, CNY or USD, then enter the amount to borrow. Choose a product, term and repayment method, review the estimate and submit the simulated loan application. Submission attaches a simulated admission notice automatically and unlocks to-dos, bills and the wallet.
 
-| Layer | What the user sees | Where |
-|---|---|---|
-| Core: price lookup | Whole-course total per school, range and yearly cost, shown in THB / CNY / USD with the rate date; side-by-side comparison with the lowest marked | Planner conversation and left sidebar "Price comparisons" ([agent-first design](docs/agent-first.md)) |
-| Extension: funding | Funding gap, simulated loan (THB lending core), family support, plan confirmation | Left sidebar "Funding & loan" |
-| After enrollment | Bills and expenses, monthly spending, wallet and FX, remittance, payments, insights, finance sub-assistant, credit record | Left sidebar "Life tools" (hidden until the plan is ENROLLED) |
+| Stage | Behavior |
+| --- | --- |
+| Price lookup and comparison | Whole-course totals and sources; saved school drafts |
+| Loan selection | User-entered principal, product/term/method, repayment estimate; cap is the full-course cost, excluding loan fees |
+| Application submitted | Automatic simulated notice and approval, remaining documents, explicit signing, school payouts and loan repayment; wallet/FX/remittance available |
+
+The [shared student-flow contract](docs/student-loan-contract.md) defines interfaces, state migration and the deletion list. Family support, monthly bookkeeping, independent credit records, enrollment confirmation and the no-loan confirmation branch are removed from the student app.
 
 > **All money is simulated.** There is no real bank, card or remittance rail. Pricing, permissions, limits, approvals and ledger constraints are nevertheless really enforced by the server.
 >
@@ -22,7 +24,7 @@
 | FX quoting | Reference rates from Frankfurter (central-bank blend) or fixtures; corridor fees and margins applied by the server; quotes are single-use and expire after 10 minutes | [§2](docs/technical-overview.md#2-server-side-fx-quoting) |
 | Remittance | 9-state order machine; full refund on failure; idempotent payout callbacks; tuition is paid to verified payees | [§3](docs/technical-overview.md#3-remittance-order-state-machine) |
 | Permissions | T0–T3 tiers, per-currency daily and monthly limits, password step-up, T3 approval by a different operator, rate limiting | [security-self-assessment](docs/security-self-assessment.md) |
-| Credit building | Simulated on-time record (BUILDING / FAIR / GOOD / AT_RISK) that scales limits from 0.5× to 1.5×; signed, verifiable statements | [§5](docs/technical-overview.md#5-credit-level-and-limit-multiplier) |
+| Historical platform services | Legacy credit/readiness APIs retain their own contracts; excluded from the current student loan decision and UI | [deletion boundary](docs/student-loan-contract.md#deletion-boundary) |
 | AI agent | Tool-calling planner (LLM or rule-based) with runner-enforced guards: at most 10 steps and 4 writes; T2 tools only create proposals that expire after 15 minutes | [§7](docs/technical-overview.md#7-agent-loop-and-guardrails), [evaluation](docs/agent-evaluation.md) |
 | Chinese and English | Localized API error messages with stable error codes | [§8](docs/technical-overview.md#8-internationalization) |
 | Earlier B/C work | Loans and repayment (B), budget readiness, consumption learning, financial copilot, optional Gemini OCR | [docs/README.zh.md](docs/README.zh.md) |
