@@ -38,7 +38,7 @@ msgstr "This action needs your own verification and cannot be performed by the A
 msgid "ALLOCATION_EXCEEDS_CAPACITY"
 msgstr "The allocation is larger than the amount available from this funding source."
 
-#: finance/agent_runner.py:86
+#: finance/agent_runner.py:106
 msgid "ALREADY_PROPOSED"
 msgstr "The same action is already waiting for your confirmation."
 
@@ -53,6 +53,10 @@ msgstr "Enter an amount greater than zero."
 #: finance/money.py:30
 msgid "AMOUNT_PRECISION_INVALID"
 msgstr "The amount has more decimal places than this currency allows."
+
+#: finance/agent_runner.py:295
+msgid "APPLICATION_REQUIRED"
+msgstr "Wallet, exchange and remittance tools open after the loan application is submitted."
 
 #: finance/policy.py:397
 msgid "APPROVAL_ALREADY_OPEN"
@@ -90,12 +94,15 @@ msgstr "The beneficiary's verification was revoked, so this payment cannot proce
 msgid "BILL_ALREADY_PAID"
 msgstr "This bill is already marked as paid."
 
+#: finance/planning/in_school.py:162
+msgid "BILL_AWAITING_LOAN"
+msgstr ""
+"This bill is planned for direct loan payment to the school. Complete the loan approval and "
+"signing steps before paying it from the wallet."
+
 #: finance/planning/in_school.py:115
 msgid "BILL_PAID_BY_LOAN"
 msgstr "The signed loan pays this bill to the school; it does not need paying again."
-
-msgid "BILL_AWAITING_LOAN"
-msgstr "This bill is planned for direct loan payment to the school. Complete the loan approval and signing steps before paying it from the wallet."
 
 #: finance/planning/life_commands.py:35
 msgid "BILL_REOPEN_NOT_SUPPORTED"
@@ -207,7 +214,7 @@ msgstr "Declare a coverage period for every account that has selected rows."
 msgid "DECLARE_PLANNING_FUNDS_AND_DATE"
 msgstr "Provide opening_balance and as_of to start planning."
 
-#: finance/planning/life_commands.py:76
+#: finance/planning/life_commands.py:78
 msgid "DEMO_DATE_MUST_ADVANCE_WITHIN_730_DAYS"
 msgstr "The demo date can only move forward, by at most 730 days."
 
@@ -279,11 +286,11 @@ msgstr "Exchange rates are temporarily unavailable. Try again later."
 msgid "HISTORICAL_OVERRIDE_FORBIDDEN"
 msgstr "New planned changes cannot take effect in the past."
 
-#: finance/execution_services.py:203
+#: finance/execution_services.py:206
 msgid "HOLD_REQUIRES_FOREIGN_CURRENCY"
 msgstr "Only foreign-currency funding can be held in its original currency."
 
-#: finance/execution_services.py:204
+#: finance/execution_services.py:207
 msgid "HOLD_WITHOUT_QUOTE"
 msgstr "Do not send fx_quote_id when holding funds in the source currency."
 
@@ -318,6 +325,10 @@ msgstr "Pay the earliest unpaid installment first."
 #: finance/readiness/funding.py:67
 msgid "INSTALLMENT_REQUIRES_TUITION"
 msgstr "Only one-time or per-semester tuition can be split into installments."
+
+#: finance/lending_core/calculations.py:48
+msgid "INSTALLMENT_TOO_SMALL"
+msgstr "An installment would not cover the interest due; adjust the loan terms."
 
 #: finance/readiness/funding.py:73
 msgid "INSTALLMENT_TOTAL_MISMATCH"
@@ -359,7 +370,7 @@ msgstr "This sponsor link is invalid."
 msgid "INVALID_STATE"
 msgstr "This loan application's current status does not allow this action."
 
-#: finance/agent_tools.py:114
+#: finance/agent_tools.py:110
 msgid "INVALID_TRANSITION"
 msgstr "This remittance order's current status does not allow this action."
 
@@ -391,11 +402,11 @@ msgstr "JPY amounts must be whole numbers."
 msgid "KEEP_REQUIRED_COSTS_OR_MARK_NOT_APPLICABLE"
 msgstr "Existing costs cannot be removed. Mark them as not applicable instead."
 
-#: finance/remittance_orders.py:210
+#: finance/remittance_orders.py:227
 msgid "LEDGER_CREDIT_MISSING"
 msgstr "The ledger has no matching credit for this order, so it cannot be reconciled."
 
-#: finance/remittance_orders.py:208
+#: finance/remittance_orders.py:225
 msgid "LEDGER_DEBIT_MISSING"
 msgstr "The ledger has no matching debit for this order, so it cannot be reconciled."
 
@@ -411,7 +422,7 @@ msgstr "A loan installment follows the contract; its amount cannot be changed he
 msgid "LOAN_CLOSED"
 msgstr "This loan is already closed."
 
-#: finance/planning/loan_stage.py:137
+#: finance/planning/loan_stage.py:163
 msgid "LOAN_DOCUMENTS_MISSING"
 msgstr "Tick off all loan documents in This month before signing."
 
@@ -419,7 +430,7 @@ msgstr "Tick off all loan documents in This month before signing."
 msgid "LOAN_DOCUMENT_AUTOMATIC"
 msgstr "The simulated admission notice is attached automatically and cannot be changed."
 
-#: finance/planning/loan_stage.py:166
+#: finance/planning/loan_stage.py:192
 msgid "LOAN_DOCUMENT_UNKNOWN"
 msgstr "This document is not part of your loan."
 
@@ -431,11 +442,11 @@ msgstr "A loan installment follows the contract; its due date cannot be changed 
 msgid "LOAN_FEES_EXCEED_PRINCIPAL"
 msgstr "The amount borrowed must exceed the withheld fee."
 
-#: finance/planning/loan_stage.py:136
+#: finance/planning/loan_stage.py:162
 msgid "LOAN_NOT_APPROVED"
 msgstr "This loan is not approved yet, so it cannot be signed."
 
-#: finance/planning/loan_stage.py:134
+#: finance/planning/loan_stage.py:160
 msgid "LOAN_NOT_IN_PLAN"
 msgstr "This loan does not belong to your current plan."
 
@@ -443,7 +454,7 @@ msgstr "This loan does not belong to your current plan."
 msgid "LOAN_REQUIRES_EXACT_NET_PROCEEDS_QUOTE"
 msgstr "Allocate exactly the net proceeds from the loan quote."
 
-#: finance/planning/loan_stage.py:131
+#: finance/planning/loan_stage.py:157
 msgid "LOAN_SIGN_NEEDS_CONFIRMED_PLAN"
 msgstr "Confirm the plan first; the loan is signed after that."
 
@@ -471,6 +482,10 @@ msgstr "Installment and spending-reduction sources must be applied as cost actio
 msgid "NO_ACTIVE_SEMESTER"
 msgstr "No active semester was found. Create a semester first."
 
+#: finance/readiness/ocr.py:113
+msgid "OCR_ATTEMPT_REQUIRES_REVIEW"
+msgstr "This document was already sent for recognition once; review it manually instead."
+
 #: finance/readiness/ocr.py:148
 msgid "OCR_CONSENT_REQUIRED"
 msgstr "Accept the current OCR notice before the document can be processed."
@@ -479,6 +494,14 @@ msgstr "Accept the current OCR notice before the document can be processed."
 msgid "OCR_NOTICE_VERSION_MISMATCH"
 msgstr "The OCR notice has been updated. Review and accept the current version."
 
+#: finance/readiness/ocr.py:64
+msgid "OCR_NOT_CONFIGURED"
+msgstr "Document recognition is not enabled on this server."
+
+#: finance/readiness/ocr.py:74
+msgid "OCR_POLICY_NOT_CONFIGURED"
+msgstr "Document recognition is not available until its usage policy is configured."
+
 #: finance/readiness/ocr.py:145
 msgid "OCR_RETRY_NOT_AVAILABLE"
 msgstr "OCR can be retried only for documents waiting for manual input."
@@ -486,6 +509,14 @@ msgstr "OCR can be retried only for documents waiting for manual input."
 #: finance/readiness/ocr.py:147
 msgid "OCR_SOURCE_EXPIRED"
 msgstr "The original file is no longer available. Upload it again."
+
+#: finance/readiness/ocr.py:111
+msgid "OCR_STALE_TASK"
+msgstr "This recognition task is out of date. Refresh and try again."
+
+#: finance/readiness/ocr.py:120
+msgid "OCR_USER_RATE_LIMITED"
+msgstr "Too many recognition requests in the last hour. Try again later."
 
 #: finance/sponsorship.py:103
 msgid "OPERATOR_REQUIRED"
@@ -515,7 +546,7 @@ msgstr "The plan cannot extend more than 730 days from today."
 msgid "PAYMENT_STATE_CHANGED"
 msgstr "Your financial state changed after this payment was created. Create a new payment."
 
-#: finance/agent_runner.py:241
+#: finance/agent_runner.py:294
 msgid "PENDING_ACTION_CLOSED"
 msgstr "This proposed action is no longer pending."
 
@@ -533,11 +564,11 @@ msgstr ""
 "A study-plan loan is paid to the school after the student signs; it is not disbursed to the "
 "wallet."
 
-#: finance/planning/services.py:233
+#: finance/planning/services.py:230
 msgid "PLAN_LOAN_SIGNED"
 msgstr "The loan for this plan is signed, so the school and plan can no longer change."
 
-#: finance/planning/assessment.py:164
+#: finance/planning/assessment.py:167
 msgid "PLAN_NOT_DRAFT"
 msgstr "Only a draft plan can be confirmed."
 
@@ -545,7 +576,7 @@ msgstr "Only a draft plan can be confirmed."
 msgid "PLAN_NOT_DRAFT_FOR_SWITCH"
 msgstr "Your plan is confirmed, so it cannot be switched to another draft."
 
-#: finance/planning/assessment.py:132
+#: finance/planning/assessment.py:135
 msgid "PLAN_REQUIRED"
 msgstr "Choose a school for the plan first."
 
@@ -577,7 +608,7 @@ msgstr "The amount must match the quoted amount."
 msgid "QUOTE_CONSUMED"
 msgstr "This quote has already been used. Request a new quote."
 
-#: finance/agent_tools.py:92
+#: finance/agent_tools.py:88
 msgid "QUOTE_CURRENCY_MISMATCH"
 msgstr "The selected quotes do not use the expected currencies."
 
@@ -589,11 +620,11 @@ msgstr "This quote has expired. Request a new quote."
 msgid "QUOTE_IN_USE"
 msgstr "This quote is already linked to a remittance order."
 
-#: finance/agent_tools.py:126
+#: finance/agent_tools.py:122
 msgid "QUOTE_NOT_EXECUTABLE"
 msgstr "This quote cannot be executed. Request a live quote for a specific amount."
 
-#: finance/planning/assessment.py:201
+#: finance/planning/assessment.py:204
 msgid "QUOTE_NOT_IN_CURRENT_ASSESSMENT"
 msgstr "Select a loan from the current plan."
 
@@ -713,7 +744,7 @@ msgstr "A similar cost already exists. Choose how to handle it in conflict_resol
 msgid "SNOOZE_MUST_BE_FUTURE"
 msgstr "Choose a date after today to be reminded again."
 
-#: finance/execution_services.py:196
+#: finance/execution_services.py:199
 msgid "SPONSOR_CONFIRMATION_REQUIRED"
 msgstr "Family support can be received only after the sponsor confirms it."
 
@@ -757,7 +788,7 @@ msgstr ""
 msgid "SUPPORT_NOT_EDITABLE"
 msgstr "Only family support in THB that has not been received can be changed in a scenario."
 
-#: finance/planning/products.py:27
+#: finance/planning/loan_recommendations.py:29
 msgid "TERM_NOT_OFFERED"
 msgstr "This term is not offered for this loan. 60 months is only for the study loan."
 
@@ -765,7 +796,7 @@ msgstr "This term is not offered for this loan. 60 months is only for the study 
 msgid "TOO_MANY_SCHEDULED_EVENTS"
 msgstr "The plan has too many scheduled items (maximum 1000)."
 
-#: finance/execution_services.py:245
+#: finance/execution_services.py:248
 msgid "TOP_UP_AMOUNT_OUT_OF_RANGE"
 msgstr "A single top-up must be more than 0 and at most 1,000,000."
 
@@ -821,7 +852,7 @@ msgstr "A verified obligation cannot be reduced."
 msgid "VERIFIED_TUITION_INVOICE_REQUIRED"
 msgstr "This payment needs a tuition cost backed by a verified invoice."
 
-#: finance/planning/in_school.py:142
+#: finance/planning/in_school.py:144
 msgid "WALLET_BALANCE_TOO_LOW"
 msgstr "Not enough in the wallet in this bill's currency. Top up or exchange first."
 

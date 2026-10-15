@@ -25,7 +25,10 @@ ROOT = Path(__file__).resolve().parent.parent
 SOURCES = ROOT / "finance"
 LOCALES = {"zh_Hans": "zh_Hans", "en": "en"}
 CODE = re.compile(r"^[A-Z][A-Z0-9_]{2,}$")
-RAISERS = {"require", "PolicyDenied", "FxNotExecutable", "Conflict", "ValidationError", "PermissionDenied"}
+RAISERS = {"require", "PolicyDenied", "FxNotExecutable", "Conflict", "ValidationError", "PermissionDenied",
+           "InputError", "VersionConflict"}
+# Raised with free text as well; only their error codes reach users.
+CODE_ONLY_RAISERS = {"ValueError"}
 
 
 def _strings(node):
@@ -51,6 +54,8 @@ def extract():
                 if name in RAISERS:
                     args = node.args[1:] if name == "require" else node.args[:1]
                     texts = [t for arg in args for t in _strings(arg)]
+                elif name in CODE_ONLY_RAISERS:
+                    texts = [t for arg in node.args[:1] for t in _strings(arg) if CODE.match(t)]
             elif isinstance(node, ast.Assign) and any(
                     getattr(t, "id", "") == "default_detail" for t in node.targets):
                 texts = list(_strings(node.value))
