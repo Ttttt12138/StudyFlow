@@ -22,7 +22,7 @@ from studyflow_ai.agent.models import (
     ToolCallStep,
     ToolSpec,
 )
-from studyflow_ai.agent.planner import AgentPlanner, LiveAgentProvider, RuleAgentProvider
+from studyflow_ai.agent.planner import FALLBACK_REPLY, AgentPlanner, LiveAgentProvider, RuleAgentProvider
 from studyflow_ai.config import Settings
 from studyflow_ai.models import CallRecord
 from studyflow_ai.providers.base import ProviderFailure
@@ -569,6 +569,27 @@ def test_live_unstructured_prose_is_not_presented_as_a_successful_answer(text):
     assert raised.value.record.attempts == 3
 
 
+def test_live_prose_in_a_planning_conversation_falls_back_to_the_planning_rules():
+    # Observed live (planning-2.2): "如果贷款证明算" got a clarifying question in prose on all three attempts.
+    planning = ctx(goal="如果贷款证明算", tools=[ToolSpec(name=n, tier="T0", description=n)
+                                               for n in ("list_schools", "get_plan", "save_plan", "simulate_loan")])
+    fake = FakeOpenAI(failure=_unparsed("你是想问“贷款证明”能否作为资金证明吗？"))
+    step, record = AgentPlanner(LiveAgentProvider(fake)).next_step(planning)
+    assert "资金证明" not in getattr(step, "answer", "")
+    assert record.mode == "rules" and record.error_code is None and record.attempts == 3
+    final, record = AgentPlanner(LiveAgentProvider(fake)).next_step(planning.model_copy(update={"steps_remaining": 0}))
+    assert isinstance(final, FinalStep) and record.mode == "rules"
+    # Once the model has looked something up, the rules do not add a catalog dump: one short reply.
+    profile = Observation(tool="get_school_profile", status="OK", arguments={"school_key": "psu-phuket"},
+                          result={"key": "psu-phuket"})
+    step, _ = AgentPlanner(LiveAgentProvider(fake)).next_step(planning.model_copy(update={"observations": [profile]}))
+    assert step.answer == FALLBACK_REPLY["zh"]
+    # A loan recommendation keeps the sentence that explains its card.
+    advice = Observation(tool="simulate_loan", status="OK", arguments={}, result={"advice": {"status": "paused"}})
+    step, _ = AgentPlanner(LiveAgentProvider(fake)).next_step(planning.model_copy(update={"observations": [advice]}))
+    assert "暂停" in step.answer
+
+
 def test_live_envelope_with_stray_closing_brackets_is_recovered_and_validated():
     # Observed live (agent-v1 tuning): a valid envelope followed by one extra "}".
     text = ('{"step":{"kind":"tool_call","tool":"get_balances","arguments_json":"{}",'
@@ -1010,6 +1031,21 @@ def test_live_unstructured_reply_is_retried_without_executing_or_exposing_it():
     assert step.tool == "get_balances" and len(fake.calls) == 2
     assert record.attempts == 2
     assert "JSON" in fake.calls[-1][-1]
+
+
+def test_live_planning_prose_is_sent_back_once_to_be_restated_in_the_schema():
+    # Observed live (planning-2.2): a direct answer ("资料没有收录 QS 排名…") arrives as prose.
+    prose = "资料没有收录 QS 排名。"
+    planning = ctx(goal="这个学校qs排名怎么样", tools=[ToolSpec(name="list_schools", tier="T0", description="x")])
+    fake = FlakyOpenAI([_unparsed(prose), _unparsed(prose)])
+    with pytest.raises(ProviderFailure):  # the fake's normal reply calls a tool this context lacks
+        AgentPlanner(LiveAgentProvider(fake)).next_step(planning)
+    first, second = (call[-1] for call in fake.calls[1:3])
+    assert prose in first and first.count("<<<") == 1 and second.count("<<<") == 1
+    # Outside planning conversations the prose is not echoed back.
+    fake = FlakyOpenAI([_unparsed(prose)])
+    AgentPlanner(LiveAgentProvider(fake)).next_step(ctx())
+    assert prose not in fake.calls[-1][-1]
 
 
 def test_live_empty_reply_gives_up_after_the_retries():

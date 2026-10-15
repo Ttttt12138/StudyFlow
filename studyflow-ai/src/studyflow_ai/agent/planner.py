@@ -6,7 +6,7 @@ from decimal import Decimal, InvalidOperation
 
 from pydantic import ValidationError
 
-from studyflow_ai.agent import prompts
+from studyflow_ai.agent import loan_rules, prompts
 from studyflow_ai.agent.models import AgentContext, FinalStep, PlannerOutput, ToolCallStep
 from studyflow_ai.agent.planning_rules import PlanningRules
 from studyflow_ai.models import CallRecord
@@ -76,6 +76,24 @@ def _leading_envelope(text):
         return None
 
 
+FALLBACK_REPLY = {
+    "zh": "这个问题我暂时没法给出可靠的回答。可以换个问法，或者问我学校总价、生活费和贷款。",
+    "en": "I can't give a reliable answer to that yet. Try rephrasing, or ask me about school totals, "
+          "living costs or loans.",
+}
+
+
+def _rules_fallback(context, finishing):
+    """The rules may start a turn, but they never pile catalog dumps onto what the model already found."""
+    advice = next((o for o in reversed(context.observations)
+                   if o.tool == "simulate_loan" and o.status == "OK" and o.result.get("advice")), None)
+    if advice is not None:
+        return FinalStep(answer=loan_rules.advice_reply(advice.result["advice"], context.locale))
+    if not finishing and not context.observations:
+        return PlanningRules().next_step(context)
+    return FinalStep(answer=FALLBACK_REPLY[context.locale])
+
+
 class LiveAgentProvider:
     def __init__(self, openai_provider):
         self.provider = openai_provider
@@ -83,8 +101,8 @@ class LiveAgentProvider:
     # An unstructured gateway reply is not a validated decision or a user-facing answer.
     FORMAT_RETRIES = 2
 
-    def _request(self, context, instruction):
-        attempts, elapsed = 0, 0
+    def _request(self, context, base):
+        attempts, elapsed, instruction = 0, 0, base
         for attempt in range(self.FORMAT_RETRIES + 1):
             try:
                 output, record = self.provider._request("plan", context.model_dump_json(), PlannerOutput, instruction)
@@ -99,15 +117,28 @@ class LiveAgentProvider:
                 if not unstructured or attempt == self.FORMAT_RETRIES:
                     exc.record.attempts, exc.record.duration_ms = attempts, elapsed
                     raise
-                instruction += "\nReturn only the required JSON object with a step; no unstructured prose."
+                instruction = base + "\nReturn only the required JSON object with a step; no unstructured prose."
+                if text and context.planning:
+                    # Observed live (planning-2.2): final answers arrive as prose while tool calls stay JSON.
+                    # The model re-decides through the validated schema; the prose itself is never shown.
+                    instruction += (
+                        "\nYour previous reply was plain text:\n<<<\n" + text[:1500] + "\n>>>\n"
+                        "If it is a complete answer addressed to the user in their language, return kind=final "
+                        "with that text as the answer. If it is your own reasoning or plan, return the step it "
+                        "describes instead.")
 
-    def _call(self, context, instruction):
+    def _call(self, context, instruction, finishing=False):
         try:
             output, record = self._request(context, instruction)
         except ProviderFailure as exc:
             exc.record.prompt_version = prompts.version(context)
             text = (getattr(exc, "raw_output", None) or "").strip()
             step = _leading_envelope(text) if exc.code == "INVALID_MODEL_OUTPUT" else None
+            if step is None and exc.code == "INVALID_MODEL_OUTPUT" and context.planning:
+                # Observed live (planning-2.2): short or ambiguous questions ("如果贷款证明算") get prose on
+                # every retry. The prose is never shown; the deterministic planning rules decide this step.
+                step = _rules_fallback(context, finishing)
+                exc.record.mode = "rules"
             if step is not None:
                 exc.record.error_code = None
                 return step, exc.record
@@ -119,7 +150,7 @@ class LiveAgentProvider:
         return self._call(context, prompts.instruction(context))
 
     def finish(self, context):
-        step, record = self._call(context, prompts.instruction(context) + "\nReturn kind=final now.")
+        step, record = self._call(context, prompts.instruction(context) + "\nReturn kind=final now.", finishing=True)
         if not isinstance(step, FinalStep):
             record.error_code = "INVALID_TOOL_CALL"
             raise ProviderFailure("INVALID_TOOL_CALL", record)
