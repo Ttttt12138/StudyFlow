@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { readWorkspaceRoute, workspaceUrl, appendTool, toolAvailable, planningTools, planTools, previewStage } from "./navigation";
+import { readWorkspaceRoute, workspaceUrl, toolAvailable, planningTools, planTools, previewStage } from "./navigation";
 
 describe("workspace navigation", () => {
   it("restores the exact to-do or loan installment from reminder links", () => {
@@ -60,9 +60,12 @@ describe("workspace navigation", () => {
     expect(readWorkspaceRoute("http://localhost/?sponsor=1").tool).toBeNull();
     expect(readWorkspaceRoute("http://localhost/?verify=1").tool).toBeNull();
   });
-  it("retains a return stack without duplicate adjacent targets", () => {
-    const wallet = { kind: "wallet" as const };
-    expect(appendTool([wallet], wallet)).toEqual([wallet]);
-    expect(appendTool([wallet], { kind: "agent", sessionId: "s-12" })).toHaveLength(2);
+  it("keeps a price result's place under the comparison list, and nothing else gets a parent", () => {
+    const route = { preview: false, stage: "plan" as const, tool: { kind: "card" as const, cardId: "t-1:0", parent: "compare" as const } };
+    expect(workspaceUrl(route)).toBe("/?tool=card&card=t-1%3A0&from=compare");
+    expect(readWorkspaceRoute(`http://localhost${workspaceUrl(route)}`)).toEqual(route);
+    // A result opened from the chat has no level above it.
+    expect(readWorkspaceRoute("http://localhost/?tool=card&card=t-1%3A0").tool).toEqual({ kind: "card", cardId: "t-1:0" });
+    expect(readWorkspaceRoute("http://localhost/?tool=wallet&from=compare").tool).toEqual({ kind: "wallet" });
   });
 });

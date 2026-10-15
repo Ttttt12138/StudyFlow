@@ -49,10 +49,19 @@ test('preview tools preserve chat and wallet drafts, history and all student too
   await page.getByRole('button', { name: 'Expand tool' }).click();
   await expect(page.locator('.workspace-dock')).toHaveAttribute('aria-modal', 'true');
   await page.getByRole('button', { name: 'Restore width' }).click();
+  // Back goes one level up in the same tool, never to the tool viewed before.
   await openTool(page, 'To-dos and bills');
   await expect(page.locator('.tool-content:not([hidden]) .life-list')).toBeVisible();
-  await page.getByRole('button', { name: 'Back to Wallet & payments' }).click();
+  await expect(page.locator('.workspace-dock-header').getByRole('button', { name: /^Back/ })).toHaveCount(0);
+  // The sidebar opens the wallet on its balances; a transfer sits under them and keeps its draft.
+  await openTool(page, 'Wallet & payments');
+  await expect(page.locator('#wallet-balances')).toBeVisible();
+  await page.locator('.panel-footer-center').getByRole('button', { name: 'Remit', exact: true }).click();
   await expect(page.locator('#wallet-quote input').first()).toHaveValue('1234');
+  await page.locator('.workspace-dock-header').getByRole('button', { name: 'Back to Balances' }).click();
+  await expect(page.locator('#wallet-balances')).toBeVisible();
+  await expect(page.locator('.workspace-dock-header').getByRole('button', { name: /^Back/ })).toHaveCount(0);
+  await page.locator('.panel-footer-center').getByRole('button', { name: 'Remit', exact: true }).click();
   await page.getByRole('button', { name: 'Close tool' }).click();
   await expect(conversation.locator('.plan-turn')).toHaveCount(messageCount);
   // Scroll anchoring may shift by a few lines while tools mount beside the chat; the list must not jump to the end or the top.

@@ -18,8 +18,8 @@ export const WorkspaceContext = createContext<{
   guideHost?: HTMLElement | null;
   close: () => void; setStage: (stage: PreviewStage) => void; account?: string;
   reportPlan?: (state: PlanState) => void;
-  /** A detail page of the open tool hands its back to the dock header; returns the unregister. */
-  registerBack?: (back: () => void) => () => void;
+  /** A detail page of the open tool hands its back (and what the header calls it) to the dock; returns the unregister. */
+  registerBack?: (back: () => void, label?: string) => () => void;
 } | null>(null);
 export const ToolContext = createContext({ embedded: false, active: true });
 export const useWorkspace = () => useContext(WorkspaceContext);
@@ -73,13 +73,13 @@ export function useClearWhenHidden(clear: () => void) {
  * Lets the dock header's back arrow close this detail page while its tool is on screen. Returns true when the
  * header handles it, so the page can drop its own back button instead of showing two.
  */
-export function useDockBack(back: () => void) {
+export function useDockBack(back: () => void, label?: string) {
   const register = useContext(WorkspaceContext)?.registerBack;
   const { embedded, active } = useContext(ToolContext);
   const latest = useRef(back); latest.current = back;
   useEffect(() => {
     if (!embedded || !active || !register) return;
-    return register(() => latest.current());
-  }, [embedded, active, register]);
+    return register(() => latest.current(), label);
+  }, [embedded, active, register, label]);
   return embedded && !!register;
 }

@@ -19,6 +19,20 @@ test('money deep links require an application and price tools remain available',
   await tools(page).getByRole('button', { name: 'School comparison', exact: true }).click();
   await expect(page.locator('.price-history')).toBeVisible();
 });
+test('a price result opened from the comparison list goes back to the list; one opened from the chat only closes', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/?plan=preview&tool=compare');
+  const header = page.locator('.workspace-dock-header');
+  await page.locator('.price-history li button').first().click();
+  await expect(page).toHaveURL(/tool=card.*from=compare/);
+  await header.getByRole('button', { name: 'Back to School comparison' }).click();
+  await expect(page.locator('#workspace-tool-title')).toHaveText('School comparison');
+  await expect(header.getByRole('button', { name: /^Back/ })).toHaveCount(0);
+  await page.locator('#plan-chat').getByRole('button', { name: /^Line items/ }).first().click();
+  await expect(page).toHaveURL(/tool=card/);
+  await expect(page).not.toHaveURL(/from=compare/);
+  await expect(header.getByRole('button', { name: /^Back/ })).toHaveCount(0);
+});
 test('currency display changes without writes and loan preview retains exact quote', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto('/?plan=preview');

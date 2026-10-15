@@ -33,7 +33,7 @@ export function CompareHistory({ rows }: { rows: Row[] }) {
             detail = t("price.historyBest", { name: pick(best.name, lang) });
           }
         }
-        return <li key={id}><button type="button" onClick={() => workspace?.open({ kind: "card", cardId: id })}>
+        return <li key={id}><button type="button" onClick={() => workspace?.open({ kind: "card", cardId: id, parent: "compare" })}>
           <span><strong>{title}</strong>{detail && <small>{detail}</small>}</span>
           <span className="price-history-figure">{figure}<ArrowRight size={14} aria-hidden="true" /></span>
         </button></li>;

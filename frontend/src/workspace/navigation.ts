@@ -3,7 +3,8 @@ import { previewStages, type PreviewStage } from "../plan/preview";
 export const studentTools = ["wallet", "payments", "agent"] as const;
 export type StudentTool = typeof studentTools[number];
 export type ToolKind = StudentTool | "plan" | "compare" | "funding" | "life" | "card";
-export type ToolTarget = { kind: ToolKind; sessionId?: string; pendingId?: string; cardId?: string; section?: string };
+/** `parent`: the tool one level up in the same feature (a price result opened from the comparison list). */
+export type ToolTarget = { kind: ToolKind; sessionId?: string; pendingId?: string; cardId?: string; section?: string; parent?: ToolKind };
 export type WorkspaceRoute = { preview: boolean; stage: PreviewStage; tool: ToolTarget | null };
 const kinds: readonly string[] = [...studentTools, "plan", "compare", "funding", "life", "card"];
 
@@ -45,6 +46,7 @@ export function readWorkspaceRoute(href: string): WorkspaceRoute {
     if (query.get("pending")) tool.pendingId = query.get("pending")!;
   }
   if (tool?.kind === "card" && query.get("card")) tool.cardId = query.get("card")!;
+  if (tool?.kind === "card" && query.get("from") === "compare") tool.parent = "compare";
   const section = query.get("section");
   if (tool && section && acceptsSection(tool.kind, section)) tool.section = section;
   const preview = query.get("plan") === "preview" || query.get("journey") === "preview" || !!legacy && query.get(legacy) === "preview";
@@ -63,13 +65,10 @@ export function workspaceUrl(route: WorkspaceRoute) {
     if (route.tool.sessionId) query.set("session", route.tool.sessionId);
     if (route.tool.pendingId) query.set("pending", route.tool.pendingId);
     if (route.tool.cardId) query.set("card", route.tool.cardId);
+    if (route.tool.kind === "card" && route.tool.parent === "compare") query.set("from", "compare");
     if (route.tool.section && acceptsSection(route.tool.kind, route.tool.section)) query.set("section", route.tool.section);
   }
   return query.size ? `/?${query}` : "/";
-}
-
-export function appendTool(stack: ToolTarget[], target: ToolTarget) {
-  return JSON.stringify(stack.at(-1)) === JSON.stringify(target) ? stack : [...stack, target];
 }
 
 /** ?stage=prepare picks the recorded "application submitted" stage (old ?stage=school links too); anything else is
