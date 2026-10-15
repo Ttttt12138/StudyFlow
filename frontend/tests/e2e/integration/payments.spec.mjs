@@ -73,8 +73,8 @@ test('real Django bill payments: top-up in place, password step-up, operator app
     assert.equal(await thb(), '30000.00');
 
     // Short by 11,000: "Top up" opens a form in the row with the missing amount filled in.
-    const housing = pay.locator('.plan-bills-list li', { hasText: 'Housing deposit' });
-    await housing.getByText('Wallet: THB 30,000.00').waitFor();
+    const housing = pay.locator('.bill-rows li', { hasText: 'Housing deposit' });
+    await pay.getByText('Wallet available THB 30,000.00').waitFor();
     await housing.getByRole('button', { name: 'Top up', exact: true }).click();
     assert.equal(await housing.getByLabel('Amount (THB)').inputValue(), '11000.00');
     await housing.getByRole('button', { name: 'Top up THB 11,000.00', exact: true }).click();
@@ -95,7 +95,7 @@ test('real Django bill payments: top-up in place, password step-up, operator app
     await page.screenshot({ path: screenshot('bill-pay-integration-paid.png'), fullPage: true });
 
     // Over the per-transaction limit (T3): the student asks for approval; a separate operator decides.
-    const tuition = pay.locator('.plan-bills-list li', { hasText: 'Tuition per semester' });
+    const tuition = pay.locator('.bill-rows li', { hasText: 'Tuition per semester' });
     await tuition.getByRole('button', { name: 'Top up', exact: true }).click();
     await tuition.getByRole('button', { name: 'Top up THB 60,000.00', exact: true }).click();
     await pay.getByText('Topped up THB 60,000.00. You can now pay Tuition per semester.').waitFor();

@@ -22,6 +22,21 @@ test("recorded price and application previews are read-only and share the live c
   await expect(notice).toBeDisabled();
   await expect(tools(page).getByRole("button", { name: "Wallet & payments", exact: true })).toBeVisible();
   await page.screenshot({ path: screenshot("simplified-application-desktop.png") });
+  // Approved but unsigned: reminders count only what the family pays; the loan's share is set aside.
+  await page.goto("/?plan=preview&stage=prepare&tool=life");
+  const life = page.locator(".tool-content:not([hidden]) .life-panel");
+  await life.getByRole("button", { name: /^Later/ }).click();
+  await expect(life).toContainText("Once signed, the loan pays THB 111,950.00; you pay THB 5,650.00");
+  await expect(life).toContainText("The loan pays this to the school once it is approved and signed");
+  await expect(life).not.toContainText(/family support/i);
+  await life.locator(".life-item", { hasText: "The loan pays this to the school once it is approved and signed" }).first().locator(".life-item-main").click();
+  const detail = page.locator(".tool-content:not([hidden]) .life-detail");
+  const payActions = /^(Pay from wallet|Record as paid)$/;
+  await expect(detail.getByRole("button", { name: payActions })).toHaveCount(0);
+  // A bill the family pays itself still offers both.
+  await page.getByRole("button", { name: "Back to the list", exact: true }).click();
+  await life.locator(".life-item", { hasText: "Student health insurance" }).first().locator(".life-item-main").click();
+  await expect(detail.getByRole("button", { name: payActions })).toHaveCount(2);
   expect(calls).toEqual([]); expect(errors).toEqual([]);
 });
 

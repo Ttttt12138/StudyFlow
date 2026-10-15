@@ -1,15 +1,15 @@
 {
  "conversation": {
-  "id": "e4f06d19-c5ef-4600-81ad-bc8fcdd65987",
+  "id": "8221afcb-810d-498f-b534-d32bd133b7de",
   "locale": "zh",
-  "created_at": "2026-10-15T11:12:33.498063+00:00",
-  "updated_at": "2026-10-15T11:12:33.724764+00:00",
+  "created_at": "2026-10-15T12:27:00.507109+00:00",
+  "updated_at": "2026-10-15T12:27:00.688859+00:00",
   "profile": {
    "role": null,
    "home_currency": "THB"
   },
   "plan": {
-   "id": "7da240e2-34f5-467c-8486-0048e4be8896",
+   "id": "9ecadcea-1f41-4a64-b15f-13269b598d38",
    "status": "DRAFT",
    "school_key": "chulalongkorn",
    "years": 4,
@@ -32,9 +32,9 @@
   },
   "turns": [
    {
-    "id": "62b4014d-7352-47e1-a657-2829c92f1744",
+    "id": "b2b498fd-02a0-45b5-8e5b-c14c4e74a0ed",
     "type": "agentsession",
-    "created_at": "2026-10-15T11:12:33.501Z",
+    "created_at": "2026-10-15T12:27:00.510Z",
     "goal": "",
     "locale": "zh",
     "mode": "system",
@@ -42,8 +42,8 @@
     "final_answer": "你好！我是 StudyFlow。告诉我想去的学校，我来算学费、住宿和生活费的全程总价，也可以帮你比较几所学校差多少。",
     "error_code": "",
     "write_count": 0,
-    "updated_at": "2026-10-15T11:12:33.501Z",
-    "conversation": "e4f06d19-c5ef-4600-81ad-bc8fcdd65987",
+    "updated_at": "2026-10-15T12:27:00.510Z",
+    "conversation": "8221afcb-810d-498f-b534-d32bd133b7de",
     "cards": [],
     "steps": [],
     "pending_actions": [],
@@ -51,9 +51,9 @@
     "kind": "assistant"
    },
    {
-    "id": "14af5c6b-0f50-4b43-9040-85748130279f",
+    "id": "beee8ecd-e99a-41bf-8906-38b51ac5575a",
     "type": "agentsession",
-    "created_at": "2026-10-15T11:12:33.524Z",
+    "created_at": "2026-10-15T12:27:00.528Z",
     "goal": "朱拉隆功读4年一共多少钱？",
     "locale": "zh",
     "mode": "mock",
@@ -61,8 +61,8 @@
     "final_answer": "读 4 年预计全部费用约 2,351,350 THB：学费 1,028,850 THB，生活费 1,166,400 THB，必要开支 156,100 THB；区间 2,118,650 THB–2,584,050 THB，约 29% 为估算。（示例数据，来自公开资料，付款前请向学校确认。）",
     "error_code": "",
     "write_count": 0,
-    "updated_at": "2026-10-15T11:12:33.546Z",
-    "conversation": "e4f06d19-c5ef-4600-81ad-bc8fcdd65987",
+    "updated_at": "2026-10-15T12:27:00.547Z",
+    "conversation": "8221afcb-810d-498f-b534-d32bd133b7de",
     "cards": [
      {
       "type": "cost",
@@ -791,8 +791,8 @@
     ],
     "steps": [
      {
-      "id": "09c349a6-a123-47ae-bc28-98f56938ea96",
-      "created_at": "2026-10-15T11:12:33.544Z",
+      "id": "536b1b92-806a-43f4-9ee5-8f3c28d9953e",
+      "created_at": "2026-10-15T12:27:00.545Z",
       "number": 1,
       "tool": "estimate_total_cost",
       "tier": "T0",
@@ -846,8 +846,8 @@
       }
      },
      {
-      "id": "0f6b87ab-2225-4d0a-9894-1bf1fbd81a96",
-      "created_at": "2026-10-15T11:12:33.545Z",
+      "id": "676b4b86-5298-413c-ad7f-ea1ddb3633d2",
+      "created_at": "2026-10-15T12:27:00.546Z",
       "number": 2,
       "tool": "",
       "tier": "",
@@ -878,9 +878,9 @@
     "kind": "user"
    },
    {
-    "id": "e2563a00-1eba-4e2c-b7a2-db9334e2ca7f",
+    "id": "26c33bbd-724b-48c4-9881-af8046b9eebe",
     "type": "agentsession",
-    "created_at": "2026-10-15T11:12:33.564Z",
+    "created_at": "2026-10-15T12:27:00.562Z",
     "goal": "比较曼彻斯特和墨尔本",
     "locale": "zh",
     "mode": "mock",
@@ -888,8 +888,8 @@
     "final_answer": "对比：曼彻斯特大学（联盟曼彻斯特商学院） 读 3 年总价约 148,643 GBP（≈6,243,006 THB）；墨尔本大学 读 3 年总价约 303,082 AUD（≈6,516,252 THB）。全程总价最低的是曼彻斯特大学（联盟曼彻斯特商学院），比最贵的一所少约 273,246 THB。（示例数据，来自公开资料，付款前请向学校确认。）",
     "error_code": "",
     "write_count": 0,
-    "updated_at": "2026-10-15T11:12:33.591Z",
-    "conversation": "e4f06d19-c5ef-4600-81ad-bc8fcdd65987",
+    "updated_at": "2026-10-15T12:27:00.584Z",
+    "conversation": "8221afcb-810d-498f-b534-d32bd133b7de",
     "cards": [
      {
       "type": "comparison",
@@ -1076,8 +1076,8 @@
     ],
     "steps": [
      {
-      "id": "1232cff2-3525-4d04-b81b-b477df1a58bf",
-      "created_at": "2026-10-15T11:12:33.589Z",
+      "id": "5868dba4-0487-40e3-bd6c-b937b807d428",
+      "created_at": "2026-10-15T12:27:00.582Z",
       "number": 1,
       "tool": "compare_schools",
       "tier": "T0",
@@ -1210,8 +1210,8 @@
       }
      },
      {
-      "id": "5cecc4dc-7f80-4500-aa63-9df84823f2a9",
-      "created_at": "2026-10-15T11:12:33.590Z",
+      "id": "9fa14e84-5c19-4889-a15e-f829110dd0e9",
+      "created_at": "2026-10-15T12:27:00.583Z",
       "number": 2,
       "tool": "",
       "tier": "",
@@ -1242,9 +1242,9 @@
     "kind": "user"
    },
    {
-    "id": "cf965574-946d-478d-9068-5d5bb24da7f7",
+    "id": "03900d66-39ea-44b2-a1c8-e9237fa9d1b9",
     "type": "agentsession",
-    "created_at": "2026-10-15T11:12:33.608Z",
+    "created_at": "2026-10-15T12:27:00.598Z",
     "goal": "就选朱拉隆功",
     "locale": "zh",
     "mode": "mock",
@@ -1252,12 +1252,12 @@
     "final_answer": "计划：朱拉隆功大学，4 年，状态：草稿，全部费用约 2,351,350 THB。下一步在贷款面板：填写想借的金额，选择产品、期限和还款方式，查看每月还款、总利息和总还款，然后确认计划并提交贷款申请；提交时会自动附上模拟录取通知。所有资金与贷款均为模拟。",
     "error_code": "",
     "write_count": 2,
-    "updated_at": "2026-10-15T11:12:33.654Z",
-    "conversation": "e4f06d19-c5ef-4600-81ad-bc8fcdd65987",
+    "updated_at": "2026-10-15T12:27:00.634Z",
+    "conversation": "8221afcb-810d-498f-b534-d32bd133b7de",
     "cards": [
      {
       "plan": {
-       "id": "7da240e2-34f5-467c-8486-0048e4be8896",
+       "id": "9ecadcea-1f41-4a64-b15f-13269b598d38",
        "total": "2351350.00",
        "years": 4,
        "school": {
@@ -1283,8 +1283,8 @@
     ],
     "steps": [
      {
-      "id": "33be6212-7228-40bd-9d2c-94f0a16762fd",
-      "created_at": "2026-10-15T11:12:33.641Z",
+      "id": "6f6e7c4f-998e-4e5f-bc5c-c0e42da9cd69",
+      "created_at": "2026-10-15T12:27:00.625Z",
       "number": 1,
       "tool": "save_plan",
       "tier": "T1",
@@ -1295,7 +1295,7 @@
       "status": "OK",
       "result": {
        "plan": {
-        "id": "7da240e2-34f5-467c-8486-0048e4be8896",
+        "id": "9ecadcea-1f41-4a64-b15f-13269b598d38",
         "total": "2351350.00",
         "years": 4,
         "school": {
@@ -1335,8 +1335,8 @@
       }
      },
      {
-      "id": "a8eaeae0-0375-4eb8-9b55-321dbe3ee2ec",
-      "created_at": "2026-10-15T11:12:33.651Z",
+      "id": "29bc6249-c750-4a5a-8f6b-28945987dff5",
+      "created_at": "2026-10-15T12:27:00.633Z",
       "number": 2,
       "tool": "simulate_loan",
       "tier": "T1",
@@ -1345,7 +1345,7 @@
       "status": "OK",
       "result": {
        "plan": {
-        "id": "7da240e2-34f5-467c-8486-0048e4be8896",
+        "id": "9ecadcea-1f41-4a64-b15f-13269b598d38",
         "total": "2351350.00",
         "years": 4,
         "school": {
@@ -1388,8 +1388,8 @@
       }
      },
      {
-      "id": "74a4518d-9dcc-412f-aece-a4547ce13c4c",
-      "created_at": "2026-10-15T11:12:33.653Z",
+      "id": "da9c6dd3-1b2f-4e68-a9ec-aebaf5d65a38",
+      "created_at": "2026-10-15T12:27:00.634Z",
       "number": 3,
       "tool": "",
       "tier": "",
@@ -1420,9 +1420,9 @@
     "kind": "user"
    },
    {
-    "id": "ceab8b38-990a-41c7-86a9-b45727a1cd42",
+    "id": "95ee1737-85e3-4d10-8966-83b684aa2334",
     "type": "agentsession",
-    "created_at": "2026-10-15T11:12:33.672Z",
+    "created_at": "2026-10-15T12:27:00.646Z",
     "goal": "我想贷款20万泰铢",
     "locale": "zh",
     "mode": "mock",
@@ -1430,12 +1430,12 @@
     "final_answer": "计划：朱拉隆功大学，4 年，状态：草稿，全部费用约 2,351,350 THB。已把贷款金额 200,000 THB 填入贷款面板。下一步：在面板选择产品、期限和还款方式，查看每月还款、总利息和总还款，然后确认计划并提交贷款申请；提交时会自动附上模拟录取通知。所有资金与贷款均为模拟。",
     "error_code": "",
     "write_count": 2,
-    "updated_at": "2026-10-15T11:12:33.723Z",
-    "conversation": "e4f06d19-c5ef-4600-81ad-bc8fcdd65987",
+    "updated_at": "2026-10-15T12:27:00.687Z",
+    "conversation": "8221afcb-810d-498f-b534-d32bd133b7de",
     "cards": [
      {
       "plan": {
-       "id": "7da240e2-34f5-467c-8486-0048e4be8896",
+       "id": "9ecadcea-1f41-4a64-b15f-13269b598d38",
        "total": "2351350.00",
        "years": 4,
        "school": {
@@ -1461,8 +1461,8 @@
     ],
     "steps": [
      {
-      "id": "5ee22abb-0b74-40c9-8976-189f88bd1417",
-      "created_at": "2026-10-15T11:12:33.714Z",
+      "id": "08898113-76c5-4e93-87b1-6b20b0db9a8c",
+      "created_at": "2026-10-15T12:27:00.679Z",
       "number": 1,
       "tool": "save_plan",
       "tier": "T1",
@@ -1475,7 +1475,7 @@
       "status": "OK",
       "result": {
        "plan": {
-        "id": "7da240e2-34f5-467c-8486-0048e4be8896",
+        "id": "9ecadcea-1f41-4a64-b15f-13269b598d38",
         "total": "2351350.00",
         "years": 4,
         "school": {
@@ -1515,8 +1515,8 @@
       }
      },
      {
-      "id": "ce97e70e-c2cb-4c16-a39c-b1eb3eb69bff",
-      "created_at": "2026-10-15T11:12:33.721Z",
+      "id": "b656b382-3215-4fc9-bf79-54fd6b9ac566",
+      "created_at": "2026-10-15T12:27:00.686Z",
       "number": 2,
       "tool": "simulate_loan",
       "tier": "T1",
@@ -1525,7 +1525,7 @@
       "status": "OK",
       "result": {
        "plan": {
-        "id": "7da240e2-34f5-467c-8486-0048e4be8896",
+        "id": "9ecadcea-1f41-4a64-b15f-13269b598d38",
         "total": "2351350.00",
         "years": 4,
         "school": {
@@ -1568,8 +1568,8 @@
       }
      },
      {
-      "id": "6724e23b-39ac-407f-8309-d656c34162b0",
-      "created_at": "2026-10-15T11:12:33.722Z",
+      "id": "17e904a2-549a-4184-85a3-d465be7dd0bf",
+      "created_at": "2026-10-15T12:27:00.687Z",
       "number": 3,
       "tool": "",
       "tier": "",
@@ -1606,7 +1606,7 @@
   "draft": false,
   "quotes": [
    {
-    "id": "832e9202-cd06-4148-b228-d156df7b1bd3",
+    "id": "2a065e9b-ca40-46c4-90d8-015a649d9aa0",
     "type": "loansimulation",
     "inputs": {
      "fees": "0.00",
@@ -2611,7 +2611,7 @@
      "missing_inputs": [],
      "shortfall_months": []
     },
-    "created_at": "2026-10-15T11:12:33.759Z",
+    "created_at": "2026-10-15T12:27:00.719Z",
     "is_simulated": true,
     "engine_version": "b-monthly-amortization-v1"
    }
@@ -3315,7 +3315,7 @@
    "school_payee": null
   },
   "plan": {
-   "id": "7da240e2-34f5-467c-8486-0048e4be8896",
+   "id": "9ecadcea-1f41-4a64-b15f-13269b598d38",
    "status": "DRAFT",
    "school_key": "chulalongkorn",
    "years": 4,

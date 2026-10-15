@@ -52,6 +52,11 @@ def money_check(rows, held):
         if row["done"] or row["amount"] is None or row["due_date"] is None or row.get("paid_by_loan"):
             continue
         amount, currency = Decimal(row["amount"]), row["currency"]
+        # A loan awaiting approval or signing will pay its share to the school; only the rest needs the wallet.
+        if row.get("loan_pending"):
+            amount -= min(amount, Decimal(row["loan_pending"]["amount"]))
+            if amount <= 0:
+                continue
         if held is not None and currency in held:
             before = spent.get(currency, Decimal(0))
             spent[currency] = before + amount

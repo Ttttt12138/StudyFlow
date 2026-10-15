@@ -366,6 +366,11 @@ class ShortPlanningTests(APITestCase):
         self.assertNotEqual(source, part.bill.source_id)
         rest = PlanBill.objects.get(owner=self.user, source_id=source)
         self.assertEqual(rest.amount + part.bill.amount, before[source])
+        # The pay tab pairs the two halves of the split bill so it is shown once.
+        rows = {b["id"]: b for b in self.client.get("/api/v2/planning/wallet-bills/").data["data"]["bills"]}
+        halves = rows[str(rest.id)], rows[str(part.bill.id)]
+        self.assertEqual({h["group"] for h in halves}, {source})
+        self.assertEqual([h["paid_by_loan"] for h in halves], [False, True])
         self.assertEqual(payouts[0].status, "SCHEDULED")
         self.client.post("/api/v2/planning/life/clock/", {"date": payouts[0].due_date.isoformat()}, format="json",
                          HTTP_IDEMPOTENCY_KEY=str(uuid4()))

@@ -9,15 +9,31 @@ import { pick } from "./format";
 
 const titleOf = (item: LifeItem, lang: Lang) => typeof item.title === "string" ? item.title : pick(item.title, lang);
 
-/** Whether the money is there when the item falls due: the wallet once it exists, the plan forecast before. */
-function MoneyCheck({ item, gapDate }: { item: LifeItem; gapDate: string | null }) {
+/** The share a submitted loan will pay, and what is left for the family (0 when the loan covers it all). */
+export function pendingShare(item: LifeItem) {
+  if (!item.loan_pending || item.amount === null) return null;
+  const loan = Math.min(Number(item.loan_pending.amount), Number(item.amount));
+  return { loan, own: Number(item.amount) - loan };
+}
+
+/** What the family itself pays for this item: nothing when the loan pays it, the rest of a pending loan's share. */
+export function ownAmount(item: LifeItem) {
+  if (item.amount === null || item.paid_by_loan) return 0;
+  return pendingShare(item)?.own ?? Number(item.amount);
+}
+
+/** Whether the money is there when the item falls due: the loan's share first, then the wallet for the rest. */
+function MoneyCheck({ item }: { item: LifeItem }) {
   const { t, lang } = useI18n();
   if (item.done || item.amount === null) return null;
   if (item.paid_by_loan) return <p className="panel-muted">{t("life.loanCovers")}</p>;
-  if (item.shortfall_basis === "wallet") return Number(item.shortfall) > 0
-    ? <p className="life-warning">{t("life.short", { amount: formatMoney(item.shortfall, item.currency, lang) })}</p>
-    : <p className="panel-muted">{t("life.covered")}</p>;
-  if (item.shortfall_basis === "forecast" && item.at_risk) return <p className="life-warning">{t("life.atRisk", { date: gapDate ?? "" })}</p>;
+  const pending = pendingShare(item);
+  const short = item.shortfall_basis === "wallet" && Number(item.shortfall) > 0
+    ? <p className="life-warning">{t("life.short", { amount: formatMoney(item.shortfall, item.currency, lang) })}</p> : null;
+  if (pending) return <>{<p className="panel-muted">{pending.own > 0
+    ? t("life.loanPendingPart", { loan: formatMoney(pending.loan.toFixed(2), item.currency, lang), own: formatMoney(pending.own.toFixed(2), item.currency, lang) })
+    : t("life.loanPending")}</p>}{short}</>;
+  if (item.shortfall_basis === "wallet") return short ?? <p className="panel-muted">{t("life.covered")}</p>;
   return null;
 }
 
@@ -28,7 +44,7 @@ function Meta({ item }: { item: LifeItem }) {
 }
 
 /** One line in the list: title, amount, date and status, and whether the money is there. Opens the item's page. */
-export function LifeItemRow({ item, gapDate, onSelect }: { item: LifeItem; gapDate: string | null; onSelect: (item: LifeItem) => void }) {
+export function LifeItemRow({ item, onSelect }: { item: LifeItem; onSelect: (item: LifeItem) => void }) {
   const { t, lang } = useI18n();
   return <article className={`life-item is-${item.done ? "done" : item.stage}`} data-source={item.source_key}>
     <button type="button" className="life-item-main" onClick={() => onSelect(item)}>
@@ -36,7 +52,7 @@ export function LifeItemRow({ item, gapDate, onSelect }: { item: LifeItem; gapDa
       {item.amount !== null && <strong className="life-item-amount">{formatMoney(item.amount, item.currency, lang)}</strong>}
       <CaretRight className="life-item-go" size={16} aria-hidden="true" />
       <Meta item={item} />
-      <MoneyCheck item={item} gapDate={gapDate} />
+      <MoneyCheck item={item} />
     </button>
   </article>;
 }
@@ -55,15 +71,16 @@ export function LifeItemDetail({ item, control, preview, onOpen }: {
       ...(action === "snooze" || action === "reschedule" ? { date } : {}), ...extra }); setMode(null); } catch { /* shown by control */ }
   };
   const disabled = preview || control.busy;
-  // The signed loan pays this bill to the school on its date, so the student has nothing to pay or change.
-  const byLoan = item.kind === "bill" && !item.done && !!item.paid_by_loan;
+  // The loan pays this bill (or, awaiting approval and signing, has its share set aside), so the student has
+  // nothing to pay or change by hand; what a pending loan leaves can be paid once it is signed.
+  const byLoan = item.kind === "bill" && !item.done && (!!item.paid_by_loan || !!item.loan_pending);
   const canPay = item.kind === "bill" && !item.done && !byLoan ;
   const editable = !item.done && !byLoan && (item.kind === "bill" || item.kind === "task");
   return <div className={`life-detail is-${item.done ? "done" : item.stage}`} data-source={item.source_key}>
     <div className="life-detail-head">
       {item.amount !== null && <strong className="life-detail-amount">{formatMoney(item.amount, item.currency, lang)}</strong>}
       <Meta item={item} />
-      <MoneyCheck item={item} gapDate={null} />
+      <MoneyCheck item={item} />
     </div>
     {item.amount_confirmed && item.catalog_amount && <p className="panel-muted">{t("life.amountFrom", { amount: formatMoney(item.catalog_amount, item.currency, lang) })}</p>}
     {item.paid_by_loan && <p className="plan-visual-gap">{t(item.done ? "life.paidByLoan" : "life.loanWillPay", {

@@ -83,3 +83,25 @@ class PendingLoanFundingTests(APITestCase):
     def test_a_quote_without_a_submitted_application_does_not_reserve_bills(self):
         self.application.delete()
         self.assertIsNone(self.rows()[str(self.first.pk)]["loan_pending"])
+
+    def test_reminders_count_only_what_the_family_pays_while_the_loan_awaits_signing(self):
+        from finance.planning import life
+
+        DemoWallet.objects.filter(owner=self.user).update(balance=Decimal("0.00"))
+        rows = {row["source_key"]: row for row in life.read(self.user)["items"]}
+        first, second, housing = (rows[f"bill:{bill.pk}"] for bill in (self.first, self.second, self.housing))
+        self.assertEqual(first["loan_pending"], {"amount": "41000.00", "status": "APPROVED"})
+        # Fully covered by the loan: nothing short. Partly covered: only the family's 32,000 counts.
+        self.assertEqual((first["shortfall"], first["at_risk"]), (None, False))
+        self.assertEqual((second["shortfall"], second["at_risk"]), ("32000.00", True))
+        self.assertEqual(housing["shortfall"], "5000.00")
+        # Its loan share is set aside: the reminder cannot mark it paid, move it or change its amount.
+        for action, extra in (("complete", {}), ("reschedule", {"date": "2027-09-01"}), ("set_amount", {"amount": "1.00"})):
+            with self.subTest(action=action):
+                response = self.client.post("/api/v2/planning/life/actions/", {"source_key": first["source_key"],
+                    "expected_token": first["token"], "action": action, **extra}, format="json", HTTP_IDEMPOTENCY_KEY=action)
+                self.assertEqual(response.status_code, 400, response.data)
+                self.assertIn("BILL_AWAITING_LOAN", str(response.data))
+        snoozed = self.client.post("/api/v2/planning/life/actions/", {"source_key": first["source_key"],
+            "expected_token": first["token"], "action": "acknowledge"}, format="json", HTTP_IDEMPOTENCY_KEY="ack")
+        self.assertEqual(snoozed.status_code, 201, snoozed.data)

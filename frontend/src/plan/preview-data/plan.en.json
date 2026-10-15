@@ -1,15 +1,15 @@
 {
  "conversation": {
-  "id": "cb23a2a3-9265-4c39-8202-f477c93d0fb9",
+  "id": "31a20ae7-5a4a-4575-a43c-d696c681a69d",
   "locale": "en",
-  "created_at": "2026-10-15T11:12:32.867088+00:00",
-  "updated_at": "2026-10-15T11:12:33.061562+00:00",
+  "created_at": "2026-10-15T12:26:59.920543+00:00",
+  "updated_at": "2026-10-15T12:27:00.104953+00:00",
   "profile": {
    "role": null,
    "home_currency": "THB"
   },
   "plan": {
-   "id": "52d579f4-9ce9-463f-ad0b-ef6fddddefa8",
+   "id": "6c24b020-76b9-428b-9c19-c73bcbfc9b01",
    "status": "DRAFT",
    "school_key": "chulalongkorn",
    "years": 4,
@@ -32,9 +32,9 @@
   },
   "turns": [
    {
-    "id": "298159c7-c111-48e3-a9a4-dd4403ab4651",
+    "id": "0f4ab9f7-2406-4746-9c39-89553e69dd6c",
     "type": "agentsession",
-    "created_at": "2026-10-15T11:12:32.871Z",
+    "created_at": "2026-10-15T12:26:59.924Z",
     "goal": "",
     "locale": "en",
     "mode": "system",
@@ -42,8 +42,8 @@
     "final_answer": "Hi! I'm StudyFlow. Tell me the school you have in mind and I'll work out the full-course total for tuition, housing and living costs, or compare what several schools would cost.",
     "error_code": "",
     "write_count": 0,
-    "updated_at": "2026-10-15T11:12:32.871Z",
-    "conversation": "cb23a2a3-9265-4c39-8202-f477c93d0fb9",
+    "updated_at": "2026-10-15T12:26:59.924Z",
+    "conversation": "31a20ae7-5a4a-4575-a43c-d696c681a69d",
     "cards": [],
     "steps": [],
     "pending_actions": [],
@@ -51,9 +51,9 @@
     "kind": "assistant"
    },
    {
-    "id": "20da6dae-dd1a-4284-b6be-98e442d0cd9b",
+    "id": "aa14f3db-bbb7-4100-9ecd-e878288c3484",
     "type": "agentsession",
-    "created_at": "2026-10-15T11:12:32.888Z",
+    "created_at": "2026-10-15T12:26:59.941Z",
     "goal": "What does 4 years at Chulalongkorn cost in total?",
     "locale": "en",
     "mode": "mock",
@@ -61,8 +61,8 @@
     "final_answer": "4 year(s) total about 2,351,350 THB: tuition 1,028,850 THB, living 1,166,400 THB, essentials 156,100 THB; range 2,118,650 THB-2,584,050 THB, about 29% estimated. (Sample data from public sources; confirm with the school before paying.)",
     "error_code": "",
     "write_count": 0,
-    "updated_at": "2026-10-15T11:12:32.912Z",
-    "conversation": "cb23a2a3-9265-4c39-8202-f477c93d0fb9",
+    "updated_at": "2026-10-15T12:26:59.963Z",
+    "conversation": "31a20ae7-5a4a-4575-a43c-d696c681a69d",
     "cards": [
      {
       "type": "cost",
@@ -791,8 +791,8 @@
     ],
     "steps": [
      {
-      "id": "a8035b3f-85e5-4300-8cbf-2c04760c82e9",
-      "created_at": "2026-10-15T11:12:32.910Z",
+      "id": "0a98a1d2-0e32-4f30-89db-cb2cd0440590",
+      "created_at": "2026-10-15T12:26:59.961Z",
       "number": 1,
       "tool": "estimate_total_cost",
       "tier": "T0",
@@ -846,8 +846,8 @@
       }
      },
      {
-      "id": "515d67a7-40d7-4bb5-a63c-0f60bef33c0f",
-      "created_at": "2026-10-15T11:12:32.912Z",
+      "id": "e8b066eb-3654-488e-a552-51c1d4ee2dd8",
+      "created_at": "2026-10-15T12:26:59.963Z",
       "number": 2,
       "tool": "",
       "tier": "",
@@ -878,9 +878,9 @@
     "kind": "user"
    },
    {
-    "id": "cb97b22a-0d5a-45e3-b84d-a555b3a6aaa2",
+    "id": "e260a11e-b421-41e2-b321-4c3ff6153536",
     "type": "agentsession",
-    "created_at": "2026-10-15T11:12:32.926Z",
+    "created_at": "2026-10-15T12:26:59.977Z",
     "goal": "Compare Manchester and Melbourne",
     "locale": "en",
     "mode": "mock",
@@ -888,8 +888,8 @@
     "final_answer": "Comparison: The University of Manchester (Alliance Manchester Business School) 3 year(s) total about 148,643 GBP (≈6,243,006 THB); The University of Melbourne 3 year(s) total about 303,082 AUD (≈6,516,252 THB). Lowest full-course total: The University of Manchester (Alliance Manchester Business School), about 273,246 THB less than the most expensive. (Sample data from public sources; confirm with the school before paying.)",
     "error_code": "",
     "write_count": 0,
-    "updated_at": "2026-10-15T11:12:32.950Z",
-    "conversation": "cb23a2a3-9265-4c39-8202-f477c93d0fb9",
+    "updated_at": "2026-10-15T12:26:59.998Z",
+    "conversation": "31a20ae7-5a4a-4575-a43c-d696c681a69d",
     "cards": [
      {
       "type": "comparison",
@@ -1076,8 +1076,8 @@
     ],
     "steps": [
      {
-      "id": "588c8204-ba63-4c0f-9ddc-dab410ae615f",
-      "created_at": "2026-10-15T11:12:32.948Z",
+      "id": "09865c62-28f4-403c-9873-e15f39c4e036",
+      "created_at": "2026-10-15T12:26:59.996Z",
       "number": 1,
       "tool": "compare_schools",
       "tier": "T0",
@@ -1210,8 +1210,8 @@
       }
      },
      {
-      "id": "9f3db70e-4e6e-4be3-881e-5ee1b8a1aa80",
-      "created_at": "2026-10-15T11:12:32.949Z",
+      "id": "71efdf5c-ab5c-4255-977a-b29728c3ce51",
+      "created_at": "2026-10-15T12:26:59.997Z",
       "number": 2,
       "tool": "",
       "tier": "",
@@ -1242,9 +1242,9 @@
     "kind": "user"
    },
    {
-    "id": "248f559b-6b22-4dd5-bd4d-8bd7d75b28d4",
+    "id": "d6791890-e12e-444e-98e2-21833e45363b",
     "type": "agentsession",
-    "created_at": "2026-10-15T11:12:32.964Z",
+    "created_at": "2026-10-15T12:27:00.014Z",
     "goal": "Choose Chulalongkorn",
     "locale": "en",
     "mode": "mock",
@@ -1252,12 +1252,12 @@
     "final_answer": "Plan: Chulalongkorn University, 4 year(s), status: draft, total about 2,351,350 THB. Next, in the loan panel: type the amount to borrow, choose the product, term and repayment method, check the monthly payment, total interest and total repayment, then confirm the plan and submit the loan application. A simulated admission notice is attached automatically. All money and loans are simulated.",
     "error_code": "",
     "write_count": 2,
-    "updated_at": "2026-10-15T11:12:33.001Z",
-    "conversation": "cb23a2a3-9265-4c39-8202-f477c93d0fb9",
+    "updated_at": "2026-10-15T12:27:00.051Z",
+    "conversation": "31a20ae7-5a4a-4575-a43c-d696c681a69d",
     "cards": [
      {
       "plan": {
-       "id": "52d579f4-9ce9-463f-ad0b-ef6fddddefa8",
+       "id": "6c24b020-76b9-428b-9c19-c73bcbfc9b01",
        "total": "2351350.00",
        "years": 4,
        "school": {
@@ -1283,8 +1283,8 @@
     ],
     "steps": [
      {
-      "id": "04a42ea2-1c74-47e9-a978-d2aed5785d9b",
-      "created_at": "2026-10-15T11:12:32.992Z",
+      "id": "e0ba9492-5be1-4817-8037-29e4aab6c2a8",
+      "created_at": "2026-10-15T12:27:00.042Z",
       "number": 1,
       "tool": "save_plan",
       "tier": "T1",
@@ -1295,7 +1295,7 @@
       "status": "OK",
       "result": {
        "plan": {
-        "id": "52d579f4-9ce9-463f-ad0b-ef6fddddefa8",
+        "id": "6c24b020-76b9-428b-9c19-c73bcbfc9b01",
         "total": "2351350.00",
         "years": 4,
         "school": {
@@ -1335,8 +1335,8 @@
       }
      },
      {
-      "id": "46c99028-41ac-4811-a695-8f7d780e42da",
-      "created_at": "2026-10-15T11:12:32.999Z",
+      "id": "cfd2cdce-0212-4616-b4b5-7fbbb1f2a7dc",
+      "created_at": "2026-10-15T12:27:00.049Z",
       "number": 2,
       "tool": "simulate_loan",
       "tier": "T1",
@@ -1345,7 +1345,7 @@
       "status": "OK",
       "result": {
        "plan": {
-        "id": "52d579f4-9ce9-463f-ad0b-ef6fddddefa8",
+        "id": "6c24b020-76b9-428b-9c19-c73bcbfc9b01",
         "total": "2351350.00",
         "years": 4,
         "school": {
@@ -1388,8 +1388,8 @@
       }
      },
      {
-      "id": "6a78af30-6ef1-4323-af68-545738a1c496",
-      "created_at": "2026-10-15T11:12:33.000Z",
+      "id": "aee7d301-b3bc-4888-a567-652fd369100e",
+      "created_at": "2026-10-15T12:27:00.051Z",
       "number": 3,
       "tool": "",
       "tier": "",
@@ -1420,9 +1420,9 @@
     "kind": "user"
    },
    {
-    "id": "24285f79-23d8-4636-8856-ff4946fde307",
+    "id": "c786b100-d139-4b98-80c8-cfe5aed0c3c1",
     "type": "agentsession",
-    "created_at": "2026-10-15T11:12:33.015Z",
+    "created_at": "2026-10-15T12:27:00.063Z",
     "goal": "I want to borrow 200000 THB",
     "locale": "en",
     "mode": "mock",
@@ -1430,12 +1430,12 @@
     "final_answer": "Plan: Chulalongkorn University, 4 year(s), status: draft, total about 2,351,350 THB. I've put the loan amount of 200,000 THB into the loan panel. Next, in the panel: choose the product, term and repayment method, check the monthly payment, total interest and total repayment, then confirm the plan and submit the loan application. A simulated admission notice is attached automatically. All money and loans are simulated.",
     "error_code": "",
     "write_count": 2,
-    "updated_at": "2026-10-15T11:12:33.060Z",
-    "conversation": "cb23a2a3-9265-4c39-8202-f477c93d0fb9",
+    "updated_at": "2026-10-15T12:27:00.104Z",
+    "conversation": "31a20ae7-5a4a-4575-a43c-d696c681a69d",
     "cards": [
      {
       "plan": {
-       "id": "52d579f4-9ce9-463f-ad0b-ef6fddddefa8",
+       "id": "6c24b020-76b9-428b-9c19-c73bcbfc9b01",
        "total": "2351350.00",
        "years": 4,
        "school": {
@@ -1461,8 +1461,8 @@
     ],
     "steps": [
      {
-      "id": "335cfde6-2682-4570-a2f7-259b7dd0d63d",
-      "created_at": "2026-10-15T11:12:33.050Z",
+      "id": "6d3fc46d-e918-4e80-abfd-4dd4be9bdc4a",
+      "created_at": "2026-10-15T12:27:00.095Z",
       "number": 1,
       "tool": "save_plan",
       "tier": "T1",
@@ -1475,7 +1475,7 @@
       "status": "OK",
       "result": {
        "plan": {
-        "id": "52d579f4-9ce9-463f-ad0b-ef6fddddefa8",
+        "id": "6c24b020-76b9-428b-9c19-c73bcbfc9b01",
         "total": "2351350.00",
         "years": 4,
         "school": {
@@ -1515,8 +1515,8 @@
       }
      },
      {
-      "id": "d547e2f3-c6cb-40b7-9211-f968056af383",
-      "created_at": "2026-10-15T11:12:33.058Z",
+      "id": "6632d9e9-cfff-4c55-a3e2-181f7e3817d6",
+      "created_at": "2026-10-15T12:27:00.102Z",
       "number": 2,
       "tool": "simulate_loan",
       "tier": "T1",
@@ -1525,7 +1525,7 @@
       "status": "OK",
       "result": {
        "plan": {
-        "id": "52d579f4-9ce9-463f-ad0b-ef6fddddefa8",
+        "id": "6c24b020-76b9-428b-9c19-c73bcbfc9b01",
         "total": "2351350.00",
         "years": 4,
         "school": {
@@ -1568,8 +1568,8 @@
       }
      },
      {
-      "id": "1e26d5bf-82ee-483b-bdbe-7a0df0d7ef9d",
-      "created_at": "2026-10-15T11:12:33.059Z",
+      "id": "d1216d5c-d4af-4d5b-a3f2-9408e8444ede",
+      "created_at": "2026-10-15T12:27:00.103Z",
       "number": 3,
       "tool": "",
       "tier": "",
@@ -1606,7 +1606,7 @@
   "draft": false,
   "quotes": [
    {
-    "id": "6f9d246b-7e1c-4bfe-bfba-f4398fa884bc",
+    "id": "99c6a75c-9933-49d9-8dd3-70a475330309",
     "type": "loansimulation",
     "inputs": {
      "fees": "0.00",
@@ -2611,7 +2611,7 @@
      "missing_inputs": [],
      "shortfall_months": []
     },
-    "created_at": "2026-10-15T11:12:33.095Z",
+    "created_at": "2026-10-15T12:27:00.134Z",
     "is_simulated": true,
     "engine_version": "b-monthly-amortization-v1"
    }
@@ -3315,7 +3315,7 @@
    "school_payee": null
   },
   "plan": {
-   "id": "52d579f4-9ce9-463f-ad0b-ef6fddddefa8",
+   "id": "6c24b020-76b9-428b-9c19-c73bcbfc9b01",
    "status": "DRAFT",
    "school_key": "chulalongkorn",
    "years": 4,

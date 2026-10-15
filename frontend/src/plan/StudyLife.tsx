@@ -6,7 +6,7 @@ import { useToolRefresh, useWorkspace } from "../workspace/context";
 import { PanelAlert, PanelSkeleton, ToolPanel } from "../workspace/ToolPanel";
 import { formatMoney } from "../backend/presenters";
 import { pick } from "./format";
-import { LifeItemDetail, LifeItemRow, titleOf } from "./LifeItems";
+import { LifeItemDetail, LifeItemRow, ownAmount, titleOf } from "./LifeItems";
 import { ClockForm, TaskForm } from "./LifeForms";
 import { PanelPage } from "../workspace/PanelPage";
 import type { LifeControl } from "./useStudyLife";
@@ -94,13 +94,13 @@ export function StudyLifePanel({ control, preview, ask }: { control: LifeControl
   }
   if (view.page === "add") return page(t("life.add"), <TaskForm control={control} preview={preview} onDone={back} />);
   if (view.page === "clock") return page(t("life.clock"), <ClockForm control={control} preview={preview} onDone={back} />);
-  const gapDate = null;
   const open7 = data ? data.items.filter(item => !item.done && SOON.has(item.stage)) : [];
   const groups: Record<Filter, LifeItem[]> = { soon: open7,
     later: data ? data.items.filter(item => !item.done && !SOON.has(item.stage)) : [], done: data ? data.items.filter(item => item.done) : [] };
   const currency = open7.find(item => item.amount !== null)?.currency ?? "THB";
-  const dueSoon = open7.filter(item => item.amount !== null && item.stage !== "unknown" && item.currency === currency);
-  const dueSum = dueSoon.reduce((sum, item) => sum + Number(item.amount), 0);
+  // What the family pays in the next 7 days: bills the loan pays (or will, once signed) do not count.
+  const dueSoon = open7.filter(item => ownAmount(item) > 0 && item.stage !== "unknown" && item.currency === currency);
+  const dueSum = dueSoon.reduce((sum, item) => sum + ownAmount(item), 0);
   // Shortfalls use today's balance only, so only the next 7 days earn the warning banner; later ones get a quiet
   // line on their own tab, oldest due date first, saying what the check is based on.
   const short = groups.soon.filter(item => item.at_risk);
@@ -127,7 +127,7 @@ export function StudyLifePanel({ control, preview, ask }: { control: LifeControl
           : filter === "later" && shortLater.length > 0 ? <button type="button" className="life-summary-line" onClick={() => setView({ page: "item", key: shortLater[0].source_key })}>
             {t("life.laterShort", { title: titleOf(shortLater[0], lang), date: shortLater[0].due_date ?? "", n: shortLater.length })}</button>
           : walletChecked && !shortLater.length && <p className="life-ok">{t("life.enough")}</p>}
-        <div className="life-list">{groups[filter].map(item => <LifeItemRow key={item.source_key} item={item} gapDate={gapDate}
+        <div className="life-list">{groups[filter].map(item => <LifeItemRow key={item.source_key} item={item}
           onSelect={row => setView({ page: "item", key: row.source_key })} />)}
           {!groups[filter].length && <p className="life-empty">{t(filter === "soon" ? "life.nothingSoon" : filter === "later" ? "life.nothingLater" : "life.nothingDone")}</p>}</div>
       </section>

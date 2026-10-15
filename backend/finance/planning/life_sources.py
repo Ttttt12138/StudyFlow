@@ -21,11 +21,15 @@ def task_rows(user, plan):
 
 
 def bill_rows(user, plan):
-    # Loan repayments come only from actual loan accounts, never the old plan estimate.
+    from .loan_stage import pending_bills
+
+    # A submitted loan not yet signed already has its share of each bill worked out (`loan_pending`), so the
+    # reminders count only what the family will pay. Loan repayments come only from actual loan accounts.
+    pending = pending_bills(plan)
     return [{"source_key": f"bill:{b.id}", "kind": "bill", "title": b.label,
              "due_date": b.due_date, "amount": str(b.amount), "currency": b.currency,
              "done": b.status == "PAID", "estimated": True, "source_version": b.status,
-             "target": "bills", "paid_by_loan": _loan_part(b)}
+             "target": "bills", "paid_by_loan": _loan_part(b), "loan_pending": pending.get(b.id)}
             for b in PlanBill.objects.filter(owner=user, plan=plan).exclude(kind="loan").select_related("payout")]
 
 

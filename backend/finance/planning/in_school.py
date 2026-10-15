@@ -172,6 +172,9 @@ def wallet_bills(user):
         return {"bills": [], "school_payee": None, "is_simulated": True}
     loan = set(LoanPayout.objects.filter(plan=plan).values_list("bill_id", flat=True))
     pending = pending_bills(plan)
-    rows = [{**bill_record(b), "paid_by_loan": b.id in loan, "loan_pending": pending.get(b.id)}
+    # A bill the loan only partly covers was split in two at signing (loan_stage._allocate); both halves share
+    # `group`, so the pay tab shows it once: the loan's part and what the family pays.
+    rows = [{**bill_record(b), "group": b.source_id.removesuffix(":loan"), "paid_by_loan": b.id in loan,
+             "loan_pending": pending.get(b.id)}
             for b in PlanBill.objects.filter(owner=user, plan=plan).exclude(kind="loan").order_by("status", "due_date")]
     return {"bills": rows, "school_payee": payee_record(plan), "is_simulated": True}

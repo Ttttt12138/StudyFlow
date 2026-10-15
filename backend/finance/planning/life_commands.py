@@ -50,6 +50,8 @@ def act(user, data, obj=None):
     require(action != "set_amount" or "amount" in data, "REMINDER_AMOUNT_REQUIRED")
     # The loan pays this bill to the school on its date: nothing to pay, reschedule or re-price by hand.
     require(not item.get("paid_by_loan") or action in ("acknowledge", "snooze"), "BILL_PAID_BY_LOAN")
+    # Its share is already set aside by the loan awaiting approval or signing: the same holds until then.
+    require(not item.get("loan_pending") or action in ("acknowledge", "snooze"), "BILL_AWAITING_LOAN")
     pref, _ = ReminderPreference.objects.get_or_create(owner=user, source_key=data["source_key"])
     if action in ("complete", "reopen"):
         _complete(user, item, action == "complete")
