@@ -983,8 +983,10 @@ class RemittanceApiTests(RemittanceHarness, APITestCase):
             self.submit(order)
         self.adapter(held, "unknown")
         window_end = self.db(due).expected_latest
-        self.set_clock(window_end.isoformat())  # its last day: still on its way
+        self.set_clock((window_end - timedelta(days=1)).isoformat())  # before its last day: still on its way
         self.assertEqual(self.db(due).status, "SUBMITTED")
+        self.set_clock(window_end.isoformat())  # the last day of the window: it has arrived
+        self.assertEqual((self.db(due).status, self.db(due).delivered_on), ("DELIVERED", window_end))
         self.set_clock((clock + timedelta(days=400)).isoformat())  # far past the window and the deadline
         delivered = self.db(due)
         self.assertEqual((delivered.status, delivered.delivered_on), ("DELIVERED", window_end))

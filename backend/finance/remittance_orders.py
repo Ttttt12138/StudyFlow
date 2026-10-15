@@ -197,7 +197,8 @@ def adapter_event(actor, data, order, delivered_on=None):
 
 
 def settle_due(user, today):
-    """The simulated channel delivers every order still on its way once the demo date passes its delivery window.
+    """The simulated channel delivers every order still on its way once the demo date reaches the last day of its
+    delivery window.
 
     It arrives on the window's last day, so moving the date far ahead never makes it late. An order an operator
     marked UNKNOWN stays with the operator."""
@@ -205,7 +206,7 @@ def settle_due(user, today):
 
     delivered = 0
     for order in RemittanceOrder.objects.select_for_update().filter(
-            owner=user, status__in=["SUBMITTED", "IN_TRANSIT"], expected_latest__lt=today).order_by("expected_latest"):
+            owner=user, status__in=["SUBMITTED", "IN_TRANSIT"], expected_latest__lte=today).order_by("expected_latest"):
         adapter_event(user, {"outcome": "delivered", "expected_version": order.version,
                              "note": "Simulated channel: delivered within its window"}, order, order.expected_latest)
         delivered += 1
