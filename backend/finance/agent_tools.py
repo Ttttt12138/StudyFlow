@@ -207,8 +207,8 @@ TOOLS = {tool.name: tool for tool in [
          ConvertInput, _convert),
 ]}
 
-# Planning conversations (finance/planning) see the finance tools plus the planning ones;
-# standalone agent sessions keep the catalog above.
+# Planning conversations (finance/planning) see the wallet tools (for a confirmed plan) plus the planning ones;
+# standalone agent sessions keep the catalog above. The on-time record is not part of the planning chat.
 def _planning_tools():
     from .planning import tools as planning
 
@@ -216,4 +216,4 @@ def _planning_tools():
     return {tool.name: tool for tool in planning.tools(Tool)}
 
 
-CONVERSATION_TOOLS = {**TOOLS, **_planning_tools()}
+CONVERSATION_TOOLS = {**{k: v for k, v in TOOLS.items() if k != "get_credit_profile"}, **_planning_tools()}

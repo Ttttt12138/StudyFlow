@@ -22,7 +22,7 @@ def remember(user, plan):
 
     item = latest(plan)
     PlanDraft.objects.update_or_create(owner=user, school_key=plan.school_key, defaults={
-        "years": plan.years, "available_funds": plan.available_funds, "funds_currency": plan.funds_currency or "",
+        "years": plan.years,
         "inputs": deepcopy(item.inputs) if item else {}})
     for old in PlanDraft.objects.filter(owner=user).order_by("-updated_at")[LIMIT:]:
         old.delete()
@@ -35,8 +35,6 @@ def record(draft, plan, home):
     return {"id": str(draft.id), "school_key": draft.school_key, "name": entry.school.name.model_dump() if entry else None,
             "years": int(draft.years) if draft.years == int(draft.years) else draft.years,
             "total": total["total"] if total else None, "currency": total["currency"] if total else None,
-            "available_funds": f"{draft.available_funds:.2f}" if draft.available_funds is not None else None,
-            "funds_currency": draft.funds_currency or None,
             "loan": {"principal": loan.get("principal"), "months": loan.get("months"), "product": loan.get("product")} if loan else None,
             "current": plan is not None and plan.school_key == draft.school_key,
             "updated_at": draft.updated_at.isoformat()}
@@ -69,20 +67,17 @@ def history(user):
 
 def open_draft(user, data, draft):
     """Makes a saved draft the current plan again, restoring the funds and loan picked for that school."""
-    from .assessment import defaults, latest
+    from .assessment import defaults, latest, current_inputs
     from .models import PlanningAssessment
 
     plan = services.plan_for(user)
     require(plan is None or plan.status == "DRAFT", "PLAN_NOT_DRAFT_FOR_SWITCH")
     facts = {"school_key": draft.school_key, "years": draft.years}
-    if draft.available_funds is not None:
-        facts.update(available_funds=draft.available_funds, funds_currency=draft.funds_currency or None)
     services.save_plan(user, facts)
     plan = services.plan_for(user)
     if draft.inputs:
-        inputs, fresh = deepcopy(draft.inputs), defaults(user, plan)
+        inputs, fresh = current_inputs(draft.inputs, user, plan), defaults(user, plan)
         # Dates move on while a draft waits: start from today and keep the first repayment in the future.
-        inputs["as_of"] = fresh["as_of"]
         if date.fromisoformat(inputs["loan"]["first_due_date"]) <= services.today_for(user) + timedelta(days=1):
             inputs["loan"]["first_due_date"] = fresh["loan"]["first_due_date"]
         previous = latest(plan)

@@ -7,7 +7,6 @@ from rest_framework import serializers as s
 from finance.workflow_serializers import Input
 
 from . import catalog, in_school, services
-from .models import EXPENSE_CATEGORIES
 
 
 class Empty(Input):
@@ -44,25 +43,9 @@ class EstimateInput(Input):
 class PlanInput(Input):
     school_key = s.CharField(max_length=60)
     years = YearsField(min_value=1, max_value=6, required=False)
-    available_funds = s.DecimalField(max_digits=16, decimal_places=2, min_value=0, required=False)
-    funds_currency = s.CharField(max_length=3, required=False)
-    support_amount = s.DecimalField(max_digits=16, decimal_places=2, min_value=0, required=False)
-    support_date = s.DateField(required=False)
+    # A loan amount the user said; stored as the plan's typed loan amount in THB.
     principal = s.DecimalField(max_digits=16, decimal_places=2, min_value=0, required=False)
-    support_currency = s.CharField(max_length=3, required=False)
     principal_currency = s.CharField(max_length=3, required=False)
-
-
-class ExpenseInput(Input):
-    amount = s.DecimalField(max_digits=16, decimal_places=2, min_value=Decimal("0.01"))
-    currency = s.CharField(max_length=3, required=False)
-    category = s.ChoiceField(choices=EXPENSE_CATEGORIES, required=False)
-    note = s.CharField(max_length=200, required=False, allow_blank=True)
-    spent_on = s.DateField(required=False)
-
-
-class MonthInput(Input):
-    month = s.CharField(max_length=7, required=False)
 
 
 class LoanInput(Input):
@@ -129,40 +112,8 @@ def _loan(user, data):
     return {**_get_plan(user, data), "open_assessment": True}
 
 
-def _confirm_plan(user, data):
-    from finance.agent_tools import Proposal
-    from finance.workflow_common import require
-
-    plan = services.plan_for(user)
-    require(plan is not None, "PLAN_REQUIRED")
-    require(plan.status == "DRAFT", "PLAN_NOT_DRAFT")
-    record = services.plan_record(plan, services.home_currency(user))["plan"]
-    return Proposal("plan.confirm", plan.id, None, "", {
-        "plan_id": str(plan.id), "school_key": plan.school_key, "years": services.plan_years(plan),
-        "total": record.get("total"), "currency": record.get("currency"), "gap": record.get("gap")})
-
-
-def _confirm_enrollment(user, data):
-    from finance.agent_tools import Proposal
-    from finance.workflow_common import require
-
-    plan = services.plan_for(user)
-    require(plan is not None, "PLAN_REQUIRED")
-    require(plan.status == "CONFIRMED", "PLAN_NOT_CONFIRMED")
-    return Proposal("plan.enroll", plan.id, None, "", {
-        "plan_id": str(plan.id), "school_key": plan.school_key, "start_date": plan.start_date.isoformat()})
-
-
 def _bills(user, data):
     return {"bills": in_school.bills(user, upcoming_only=True, limit=12)}
-
-
-def _record_expense(user, data):
-    return in_school.record_expense(user, data, via_agent=True)
-
-
-def _spending(user, data):
-    return in_school.spending(user, data.get("month"))
 
 
 def _study_life(user, data):
@@ -175,13 +126,8 @@ HINTS = {
     "school_key": "key of a school from list_schools (not its name)",
     "school_keys": "2-4 keys of schools from list_schools",
     "years": "academic years to cover in half-year steps, e.g. 3.5; omit to use the programme length",
-    "available_funds": "decimal string of savings the family already has for study",
-    "funds_currency": "currency of available_funds; omit to use the home currency",
-    "amount": "decimal string the user says they spent",
-    "currency": "currency the user names; omit to use the plan currency",
-    "category": "food, transport, housing, study, shopping, fun, health or other",
-    "note": "what was bought, in the user's words",
-    "month": "YYYY-MM; omit for the current month",
+    "principal": "decimal string of the loan amount the user wants to borrow; omit when they did not say one",
+    "principal_currency": "currency of principal; omit to use the home currency",
 }
 
 
@@ -191,7 +137,7 @@ def tools(Tool):
     return [
         Tool("create_study_task", "T1", "Save a user-requested in-app reminder. Preserve the original source text. "
              "Dates are user-supplied; use null when unknown. Never invent official deadlines.", StudyTaskInput, life_commands.create_task),
-        Tool("get_study_life", "T0", "Current in-app tasks, enrollment and payment reminders; next actual loan installment and monthly budget.",
+        Tool("get_study_life", "T0", "Current in-app to-dos, bill due reminders and the next actual loan installment.",
              Empty, _study_life),
         Tool("list_schools", "T0", "Sample catalog schools with first-year and full-course cost in local and home "
              "currency.",
@@ -203,18 +149,13 @@ def tools(Tool):
              CompareInput, _compare),
         Tool("estimate_total_cost", "T0", "Tuition, living and essential costs for a school over N years, "
              "with totals and a home-currency conversion.", EstimateInput, _estimate),
-        Tool("get_plan", "T0", "The user's study plan (school, totals, funds, gap, loan) and display currency.", Empty, _get_plan),
-        Tool("save_plan", "T1", "Choose a school for the plan and record years and available funds; "
-             "returns the funding gap.", PlanInput, _save_plan),
-        Tool("simulate_loan", "T1", "Open the combined loan assessment. It does not create a quote or application; "
-             "the user reviews amounts and repayment assumptions in the panel.", LoanInput, _loan),
-        Tool("confirm_plan", "T2", "Propose confirming the study plan; the user must confirm.", Empty, _confirm_plan),
-        Tool("list_bills", "T0", "Upcoming in-school bills (tuition, housing, insurance, loan installments).",
-             Empty, _bills),
-        Tool("record_expense", "T1", "Record day-to-day spending for an enrolled student.", ExpenseInput,
-             _record_expense),
-        Tool("get_spending", "T0", "A month's spending by category against the monthly living budget.",
-             MonthInput, _spending),
-        Tool("confirm_enrollment", "T2", "Propose marking the student as enrolled; the user must confirm.",
-             Empty, _confirm_enrollment),
+        Tool("get_plan", "T0", "The user's study plan (school, years, status, full-course total, loan) and display "
+             "currency.", Empty, _get_plan),
+        Tool("save_plan", "T1", "Choose a school for the plan, with the years and optionally the loan amount the "
+             "user said; returns the plan with its full-course total.", PlanInput, _save_plan),
+        Tool("simulate_loan", "T1", "Open the loan panel. It does not create a quote or application; the user types "
+             "the loan amount, picks the product, term and repayment method, and confirms the plan with the loan "
+             "application there.", LoanInput, _loan),
+        Tool("list_bills", "T0", "Upcoming plan bills (tuition, housing, insurance, visa), each saying whether the "
+             "loan pays it to the school.", Empty, _bills),
     ]

@@ -1,8 +1,7 @@
-"""Stage two: fixed bills from the confirmed plan, day-to-day spending and the monthly budget."""
+"""Fixed bills from the confirmed plan: listed, paid from the wallet, or paid by the signed loan."""
 
 import calendar
 import math
-from collections import defaultdict
 from datetime import date
 from decimal import Decimal
 
@@ -12,27 +11,9 @@ from finance import money
 from finance.workflow_common import audit, require
 
 from . import services
-from .models import ExpenseEntry, PlanBill, StudyMonthBudget
+from .models import LoanPayout, PlanBill
 
 BILLED = {"tuition", "housing", "insurance", "visa"}
-CATEGORY_WORDS = {
-    "food": ("饭", "餐", "吃", "咖啡", "奶茶", "早饭", "午饭", "晚饭", "外卖", "食", "lunch", "dinner", "breakfast",
-             "coffee", "food", "meal", "snack"),
-    "transport": ("打车", "地铁", "公交", "车费", "grab", "taxi", "bus", "train", "metro", "uber", "bts", "mrt"),
-    "housing": ("房租", "水电", "宿舍", "rent", "electric", "water bill", "dorm"),
-    "study": ("书", "文具", "打印", "课本", "book", "print", "stationery", "course"),
-    "shopping": ("超市", "衣服", "购物", "日用", "shopping", "clothes", "supermarket", "groceries"),
-    "fun": ("电影", "门票", "玩", "旅游", "酒吧", "movie", "ticket", "trip", "bar", "concert"),
-    "health": ("药", "医院", "看病", "诊所", "pharmacy", "doctor", "clinic", "medicine"),
-}
-
-
-def guess_category(text):
-    text = (text or "").lower()
-    for category, words in CATEGORY_WORDS.items():
-        if any(w in text for w in words):
-            return category
-    return "other"
 
 
 def add_months(day, months):
@@ -116,6 +97,7 @@ def bill_record(bill):
 
 
 def bills(user, upcoming_only=False, limit=None):
+    """The plan's bills, each saying whether the signed loan pays it to the school."""
     plan = services.plan_for(user)
     if plan is None:
         return []
@@ -123,106 +105,19 @@ def bills(user, upcoming_only=False, limit=None):
     if upcoming_only:
         rows = rows.filter(status="DUE")
     rows = rows.order_by("due_date", "kind", "source_id")
-    return [bill_record(b) for b in (rows[:limit] if limit else rows)]
+    loan = set(LoanPayout.objects.filter(plan=plan).values_list("bill_id", flat=True))
+    return [{**bill_record(b), "paid_by_loan": b.id in loan} for b in (rows[:limit] if limit else rows)]
 
 
 def pay_bill(user, data, bill):
-    """Records a bill as paid. Money moves through payments or remittances, not here."""
+    """Records a bill as paid. Money moves through payments or remittances, not here; the loan pays its own bills."""
     require(bill.status == "DUE", "BILL_ALREADY_PAID")
+    require(not LoanPayout.objects.filter(bill=bill).exists(), "BILL_PAID_BY_LOAN")
+    require_no_pending_loan(bill)
     bill.status, bill.paid_at, bill.paid_on = "PAID", timezone.now(), data.get("paid_on") or services.today_for(user)
     bill.save(update_fields=["status", "paid_at", "paid_on"])
     audit(user, user, "planning.bill_paid", bill, {"amount": str(bill.amount), "currency": bill.currency})
     return bill_record(bill)
-
-
-def _enrolled_plan(user):
-    plan = services.plan_for(user)
-    require(plan is not None and plan.status == "ENROLLED", "ENROLLMENT_REQUIRED")
-    return plan
-
-
-def monthly_budget(plan):
-    lines = (plan.snapshot or {}).get("lines") or []
-    return sum((Decimal(l["amount"]) for l in lines if l["period"] == "month" and l.get("amount") is not None), Decimal(0))
-
-
-def record_expense(user, data, via_agent=False):
-    plan = _enrolled_plan(user)
-    currency = (data.get("currency") or plan.snapshot.get("currency")).upper()
-    money.require_supported(currency)
-    amount = money.require_precision(Decimal(data["amount"]), currency)
-    require(amount > 0, "Amount must be positive.")
-    entry = ExpenseEntry.objects.create(
-        owner=user, spent_on=data.get("spent_on") or services.today_for(user), amount=amount, currency=currency,
-        category=data.get("category") or guess_category(data.get("note")), note=(data.get("note") or "")[:200],
-        via_agent=via_agent)
-    audit(user, user, "planning.expense_recorded", entry, {"amount": str(amount), "currency": currency})
-    return {"expense": expense_record(entry), **spending(user, entry.spent_on.strftime("%Y-%m"))}
-
-
-def expense_record(entry):
-    return {"id": str(entry.id), "spent_on": entry.spent_on.isoformat(), "category": entry.category,
-            "amount": money.fmt(entry.amount, entry.currency), "currency": entry.currency, "note": entry.note,
-            "via_agent": entry.via_agent}
-
-
-def spending(user, month=None, detail=True):
-    """Spending for one month in the plan currency against the monthly living budget."""
-    plan = _enrolled_plan(user)
-    currency = plan.snapshot.get("currency")
-    month = month or services.today_for(user).strftime("%Y-%m")
-    require(len(month) == 7 and month[4] == "-" and month[:4].isdigit() and month[5:].isdigit()
-            and 1 <= int(month[5:]) <= 12, "MONTH_INVALID")
-    year, number = int(month[:4]), int(month[5:])
-    rows = ExpenseEntry.objects.filter(owner=user, spent_on__year=year, spent_on__month=number, voided_at__isnull=True)
-    totals, unconverted = defaultdict(Decimal), []
-    for entry in rows:
-        value = entry.amount
-        if entry.currency != currency:
-            converted = services.convert(entry.amount, entry.currency, currency)
-            if converted is None:
-                unconverted.append(str(entry.id))
-                continue
-            value = Decimal(converted["amount"])
-        totals[entry.category] += value
-    spent = sum(totals.values(), Decimal(0))
-    override = StudyMonthBudget.objects.filter(plan=plan, month=month).first()
-    budget = override.amount if override else monthly_budget(plan)
-    monthly = [line for line in plan.snapshot.get("lines", []) if line["period"] == "month"]
-    known = bool(override or (monthly and all(line.get("amount") is not None for line in monthly)))
-    result = {"month": month, "currency": currency, "spent": money.fmt(spent, currency),
-              "budget_known": known, "budget_source": "declared" if override else "estimate",
-              "budget_version": override.version if override else 0,
-              "budget": money.fmt(budget, currency), "remaining": money.fmt(budget - spent, currency),
-              "over_budget": known and not unconverted and spent > budget,
-              "by_category": {k: money.fmt(v, currency) for k, v in sorted(totals.items())},
-              "unconverted": unconverted, "is_simulated": True}
-    if detail:
-        result["recent"] = [expense_record(e) for e in rows.order_by("-spent_on", "-created_at")[:10]]
-    return result
-
-
-def spending_page(user, month=None, offset=0):
-    result = spending(user, month)
-    year, number = map(int, result["month"].split("-"))
-    rows = ExpenseEntry.objects.filter(owner=user, spent_on__year=year, spent_on__month=number, voided_at__isnull=True)
-    count = rows.count()
-    entries = rows.order_by("-spent_on", "-created_at", "-id")[offset:offset + 50]
-    return {**result, "entries": [expense_record(e) for e in entries], "count": count,
-            "next_offset": offset + 50 if offset + 50 < count else None}
-
-
-def summary(user, detail=True):
-    """Everything the in-school dashboard shows."""
-    plan = services.plan_for(user)
-    if plan is None or plan.status != "ENROLLED":
-        return {"enrolled": False}
-    upcoming = bills(user, upcoming_only=True)
-    today = services.today_for(user)
-    return {"enrolled": True, "today": today.isoformat(),
-            "plan": services.plan_record(plan, services.home_currency(user))["plan"],
-            "upcoming_bills": upcoming[:8], "overdue": [b for b in upcoming if b["due_date"] < today.isoformat()],
-            "bill_count": len(upcoming), "spending": spending(user, detail=detail)}
 
 
 def pay_from_wallet(user, data, bill):
@@ -237,11 +132,11 @@ def pay_from_wallet(user, data, bill):
     from finance.wallets import balance_of, post, wallet
     from finance.workflow_common import append_state, current
 
-    from .models import LoanPayout
     from .payees import require_verified
 
     require(bill.status == "DUE", "BILL_ALREADY_PAID")
     require(not LoanPayout.objects.filter(bill=bill).exists(), "BILL_PAID_BY_LOAN")
+    require_no_pending_loan(bill)
     if bill.kind == "tuition":
         require_verified(bill.plan)
     item = wallet(user)
@@ -261,15 +156,22 @@ def pay_from_wallet(user, data, bill):
             "currency": bill.currency, "is_simulated": True}
 
 
+def require_no_pending_loan(bill):
+    from .loan_stage import pending_bills
+
+    require(bill.pk not in pending_bills(bill.plan), "BILL_AWAITING_LOAN")
+
+
 def wallet_bills(user):
     """The plan's bills for the wallet's pay tab: unpaid first, each with who pays it, and the school's account."""
-    from .models import LoanPayout
     from .payees import payee_record
+    from .loan_stage import pending_bills
 
     plan = services.plan_for(user)
     if plan is None:
         return {"bills": [], "school_payee": None, "is_simulated": True}
     loan = set(LoanPayout.objects.filter(plan=plan).values_list("bill_id", flat=True))
-    rows = [{**bill_record(b), "paid_by_loan": b.id in loan}
+    pending = pending_bills(plan)
+    rows = [{**bill_record(b), "paid_by_loan": b.id in loan, "loan_pending": pending.get(b.id)}
             for b in PlanBill.objects.filter(owner=user, plan=plan).exclude(kind="loan").order_by("status", "due_date")]
     return {"bills": rows, "school_payee": payee_record(plan), "is_simulated": True}

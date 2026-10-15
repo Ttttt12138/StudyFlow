@@ -11,7 +11,6 @@ from .models import StudyTask
 
 # (key, days from the programme start, English, Chinese)
 COMMON = [
-    ("admission", -120, "Confirm the admission result and accept the offer", "确认录取结果并接受录取"),
     ("documents", -75, "Prepare passport, photos and original transcripts", "准备护照、证件照和成绩单原件"),
 ]
 COUNTRY = {

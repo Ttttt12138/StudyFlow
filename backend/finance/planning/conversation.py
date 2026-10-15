@@ -8,11 +8,10 @@ enrollment proposal) have an empty goal and never call a model.
 from types import SimpleNamespace
 
 from django.conf import settings
-from django.contrib.auth import get_user_model
 from django.db import transaction
 
 from finance import agent_runner
-from finance.agent_models import AgentPendingAction, AgentSession
+from finance.agent_models import AgentSession
 from finance.services import json_value
 from finance.workflow_common import record, require
 
@@ -29,16 +28,12 @@ def _memory(conversation):
     if plan is not None:
         full = services.plan_record(plan, services.home_currency(user))["plan"]
         plan_info = {k: full.get(k) for k in ("status", "school_key", "years", "start_date", "total",
-                                              "currency", "gap")}
+                                              "currency")}
         plan_info["has_loan"] = plan.loan_id is not None
-        plan_info["first_month"] = services.first_month(plan)
-        from .assessment import latest
+        from .assessment import latest, current_inputs
         assessment = latest(plan)
         if assessment:
-            plan_info["known_planning_inputs"] = assessment.inputs
-            check = assessment.result.get("prequal")
-            if check:
-                plan_info["prequal"] = {k: check.get(k) for k in ("status", "max_principal", "gap", "currency")}
+            plan_info["known_planning_inputs"] = current_inputs(assessment.inputs, user, plan)
     recent = []
     for turn in conversation.turns.order_by("-created_at")[:6]:
         for step in turn.steps.order_by("-number"):
@@ -49,7 +44,6 @@ def _memory(conversation):
         "home_currency": services.home_currency(user),
         "today": services.today_for(user).isoformat(),
         "plan": plan_info,
-        "enrollment_due": services.enrollment_due(user, plan),
         "recent_schools": recent[:4],
         "schools": [{"key": e.key, "name_en": e.school.name.en, "name_zh": e.school.name.zh,
                      "country_code": e.school.country_code, "country_en": e.school.country.en,
@@ -104,26 +98,8 @@ def start(user, locale):
 
 
 def open_conversation(conversation):
-    """Proactive step: from three days before the start date, propose enrollment once."""
-    user = conversation.owner
-    plan = services.plan_for(user)
-    if not services.enrollment_due(user, plan):
-        return None
-    if AgentPendingAction.objects.filter(owner=user, action="plan.enroll", target_id=plan.id,
-                                         status="PENDING").exists():
-        return None
-    days = services.days_until(plan.start_date, services.today_for(user))
-    text = {"zh": (f"距离开学还有 {days} 天。" if days > 0 else "已经到开学日期了。")
-            + "学生已经完成报到，还是仍在准备？完成报到后再确认入学，计划中的模拟学费和还款会生成账单。若还在准备或日期有变化，请先告诉我；日期本身不会让计划自动入学。",
-            "en": (f"Classes start in {days} day(s). " if days > 0 else "The start date has arrived. ")
-            + "Has the student completed registration, or are they still preparing? Confirm enrollment only after registration: planned simulated tuition and repayments become bills. Tell me if you are still preparing or the date has changed. The date alone never enrolls you."}[conversation.locale]
-    with transaction.atomic():
-        get_user_model().objects.select_for_update().get(pk=user.pk)
-        turn = _assistant_turn(conversation, text)
-        step = SimpleNamespace(tool="confirm_enrollment", rationale="Start date is near", arguments_json="{}")
-        agent_runner._execute(turn, 1, step, {"provider": "system", "purpose": "enrollment_due"}, {})
-        turn.save()
-    return turn
+    """Opening a conversation does not propose a state change."""
+    return None
 
 
 def send(conversation, text, key):
@@ -141,10 +117,10 @@ def send(conversation, text, key):
 
 CHOSEN = {
     "zh": ("选这所学校：{name}",
-           "已选{name}，按 {years} 年计划，全程约 {total} {currency}。在左侧「我的方案」填上可用资金和每月收支，就能算出资金缺口。"),
+           "已选{name}，按 {years} 年计划，全程约 {total} {currency}。在左侧「我的方案」填写需要贷款的金额，选择产品和期限后查看还款试算。"),
     "en": ("Choose this school: {name}",
-           "{name} is in your plan for {years} years, about {total} {currency} in total. Add your available funds "
-           "and monthly budget in My plan on the left to see the funding gap."),
+           "{name} is in your plan for {years} years, about {total} {currency} in total. Enter the amount you want to borrow "
+           "in My plan, then choose the product and term to see repayments."),
 }
 
 

@@ -246,20 +246,13 @@ def confirm_pending(actor, data, pending):
         order = RemittanceOrder.objects.get(owner=actor, pk=pending.target_id)
         result = remittance_orders.submit(actor, {"expected_version": order.version}, order)
     elif pending.action in ("plan.confirm", "plan.enroll"):
-        from .planning import services as planning
-        from .planning.models import StudyPlan
-
-        plan = StudyPlan.objects.select_for_update().get(owner=actor, pk=pending.target_id)
-        result = (planning.confirm_plan if pending.action == "plan.confirm" else planning.enroll)(actor, plan)
+        _decide(pending, "EXPIRED")
+        return record(pending)
     else:
         result = wallets.convert_balance(actor, {
             "quote_id": pending.target_id, "source_amount": pending.amount,
             "state_version": current(actor).version}, None)
     _decide(pending, "CONFIRMED", result)
-    if pending.action in ("plan.confirm", "plan.enroll"):
-        from .planning.guidance import append_handoff
-
-        append_handoff(pending)
     audit(actor, actor, "agent.action_confirmed", pending, {"action": pending.action})
     return record(pending)
 

@@ -74,8 +74,8 @@ class PlanningLifeTests(LifeCase):
         for day in (None, "2027-08-07", "2027-08-08", "2027-08-09", "2027-08-20"):
             self.task(due_date=day)
         data = self.read()
-        self.assertEqual([i["stage"] for i in data["upcoming"]], ["overdue", "overdue", "due"])
-        self.assertEqual(data["attention_count"], 5)
+        self.assertEqual([i["stage"] for i in data["upcoming"]], ["overdue", "due", "tomorrow"])
+        self.assertEqual(data["attention_count"], 4)
         self.plan.refresh_from_db()
         self.assertEqual(self.plan.status, "CONFIRMED")
 
@@ -135,7 +135,7 @@ class PlanningLifeTests(LifeCase):
         self.assertEqual(self.act(item, "complete").status_code, 409)
 
     def test_estimated_bills_are_not_official_deadlines(self):
-        self.plan.status = "ENROLLED"
+        self.plan.status = "CONFIRMED"
         self.plan.snapshot = {"currency": "THB", "lines": []}
         self.plan.save()
         bill = PlanBill.objects.create(owner=self.user, plan=self.plan, kind="tuition", source_id="sample",
@@ -151,40 +151,7 @@ class PlanningLifeTests(LifeCase):
         bill.refresh_from_db()
         self.assertEqual(bill.status, "PAID")
 
-    def test_budget_is_separate_from_money_and_expense_can_be_undone(self):
-        self.plan.status = "ENROLLED"
-        self.plan.snapshot = {"currency": "THB", "lines": []}
-        self.plan.save()
-        self.assertFalse(self.read()["budget"]["budget_known"])
-        month = services.today_for(self.user).strftime("%Y-%m")
-        body = {"month": month, "amount": "6000.00", "expected_version": 0}
-        self.assertEqual(self.post("budget/", body).status_code, 201)
-        self.assertEqual(self.post("budget/", body).status_code, 409)
-        response = self.client.post("/api/v2/planning/expenses/record/", {"amount": "120", "note": "Lunch"},
-            format="json", HTTP_IDEMPOTENCY_KEY=str(uuid4()))
-        self.assertEqual(response.status_code, 201, response.data)
-        expense = response.data["data"]["expense"]
-        budget = self.read()["budget"]
-        self.assertEqual(budget["remaining"], "5880.00")
-        self.assertEqual(self.post("undo-expense/", {"expense_id": expense["id"]}).status_code, 201)
-        self.assertEqual(self.read()["budget"]["remaining"], "6000.00")
-        from finance.workflow_models import DemoWallet
-        self.assertFalse(DemoWallet.objects.filter(owner=self.user).exists())
 
-    def test_partial_budget_stays_unknown_and_zero_budget_is_valid(self):
-        self.plan.status = "ENROLLED"
-        self.plan.snapshot = {"currency": "THB", "lines": [
-            {"period": "month", "amount": "3000"}, {"period": "month", "amount": None}]}
-        self.plan.save()
-        self.assertFalse(self.read()["budget"]["budget_known"])
-        month = services.today_for(self.user).strftime("%Y-%m")
-        self.post("budget/", {"month": month, "amount": "0", "expected_version": 0})
-        self.client.post("/api/v2/planning/expenses/record/", {"amount": "120", "note": "Lunch"},
-            format="json", HTTP_IDEMPOTENCY_KEY=str(uuid4()))
-        budget = self.read()["budget"]
-        self.assertTrue(budget["budget_known"])
-        self.assertTrue(budget["over_budget"])
-        self.assertEqual(budget["remaining"], "-120.00")
 
 
 class PlanningLifeChecklistTests(LifeCase):
@@ -204,9 +171,10 @@ class PlanningLifeChecklistTests(LifeCase):
         self.assertTrue(item["template"])
         self.assertEqual(set(item["title"]), {"en", "zh"})
         count = tasks.count()
-        services.enroll(self.user, services.plan_for(self.user))
+        from finance.planning import checklist
+        checklist.seed(self.user, services.plan_for(self.user))
         self.assertEqual(StudyTask.objects.filter(plan=self.plan).exclude(template_key="").count(), count)
-        self.assertTrue(StudyTask.objects.get(plan=self.plan, template_key="registration").done)
+        self.assertFalse(StudyTask.objects.get(plan=self.plan, template_key="registration").done)
 
     def test_reopening_a_plan_drops_open_generated_items_and_keeps_finished_ones(self):
         services.confirm_plan(self.user, self.plan)
@@ -249,141 +217,16 @@ class PlanningLifeChecklistTests(LifeCase):
         self.assertEqual((rows["2027-09-01"]["shortfall"], rows["2027-09-01"]["at_risk"]), ("10000.00", True))
         self.assertEqual(rows["2027-09-01"]["shortfall_basis"], "wallet")
 
-    def test_without_wallet_the_forecast_gap_date_marks_later_payments(self):
+    def test_without_wallet_does_not_infer_a_funding_gap(self):
         from finance.planning.life import money_check
         rows = [{"source_key": "bill:a", "done": False, "amount": "10.00", "currency": "THB", "due_date": "2027-08-01"},
                 {"source_key": "bill:b", "done": False, "amount": "10.00", "currency": "THB", "due_date": "2027-09-01"},
                 {"source_key": "task:c", "done": False, "amount": None, "currency": "THB", "due_date": "2027-09-01"}]
-        money_check(rows, None, {"first_gap_date": "2027-08-20"})
-        self.assertEqual([r["at_risk"] for r in rows], [False, True, False])
-        self.assertEqual([r["shortfall_basis"] for r in rows], ["forecast", "forecast", None])
+        money_check(rows, None)
+        self.assertEqual([r["at_risk"] for r in rows], [False, False, False])
+        self.assertEqual([r["shortfall_basis"] for r in rows], [None, None, None])
 
 
-class PlanningCreditTests(LifeCase):
-    """Pay-later line: a fixed 2,000 CNY (in THB), used by paying a bill, freed by repaying it from the wallet."""
-    PASSWORD = "credit-line-pass-17"
-
-    def setUp(self):
-        from finance.planning.assessment import ensure_demo_state
-        from finance.workflow_models import DemoWallet
-
-        super().setUp()
-        cache.clear()
-        self.user.set_password(self.PASSWORD)
-        self.user.save()
-        ensure_demo_state(self.user)
-        DemoWallet.objects.filter(owner=self.user).update(balance=Decimal("5000.00"), clock=date(2027, 8, 1))
-
-    def repay(self, charge_id, token=None):
-        headers = {"HTTP_IDEMPOTENCY_KEY": str(uuid4())}
-        if token:
-            headers["HTTP_X_STEP_UP_TOKEN"] = token
-        return self.client.post(f"/api/v2/planning/credit/charges/{charge_id}/repay/", {}, format="json", **headers)
-
-    def token(self, charge):
-        response = self.client.post("/api/v2/auth/step-up/", {"password": self.PASSWORD, "action": "credit.repay",
-            "target_id": str(charge.id), "amount": f"{charge.amount:.2f}", "currency": charge.currency}, format="json")
-        self.assertEqual(response.status_code, 200, response.data)
-        return response.data["token"]
-
-    def evidence(self):
-        response = self.client.get("/api/v2/credit/profile/")
-        self.assertEqual(response.status_code, 200, response.data)
-        return [(e["source"], e["status"]) for e in response.data["data"]["evidence"]]
-
-    def bill(self, amount, currency="THB", source="credit-bill"):
-        return PlanBill.objects.create(owner=self.user, plan=self.plan, kind="tuition", source_id=source,
-            label={"en": "Tuition", "zh": "学费"}, due_date=date(2027, 8, 8), amount=amount, currency=currency)
-
-    def credit(self):
-        return self.read()["credit"]
-
-    def pay(self, item):
-        return self.client.post("/api/v2/planning/credit/pay/", {"source_key": item["source_key"], "expected_token": item["token"]},
-                                format="json", HTTP_IDEMPOTENCY_KEY=str(uuid4()))
-
-    def limit(self):
-        from finance.planning.credit import fixed_limit
-        return fixed_limit()
-
-    def test_limit_is_a_fixed_2000_cny_without_any_income(self):
-        line = self.credit()
-        thb = Decimal(services.convert("2000.00", "CNY", "THB")["amount"]).quantize(Decimal("0.01"), rounding="ROUND_DOWN")
-        self.assertEqual((line["limit"], line["fixed"]), (f"{thb:.2f}", {"amount": "2000.00", "currency": "CNY"}))
-        self.assertTrue(line["basis_known"])
-        self.assertNotIn("monthly_room", line)
-
-    def test_paying_with_credit_records_the_bill_and_owes_it_back_until_repaid(self):
-        limit = self.limit()
-        bill = self.bill("1000")
-        item = next(i for i in self.read()["items"] if i["kind"] == "bill")
-        self.assertEqual(self.pay(item).status_code, 201)
-        bill.refresh_from_db()
-        self.assertEqual(bill.status, "PAID")
-        line = self.credit()
-        self.assertEqual((line["used"], line["available"]), ("1000.00", f"{limit - 1000:.2f}"))
-        owed = next(i for i in self.read()["items"] if i["kind"] == "credit")
-        self.assertEqual((owed["amount"], owed["done"]), ("1000.00", False))
-        self.assertEqual(self.act(owed, "reschedule", date="2027-12-01").status_code, 400)
-        # Ticking it off is not a repayment: the money comes back from the wallet, after the password.
-        self.assertEqual(self.act(owed, "complete").status_code, 400)
-        from finance.planning.models import CreditCharge
-        from finance.workflow_models import DemoLedgerEntry, DemoWallet
-        charge = CreditCharge.objects.get(owner=self.user)
-        self.assertEqual(self.repay(charge.id).status_code, 403)
-        self.assertEqual(self.repay(charge.id, self.token(charge)).status_code, 201)
-        self.assertEqual(DemoWallet.objects.get(owner=self.user).balance, Decimal("4000.00"))
-        self.assertEqual(DemoLedgerEntry.objects.get(credit_charge=charge).amount, Decimal("-1000.00"))
-        self.assertEqual(self.credit()["available"], f"{limit:.2f}")
-        self.assertTrue(next(i for i in self.read()["items"] if i["kind"] == "credit")["done"])
-        self.assertIn(("credit_charge", "ON_TIME"), self.evidence())
-        self.assertEqual(self.repay(charge.id, "any").status_code, 400)
-
-    def test_repayments_count_on_time_late_or_overdue_by_the_demo_date(self):
-        from finance.planning.models import CreditCharge
-        from finance.workflow_models import DemoWallet
-
-        for source in ("a", "b"):
-            self.bill("500", source=source)
-        for item in [i for i in self.read()["items"] if i["kind"] == "bill"]:
-            self.assertEqual(self.pay(item).status_code, 201)
-        first, second = CreditCharge.objects.filter(owner=self.user).order_by("created_at")
-        self.assertEqual(self.evidence(), [])
-        # Past the 30-day term, unpaid: overdue. Paid back then: late.
-        DemoWallet.objects.filter(owner=self.user).update(clock=first.due_date + timedelta(days=1))
-        self.assertEqual(sorted(self.evidence()), [("credit_charge", "OVERDUE")] * 2)
-        self.assertEqual(self.repay(first.id, self.token(first)).status_code, 201)
-        self.assertEqual(sorted(self.evidence()), [("credit_charge", "LATE"), ("credit_charge", "OVERDUE")])
-        DemoWallet.objects.filter(owner=self.user).update(balance=Decimal("100.00"))
-        short = self.repay(second.id, self.token(second))
-        self.assertEqual(short.status_code, 400, short.data)
-        self.assertIn("WALLET_BALANCE_TOO_LOW", str(short.data))
-
-    def test_credit_pays_tuition_only_to_a_verified_school_account(self):
-        from finance.planning.payees import school_payee
-
-        payee = school_payee(self.plan)
-        payee.verified = False
-        payee.save(update_fields=["verified"])
-        bill = self.bill("1000")
-        response = self.pay(next(i for i in self.read()["items"] if i["kind"] == "bill"))
-        self.assertEqual(response.status_code, 400, response.data)
-        self.assertIn("SCHOOL_PAYEE_NOT_VERIFIED", str(response.data))
-        bill.refresh_from_db()
-        self.assertEqual(bill.status, "DUE")
-        self.assertEqual(self.credit()["used"], "0.00")
-
-    def test_over_limit_foreign_currency_and_stale_tokens_are_refused(self):
-        self.bill(f"{self.limit() + 1:.2f}", source="big")
-        item = next(i for i in self.read()["items"] if i["kind"] == "bill")
-        self.assertEqual(self.pay(item).status_code, 400)
-        PlanBill.objects.all().delete()
-        self.bill("100", currency="JPY", source="yen")
-        item = next(i for i in self.read()["items"] if i["kind"] == "bill")
-        self.assertEqual(self.pay(item).status_code, 400)
-        self.assertEqual(self.pay({**item, "token": "stale"}).status_code, 409)
-        from finance.planning.models import CreditCharge
-        self.assertFalse(CreditCharge.objects.exists())
 
 
 class WalletBillPaymentTests(APITestCase):
@@ -395,6 +238,9 @@ class WalletBillPaymentTests(APITestCase):
         from finance.workflow_models import DemoWallet
 
         cache.clear()
+        from finance.policy_models import PolicyLimit
+        PolicyLimit.objects.update_or_create(action="outflow", currency="THB", defaults={
+            "per_transaction": "50000", "daily": "100000", "monthly": "300000", "enabled": True})
         self.user = get_user_model().objects.create_user("bill-payer", password=self.PASSWORD)
         self.client.force_authenticate(self.user)
         services.save_plan(self.user, {"school_key": "psu-phuket"})
@@ -458,34 +304,6 @@ class WalletBillPaymentTests(APITestCase):
         payee.save(update_fields=["verified"])
         self.assertEqual(self.pay(self.bill, self.token(self.bill)).status_code, 201)
 
-    def test_wallet_bill_payments_build_the_credit_record(self):
-        from finance.workflow_models import DemoWallet
-
-        def bill(source, due, amount="1000.00"):
-            return PlanBill.objects.create(owner=self.user, plan=self.plan, kind="housing", source_id=source,
-                label={"en": "Housing", "zh": "住宿"}, due_date=due, amount=Decimal(amount), currency="THB")
-
-        def evidence():
-            response = self.client.get("/api/v2/credit/profile/")
-            self.assertEqual(response.status_code, 200, response.data)
-            return {(e["id"], e["status"]) for e in response.data["data"]["evidence"] if e["source"] == "plan_bill"}
-
-        DemoWallet.objects.filter(owner=self.user).update(clock=date(2027, 8, 1))
-        self.assertEqual(self.pay(self.bill, self.token(self.bill)).status_code, 201)
-        self.bill.refresh_from_db()
-        self.assertEqual(self.bill.paid_on, date(2027, 8, 1))
-        # Prepaid more than a year ahead: paid, but not evidence.
-        ahead = bill("housing:y2", date(2028, 9, 1))
-        self.assertEqual(self.pay(ahead, self.token(ahead)).status_code, 201)
-        # Marked paid by hand: no money moved through the wallet.
-        manual = bill("housing:manual", date(2027, 8, 20))
-        marked = self.client.post(f"/api/v2/planning/bills/{manual.id}/pay/", {}, format="json",
-                                  HTTP_IDEMPOTENCY_KEY=str(uuid4()))
-        self.assertEqual(marked.status_code, 201, marked.data)
-        late = bill("housing:late", date(2027, 8, 5))
-        DemoWallet.objects.filter(owner=self.user).update(clock=date(2027, 8, 10))
-        self.assertEqual(self.pay(late, self.token(late)).status_code, 201)
-        self.assertEqual(evidence(), {(str(self.bill.id), "ON_TIME"), (str(late.id), "LATE")})
 
     def test_short_balance_and_loan_paid_bills_are_refused(self):
         big = PlanBill.objects.create(owner=self.user, plan=self.plan, kind="housing", source_id="housing:y1s1",
@@ -513,7 +331,7 @@ class WalletBillPaymentTests(APITestCase):
         item = next(i for i in items if i["source_key"] == f"bill:{self.bill.id}")
         self.assertEqual(item["paid_by_loan"], "20000.00")
         self.assertIsNone(item["shortfall"])
-        for path, body in (("planning/life/actions/", {"action": "complete"}), ("planning/credit/pay/", {})):
+        for path, body in (("planning/life/actions/", {"action": "complete"}),):
             response = self.client.post("/api/v2/" + path, {"source_key": item["source_key"], "expected_token": item["token"], **body},
                                         format="json", HTTP_IDEMPOTENCY_KEY=str(uuid4()))
             self.assertEqual(response.status_code, 400, response.data)

@@ -298,8 +298,8 @@ paths:
   /api/v2/agent/conversations/{id}/open/:
     post:
       operationId: post_api_v2_agent_conversations_id_open
-      description: Called when the app opens a conversation; the agent may speak first
-        (enrollment).
+      description: Called when the app opens a conversation; the existing conversation
+        is restored.
       parameters:
       - in: path
         name: id
@@ -2407,89 +2407,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/CommandResponse'
           description: ''
-  /api/v2/planning/credit/:
-    get:
-      operationId: get_api_v2_planning_credit
-      tags:
-      - api
-      security:
-      - tokenAuth: []
-      - cookieAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CommandResponse'
-          description: ''
-  /api/v2/planning/credit/charges/{id}/repay/:
-    post:
-      operationId: post_api_v2_planning_credit_charges_id_repay
-      parameters:
-      - in: header
-        name: Idempotency-Key
-        schema:
-          type: string
-        description: Unique action key; reuse the same key and body when retrying.
-        required: true
-      - in: header
-        name: X-Step-Up-Token
-        schema:
-          type: string
-        description: T2 step-up token from POST auth/step-up/ (docs/permissions.md);
-          T3 also needs an approved approval. Denials are 403 with detail and policy.
-      - in: path
-        name: id
-        schema:
-          type: string
-          format: uuid
-        required: true
-      tags:
-      - api
-      security:
-      - tokenAuth: []
-      - cookieAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CommandResponse'
-          description: ''
-  /api/v2/planning/credit/pay/:
-    post:
-      operationId: post_api_v2_planning_credit_pay
-      parameters:
-      - in: header
-        name: Idempotency-Key
-        schema:
-          type: string
-        description: Unique action key; reuse the same key and body when retrying.
-        required: true
-      tags:
-      - api
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreditPayInput'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/CreditPayInput'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/CreditPayInput'
-        required: true
-      security:
-      - tokenAuth: []
-      - cookieAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CommandResponse'
-          description: ''
   /api/v2/planning/drafts/{id}/open/:
     post:
       operationId: post_api_v2_planning_drafts_id_open
@@ -2518,119 +2435,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/CommandResponse'
           description: ''
-  /api/v2/planning/expenses/:
-    get:
-      operationId: get_api_v2_planning_expenses
-      parameters:
-      - in: query
-        name: month
-        schema:
-          type: string
-      - in: query
-        name: offset
-        schema:
-          type: integer
-      tags:
-      - api
-      security:
-      - tokenAuth: []
-      - cookieAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CommandResponse'
-          description: ''
-  /api/v2/planning/expenses/record/:
-    post:
-      operationId: post_api_v2_planning_expenses_record
-      parameters:
-      - in: header
-        name: Idempotency-Key
-        schema:
-          type: string
-        description: Unique action key; reuse the same key and body when retrying.
-        required: true
-      tags:
-      - api
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ExpenseInput'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/ExpenseInput'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/ExpenseInput'
-        required: true
-      security:
-      - tokenAuth: []
-      - cookieAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CommandResponse'
-          description: ''
-  /api/v2/planning/family-links/:
-    get:
-      operationId: get_api_v2_planning_family_links
-      tags:
-      - api
-      security:
-      - tokenAuth: []
-      - cookieAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CommandResponse'
-          description: ''
-    post:
-      operationId: post_api_v2_planning_family_links
-      parameters:
-      - in: header
-        name: X-Sponsor-Token
-        schema:
-          type: string
-        required: true
-      tags:
-      - api
-      security:
-      - tokenAuth: []
-      - cookieAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CommandResponse'
-          description: ''
   /api/v2/planning/history/:
     get:
       operationId: get_api_v2_planning_history
       description: 'Sidebar history: the latest three school drafts and the price
         lookups of every conversation.'
-      tags:
-      - api
-      security:
-      - tokenAuth: []
-      - cookieAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CommandResponse'
-          description: ''
-  /api/v2/planning/in-school/:
-    get:
-      operationId: get_api_v2_planning_in_school
       tags:
       - api
       security:
@@ -2681,40 +2490,6 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/ReminderActionInput'
-        required: true
-      security:
-      - tokenAuth: []
-      - cookieAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CommandResponse'
-          description: ''
-  /api/v2/planning/life/budget/:
-    post:
-      operationId: post_api_v2_planning_life_budget
-      parameters:
-      - in: header
-        name: Idempotency-Key
-        schema:
-          type: string
-        description: Unique action key; reuse the same key and body when retrying.
-        required: true
-      tags:
-      - api
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/StudyBudgetInput'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/StudyBudgetInput'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/StudyBudgetInput'
         required: true
       security:
       - tokenAuth: []
@@ -2783,40 +2558,6 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/StudyTaskInput'
-        required: true
-      security:
-      - tokenAuth: []
-      - cookieAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CommandResponse'
-          description: ''
-  /api/v2/planning/life/undo-expense/:
-    post:
-      operationId: post_api_v2_planning_life_undo_expense
-      parameters:
-      - in: header
-        name: Idempotency-Key
-        schema:
-          type: string
-        description: Unique action key; reuse the same key and body when retrying.
-        required: true
-      tags:
-      - api
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UndoExpenseInput'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/UndoExpenseInput'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/UndoExpenseInput'
         required: true
       security:
       - tokenAuth: []
@@ -5210,41 +4951,11 @@ components:
       - target_id
     AssessmentDetails:
       type: object
+      description: |-
+        Who borrows and the loan typed in the panel.
+
+        Older clients may still send the retired funds, supports, costs or budget keys; they are dropped, not rejected.
       properties:
-        available_funds:
-          type: string
-          format: decimal
-          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
-          nullable: true
-        funds_currency:
-          type: string
-          maxLength: 3
-        reserve:
-          type: string
-          format: decimal
-          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
-          nullable: true
-        as_of:
-          type: string
-          format: date
-        horizon:
-          allOf:
-          - $ref: '#/components/schemas/HorizonEnum'
-          default: 90
-        payment_date:
-          type: string
-          format: date
-          nullable: true
-        supports:
-          type: array
-          items:
-            $ref: '#/components/schemas/SupportInput'
-        costs:
-          type: array
-          items:
-            $ref: '#/components/schemas/CostOverrideInput'
-        repayment:
-          $ref: '#/components/schemas/PlanningRecurringInput'
         loan:
           $ref: '#/components/schemas/LoanTermsInput'
         borrower:
@@ -5252,12 +4963,7 @@ components:
           - $ref: '#/components/schemas/BorrowerEnum'
           default: student_with_parent
       required:
-      - as_of
-      - available_funds
-      - funds_currency
       - loan
-      - repayment
-      - reserve
     AssessmentInput:
       type: object
       properties:
@@ -5361,6 +5067,30 @@ components:
       description: |-
         * `student_with_parent` - student_with_parent
         * `parent` - parent
+    CategoryEnum:
+      enum:
+      - Rent
+      - Food
+      - Transport
+      - Mobile
+      - Utilities
+      - Subscription
+      - Transfer
+      - Income
+      - Refund
+      - Other
+      type: string
+      description: |-
+        * `Rent` - Rent
+        * `Food` - Food
+        * `Transport` - Transport
+        * `Mobile` - Mobile
+        * `Utilities` - Utilities
+        * `Subscription` - Subscription
+        * `Transfer` - Transfer
+        * `Income` - Income
+        * `Refund` - Refund
+        * `Other` - Other
     ChooseInput:
       type: object
       properties:
@@ -5477,22 +5207,22 @@ components:
       - selected_rows
     ConfirmPlanningPlan:
       type: object
-      description: Confirm the plan; quote_id is the simulated loan to apply for at
-        the same time, or null for no loan.
+      description: Confirm the plan and submit the simulated loan quoted in the current
+        assessment, in one step.
       properties:
         expected_version:
           type: integer
-          minimum: 0
+          minimum: 1
         plan_version:
           type: integer
           minimum: 1
         quote_id:
           type: string
           format: uuid
-          nullable: true
       required:
       - expected_version
       - plan_version
+      - quote_id
     ConfirmationInput:
       type: object
       properties:
@@ -5550,27 +5280,6 @@ components:
       - quote_id
       - source_amount
       - state_version
-    CostOverrideInput:
-      type: object
-      properties:
-        cost_id:
-          type: string
-          maxLength: 60
-          pattern: ^[-a-zA-Z0-9_]+$
-        amount:
-          type: string
-          format: decimal
-          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
-          nullable: true
-        due_date:
-          type: string
-          format: date
-          nullable: true
-        paid:
-          type: boolean
-          default: false
-      required:
-      - cost_id
     CoverageInput:
       type: object
       properties:
@@ -5590,18 +5299,6 @@ components:
       - account_id
       - end
       - start
-    CreditPayInput:
-      type: object
-      properties:
-        source_key:
-          type: string
-          maxLength: 100
-        expected_token:
-          type: string
-          maxLength: 64
-      required:
-      - expected_token
-      - source_key
     CreditStatementInput:
       type: object
       properties:
@@ -5709,46 +5406,6 @@ components:
       description: |-
         * `expense` - expense
         * `income` - income
-    ExpenseInput:
-      type: object
-      properties:
-        amount:
-          type: string
-          format: decimal
-          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
-        currency:
-          type: string
-          maxLength: 3
-        category:
-          $ref: '#/components/schemas/ExpenseInputCategoryEnum'
-        note:
-          type: string
-          maxLength: 200
-        spent_on:
-          type: string
-          format: date
-      required:
-      - amount
-    ExpenseInputCategoryEnum:
-      enum:
-      - food
-      - transport
-      - housing
-      - study
-      - shopping
-      - fun
-      - health
-      - other
-      type: string
-      description: |-
-        * `food` - food
-        * `transport` - transport
-        * `housing` - housing
-        * `study` - study
-        * `shopping` - shopping
-        * `fun` - fun
-        * `health` - health
-        * `other` - other
     ExpenseOverride:
       type: object
       properties:
@@ -6399,42 +6056,6 @@ components:
         home_currency:
           type: string
           maxLength: 3
-    PlanningRecurringInput:
-      type: object
-      properties:
-        income:
-          type: string
-          format: decimal
-          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
-          nullable: true
-        living_expenses:
-          type: string
-          format: decimal
-          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
-          nullable: true
-        existing_repayments:
-          type: string
-          format: decimal
-          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
-          nullable: true
-        from_month:
-          oneOf:
-          - type: string
-            default: ''
-            pattern: ^\d{4}-(0[1-9]|1[0-2])$
-          - type: string
-            maxLength: 0
-        to_month:
-          oneOf:
-          - type: string
-            default: ''
-            pattern: ^\d{4}-(0[1-9]|1[0-2])$
-          - type: string
-            maxLength: 0
-        changes:
-          type: array
-          items:
-            $ref: '#/components/schemas/RepaymentChange'
     PolicyActionEnum:
       enum:
       - payment.submit
@@ -6442,7 +6063,6 @@ components:
       - loan.repay
       - remittance.submit
       - bill.pay
-      - credit.repay
       - agent.confirm
       type: string
       description: |-
@@ -6451,7 +6071,6 @@ components:
         * `loan.repay` - loan.repay
         * `remittance.submit` - remittance.submit
         * `bill.pay` - bill.pay
-        * `credit.repay` - credit.repay
         * `agent.confirm` - agent.confirm
     PreviewInput:
       type: object
@@ -6571,29 +6190,6 @@ components:
         * `complete` - complete
         * `reopen` - reopen
         * `set_amount` - set_amount
-    RepaymentChange:
-      type: object
-      properties:
-        month:
-          type: string
-          pattern: ^\d{4}-(0[1-9]|1[0-2])$
-        income:
-          type: string
-          format: decimal
-          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
-          nullable: true
-        living_expenses:
-          type: string
-          format: decimal
-          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
-          nullable: true
-        existing_repayments:
-          type: string
-          format: decimal
-          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
-          nullable: true
-      required:
-      - month
     RepaymentInput:
       type: object
       properties:
@@ -7093,23 +6689,6 @@ components:
       - authenticated
       - csrf_token
       - username
-    StudyBudgetInput:
-      type: object
-      properties:
-        month:
-          type: string
-          pattern: ^\d{4}-(0[1-9]|1[0-2])$
-        amount:
-          type: string
-          format: decimal
-          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
-        expected_version:
-          type: integer
-          minimum: 0
-      required:
-      - amount
-      - expected_version
-      - month
     StudyClockInput:
       type: object
       properties:
@@ -7159,35 +6738,6 @@ components:
       - expected_version
       - plan_version
       - quote_id
-    SupportInput:
-      type: object
-      properties:
-        id:
-          type: string
-          maxLength: 60
-          pattern: ^[-a-zA-Z0-9_]+$
-        amount:
-          type: string
-          format: decimal
-          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
-        currency:
-          type: string
-          maxLength: 3
-        available_on:
-          type: string
-          format: date
-          nullable: true
-        confirmed:
-          type: boolean
-          default: false
-        included_in_funds:
-          type: boolean
-          default: false
-      required:
-      - amount
-      - available_on
-      - currency
-      - id
     SupportedCurrencyEnum:
       enum:
       - THB
@@ -7270,7 +6820,7 @@ components:
       type: object
       properties:
         category:
-          $ref: '#/components/schemas/TransactionRevisionInputCategoryEnum'
+          $ref: '#/components/schemas/CategoryEnum'
         cost_id:
           type: string
           maxLength: 100
@@ -7284,30 +6834,6 @@ components:
       required:
       - category
       - reason
-    TransactionRevisionInputCategoryEnum:
-      enum:
-      - Rent
-      - Food
-      - Transport
-      - Mobile
-      - Utilities
-      - Subscription
-      - Transfer
-      - Income
-      - Refund
-      - Other
-      type: string
-      description: |-
-        * `Rent` - Rent
-        * `Food` - Food
-        * `Transport` - Transport
-        * `Mobile` - Mobile
-        * `Utilities` - Utilities
-        * `Subscription` - Subscription
-        * `Transfer` - Transfer
-        * `Income` - Income
-        * `Refund` - Refund
-        * `Other` - Other
     TransactionUploadInput:
       type: object
       properties:
@@ -7343,14 +6869,6 @@ components:
       - semester_id
       - state_version
       - text
-    UndoExpenseInput:
-      type: object
-      properties:
-        expense_id:
-          type: string
-          format: uuid
-      required:
-      - expense_id
     UploadInput:
       type: object
       properties:

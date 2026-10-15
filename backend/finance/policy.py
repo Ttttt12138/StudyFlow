@@ -127,19 +127,6 @@ def _bill_check(actor, target_id, amount, currency):
     require(bill.status == "DUE" and bill.amount == amount and bill.currency == currency, "POLICY_SUBJECT_MISMATCH")
 
 
-def _credit_subject(actor, data, obj):
-    if obj.repaid_on is not None:
-        return None  # the handler answers CREDIT_ALREADY_REPAID
-    return Subject("credit.repay", str(obj.pk), obj.amount, obj.currency)
-
-
-def _credit_check(actor, target_id, amount, currency):
-    from .planning.models import CreditCharge
-    charge = get_object_or_404(CreditCharge, owner=actor, pk=target_id)
-    require(charge.repaid_on is None and charge.amount == amount and charge.currency == currency,
-            "POLICY_SUBJECT_MISMATCH")
-
-
 # Every T2 action must be registered here and declared on its route (CommandView.policy).
 def _remittance_subject(actor, data, obj):
     if obj.status != "CREATED" or obj.quote.expires_at <= timezone.now():
@@ -170,7 +157,6 @@ ACTIONS = {
     "loan.repay": Action(LoanAccount, _repayment_subject, _repayment_check),
     "remittance.submit": Action(RemittanceOrder, _remittance_subject, _remittance_check),
     "bill.pay": Action("finance.PlanBill", _bill_subject, _bill_check),
-    "credit.repay": Action("finance.CreditCharge", _credit_subject, _credit_check),
     # Confirming an agent proposal; step-up is requested for the underlying action.
     "agent.confirm": Action(AgentPendingAction, _pending_subject, None),
 }

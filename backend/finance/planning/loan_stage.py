@@ -12,6 +12,7 @@ from types import SimpleNamespace
 
 from django.utils import timezone
 
+from finance import money
 from finance.lending_applications import changed, check_version, ensure_future
 from finance.lending_ledger import create_account, loan_events
 from finance.workflow_common import append_state, audit, current, owned, record, require
@@ -21,9 +22,11 @@ from . import services
 from .models import LoanPayout, PlanBill, StudyTask
 
 PREFIX = "loan_doc:"
+# The simulated admission notice is attached automatically when the application is submitted; nobody uploads it.
+ADMISSION = PREFIX + "admission"
 # (key, English, Chinese); the income proof names whoever signs.
 DOCUMENTS = [
-    ("admission", "Upload the admission letter", "上传录取通知书"),
+    ("admission", "Simulated admission notice (attached automatically)", "模拟录取通知（已自动附加）"),
     ("identity", "Provide a passport or ID", "提供护照或身份证件"),
 ]
 INCOME = {
@@ -45,12 +48,12 @@ def document_title(key):
 
 
 def seed_documents(user, plan, borrower):
-    """The documents an approved loan needs before signing, as to-dos in "This month"."""
+    """The documents a loan application needs before signing, as to-dos: the admission notice arrives done."""
     have = set(StudyTask.objects.filter(plan=plan, template_key__startswith=PREFIX).values_list("template_key", flat=True))
     due = max(services.today_for(user) + timedelta(days=7), plan.start_date - timedelta(days=30))
     keys = [PREFIX + k for k, _, _ in DOCUMENTS] + [f"{PREFIX}income:{borrower}"]
     StudyTask.objects.bulk_create([StudyTask(owner=user, plan=plan, title=document_title(k)["en"], template_key=k,
-                                             due_date=due) for k in keys if k not in have])
+                                             due_date=due, done=k == ADMISSION) for k in keys if k not in have])
 
 
 def missing_documents(plan):
@@ -69,25 +72,50 @@ def _thb(amount, currency):
     return Decimal(value["amount"])
 
 
-def _allocate(user, plan, application, total):
-    """Spread the loan over the plan's unpaid bills: tuition first, then the rest, each in date order."""
+def allocations(plan, total):
+    """Project school payments without writing; signing uses these same amounts and order."""
     bills = list(PlanBill.objects.filter(plan=plan, status="DUE").exclude(kind="loan").filter(payout__isnull=True))
     bills.sort(key=lambda b: (b.kind not in FIRST, b.due_date, b.source_id))
     left = total
     for bill in bills:
         if left <= 0:
             break
-        thb = _thb(bill.amount, bill.currency)
-        if thb <= left:
-            covered_thb, covered = thb, bill.amount
-        else:
-            # Part of this bill: the loan's part becomes its own bill, the family keeps the rest.
-            back = services.convert(left, "THB", bill.currency) if bill.currency != "THB" else {"amount": str(left)}
-            require(back is not None, "FX_RATE_UNAVAILABLE")
-            covered = Decimal(back["amount"]).quantize(Decimal("0.01"), ROUND_FLOOR)
-            if covered <= 0:
-                break
-            covered_thb = left
+        covered_thb, covered = _bill_portion(bill, left)
+        if covered <= 0:
+            break
+        yield bill, covered_thb, covered
+        left -= covered_thb
+
+
+def _bill_portion(bill, left):
+    cost = _thb(bill.amount, bill.currency)
+    if cost <= left:
+        return cost, bill.amount
+    back = services.convert(left, "THB", bill.currency) if bill.currency != "THB" else {"amount": str(left)}
+    require(back is not None, "FX_RATE_UNAVAILABLE")
+    return left, Decimal(back["amount"]).quantize(Decimal("0.01"), ROUND_FLOOR)
+
+
+def pending_bills(plan):
+    """Bills provisionally funded by this plan's submitted loan, before it is signed."""
+    from .assessment import plan_loans
+
+    if plan.status != "CONFIRMED":
+        return {}
+    application = SimulatedApplication.objects.filter(owner_id=plan.owner_id, loan_id__in=plan_loans(plan),
+        status__in=["APPROVED", "UNDER_REVIEW"]).select_related("loan").order_by("-created_at").first()
+    if application is None:
+        return {}
+    total = Decimal(application.loan.result.get("net_proceeds") or "0")
+    return {bill.pk: {"amount": money.fmt(covered, bill.currency), "status": application.status}
+            for bill, _thb_amount, covered in allocations(plan, total)}
+
+
+def _allocate(user, plan, application, total):
+    """Commit the projected payments; split a partly funded bill into loan and self-funded parts."""
+    left = total
+    for bill, covered_thb, covered in allocations(plan, total):
+        if covered < bill.amount:
             bill.amount -= covered
             bill.save(update_fields=["amount"])
             bill = PlanBill.objects.create(owner=user, plan=plan, kind=bill.kind, source_id=f"{bill.source_id}:loan"[:60],
@@ -126,7 +154,7 @@ def sign(user, data, obj=None):
     from .payees import require_verified
 
     plan = services.plan_for(user)
-    require(plan is not None and plan.status in ("CONFIRMED", "ENROLLED"), "LOAN_SIGN_NEEDS_CONFIRMED_PLAN")
+    require(plan is not None and plan.status == "CONFIRMED", "LOAN_SIGN_NEEDS_CONFIRMED_PLAN")
     require_verified(plan)
     application = owned(SimulatedApplication, user, data["application_id"])
     require(str(application.loan_id) in plan_loans(plan), "LOAN_NOT_IN_PLAN")
@@ -153,7 +181,7 @@ def sign(user, data, obj=None):
 
 
 def tick_document(user, data, obj=None):
-    """Marks a loan document as handed in (or not); the same to-do also shows in "This month"."""
+    """Marks a loan document as handed in (or not); the automatic admission notice cannot be changed."""
     from finance.services import VersionConflict
 
     from .assessment import read
@@ -162,6 +190,7 @@ def tick_document(user, data, obj=None):
     require(plan is not None, "PLAN_REQUIRED")
     task = owned(StudyTask, user, data["task_id"])
     require(task.plan_id == plan.id and task.template_key.startswith(PREFIX), "LOAN_DOCUMENT_UNKNOWN")
+    require(task.template_key != ADMISSION, "LOAN_DOCUMENT_AUTOMATIC")
     if task.version != data["expected_version"]:
         raise VersionConflict()
     task.done, task.version = data["done"], task.version + 1

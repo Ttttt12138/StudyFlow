@@ -1,6 +1,5 @@
-"""Planning services: cost estimates, the funding gap, loan simulation and plan states."""
+"""Planning services: cost estimates, the chosen school and plan states (DRAFT, then CONFIRMED with the loan)."""
 
-from datetime import date, timedelta
 from decimal import ROUND_HALF_UP, Decimal
 
 from django.utils import timezone
@@ -13,8 +12,6 @@ from .models import DISPLAY_CURRENCIES, ROLES, PlanningProfile, StudyPlan
 
 LIVING = ("housing", "food", "transport", "communications")
 ESSENTIALS = ("insurance", "visa", "deposit", "travel", "settlement", "study_materials")
-ENROLLMENT_NOTICE_DAYS = 3
-DEFAULT_LOAN = {"months": 48, "annual_rate": "0.06"}
 CENT = Decimal(".01")
 DEFAULT_DISPLAY_CURRENCY = "THB"
 
@@ -186,18 +183,18 @@ def plan_for(user):
     return StudyPlan.objects.filter(owner=user).first()
 
 
-def funding(plan, entry, estimate_result):
-    """Available funds in the school currency and the remaining gap."""
-    total = Decimal(estimate_result["total"])
-    if plan.available_funds is None:
-        return {"available": None, "gap": None}
-    funds = Decimal(plan.available_funds)
-    if plan.funds_currency and plan.funds_currency != entry.school.currency:
-        converted = convert(funds, plan.funds_currency, entry.school.currency)
-        if converted is None:
-            return {"available": None, "gap": None, "error": "FX_RATE_UNAVAILABLE"}
-        funds = Decimal(converted["amount"])
-    return {"available": _s(funds), "gap": _s(max(total - funds, Decimal(0)))}
+def plan_costs(plan, home=None):
+    """The plan's cost estimate: frozen at confirmation, else from the catalog; None once the school is gone."""
+    if plan.status != "DRAFT" and plan.snapshot:
+        return plan.snapshot
+    entry = catalog.school(plan.school_key)
+    return estimate(entry, plan.years, home) if entry else None
+
+
+def course_total(plan):
+    """{"total", "currency"} of the full course (the known part while lines are missing), or None."""
+    costs = plan_costs(plan)
+    return {"total": costs["total"], "currency": costs["currency"]} if costs else None
 
 
 def plan_years(plan):
@@ -210,21 +207,17 @@ def plan_record(plan, home=None):
     entry = catalog.school(plan.school_key)
     result = {"id": str(plan.id), "status": plan.status, "school_key": plan.school_key,
               "years": plan_years(plan), "start_date": plan.start_date.isoformat(), "version": plan.version,
-              "available_funds": _s(plan.available_funds) if plan.available_funds is not None else None,
-              "funds_currency": plan.funds_currency or None,
               "confirmed_at": plan.confirmed_at.isoformat() if plan.confirmed_at else None,
-              "enrolled_at": plan.enrolled_at.isoformat() if plan.enrolled_at else None,
               "is_simulated": True}
     if entry is None:
         result["error"] = "SCHOOL_REMOVED_FROM_CATALOG"
         return {"plan": result}
-    costs = plan.snapshot if plan.status != "DRAFT" and plan.snapshot else estimate(entry, plan.years, home)
+    costs = plan_costs(plan, home)
     result["school"] = {"name": entry.school.name.model_dump(), "currency": entry.school.currency}
     result["total"], result["currency"] = costs["total"], costs["currency"]
     result["duration_months"] = costs.get("duration_months", round(plan.years * 12))
     result["complete"] = costs.get("complete", True)
     result["converted"] = costs.get("converted")
-    result.update(funding(plan, entry, costs))
     if plan.loan_id:
         loan = plan.loan.result
         result["loan"] = {"id": str(plan.loan_id), "currency": "THB", "principal": loan.get("principal"),
@@ -237,14 +230,7 @@ def plan_record(plan, home=None):
 def save_plan(user, data):
     entry = entry_or_404(data["school_key"])
     plan = plan_for(user)
-    require(plan is None or plan.status != "ENROLLED", "PLAN_ALREADY_ENROLLED")
     require(plan is None or not _signed(plan), "PLAN_LOAN_SIGNED")
-    funds = data.get("available_funds")
-    currency = (data.get("funds_currency") or "").upper()
-    if funds is not None:
-        require(Decimal(funds) >= 0, "FUNDS_MUST_BE_NONNEGATIVE")
-        currency = currency or home_currency(user)
-        money.require_supported(currency)
     withdrawn = False
     if plan is None:
         plan = StudyPlan(owner=user, school_key=entry.key, catalog_version=entry.version,
@@ -261,18 +247,18 @@ def save_plan(user, data):
             plan.years = data["years"]
         plan.version += 1
     require(valid_years(plan.years), "YEARS_OUT_OF_RANGE")
-    if funds is not None:
-        plan.available_funds, plan.funds_currency = _q(funds), currency
     # Any change reopens a confirmed plan for review.
     plan.status, plan.snapshot, plan.confirmed_at = "DRAFT", {}, None
     plan.save()
     _reopened(plan)
     from .assessment import remember_facts
-    remember_facts(user, plan, data)
+    principal = remember_facts(user, plan, data)
     audit(user, user, "planning.plan_saved", plan, {"school_key": plan.school_key, "version": plan.version})
     from .drafts import remember
     remember(user, plan)
-    return {**plan_record(plan, home_currency(user)), "withdrawn_application": withdrawn}
+    # The loan amount said in the chat, as stored for the loan panel (THB), so the reply can repeat it.
+    return {**plan_record(plan, home_currency(user)), "withdrawn_application": withdrawn,
+            "loan_principal": principal}
 
 
 def _signed(plan):
@@ -298,37 +284,6 @@ def _withdraw_applications(user, plan):
     return bool(open_apps)
 
 
-def simulate_loan(user, data):
-    from finance.budget_services import create_loan
-    from finance.workflow_models import LoanSimulation
-
-    plan = plan_for(user)
-    require(plan is not None, "PLAN_REQUIRED")
-    require(plan.status != "ENROLLED", "PLAN_ALREADY_ENROLLED")
-    require(not _signed(plan), "PLAN_LOAN_SIGNED")
-    entry = entry_or_404(plan.school_key)
-    gap = funding(plan, entry, estimate(entry, plan.years)).get("gap")
-    require(gap is not None, "AVAILABLE_FUNDS_REQUIRED")
-    require(Decimal(gap) > 0, "NO_FUNDING_GAP")
-    # The simulated lending core settles in THB only (config/settings.py).
-    principal = convert(gap, entry.school.currency, "THB")
-    require(principal is not None, "FX_RATE_UNAVAILABLE")
-    if data.get("principal"):
-        principal = {**principal, "amount": _s(min(Decimal(data["principal"]), Decimal(principal["amount"])))}
-    first_due = max(plan.start_date, today_for(user)) + timedelta(days=30)
-    loan = create_loan(user, {"currency": "THB", "principal": principal["amount"],
-                              "annual_rate": data.get("annual_rate") or DEFAULT_LOAN["annual_rate"],
-                              "fees": "0.00", "months": data.get("months") or DEFAULT_LOAN["months"],
-                              "first_due_date": first_due})
-    plan.loan = LoanSimulation.objects.get(owner=user, pk=loan["id"])
-    plan.status, plan.snapshot, plan.confirmed_at = "DRAFT", {}, None
-    plan.version += 1
-    plan.save()
-    _reopened(plan)
-    return {**plan_record(plan, home_currency(user)), "gap": gap, "gap_currency": entry.school.currency,
-            "principal_fx": principal}
-
-
 def confirm_plan(user, plan):
     require(plan.status == "DRAFT", "PLAN_NOT_DRAFT")
     entry = entry_or_404(plan.school_key)
@@ -337,7 +292,7 @@ def confirm_plan(user, plan):
     plan.version += 1
     plan.save()
     # Deposits, the first tuition and the visa fall due before arrival, so bills and the
-    # arrival checklist start with the confirmed plan rather than at enrollment.
+    # arrival checklist start with the confirmed plan.
     from . import checklist
     from .in_school import generate_bills
 
@@ -357,80 +312,6 @@ def _reopened(plan):
 
     PlanBill.objects.filter(plan=plan, status="DUE").delete()
     checklist.clear(plan)
-
-
-def enroll(user, plan):
-    require(plan.status == "CONFIRMED", "PLAN_NOT_CONFIRMED")
-    from .in_school import generate_bills
-
-    plan.status, plan.enrolled_at = "ENROLLED", timezone.now()
-    plan.version += 1
-    plan.save()
-    # Plans confirmed before bills moved to confirmation get them now; existing rows are kept.
-    generate_bills(user, plan)
-    # Confirming enrollment is the student saying registration is done.
-    from .models import StudyTask
-    StudyTask.objects.filter(plan=plan, template_key="registration", done=False).update(done=True)
-    audit(user, user, "planning.enrolled", plan, {"version": plan.version})
-    return plan_record(plan)
-
-
-def enrollment_due(user, plan, today=None):
-    """The agent proposes enrollment from three days before the start date."""
-    if plan is None or plan.status != "CONFIRMED":
-        return False
-    today = today or today_for(user)
-    return today >= plan.start_date - timedelta(days=ENROLLMENT_NOTICE_DAYS)
-
-
-def days_until(start: date, today: date):
-    return (start - today).days
-
-
-# -- family links -----------------------------------------------------------------------------
-
-def link_family(parent, raw_token):
-    """A signed-in parent links to the student whose sponsor link they hold and confirmed."""
-    from django.db import IntegrityError
-
-    from finance.sponsorship import lookup_token
-
-    from .models import FamilyLink
-
-    item = lookup_token(raw_token)
-    require(item.status == "CONFIRMED", "SPONSOR_LINK_NOT_CONFIRMED")
-    require(item.owner_id != parent.pk, "CANNOT_LINK_OWN_ACCOUNT")
-    link = FamilyLink.objects.filter(student_id=item.owner_id, parent=parent).first()
-    if link is None:
-        try:
-            link = FamilyLink.objects.create(student_id=item.owner_id, parent=parent, sponsor_request=item)
-        except IntegrityError:
-            link = FamilyLink.objects.get(student_id=item.owner_id, parent=parent)
-        audit(item.owner, parent, "planning.family_linked", item, {"parent_id": parent.pk})
-    return link_record(link, parent)
-
-
-def link_record(link, viewer):
-    other = link.student if link.parent_id == viewer.pk else link.parent
-    result = {"id": link.pk, "relation": "child" if link.parent_id == viewer.pk else "parent",
-              "account": other.get_username(), "created_at": link.created_at.isoformat()}
-    if link.parent_id == viewer.pk:
-        from .in_school import summary
-
-        # Parents see the student's plan, upcoming bills and spending totals read-only;
-        # individual expense notes stay private to the student.
-        result["plan"] = plan_record(plan_for(link.student), home_currency(viewer))["plan"]
-        result["in_school"] = summary(link.student, detail=False)
-    return result
-
-
-def links(user):
-    from django.db.models import Q
-
-    from .models import FamilyLink
-
-    rows = FamilyLink.objects.filter(Q(parent=user) | Q(student=user)).select_related("parent", "student")
-    return [link_record(link, user) for link in rows.order_by("created_at")]
 
 
 def first_month(plan):

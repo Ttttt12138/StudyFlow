@@ -3,8 +3,7 @@ import hashlib
 import json
 from decimal import Decimal
 
-from . import assessment, in_school, services
-from .credit import line as credit_line
+from . import services
 from .life_sources import balances, source_rows
 from .models import ReminderPreference
 
@@ -40,27 +39,13 @@ def decorate(row, pref, today):
         "snoozed_until": pref.snoozed_until.isoformat() if pref and pref.snoozed_until else None}
 
 
-def funding(plan, today):
-    revision = assessment.latest(plan)
-    forecast = (revision.result.get("forecast") or {}) if revision else {}
-    current = bool(revision and revision.plan_version == plan.version and not revision.result.get("draft")
-                   and forecast.get("complete") and forecast.get("as_of") == today.isoformat())
-    if current:
-        current = revision.result.get("estimate", {}).get("catalog_version") == services.entry_or_404(plan.school_key).version
-    return {"current": current, "as_of": forecast.get("as_of"), "end_date": forecast.get("end_date"),
-            "gap": forecast.get("maximum_reserve_gap") if current else None,
-            "first_gap_date": forecast.get("first_gap_date") if current else None}
+def money_check(rows, held):
+    """Whether each open payment is covered by the wallet when it falls due.
 
-
-def money_check(rows, held, plan_funding):
-    """Whether each open payment is covered when it falls due.
-
-    With a wallet, open amounts are taken from the balance of their currency in due-date order, so two bills
-    never count the same money; `shortfall` is how much of this item is not covered. Before the wallet exists
-    the plan's forecast decides: anything due on or after its first gap date is `at_risk`.
+    Open amounts are taken from the balance of their currency in due-date order, so two bills never count the
+    same money; `shortfall` is how much of this item is not covered. Before the wallet exists nothing is checked.
     """
     spent = {}
-    first_gap = plan_funding.get("first_gap_date")
     for row in sorted(rows, key=lambda r: (r["due_date"] or "9999", r["source_key"])):
         row["shortfall"], row["shortfall_basis"], row["at_risk"] = None, None, False
         # A bill the signed loan pays to the school needs no money from the wallet.
@@ -72,8 +57,6 @@ def money_check(rows, held, plan_funding):
             spent[currency] = before + amount
             short = min(amount, max(Decimal(0), spent[currency] - held[currency]))
             row["shortfall"], row["shortfall_basis"], row["at_risk"] = str(short), "wallet", short > 0
-        elif first_gap:
-            row["shortfall_basis"], row["at_risk"] = "forecast", row["due_date"] >= first_gap
 
 
 def read(user):
@@ -81,12 +64,9 @@ def read(user):
     preferences = {p.source_key: p for p in ReminderPreference.objects.filter(owner=user)}
     rows = [decorate(row, preferences.get(row["source_key"]), today) for row in source_rows(user, plan)]
     priority = {s: i for i, s in enumerate(["overdue", "due", "tomorrow", "week", "unknown", "later"])}
-    plan_funding = funding(plan, today)
-    money_check(rows, balances(user), plan_funding)
+    money_check(rows, balances(user))
     rows.sort(key=lambda r: (r["done"], r["snoozed"], priority[r["stage"]], r["due_date"] or "9999", r["source_key"]))
     active = [r for r in rows if not r["done"] and not r["snoozed"] and r["stage"] != "later"]
     return {"today": today.isoformat(), "is_simulated": True, "in_app_only": True,
         "items": rows, "upcoming": active[:3], "attention_count": len(active),
-        "unread_count": sum(r["unread"] for r in active), "funding": plan_funding,
-        "budget": in_school.spending(user) if plan and plan.status == "ENROLLED" else None,
-        "credit": credit_line(user, plan) if plan else None}
+        "unread_count": sum(r["unread"] for r in active)}

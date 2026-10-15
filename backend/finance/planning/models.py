@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.db import models
 from django.db.models import Q
 
@@ -7,7 +6,7 @@ from finance.models import OwnedRecord
 ROLES = ["parent", "student"]
 # The product no longer asks who is planning; the column is kept so existing rows stay valid.
 DISPLAY_CURRENCIES = ("THB", "CNY", "USD")
-PLAN_STATUSES = ["DRAFT", "CONFIRMED", "ENROLLED"]
+PLAN_STATUSES = ["DRAFT", "CONFIRMED"]
 
 
 class PlanningProfile(OwnedRecord):
@@ -25,12 +24,10 @@ class PlanningProfile(OwnedRecord):
 
 
 class StudyPlan(OwnedRecord):
-    """The school chosen in the planning conversation and how it will be paid for."""
+    """The school chosen in the planning conversation; CONFIRMED once its loan application is submitted."""
     school_key = models.CharField(max_length=60)
     catalog_version = models.PositiveIntegerField()
     years = models.FloatField(default=1)  # half-year steps, e.g. 3.5
-    available_funds = models.DecimalField(max_digits=16, decimal_places=2, null=True, blank=True)
-    funds_currency = models.CharField(max_length=3, blank=True)
     loan = models.ForeignKey("finance.LoanSimulation", null=True, blank=True, on_delete=models.PROTECT)
     # The school's tuition account (planning/payees.py); payments to the school need it verified.
     school_payee = models.ForeignKey("finance.Beneficiary", null=True, blank=True, on_delete=models.PROTECT,
@@ -41,7 +38,6 @@ class StudyPlan(OwnedRecord):
     snapshot = models.JSONField(default=dict)
     start_date = models.DateField()
     confirmed_at = models.DateTimeField(null=True, blank=True)
-    enrolled_at = models.DateTimeField(null=True, blank=True)
     version = models.PositiveIntegerField(default=1)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -50,22 +46,6 @@ class StudyPlan(OwnedRecord):
             models.UniqueConstraint(fields=["owner"], name="study_plan_one_per_owner"),
             models.CheckConstraint(condition=Q(status__in=PLAN_STATUSES), name="study_plan_status_valid"),
             models.CheckConstraint(condition=Q(years__gte=1, years__lte=6), name="study_plan_years_range"),
-            models.CheckConstraint(condition=Q(available_funds__isnull=True) | Q(available_funds__gte=0),
-                                   name="study_plan_funds_nonnegative"),
-        ]
-
-
-class FamilyLink(models.Model):
-    """A parent account linked to a student account through a confirmed sponsor link."""
-    student = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="parent_links")
-    parent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="student_links")
-    sponsor_request = models.ForeignKey("finance.SponsorRequest", on_delete=models.PROTECT)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=["student", "parent"], name="family_link_unique_pair"),
-            models.CheckConstraint(condition=~Q(student=models.F("parent")), name="family_link_distinct_accounts"),
         ]
 
 
@@ -93,11 +73,10 @@ class AgentConversation(OwnedRecord):
 
 BILL_KINDS = ["tuition", "housing", "insurance", "visa", "loan", "other"]
 BILL_STATUSES = ["DUE", "PAID"]
-EXPENSE_CATEGORIES = ["food", "transport", "housing", "study", "shopping", "fun", "health", "other"]
 
 
 class PlanBill(OwnedRecord):
-    """A fixed in-school payment generated from the confirmed plan when the student enrolls."""
+    """A fixed payment generated from the plan when it is confirmed together with the loan application."""
     plan = models.ForeignKey(StudyPlan, on_delete=models.PROTECT, related_name="bills")
     kind = models.CharField(max_length=10, choices=[(k, k.title()) for k in BILL_KINDS])
     source_id = models.CharField(max_length=60)
@@ -123,9 +102,7 @@ class PlanDraft(OwnedRecord):
     """A school the student chose, kept so they can switch back to it (planning/drafts.py keeps the latest three)."""
     school_key = models.CharField(max_length=60)
     years = models.FloatField()
-    available_funds = models.DecimalField(max_digits=16, decimal_places=2, null=True, blank=True)
-    funds_currency = models.CharField(max_length=3, blank=True)
-    # The assessment inputs last used with this school: funds, borrower and the loan picked.
+    # The assessment inputs last used with this school: the borrower and the loan picked.
     inputs = models.JSONField(default=dict)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -158,24 +135,6 @@ class LoanPayout(OwnedRecord):
         ]
 
 
-class ExpenseEntry(OwnedRecord):
-    """Day-to-day spending the student records by form or by telling the agent."""
-    spent_on = models.DateField()
-    amount = models.DecimalField(max_digits=16, decimal_places=2)
-    currency = models.CharField(max_length=3)
-    category = models.CharField(max_length=10, choices=[(c, c.title()) for c in EXPENSE_CATEGORIES])
-    note = models.CharField(max_length=200, blank=True)
-    via_agent = models.BooleanField(default=False)
-    voided_at = models.DateTimeField(null=True, blank=True)
-
-    class Meta:
-        ordering = ["-spent_on", "-created_at"]
-        constraints = [
-            models.CheckConstraint(condition=Q(amount__gt=0), name="expense_entry_positive_amount"),
-            models.CheckConstraint(condition=Q(category__in=EXPENSE_CATEGORIES), name="expense_entry_category_valid"),
-        ]
-
-
 class StudyTask(OwnedRecord):
     plan = models.ForeignKey(StudyPlan, on_delete=models.PROTECT)
     title = models.CharField(max_length=200)
@@ -203,29 +162,3 @@ class ReminderPreference(OwnedRecord):
 
     class Meta:
         constraints = [models.UniqueConstraint(fields=["owner", "source_key"], name="reminder_preference_unique")]
-
-
-class StudyMonthBudget(OwnedRecord):
-    plan = models.ForeignKey(StudyPlan, on_delete=models.PROTECT)
-    month = models.CharField(max_length=7)
-    amount = models.DecimalField(max_digits=16, decimal_places=2)
-    version = models.PositiveIntegerField(default=1)
-
-    class Meta:
-        constraints = [models.UniqueConstraint(fields=["plan", "month"], name="study_month_budget_unique"),
-                       models.CheckConstraint(condition=Q(amount__gte=0), name="study_month_budget_nonnegative")]
-
-
-class CreditCharge(OwnedRecord):
-    """A bill paid with the simulated credit line; it is owed back by `due_date` and frees the line once repaid."""
-    plan = models.ForeignKey(StudyPlan, on_delete=models.PROTECT)
-    bill = models.OneToOneField(PlanBill, on_delete=models.PROTECT, related_name="credit_charge")
-    amount = models.DecimalField(max_digits=16, decimal_places=2)
-    currency = models.CharField(max_length=3)
-    charged_on = models.DateField()
-    due_date = models.DateField()
-    repaid_on = models.DateField(null=True, blank=True)
-    version = models.PositiveIntegerField(default=1)
-
-    class Meta:
-        constraints = [models.CheckConstraint(condition=Q(amount__gt=0), name="credit_charge_positive")]
