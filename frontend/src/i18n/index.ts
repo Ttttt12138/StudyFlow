@@ -11,8 +11,9 @@ function initial(): Lang {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved === "en" || saved === "zh") return saved;
-  } catch { /* storage blocked: fall back to the browser language */ }
-  return typeof navigator !== "undefined" && /^zh\b/i.test(navigator.language) ? "zh" : "en";
+  } catch { /* storage blocked: use the default */ }
+  // English is the default whatever the browser language; the 中文 switch is remembered once chosen.
+  return "en";
 }
 
 let current: Lang = initial();
