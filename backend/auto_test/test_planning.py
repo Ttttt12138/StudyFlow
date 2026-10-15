@@ -194,6 +194,26 @@ class ProfileTests(ConversationHarness):
 
 
 class ConversationTests(ConversationHarness):
+    def test_wallet_tools_are_refused_until_the_loan_application_is_submitted(self):
+        from auto_test.test_agent import StubPlanner, call, final
+
+        conversation = self.start()
+        self.say(conversation, "就选朱拉隆功")
+
+        def ask():
+            with patch.object(agent_runner, "planner", lambda: StubPlanner([call("get_balances"), final("ok")])):
+                return self.say(conversation, "我的余额是多少")
+
+        step = next(s for s in ask()["steps"] if s.get("tool") == "get_balances")
+        self.assertEqual((step["status"], step["result"]), ("DENIED", {"error": "APPLICATION_REQUIRED"}))
+        plan = services.plan_for(self.user)
+        plan.status = "CONFIRMED"
+        plan.save(update_fields=["status"])
+        step = next(s for s in ask()["steps"] if s.get("tool") == "get_balances")
+        # The tool itself now runs (this test user has no demo wallet yet).
+        self.assertNotEqual(step["result"].get("error"), "APPLICATION_REQUIRED")
+        self.assertNotEqual(step["status"], "DENIED")
+
     def test_memory_tells_the_planner_what_the_school_data_does_not_cover(self):
         from finance.planning.conversation import _memory
         from finance.planning.models import AgentConversation

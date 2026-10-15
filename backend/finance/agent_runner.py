@@ -72,6 +72,14 @@ def tools_for(session):
     return CONVERSATION_TOOLS if session.conversation_id else TOOLS
 
 
+def _locked(session, tool_name):
+    """In a planning conversation the wallet tools open only once the loan application is submitted."""
+    if not session.conversation_id or tool_name not in TOOLS:
+        return False
+    from .planning.models import StudyPlan
+    return not StudyPlan.objects.filter(owner=session.owner, status="CONFIRMED").exists()
+
+
 def _arguments(step, catalog=TOOLS):
     """The planner's arguments if they are a JSON object for a registered tool, else None."""
     if step.tool not in catalog:
@@ -118,7 +126,9 @@ def _propose(session, number, tool, arguments, step, call, outcome):
 
 def _execute(session, number, step, call, arguments):
     user, tool = session.owner, tools_for(session)[step.tool]
-    if tool.tier == "T1" and session.write_count >= MAX_WRITES:
+    if _locked(session, tool.name):
+        status, result = "DENIED", {"error": "APPLICATION_REQUIRED"}
+    elif tool.tier == "T1" and session.write_count >= MAX_WRITES:
         status, result = "DENIED", {"error": "WRITE_BUDGET_EXHAUSTED"}
     else:
         try:
@@ -282,6 +292,7 @@ def confirm_pending(actor, data, pending):
     if pending.status == "CONFIRMED":
         return record(pending)
     require(pending.status == "PENDING", "PENDING_ACTION_CLOSED")
+    require(not _locked(pending.session, pending.tool), "APPLICATION_REQUIRED")
     if pending.expires_at <= timezone.now():
         _decide(pending, "EXPIRED")
         return record(pending)
