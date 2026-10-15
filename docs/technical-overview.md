@@ -79,6 +79,16 @@ The user enters the loan amount. The server caps it at the chosen school's full-
 
 Signing creates a loan account and school-directed disbursement without crediting the student's wallet. `planning/loan_stage.py` allocates net proceeds to tuition first, then other bills by due date. Partial coverage splits a bill into a loan-funded part and a part the student pays, using signing-time reference FX. Scheduled payouts mark covered bills paid when the simulated date reaches their due dates. They are simulation records, not bank transfers or school receipts. Unallocated proceeds are audited. Operator wallet disbursement is refused for these loans. Repayment follows the signed schedule and existing password step-up, limits, version and idempotency controls.
 
+#### Loan recommendation algorithm
+
+Source: `backend/finance/planning/loan_recommendations.py`, called by the `simulate_loan` tool. The model chooses only the user's intent and passes the fields the newest message states; every number comes from the server calculator.
+
+1. **Candidates.** For each offered product, method and term (`custom` 24/36/48 months; `commercial_student_demo` 24/36/48/60 months, amortized or interest-only), the server prices the user's principal with the same `calculate_preview` the loan panel uses. Product, term or method the user stated explicitly filter the set; the saved defaults do not. `lower_interest` switches to amortized repayment.
+2. **Ranking by intent.** `recommend` keeps the term already discussed and picks the lowest total interest, then the lowest monthly payment. `lower_monthly` sorts by monthly payment, then interest. `lower_interest` sorts by total interest, then monthly payment. `reduce_amount` asks for the new principal and recalculates at the current terms.
+3. **Cap and checks.** The principal must not exceed the full-course cap (§1.2); an unavailable combination returns `TERM_NOT_OFFERED`.
+4. **Explanation.** The reply states the selected plan's monthly payment, total interest, fees and total repayment, and the exact change from the previous plan (`changes`). The turn ends there, so the model cannot re-run the calculator to invent its own comparison.
+5. **Consent.** Recommendation never submits. "Apply with this plan" opens a review of the exact quote; only the student's explicit confirmation submits the simulated application. Pause and resume are stored, so a declined recommendation is not repeated.
+
 ### 1.3 Money tools after the application
 
 To-dos group preparation tasks, reminders and upcoming payments. Reminder changes do not alter original contract or bill dates; completing a task does not repay a loan. Reminders refresh while the app is open and send no email or system push. Day-to-day spending is not recorded.
@@ -87,7 +97,7 @@ After the application is submitted, Wallet and payments groups balances, convers
 
 ### 1.4 Retired features kept in the backend
 
-Family support, budgets and bookkeeping, the independent credit record, enrollment confirmation and funding-gap calculation are removed from the product. Their backend services, tables and APIs (credit, sponsor requests, budget scenarios, funding sources/plans, readiness budgets, consumption imports) remain only for existing contracts, demo gates and the frozen agent evaluations, which include one on-time-record case each. Nothing in the student app or operations console reaches them, and the planning conversation cannot call them. They will be deleted after the competition; see the [deletion boundary](student-loan-contract.md#deletion-boundary).
+Family support, budgets and bookkeeping, the standalone credit-record page, enrollment confirmation and funding-gap calculation are removed from the product (the on-time record behind limits stays live, §5). Their backend services, tables and APIs (credit, sponsor requests, budget scenarios, funding sources/plans, readiness budgets, consumption imports) remain only for existing contracts, demo gates and the frozen agent evaluations, which include one on-time-record case each. Nothing in the student app or operations console reaches them, and the planning conversation cannot call them. They will be deleted after the competition; see the [deletion boundary](student-loan-contract.md#deletion-boundary).
 
 ### Directory map
 
@@ -162,7 +172,7 @@ Source: `TRANSITIONS` in `backend/finance/remittance_orders.py`.
 - **Callbacks** (`dispatched` / `delivered` / `failed` / `unknown`) are operator-only. Each is idempotent, so a duplicate callback is acknowledged without a second posting, and conflicting callbacks settle one way only.
 - `REFUNDED` and `UNKNOWN` orders appear in the review queue. Delivered orders with a deadline, paid to a verified beneficiary, feed the credit record.
 
-Tuition can be a plan bill, covered by a signed planning loan or paid from the wallet or the credit line. Each plan has a school payee (`StudyPlan.school_payee`, `backend/finance/planning/payees.py`): a `Beneficiary` the student owns, created from the school's seeded tuition account, which is marked verified. Money to the school requires it to be verified at the moment it moves: signing the loan, every loan payout (an unverified account leaves the tranche `SCHEDULED` and the bill due), and paying a tuition bill from the wallet or credit line (`SCHOOL_PAYEE_NOT_VERIFIED`). Operators can revoke or restore it through `beneficiaries/{id}/verify/`. Housing, insurance and visa bills paid by the student may go to third parties and are not checked. Legacy remittance supports `purpose=tuition` to a verified payee; readiness supports a confirmed invoice ([consumption.md](consumption.md)). The seeded accounts are simulated, and catalog bills and loan payouts do not constitute school-side invoice verification or confirmation of receipt.
+Tuition can be a plan bill, covered by a signed planning loan or paid from the wallet. Each plan has a school payee (`StudyPlan.school_payee`, `backend/finance/planning/payees.py`): a `Beneficiary` the student owns, created from the school's seeded tuition account, which is marked verified. Money to the school requires it to be verified at the moment it moves: signing the loan, every loan payout (an unverified account leaves the tranche `SCHEDULED` and the bill due), and paying a tuition bill from the wallet or credit line (`SCHOOL_PAYEE_NOT_VERIFIED`). Operators can revoke or restore it through `beneficiaries/{id}/verify/`. Housing, insurance and visa bills paid by the student may go to third parties and are not checked. Legacy remittance supports `purpose=tuition` to a verified payee; the retired readiness module also accepts a confirmed invoice (backend only). The seeded accounts are simulated, and catalog bills and loan payouts do not constitute school-side invoice verification or confirmation of receipt.
 
 ## 4. Tiered permissions and limits (summary)
 
@@ -177,7 +187,7 @@ Limits are kept per currency in the `PolicyLimit` table and multiplied by the cr
 
 ## 5. Credit level and limit multiplier
 
-> Retired from the product (§1.4): kept in the backend for the remittance demo gate and the frozen agent evaluations; no student-facing entry.
+> **Live, and the product's credit-building mechanism (Topic C).** Every on-time loan installment, settled payment and on-time remittance counts, and the level scales the student's outflow limits on the server (`policy.limits_for`). Retired on 2026-10-15: the standalone credit page, signed statements and the pay-later facility (§1.4); historical pay-later records still count.
 
 Source: `backend/finance/credit.py`. The credit level is a simulated on-time record, not a credit score.
 
@@ -186,7 +196,7 @@ Source: `backend/finance/credit.py`. The credit level is a simulated on-time rec
   - settled bill payments;
   - delivered remittance orders that have a deadline and go to a **verified** beneficiary;
   - plan bills paid from the wallet (not those marked paid by hand or paid by the loan), compared by the demo date paid; a bill due more than a year after it was paid does not count;
-  - pay-later charges repaid from the wallet (on time or late), or still unpaid past their 30-day due date (overdue).
+  - historical pay-later charges (facility retired) repaid from the wallet, or still unpaid past their 30-day due date (overdue).
 
   Self-transfers never count, so the level cannot be inflated cheaply.
 - **Window.** Only the last **365 days** count, measured in **real** dates. Moving the demo clock forward can only make obligations overdue sooner; it can never age a late record out. Unresolved overdue items never age out.
@@ -199,7 +209,7 @@ Source: `backend/finance/credit.py`. The credit level is a simulated on-time rec
 | FAIR | 3 or more on time and at most 1 late | 1.2 |
 | BUILDING | otherwise | 1.0 |
 
-- Snapshots are immutable. A signed statement (`django.core.signing`, valid 90 days) contains only summary fields, and anyone can verify it without logging in.
+- Snapshots are immutable. A signed statement (`django.core.signing`, valid 90 days) contains only summary fields, and anyone can verify it without logging in (API kept; no product UI since 2026-10-15).
 
 ## 6. Ledger invariants
 

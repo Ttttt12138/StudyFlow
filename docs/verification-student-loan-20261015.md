@@ -17,7 +17,7 @@ Scope: the current uncommitted workspace and [shared contract](student-loan-cont
 
 The generated `backend/openapi.yaml` matches the separately regenerated validated schema byte for byte. `git diff --check` passes.
 
-The three skipped Django cases are `test_full_demo_browser`, `test_short_planning_browser` and `test_study_life_browser`, gated by opt-in recording environment variables. They are historical workflows, not current acceptance. The retained six real-API Playwright suites provide current integration coverage. No live-model, OCR-provider, real-money or production deployment acceptance is claimed.
+The skipped Django cases are opt-in recordings gated by environment variables (`test_short_planning_browser` and, since 2026-10-15, `test_formal_demo_browser`); the older full-demo and study-life recordings were removed with the retired features. The retained six real-API Playwright suites provide current integration coverage. No live-model, OCR-provider, real-money or production deployment acceptance is claimed.
 
 ## Coverage relevant to this change
 
