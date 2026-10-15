@@ -2,71 +2,24 @@ import { useEffect, useState } from "react";
 import { useI18n, type MessageKey } from "../i18n";
 import { loanProductLabel, type LoanProduct } from "../loans/products";
 import type { WalletClient } from "../wallet/client";
-import { AssessmentEssentials } from "./AssessmentForm";
-import { TERMS, type AssessmentInputs, type Borrower, type LoanMethod, type LoanPreview, type Prequal, type Term } from "./assessmentTypes";
+import { TERMS, type LoanMethod, type LoanPreview, type LoanLimit, type LoanOffer, type Term } from "./assessmentTypes";
 import { useShow } from "./currency";
 
-/** What the family picked: an amount within the pre-check (0 = no loan), a term, a product and how to repay. */
+/** What the family picked: an amount within the full-course cost, a term, a product and how to repay. */
 export type LoanChoice = { principal: number; months: Term; product: LoanProduct; method: LoanMethod };
 
-const BORROWERS: Borrower[] = ["student_with_parent", "parent"];
 const PRODUCTS: LoanProduct[] = ["custom", "commercial_student_demo"];
-const STEP = 100;
 const percent = (rate: string | undefined) => rate === undefined ? "—" : `${(Number(rate) * 100).toFixed(2).replace(/\.?0+$/, "")}%`;
 
-/** Step one of the loan: who borrows and the money on hand, before any application. Income is not asked. */
-export function PrequalForm({ value, onChange, disabled, onSubmit }: {
-  value: AssessmentInputs; onChange: (value: AssessmentInputs) => void; disabled: boolean;
-  onSubmit: (event: React.FormEvent) => void;
-}) {
-  const { t } = useI18n();
-  const borrower = value.borrower ?? "student_with_parent";
-  return <form className="assessment-quick" onSubmit={onSubmit} aria-label={t("prequal.title")}>
-    <h3>{t("prequal.title")}</h3>
-    <p className="panel-muted">{t("prequal.note")}</p>
-    <fieldset disabled={disabled}>
-      <div className="prequal-borrower" role="radiogroup" aria-label={t("prequal.borrower")}>
-        <span>{t("prequal.borrower")}</span>
-        {BORROWERS.map(b => <label key={b}><input type="radio" name="borrower" checked={borrower === b}
-          onChange={() => onChange({ ...value, borrower: b })} />{t(`prequal.borrower.${b}` as MessageKey)}</label>)}
-      </div>
-      <AssessmentEssentials value={value} onChange={onChange} />
-    </fieldset>
-    <button type="submit" className="primary assessment-main" disabled={disabled || !value.available_funds}>{t("prequal.submit")}</button>
-    <p className="panel-muted">{t("simple.quickChat")}</p>
-  </form>;
-}
-
-/** "How much can I borrow": the gap is the limit, with one sentence to act on. */
-export function PrequalResult({ check, onEdit }: { check: Prequal; onEdit: () => void }) {
-  const { t, lang } = useI18n();
-  const show = useShow();
-  const thb = (value: string | null | undefined) => show(value, "THB", lang).main;
-  const sentence = check.status === "enough" ? t("prequal.enough", { amount: thb(check.max_principal) })
-    : t(`prequal.${check.status}` as MessageKey);
-  return <section className="prequal-result" aria-label={t("prequal.result")}>
-    <div className="prequal-head"><h3>{t("prequal.result")}</h3>
-      <button type="button" className="link-button" onClick={onEdit}>{t("prequal.edit")}</button></div>
-    <dl className="assessment-facts">
-      <div><dt>{t("prequal.gap")}</dt><dd>{thb(check.gap)}</dd></div>
-      <div><dt>{t("prequal.max")}</dt><dd><strong>{thb(check.max_principal)}</strong></dd></div>
-      <div><dt>{t("prequal.rate")}</dt><dd>{check.products?.length
-        ? check.products.map(o => `${t(loanProductLabel(o.key))} ${percent(o.annual_rate)}`).join(" · ")
-        : percent(check.annual_rate)}</dd></div>
-    </dl>
-    <p className="panel-muted" role="status">{sentence}</p>
-  </section>;
-}
-
-/** Step two: pick the amount, term and product within the pre-check; the repayment plan follows instantly. */
+/** Step two: pick the amount, term and product within the full-course cost; the repayment plan follows instantly. */
 export function LoanChooser({ client, check, choice, onChange, onPreview }: {
-  client: WalletClient; check: Prequal; choice: LoanChoice; onChange: (choice: LoanChoice) => void;
+  client: WalletClient; check: LoanLimit & { products?: LoanOffer[] }; choice: LoanChoice; onChange: (choice: LoanChoice) => void;
   onPreview?: (preview: LoanPreview | null) => void;
 }) {
   const { t, lang } = useI18n();
   const show = useShow();
   const thb = (value: string | number | null | undefined) => show(value, "THB", lang).main;
-  const max = Number(check.max_principal ?? 0);
+  const max = check.max_principal === null ? undefined : Number(check.max_principal);
   // Table cells are THB without the symbol, so 60 rows stay readable on a phone.
   const num = (value: string) => Number(value).toLocaleString(lang === "zh" ? "zh-CN" : "en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   const [preview, setPreview] = useState<LoanPreview | null>(null);
@@ -94,9 +47,15 @@ export function LoanChooser({ client, check, choice, onChange, onPreview }: {
       method: ways.includes(choice.method) ? choice.method : "amortized" });
   };
   const study = preview?.interest_only_months ?? 0;
-  const amount = (value: number) => Math.max(0, Math.min(max, Math.round(value / STEP) * STEP));
+  const amount = (value: number) => Number.isFinite(value) ? Math.max(0, value) : 0;
   return <section className="loan-chooser" aria-label={t("choose.title")}>
     <h3 className="panel-section-title">{t("choose.title")}</h3>
+    <label className="loan-chooser-amount"><span>{t("choose.amount")}</span>
+      <span className="loan-chooser-figure">
+        <input type="number" min={0.01} max={max} step={0.01} inputMode="decimal" aria-label={t("choose.amount")} value={choice.principal}
+          onChange={e => set({ principal: amount(Number(e.target.value)) })} /> THB</span>
+      <small className="panel-muted">{t("choose.range", { max: thb(max ?? null) })}</small>
+    </label>
     <div className="loan-chooser-row" role="radiogroup" aria-label={t("choose.product")}>
       <span>{t("choose.product")}</span>
       {PRODUCTS.map(p => <button key={p} type="button" role="radio" aria-checked={choice.product === p}
@@ -104,16 +63,6 @@ export function LoanChooser({ client, check, choice, onChange, onPreview }: {
         <span>{t(loanProductLabel(p))}</span><small>{t("choose.rateOf", { rate: percent(offer(p)?.annual_rate) })}
           {offer(p)?.terms.includes(60) && ` · ${t("choose.longest")}`}</small></button>)}
     </div>
-    <label className="loan-chooser-amount"><span>{t("choose.amount")}</span>
-      <input type="range" min={0} max={max} step={STEP} value={choice.principal} aria-valuetext={thb(choice.principal)}
-        onChange={e => set({ principal: amount(Number(e.target.value)) })} />
-      <span className="loan-chooser-figure">
-        <input type="number" min={0} max={max} step={STEP} inputMode="decimal" aria-label={t("choose.amount")} value={choice.principal}
-          onChange={e => set({ principal: amount(Number(e.target.value)) })} /> THB</span>
-      <small className="panel-muted">{t("choose.range", { max: thb(max) })}</small>
-    </label>
-    <button type="button" className={`chip${choice.principal === 0 ? " is-selected" : ""}`} aria-pressed={choice.principal === 0}
-      onClick={() => set({ principal: 0 })}>{t("choose.none")}</button>
     {choice.principal > 0 && <>
       <div className="loan-chooser-row" role="radiogroup" aria-label={t("choose.term")}>
         <span>{t("choose.term")}</span>
@@ -165,6 +114,6 @@ export function LoanChooser({ client, check, choice, onChange, onPreview }: {
         </> : error ? <p role="alert">{error}</p> : <p className="panel-muted">{t("simple.saving")}</p>}
       </div>
     </>}
-    {choice.principal === 0 && <p className="panel-muted">{t("choose.noLoanNote")}</p>}
+    {choice.principal === 0 && <p className="panel-muted">{t("choose.enterAmount")}</p>}
   </section>;
 }

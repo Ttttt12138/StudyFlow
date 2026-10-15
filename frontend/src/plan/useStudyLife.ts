@@ -14,7 +14,7 @@ export function useStudyLife(client: WalletClient, scope: string, preview: boole
     try {
       const next = await client.get<StudyLife>("planning/life/");
       // A malformed reply shows the section error instead of breaking the conversation it sits in.
-      if (!next || !Array.isArray(next.items) || !Array.isArray(next.upcoming) || !next.funding) throw new Error(translate(getLang(), "common.err.section"));
+      if (!next || !Array.isArray(next.items) || !Array.isArray(next.upcoming)) throw new Error(translate(getLang(), "common.err.section"));
       if (request === sequence.current) { setData(next); setError(""); }
     } catch (reason) { if (request === sequence.current) setError(String(reason instanceof Error ? reason.message : reason)); }
   }, [client]);

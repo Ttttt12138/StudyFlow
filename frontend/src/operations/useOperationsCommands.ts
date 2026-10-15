@@ -3,7 +3,7 @@ import { useI18n, type MessageKey } from "../i18n";
 import { formatMoney } from "../backend/presenters";
 import type { WalletClient } from "../wallet/client";
 import type { IssuedLink, OpsApplication, OpsApproval, OpsOrder, OpsPayment, OpsSponsorRequest } from "./types";
-import { sponsorLink } from "../family/link";
+import { sponsorLink } from "./sponsorLink";
 
 export type OpsCommand = { key: string; text: string; danger?: boolean; noteFor?: string; act: () => Promise<string> };
 

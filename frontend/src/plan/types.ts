@@ -33,15 +33,15 @@ export type Estimate = { school_key: string; currency: string; years: number; li
 
 export type Loan = { id: string; currency: string; principal: string; months: number; annual_rate: string; monthly_payment: string; total_repayment: string };
 export type Plan = {
-  id: string; status: "DRAFT" | "CONFIRMED" | "ENROLLED"; school_key: string; years: number; start_date: string; version: number;
-  available_funds: string | null; funds_currency: string | null; school?: { name: Text; currency: string };
-  total?: string; currency?: string; converted?: Converted; available?: string | null; gap?: string | null; loan?: Loan;
+  id: string; status: "DRAFT" | "CONFIRMED"; school_key: string; years: number; start_date: string; version: number;
+  school?: { name: Text; currency: string };
+  total?: string; currency?: string; converted?: Converted; loan?: Loan;
 };
 
 /** Sidebar history (GET planning/history/): price lookups of every conversation, and the latest three school drafts. */
 export type HistoryPrice = { id: string; conversation_id: string; created_at: string; card: Card };
 export type PlanDraftItem = { id: string; school_key: string; name: Text | null; years: number; total: string | null; currency: string | null;
-  available_funds: string | null; funds_currency: string | null; current: boolean; updated_at: string;
+  current: boolean; updated_at: string;
   loan: { principal: string | null; months?: number; product?: string } | null };
 export type PlanHistory = { prices: HistoryPrice[]; drafts: PlanDraftItem[]; draft_limit: number };
 export type Bill = { id: string; kind: string; label: Text; due_date: string; amount: string; currency: string; status: "DUE" | "PAID"; paid_at: string | null };
@@ -70,7 +70,3 @@ export type Turn = { id: string; kind: "user" | "assistant"; goal: string; final
 export type Conversation = { id: string; locale: "zh" | "en"; profile: { role: Role | "" | null; home_currency: string };
   plan: Plan | null; turns: Turn[] };
 export type ConversationSummary = { id: string; updated_at: string; turn_count: number };
-
-export type InSchool = { enrolled: false } | { enrolled: true; today: string; plan: Plan; upcoming_bills: Bill[]; overdue: Bill[];
-  bill_count: number; spending: Spending; bills?: Bill[] };
-export type FamilyLink = { id: number; relation: "child" | "parent"; account: string; created_at: string; plan?: Plan | null; in_school?: InSchool };

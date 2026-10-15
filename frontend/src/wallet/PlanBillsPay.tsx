@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { formatMoney } from "../backend/presenters";
-import { useI18n } from "../i18n";
+import { useI18n, type MessageKey } from "../i18n";
 import { pick } from "../plan/format";
 import type { SchoolPayee } from "../plan/assessmentTypes";
 import type { Text } from "../plan/types";
@@ -14,7 +14,14 @@ import { SessionWalletClient, type WalletBalances, type WalletClient } from "./c
 export type ExchangeWant = { currency: string; short: string; name: string };
 
 type PlanBillRow = { id: string; kind: string; label: Text | string; due_date: string; amount: string; currency: string;
-  status: "DUE" | "PAID"; paid_at: string | null; paid_by_loan: boolean };
+  status: "DUE" | "PAID"; paid_at: string | null; paid_by_loan: boolean;
+  loan_pending?: { amount: string; status: "APPROVED" | "UNDER_REVIEW" } | null };
+
+function loanBillStatus(row: PlanBillRow): MessageKey {
+  if (row.status === "PAID") return "billpay.loanPaid";
+  if (row.loan_pending?.status === "APPROVED") return "billpay.loanAwaitingSigning";
+  return row.loan_pending ? "billpay.loanAwaiting" : "billpay.loanScheduled";
+}
 
 /**
  * The wallet's pay tab: the study plan's bills (tuition, housing, insurance, visa), paid from the demo wallet in the
@@ -61,11 +68,12 @@ export function PlanBillsPay({ preview, mode = "pay", onExchange }: { preview: b
   }
   if (bills === null) return error ? <PanelAlert message={error} onRetry={() => void load().catch(e => setError(String(e)))} /> : <PanelSkeleton />;
   const history = mode === "history";
-  const due = history ? [] : bills.filter(b => b.status === "DUE" && !b.paid_by_loan);
-  const loan = bills.filter(b => b.paid_by_loan && (!history || b.status === "PAID"));
+  const due = history ? [] : bills.filter(b => b.status === "DUE" && !b.paid_by_loan && !b.loan_pending);
+  const loan = bills.filter(b => (b.paid_by_loan || (!history && b.loan_pending)) && (!history || b.status === "PAID"));
+  const pending = !history && loan.find(b => b.loan_pending)?.loan_pending;
   const paid = bills.filter(b => b.status === "PAID" && !b.paid_by_loan);
   const held = (row: PlanBillRow) => row.kind === "tuition" && payee?.verified === false;
-  return <section className="plan-bills-pay" aria-label={t("billpay.title")}>
+  return <section className="plan-bills-pay panel-body" aria-label={t("billpay.title")} tabIndex={0}>
     {stale}
     <div className="panel-card-head"><h2>{t(history ? "billpay.records" : "billpay.title")}</h2><span className="panel-tag">{t("plan.simulated")}</span></div>
     {!history && <p className="panel-muted">{t("billpay.text")}</p>}
@@ -73,10 +81,12 @@ export function PlanBillsPay({ preview, mode = "pay", onExchange }: { preview: b
     {!history && payee?.verified === false && <p className="life-warning" role="alert">{t("billpay.payeeUnverified")}</p>}
     {error && <PanelAlert message={error} />}
     {notice && <p className="plan-visual-gap" role="status">{notice}</p>}
+    {pending && <LoanPendingNotice status={pending.status} disabled={preview || !!busy || policy.pending}
+      onContinue={() => workspace?.open({ kind: "funding" })} />}
     {(history ? loan.length + paid.length === 0 : bills.length === 0)
       ? <PanelEmpty title={t(history ? "billpay.noRecords" : "billpay.none")} text={history ? undefined : t("billpay.noneHint")} /> : <>
       {!history && <h3 className="panel-section-title">{t("billpay.due", { n: due.length })}</h3>}
-      {history ? null : due.length === 0 ? <p className="panel-muted">{t("billpay.allPaid")}</p> : <ul className="plan-bills-list">{due.map(row => {
+      {history ? null : due.length === 0 ? <p className="panel-muted">{t(loan.length ? "billpay.noWalletDue" : "billpay.allPaid")}</p> : <ul className="plan-bills-list">{due.map(row => {
         const short = Number(balance(row.currency)) < Number(row.amount);
         return <li key={row.id}>
           <span><strong>{label(row)}</strong><small>{t("billpay.dueOn", { date: row.due_date })}</small>
@@ -97,7 +107,10 @@ export function PlanBillsPay({ preview, mode = "pay", onExchange }: { preview: b
         </li>; })}</ul>}
       {loan.length > 0 && <><h3 className="panel-section-title">{t("billpay.loan", { n: loan.length })}</h3>
         <ul className="plan-bills-list is-quiet">{loan.map(row => <li key={row.id}><span><strong>{label(row)}</strong>
-          <small>{row.due_date} · {t(row.status === "PAID" ? "billpay.loanPaid" : "billpay.loanScheduled")}</small></span>
+          <small>{row.due_date} · {t(loanBillStatus(row))}</small>
+          {row.loan_pending && <small>{t("billpay.loanPendingAmount", { amount: formatMoney(row.loan_pending.amount, row.currency, lang) })}</small>}
+          {row.loan_pending && Number(row.loan_pending.amount) < Number(row.amount) && <small>{t("billpay.loanRemainder", {
+            amount: formatMoney((Number(row.amount) - Number(row.loan_pending.amount)).toFixed(2), row.currency, lang) })}</small>}</span>
           <span className="plan-bills-amount">{formatMoney(row.amount, row.currency, lang)}</span></li>)}</ul></>}
       {paid.length > 0 && <><h3 className="panel-section-title">{t("billpay.paid", { n: paid.length })}</h3>
         <ul className="plan-bills-list is-quiet">{paid.map(row => <li key={row.id}><span><strong>{label(row)}</strong>
@@ -106,4 +119,14 @@ export function PlanBillsPay({ preview, mode = "pay", onExchange }: { preview: b
     </>}
     {policy.panel}
   </section>;
+}
+
+function LoanPendingNotice({ status, disabled, onContinue }: {
+  status: "APPROVED" | "UNDER_REVIEW"; disabled: boolean; onContinue: () => void;
+}) {
+  const { t } = useI18n();
+  return <div className="panel-note plan-bills-loan-notice" role="status">
+    <p>{t(status === "APPROVED" ? "billpay.loanPendingSigning" : "billpay.loanPendingApproval")}</p>
+    <button type="button" className="primary" disabled={disabled} onClick={onContinue}>{t("billpay.loanContinue")}</button>
+  </div>;
 }

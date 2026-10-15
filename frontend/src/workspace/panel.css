@@ -185,7 +185,7 @@
 .panel-dots li.is-active { width:18px; border-radius:6px; background:var(--accent); }
 @media (max-width:600px) { .panel-grid-3 { grid-template-columns:minmax(0, 1fr); } }
 .tool-content > :has(.tool-panel) { flex:1; min-height:0; display:flex; flex-direction:column; }
-.tool-content > :has(.tool-panel) > :not(.tool-panel):not(.panel-view) { flex:none; }
+.tool-content > :has(.tool-panel) > :not(.tool-panel):not(.panel-view):not(.money-body) { flex:none; }
 .panel-fieldset { border:0; margin:0; padding:0; min-width:0; }
 .panel-fieldset legend { padding:0; margin-bottom:8px; font-size:12px; color:var(--text-3); }
 .panel-amount { display:flex; flex-direction:column; gap:6px; font-size:12px; color:var(--text-3); }

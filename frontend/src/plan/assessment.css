@@ -68,6 +68,9 @@
 .plan-visual-tag.is-UNAFFORDABLE { background: var(--warm-soft); color: var(--danger); }
 
 .assessment-links { display: grid; gap: 8px; }
+.assessment-signing-notice { display: grid; gap: 10px; }
+.assessment-signing-notice p { margin: 0; }
+.assessment-signing-notice button { justify-self: start; }
 .assessment-edit { display: grid; gap: 12px; }
 .assessment-group { display: grid; gap: 10px; }
 .assessment-group > h4 { margin: 8px 0 0; font-size: 14px; color: var(--text); }

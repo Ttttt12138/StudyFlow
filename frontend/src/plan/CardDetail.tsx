@@ -128,9 +128,7 @@ function SimpleDetail({ card, actions }: { card: Card; actions: CardActions }) {
       <p className="panel-muted">{t("plan.loan.thb")}</p></> : <>
       <div className="panel-card-head"><h3>{pick(plan.school?.name, lang) || plan.school_key}</h3><span className={`status-chip status-${plan.status.toLowerCase()}`}>{t(`plan.plan.status.${plan.status}`)}</span></div>
       <PanelHero label={t("plan.plan.total")} value={money(plan.total, cur, lang)} />
-      <PanelFacts items={[[t("plan.plan.years"), plan.years], [t("plan.plan.start"), day(plan.start_date, lang)],
-        [t("plan.plan.funds"), plan.available_funds ? money(plan.available_funds, plan.funds_currency ?? "", lang) : t("plan.plan.noFunds")],
-        ...(plan.gap != null ? [[t("plan.plan.gap"), <span className={Number(plan.gap) > 0 ? "plan-gap" : ""}>{money(plan.gap, cur, lang)}</span>] as [React.ReactNode, React.ReactNode]] : [])]} /></>;
+      <PanelFacts items={[[t("plan.plan.years"), plan.years], [t("plan.plan.start"), day(plan.start_date, lang)]]} /></>;
   } else if (card.type === "spending") {
     const used = Number(card.budget) > 0 ? Math.min(100, Number(card.spent) / Number(card.budget) * 100) : 0;
     body = <>

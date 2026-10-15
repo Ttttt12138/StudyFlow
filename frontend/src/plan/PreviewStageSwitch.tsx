@@ -2,7 +2,7 @@ import { useI18n, type MessageKey } from "../i18n";
 import { previewStages, type PreviewStage } from "./preview";
 
 const labels: Record<PreviewStage, MessageKey> = {
-  plan: "plan.preview.stage1", prepare: "plan.preview.stagePrepare", school: "plan.preview.stage2",
+  plan: "plan.preview.stage1", prepare: "plan.preview.stagePrepare",
 };
 
 export function PreviewStageSwitch({ stage, onChange }: { stage: PreviewStage; onChange: (stage: PreviewStage) => void }) {

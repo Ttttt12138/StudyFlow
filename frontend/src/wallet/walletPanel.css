@@ -46,17 +46,28 @@
 .student-workspace .tool-panel .panel-footer-center > button { min-width: 120px; }
 
 /* Pay tab: the study plan's bills */
-.plan-bills-pay { display: grid; gap: 12px; padding: 16px; }
+.plan-bills-pay { min-width: 0; gap: 12px; padding: 16px; container-type: inline-size; }
+.plan-bills-pay > * { flex-shrink: 0; }
+.plan-bills-pay .panel-card-head { padding-right: 0; }
 .plan-bills-pay .panel-card-head h2 { margin: 0; font-size: 18px; }
 .plan-bills-list { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
-.plan-bills-list li { display: grid; grid-template-columns: 1fr auto; gap: 6px 12px; align-items: center; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; }
+.plan-bills-list li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 12px; align-items: center; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; }
 .plan-bills-list li > span:first-child { display: grid; gap: 2px; min-width: 0; }
 .plan-bills-list li small { color: var(--text-2); font-size: 12px; }
 .plan-bills-list li button { grid-column: 1 / -1; justify-self: end; }
 .plan-bills-amount { font-weight: 700; font-variant-numeric: tabular-nums; }
 .plan-bills-list.is-quiet li { background: var(--surface-2); border-color: transparent; }
+.plan-bills-loan-notice { display:grid; gap:10px; }
+.plan-bills-loan-notice p { margin:0; }
+.plan-bills-loan-notice button { justify-self:start; }
 
 /* Top-up: inline under a short plan bill, or in the balance view's sheet */
-.plan-bills-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.plan-bills-actions { grid-column: 1 / -1; display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
 .plan-bills-list li > .plan-bills-topup { grid-column: 1 / -1; padding: 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-2); }
+.plan-bills-topup .top-up-actions { flex-wrap: wrap; }
 .top-up-actions { display: flex; justify-content: flex-end; gap: 8px; }
+@container (max-width: 400px) {
+  .plan-bills-list li { grid-template-columns: minmax(0, 1fr); }
+  .plan-bills-amount { justify-self: start; }
+  .plan-bills-topup .panel-form { grid-template-columns: minmax(0, 1fr); }
+}

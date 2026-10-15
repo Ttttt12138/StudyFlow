@@ -10,7 +10,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { formatDate, formatMoney, formatRate } from "../backend/presenters";
 import { loadWallet, SessionWalletClient, WalletApiError, type WalletClient } from "./client";
 import { createWalletPreview, previewQuotes, type WalletPreviewScenario } from "./mockAdapter";
-import { CreditLoop } from "./CreditLoop";
 import type { Approval, Order, Quote, WalletSnapshot } from "./types";
 import "./wallet.css";
 import "./walletPanel.css";
@@ -342,8 +341,9 @@ export function WalletApp({ preview, onExit, tab: shownTab, onTab, historyView: 
       <div className="panel-card-head"><h2>{t("wallet.balances.title")}</h2><span className="panel-tag">{snapshot.balances?.is_simulated ? t("wallet.balances.simulated") : t("wallet.balances.backendData")}</span></div>
       {snapshot.errors.balances && <PanelAlert message={snapshot.errors.balances} onRetry={() => void refresh()} />}
       {homeRow ? <>
-        {/* Balance (left loop) and credit (right loop) as one figure; other currencies and holds are listed below it. */}
-        <CreditLoop client={client} preview={preview} walletAvailable={homeRow.available_balance} currency={homeRow.currency} />
+        <PanelHero label={homeRow.currency + t("wallet.balances.home")} value={money(homeRow.available_balance, homeRow.currency)}>
+          <span className="panel-muted">{t("wallet.balances.available", { amount: money(homeRow.available_balance, homeRow.currency) })}</span>
+        </PanelHero>
         {missingIndicative.map((row) => <small key={row.currency} className="panel-muted">{t("wp.noIndicative", { currency: row.currency })}</small>)}
         {Number(homeRow.balance) > Number(homeRow.available_balance) && <StackBar label={t("wp.availableVsHeld")} parts={[
           { key: "available", value: Number(homeRow.available_balance), tone: "mint", label: t("wp.available", { amount: money(homeRow.available_balance, homeRow.currency) }) },

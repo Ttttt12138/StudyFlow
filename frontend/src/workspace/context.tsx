@@ -6,7 +6,7 @@ import type { ToolKind, ToolTarget } from "./navigation";
 import type { PreviewStage } from "../plan/preview";
 
 /** What the planner tells the workspace shell: the plan's stage decides which tools exist. */
-export type PlanState = { status: "DRAFT" | "CONFIRMED" | "ENROLLED" | null; gap: boolean;
+export type PlanState = { status: "DRAFT" | "CONFIRMED" | null;
   /** Shown under the sidebar's tools; opening a draft makes it the current plan. */
   history?: PlanHistory | null; openDraft?: (id: string) => void };
 

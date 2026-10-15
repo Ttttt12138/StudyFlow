@@ -25,7 +25,7 @@ html:has(.student-workspace), body:has(.student-workspace) { height: 100%; overf
 .side-new { margin-bottom: 8px; background: var(--accent-soft); color: var(--accent-strong); font-weight: 600; }
 .side-new > svg { color: var(--accent); }
 .side-new:hover { background: #d6e7ff; }
-.side-dot { width: 8px; height: 8px; margin-left: auto; flex: none; border-radius: 50%; background: var(--warm); }
+.side-locked { color: var(--text-3); cursor: default; }
 .side-scroll { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; scrollbar-width: thin; }
 .side-group { margin: 12px 0 4px; padding: 0 12px; font-size: 12px; color: var(--text-3); white-space: nowrap; }
 .side-group-life { display: flex; align-items: center; gap: 8px; margin-top: 16px; color: var(--accent-strong); font-weight: 600; }
@@ -45,7 +45,6 @@ html:has(.student-workspace), body:has(.student-workspace) { height: 100%; overf
 .tool-sidebar.is-compact .side-head { flex-direction: column; padding-inline: 0; }
 .tool-sidebar.is-compact .side-item { justify-content: center; padding: 0; }
 .tool-sidebar.is-compact .side-group-life { display: block; height: 0; margin: 10px 8px; padding: 0; border-top: 1px solid var(--line); font-size: 0; }
-.tool-sidebar.is-compact .side-dot { position: absolute; top: 9px; right: 11px; margin: 0; border: 2px solid var(--surface-1); }
 .tool-sidebar.is-compact .side-settings { left: calc(100% + 8px); bottom: 0; }
 
 /* Phone: the same sidebar slides in from the left over a dimmed page. */

@@ -4,23 +4,23 @@ import type { ToolKind } from "../workspace/navigation";
 import type { PreviewStage } from "../plan/preview";
 
 /** Where a tour stop lands: the planner preview at a journey stage, optionally with one workspace tool
- *  open beside the conversation, or one of the separate role pages (family member, operator, verifier). */
-export type TourTarget = { kind: "home"; stage: PreviewStage; tool?: ToolKind } | { kind: "sponsor" | "ops" | "verify" };
+ *  open beside the conversation, or the operator's console. */
+export type TourTarget = { kind: "home"; stage: PreviewStage; tool?: ToolKind } | { kind: "ops" };
 type TourStop = { target: TourTarget; extra?: TourTarget };
 
-// Price first: the total for one school, then a comparison, then the funding gap and a simulated loan.
-// Preparing and daily life come after; the money tools only appear once the student has enrolled.
-// Each stop may offer one side trip: another tool, or the other person involved.
+// The main flow in order: the price of one school, a comparison, choosing a school and the loan (amount, terms,
+// estimate), the submitted application (admission notice, approval, signing, payouts to the school), then the plan
+// tools that open with it: to-dos and bills, the wallet, paying what the loan does not cover, and repayment.
+// A stop may offer one side trip: another tool, or the operator's console.
 export const tourStops: TourStop[] = [
   { target: { kind: "home", stage: "plan" } },
   { target: { kind: "home", stage: "plan", tool: "compare" } },
-  { target: { kind: "home", stage: "plan", tool: "funding" }, extra: { kind: "sponsor" } },
+  { target: { kind: "home", stage: "plan", tool: "funding" } },
+  { target: { kind: "home", stage: "prepare", tool: "funding" } },
   { target: { kind: "home", stage: "prepare", tool: "life" } },
-  { target: { kind: "home", stage: "school" }, extra: { kind: "home", stage: "school", tool: "life" } },
-  { target: { kind: "home", stage: "school", tool: "wallet" }, extra: { kind: "ops" } },
-  { target: { kind: "home", stage: "school", tool: "payments" } },
-  { target: { kind: "home", stage: "school" } },
-  { target: { kind: "home", stage: "school", tool: "trust" }, extra: { kind: "verify" } },
+  { target: { kind: "home", stage: "prepare", tool: "wallet" }, extra: { kind: "ops" } },
+  { target: { kind: "home", stage: "prepare", tool: "payments" } },
+  { target: { kind: "home", stage: "prepare", tool: "funding" }, extra: { kind: "home", stage: "prepare", tool: "life" } },
 ];
 
 /** Bottom bar for the guided demo: what this stop shows, a side trip, and back / next / exit. */

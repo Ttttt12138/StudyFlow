@@ -1,8 +1,8 @@
 import { createContext, useContext } from "react";
 import { useI18n, type MessageKey } from "../i18n";
 
-/** Every page Root can show. "home" is the agent-first planner; sponsor and verify are public. */
-export type Module = "home" | "wallet" | "payments" | "trust" | "loans" | "agent" | "insights" | "family" | "copilot" | "ops" | "sponsor" | "verify";
+/** Every page Root can show. "home" is the agent-first planner; "ops" is the staff console. */
+export type Module = "home" | "wallet" | "payments" | "agent" | "ops";
 export type ModuleNavState = {
   current: Module;
   preview: boolean;
@@ -23,16 +23,9 @@ type Item = { id: Module; label: MessageKey; color: string };
 // The AI assistant is a drawer on every page; operations is a separate role (RoleSwitch).
 const home: Item = { id: "home", label: "plan.title", color: "#4ff2c6" };
 const groups: { label: MessageKey; items: Item[] }[] = [
-  { label: "nav.group.plan", items: [
-    { id: "family", label: "nav.family", color: "#f2d29a" },
-  ] },
   { label: "nav.group.money", items: [
     { id: "wallet", label: "wallet.title", color: "#6fe3c8" },
     { id: "payments", label: "nav.payments", color: "#9fd2f2" },
-    { id: "loans", label: "nav.loans", color: "#f29ab4" },
-  ] },
-  { label: "nav.group.account", items: [
-    { id: "trust", label: "nav.trust", color: "#f2b98a" },
   ] },
 ];
 
@@ -66,11 +59,11 @@ export function ModuleNav() {
   );
 }
 
-/** Student / operations switch in the top strip; hidden on the public sponsor and verify pages. */
+/** Student / operations switch in the top strip. */
 export function RoleSwitch() {
   const { t } = useI18n();
   const nav = useContext(ModuleNavContext);
-  if (!nav || nav.current === "sponsor" || nav.current === "verify") return null;
+  if (!nav) return null;
   const ops = nav.current === "ops";
   return (
     <div className="role-switch" role="group" aria-label={t("role.label")}>

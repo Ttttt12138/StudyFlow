@@ -139,8 +139,6 @@ export function PlanFacts({ plan }: { plan: Plan }) {
     <div><dt>{t("plan.plan.years")}</dt><dd>{plan.years}</dd></div>
     <div><dt>{t("plan.plan.start")}</dt><dd>{day(plan.start_date, lang)}</dd></div>
     <div><dt>{t("plan.plan.total")}</dt><dd>{show(plan.total, cur, lang).main}</dd></div>
-    <div><dt>{t("plan.plan.funds")}</dt><dd>{plan.available_funds ? show(plan.available_funds, plan.funds_currency || cur, lang).main : t("plan.plan.noFunds")}</dd></div>
-    {plan.gap != null && <div><dt>{t("plan.plan.gap")}</dt><dd className={Number(plan.gap) > 0 ? "plan-gap" : ""}>{show(plan.gap, cur, lang).main}</dd></div>}
   </dl>;
 }
 

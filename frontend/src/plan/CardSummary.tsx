@@ -25,7 +25,7 @@ export function CardSummary({ card, id, actions }: { card: Card; id: string; act
   switch (card.type) {
     case "school": title = card.school ? pick(card.school.school.name, lang) : t("plan.card.schools"); detail = card.school ? pick(card.school.school.program, lang) : ""; break;
     case "plan": title = t("ws.plan"); detail = `${pick(card.plan.school?.name, lang) || card.plan.school_key} · ${t(`plan.plan.status.${card.plan.status}`)}`;
-      next = planNext(card.plan, t, (value, from) => show(value, from, lang).main); break;
+      next = planNext(card.plan, t); break;
     case "loan": title = t("plan.loan.title"); detail = "—"; break;
     case "bills": title = t("plan.bills.title"); detail = t("ws.billsCount", { n: card.bills.length }); break;
     case "spending": title = t("plan.spending.title", { month: card.month }); detail = money(card.spent, card.currency, lang); break;
@@ -40,9 +40,6 @@ export function CardSummary({ card, id, actions }: { card: Card; id: string; act
 }
 
 /** The plan card's one line: what is still needed, and the next step. */
-function planNext(plan: Plan, t: ReturnType<typeof useI18n>["t"], money: (value: string, from: string) => string) {
-  if (plan.status === "ENROLLED") return t("plan.card.next.enrolled");
-  if (plan.status === "CONFIRMED") return t("plan.card.next.loan");
-  if (plan.gap == null) return t("plan.card.next.funds");
-  return `${t("plan.card.gapLine", { amount: money(plan.gap, plan.currency ?? "THB") })} · ${t("plan.card.next.choose")}`;
+function planNext(plan: Plan, t: ReturnType<typeof useI18n>["t"]) {
+  return t(plan.status === "CONFIRMED" ? "plan.card.next.loan" : "plan.card.next.amount");
 }

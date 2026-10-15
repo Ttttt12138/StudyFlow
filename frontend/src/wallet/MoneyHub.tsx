@@ -26,7 +26,7 @@ function tabFor(kind: string | undefined, section: string | undefined): Tab {
 }
 
 /**
- * One money tool after enrollment: balances, exchange, transfers, paying bills and every record, under a single
+ * One money tool after application submission: balances, exchange, transfers, paying bills and every record, under a single
  * row of tabs. The wallet and payments panels stay mounted underneath (drafts and quotes survive tab switches);
  * the hub owns the tabs, so neither shows its own copy of "records".
  */

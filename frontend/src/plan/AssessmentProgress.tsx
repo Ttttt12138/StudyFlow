@@ -47,7 +47,7 @@ export function AssessmentProgress({ data, client, refresh }: {
   })}
     {error && <p role="alert">{error}</p>}{policy.panel}
     <button className="link-button" onClick={() => void refresh().catch(e => setError(String(e)))}>{t("simple.refresh")}</button>{" · "}
-    <button className="link-button" onClick={() => workspace?.open({ kind: "loans" })}>{t("simple.loanDetails")}</button>
+    <button className="link-button" onClick={() => workspace?.open({ kind: "funding" })}>{t("simple.loanDetails")}</button>
     {confirm && <FocusDialog title={t("simple.confirmRepay")} busy={busy} onClose={() => setConfirm(null)}>
       <p>{confirm.next.due_on} · {formatMoney(confirm.next.amount, "THB", lang)}</p>
       <button className="primary" disabled={busy} onClick={() => void repay()}>{t("simple.confirmRepay")}</button>

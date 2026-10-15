@@ -1,8 +1,6 @@
 // Shared service-page chrome (src/services/ServiceShell.tsx) and generic action words.
 export const en = {
-  "shell.sections": "{title} sections",
   "shell.err.generic": "The request could not be completed.",
-  "shell.err.changed": "This changed since the page loaded. It has been refreshed; check it and try again.",
   "shell.err.password": "Enter your password.",
   "shell.err.lost": "The response was lost. Refresh to see whether the action went through; retrying reuses the same request key.",
   "shell.policy.stepUpTitle": "Confirm with your password",
@@ -11,7 +9,6 @@ export const en = {
   "shell.policy.submit": "Confirm",
   "shell.policy.approvalTitle": "Operator approval needed",
   "shell.policy.approvalText": "This amount is over your limit. A second operator must approve it; then confirm again with your password.",
-  "shell.policy.reason": "Reason",
   "shell.policy.reasonOptional": "Explanation (optional)", "shell.policy.reasonHint": "e.g. second-semester housing deposit",
   "shell.policy.reviewTitle": "Operations is reviewing",
   "shell.policy.contact": "Approval requested. An operator may contact you to confirm the details of this payment.",
@@ -20,19 +17,11 @@ export const en = {
   "shell.policy.later": "Close, continue later",
   "shell.policy.request": "Request approval",
   "shell.policy.requested": "Approval requested. Come back after an operator decides.",
-  "shell.confirm": "Confirm",
   "shell.cancel": "Cancel",
-  "shell.none": "Nothing here yet.",
-  "nav.loans": "Loans",
-  "nav.insights": "Spending insights",
-  "nav.family": "Family support",
-  "nav.copilot": "Compare plans",
 };
 
 export const zh: Record<keyof typeof en, string> = {
-  "shell.sections": "{title}分区",
   "shell.err.generic": "请求未能完成。",
-  "shell.err.changed": "页面加载后数据已变化，已自动刷新；请核对后重试。",
   "shell.err.password": "请输入密码。",
   "shell.err.lost": "响应丢失。请刷新查看操作是否已完成；重试会复用同一个请求键。",
   "shell.policy.stepUpTitle": "输入密码确认",
@@ -41,7 +30,6 @@ export const zh: Record<keyof typeof en, string> = {
   "shell.policy.submit": "确认",
   "shell.policy.approvalTitle": "需要运营审批",
   "shell.policy.approvalText": "金额超过你的限额，须由第二名运营人员批准；批准后再输入密码确认。",
-  "shell.policy.reason": "理由",
   "shell.policy.reasonOptional": "说明（选填）", "shell.policy.reasonHint": "例如：第二学期住宿押金",
   "shell.policy.reviewTitle": "运营审核中",
   "shell.policy.contact": "已提交审批。运营人员可能会联系你，确认这笔付款的相关信息。",
@@ -50,11 +38,5 @@ export const zh: Record<keyof typeof en, string> = {
   "shell.policy.later": "关闭，稍后再继续",
   "shell.policy.request": "申请审批",
   "shell.policy.requested": "已申请审批。运营人员处理后请回来继续。",
-  "shell.confirm": "确认",
   "shell.cancel": "取消",
-  "shell.none": "暂无内容。",
-  "nav.loans": "借款与还款",
-  "nav.insights": "消费洞察",
-  "nav.family": "家庭资助",
-  "nav.copilot": "方案对比",
 };
