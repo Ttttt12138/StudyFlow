@@ -22,3 +22,21 @@ def append_confirmed(user, plan):
         defaults={"conversation": conversation, "goal": "", "locale": conversation.locale,
                   "mode": "system", "status": "COMPLETED",
                   "final_answer": HANDOFFS["CONFIRMED"][conversation.locale], "cards": []})
+
+
+def finish_loan_advice(session, observation, number):
+    """One completed calculation has one authoritative reply, without another model/tool cycle."""
+    if not session.conversation_id or observation.tool != "simulate_loan" or observation.status != "OK":
+        return False
+    advice = observation.result.get("advice")
+    if not advice:
+        return False
+    from studyflow_ai.agent.loan_rules import advice_reply
+
+    from finance.agent_models import AgentStep
+
+    session.status, session.final_answer = "COMPLETED", advice_reply(advice, session.locale)
+    AgentStep.objects.create(owner=session.owner, session=session, number=number + 1, status="FINAL",
+        result={"answer": session.final_answer}, call={"provider": "system", "purpose": "loan_advice_reply",
+                                                     "mode": "deterministic"})
+    return True

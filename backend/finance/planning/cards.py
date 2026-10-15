@@ -42,6 +42,8 @@ def build(user, tool, arguments, result, status):
         return {"type": "cost", "school": {"key": entry.key, "name": entry.school.name.model_dump()},
                 "estimate": estimate, "notes": [n.model_dump() for n in entry.notes]}
     if tool == "simulate_loan":
+        if result.get("advice"):
+            return {"type": "loan_advice", **result}
         if result.get("open_assessment"):
             return {"type": "plan", "plan": result.get("plan")} if result.get("plan") else None
         return {"type": "loan", **result}

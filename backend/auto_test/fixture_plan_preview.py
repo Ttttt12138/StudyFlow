@@ -44,11 +44,7 @@ class PlanPreviewFixture(ConversationHarness):
             conversation = self.start(lang)
             for text in SCRIPTS[lang]:
                 self.say(conversation, text)
-            current = self.get("planning/assessment/")
-            current["inputs"]["loan"].update(principal="200000.00", months=48)
-            response = self.post("planning/assessment/", {"expected_version": current["version"],
-                "plan_version": current["plan_version"], "inputs": current["inputs"]})
-            self.assertEqual(response.status_code, 201, response.data)
+            # The recommendation card and the panel share the same current quote.
             quote = self.capture(conversation, "plan", lang)
             response = self.post("planning/plan/confirm/", {"expected_version": quote["version"],
                 "plan_version": quote["plan_version"], "quote_id": quote["quotes"][0]["id"]})

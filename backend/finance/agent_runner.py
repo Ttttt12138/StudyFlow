@@ -207,6 +207,9 @@ def run(session, history=None, memory=None):
                 session.final_answer = FALLBACK[session.locale]
                 break
             observations.append(_execute(session, number, step, call, arguments))
+            from .planning.guidance import finish_loan_advice
+            if finish_loan_advice(session, observations[-1], number):
+                break
     finally:
         brain.close()
     session.save()

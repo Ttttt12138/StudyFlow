@@ -240,7 +240,7 @@ class ConversationTests(ConversationHarness):
         self.assertEqual((turn["kind"], turn["status"]), ("user", "COMPLETED"))
         self.assertIn("宋卡王子大学", turn["goal"])
         self.assertIn("3.5 年", turn["final_answer"])
-        self.assertEqual([c["type"] for c in turn["cards"]], ["plan"])
+        self.assertEqual([c["type"] for c in turn["cards"]], ["plan", "loan_advice"])
         self.assertEqual(turn["cards"][0]["plan"]["years"], 3.5)
         self.assertEqual(turn["steps"][0]["tool"], "save_plan")
         self.assertEqual(services.plan_for(self.user).years, 3.5)

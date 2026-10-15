@@ -34,6 +34,8 @@ def _memory(conversation):
         assessment = latest(plan)
         if assessment:
             plan_info["known_planning_inputs"] = current_inputs(assessment.inputs, user, plan)
+            plan_info["loan_advice"] = {k: v for k, v in assessment.result.get("loan_advice", {}).items()
+                                        if k in ("status", "intent")}
     recent = []
     for turn in conversation.turns.order_by("-created_at")[:6]:
         for step in turn.steps.order_by("-number"):
@@ -117,10 +119,9 @@ def send(conversation, text, key):
 
 CHOSEN = {
     "zh": ("选这所学校：{name}",
-           "已选{name}，按 {years} 年计划，全程约 {total} {currency}。在左侧「我的方案」填写需要贷款的金额，选择产品和期限后查看还款试算。"),
+           "已选{name}，按 {years} 年计划，全程约 {total} {currency}。"),
     "en": ("Choose this school: {name}",
-           "{name} is in your plan for {years} years, about {total} {currency} in total. Enter the amount you want to borrow "
-           "in My plan, then choose the product and term to see repayments."),
+           "{name} is in your plan for {years} years, about {total} {currency} in total. "),
 }
 
 
@@ -152,6 +153,12 @@ def choose(conversation, school_key, years, key):
                                           total=f"{float(plan['total']):,.0f}")
         if observation.result.get("withdrawn_application"):
             turn.final_answer += WITHDRAWN[conversation.locale]
+        if plan["status"] == "DRAFT":
+            from studyflow_ai.agent.loan_rules import advice_reply
+            step = SimpleNamespace(tool="simulate_loan", rationale="Recommend after choosing a school", arguments_json="{}")
+            advice = agent_runner._execute(turn, 2, step, {"provider": "system", "purpose": "loan_advice"}, {})
+            if advice.status == "OK":
+                turn.final_answer += advice_reply(advice.result["advice"], conversation.locale)
         turn.save()
     conversation.save(update_fields=["updated_at"])
     return turn, True

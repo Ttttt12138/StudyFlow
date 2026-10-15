@@ -53,15 +53,20 @@ def create_quotes(user, inputs, cap, plan=None):
 
 def preview(user, data):
     """Repayment figures for an amount and term being chosen, from the latest assessment's terms. Nothing is stored."""
-    from finance.lending_core.calculations import calculate
-    from finance.lending_core.schemas import QuoteInput
-
     from .assessment import defaults, latest
 
     plan = services.plan_for(user)
     require(plan is not None, "PLAN_REQUIRED")
     item = latest(plan)
     terms = (item.inputs if item else defaults(user, plan))["loan"]
+    return calculate_preview(plan, terms, data)
+
+
+def calculate_preview(plan, terms, data):
+    """Shared deterministic calculator for the panel and conversational comparisons."""
+    from finance.lending_core.calculations import calculate
+    from finance.lending_core.schemas import QuoteInput
+
     principal, months = Decimal(data["principal"]), int(data["months"])
     product = data.get("product") or "custom"
     method = data.get("method") or "amortized"

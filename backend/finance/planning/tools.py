@@ -49,8 +49,12 @@ class PlanInput(Input):
 
 
 class LoanInput(Input):
-    months = s.IntegerField(min_value=6, max_value=60, required=False)
+    intent = s.ChoiceField(choices=["recommend", "lower_monthly", "lower_interest", "reduce_amount", "apply", "pause", "resume"], required=False)
+    months = s.ChoiceField(choices=[24, 36, 48, 60], required=False)
     principal = s.DecimalField(max_digits=16, decimal_places=2, min_value=1, required=False)
+    principal_currency = s.CharField(max_length=3, required=False)
+    product = s.ChoiceField(choices=["custom", "commercial_student_demo"], required=False)
+    method = s.ChoiceField(choices=["amortized", "interest_only"], required=False)
 
 
 def filtered_schools(data):
@@ -109,7 +113,8 @@ def _save_plan(user, data):
 
 
 def _loan(user, data):
-    return {**_get_plan(user, data), "open_assessment": True}
+    from .loan_advice import advise
+    return advise(user, data)
 
 
 def _bills(user, data):
@@ -153,9 +158,10 @@ def tools(Tool):
              "currency.", Empty, _get_plan),
         Tool("save_plan", "T1", "Choose a school for the plan, with the years and optionally the loan amount the "
              "user said; returns the plan with its full-course total.", PlanInput, _save_plan),
-        Tool("simulate_loan", "T1", "Open the loan panel. It does not create a quote or application; the user types "
-             "the loan amount, picks the product, term and repayment method, and confirms the plan with the loan "
-             "application there.", LoanInput, _loan),
+        Tool("simulate_loan", "T1", "Recommend a simulated loan and prepare a quote using the user's amount. "
+             "intent: recommend, lower_monthly, lower_interest, reduce_amount (ask amount if omitted), "
+             "apply (prepare confirmation only), pause or resume. Reuse known inputs; never invent principal. "
+             "Returns exact costs, comparisons and the application review card. Never submits or signs.", LoanInput, _loan),
         Tool("list_bills", "T0", "Upcoming plan bills (tuition, housing, insurance, visa), each saying whether the "
              "loan pays it to the school.", Empty, _bills),
     ]
