@@ -1,81 +1,83 @@
-# 汇款订单
+# Remittance Orders
 
-学生可以从钱包里的某个币种余额，沿已配置的汇路向外汇款：汇给自己（到账后进入本人的目标币种余额），或汇给已核验的收款人（如学校或国内家人账户）。订单有完整的状态机、费用明细、按汇路的金额上下限，以及权限分级里的 T2/T3 检查。所有资金和通道都是模拟的。
+A student can send money out of one currency balance in the wallet along a configured corridor: to themselves (credited to their own balance in the target currency on arrival), or to a verified beneficiary (such as a school or a family account at home). Orders have a full state machine, a fee breakdown, per-corridor minimum and maximum amounts, and the T2/T3 checks from the permission tiers. All money and channels are simulated.
 
-与[自有余额换汇](multi-currency.md)的区别：换汇即时完成；汇款是跨境转账，有结算期，可能失败或状态不明，需要逐步跟踪。
+Difference from [conversion between own balances](multi-currency.md): a conversion completes instantly; a remittance is a cross-border transfer with a settlement period that can fail or end in an unknown state and must be tracked step by step.
 
-## 状态机
+## State machine
 
 ```
 CREATED ──submit──▶ SUBMITTED ──dispatched──▶ IN_TRANSIT ──delivered──▶ DELIVERED ──reconcile──▶ RECONCILED
    │                    │  └──delivered──────────────────────────────▶ DELIVERED
-   ├─cancel─▶ CANCELLED  ├──failed──▶ REFUNDED（原币种退回）
-   └─(报价过期)─▶ EXPIRED └──unknown──▶ UNKNOWN ──delivered/failed──▶ DELIVERED / REFUNDED
-                         IN_TRANSIT 同样可 failed / unknown
+   ├─cancel─▶ CANCELLED  ├──failed──▶ REFUNDED (returned in the source currency)
+   └─(quote expired)─▶ EXPIRED └──unknown──▶ UNKNOWN ──delivered/failed──▶ DELIVERED / REFUNDED
+                         IN_TRANSIT can also go failed / unknown
 ```
 
-| 动作 | 从状态 | 到状态 | 谁 |
+| Action | From | To | Who |
 |---|---|---|---|
-| 创建 | — | CREATED | 学生（T1） |
-| `cancel` | CREATED | CANCELLED | 学生 |
-| `submit` | CREATED | SUBMITTED | 学生（T2 `remittance.submit`，超限为 T3） |
-| `dispatched` | SUBMITTED | IN_TRANSIT | 运营（模拟通道回调） |
-| `delivered` | SUBMITTED、IN_TRANSIT、UNKNOWN | DELIVERED | 运营 |
-| `failed` | SUBMITTED、IN_TRANSIT、UNKNOWN | REFUNDED | 运营 |
-| `unknown` | SUBMITTED、IN_TRANSIT | UNKNOWN | 运营 |
-| `reconcile` | DELIVERED | RECONCILED | 学生 |
-| 过期 | CREATED 且报价已过期 | EXPIRED | 任何对该订单的命令触发 |
+| Create | — | CREATED | Student (T1) |
+| `cancel` | CREATED | CANCELLED | Student |
+| `submit` | CREATED | SUBMITTED | Student (T2 `remittance.submit`; T3 above limits) |
+| `dispatched` | SUBMITTED | IN_TRANSIT | Operator (simulated channel callback) |
+| `delivered` | SUBMITTED, IN_TRANSIT, UNKNOWN | DELIVERED | Operator |
+| `failed` | SUBMITTED, IN_TRANSIT, UNKNOWN | REFUNDED | Operator |
+| `unknown` | SUBMITTED, IN_TRANSIT | UNKNOWN | Operator |
+| `reconcile` | DELIVERED | RECONCILED | Student |
+| Expire | CREATED with an expired quote | EXPIRED | Triggered by any command on the order |
 
-补充规则：
+Additional rules:
 
-- **重放**：订单已处于某动作的目标状态或之后的状态时，该动作视为重放，直接返回当前订单，不检查 `expected_version`，也不再入账。例如对 DELIVERED 或 RECONCILED 的订单再报 `delivered`，或对已提交的订单再次 `submit`。
-- **报价占用**：报价一旦被订单占用（一对一），即使订单后来被取消或过期，也不能再用于其他订单、换汇或到账（`QUOTE_IN_USE`）。
-- **外币不写快照**：源币种和目标币种都不是本币时，资金变化不会写入本币状态快照。
-- **点差成本舍入**：`fx_margin_cost` 按源币种精度 ROUND_HALF_UP 舍入。
+- **Replay**: when the order is already in the target state of an action or later, the action is a replay and returns the current order without checking `expected_version` and without posting again. Examples: reporting `delivered` again on a DELIVERED or RECONCILED order, or calling `submit` again on a submitted order.
+- **Quote reservation**: once a quote is taken by an order (one to one), it cannot be used for any other order, conversion or funds receipt, even if the order is later cancelled or expires (`QUOTE_IN_USE`).
+- **No snapshot for foreign currencies**: when neither the source nor the target currency is the home currency, the money movement is not written to the home-currency state snapshot.
+- **FX margin cost rounding**: `fx_margin_cost` is rounded ROUND_HALF_UP to the source currency precision.
 
-不在表中的转换一律拒绝（`INVALID_TRANSITION`），终态为 CANCELLED、EXPIRED、REFUNDED、RECONCILED。每次转换都检查 `expected_version`（不符返回 409），版本加一，写入不可修改的 `RemittanceStatusEvent`（从、到、操作人、时间、备注），并记审计。重复发送已生效的同一结果（例如对 DELIVERED 再报 `delivered`）返回当前订单，不重复入账。
+Transitions not in the table are rejected (`INVALID_TRANSITION`); terminal states are CANCELLED, EXPIRED, REFUNDED and RECONCILED. Every transition checks `expected_version` (409 on mismatch), increments the version, writes an immutable `RemittanceStatusEvent` (from, to, actor, time, note) and is audited. Re-sending an outcome that has already taken effect (for example `delivered` on a DELIVERED order) returns the current order without posting again.
 
-## 资金
+## Money movements
 
-- **提交**：从源币种余额扣减 `send_amount`（含发送费），分录来源为 `remittance_order`，腿为 `debit`；报价在此时标记为已使用。源币种为本币时，还要求提交后的本币可用余额不低于快照的 `reserve`（`RESERVE_REQUIRED`）。
-- **失败**：按原币种退回 `send_amount`（腿 `refund`），状态直接进入 REFUNDED，并记录 `failure_reason`。
-- **送达**：收款人为 SELF 时，把 `receive_amount` 记入本人的目标币种余额（腿 `credit`）；收款人为外部账户时，钱包不再变化。
-- 数据库约束保证每张订单每种腿最多一条分录。
+- **Submit**: debits `send_amount` (including the sender fee) from the source currency balance; ledger origin `remittance_order`, leg `debit`; the quote is marked used at this point. When the source currency is the home currency, the home-currency available balance after submission must also stay at or above the snapshot `reserve` (`RESERVE_REQUIRED`).
+- **Failure**: refunds `send_amount` in the source currency (leg `refund`), moves straight to REFUNDED and records `failure_reason`.
+- **Delivery**: when the recipient is SELF, `receive_amount` is credited to the student's own target-currency balance (leg `credit`); for an external recipient the wallet does not change.
+- A database constraint allows at most one ledger entry per leg type per order.
 
-## 费用与限额
+## Fees and limits
 
-订单只能用服务端定价的汇路报价创建（`POST fx-quotes/live/`），`send_amount` 等于报价的 `quoted_amount`。响应中的费用明细：
+Orders can only be created from a server-priced corridor quote (`POST fx-quotes/live/`); `send_amount` equals the quote's `quoted_amount`. Fee breakdown in the response:
 
-| 字段 | 含义 |
+| Field | Meaning |
 |---|---|
-| `sender_fee` | 汇路固定费 + 百分比费，源币种 |
-| `rate` / `mid_rate` | 成交汇率 / 参考中间价 |
-| `fx_margin_cost` | 汇率点差折合的源币种成本 =（`send_amount` − `sender_fee`）×（`mid_rate` − `rate`）/ `mid_rate` |
-| `total_cost` | `sender_fee` + `fx_margin_cost`，源币种 |
-| `receive_amount` | 收款方到账金额，目标币种 |
+| `sender_fee` | Corridor fixed fee + percentage fee, source currency |
+| `rate` / `mid_rate` | Executed rate / reference mid rate |
+| `fx_margin_cost` | FX margin expressed as a source-currency cost = (`send_amount` − `sender_fee`) × (`mid_rate` − `rate`) / `mid_rate` |
+| `total_cost` | `sender_fee` + `fx_margin_cost`, source currency |
+| `receive_amount` | Amount the recipient receives, target currency |
 
-提交时再次检查：汇路仍启用、金额在汇路上下限之内、余额足够（`INSUFFICIENT_BALANCE`）、收款人仍已核验（`BENEFICIARY_NOT_VERIFIED`），以及权限分级的单笔、单日、单月限额。
+Submission re-checks: the corridor is still enabled, the amount is within the corridor's minimum and maximum, the balance is sufficient (`INSUFFICIENT_BALANCE`), the beneficiary is still verified (`BENEFICIARY_NOT_VERIFIED`), and the per-transaction, daily and monthly limits of the permission tiers.
 
-## 接口（`/api/v2/`，所有 POST 需 `Idempotency-Key`）
+## Endpoints (`/api/v2/`, every POST requires `Idempotency-Key`)
 
-| 方法与路径 | 请求体 |
+| Method and path | Request body |
 |---|---|
 | `POST remittance-orders/` | `{"quote_id", "recipient": "SELF"|"BENEFICIARY", "beneficiary_id"?, "purpose": "tuition"|"living"|"family_support"|"other", "reference"?, "deadline"?}` |
-| `GET remittance-orders/`、`GET remittance-orders/{id}/` | 详情包含 `history`（状态事件列表）和费用明细 |
+| `GET remittance-orders/`, `GET remittance-orders/{id}/` | Details include `history` (list of status events) and the fee breakdown |
 | `POST remittance-orders/{id}/cancel/` | `{"expected_version"}` |
-| `POST remittance-orders/{id}/submit/` | `{"expected_version"}`；请求头 `X-Step-Up-Token` |
-| `POST remittance-orders/{id}/adapter-event/` | 运营：`{"outcome": "dispatched"|"delivered"|"failed"|"unknown", "expected_version", "note"?}` |
+| `POST remittance-orders/{id}/submit/` | `{"expected_version"}`; header `X-Step-Up-Token` |
+| `POST remittance-orders/{id}/adapter-event/` | Operator: `{"outcome": "dispatched"|"delivered"|"failed"|"unknown", "expected_version", "note"?}` |
 | `POST remittance-orders/{id}/reconcile/` | `{"expected_version"}` |
 
-创建时的校验：
-- 报价属于本人、服务端定价、未使用、未过期，带 `quoted_amount`。
-- `BENEFICIARY` 必须提供本人名下、已核验的收款人；`SELF` 不能带 `beneficiary_id`。
-- `deadline` 可选；如果提供，必须在演示时钟当天到之后 366 天之间（`DEADLINE_OUT_OF_RANGE`）。送达时记录 `delivered_on`（演示时钟日期），有 deadline 时得出 `on_time`。
+Validation on create:
+- The quote belongs to the caller, is server-priced, unused, unexpired, and has a `quoted_amount`.
+- `BENEFICIARY` requires a verified beneficiary owned by the caller; `SELF` must not carry `beneficiary_id`.
+- `deadline` is optional; if given, it must be between the demo-clock date and 366 days after it (`DEADLINE_OUT_OF_RANGE`). On delivery, `delivered_on` (demo-clock date) is recorded and, when there is a deadline, `on_time` is derived.
 
-推荐流程：先用 `fx-quotes/live/` 为同一币种对的各档汇路生成报价，用 `remittance-comparisons/` 比较，再用 `recommended_quote_id` 创建订单。
+Recommended flow: price quotes for every corridor tier of the same currency pair with `fx-quotes/live/`, compare them with `remittance-comparisons/`, then create the order from `recommended_quote_id`.
 
-## 联动
+In the planning chat, remittance tools are available only after the loan application is submitted (plan `CONFIRMED`); before that they are refused server-side with `APPLICATION_REQUIRED` (see [Agent](agent.md)).
 
-- 状态为 REFUNDED 或 UNKNOWN 的订单进入 Review Queue，订单恢复正常后关闭对应条目。
-- 汇给已核验收款人、有 deadline 且已送达的订单计入[信用建立](credit.md)的准时记录：`delivered_on ≤ deadline` 记为准时，否则记为逾期完成。汇给自己的订单不计入。
-- 演示命令 `manage.py demo_remittance --runs 3` 走完整 HTTP 流程：汇路报价 → 比价 → 下单 → step-up 提交 → 通道回调 → 对账；另含一次失败退款和一次超限审批。
+## Related behavior
+
+- Orders in REFUNDED or UNKNOWN enter the Review Queue; the entry closes when the order recovers.
+- Delivered orders to a verified beneficiary with a deadline count toward the on-time record in [Credit building](credit.md): `delivered_on ≤ deadline` counts as on time, otherwise as completed late. Orders to oneself do not count. The credit page is retired from the product (2026-10-15), but the on-time record still scales outflow limits.
+- The demo command `manage.py demo_remittance --runs 3` runs the full HTTP flow: corridor quotes → comparison → order → step-up submission → channel callback → reconciliation; it also includes one failed refund and one approval above the limits.

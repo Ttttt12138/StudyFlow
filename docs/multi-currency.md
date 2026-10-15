@@ -1,40 +1,42 @@
-# 多币种钱包与汇路
+# Multi-Currency Wallet and Corridors
 
-StudyFlow 的预算、借款和学费结算使用本币 THB。钱包可以同时持有多种币种的模拟余额，并按汇路和参考汇率在自有余额之间换汇。所有资金操作仍为模拟。
+StudyFlow's loans and tuition settlement use the home currency THB (budgets also used it; retired from the product on 2026-10-15; backend only). The wallet can hold simulated balances in several currencies at once and convert between the student's own balances using corridors and reference rates. All money operations are simulated.
 
-## 配置
+## Configuration
 
-| 变量 | 默认 | 说明 |
+| Variable | Default | Description |
 |---|---|---|
-| `STUDYFLOW_HOME_CURRENCY` | `THB` | 本币。FinancialState 快照、预算和借款都以本币计价。借款核心 B 只支持 THB，所以设为其他值时启动失败 |
-| `STUDYFLOW_SUPPORTED_CURRENCIES` | `THB,USD,EUR,CNY,GBP,JPY,AUD,SGD,MYR` | 钱包、报价和汇路可用的币种。必须包含本币；小数位超过 2 的币种（如 KWD）启动时拒绝 |
+| `STUDYFLOW_HOME_CURRENCY` | `THB` | Home currency. FinancialState snapshots, budgets and loans are denominated in it. The lending core B supports only THB, so any other value fails startup |
+| `STUDYFLOW_SUPPORTED_CURRENCIES` | `THB,USD,EUR,CNY,GBP,JPY,AUD,SGD,MYR` | Currencies available to the wallet, quotes and corridors. Must include the home currency; currencies with more than 2 decimal places (such as KWD) are rejected at startup |
 
-金额精度按 ISO 4217（Babel）：JPY 0 位小数，其余 2 位。超出精度的金额被拒绝（`AMOUNT_PRECISION_INVALID`），不做静默舍入；换汇结果按目标币种精度 ROUND_HALF_UP。
+Amount precision follows ISO 4217 (Babel): JPY has 0 decimal places, the rest 2. Amounts beyond the precision are rejected (`AMOUNT_PRECISION_INVALID`) rather than silently rounded; conversion results are rounded ROUND_HALF_UP to the target currency precision.
 
-## 数据模型
+## Data model
 
-- `DemoWallet.balance`：本币余额（保持原字段，向后兼容）。数据库约束 `demo_wallet_balance_nonnegative`。
-- `WalletBalance(owner, wallet, currency, balance)`：非本币余额，每个所有者每种币种一行（`wallet_balance_owner_currency_unique`），`balance ≥ 0`（`wallet_balance_nonnegative`）。本币永远不写入此表。
-- `DemoLedgerEntry.currency`：分录币种，历史分录回填为 THB。不变量：对每个所有者和币种，分录金额之和 = 该币种余额（本币为 `DemoWallet.balance − opening_balance`，即开户余额不入账）。
-- `CurrencyConversion`：一次自有余额换汇，引用唯一报价（`quote` 一对一，报价只能使用一次），产生两条分录：源币种负数、目标币种正数，二者 `conversion` 相同、币种不同（`ledger_conversion_leg_unique`）。不可修改（不可变触发器）。
-- `Corridor`：全局汇路配置（非用户数据），字段 `code, provider, tier, source_currency, target_currency, enabled, min_amount, max_amount, fee_fixed, fee_percent, fx_margin_bps, settlement_min_days, settlement_days`。种子：CNY/USD/EUR→THB、THB→CNY，各 express / standard / economy。
-- `FXQuote` 新增：`corridor`（可空）、`rate_source`（`manual` / `frankfurter` / `fixture`）、`mid_rate`、`rate_date`、`consumed_at`、`quoted_amount`。`target_currency` 可为任一支持币种（默认本币）。
-- `FxRateSnapshot`：参考汇率快照，见 [汇率接入](fx-rates.md)。
+- `DemoWallet.balance`: home-currency balance (original field kept for backward compatibility). Database constraint `demo_wallet_balance_nonnegative`.
+- `WalletBalance(owner, wallet, currency, balance)`: non-home-currency balances, one row per owner per currency (`wallet_balance_owner_currency_unique`), `balance ≥ 0` (`wallet_balance_nonnegative`). The home currency is never written to this table.
+- `DemoLedgerEntry.currency`: entry currency; historical entries were backfilled as THB. Invariant: for each owner and currency, the sum of entry amounts = that currency's balance (for the home currency, `DemoWallet.balance − opening_balance`, i.e. the opening balance is not posted).
+- `CurrencyConversion`: one conversion between own balances, referencing a unique quote (`quote` one to one; a quote can be used only once), producing two entries: negative in the source currency and positive in the target currency, with the same `conversion` and different currencies (`ledger_conversion_leg_unique`). Immutable (immutability trigger).
+- `Corridor`: global corridor configuration (not user data), fields `code, provider, tier, source_currency, target_currency, enabled, min_amount, max_amount, fee_fixed, fee_percent, fx_margin_bps, settlement_min_days, settlement_days`. Seeds: CNY/USD/EUR→THB and THB→CNY, each with express / standard / economy.
+- `FXQuote` additions: `corridor` (nullable), `rate_source` (`manual` / `frankfurter` / `fixture`), `mid_rate`, `rate_date`, `consumed_at`, `quoted_amount`. `target_currency` can be any supported currency (defaults to the home currency).
+- `FxRateSnapshot`: reference rate snapshot, see [FX rates](fx-rates.md).
 
-### 报价的两类用途
+### Two kinds of quotes
 
-| 报价来源 | 如何生成 | 可用于 |
+| Quote source | How it is created | Usable for |
 |---|---|---|
-| 手填（`manual`） | `POST fx-quotes/`，学生自填汇率和费用 | 只读估算：预算场景、比价；运营人员确认的资金到账 |
-| 服务端定价（`frankfurter` / `fixture`） | `POST fx-quotes/live/`，按汇路、参考中间价和点差生成 | 以上全部，以及自有余额换汇 |
+| Manual (`manual`) | `POST fx-quotes/`, student enters the rate and fees | Read-only estimates: budget scenarios (retired from the product on 2026-10-15; backend only), comparisons; funds receipts confirmed by an operator |
+| Server-priced (`frankfurter` / `fixture`) | `POST fx-quotes/live/`, priced from the corridor, reference mid rate and margin | All of the above, plus conversion between own balances |
 
-自有余额换汇只接受服务端定价的报价（`QUOTE_NOT_EXECUTABLE`）。否则学生可以用自定的汇率凭空制造余额。
+Conversion between own balances accepts only server-priced quotes (`QUOTE_NOT_EXECUTABLE`). Otherwise a student could create balance out of thin air with a self-chosen rate.
 
-## 余额唯一写入口
+## Single write path for balances
 
-`finance.wallets.post(wallet, currency, amount, origin)` 是唯一改变余额的函数。它先锁定所有者的用户行（分录序号跨币种递增，必须串行），再锁定余额行，然后校验币种和精度，检查 `0 ≤ 新余额 ≤ 9999999999999999.99`（`INSUFFICIENT_BALANCE_OR_PRECISION`），按所有者递增 `sequence` 写分录。付款结算、资金到账、放款、还款、换汇全部经由它。
+`finance.wallets.post(wallet, currency, amount, origin)` is the only function that changes a balance. It first locks the owner's user row (entry sequence numbers increase across currencies, so writes must be serialized), then locks the balance row, validates currency and precision, checks `0 ≤ new balance ≤ 9999999999999999.99` (`INSUFFICIENT_BALANCE_OR_PRECISION`), and writes the entry with the owner's next `sequence`. Payment settlement, funds receipt, disbursement, repayment and conversion all go through it.
 
-## 接口（均在 `/api/v2/` 下）
+## Endpoints (all under `/api/v2/`)
+
+In the planning chat, wallet and conversion tools are available only after the loan application is submitted (plan `CONFIRMED`); before that they are refused server-side with `APPLICATION_REQUIRED` (see [Agent](agent.md)). The "Wallet and payments" tool in the app opens at the same point.
 
 ### `GET demo/wallets/balances/`
 ```json
@@ -43,39 +45,39 @@ StudyFlow 的预算、借款和学费结算使用本币 THB。钱包可以同时
   {"currency": "CNY", "balance": "500.00", "available_balance": "500.00", "is_home": false}
 ], "is_simulated": true}}
 ```
-本币始终列出，外币只列出已有余额行的币种。本币可用余额 = 余额 − 处于 pending/unknown 状态的付款。每行还有 `indicative_home_value` 和 `valuation`（`rate`、`rate_date`、`source`、`stale`），只用已保存的汇率快照计算，读请求不会发起外部调用；没有快照时为 `null`。钱包未初始化时返回 400。
+The home currency is always listed; foreign currencies are listed only if a balance row exists. Home available balance = balance − payments in pending/unknown status. Each row also has `indicative_home_value` and `valuation` (`rate`, `rate_date`, `source`, `stale`), computed only from saved rate snapshots, so read requests make no external calls; `null` when there is no snapshot. Returns 400 if the wallet is not initialized.
 
 ### `GET corridors/`
-列出启用的汇路，可按 `?source_currency=CNY&target_currency=THB` 过滤。
+Lists enabled corridors, filterable with `?source_currency=CNY&target_currency=THB`.
 
-### `POST fx-quotes/`（扩展）
-`target_currency` 可选任一支持币种（默认本币），`source_currency ≠ target_currency`（`SAME_CURRENCY_QUOTE`）。可选 `corridor_id`：币种必须与汇路一致（`CORRIDOR_CURRENCY_MISMATCH`）且汇路启用（`CORRIDOR_DISABLED`）。费用精度：`sender_fee` 按源币种、`receiver_fee` 按目标币种。
+### `POST fx-quotes/` (extended)
+`target_currency` may be any supported currency (defaults to the home currency); `source_currency ≠ target_currency` (`SAME_CURRENCY_QUOTE`). Optional `corridor_id`: the currencies must match the corridor (`CORRIDOR_CURRENCY_MISMATCH`) and the corridor must be enabled (`CORRIDOR_DISABLED`). Fee precision: `sender_fee` uses the source currency, `receiver_fee` the target currency.
 
-### `POST funding-sources/{id}/receive/`（扩展，运营）
-新增 `hold_in_source_currency`（默认 false）。为 true 时：资金来源币种必须不是本币（`HOLD_REQUIRES_FOREIGN_CURRENCY`）、不能附带 `fx_quote_id`（`HOLD_WITHOUT_QUOTE`），以原币种记入 `WalletBalance`，不追加本币快照事件（外币持有不计入本币现金流，换汇成本币时才计入）。其余检查（赞助确认、到账日期）不变。
+### `POST funding-sources/{id}/receive/` (extended, operator; funding sources and sponsor confirmation are retired from the product on 2026-10-15; backend only)
+Adds `hold_in_source_currency` (default false). When true: the funding source currency must not be the home currency (`HOLD_REQUIRES_FOREIGN_CURRENCY`), no `fx_quote_id` may be supplied (`HOLD_WITHOUT_QUOTE`), the amount is credited to `WalletBalance` in the original currency, and no home-currency snapshot event is appended (foreign holdings do not count toward home-currency cash flow until converted). Other checks (sponsor confirmation, arrival date) are unchanged.
 
 ### `POST conversions/`
-请求头 `Idempotency-Key`。
+Header `Idempotency-Key`.
 ```json
 {"quote_id": "<uuid>", "source_amount": "500.00", "state_version": 7}
 ```
-- 报价属于本人、未过期（`QUOTE_EXPIRED`）、未使用（`QUOTE_CONSUMED`），并且是服务端定价的汇路报价（`QUOTE_NOT_EXECUTABLE`）。
-- 汇路仍启用（`CORRIDOR_DISABLED`），金额在汇路上下限之内（`CORRIDOR_AMOUNT_OUT_OF_RANGE`）。报价带 `quoted_amount` 时，换汇金额必须与它相等（`QUOTE_AMOUNT_MISMATCH`），因为百分比手续费是按这个金额算的。
-- 金额精度按源币种；`source_amount > sender_fee`；结果 `(source_amount − sender_fee) × rate − receiver_fee > 0`，按目标币种精度舍入（`CONVERSION_NOT_POSITIVE`）。
-- 源币种余额足够（`INSUFFICIENT_BALANCE`）。源为本币时还要求 `本币可用余额 − source_amount ≥ 快照 reserve`（`RESERVE_REQUIRED`）。
-- `state_version` 必须是当前版本（否则 409）。目标为本币时追加收入事件 `conversion:<id>`；源为本币时追加支出事件 `conversion:<id>`；均带 `settled_sequence`，前缀 `conversion:` 为账本保留。
-- 写 `CurrencyConversion`、两条分录，置报价 `consumed_at`，审计 `wallet.conversion_settled`。
-- 响应 `data`：`id, quote_id, source_currency, source_amount, target_currency, target_amount, rate, sender_fee, receiver_fee, effective_on, debit_sequence, credit_sequence, is_simulated`。
+- The quote belongs to the caller, is unexpired (`QUOTE_EXPIRED`), unused (`QUOTE_CONSUMED`), and is a server-priced corridor quote (`QUOTE_NOT_EXECUTABLE`).
+- The corridor is still enabled (`CORRIDOR_DISABLED`) and the amount is within its minimum and maximum (`CORRIDOR_AMOUNT_OUT_OF_RANGE`). When the quote has a `quoted_amount`, the conversion amount must equal it (`QUOTE_AMOUNT_MISMATCH`), because the percentage fee was computed on that amount.
+- Amount precision follows the source currency; `source_amount > sender_fee`; the result `(source_amount − sender_fee) × rate − receiver_fee > 0`, rounded to the target currency precision (`CONVERSION_NOT_POSITIVE`).
+- The source balance is sufficient (`INSUFFICIENT_BALANCE`). When the source is the home currency, `home available balance − source_amount ≥ snapshot reserve` is also required (`RESERVE_REQUIRED`).
+- `state_version` must be the current version (otherwise 409). When the target is the home currency an income event `conversion:<id>` is appended; when the source is the home currency an expense event `conversion:<id>` is appended; both carry `settled_sequence`, and the `conversion:` prefix is reserved for the ledger.
+- Writes `CurrencyConversion` and two entries, sets the quote's `consumed_at`, audits `wallet.conversion_settled`.
+- Response `data`: `id, quote_id, source_currency, source_amount, target_currency, target_amount, rate, sender_fee, receiver_fee, effective_on, debit_sequence, credit_sequence, is_simulated`.
 
-### 报价只能结算一次
-报价一旦被换汇或资金到账（`receive` 时带 `fx_quote_id`）使用，就不能再用于任何结算（`QUOTE_CONSUMED`）。预算场景和比价属于只读估算，仍可引用已使用的报价。
+### A quote settles only once
+Once a quote has been used by a conversion or a funds receipt (`receive` with `fx_quote_id`), it cannot be used for any further settlement (`QUOTE_CONSUMED`). Budget scenarios and comparisons are read-only estimates and may still reference a used quote.
 
-### 迁移
-`0015_multicurrency` 不引用应用代码：汇路种子数据和默认值都在迁移文件内冻结。存在外币分录或换汇分录时拒绝回滚，因为旧结构无法表示这些数据。
+### Migration
+`0015_multicurrency` does not reference application code: corridor seed data and defaults are frozen inside the migration file. Rollback is refused when foreign-currency or conversion entries exist, because the old schema cannot represent them.
 
-## 不变量（测试必须覆盖）
+## Invariants (must be covered by tests)
 
-1. 任意操作序列后，每个币种：分录之和 = 余额（本币减开户余额）；余额 ≥ 0。
-2. 迁移：迁移前的本币余额、分录金额不变，历史分录币种为 THB。
-3. 并发：同一用户并发换汇/付款不会产生负余额或重复使用报价。
-4. 失败的命令不留下分录、余额变化或报价消耗。
+1. After any sequence of operations, for each currency: sum of entries = balance (home currency minus the opening balance); balance ≥ 0.
+2. Migration: pre-migration home balances and entry amounts are unchanged, and historical entries have currency THB.
+3. Concurrency: concurrent conversions/payments by the same user never produce a negative balance or reuse a quote.
+4. A failed command leaves no entries, no balance change and no consumed quote.

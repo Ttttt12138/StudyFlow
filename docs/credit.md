@@ -1,3 +1,5 @@
+> **Retired from the product UI (2026-10-15).** Kept for backend contracts and tests until after the competition. One part remains live: the on-time repayment record scales outflow limits (`backend/finance/policy.py`, `limits_for`). The rest of this document is the original Chinese design note.
+
 # 信用建立（模拟）
 
 留学生在当地通常没有信用记录。StudyFlow 把学生在平台内按时履约的记录整理成一份**内部准时记录档案**：用来解释"你的记录怎样"，适度调整权限限额，并可导出一份可验证的签名证明（例如给房东看）。它不是征信评分，不对接、不上报任何征信机构，所有数据都是模拟的。
