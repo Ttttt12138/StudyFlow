@@ -130,9 +130,6 @@
 .panel-rows li strong { font-weight:600; color:var(--text); }
 .panel-rows li > span:not(:first-child) { white-space:nowrap; color:var(--text); }
 .panel-rows button.chip { border-radius:999px; }
-.panel-meter { height:6px; border-radius:6px; background:#1f23291f; overflow:hidden; }
-.panel-meter > span { display:block; height:100%; border-radius:inherit; background:linear-gradient(90deg, #0958d9, #1677ff); }
-.panel-meter > span.is-over { background:var(--warn); }
 .panel-grid-2 { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:10px; }
 .panel-tile { padding:12px; border-radius:12px; border:1px solid #1f23291f; background:#1677ff08; display:flex; flex-direction:column; gap:3px; min-width:0; }
 .panel-tile span { font-size:12px; color:var(--text-3); }

@@ -7,7 +7,7 @@ export const en = {
   "ops.w.priority": "Priority queue", "ops.w.viewAll": "View all items", "ops.w.view": "View", "ops.w.detail": "Item details", "ops.w.close": "Close details",
   "ops.w.type": "Type", "ops.w.subject": "Item / amount", "ops.w.time": "Queued", "ops.w.status": "Status", "ops.w.action": "Action",
   "ops.w.allTypes": "All types", "ops.w.attention": "Attention", "ops.w.allAttention": "All items",
-  "ops.w.approvals": "Approvals", "ops.w.transactions": "Payments & transfers", "ops.w.payees": "Payee verification", "ops.w.loans": "Loans", "ops.w.sponsors": "Family support",
+  "ops.w.approvals": "Approvals", "ops.w.transactions": "Payments & transfers", "ops.w.payees": "Payee verification", "ops.w.loans": "Loans",
   "ops.w.payment": "Payment", "ops.w.order": "Transfer", "ops.w.payeeStatus": "Unverified",
   "ops.w.empty": "No matching items", "ops.w.emptyHint": "Try another filter, or refresh to check for new work.",
   "ops.w.noHistory": "No recent approval records", "ops.w.recordsTitle": "Latest 20 approval records", "ops.w.allStatuses": "All statuses",
@@ -16,7 +16,6 @@ export const en = {
   "ops.w.readFailed": "Could not refresh. Displayed data may be out of date. Retry before taking action.",
   "ops.w.savedRefreshFailed": "Action recorded, but refresh failed. Retry refresh; do not repeat the action.",
   "ops.w.retry": "Retry refresh", "ops.w.changed": "This item changed. Review its current details before trying again.",
-  "ops.w.copied": "Link copied", "ops.w.copyFailed": "Could not copy. Select the link and copy it manually.",
   "ops.w.blocked": "Another operator required", "ops.w.expiry": "Approval expires", "ops.w.note": "Note", "ops.w.recorded": "Recorded",
 } as const;
 
@@ -29,7 +28,7 @@ export const zh: Record<keyof typeof en, string> = {
   "ops.w.priority": "优先待办", "ops.w.viewAll": "查看全部待办", "ops.w.view": "查看", "ops.w.detail": "待办详情", "ops.w.close": "关闭详情",
   "ops.w.type": "类型", "ops.w.subject": "事项 / 金额", "ops.w.time": "进入队列时间", "ops.w.status": "状态", "ops.w.action": "操作",
   "ops.w.allTypes": "全部类型", "ops.w.attention": "关注项", "ops.w.allAttention": "全部待办",
-  "ops.w.approvals": "审批", "ops.w.transactions": "付款与汇款", "ops.w.payees": "收款人核验", "ops.w.loans": "借款", "ops.w.sponsors": "家庭资助",
+  "ops.w.approvals": "审批", "ops.w.transactions": "付款与汇款", "ops.w.payees": "收款人核验", "ops.w.loans": "借款",
   "ops.w.payment": "付款", "ops.w.order": "汇款", "ops.w.payeeStatus": "待核验",
   "ops.w.empty": "没有匹配的待办", "ops.w.emptyHint": "可调整筛选条件，或刷新查看最新待办。",
   "ops.w.noHistory": "暂无近期审批记录", "ops.w.recordsTitle": "最近 20 条审批记录", "ops.w.allStatuses": "全部状态",
@@ -38,6 +37,5 @@ export const zh: Record<keyof typeof en, string> = {
   "ops.w.readFailed": "刷新失败，当前数据可能已过时。请重新刷新后再操作。",
   "ops.w.savedRefreshFailed": "操作已成功，但刷新失败。请重试刷新，无需重复操作。",
   "ops.w.retry": "重试刷新", "ops.w.changed": "这条记录已发生变化，请核对最新详情后再操作。",
-  "ops.w.copied": "链接已复制", "ops.w.copyFailed": "复制失败，请选中链接手动复制。",
   "ops.w.blocked": "须由其他人员处理", "ops.w.expiry": "审批到期时间", "ops.w.note": "备注", "ops.w.recorded": "记录时间",
 };

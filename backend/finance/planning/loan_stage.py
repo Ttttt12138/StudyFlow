@@ -3,7 +3,7 @@
 As with a study loan from a lender: once the application is approved, the borrower hands in the documents, signs,
 and the loan is paid to the school on each bill's due date rather than into the student's wallet. Tuition is
 covered first, then the other plan bills, in date order; a bill the loan only partly covers is split into the part
-the loan pays and the part the family still pays. Repayments follow the signed schedule in the loan account.
+the loan pays and the part the student still pays. Repayments follow the signed schedule in the loan account.
 """
 from copy import deepcopy
 from datetime import timedelta

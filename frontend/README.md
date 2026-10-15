@@ -71,7 +71,7 @@ Requests for transfers and conversion also work in the main conversation after a
 
 `/ops` remains a staff-only operations console with overview, work queue and recent records. Existing legacy platform workflows retain permission, version and idempotency checks. Removed student modules and their old routes no longer mount; the retired family, trust, copilot, expenses and standalone loan implementations are gone.
 
-The historical multi-role `demo` Playwright project and older opt-in live recordings still describe previous versions. They are outside the current default suites and must be updated before reuse. The current reproducible demonstration is [the student script](../docs/demo-script.md) and `integration/plan.spec.mjs`; no reset of the development database is needed.
+The October 12 multi-role `demo` Playwright rehearsal was removed with the features it exercised (it remains in git history). Older opt-in live recordings still describe previous versions and must be updated before reuse. The current reproducible demonstration is [the student script](../docs/demo-script.md) and `integration/plan.spec.mjs`; no reset of the development database is needed.
 
 ## Language and simulation notice
 

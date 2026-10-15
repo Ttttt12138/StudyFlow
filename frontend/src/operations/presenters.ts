@@ -17,12 +17,11 @@ export function useOpsPresentation() {
       case "order": return `${money(item.record.send_amount, item.record.send_currency)} → ${money(item.record.receive_amount, item.record.receive_currency)}`;
       case "payee": return item.record.name;
       case "loan": return `${money(item.record.quote.principal, item.record.quote.currency)} · ${t("ops.loans.months", { months: item.record.quote.months })}`;
-      case "sponsor": return `${money(item.record.source.amount, item.record.source.currency)} · ${item.record.purpose}`;
     }
   }
   function status(item: OpsItem) {
     if (item.kind === "payee") return t("ops.w.payeeStatus");
-    const prefix = { approval: "approval", payment: "pay.status", order: "ops.orderStatus", loan: "ops.loanStatus", sponsor: "ops.sponsorStatus" }[item.kind];
+    const prefix = { approval: "approval", payment: "pay.status", order: "ops.orderStatus", loan: "ops.loanStatus" }[item.kind];
     return t(`${prefix}.${item.record.status}` as MessageKey);
   }
   return { t, lang, money, when, actionName, typeName, subject, status };

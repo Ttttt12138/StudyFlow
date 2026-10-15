@@ -407,8 +407,7 @@ class RuleAgentProvider:
         if order is None:
             arguments = {"quote_id": recommended,
                          "recipient": "BENEFICIARY" if beneficiary else "SELF",
-                         "purpose": "tuition" if intent.tuition else
-                         "family_support" if intent.family else "other"}
+                         "purpose": "tuition" if intent.tuition else "other"}
             if beneficiary:
                 arguments["beneficiary_id"] = beneficiary.get("id")
             if intent.deadline:

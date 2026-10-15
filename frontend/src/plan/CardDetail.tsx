@@ -4,12 +4,12 @@ import { useI18n, type MessageKey } from "../i18n";
 import { PanelFacts, PanelHero, PanelPager, ToolPanel, usePage } from "../workspace/ToolPanel";
 import { CardView, type CardActions } from "./cards";
 import { day, money, percent, pick } from "./format";
-import type { Card, CatalogEntry, Estimate, Place, SchoolBrief, Text } from "./types";
+import { shownCard, type Card, type CatalogEntry, type Estimate, type Place, type SchoolBrief, type Text } from "./types";
 
 /** A conversation result opened from "View details", laid out to fit the tool panel without a long scroll. */
 export function CardDetail({ card, actions }: { card: Card | null; actions: CardActions }) {
   const { t } = useI18n();
-  if (!card) return <ToolPanel label={t("cd.title")}><div className="panel-empty"><p>{t("ws.missingCard")}</p></div></ToolPanel>;
+  if (!card || !shownCard(card)) return <ToolPanel label={t("cd.title")}><div className="panel-empty"><p>{t("ws.missingCard")}</p></div></ToolPanel>;
   switch (card.type) {
     case "school_list": case "comparison": return <SchoolPager schools={card.schools} actions={actions} compare={card.type === "comparison"} />;
     case "school": return card.school ? <SchoolDetail school={card.school} actions={actions} /> : null;
@@ -129,16 +129,6 @@ function SimpleDetail({ card, actions }: { card: Card; actions: CardActions }) {
       <div className="panel-card-head"><h3>{pick(plan.school?.name, lang) || plan.school_key}</h3><span className={`status-chip status-${plan.status.toLowerCase()}`}>{t(`plan.plan.status.${plan.status}`)}</span></div>
       <PanelHero label={t("plan.plan.total")} value={money(plan.total, cur, lang)} />
       <PanelFacts items={[[t("plan.plan.years"), plan.years], [t("plan.plan.start"), day(plan.start_date, lang)]]} /></>;
-  } else if (card.type === "spending") {
-    const used = Number(card.budget) > 0 ? Math.min(100, Number(card.spent) / Number(card.budget) * 100) : 0;
-    body = <>
-      <div className="panel-card-head"><h3>{t("plan.spending.title", { month: card.month })}</h3></div>
-      <PanelHero label={t("plan.spending.spent")} value={money(card.spent, card.currency, lang)}>
-        <div className="panel-meter" aria-hidden="true"><span style={{ width: `${used}%` }} className={card.over_budget ? "is-over" : ""} /></div></PanelHero>
-      <div className="panel-grid-2"><div className="panel-tile"><span>{t("plan.spending.budget")}</span><strong>{money(card.budget, card.currency, lang)}</strong></div>
-        <div className="panel-tile"><span>{t("plan.spending.remaining")}</span><strong>{money(card.remaining, card.currency, lang)}</strong></div></div>
-      <ul className="panel-rows">{Object.entries(card.by_category).slice(0, 5).map(([category, value]) => <li key={category}>
-        <span><strong>{t(`plan.cat.${category}` as MessageKey)}</strong></span><span>{money(value, card.currency, lang)}</span></li>)}</ul></>;
   } else body = <CardView card={card} actions={actions} />;
   return <ToolPanel label={t("ws.history")}>{body}<Snapshot /></ToolPanel>;
 }

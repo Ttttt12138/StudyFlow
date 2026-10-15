@@ -15,7 +15,7 @@ export function OperationsOverview({ data, navigate, onOpen, disabled }: { data:
     <div className="ops-charts">
       <section className="ops-panel"><h2>{t("ops.w.distribution")}</h2><p className="ops-caption">{t("ops.w.totalHint")}</p>
         <div className="ops-bars">{groups.map(group => <ChartBar key={group} label={t(`ops.w.${group}`)} value={data.summary.by_kind[group]}
-          maximum={Math.max(1, ...Object.values(data.summary.by_kind))} onClick={() => tasks(group)} />)}</div>
+          maximum={Math.max(1, ...groups.map(kind => data.summary.by_kind[kind] ?? 0))} onClick={() => tasks(group)} />)}</div>
       </section>
       <section className="ops-panel"><h2>{t("ops.w.recentChart")}</h2><p className="ops-caption">{t("ops.w.recentHint")}</p>
         {!data.recent_decisions.length ? <p className="ops-chart-empty">{t("ops.w.noHistory")}</p> : <div className="ops-bars">

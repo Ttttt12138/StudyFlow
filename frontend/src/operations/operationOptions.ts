@@ -16,8 +16,5 @@ export function operationOptions(item: OpsItem, commands: OperationsCommands): O
     case "loan": return item.record.status === "UNDER_REVIEW"
       ? [{ label: "ops.loans.reassess", primary: true, command: () => commands.loanDecisionAction(item.record) }]
       : [{ label: "ops.loans.disburse", primary: true, command: () => commands.disburseAction(item.record) }];
-    case "sponsor": return item.record.status === "CONFIRMED"
-      ? [{ label: "ops.sponsors.receive", primary: true, command: () => commands.receiveAction(item.record) }]
-      : [{ label: item.record.token_expires_at ? "ops.sponsors.reissue" : "ops.sponsors.issue", primary: true, command: () => commands.issueLinkAction(item.record) }];
   }
 }

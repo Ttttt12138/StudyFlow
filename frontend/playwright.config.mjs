@@ -23,8 +23,6 @@ export default defineConfig({
     { name: 'mocked', testDir: './tests/e2e/mocked' },
     // Needs Django, PostgreSQL and `manage.py readiness_worker --mode mock` (frontend/README.md).
     { name: 'integration', testDir: './tests/e2e/integration', timeout: 300_000 },
-    // Full demo script (docs/demo-script.md) against the compose demo stack; resets its database first.
-    { name: 'demo', testDir: './tests/e2e/demo', timeout: 900_000 },
   ],
   // Starts Vite unless TEST_URL points at a server that is already running.
   webServer: process.env.TEST_URL ? undefined : {

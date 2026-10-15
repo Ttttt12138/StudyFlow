@@ -20,7 +20,7 @@ import { BarCompare, DateWindow, StackBar, StepTrack } from "../workspace/PanelC
 import { intlLocale, useI18n, type MessageKey } from "../i18n";
 
 const previewStates: WalletPreviewScenario[] = ["submitted", "pending", "refunded", "unknown", "expired", "empty"];
-const purposes = ["tuition", "living", "family_support", "other"];
+const purposes = ["tuition", "living", "other"];
 const initial: WalletSnapshot = { balances: null, corridors: [], beneficiaries: [], orders: [], approvals: [], errors: {} };
 const amountPattern = /^(?=.*[1-9])\d+(?:\.\d+)?$/;
 const signInUrl = `/auth?next=${encodeURIComponent(window.location.origin+"/?wallet=1")}`;

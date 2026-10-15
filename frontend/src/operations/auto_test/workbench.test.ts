@@ -8,6 +8,8 @@ describe("workbench navigation and preview", () => {
     expect(navigationFromHash("#ops-adapter")).toEqual({ view: "tasks", kind: "transactions", attention: "all" });
     expect(navigationFromHash("#ops-decisions").view).toBe("history");
     expect(navigationFromHash("#unknown").view).toBe("overview");
+    // Family support was retired: its old section link opens the overview.
+    expect(navigationFromHash("#ops-sponsors")).toEqual({ view: "overview", kind: "all", attention: "all" });
   });
   it("encodes student input as a parameter", () => {
     const url = new URL(workbenchPath({ student: "a&b", kind: "all", attention: "unknown", page: 2 }), "https://test/");

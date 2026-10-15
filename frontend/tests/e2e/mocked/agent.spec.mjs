@@ -67,7 +67,6 @@ test.describe("money in the conversation with mocked Django", () => {
       if (path === "agent/conversations/" && method === "GET") return json(route, 200, { data: [{ id: conversation.id, updated_at: inMinutes(0), turn_count: 2 }] });
       if (path.startsWith("agent/conversations/")) return json(route, 200, { data: conversation });
       if (path === "planning/in-school/") return json(route, 200, { data: { enrolled: false } });
-      if (path === "planning/family-links/") return json(route, 200, { data: [] });
       if (path === "planning/rates/") return json(route, 200, { data: { thb_per_unit: { THB: "1", CNY: "4.60", USD: "33.00" }, rate_date: "2026-10-13", source: "fixture" } });
       if (path === "planning/schools/") return json(route, 200, { data: { schools: [] } });
       if (path === "auth/step-up/") {

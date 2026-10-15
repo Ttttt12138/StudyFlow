@@ -15,7 +15,6 @@
 .life-form label { display: grid; gap: 5px; font-size: 13px; min-width: 0; }
 .life-form :is(input, textarea, select) { width: 100%; min-width: 0; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px; background: white; color: #162d43; font: inherit; }
 .life-form textarea { min-height: 80px; }
-.life-budget { padding-top: 16px; border-top: 1px solid #dce5ee; }
 .life-warning { color: #a53828; }
 /* Reminder bell in the workspace top bar. */
 .life-bell { position: relative; }
@@ -56,7 +55,6 @@
 .life-fold > summary { padding: 11px 14px; cursor: pointer; font-size: 14px; color: var(--text-2); }
 .life-fold[open] > summary { border-bottom: 1px solid var(--line); }
 .life-fold > :not(summary) { margin: 10px 14px; }
-.life-fold .life-budget h3 { display: none; }
 
 /* A to-do is one row until opened: title and amount, date and status, and whether the money is there. */
 .life-item { padding: 0; margin: 0; gap: 0; overflow: hidden; background: var(--surface-1); }
@@ -86,7 +84,7 @@
 .life-inline-form input { width: 140px; padding: 8px 10px; border: 1px solid var(--line-2); border-radius: 8px; font: inherit; }
 .life-section-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
 .life-section-head h3 { margin: 0; font-size: 16px; }
-.life-todo, .life-spending { display: grid; gap: 10px; }
+.life-todo { display: grid; gap: 10px; }
 .life-filter { display: inline-flex; padding: 3px; border-radius: 10px; background: var(--surface-2); }
 .life-filter button { padding: 6px 12px; border: 0; border-radius: 8px; background: transparent; font: inherit; font-size: 13px; color: var(--text-2); cursor: pointer; }
 .life-filter button[aria-pressed="true"] { background: var(--surface-1); color: var(--text); font-weight: 600; box-shadow: 0 1px 2px rgba(31, 35, 41, .08); }
@@ -97,8 +95,6 @@
 .life-detail-amount { font-size: 24px; }
 .life-source { margin: 0; padding: 10px 12px; border-left: 3px solid var(--line-2); color: var(--text-2); white-space: pre-wrap; }
 .life-form-pair { display: grid; grid-template-columns: minmax(0, 1fr) 110px; gap: 10px; }
-.life-spending .monthly-distribution { display: grid; grid-template-columns: 112px minmax(0, 1fr); align-items: center; gap: 16px; margin: 0; }
-.life-spending .monthly-pie { width: 112px; height: 112px; aspect-ratio: 1; -webkit-mask: radial-gradient(circle, transparent 34px, #000 35px); mask: radial-gradient(circle, transparent 34px, #000 35px); }
 /* Later shortfalls: a quiet line that opens the first bill, not the warning banner */
 button.life-summary-line { padding: 0; border: 0; background: none; text-align: left; line-height: 1.55; cursor: pointer; }
 button.life-summary-line:hover { color: var(--text); text-decoration: underline; }

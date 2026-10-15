@@ -14,7 +14,7 @@ const tuition: OpsPayment = {
 };
 const transfer: OpsOrder = {
   ...student, id: id(2), version: 1, status: "CREATED", effective_status: "CREATED", recipient: "BENEFICIARY",
-  beneficiary_name: "Family account", purpose: "family_support", send_amount: "15000.00", send_currency: "CNY",
+  beneficiary_name: "Demo Condo", purpose: "living", send_amount: "15000.00", send_currency: "CNY",
   receive_amount: "73500.00", receive_currency: "THB", submitted_at: null, expected_latest: "2026-10-14", deadline: null,
   payee_verified_by: 8,
 };
@@ -27,7 +27,7 @@ const queue: OpsQueue = {
       decided_at: null, decision_note: "", requested_by_username: "demo-student", decided_by_username: null,
       can_decide: true, blocked_reason: null, target: { ...tuition, kind: "payment" } },
     { ...student, id: id(11), action: "remittance.submit", target_id: transfer.id, amount: "15000.00", currency: "CNY",
-      reason: "Help with family costs", status: "PENDING", version: 1, created_at: "2026-10-11T02:30:00Z", expires_at: later(2),
+      reason: "Monthly living costs", status: "PENDING", version: 1, created_at: "2026-10-11T02:30:00Z", expires_at: later(2),
       decided_at: null, decision_note: "", requested_by_username: "demo-student", decided_by_username: null,
       can_decide: false, blocked_reason: "VERIFIED_PAYEE", target: { ...transfer, kind: "remittance_order" } },
   ],
@@ -58,12 +58,6 @@ const queue: OpsQueue = {
       assessment: { status: "AFFORDABLE" },
       quote: { currency: "THB", principal: "10000.00", net_proceeds: "10000.00", fees: "0.00", total_repayment: "10345.00",
         maximum_installment: "1725.00", affordability_status: "AFFORDABLE", months: 6, annual_rate: "0.12" } },
-  ],
-  sponsor_requests: [
-    { ...student, id: id(30), status: "PENDING", terms_version: 1, purpose: "Spring tuition help", created_at: "2026-10-11T02:40:00Z",
-      token_expires_at: null, confirmed_at: null, source: { id: id(31), amount: "1000.00", currency: "USD", available_on: "2026-10-20", received: false } },
-    { ...student, id: id(32), status: "CONFIRMED", terms_version: 1, purpose: "Rent support", created_at: "2026-10-08T02:40:00Z",
-      token_expires_at: "2026-10-11T02:40:00Z", confirmed_at: "2026-10-09T08:00:00Z", source: { id: id(33), amount: "8000.00", currency: "THB", available_on: "2026-10-10", received: false } },
   ],
   is_simulated: true,
 };

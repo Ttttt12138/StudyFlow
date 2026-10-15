@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { WalletApiError } from "../wallet/client";
 import { money, pick } from "./format";
 import { createPlanPreview } from "./preview";
-import type { Conversation } from "./types";
+import { shownCard, type Conversation } from "./types";
 
 describe("planner money format", () => {
   it("drops cents on large amounts and keeps them on small ones", () => {
@@ -47,5 +47,15 @@ describe("planner preview client", () => {
     for (const route of ["planning/family-links/", "planning/expenses/", "planning/credit/"]) {
       await expect(client.get(route)).rejects.toBeInstanceOf(WalletApiError);
     }
+  });
+});
+
+describe("stored cards of retired features", () => {
+  it("render nothing instead of failing", () => {
+    expect(shownCard({ type: "spending" })).toBe(false);
+    expect(shownCard({ type: "confirmation", action: "plan.enroll" })).toBe(false);
+    expect(shownCard({ type: "something_new" })).toBe(false);
+    expect(shownCard({ type: "confirmation", action: "plan.confirm" })).toBe(true);
+    expect(shownCard({ type: "cost" })).toBe(true);
   });
 });

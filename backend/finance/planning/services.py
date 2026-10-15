@@ -143,9 +143,6 @@ def set_profile(user, data):
     return profile_record(item)
 
 
-set_role = set_profile  # older callers
-
-
 def profile_record(item):
     if item is None:
         return {"role": None, "home_currency": DEFAULT_DISPLAY_CURRENCY}

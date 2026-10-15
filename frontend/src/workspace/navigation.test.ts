@@ -57,6 +57,7 @@ describe("workspace navigation", () => {
   });
   it("ignores unknown tools and retired public pages", () => {
     expect(readWorkspaceRoute("http://localhost/?tool=not-a-tool").tool).toBeNull();
+    // The retired family-support confirmation link (?sponsor=1#token=…) opens no tool.
     expect(readWorkspaceRoute("http://localhost/?sponsor=1").tool).toBeNull();
     expect(readWorkspaceRoute("http://localhost/?verify=1").tool).toBeNull();
   });

@@ -45,10 +45,6 @@ export type PlanDraftItem = { id: string; school_key: string; name: Text | null;
   loan: { principal: string | null; months?: number; product?: string } | null };
 export type PlanHistory = { prices: HistoryPrice[]; drafts: PlanDraftItem[]; draft_limit: number };
 export type Bill = { id: string; kind: string; label: Text; due_date: string; amount: string; currency: string; status: "DUE" | "PAID"; paid_at: string | null };
-export type Expense = { id: string; spent_on: string; category: string; amount: string; currency: string; note: string; via_agent: boolean };
-export type Spending = { month: string; currency: string; spent: string; budget: string; remaining: string; over_budget: boolean;
-  by_category: Record<string, string>; unconverted?: string[]; recent?: Expense[]; expense?: Expense };
-export type SpendingPage = Spending & { entries: Expense[]; count: number; next_offset: number | null };
 
 export type Card =
   | { type: "role"; role: Role | null; home_currency: string }
@@ -57,11 +53,14 @@ export type Card =
   | { type: "comparison"; schools: SchoolBrief[]; home_currency: string }
   | { type: "cost"; school: { key: string; name: Text }; estimate: Estimate; notes: Text[] }
   | { type: "plan"; plan: Plan }
-  | { type: "loan"; plan: Plan; gap: string; gap_currency: string }
+  | { type: "loan"; plan: Plan }
   | { type: "loan_advice"; plan_id: string; advice: import("./loanAdvice").LoanAdvice }
   | { type: "confirmation"; action: string; pending_action_id: string; details: Record<string, unknown>; expires_at: string; plan?: Plan; amount?: string | null; currency?: string }
-  | { type: "bills"; bills: Bill[] }
-  | ({ type: "spending" } & Spending);
+  | { type: "bills"; bills: Bill[] };
+/** Card types this interface renders; a stored conversation may hold retired ones (spending, enrollment), which render nothing. */
+const cardTypes: readonly string[] = ["role", "school_list", "school", "comparison", "cost", "plan", "loan", "loan_advice", "confirmation", "bills"];
+/** Whether a stored card is one this interface still shows (not a retired type or the retired enrollment confirmation). */
+export const shownCard = (card: { type: string; action?: unknown }) => cardTypes.includes(card.type) && !(card.type === "confirmation" && card.action === "plan.enroll");
 
 export type PendingAction = { id: string; action: string; status: string; expires_at: string; session: string;
   /** Money proposals: what the step-up grant is bound to (finance/agent_runner.py session_record). */

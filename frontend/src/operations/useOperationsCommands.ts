@@ -2,16 +2,14 @@ import { useRef } from "react";
 import { useI18n, type MessageKey } from "../i18n";
 import { formatMoney } from "../backend/presenters";
 import type { WalletClient } from "../wallet/client";
-import type { IssuedLink, OpsApplication, OpsApproval, OpsOrder, OpsPayment, OpsSponsorRequest } from "./types";
-import { sponsorLink } from "./sponsorLink";
+import type { OpsApplication, OpsApproval, OpsOrder, OpsPayment } from "./types";
 
 export type OpsCommand = { key: string; text: string; danger?: boolean; noteFor?: string; act: () => Promise<string> };
 
-export function useOperationsCommands(client: WalletClient, setIssued: (link: IssuedLink) => void) {
+export function useOperationsCommands(client: WalletClient) {
   const { t, lang } = useI18n();
   const note = useRef("");
   const money = (value: unknown, currency?: string) => formatMoney(value, currency, lang);
-  const home = "THB";
   // Builders for each kind of operator action; the Django route enforces the real rules.
   const decideAction = (approval: OpsApproval, decision: "approve" | "reject"): OpsCommand => ({
     key: `decide:${approval.id}`, danger: decision === "reject",
@@ -64,28 +62,7 @@ export function useOperationsCommands(client: WalletClient, setIssued: (link: Is
       return t(result.account ? "ops.notice.disbursed" : "ops.notice.backToReview");
     },
   });
-  const issueLinkAction = (request: OpsSponsorRequest): OpsCommand => ({
-    key: `sponsor:${request.id}`, text: t("ops.confirm.issueLink", { student: request.owner_username }),
-    act: async () => {
-      const link = await client.post<{ token: string; expires_at: string }>(`sponsor-requests/${request.id}/issue-link/`,
-        { terms_version: request.terms_version }, `issue-link:${request.id}:${request.terms_version}`);
-      // Shown once to pass on; StudyFlow keeps only a digest of the token.
-      setIssued({ id: request.id, url: sponsorLink(window.location.origin, link.token), expires: link.expires_at });
-      return t("ops.notice.linkIssued");
-    },
-  });
-  const receiveAction = (request: OpsSponsorRequest): OpsCommand => ({
-    key: `sponsor:${request.id}`,
-    text: t("ops.confirm.receive", { amount: money(request.source.amount, request.source.currency), student: request.owner_username }),
-    act: async () => {
-      // Foreign-currency support stays in its own currency; converting is the student's choice in the wallet.
-      await client.post(`funding-sources/${request.source.id}/receive/`, { hold_in_source_currency: request.source.currency !== home },
-        `receive:${request.source.id}`);
-      return t("ops.notice.received", { amount: money(request.source.amount, request.source.currency) });
-    },
-  });
-
   return { decideAction, paymentAction, orderAction, verifyAction, loanDecisionAction, disburseAction,
-    issueLinkAction, receiveAction, setNote: (value: string) => { note.current = value; } };
+    setNote: (value: string) => { note.current = value; } };
 }
 export type OperationsCommands = ReturnType<typeof useOperationsCommands>;

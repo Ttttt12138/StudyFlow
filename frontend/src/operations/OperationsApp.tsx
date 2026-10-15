@@ -12,7 +12,7 @@ import { OperationsQueue, OperationsPagination } from "./OperationsQueue";
 import { OperationsHistory } from "./OperationsHistory";
 import { OperationsDetail } from "./OperationsDetail";
 import type { OpsCommand } from "./useOperationsCommands";
-import type { IssuedLink, OpsAttention, OpsGroup, OpsItem, OpsNavigation } from "./types";
+import type { OpsAttention, OpsGroup, OpsItem, OpsNavigation } from "./types";
 import "../services/services.css";
 import "./operations.css";
 
@@ -27,7 +27,6 @@ export function OperationsApp({ preview, onExit }: { preview: boolean; onExit: (
   const [page, setPage] = useState(1);
   const [historyStatus, setHistoryStatus] = useState("all");
   const [selected, setSelected] = useState<OpsItem | null>(null);
-  const [issued, setIssued] = useState<IssuedLink | null>(null);
   const [busy, setBusy] = useState(false);
   const running = useRef(false);
   const [notice, setNotice] = useState("");
@@ -45,7 +44,7 @@ export function OperationsApp({ preview, onExit }: { preview: boolean; onExit: (
     return () => window.removeEventListener("hashchange", sync);
   }, []);
   useEffect(() => { setSelected(current => current && data?.items.find(row => itemKey(row) === itemKey(current)) || null); }, [data]);
-  useEffect(() => { setIssued(null); setNotice(""); setError(""); }, [data?.operator.id]);
+  useEffect(() => { setNotice(""); setError(""); }, [data?.operator.id]);
 
   function navigate(next: OpsNavigation, status = "all") {
     setNavigation(next); setPage(1); setSelected(null); setHistoryStatus(status);
@@ -112,6 +111,6 @@ export function OperationsApp({ preview, onExit }: { preview: boolean; onExit: (
       </div>}
     </main></div>
     {selected && data && <OperationsDetail key={itemKey(selected)} item={selected} operatorId={data.operator.id} client={client} locked={locked || preview} busy={busy}
-      notice={notice} error={error} refreshError={refreshError} issued={issued} setIssued={setIssued} onClose={() => setSelected(null)} onRun={run} onRetry={() => void retry()}/>}
+      notice={notice} error={error} refreshError={refreshError} onClose={() => setSelected(null)} onRun={run} onRetry={() => void retry()}/>}
   </div>;
 }

@@ -10,19 +10,12 @@ def _school(key):
 
 def build(user, tool, arguments, result, status):
     if status == "PROPOSED":
-        if result.get("action") not in ("plan.confirm", "plan.enroll"):
-            return {"type": "confirmation", "action": result.get("action"),
-                    "pending_action_id": result.get("pending_action_id"), "details": result.get("details"),
-                    "amount": result.get("amount"), "currency": result.get("currency"),
-                    "expires_at": result.get("expires_at")}
-        return {"type": "confirmation", "action": result["action"],
-                "pending_action_id": result["pending_action_id"], "details": result.get("details"),
-                "expires_at": result.get("expires_at"),
-                "plan": services.plan_record(services.plan_for(user), services.home_currency(user))["plan"]}
+        return {"type": "confirmation", "action": result.get("action"),
+                "pending_action_id": result.get("pending_action_id"), "details": result.get("details"),
+                "amount": result.get("amount"), "currency": result.get("currency"),
+                "expires_at": result.get("expires_at")}
     if status != "OK":
         return None
-    if tool == "set_role":  # retired tool; kept so stored turns from older conversations still render
-        return {"type": "role", **result}
     if tool == "list_schools":
         from .tools import filtered_schools
 
@@ -49,8 +42,6 @@ def build(user, tool, arguments, result, status):
         return {"type": "loan", **result}
     if tool == "list_bills":
         return {"type": "bills", "bills": result.get("bills", [])}
-    if tool in ("record_expense", "get_spending"):
-        return {"type": "spending", **result}
     if tool in ("save_plan", "get_plan"):
         return {"type": "plan", "plan": result.get("plan")} if result.get("plan") else None
     return None
