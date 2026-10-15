@@ -1,8 +1,0 @@
-
-  VITE v6.4.3  ready in 281 ms
-
-  ➜  Local:   http://127.0.0.1:5199/
-20:25:14 [vite] (client) page reload src/i18n/assessment.ts
-20:25:14 [vite] (client) page reload src/i18n/payments.ts
-20:25:14 [vite] (client) page reload src/plan/assessmentTypes.ts
-20:25:14 [vite] (client) page reload src/plan/LoanStage.tsx

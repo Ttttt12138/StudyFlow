@@ -72,26 +72,8 @@ def _plan_bills(owner, as_of, start):
                "status": "ON_TIME" if row.paid_on <= row.due_date else "LATE"}
 
 
-def _credit_charges(owner, as_of, start):
-    # The pay-later line: paid back from the wallet by its 30-day due date, late, or still owed past it.
-    # Charges recorded as repaid before repayments moved money (no wallet entry) prove nothing.
-    from .planning.models import CreditCharge
-
-    for row in CreditCharge.objects.filter(owner=owner).order_by("due_date", "id"):
-        if row.repaid_on is None:
-            if row.due_date >= as_of:
-                continue
-            status = "OVERDUE"
-        elif not hasattr(row, "ledger_entry"):
-            continue
-        else:
-            status = "ON_TIME" if row.repaid_on <= row.due_date else "LATE"
-        yield {"source": "credit_charge", "id": str(row.id), "due_on": row.due_date,
-               "completed_on": row.repaid_on, "status": status}
-
-
 # Each source yields evidence dicts for one owner; profile() applies the window.
-EVIDENCE_SOURCES = [_installments, _payments, _remittances, _plan_bills, _credit_charges]
+EVIDENCE_SOURCES = [_installments, _payments, _remittances, _plan_bills]
 
 
 def _in_window(item, start):

@@ -1,8 +1,0 @@
-{
-  "completed_at": "2026-10-11T16:33:17.3686238Z",
-  "rounds_per_arm": 1,
-  "previous_run": "v5-regression-20261011T161212Z",
-  "authorized_additional_rounds": 1,
-  "exit_code": 1,
-  "automatic_additional_rounds": 0
-}

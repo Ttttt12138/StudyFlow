@@ -67,3 +67,8 @@ class FinalStep(Contract):
 
 class PlannerOutput(Contract):
     step: Annotated[ToolCallStep | FinalStep, Field(discriminator="kind")]
+
+
+class ProseVerdict(Contract):
+    """Whether a plain-text planner reply is a finished answer to the user, or the model's own reasoning."""
+    user_facing: bool

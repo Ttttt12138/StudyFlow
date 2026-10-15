@@ -45,7 +45,7 @@ export function PriceCard({ id, name, estimate, actions }: { id: string; name: T
       <div className="price-actions">
         <button type="button" className="link-button" onClick={() => workspace?.open({ kind: "card", cardId: id })}>{t("price.details")}<ArrowRight size={14} aria-hidden="true" /></button>
         {!actions.readOnly && <button type="button" className="primary" disabled={actions.busy}
-          onClick={() => actions.choose(estimate.school_key, title, estimate.years)}>{t("price.chooseGap")}</button>}
+          onClick={() => actions.choose(estimate.school_key, title, estimate.years)}>{t("price.chooseSchool")}</button>}
       </div>
     </div>
   </article>;
@@ -99,24 +99,7 @@ export function CompareCard({ id, schools, actions, list }: { id: string; school
   </article>;
 }
 
-/** Shown after the plan has a school and the family's funds: what is still missing, and the two ways to cover it. */
-export function GapCard({ plan, actions }: { plan: Plan; actions: CardActions }) {
-  const { lang, t } = useI18n();
-  const show = useShow();
-  const workspace = useWorkspace();
-  const cur = plan.currency ?? plan.school?.currency ?? "THB";
-  const name = pick(plan.school?.name, lang) || plan.school_key;
-  const gap = show(plan.gap, cur, lang);
-  return <article className="gap-card">
-    <div><p>{t("price.gapOf", { name, years: plan.years })}</p><strong>{gap.main}</strong>{gap.original && <small>{gap.original}</small>}</div>
-    {!actions.readOnly && <div className="price-actions">
-      <button type="button" className="primary" disabled={actions.busy} onClick={() => workspace?.open({ kind: "funding" })}>{t("simple.choose")}</button>
-      
-    </div>}
-  </article>;
-}
-
-/** The simulated loan for the gap: the monthly payment first, then what it costs in total. */
+/** The simulated loan chosen by the student: the monthly payment first, then what it costs in total. */
 export function LoanOffer({ plan, actions }: { plan: Plan; actions: CardActions }) {
   const { lang, t } = useI18n();
   const show = useShow();

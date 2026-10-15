@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { screenshot } from '../../support.mjs';
-import { approval, payment, order, payee, loan, sponsor, item, workbench, openOpsItem, id } from '../../operations-support.mjs';
+import { approval, payment, order, payee, loan, item, workbench, openOpsItem, id } from '../../operations-support.mjs';
 
 const base = process.env.TEST_URL || 'http://127.0.0.1:5173';
 const json = (route, status, body) => route.fulfill({ status, contentType: 'application/json', body: JSON.stringify(body) });
@@ -107,28 +107,28 @@ test('409 refreshes the selected record and requires a new confirmation', async 
   expect(posts.map(row => row.expected_version)).toEqual([1, 2]);
 });
 
-test('sponsor link stays in the fragment; receipt and loan disbursement keep their contracts', async ({ page }) => {
-  const posts = [], token = 'ab'.repeat(32);
+test('retired family-support rows are ignored; loan disbursement keeps its contract', async ({ page }) => {
+  const posts = [];
+  // A server that still lists a family-support request: the console shows neither the row nor a group for it.
+  const retired = { kind: 'sponsor', record: { ...loan, id: id(7), purpose: 'Tuition help' }, queued_at: '2026-10-11T00:00:00Z', attention: null };
   await mock(page, route => {
     const path = new URL(route.request().url()).pathname.replace('/api/v2/', '');
     if (route.request().method() === 'POST') {
       posts.push([path, route.request().postDataJSON()]);
-      return json(route, 201, { data: path.includes('issue-link') ? { token, expires_at: '2026-10-14T00:00:00Z' } : { account: { id: 'acc' } } });
+      return json(route, 201, { data: { account: { id: 'acc' } } });
     }
-    const items = [];
-    if (!posts.some(([p]) => p.includes('/receive/'))) items.push(item('sponsor', { ...sponsor, status: posts.length ? 'CONFIRMED' : 'PENDING' }));
-    if (!posts.some(([p]) => p.includes('/disburse/'))) items.push(item('loan', loan));
+    const items = [retired];
+    if (!posts.length) items.push(item('loan', loan));
     return json(route, 200, { data: workbench(items) });
   });
-  await page.goto(`${base}/ops`); let detail = await openOpsItem(page, 'sponsor');
-  await detail.getByRole('button', { name: 'Create confirmation link' }).click(); await detail.getByRole('button', { name: 'Confirm', exact: true }).click();
-  await expect(detail.getByLabel('Confirmation link')).toHaveValue(`${base}/?sponsor=1#token=${token}`);
-  await detail.getByRole('button', { name: 'Record money received' }).click(); await detail.getByRole('button', { name: 'Confirm', exact: true }).click();
-  await expect(detail).toHaveCount(0);
-  detail = await openOpsItem(page, 'loan');
+  await page.goto(`${base}/ops`);
+  await expect(page.locator('.ops-table tbody tr[data-kind="loan"]')).toHaveCount(1);
+  await expect(page.locator('.ops-table tbody tr[data-kind="sponsor"]')).toHaveCount(0);
+  await expect(page.getByText('Family support')).toHaveCount(0);
+  const detail = await openOpsItem(page, 'loan');
   await detail.getByRole('button', { name: 'Disburse', exact: true }).click(); await detail.getByRole('button', { name: 'Confirm', exact: true }).click();
   await expect(page.getByText('Disbursed. The student now has an active loan account.')).toBeVisible();
-  expect(posts).toEqual([[`sponsor-requests/${sponsor.id}/issue-link/`, { terms_version: 2 }], [`funding-sources/${sponsor.source.id}/receive/`, { hold_in_source_currency: false }], [`applications/${loan.id}/disburse/`, { expected_version: 3 }]]);
+  expect(posts).toEqual([[`applications/${loan.id}/disburse/`, { expected_version: 3 }]]);
 });
 
 test('notes entered during confirmation are sent for reassessment and transfer outcomes', async ({ page }) => {
@@ -169,7 +169,7 @@ test('server pagination and student filtering reach items beyond the old cap', a
     const total = filtered ? 1 : 125;
     const records = filtered ? [item('payee', { ...payee, owner_username: 'last-student', name: 'Last payee' })]
       : Array.from({ length: current === 7 ? 5 : 20 }, (_, i) => item('payee', { ...payee, id: id(100 + (current - 1) * 20 + i), name: `Payee ${(current - 1) * 20 + i + 1}` }));
-    return json(route, 200, { data: workbench(records, { summary: { total, expiring: 0, unknown: 0, unverified: total, by_kind: { approvals: 0, transactions: 0, payees: total, loans: 0, sponsors: 0 } }, pagination: { page: current, page_size: 20, total, pages: filtered ? 1 : 7 } }) });
+    return json(route, 200, { data: workbench(records, { summary: { total, expiring: 0, unknown: 0, unverified: total, by_kind: { approvals: 0, transactions: 0, payees: total, loans: 0 } }, pagination: { page: current, page_size: 20, total, pages: filtered ? 1 : 7 } }) });
   });
   await page.goto(`${base}/ops`); await tasks(page);
   for (let pageNo = 2; pageNo <= 7; pageNo++) {

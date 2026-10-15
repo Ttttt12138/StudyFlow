@@ -11,3 +11,13 @@
 .walletx-ledger .walletx-credit{color:var(--accent)}
 .walletx-note{font-size:12px;color:var(--text-2);margin-top:12px}
 @media(max-width:650px){.walletx-filter{max-width:none}}
+.fx-quote-picker { display:grid; gap:6px; min-width:0; font-size:13px; color:var(--text-2); }
+.fx-quote-picker select { max-width:100%; }
+.tool-panel .walletx { flex-shrink:0; overflow:visible; }
+.tool-panel .walletx .fx-review { margin:0; display:grid; gap:10px; }
+.fx-review > h3, .fx-review > p, .fx-review .wallet-actions { margin:0; }
+.fx-review .wallet-actions { flex-direction:column; align-items:stretch; }
+.fx-review .wallet-confirm { max-width:none; }
+.fx-review .comparison-facts { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:8px 14px; }
+.fx-review .comparison-facts > div { display:grid; align-content:start; gap:4px; padding:8px 0; }
+.fx-review .comparison-facts dd { margin:0; text-align:left; overflow-wrap:anywhere; }

@@ -3,7 +3,6 @@ import { useToolActive, useToolRefresh } from "../workspace/context";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { formatDate, formatMoney, formatRate } from "../backend/presenters";
 import { intlLocale, useI18n, type MessageKey } from "../i18n";
-import { Amount } from "../services/Amount";
 import { TierBadge } from "../services/TierBadge";
 import { usePolicyAction } from "../services/usePolicyAction";
 import { WalletApiError, type WalletClient } from "./client";
@@ -13,8 +12,9 @@ import { amountProblem, amountRange, countdown, directions, ledgerCurrencies, le
 import { previewConversions, previewCorridors, previewHeld, previewHome, previewLedger, previewQuotes } from "./extras/previewData";
 import "./extras/walletx.css";
 import { ArrowDown } from "@phosphor-icons/react/dist/csr/ArrowDown";
-import { BarCompare, LevelBar, LineChart, RangeTrack } from "../workspace/PanelCharts";
+import { LevelBar, LineChart, RangeTrack } from "../workspace/PanelCharts";
 import { PanelAlert, PanelEmpty } from "../workspace/ToolPanel";
+import { ConversionQuotePicker } from "./ConversionQuotePicker";
 
 type Errors = Partial<Record<"corridors" | "balances" | "ledger" | "conversions", string>>;
 const POLICY_CODES = ["STEP_UP_REQUIRED", "STEP_UP_INVALID", "APPROVAL_REQUIRED"];
@@ -58,6 +58,14 @@ export function WalletExtras({ client, preview, onChanged, view = "all", balance
   const [result, setResult] = useState<Conversion | null>(null);
   const [filter, setFilter] = useState("all");
   const [now, setNow] = useState(() => Date.now());
+  const reviewRef = useRef<HTMLDivElement>(null), resultRef = useRef<HTMLDivElement>(null), convertRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (preview || !active || policy.pending || (view !== "all" && view !== "convert")) return;
+    const next = result ? resultRef.current : selectedId ? reviewRef.current : null;
+    next?.focus({ preventScroll: true });
+    convertRef.current?.closest<HTMLElement>(".panel-body")?.scrollTo({ top: 0 });
+  }, [selectedId, result?.id, preview, active, view, policy.pending]);
 
   const list = useMemo(() => directions(corridors), [corridors]);
   const sources = sourceCurrencies(list, held);
@@ -208,13 +216,13 @@ export function WalletExtras({ client, preview, onChanged, view = "all", balance
   const signed = (value: string, currency: string) => { const part = signedParts(value); return `${part.sign} ${money(part.abs, currency)}`; };
 
   return <>{view === "all" && stale}
-    <section id="wallet-convert" className="card wallet-panel walletx" hidden={view !== "all" && view !== "convert"}>
+    <section id="wallet-convert" className="card wallet-panel walletx" ref={convertRef} hidden={view !== "all" && view !== "convert"}>
       <div className="wallet-heading"><div><span className="eyebrow">{t("walletx.convert.eyebrow")}</span><h2>{t("walletx.convert.title")}</h2></div><TierBadge tier="T2" withLabel /></div>
-      <p>{t("walletx.convert.text")}</p>
-      {want && <p className="service-notice" role="status">{t(wantSource ? "walletx.convert.forBill" : "walletx.convert.forBillNone",
+      {!selected && !result && <p>{t("walletx.convert.text")}</p>}
+      {!selected && !result && want && <p className="service-notice" role="status">{t(wantSource ? "walletx.convert.forBill" : "walletx.convert.forBillNone",
         { name: want.name, amount: money(want.short, want.currency), currency: want.currency })}</p>}
       {(["corridors", "balances"] as const).map((key) => errors[key] && <PanelAlert key={key} message={errors[key]!} />)}
-      {list.length ? <>
+      {!selected && !result && (list.length ? <>
         <div className="fx-card">
           <div className="fx-leg">
             <label>{t("walletx.convert.from")}<select value={source} disabled={preview || busy} onChange={(event) => { setSource(event.target.value); resetQuotes(); }}>{sources.map((code) => <option key={code} value={code}>{code}{code === home ? t("walletx.convert.homeTag") : ""}</option>)}</select></label>
@@ -225,7 +233,7 @@ export function WalletExtras({ client, preview, onChanged, view = "all", balance
           <div className="fx-leg is-to">
             <label>{t("walletx.convert.to")}<select value={target} disabled={preview || busy} onChange={(event) => { setTarget(event.target.value); resetQuotes(); }}>{targets.map((code) => <option key={code} value={code}>{code}</option>)}</select></label>
             <div className="fx-credit"><span>{t("walletx.quote.net")}</span>
-              <strong>{selected ? <Amount text={money(selected.net_received, selected.target_currency)} /> : t("walletx.fx.afterQuote")}</strong></div>
+              <strong>{t("walletx.fx.afterQuote")}</strong></div>
           </div>
         </div>
         {range && <div className="fx-figure"><div className="panel-section-title">{t("walletx.fx.tiers")}<small>{t("walletx.convert.range", { min: money(range.min, source), max: money(range.max, source), n: tiers.length })}</small></div>
@@ -238,32 +246,25 @@ export function WalletExtras({ client, preview, onChanged, view = "all", balance
           {Number(amount) > Number(sourceRow.available_balance) && <small className="fx-warn">{t("walletx.fx.overAvailable")}</small>}</div>}
         {!sources.length && <small>{t("walletx.convert.noSource")}</small>}
         <div className="fx-actions"><button className="primary" disabled={preview || busy || !tiers.length} onClick={() => void requestQuotes()}>{t("walletx.convert.quote")}</button></div>
-      </> : <PanelEmpty title={t("walletx.convert.noRoutes")} />}
+      </> : <PanelEmpty title={t("walletx.convert.noRoutes")} />)}
       {error && <p className="error" role="alert">{error}</p>}
       {notice && <p className="service-notice" role="status">{notice}</p>}
-      {quotes.length > 1 && <BarCompare label={t("walletx.fx.compare")} rows={quotes.map((quote) => ({ key: quote.id, label: quote.route_name, value: Number(quote.net_received),
-        display: money(quote.net_received, quote.target_currency), best: Number(quote.net_received) === Math.max(...quotes.map((item) => Number(item.net_received))) }))} />}
-      {quotes.length > 0 && <div className="wallet-quote-grid">{quotes.map((quote) => {
-        const left = quoteSecondsLeft(quote, now);
-        return <article key={quote.id} className={selectedId === quote.id ? "selected" : ""}>
-          <h3>{quote.route_name}</h3>
-          <p><strong><Amount text={money(quote.net_received, quote.target_currency)} /></strong><span>{t("walletx.quote.net")}</span></p>
-          <dl><div><dt>{t("walletx.quote.debit")}</dt><dd>{money(quotedAmount(quote), quote.source_currency)}</dd></div>
-            <div><dt>{t("walletx.quote.rate")}</dt><dd title={quote.rate}>{formatRate(quote.rate)}</dd></div>
-            <div><dt>{t("walletx.quote.senderFee")}</dt><dd>{money(quote.sender_fee, quote.source_currency)}</dd></div>
-            <div><dt>{t("walletx.quote.receiverFee")}</dt><dd>{money(quote.receiver_fee == null ? null : String(quote.receiver_fee), quote.target_currency)}</dd></div>
-            <div><dt>{t("walletx.quote.expires")}</dt><dd>{left > 0 ? t("walletx.quote.left", { time: countdown(left) }) : <span className="status-chip status-expired">{t("walletx.quote.expired")}</span>}</dd></div></dl>
-          <small>{quote.is_mock ? t("walletx.quote.fixture") : t("walletx.quote.source", { source: quote.rate_source })}</small>
-          <button className="secondary" disabled={preview || left <= 0} aria-pressed={selectedId === quote.id} onClick={() => { setSelectedId(quote.id); setConfirmed(false); }}>{selectedId === quote.id ? t("walletx.quote.selected") : t("walletx.quote.select")}</button>
-        </article>; })}</div>}
-      {selected && <div className="wallet-review">
+      {selected && <>
+        <button type="button" className="panel-link" disabled={preview || busy || policy.pending} onClick={resetQuotes}>{t("walletx.review.edit")}</button>
+        <ConversionQuotePicker quotes={quotes} selected={selectedId} disabled={preview || busy || policy.pending}
+          onSelect={id => { setSelectedId(id); setConfirmed(false); }} />
+      </>}
+      {selected && <div className="wallet-review fx-review" ref={reviewRef} tabIndex={-1} role="region" aria-label={t("walletx.review.title")}>
         <h3>{t("walletx.review.title")}</h3>
         <dl className="comparison-facts">
           <div><dt>{t("walletx.review.debit")}</dt><dd>{money(quotedAmount(selected), selected.source_currency)}</dd></div>
           <div><dt>{t("walletx.review.credit")}</dt><dd>{money(selected.net_received, selected.target_currency)}</dd></div>
           <div><dt>{t("walletx.quote.rate")}</dt><dd title={selected.rate}>{formatRate(selected.rate)}</dd></div>
           <div><dt>{t("walletx.quote.senderFee")}</dt><dd>{money(selected.sender_fee, selected.source_currency)}</dd></div>
+          <div><dt>{t("walletx.quote.receiverFee")}</dt><dd>{money(selected.receiver_fee, selected.target_currency)}</dd></div>
+          <div><dt>{t("walletx.quote.expires")}</dt><dd>{selectedLive ? t("walletx.quote.left", { time: countdown(quoteSecondsLeft(selected, now)) }) : t("walletx.quote.expired")}</dd></div>
         </dl>
+        <small className="panel-muted">{selected.is_mock ? t("walletx.quote.fixture") : t("walletx.quote.source", { source: selected.rate_source })}</small>
         {selected.source_currency === home && <p className="service-alert">{t("walletx.review.reserve", { currency: home })}</p>}
         <p>{t("walletx.review.note")}</p>
         {!selectedLive && <p className="error" role="alert">{t("walletx.err.expired")}</p>}
@@ -273,7 +274,7 @@ export function WalletExtras({ client, preview, onChanged, view = "all", balance
         </div>
       </div>}
       {policy.panel}
-      {result && <div className="wallet-review" role="status">
+      {result && <div className="wallet-review" ref={resultRef} tabIndex={-1} role="status" aria-label={t("walletx.result.title")}>
         <h3>{t("walletx.result.title")}</h3>
         <dl className="comparison-facts">
           <div><dt>{t("walletx.result.debited")}</dt><dd>{money(result.source_amount, result.source_currency)}</dd></div>
@@ -282,15 +283,16 @@ export function WalletExtras({ client, preview, onChanged, view = "all", balance
           <div><dt>{t("walletx.result.sequences")}</dt><dd>{result.debit_sequence != null ? `#${result.debit_sequence} / #${result.credit_sequence}` : "—"}</dd></div>
           <div><dt>{t("walletx.result.effective")}</dt><dd>{formatDate(result.effective_on, lang)}</dd></div>
         </dl>
+        <button type="button" className="secondary" onClick={() => { setResult(null); setNotice(""); }}>{t("walletx.result.again")}</button>
       </div>}
-      <h3 className="walletx-sub">{t("walletx.recent.title")}</h3>
+      {!selected && <><h3 className="walletx-sub">{t("walletx.recent.title")}</h3>
       {trend.length >= 2 && <div className="fx-figure"><div className="panel-section-title">{t("walletx.fx.trend", { pair: trendPair })}<span>{formatRate(trend[trend.length - 1])}</span></div>
         <LineChart points={trend} label={t("walletx.fx.trend", { pair: trendPair })} height={64} /></div>}
       {errors.conversions && <p className="error" role="alert">{errors.conversions}</p>}
       {conversions.length ? <ul className="walletx-recent">{conversions.map((item) => <li key={item.id}>
         <strong>{money(item.source_amount, item.source_currency)} → {money(item.target_amount, item.target_currency)}</strong>
         <span>{t("walletx.recent.meta", { rate: formatRate(item.rate), date: stamp(item.created_at) })}</span></li>)}</ul>
-        : !errors.conversions && <p className="wallet-empty">{t("walletx.recent.none")}</p>}
+        : !errors.conversions && <p className="wallet-empty">{t("walletx.recent.none")}</p>}</>}
     </section>
     <section id="wallet-ledger" className="card wallet-panel walletx" hidden={view !== "all" && view !== "ledger"}>
       <div className="wallet-heading"><div><span className="eyebrow">{t("walletx.ledger.eyebrow")}</span><h2>{t("walletx.ledger.title")}</h2></div><span className="count">{t("walletx.ledger.count", { shown: ledger.length, total: ledgerCount })}</span></div>

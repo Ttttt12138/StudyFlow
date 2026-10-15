@@ -12,8 +12,8 @@ import { pick } from "./format";
  * After the plan is confirmed, the loan goes as it does with a lender: approval, the documents, signing, then
  * payment to the school bill by bill. Repayments of the signed loan follow in AssessmentProgress.
  */
-export function LoanStage({ data, quote, client, refresh }: {
-  data: PlanningAssessment; quote?: PlanningQuote; client: WalletClient; refresh: () => Promise<void>;
+export function LoanStage({ data, quote, client, refresh, preview = false, showHeading = true }: {
+  data: PlanningAssessment; quote?: PlanningQuote; client: WalletClient; refresh: () => Promise<void>; preview?: boolean; showHeading?: boolean;
 }) {
   const { t, lang } = useI18n();
   const show = useShow();
@@ -39,25 +39,27 @@ export function LoanStage({ data, quote, client, refresh }: {
   const status = stage.signed ? t("stage.signed") : application.status === "APPROVED" ? t("stage.approved")
     : application.status === "UNDER_REVIEW" ? t("stage.review") : application.status === "REJECTED" ? t("stage.rejected") : "";
   return <section className="loan-stage" aria-label={t("stage.title")}>
-    <h3 className="panel-section-title">{t("stage.title")}</h3>
+    {showHeading && <h3 className="panel-section-title">{t("stage.title")}</h3>}
     {status && <p className={stage.signed ? "plan-visual-gap" : "panel-muted"} role="status">{status}</p>}
     {payee && <p className="panel-muted loan-stage-payee">{t("stage.payee", { name: payee.name, account: payee.account })}
       {!held && <> · <span className="panel-tag">{t("stage.payeeVerified")}</span></>}</p>}
     {held && <p className="life-warning" role="alert">{t("stage.payeeUnverified")}</p>}
-    {!stage.signed && stage.documents.length > 0 && <fieldset className="loan-stage-docs" disabled={busy}>
+    {!stage.signed && stage.documents.length > 0 && <fieldset className="loan-stage-docs" disabled={busy || preview}>
       <legend>{t("stage.docs")}{left > 0 && ` · ${t("stage.docsLeft", { n: left })}`}</legend>
       {stage.documents.map(d => <label key={d.id}>
-        <input type="checkbox" checked={d.done} onChange={e => tick(d.id, e.target.checked, d.version)} />
+        <input type="checkbox" checked={d.done} disabled={d.auto} onChange={e => tick(d.id, e.target.checked, d.version)} />
         <span>{d.title ? pick(d.title, lang) : d.key}</span>
         {d.due_date && <small className="panel-muted">{d.due_date}</small>}
       </label>)}
     </fieldset>}
+    {application.status === "APPROVED" && !stage.signed && !held && <p className="panel-muted" role="status">
+      {left > 0 ? t("stage.signingDocumentsLeft", { n: left }) : t("stage.signingReady")}</p>}
     {application.status === "APPROVED" && !stage.signed &&
-      <button type="button" className="primary assessment-main" disabled={busy || !canSign} onClick={() => setSigning(true)}>{t("stage.sign")}</button>}
+      <button type="button" className="primary assessment-main" disabled={preview || busy || !canSign} onClick={() => setSigning(true)}>{t("stage.sign")}</button>}
     {stage.payouts.length > 0 && <div className="loan-stage-payouts">
       <h4>{t("stage.payouts")}</h4>
       <p className="plan-visual-gap">{t("stage.loanCovers", { amount: show(loanTotal, "THB", lang).main,
-        rest: show(Math.max(0, Number(data.prequal?.gap ?? 0) - loanTotal), "THB", lang).main })}</p>
+        rest: show(Math.max(0, Number(data.limit?.max_principal ?? 0) - loanTotal), "THB", lang).main })}</p>
       <ul>{byDate(stage.payouts).map(group => <li key={group.date} className={group.paid ? "is-paid" : ""}
         title={group.items.map(p => typeof p.bill_label === "string" ? p.bill_label : pick(p.bill_label, lang)).join("\n")}>
         <span>{[...new Set(group.items.map(p => t(KIND[p.kind] ?? "stage.kind.other")))].join("、")}</span>

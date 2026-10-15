@@ -1,4 +1,4 @@
-import { test } from "@playwright/test";
+import { test, expect } from "@playwright/test";
 import assert from "node:assert/strict";
 import { screenshot } from "../../support.mjs";
 import { enrolledPlanner } from "../plannerMock.mjs";
@@ -12,7 +12,8 @@ const page_ = results => ({ count: results.length, next: null, previous: null, r
 const denied = code => ({ detail: code, code, message: code, policy: { tier: code === "APPROVAL_REQUIRED" ? "T3" : "T2" } });
 
 function bill(id, label, amount, currency = "THB") {
-  return { id, kind: "tuition", label: { en: label, zh: label }, due_date: "2026-11-01", amount, currency, status: "DUE", paid_at: null, paid_by_loan: false };
+  return { id, kind: "tuition", label: typeof label === "string" ? { en: label, zh: label } : label,
+    due_date: "2026-11-01", amount, currency, status: "DUE", paid_at: null, paid_by_loan: false };
 }
 
 const SCHOOL = { id: "00000000-0000-4000-8000-0000000000a1", name: "Prince of Songkla University, Phuket Campus",
@@ -44,6 +45,115 @@ async function wallet(page, { bills, balance, commands, payee = SCHOOL }) {
 test.describe("wallet bill payments", () => {
   test.use({ viewport: { width: 390, height: 844 } });
 
+  for (const [width, height, expanded] of [[320, 740, false], [390, 844, false], [1440, 900, false], [1440, 900, true]]) {
+    test(`all bill details remain reachable at ${width}x${height}${expanded ? " expanded" : ""}`, async ({ page }) => {
+      await page.setViewportSize({ width, height });
+      const rows = Array.from({ length: 10 }, (_, index) => ({
+        ...bill(`tuition-${index}`, { en: `Semester ${index + 1} tuition`, zh: `第 ${index + 1} 学期学费` }, "41000.00"),
+        loan_pending: { amount: index === 9 ? "9000.00" : "41000.00", status: "APPROVED" },
+      }));
+      rows.push({ ...bill("housing", { en: "Housing deposit", zh: "住宿押金" }, "90000.00"), kind: "housing" });
+      const posts = await wallet(page, { bills: rows, balance: { value: "7000.00" },
+        commands: route => json(route, 500, { detail: "No payment should be submitted" }) });
+      await page.goto(`${base}/?tool=wallet&section=pay`);
+      if (expanded) await page.getByRole("button", { name: "Expand tool", exact: true }).click();
+      const pay = page.locator(".plan-bills-pay").first();
+      for (const language of ["English", "中文"]) {
+        await page.getByRole("button", { name: language, exact: true }).click();
+        await pay.evaluate(node => node.scrollTo({ top: 0 }));
+        await expect(pay.getByRole("heading", { name: language === "English" ? "Plan bills" : "方案账单", exact: true })).toBeInViewport({ ratio: 1 });
+        // The loan's nine direct payments fold into one line; the partly covered tenth bill is listed with the family's part.
+        await expect(pay.locator(".bill-loan > summary")).toContainText(language === "English" ? "9 bill(s)" : "9 笔");
+        if (!await pay.locator(".bill-loan").evaluate(node => node.open)) await pay.locator(".bill-loan > summary").click();
+        const last = pay.locator(".bill-loan .bill-rows li").last();
+        await last.scrollIntoViewIfNeeded();
+        await expect(last).toBeInViewport({ ratio: 0.99 });
+        expect(await pay.evaluate(node => node.scrollTop > 0)).toBe(true);
+        expect(await page.locator(".tool-content[data-tool=wallet]").evaluate(node =>
+          node.scrollTop === 0 && node.scrollHeight <= node.clientHeight + 1)).toBe(true);
+        const name = `bill-layout-${width}-${expanded ? "expanded" : "dock"}-${language === "English" ? "en" : "zh"}`;
+        await page.locator(".workspace-dock").screenshot({ path: screenshot(`${name}-last.png`) });
+        const housing = pay.locator(".bill-rows li", { hasText: language === "English" ? "Housing deposit" : "住宿押金" });
+        await housing.getByRole("button", { name: language === "English" ? "Top up" : "充值", exact: true }).click();
+        const amount = housing.getByLabel(language === "English" ? "Amount (THB)" : "金额（THB）", { exact: true });
+        await expect(amount).toHaveValue("83000.00");
+        const cancel = housing.getByRole("button", { name: language === "English" ? "Cancel" : "取消", exact: true });
+        await cancel.scrollIntoViewIfNeeded();
+        await expect(cancel).toBeInViewport({ ratio: 0.99 });
+        expect(await pay.evaluate(node => node.scrollWidth <= node.clientWidth + 1)).toBe(true);
+        await page.locator(".workspace-dock").screenshot({ path: screenshot(`${name}-topup.png`) });
+        await cancel.click();
+      }
+      expect(posts).toEqual([]);
+    });
+  }
+
+  for (const [status, amount] of [["APPROVED", "41000.00"], ["UNDER_REVIEW", "41000.00"], ["APPROVED", "9000.00"]]) test(`unsigned ${status} loan funds ${amount} of tuition directly`, async ({ page }) => {
+    const tuition = { ...bill("00000000-0000-4000-8000-0000000000c1", "Tuition per semester", "41000.00"),
+      loan_pending: { amount, status } };
+    const rows = [tuition, { ...bill("00000000-0000-4000-8000-0000000000c2", "Insurance", "2000.00"), kind: "insurance" }];
+    const posts = await wallet(page, { bills: rows, balance: { value: "60000.00" },
+      commands: route => json(route, 500, { detail: "No payment should be submitted" }) });
+    await page.goto(`${base}/?tool=wallet&section=pay`);
+    const pay = page.locator(".plan-bills-pay").first();
+    await expect(pay.getByRole("button", { name: "Continue loan application", exact: true })).toBeVisible();
+    await expect(pay).toContainText(status === "APPROVED" ? "Loan approved" : "under review");
+    // Tuition is listed once: in full under the loan's payments, or with the family's remainder when the loan covers part.
+    await expect(pay.locator(".bill-rows li", { hasText: "Tuition per semester" })).toHaveCount(1);
+    if (amount === "9000.00") {
+      const row = pay.locator(".bill-section").first().locator(".bill-rows li", { hasText: "Tuition per semester" });
+      await expect(row).toContainText("Total THB 41,000.00 · the loan pays THB 9,000.00");
+      await expect(row).toContainText("THB 32,000.00");
+      await expect(row).toContainText("Payable after signing");
+      await expect(row.getByRole("button", { name: "Pay from wallet", exact: true })).toHaveCount(0);
+    } else {
+      // The loan's state is said once, on the folded line; each row only names the bill.
+      await expect(pay.locator(".bill-loan > summary")).toContainText(status === "APPROVED" ? "awaiting documents and signing" : "awaiting loan approval/signing");
+      await pay.locator(".bill-loan > summary").click();
+      await expect(pay.locator(".bill-loan .bill-rows li", { hasText: "Tuition per semester" })).toContainText("THB 41,000.00");
+    }
+    const insurance = pay.locator(".bill-rows li", { hasText: "Insurance" });
+    await expect(insurance.getByRole("button", { name: "Pay from wallet", exact: true })).toBeEnabled();
+    await page.getByRole("button", { name: "中文", exact: true }).click();
+    await expect(pay.getByRole("button", { name: "继续贷款流程", exact: true })).toBeVisible();
+    await page.locator(".workspace-dock").screenshot({ path: screenshot(`tuition-loan-${status.toLowerCase()}-${amount}-390-zh.png`) });
+    expect(posts).toEqual([]);
+  });
+
+  test("a bill the signed loan partly pays is listed once, with the family's part to pay", async ({ page }) => {
+    const insurance = { ...bill("00000000-0000-4000-8000-0000000000d1", "Student insurance", "2300.00"), kind: "insurance",
+      due_date: "2029-08-09", group: "insurance:y3" };
+    const rows = [insurance,
+      { ...insurance, id: "00000000-0000-4000-8000-0000000000d2", amount: "4700.00", paid_by_loan: true },
+      { ...bill("00000000-0000-4000-8000-0000000000d3", "Tuition per semester", "41000.00"), paid_by_loan: true, due_date: "2029-08-09" },
+      { ...bill("00000000-0000-4000-8000-0000000000d4", "Tuition per semester", "41000.00"), paid_by_loan: true, status: "PAID", due_date: "2027-08-09" },
+      { ...bill("00000000-0000-4000-8000-0000000000d5", "Visa", "2000.00"), kind: "visa", status: "PAID", due_date: "2027-08-09" }];
+    const posts = await wallet(page, { bills: rows, balance: { value: "58382.35" },
+      commands: route => json(route, 500, { detail: "No payment should be submitted" }) });
+    await page.goto(`${base}/?tool=wallet&section=pay`);
+    const pay = page.locator(".plan-bills-pay").first();
+    await expect(pay.locator(".bill-summary")).toContainText("THB 2,300.00");
+    await expect(pay.locator(".bill-summary")).toContainText("THB 41,000.00");
+    const own = pay.locator(".bill-section").first().locator(".bill-rows li");
+    await expect(own).toHaveCount(1);
+    await expect(own).toContainText("Total THB 7,000.00 · the loan pays THB 4,700.00");
+    await expect(own.getByRole("button", { name: "Pay from wallet", exact: true })).toBeEnabled();
+    // Paid bills are in the records, not on the pay tab; the loan's payments are folded until opened.
+    await expect(pay.getByText("Visa")).toHaveCount(0);
+    await expect(pay.locator(".bill-loan")).not.toHaveAttribute("open", "");
+    await pay.locator(".bill-loan > summary").click();
+    await expect(pay.locator(".bill-loan .bill-rows li")).toHaveCount(1);
+    await expect(pay.locator(".bill-rows li", { hasText: "Student insurance" })).toHaveCount(1);
+    await page.getByRole("button", { name: "中文", exact: true }).click();
+    await page.locator(".workspace-dock").screenshot({ path: screenshot("wallet-bill-split-390-zh.png") });
+    await page.getByRole("button", { name: "English", exact: true }).click();
+    await pay.getByRole("button", { name: "View records", exact: true }).click();
+    const records = page.locator(".plan-bills-pay").filter({ hasText: "Bill payments" });
+    await expect(records.locator(".bill-rows li")).toHaveCount(2);
+    await expect(records).toContainText("paid from the wallet");
+    expect(posts).toEqual([]);
+  });
+
   test("a short bill is topped up in place, then paid after the password", async ({ page }) => {
     const errors = [];
     page.on("pageerror", error => errors.push(error.message));
@@ -71,8 +181,9 @@ test.describe("wallet bill payments", () => {
     } });
     await page.goto(`${base}/?tool=wallet&section=pay`);
     const pay = page.locator(".plan-bills-pay").first();
-    const row = pay.locator(".plan-bills-list li", { hasText: "Tuition per semester" });
-    await row.getByText("Wallet: THB 7,000.00").waitFor();
+    const row = pay.locator(".bill-rows li", { hasText: "Tuition per semester" });
+    await pay.getByText("Wallet available THB 7,000.00").waitFor();
+    await pay.getByText("The wallet is THB 34,000.00 short of everything listed").waitFor();
     // Short of 34,000: "Top up" opens a form in the row with the missing amount filled in.
     await row.getByRole("button", { name: "Top up", exact: true }).click();
     assert.equal(await row.getByLabel("Amount (THB)").inputValue(), "34000.00");
@@ -117,7 +228,7 @@ test.describe("wallet bill payments", () => {
       return json(route, 500, { detail: `unexpected POST ${path}` });
     } });
     await page.goto(`${base}/?tool=wallet&section=pay`);
-    const row = page.locator(".plan-bills-list li", { hasText: "Housing deposit" });
+    const row = page.locator(".bill-rows li", { hasText: "Housing deposit" });
     await row.getByRole("button", { name: "Pay from wallet" }).click();
     const dialog = page.getByRole("dialog", { name: "Review and confirm" });
     await dialog.getByRole("heading", { name: /Operator approval needed/ }).waitFor();
@@ -145,12 +256,11 @@ test.describe("wallet bill payments", () => {
       commands: (route, path) => json(route, 500, { detail: `unexpected POST ${path}` }) });
     await page.goto(`${base}/?tool=wallet&section=pay`);
     const pay = page.locator(".plan-bills-pay").first();
-    await pay.getByText("Tuition goes to Prince of Songkla University, Phuket Campus · Tuition account (simulated)").waitFor();
     await pay.getByRole("alert").filter({ hasText: "The school's tuition account is not verified" }).waitFor();
-    const tuition = pay.locator(".plan-bills-list li", { hasText: "Tuition per semester" });
+    const tuition = pay.locator(".bill-rows li", { hasText: "Tuition per semester" });
     assert.equal(await tuition.getByRole("button", { name: "Awaiting verification" }).isDisabled(), true);
     assert.equal(await tuition.getByRole("button", { name: "Pay from wallet" }).count(), 0);
-    const visa = pay.locator(".plan-bills-list li", { hasText: "Student visa" });
+    const visa = pay.locator(".bill-rows li", { hasText: "Student visa" });
     assert.equal(await visa.getByRole("button", { name: "Pay from wallet" }).isEnabled(), true);
     await page.screenshot({ path: screenshot("wallet-bill-school-unverified-390.png") });
     assert.deepEqual(posts, []);

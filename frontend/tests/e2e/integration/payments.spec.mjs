@@ -1,13 +1,13 @@
-// Real Django/PostgreSQL: an enrolled student pays the study plan's bills from the wallet's Pay tab
+// Real Django/PostgreSQL: an student with a submitted application pays the study plan's bills from the wallet's Pay tab
 // (src/wallet/PlanBillsPay.tsx). A short bill is topped up in its row and paid after the password (T2); a bill over
 // the per-transaction limit first needs a separate operator's approval (T3), which an approver gives over HTTP.
 import { test } from '@playwright/test';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
-import { backend, python, screenshot, enroll } from '../../support.mjs';
+import { backend, python, screenshot, submittedPlan } from '../../support.mjs';
 
-// Two DUE bills on the student's enrolled plan and a THB wallet holding 30,000.
+// Two DUE bills on the student's confirmed plan and a THB wallet holding 30,000.
 const SETUP = `import json, os
 from datetime import timedelta
 from django.contrib.auth import get_user_model
@@ -32,7 +32,7 @@ test('real Django bill payments: top-up in place, password step-up, operator app
   const passwords = { student: randomUUID(), approver: randomUUID() };
   execFileSync(python, ['manage.py', 'shell', '-c', 'import os,json; from django.contrib.auth import get_user_model; from finance.policy_defaults import ensure_default_limits; names=json.loads(os.environ["UAT_NAMES"]); passwords=json.loads(os.environ["UAT_PASSWORDS"]); [get_user_model().objects.create_user(username=n,password=passwords[k],is_staff=k!="student") for k,n in names.items()]; ensure_default_limits()'],
     { cwd: backend, env: { ...process.env, UAT_NAMES: JSON.stringify(names), UAT_PASSWORDS: JSON.stringify(passwords) }, stdio: 'pipe' });
-  enroll(names.student);
+  submittedPlan(names.student);
   const bills = [['uat-housing', 'housing', 'Housing deposit', '41000.00'], ['uat-tuition', 'tuition', 'Tuition per semester', '60000.00']];
   execFileSync(python, ['manage.py', 'shell', '-c', SETUP],
     { cwd: backend, env: { ...process.env, UAT_NAME: names.student, UAT_BILLS: JSON.stringify(bills) }, stdio: 'pipe' });
@@ -73,8 +73,8 @@ test('real Django bill payments: top-up in place, password step-up, operator app
     assert.equal(await thb(), '30000.00');
 
     // Short by 11,000: "Top up" opens a form in the row with the missing amount filled in.
-    const housing = pay.locator('.plan-bills-list li', { hasText: 'Housing deposit' });
-    await housing.getByText('Wallet: THB 30,000.00').waitFor();
+    const housing = pay.locator('.bill-rows li', { hasText: 'Housing deposit' });
+    await pay.getByText('Wallet available THB 30,000.00').waitFor();
     await housing.getByRole('button', { name: 'Top up', exact: true }).click();
     assert.equal(await housing.getByLabel('Amount (THB)').inputValue(), '11000.00');
     await housing.getByRole('button', { name: 'Top up THB 11,000.00', exact: true }).click();
@@ -95,7 +95,7 @@ test('real Django bill payments: top-up in place, password step-up, operator app
     await page.screenshot({ path: screenshot('bill-pay-integration-paid.png'), fullPage: true });
 
     // Over the per-transaction limit (T3): the student asks for approval; a separate operator decides.
-    const tuition = pay.locator('.plan-bills-list li', { hasText: 'Tuition per semester' });
+    const tuition = pay.locator('.bill-rows li', { hasText: 'Tuition per semester' });
     await tuition.getByRole('button', { name: 'Top up', exact: true }).click();
     await tuition.getByRole('button', { name: 'Top up THB 60,000.00', exact: true }).click();
     await pay.getByText('Topped up THB 60,000.00. You can now pay Tuition per semester.').waitFor();

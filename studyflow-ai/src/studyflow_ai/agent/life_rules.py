@@ -54,11 +54,11 @@ def life_reply(context):
     observed = next((o for o in reversed(context.observations) if o.tool == tool), None)
     if observed:
         if observed.status != "OK":
-            return FinalStep(answer="待办未保存，请在待办面板重试。" if zh else "The request failed. Retry in the tasks panel.")
+            return FinalStep(answer="这条待办没存上，可以在待办面板里再加一次。" if zh else "That reminder didn't save; you can add it again in the tasks panel.")
         result = observed.result or {}
         if create:
-            when = result.get("due_date") or ("日期待补，可在待办面板修改" if zh else "date unknown; edit it in the tasks panel")
-            return FinalStep(answer=(f"已添加应用内待办：{result.get('title', '')}。{when}。" if zh else
+            when = result.get("due_date") or ("日期还没定，之后可以在待办面板里补上" if zh else "date unknown; edit it in the tasks panel")
+            return FinalStep(answer=(f"记下了：{result.get('title', '')}。{when}。" if zh else
                                      f"In-app reminder saved: {result.get('title', '')}. {when}."))
         items = result.get("upcoming", [])
         lines = []
@@ -67,11 +67,11 @@ def life_reply(context):
             if isinstance(title, dict):
                 title = title.get(context.locale, title.get("en", ""))
             lines.append(f"{item.get('due_date') or ('日期待补' if zh else 'Date unknown')} · {title}")
-        return FinalStep(answer="\n".join(lines) or ("暂无近期未完成待办。" if zh else "No upcoming unfinished tasks."))
+        return FinalStep(answer="\n".join(lines) or ("最近没有要做的待办，挺轻松的。" if zh else "Nothing on your to-do list right now."))
     if not context.steps_remaining or tool not in {t.name for t in context.tools}:
-        return FinalStep(answer="请打开待办面板继续。" if zh else "Open the tasks panel to continue.")
+        return FinalStep(answer="这个在待办面板里操作更方便，打开它就能继续。" if zh else "This is easiest in the tasks panel; open it to continue.")
     if create and not context.memory.get("plan"):
-        return FinalStep(answer="先选择计划中的学校，再为这份计划添加待办。" if zh else "Choose a school for your plan before adding tasks.")
+        return FinalStep(answer="先选定一所学校，我就能把待办加进你的方案里。" if zh else "Once you choose a school, I can add reminders to your plan.")
     arguments = {"title": context.goal[:200], "source_text": context.goal,
                  "due_date": due_date(text, context.memory.get("today")), **labelled_payment(text)} if create else {}
     return ToolCallStep(tool=tool, arguments_json=json.dumps(arguments), rationale="User requested in-app tasks")

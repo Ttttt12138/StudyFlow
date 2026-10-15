@@ -11,15 +11,13 @@ export const order = { ...student, id: id(4), version: 2, status: 'SUBMITTED', e
 export const payee = { ...student, id: id(5), name: 'New landlord', destination_label: 'MOCK-ONLY', verified: false, created_at: '2026-10-11T00:00:00Z' };
 export const loan = { ...student, id: id(6), version: 3, status: 'APPROVED', created_at: '2026-10-11T00:00:00Z', decision_reason: '',
   assessment: { status: 'AFFORDABLE' }, quote: { currency: 'THB', principal: '10000.00', net_proceeds: '9500.00', fees: '500.00', total_repayment: '10300.00', maximum_installment: '1720.00', months: 6, annual_rate: '0.12' } };
-export const sponsor = { ...student, id: id(7), status: 'PENDING', terms_version: 2, purpose: 'Tuition help', created_at: '2026-10-11T00:00:00Z', token_expires_at: null, confirmed_at: null,
-  source: { id: id(8), amount: '8000.00', currency: 'THB', available_on: '2026-10-10', received: false } };
 export const item = (kind, record) => ({ kind, record, queued_at: record.created_at ?? record.submitted_at, attention: record.status?.toLowerCase() === 'unknown' ? 'unknown' : null });
 export function workbench(items = [], changes = {}) {
   return { operator: { id: 9, username: 'op' }, is_simulated: true, generated_at: '2026-10-13T09:00:00Z',
     summary: { total: items.length, expiring: 0, unknown: items.filter(row => row.attention === 'unknown').length,
       unverified: items.filter(row => row.kind === 'payee').length,
       by_kind: { approvals: items.filter(row => row.kind === 'approval').length, transactions: items.filter(row => ['payment', 'order'].includes(row.kind)).length,
-        payees: items.filter(row => row.kind === 'payee').length, loans: items.filter(row => row.kind === 'loan').length, sponsors: items.filter(row => row.kind === 'sponsor').length } },
+        payees: items.filter(row => row.kind === 'payee').length, loans: items.filter(row => row.kind === 'loan').length } },
     items, recent_decisions: [], pagination: { page: 1, page_size: 20, total: items.length, pages: 1 }, ...changes };
 }
 export async function openOpsItem(page, kind, text) {

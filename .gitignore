@@ -31,3 +31,6 @@ deliverables/
 # Playwright traces and per-run output inside verification evidence
 evidence/**/test-results/
 evidence/**/*pytest-tmp/
+
+# Internal team handoff notes (Chinese); kept locally, not part of the submission.
+HANDOFF.md

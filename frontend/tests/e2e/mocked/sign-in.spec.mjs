@@ -19,10 +19,12 @@ test("sign-in links open /auth, which signs in with a password and returns to th
   });
   await page.route("**/api/v2/**", route => route.fulfill({ status: 401, json: { detail: "Authentication credentials were not provided." } }));
 
-  // My loans is open before enrollment, so a signed-out visitor reaches its sign-in prompt.
+  // Old loan links open the new loan panel; the conversation owns the sign-in prompt.
   await page.goto(`${base}/?loans=1`);
-  const link = page.locator('.workspace-dock').getByRole("link", { name: "Sign in to StudyFlow" });
-  assert.match(await link.getAttribute("href"), /^\/auth\?next=/);
+  const link = page.getByRole("link", { name: "Sign in to StudyFlow", exact: true });
+  const href = await link.getAttribute("href");
+  assert.match(href, /^\/auth\?next=/);
+  const returnTo = new URL(href, base).searchParams.get('next');
   await link.click();
   await page.waitForURL(/\/auth\?next=/);
   await page.getByRole("heading", { name: "Sign in to StudyFlow" }).waitFor();
@@ -37,7 +39,7 @@ test("sign-in links open /auth, which signs in with a password and returns to th
   assert.deepEqual(posted, { login: "student", password: "wrong" });
 
   await page.getByLabel("Password", { exact: true }).fill("right-password");
-  await Promise.all([page.waitForURL(/\?loans=1$/), page.getByRole("button", { name: "Log in" }).click()]);
+  await Promise.all([page.waitForURL(returnTo), page.getByRole("button", { name: "Log in" }).click()]);
   assert.deepEqual(errors, []);
 });
 

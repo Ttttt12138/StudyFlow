@@ -1,3 +1,5 @@
+> Current student flow (2026-10-15): [shared contract](../student-loan-contract.md). User-entered loan amount, mandatory application, automatic simulated admission notice, DRAFT/CONFIRMED only. Older descriptions of family funding, budgets, bookkeeping, enrollment and no-loan confirmation below are historical platform documentation.
+
 # Backend API integration guide
 
 Base: http://127.0.0.1:8000/api/v2/

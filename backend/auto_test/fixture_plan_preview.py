@@ -1,90 +1,53 @@
-"""Records the planner preview shown at /?plan=preview (frontend/src/plan/preview-data/).
+"""Record both preview stages from real APIs in Django's isolated test database.
 
-Not collected by default (no test_ prefix). Regenerate after changing cards or the catalog:
-    python manage.py test auto_test.fixture_plan_preview
-It drives the real API with the deterministic rule planner, so the preview has the live shapes.
+Run: python backend/manage.py test auto_test.fixture_plan_preview
 """
 import json
-from datetime import timedelta
 from pathlib import Path
-from unittest.mock import patch
 
 from django.conf import settings
+from django.contrib.auth import get_user_model
 
 from auto_test.test_planning import API, ConversationHarness
-from finance.planning import services
-from finance.planning.models import StudyPlan
 
-OUT = Path(settings.BASE_DIR).parent / "frontend" / "src" / "plan" / "preview-data"
+OUT = Path(settings.BASE_DIR).parent / "frontend/src/plan/preview-data"
 SCRIPTS = {
-    "zh": {"plan": ["朱拉隆功读4年一共多少钱？", "比较曼彻斯特和墨尔本", "早稻田周边有什么好吃好玩的？",
-                    "我们有存款150万泰铢，就选朱拉隆功", "帮我试算贷款，分48个月", "确认计划"],
-           "prepare": ["学校宿舍和周边环境怎么样？", "出发准备", "首月预算"],
-           "school": ["今天午饭花了120泰铢", "打车花了85泰铢", "这个月花了多少？", "接下来有哪些账单？", "人民币兑泰铢汇率是多少"]},
-    "en": {"plan": ["What does 4 years at Chulalongkorn cost in total?", "Compare Manchester and Melbourne",
-                    "What food and fun is near Waseda?", "We have savings of 1500000 THB, choose Chulalongkorn",
-                    "Simulate a loan over 48 months", "Confirm the plan"],
-           "prepare": ["What are the school's dorms and surroundings like?", "Departure preparation", "First-month budget"],
-           "school": ["I spent 120 THB on lunch today", "Taxi, spent 85 THB", "How much have I spent this month?",
-                      "Which bills are due?", "What is the CNY to THB rate?"]},
+    "en": ["What does 4 years at Chulalongkorn cost in total?", "Compare Manchester and Melbourne",
+           "Choose Chulalongkorn", "I want to borrow 200000 THB"],
+    "zh": ["朱拉隆功读4年一共多少钱？", "比较曼彻斯特和墨尔本", "就选朱拉隆功", "我想贷款20万泰铢"],
 }
 
 
-def scrub(value):
-    """Stable, account-free JSON for the bundle."""
-    text = json.dumps(value, ensure_ascii=False, default=str)
-    return json.loads(text)
-
-
 class PlanPreviewFixture(ConversationHarness):
-    username = "demo-family"
-
     def write(self, name, data):
         OUT.mkdir(parents=True, exist_ok=True)
-        (OUT / name).write_text(json.dumps(scrub(data), ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+        (OUT / name).write_text(json.dumps(data, ensure_ascii=False, indent=1, default=str) + "\n", encoding="utf-8")
 
     def get(self, path):
         response = self.client.get(API + path)
         self.assertEqual(response.status_code, 200, response.data)
         return response.data["data"]
 
-    def run_stage_one(self, lang):
-        conversation = self.start(lang)
-        for text in SCRIPTS[lang]["plan"]:
-            self.say(conversation, text)
-        return self.get(f"agent/conversations/{conversation['id']}/")
+    def capture(self, conversation, stage, lang):
+        assessment = self.get("planning/assessment/")
+        self.write(f"{stage}.{lang}.json", {
+            "conversation": self.get(f"agent/conversations/{conversation['id']}/"), "assessment": assessment})
+        self.write(f"life.{stage}.{lang}.json", self.get("planning/life/"))
+        if stage == "plan" and lang == "en":
+            self.write("assessment.json", assessment)
+        return assessment
 
     def test_record(self):
-        for lang in ("zh", "en"):
-            StudyPlan.objects.filter(owner=self.user).delete()
-            self.user.planningprofile_set.all().delete()
-            stage_one = self.run_stage_one(lang)
-            self.write(f"plan.{lang}.json", {"conversation": stage_one, "in_school": self.get("planning/in-school/"),
-                                             "family": self.get("planning/family-links/")})
-            # Before enrollment: confirm the plan (the server appends its handoff), then ask the
-            # preparing-stage questions in the same conversation, well before the start date.
-            pending = next(p for t in stage_one["turns"] for p in t["pending_actions"] if p["status"] == "PENDING")
-            self.post(f"agent/pending-actions/{pending['id']}/confirm/")
-            start = StudyPlan.objects.get(owner=self.user).start_date
-            with patch.object(services, "today_for", return_value=start - timedelta(days=30)):
-                for text in SCRIPTS[lang]["prepare"]:
-                    self.say(stage_one, text)
-                self.write(f"prepare.{lang}.json", {
-                    "conversation": self.get(f"agent/conversations/{stage_one['id']}/"),
-                    "in_school": self.get("planning/in-school/"), "family": self.get("planning/family-links/")})
-            # Daily life: let the agent propose enrollment near the start date, then live there.
-            with patch.object(services, "today_for", return_value=start - timedelta(days=2)):
-                conversation = self.start(lang)
-                enroll = next(p for t in self.get(f"agent/conversations/{conversation['id']}/")["turns"]
-                              for p in t["pending_actions"] if p["action"] == "plan.enroll")
-                self.post(f"agent/pending-actions/{enroll['id']}/confirm/")
-            with patch.object(services, "today_for", return_value=start + timedelta(days=12)):
-                for text in SCRIPTS[lang]["school"]:
-                    self.say(conversation, text)
-                self.write(f"school.{lang}.json", {
-                    "conversation": self.get(f"agent/conversations/{conversation['id']}/"),
-                    "in_school": self.get("planning/in-school/"), "family": self.get("planning/family-links/")})
-            from finance.planning.models import PlanBill
-            PlanBill.objects.filter(owner=self.user).delete()
-            from finance.planning.models import ExpenseEntry
-            ExpenseEntry.objects.filter(owner=self.user).delete()
+        for lang in ("en", "zh"):
+            self.user = get_user_model().objects.create_user(f"preview-student-{lang}")
+            self.client.force_authenticate(self.user)
+            conversation = self.start(lang)
+            for text in SCRIPTS[lang]:
+                self.say(conversation, text)
+            # The recommendation card and the panel share the same current quote.
+            quote = self.capture(conversation, "plan", lang)
+            response = self.post("planning/plan/confirm/", {"expected_version": quote["version"],
+                "plan_version": quote["plan_version"], "quote_id": quote["quotes"][0]["id"]})
+            self.assertEqual(response.status_code, 201, response.data)
+            self.say(conversation, "Which bills are due?" if lang == "en" else "接下来有哪些账单？")
+            self.capture(conversation, "prepare", lang)

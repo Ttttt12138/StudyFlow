@@ -50,6 +50,6 @@ from .policy_models import PolicyLimit, ApprovalRequest, StepUpGrant
 from .credit_models import CreditSnapshot
 from .remittance_models import RemittanceOrder, RemittanceStatusEvent
 from .agent_models import AgentSession, AgentStep, AgentPendingAction
-from .planning.models import PlanningProfile, StudyPlan, FamilyLink, AgentConversation, PlanBill, ExpenseEntry
+from .planning.models import PlanningProfile, StudyPlan, AgentConversation, PlanBill
 from .copilot.models import WhatIfRun, PlanningPreference, ReviewItem, ReviewAction, ExplanationTrace
 from .auth_models import EmailOtpChallenge

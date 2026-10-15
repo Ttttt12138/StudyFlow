@@ -4,10 +4,13 @@ import { day, money, percent, pick } from "./format";
 import { useShow } from "./currency";
 import { moneyActionName } from "./MoneyConfirm";
 import { formatRate } from "../backend/presenters";
-import type { Bill, Card, CatalogEntry, Estimate, Place, Plan, SchoolBrief, Spending } from "./types";
+import { LoanAdviceCard } from "./LoanAdviceCard";
+import type { LoanReview } from "./loanAdvice";
+import { shownCard, type Bill, type Card, type CatalogEntry, type Estimate, type Place, type Plan, type SchoolBrief } from "./types";
 
 export type CardActions = {
   ask(text: string): void;
+  reviewLoan?(review: LoanReview): void;
   /** Saves the school as the plan straight away (no model call) and opens the funding panel. */
   choose(schoolKey: string, name: string, years?: number): void;
   confirm(pendingId: string): void;
@@ -139,8 +142,6 @@ export function PlanFacts({ plan }: { plan: Plan }) {
     <div><dt>{t("plan.plan.years")}</dt><dd>{plan.years}</dd></div>
     <div><dt>{t("plan.plan.start")}</dt><dd>{day(plan.start_date, lang)}</dd></div>
     <div><dt>{t("plan.plan.total")}</dt><dd>{show(plan.total, cur, lang).main}</dd></div>
-    <div><dt>{t("plan.plan.funds")}</dt><dd>{plan.available_funds ? show(plan.available_funds, plan.funds_currency || cur, lang).main : t("plan.plan.noFunds")}</dd></div>
-    {plan.gap != null && <div><dt>{t("plan.plan.gap")}</dt><dd className={Number(plan.gap) > 0 ? "plan-gap" : ""}>{show(plan.gap, cur, lang).main}</dd></div>}
   </dl>;
 }
 
@@ -177,7 +178,7 @@ function LoanCard({ plan }: { plan: Plan }) {
 function Confirmation({ card, actions }: { card: Extract<Card, { type: "confirmation" }>; actions: CardActions }) {
   const { lang, t } = useI18n();
   const status = actions.pendingStatus(card.pending_action_id);
-  const isPlan = card.action === "plan.confirm" || card.action === "plan.enroll";
+  const isPlan = card.action === "plan.confirm";
   const open = status === "PENDING" && new Date(card.expires_at).getTime() > Date.now();
   return <div className="plan-card plan-card-confirm">
     <div className="plan-card-head">
@@ -186,7 +187,7 @@ function Confirmation({ card, actions }: { card: Extract<Card, { type: "confirma
     </div>
     {card.plan && <PlanFacts plan={card.plan} />}
     {!isPlan && card.amount && <p>{money(card.amount, card.currency, lang)}</p>}
-    <p className="service-muted">{card.action === "plan.enroll" ? t("plan.confirm.enrollText") : isPlan ? t("plan.confirm.planText") : t("plan.confirm.money")}</p>
+    <p className="service-muted">{isPlan ? t("plan.confirm.planText") : t("plan.confirm.money")}</p>
     {open && !actions.readOnly && (isPlan ? <div className="plan-card-actions">
       <button type="button" className="primary" disabled={actions.busy} onClick={() => actions.confirm(card.pending_action_id)}>{t("plan.confirm.yes")}</button>
       <button type="button" className="secondary" disabled={actions.busy} onClick={() => actions.reject(card.pending_action_id)}>{t("plan.confirm.no")}</button>
@@ -210,30 +211,9 @@ export function Bills({ bills, onPay, busy, today }: { bills: Bill[]; onPay?: (b
   </li>)}</ul>;
 }
 
-export function SpendingFacts({ spending, showCategories = true }: { spending: Spending; showCategories?: boolean }) {
-  const { lang, t } = useI18n();
-  const cur = spending.currency;
-  const used = Number(spending.budget) > 0 ? Math.min(100, Number(spending.spent) / Number(spending.budget) * 100) : 0;
-  return <div className="plan-spending">
-    <div className="plan-totals">
-      <div><span>{t("plan.spending.spent")}</span><strong>{money(spending.spent, cur, lang)}</strong></div>
-      <div><span>{t("plan.spending.budget")}</span><strong>{money(spending.budget, cur, lang)}</strong></div>
-      <div><span>{t("plan.spending.remaining")}</span><strong className={spending.over_budget ? "plan-gap" : ""}>{money(spending.remaining, cur, lang)}</strong></div>
-    </div>
-    <div className="plan-meter" role="meter" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(used)} aria-label={t("plan.spending.spent")}>
-      <span style={{ width: `${used}%` }} className={spending.over_budget ? "is-over" : ""} />
-    </div>
-    {spending.over_budget && <p className="error">{t("plan.spending.over")}</p>}
-    {showCategories && Object.keys(spending.by_category).length > 0 && <ul className="plan-categories">
-      {Object.entries(spending.by_category).map(([category, value]) => <li key={category}>
-        <span>{t(`plan.cat.${category}` as MessageKey)}</span><span>{money(value, cur, lang)}</span>
-      </li>)}
-    </ul>}
-  </div>;
-}
-
 export function CardView({ card, actions }: { card: Card; actions: CardActions }) {
   const { lang, t } = useI18n();
+  if (!shownCard(card)) return null;
   switch (card.type) {
     case "role":
       return card.role ? <p className="plan-role-note">{t(`plan.card.role.${card.role}`)}</p> : null;
@@ -249,17 +229,12 @@ export function CardView({ card, actions }: { card: Card; actions: CardActions }
       return <PlanCard plan={card.plan} />;
     case "loan":
       return <LoanCard plan={card.plan} />;
+    case "loan_advice":
+      return <LoanAdviceCard card={card} actions={actions} />;
     case "confirmation":
       return <Confirmation card={card} actions={actions} />;
     case "bills":
       return <div className="plan-card"><div className="plan-card-head"><h3>{t("plan.bills.title")}</h3><Simulated /></div><Bills bills={card.bills} /></div>;
-    case "spending":
-      return <div className="plan-card">
-        <div className="plan-card-head"><h3>{t("plan.spending.title", { month: card.month })}</h3></div>
-        {card.expense && <p>{t("plan.spending.recorded", { amount: money(card.expense.amount, card.expense.currency, lang),
-          category: t(`plan.cat.${card.expense.category}` as MessageKey) })}</p>}
-        <SpendingFacts spending={card} />
-      </div>;
     default:
       return null;
   }

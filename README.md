@@ -1,16 +1,28 @@
 # StudyFlow
 
-**A study-abroad finance assistant that starts with the price.** Before departure, a student or family names a school and sees the **whole-course total** (tuition, housing, living costs, insurance and visa) in THB, CNY or USD, then **compares schools** on totals and yearly cost. When savings fall short, the assistant shows the **funding gap and a simulated loan** (monthly payment, total interest) or family support. Wallets, FX, remittance, bills and expense tracking stay in the product but **only appear after enrollment**, behind the same server-enforced permissions, limits, approvals and ledger rules.
+FinTechathon 2026 International Track · Topic C (Cross-border & Student Finance Assistant) · Repository: <https://github.com/Ttttt12138/StudyFlow>
 
-| Layer | What the user sees | Where |
-|---|---|---|
-| Core: price lookup | Whole-course total per school, range and yearly cost, shown in THB / CNY / USD with the rate date; side-by-side comparison with the lowest marked | Planner conversation and left sidebar "Price comparisons" ([agent-first design](docs/agent-first.md)) |
-| Extension: funding | Funding gap, simulated loan (THB lending core), family support, plan confirmation | Left sidebar "Funding & loan" |
-| After enrollment | Bills and expenses, monthly spending, wallet and FX, remittance, payments, insights, finance sub-assistant, credit record | Left sidebar "Life tools" (hidden until the plan is ENROLLED) |
+**A study-abroad finance assistant that starts with the price.** Look up whole-course costs, compare schools in THB, CNY or USD, then tell the Agent the amount to borrow. It recommends one loan plan, recalculates when monthly payments, interest or the amount concern you, and guides you to review and explicitly submit the simulated application. Submission attaches a simulated admission notice automatically and unlocks to-dos, bills and the wallet.
+
+| Stage | Behavior |
+| --- | --- |
+| Price lookup and comparison | Whole-course totals and sources; saved school drafts |
+| Loan selection | Agent recommendation from user-entered principal; concern-based recalculation, exact costs and explicit application review; full-course cap excluding fees |
+| Application submitted | Automatic simulated notice and approval, remaining documents, explicit signing, school payouts and loan repayment; wallet/FX/remittance available |
+
+The [shared student-flow contract](docs/student-loan-contract.md) defines interfaces, state migration and the deletion list. Family support, monthly bookkeeping, the standalone credit-record page, enrollment confirmation and the no-loan confirmation branch are removed from the student app; the on-time record itself still scales limits (see Credit building below).
 
 > **All money is simulated.** There is no real bank, card or remittance rail. Pricing, permissions, limits, approvals and ledger constraints are nevertheless really enforced by the server.
->
-> **The English documents are authoritative.** The Chinese documents in `docs/` are working notes and reference material ([中文说明](docs/README.zh.md)).
+
+### Submission materials
+
+| Checklist item | Where |
+|---|---|
+| Technical documentation (architecture, core algorithms, security design) | [docs/technical-overview.md](docs/technical-overview.md) |
+| Demo video (4:25) | [evidence/demo-current-live-20261015/StudyFlow_Demo_EN.mp4](evidence/demo-current-live-20261015/StudyFlow_Demo_EN.mp4) |
+| Source code, deployment instructions and test cases | This README: [Quick start](#quick-start-docker-no-credentials-needed), [Local development](#local-development), [Testing](#testing) |
+| Security self-assessment (permission tiers, known risks) | [docs/security-self-assessment.md](docs/security-self-assessment.md) |
+| Execution evidence (simulated-account operation logs and demo video) | [evidence/demo-current-live-20261015/README.md](evidence/demo-current-live-20261015/README.md), [evidence index](evidence/README.md) |
 
 ---
 
@@ -22,10 +34,10 @@
 | FX quoting | Reference rates from Frankfurter (central-bank blend) or fixtures; corridor fees and margins applied by the server; quotes are single-use and expire after 10 minutes | [§2](docs/technical-overview.md#2-server-side-fx-quoting) |
 | Remittance | 9-state order machine; full refund on failure; idempotent payout callbacks; tuition is paid to verified payees | [§3](docs/technical-overview.md#3-remittance-order-state-machine) |
 | Permissions | T0–T3 tiers, per-currency daily and monthly limits, password step-up, T3 approval by a different operator, rate limiting | [security-self-assessment](docs/security-self-assessment.md) |
-| Credit building | Simulated on-time record (BUILDING / FAIR / GOOD / AT_RISK) that scales limits from 0.5× to 1.5×; signed, verifiable statements | [§5](docs/technical-overview.md#5-credit-level-and-limit-multiplier) |
+| Credit building | Every loan installment paid on time, settled payment and on-time remittance counts toward a simulated on-time record (not a bureau score). Its level scales the student's outflow limits from 0.5× to 1.5× on the server, so repaying the study loan on time directly raises what the student can move | [technical-overview §5](docs/technical-overview.md#5-credit-level-and-limit-multiplier) |
+| Historical platform services | Retired features (credit record, family support, budgets, bookkeeping, readiness) remain in the backend only, for existing contracts, demo gates and frozen evaluations; no entry in the app or operations console; deletion planned after the competition | [deletion boundary](docs/student-loan-contract.md#deletion-boundary) |
 | AI agent | Tool-calling planner (LLM or rule-based) with runner-enforced guards: at most 10 steps and 4 writes; T2 tools only create proposals that expire after 15 minutes | [§7](docs/technical-overview.md#7-agent-loop-and-guardrails), [evaluation](docs/agent-evaluation.md) |
 | Chinese and English | Localized API error messages with stable error codes | [§8](docs/technical-overview.md#8-internationalization) |
-| Earlier B/C work | Loans and repayment (B), budget readiness, consumption learning, financial copilot, optional Gemini OCR | [docs/README.zh.md](docs/README.zh.md) |
 
 The repository holds three modules side by side: **A** `frontend/` (React student app, see [frontend setup](frontend/README.md)), **B** `backend/` (Django API) and **C** `studyflow-ai/` (AI package imported by B). The frontend signs in with the Django session; the API can also be exercised through Swagger UI and scripted HTTP demos.
 
@@ -67,7 +79,7 @@ Everything runs in **mock mode** with fixed FX rates, so nothing calls an extern
    The file lasts until the container is recreated (for example by a later `--build`); the users stay in the database. Set a new password with `docker compose exec app python manage.py changepassword demo-student`.
 2. **Open the student app.** Go to <http://localhost:8080>, choose **Sign in to StudyFlow** and log in as `demo-student`; Django's login page returns you to the app.
 3. **Browse the API.** Log in at <http://localhost:8080/api/auth/login/?next=/api/docs/> to open Swagger UI. `/api/docs/` requires login by design.
-4. **Run a full remittance scenario over real HTTP.** It compares routes, pays tuition to a verified payee, refunds a failed transfer, routes a T3 approval through a second operator, and updates the credit record:
+4. **Run a full remittance scenario over real HTTP.** It compares routes, pays tuition to a verified payee, refunds a failed transfer, routes a T3 approval through a second operator, and updates the on-time record that scales limits:
    ```bash
    docker compose exec app python manage.py demo_remittance --runs 1
    docker compose exec app python manage.py demo_agent --runs 1
@@ -114,19 +126,20 @@ One command runs all 17 gates: Django and C tests, migrations, OpenAPI validatio
 studyFlow/Scripts/python.exe scripts/run_gates.py
 ```
 
-Latest run: **17/17 pass. Django: 481 tests. C package: 298 tests.** Logs are in [evidence/gates/](evidence/gates/). CI runs the same suites on every push ([django.yml](.github/workflows/django.yml), [c-module.yml](.github/workflows/c-module.yml)), plus the frontend build and browser suites ([frontend.yml](.github/workflows/frontend.yml)).
+Current suites (2026-10-16), all passing: **Django 632 tests** (2 opt-in live recordings skipped), **C package 481 tests**, **frontend 81 unit and 54 mocked browser tests**. An earlier full 17-gate run is logged in [evidence/gates/](evidence/gates/). CI runs the same suites on every push ([django.yml](.github/workflows/django.yml), [c-module.yml](.github/workflows/c-module.yml)), plus the frontend build and browser suites ([frontend.yml](.github/workflows/frontend.yml)).
 
 | Area | Test files | Test functions* | What they prove |
 |---|---|---:|---|
 | Permissions and limits | `backend/auto_test/test_policy.py`, `test_policy_concurrency.py` | 50 | Tier matrix, step-up token binding and single use, T3 approvals and separation of duties, Bangkok day and month windows, throttling, `check --deploy` |
 | Remittance | `backend/auto_test/test_remittance.py`, `test_remittance_concurrency.py` | 59 | Every state transition, fee breakdowns, refunds, idempotent callbacks, no overdraw under concurrency |
 | Multi-currency ledger | `backend/auto_test/test_multicurrency.py`, `test_multicurrency_concurrency.py` | 67 | Server-only pricing (client-rate exploit regression), single-use quotes, ledger sum equals balance, negative-balance constraint |
-| Credit building | `backend/auto_test/test_credit.py` | 62 | Level rules, real-date window, anti-gaming, immutable snapshots, signed statements |
+| Credit building (on-time record) | `backend/auto_test/test_credit.py` | 62 | Level rules, real-date window, anti-gaming, limit multiplier, immutable snapshots |
 | Agent (Django runner) | `backend/auto_test/test_agent.py`, `test_agent_concurrency.py` | 56 | T2 never executes, step and write budgets, truncation, proposal expiry and confirmation, races |
 | Agent (C planner) | `studyflow-ai/auto_test/test_agent_planner.py`, `test_agent_holdout.py` | 65 | Tool-call validation, live-output recovery, frozen holdout integrity |
 | i18n | `backend/auto_test/test_i18n.py` | 9 | Localized messages and stable codes |
 | OCR | `backend/auto_test/test_ocr_*.py`, `studyflow-ai/auto_test/test_document_ocr.py`, `test_ocr_config.py` | 37 | Consent gates, operator attestations, retry and fallback, injection cannot be confirmed, retention purge |
-| Earlier B/C modules | `backend/auto_test/test_lending_*.py`, `test_readiness_*.py`, `test_consumption_*.py`, `test_copilot*.py`, `backend/finance/test*.py`, other `studyflow-ai/auto_test` files | the rest | Loans, budgets, readiness, consumption, copilot workflows |
+| Planning and loans | `backend/auto_test/test_planning*.py`, `test_loan_advice.py`, `test_lending_*.py`, `test_simplified_contract.py`, `studyflow-ai/auto_test/test_funnel.py`, `test_planning_rules.py` | — | Cost estimates, loan recommendation and recalculation, application, signing, school payouts, repayment |
+| Retired modules (backend only) | `test_readiness_*.py`, `test_consumption_*.py`, `test_copilot*.py` and related `studyflow-ai/auto_test` files | the rest | Kept until the retired backend code is deleted after the competition |
 
 \* Counted as `def test_` per file. Parametrized tests expand to more cases at run time.
 
@@ -157,8 +170,7 @@ The limitations behind these numbers are stated plainly in [docs/security-self-a
 | `scripts/` | Cross-module gate runner, holdout freeze, PostgreSQL helpers |
 | `compose.yaml` | One-command demo: database, API, readiness worker and web app |
 | `evidence/` | Committed sandbox run logs and reports ([index](evidence/README.md)) |
-| `docs/` | Technical overview, security self-assessment, evaluation, API guide (`docs/api/`), design notes |
-| `legacy/`, `docs/legacy/` | Earlier prototype and notes; **not part of the submission** |
+| `docs/` | Technical overview, security self-assessment, evaluation, API guide (`docs/api/`), module notes |
 
 ## Documentation
 
@@ -171,10 +183,8 @@ The limitations behind these numbers are stated plainly in [docs/security-self-a
 
 ## Demo video
 
-[**Watch the English demo — complete updated study journey**](evidence/demo-live-20261014/StudyFlow_Demo_EN.mp4)
+[**Watch the English demo (4:25)**](evidence/demo-current-live-20261015/StudyFlow_Demo_EN.mp4)
 
-The current formal demo is 4 minutes 05 seconds, in 1080p, with Microsoft Ava neural narration and newly timed English subtitles. Twelve continuous narrative paragraphs connect all 46 retained shots: school costs and funding, loan selection/signing, family support, preparation/enrollment, budgeting, currency conversion/remittance, tuition, loan/credit repayment and record verification. The footage retains the accepted twelve live-AI turns and sixteen feature checks; this narration revision is not a new AI acceptance run. All financial transactions are simulated.
+1080p with English narration and subtitles. Fifty-four shots follow the current journey: cost comparison, conversational loan recommendation, application and signing, reminders, tuition, currency exchange, remittance, repayment and independent operations approval. It was cut from one live browser acceptance run (19 live-AI user turns, 13 scenario checks, no rule or mock fallback). All financial transactions are simulated.
 
-[English subtitles](evidence/demo-live-20261014/StudyFlow_Demo_EN.srt) · [Timed narration and reproduction](docs/demo-video-en.md) · [Recording evidence](evidence/demo-live-20261014/README.md)
-
-This version replaces the earlier formal film at the same link. [Full original recordings, source snapshots and synchronization checks](evidence/demo-full-live-20261014/README.md) are retained; the [previous formal version](evidence/demo-live-20261014/formal-previous-20261014/README.md) is archived unchanged.
+[English subtitles](evidence/demo-current-live-20261015/StudyFlow_Demo_EN.srt) · [Timed narration and reproduction](docs/demo-video-en.md) · [Recording evidence and operation logs](evidence/demo-current-live-20261015/README.md)

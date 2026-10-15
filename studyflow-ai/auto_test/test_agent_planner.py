@@ -13,7 +13,7 @@ from dataclasses import dataclass, field
 import pytest
 from pydantic import ValidationError
 
-from studyflow_ai.agent import prompts
+from studyflow_ai.agent import funnel, prompts
 from studyflow_ai.agent.models import (
     AgentContext,
     FinalStep,
@@ -569,6 +569,33 @@ def test_live_unstructured_prose_is_not_presented_as_a_successful_answer(text):
     assert raised.value.record.attempts == 3
 
 
+def test_live_prose_in_a_planning_conversation_falls_back_to_the_planning_rules():
+    # Observed live (planning-2.2): "如果贷款证明算" got a clarifying question in prose on all three attempts.
+    planning = ctx(goal="如果贷款证明算", tools=[ToolSpec(name=n, tier="T0", description=n)
+                                               for n in ("list_schools", "get_plan", "save_plan", "simulate_loan")])
+    fake = FakeOpenAI(failure=_unparsed("你是想问“贷款证明”能否作为资金证明吗？"))
+    step, record = AgentPlanner(LiveAgentProvider(fake)).next_step(planning)
+    assert "资金证明" not in getattr(step, "answer", "")
+    assert record.mode == "rules" and record.error_code is None
+    # Three planner attempts, each followed by a check of the prose (which also fails here).
+    assert len(fake.calls) == 6 and fake.calls[1][-1] == prompts.PROSE_VERDICT
+    final, record = AgentPlanner(LiveAgentProvider(fake)).next_step(planning.model_copy(update={"steps_remaining": 0}))
+    assert isinstance(final, FinalStep) and record.mode == "rules"
+    # Observed live: "比较一下泰国的大学" listed 5 schools, then the reply said it could not answer. The rules
+    # now answer from what the model found, briefly, and invite the next step (choosing a school).
+    row = {"country": {"zh": "泰国", "en": "Thailand"}, "home_currency": "CNY", "currency": "THB"}
+    listed = Observation(tool="list_schools", status="OK", arguments={"country_code": "TH"}, result={"schools": [
+        {**row, "key": "psu-phuket", "name": {"zh": "宋卡王子大学（普吉校区）"}, "total": "1013800", "total_home": "220391"},
+        {**row, "key": "mahidol", "name": {"zh": "玛希敦大学国际学院"}, "total": "2372550", "total_home": "515772"}]})
+    step, _ = AgentPlanner(LiveAgentProvider(fake)).next_step(planning.model_copy(update={"observations": [listed]}))
+    assert "泰国有 2 所学校" in step.answer and "220,391 CNY" in step.answer and "515,772 CNY" in step.answer
+    assert step.answer.endswith(funnel.invite("choose", "zh")) and "可靠" not in step.answer
+    # A loan recommendation keeps the sentence that explains its card.
+    advice = Observation(tool="simulate_loan", status="OK", arguments={}, result={"advice": {"status": "paused"}})
+    step, _ = AgentPlanner(LiveAgentProvider(fake)).next_step(planning.model_copy(update={"observations": [advice]}))
+    assert "先停下" in step.answer and "贷款方案" not in step.answer
+
+
 def test_live_envelope_with_stray_closing_brackets_is_recovered_and_validated():
     # Observed live (agent-v1 tuning): a valid envelope followed by one extra "}".
     text = ('{"step":{"kind":"tool_call","tool":"get_balances","arguments_json":"{}",'
@@ -1010,6 +1037,22 @@ def test_live_unstructured_reply_is_retried_without_executing_or_exposing_it():
     assert step.tool == "get_balances" and len(fake.calls) == 2
     assert record.attempts == 2
     assert "JSON" in fake.calls[-1][-1]
+
+
+def test_live_planning_prose_is_sent_back_once_to_be_restated_in_the_schema():
+    # Observed live (planning-2.2): a direct answer ("资料没有收录 QS 排名…") arrives as prose.
+    prose = "资料没有收录 QS 排名。"
+    planning = ctx(goal="这个学校qs排名怎么样", tools=[ToolSpec(name="list_schools", tier="T0", description="x")])
+    # Each prose reply is checked first (the checks fail here), then sent back once per retry.
+    fake = FlakyOpenAI([_unparsed(prose)] * 4)
+    with pytest.raises(ProviderFailure):  # the fake's normal reply calls a tool this context lacks
+        AgentPlanner(LiveAgentProvider(fake)).next_step(planning)
+    first, second = fake.calls[2][-1], fake.calls[4][-1]
+    assert prose in first and first.count("<<<") == 1 and second.count("<<<") == 1
+    # Outside planning conversations the prose is not echoed back.
+    fake = FlakyOpenAI([_unparsed(prose)])
+    AgentPlanner(LiveAgentProvider(fake)).next_step(ctx())
+    assert prose not in fake.calls[-1][-1]
 
 
 def test_live_empty_reply_gives_up_after_the_retries():

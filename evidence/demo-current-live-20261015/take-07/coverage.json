@@ -1,0 +1,117 @@
+[
+  {
+    "name": "Live sourced full-course costs, four-school comparison and THB/CNY/USD display",
+    "passed": true
+  },
+  {
+    "name": "Unavailable ranking disclosed without inventing a ranking",
+    "passed": true
+  },
+  {
+    "name": "Loan recommendation, actual monthly/interest tradeoffs, interest-only phases and reduced principal",
+    "passed": true,
+    "initial": {
+      "product": "commercial_student_demo",
+      "principal": "48000.00",
+      "annual_rate": "0.06",
+      "fees": "0.00",
+      "first_due_date": "2027-09-08",
+      "months": 48,
+      "method": "amortized"
+    },
+    "lowerMonthly": {
+      "product": "commercial_student_demo",
+      "principal": "48000.00",
+      "annual_rate": "0.06",
+      "fees": "0.00",
+      "first_due_date": "2027-09-08",
+      "months": 60,
+      "method": "amortized"
+    },
+    "final": {
+      "product": "commercial_student_demo",
+      "principal": "30000.00",
+      "annual_rate": "0.06",
+      "fees": "0.00",
+      "first_due_date": "2027-09-08",
+      "months": 24,
+      "method": "amortized"
+    }
+  },
+  {
+    "name": "Stale quote submission rejected without creating an application",
+    "passed": true,
+    "rejection": {
+      "detail": "State version changed. Refresh and retry.",
+      "code": "stale_version",
+      "message": "State version changed. Refresh and retry."
+    }
+  },
+  {
+    "name": "Pause, unrelated question, explicit resume and inactive historical recommendation",
+    "passed": true
+  },
+  {
+    "name": "Explicit application confirmation, automatic simulated notice, no automatic signing",
+    "passed": true
+  },
+  {
+    "name": "Document declarations, explicit signing and verified-school-directed payout schedule",
+    "passed": true
+  },
+  {
+    "name": "Task acknowledgement, persisted completion and undo completion",
+    "passed": true
+  },
+  {
+    "name": "Persisted live-AI reminder and partially covered tuition shown once, wallet top-up and authorized payment",
+    "passed": true,
+    "bill": "31000.00",
+    "loanBillDuplicateDenied": {
+      "detail": "STEP_UP_REQUIRED",
+      "policy": {
+        "action": "bill.pay",
+        "tier": "T2",
+        "target_id": "e30007a6-55a4-417c-9bbe-064f6d954c4f",
+        "amount": "20000.00",
+        "currency": "THB",
+        "limits": {
+          "per_transaction": "50000.00",
+          "daily": "100000.00",
+          "monthly": "300000.00"
+        },
+        "usage": {
+          "daily": "31000.00",
+          "monthly": "31000.00"
+        },
+        "requires": [
+          "step_up"
+        ]
+      },
+      "code": "STEP_UP_REQUIRED",
+      "message": "This action requires step-up verification. Re-enter your password and send the X-Step-Up-Token header."
+    }
+  },
+  {
+    "name": "Live quote comparison and exchange proposal, wrong password denied, authorized CNY 500 debit",
+    "passed": true
+  },
+  {
+    "name": "Live remittance comparison, explicit submission, order and delivery on final delivery-window day",
+    "passed": true,
+    "order": "17f5ed17-757f-4c71-b935-673eb5c88ecb",
+    "delivery": "2026-10-20"
+  },
+  {
+    "name": "Live over-limit transfer, student denial, operator payee verification, separation of duties, independent approval, no debit until password and single-use approval",
+    "passed": true,
+    "amount": "15000.00",
+    "currency": "CNY",
+    "approval": "65f8ad0c-3a89-4438-b19e-63c21b5fe326"
+  },
+  {
+    "name": "Real simulated loan installment repaid with password and exact wallet debit",
+    "passed": true,
+    "amount": "1309.43"
+  }
+]

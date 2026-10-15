@@ -6,16 +6,11 @@ import { CardDetail } from "./CardDetail";
 import { ArrowUp } from "@phosphor-icons/react/dist/csr/ArrowUp";
 import { Sparkle } from "@phosphor-icons/react/dist/csr/Sparkle";
 import { JourneyGuide } from "./JourneyGuide";
-import { journeyPhase } from "./journeyPhase";
-import { asksForMonthlySpending } from "./monthly";
-import { ToolSlot, useWorkspace, useToolRefresh, useClearWhenHidden, useToolActive } from "../workspace/context";
+import { ToolSlot, useWorkspace, useToolRefresh } from "../workspace/context";
 import { FocusDialog } from "../workspace/FocusDialog";
 import { PanelAlert, PanelEmpty, PanelFacts, PanelHero, PanelInfo, PanelPager, ToolPanel } from "../workspace/ToolPanel";
-import { LevelBar, StackBar } from "../workspace/PanelCharts";
-import { UsersThree } from "@phosphor-icons/react/dist/csr/UsersThree";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useI18n, type MessageKey } from "../i18n";
-import { useModuleLink } from "../services/ModuleNav";
 import { SessionWalletClient, WalletApiError, type WalletClient } from "../wallet/client";
 import { CardView, type CardActions } from "./cards";
 import { DISPLAY_CURRENCIES, DisplayContext, PREVIEW_RATES, cash, displayCurrency, useShow, type DisplayCurrency, type DisplayRates } from "./currency";
@@ -23,25 +18,24 @@ import { day, money, pick } from "./format";
 import { CompareHistory } from "./PricePanels";
 import { AssessmentPanel } from "./AssessmentPanel";
 import { MoneyConfirm } from "./MoneyConfirm";
+import { LoanApplicationReview } from "./LoanApplicationReview";
+import type { LoanReview } from "./loanAdvice";
 import { createPlanPreview, type PreviewStage } from "./preview";
-import type { Conversation, ConversationSummary, FamilyLink, InSchool, PlanHistory, Role, SchoolBrief, Turn } from "./types";
+import type { Conversation, ConversationSummary, PlanHistory, SchoolBrief, Turn } from "./types";
 import { Markdown } from "./Markdown";
 import "./plan.css";
 import "./price.css";
 
-const CATEGORIES = ["food", "transport", "housing", "study", "shopping", "fun", "health", "other"] as const;
 
 // Price questions first; the later stages keep their own short lists.
-const SUGGESTIONS: Record<"en" | "zh", Record<"consult" | "preparing" | "enrolled", string[]>> = {
+const SUGGESTIONS: Record<"en" | "zh", Record<"consult" | "preparing", string[]>> = {
   zh: {
     consult: ["朱拉隆功读4年一共多少钱？", "比较曼彻斯特和墨尔本", "哪所学校总价最低？", "有哪些学校？"],
-    preparing: ["学校宿舍和周边环境怎么样？", "出发准备", "首月预算"],
-    enrolled: ["学校周边有什么好吃好玩的？", "这个月花了多少？", "接下来有哪些账单？", "今天午饭花了120泰铢"],
+    preparing: ["学校宿舍和周边环境怎么样？", "出发准备", "接下来有哪些账单？"],
   },
   en: {
     consult: ["What does 4 years at Chulalongkorn cost in total?", "Compare Manchester and Melbourne", "Which school has the lowest total?", "Which schools are there?"],
-    preparing: ["What are the school's dorms and surroundings like?", "Departure preparation", "First-month budget"],
-    enrolled: ["What food and fun is near my school?", "How much have I spent this month?", "Which bills are due?", "I spent 120 THB on lunch today"],
+    preparing: ["What are the school's dorms and surroundings like?", "Departure preparation", "Which bills are due?"],
   },
 };
 
@@ -97,8 +91,6 @@ export function PlanApp({ preview, initialStage = "plan" }: { account?: string; 
   const [stage] = useState<PreviewStage>(initialStage);
   const client = useMemo<WalletClient>(() => preview ? createPlanPreview(lang, stage) : new SessionWalletClient(), [preview, lang, stage]);
   const [conversation, setConversation] = useState<Conversation | null>(null);
-  const [inSchool, setInSchool] = useState<InSchool | null>(null);
-  const [family, setFamily] = useState<FamilyLink[]>([]);
   const [rates, setRates] = useState<DisplayRates | null>(preview ? PREVIEW_RATES : null);
   const [currency, setCurrency] = useState<DisplayCurrency>("THB");
   const [schools, setSchools] = useState<SchoolBrief[]>([]);
@@ -108,6 +100,7 @@ export function PlanApp({ preview, initialStage = "plan" }: { account?: string; 
   const [sending, setSending] = useState(false);
   const [busy, setBusy] = useState(false);
   const [confirmId, setConfirmId] = useState<string | null>(null);
+  const [loanReview, setLoanReview] = useState<LoanReview | null>(null);
   const [history, setHistory] = useState<PlanHistory | null>(null);
   const [replacing, setReplacing] = useState<{ key: string; name: string; years?: number } | null>(null);
   const [signedOut, setSignedOut] = useState(false);
@@ -123,13 +116,9 @@ export function PlanApp({ preview, initialStage = "plan" }: { account?: string; 
   }, [t]);
 
   const loadSide = useCallback(async () => {
-    const [school, links, past] = await Promise.allSettled([client.get<InSchool>("planning/in-school/"), client.get<FamilyLink[]>("planning/family-links/"),
-      client.get<PlanHistory>("planning/history/")]);
-    if (school.status === "fulfilled") setInSchool(school.value);
-    if (links.status === "fulfilled") setFamily(links.value);
-    // Only a well-formed answer replaces the sidebar history; anything else leaves it empty rather than breaking the page.
-    if (past.status === "fulfilled" && Array.isArray(past.value?.prices) && Array.isArray(past.value?.drafts)) setHistory(past.value);
-    if (school.status === "rejected" || links.status === "rejected") throw new Error(t("ws.stale"));
+    const past = await client.get<PlanHistory>("planning/history/");
+    if (!Array.isArray(past?.prices) || !Array.isArray(past?.drafts)) throw new Error(t("ws.stale"));
+    setHistory(past);
   }, [client, t]);
 
   const load = useCallback(async (fresh = false) => {
@@ -198,9 +187,12 @@ export function PlanApp({ preview, initialStage = "plan" }: { account?: string; 
     try {
       const completed = await client.post<Turn>(`agent/conversations/${conversation.id}/messages/`, { text: trimmed }, `message:${conversation.id}:${pending.id}`);
       setConversation(current => current && ({ ...current, turns: current.turns.map(turn => turn.id === pending.id ? completed : turn) }));
-      if (completed.cards.some(card => card.type === "plan" || card.type === "loan")) workspace?.open({ kind: "funding" });
+      const advice = [...completed.cards].reverse().find(card => card.type === "loan_advice");
+      if (advice?.type === "loan_advice" && advice.advice.ready_to_apply && advice.advice.quote_id) {
+        setLoanReview({ planId: advice.plan_id, quoteId: advice.advice.quote_id,
+          assessmentVersion: advice.advice.assessment_version!, planVersion: advice.advice.plan_version! });
+      } else if (!advice && completed.cards.some(card => card.type === "plan" || card.type === "loan")) workspace?.open({ kind: "funding" });
       await refresh().catch(() => setError(t("ws.stale")));
-      if (completed.status === "COMPLETED" && asksForMonthlySpending(trimmed) && conversation.plan?.status === "ENROLLED") workspace?.open({ kind: "life" });
       if (completed.status === "COMPLETED" && /提醒我|待办|我的提醒|有哪些提醒|remind me|my tasks|my reminders|add (a )?task/i.test(trimmed)) workspace?.open({ kind: "life" });
     } catch (err) {
       setConversation(conversation);
@@ -228,7 +220,7 @@ export function PlanApp({ preview, initialStage = "plan" }: { account?: string; 
       const chosen = await client.post<Turn>(`agent/conversations/${conversation.id}/choose/`,
         { school_key: key, ...(years ? { years } : {}) }, `choose:${conversation.id}:${pending.id}`);
       setConversation(current => current && ({ ...current, turns: current.turns.map(turn => turn.id === pending.id ? chosen : turn) }));
-      workspace?.open({ kind: "funding" });
+      if (!chosen.cards.some(card => card.type === "loan_advice")) workspace?.open({ kind: "funding" });
       await refresh().catch(() => setError(t("ws.stale")));
     } catch (err) {
       setConversation(conversation);
@@ -266,26 +258,27 @@ export function PlanApp({ preview, initialStage = "plan" }: { account?: string; 
   }, [conversation]);
 
   const actions: CardActions = {
+    reviewLoan: review => { if (!preview) setLoanReview(review); },
     ask: (text) => void ask(text), choose, confirm: (id) => setConfirmId(id), reject: (id) => void decide(id, "reject"),
     busy: busy || sending, readOnly: preview, pendingStatus,
   };
 
   const plan = conversation?.plan ?? null;
   const life = useStudyLife(client, conversation ? `${conversation.id}:${plan?.status}:${conversation.turns.length}` : "", preview);
-  const phase = journeyPhase(plan?.status ?? null);
-  const gap = !!plan && plan.status === "DRAFT" && Number(plan.gap) > 0;
+  const phase = plan?.status === "CONFIRMED" ? 1 : 0;
   const report = workspace?.reportPlan;
   useEffect(() => {
     if (!report) return;
     // No plan to read (signed out, or the planner could not load): only the price tools are offered.
-    if (signedOut || failed && !conversation) report({ status: null, gap: false });
-    else if (conversation) report({ status: plan?.status ?? null, gap, history: preview ? null : history, openDraft: id => void openDraft(id) });
-  }, [report, signedOut, failed, conversation, plan?.status, gap, history]);
-  const suggestions = SUGGESTIONS[lang][phase === 2 ? "enrolled" : phase === 1 ? "preparing" : "consult"];
-  const enrollment = conversation?.turns.flatMap(turn => turn.pending_actions).find(action =>
-    action.action === "plan.enroll" && action.status === "PENDING" && new Date(action.expires_at).getTime() > Date.now());
+    if (signedOut || failed && !conversation) report({ status: null });
+    else if (conversation) report({ status: plan?.status ?? null, history: preview ? null : history, openDraft: id => void openDraft(id) });
+  }, [report, signedOut, failed, conversation, plan?.status, history]);
   const stale = useToolRefresh(refresh);
   const cardRows = conversation?.turns.flatMap(turn => turn.cards.map((card, index) => ({ card, id: `${turn.id}:${index}` }))) ?? [];
+  const latestAdvice = [...cardRows].reverse().find(row => row.card.type === "loan_advice")?.card;
+  const adviceStatus = plan?.status === "DRAFT" && latestAdvice?.type === "loan_advice" ? latestAdvice.advice.status : null;
+  const discussingLoan = adviceStatus === "recommended" || adviceStatus === "needs_amount";
+  const suggestions = discussingLoan ? [] : SUGGESTIONS[lang][phase === 1 ? "preparing" : "consult"];
   // A card opened from the sidebar history may come from another conversation of this account.
   const selectedCard = [...cardRows, ...(history?.prices ?? [])].find(item => item.id === workspace?.target?.cardId)?.card;
   const confirming = conversation?.turns.flatMap(turn => turn.cards).find(card => card.type === "confirmation" && card.pending_action_id === confirmId);
@@ -294,23 +287,24 @@ export function PlanApp({ preview, initialStage = "plan" }: { account?: string; 
     ? conversation?.turns.flatMap(turn => turn.pending_actions).find(action => action.id === confirmId) : undefined;
   // First screen: nothing asked yet, so the page leads with the price question instead of an empty chat.
   const fresh = !!conversation && !conversation.turns.some(turn => turn.goal) && phase === 0;
-  const placeholder = t(phase === 1 ? "plan.journey.preparingPlaceholder" : phase === 2 ? "plan.journey.dailyPlaceholder" : "plan.composer.placeholder");
+  const placeholder = t(adviceStatus === "needs_amount" ? "advice.amountPlaceholder" : adviceStatus === "recommended" ? "advice.concernPlaceholder"
+    : phase === 1 ? "plan.journey.preparingPlaceholder" : "plan.composer.placeholder");
 
   // Suggested questions sit above the input, so they read as the next step before typing.
   const composer = <form className={`plan-composer${fresh ? " is-hero" : ""}`} onSubmit={(event) => { event.preventDefault(); void ask(draft); }}>
-    <div className="agent-suggestions" aria-label={t("plan.composer.suggestions")}>
+    {!!suggestions.length && <div className="agent-suggestions" aria-label={t("plan.composer.suggestions")}>
       {suggestions.map((text) => <button type="button" key={text} className="chip" disabled={sending || !conversation}
         onClick={() => void ask(text)}>{text}</button>)}
-    </div>
+    </div>}
     <div className="plan-input-wrap"><label className="service-field"><span className="sr-only">{t("plan.composer.label")}</span>
-      <textarea value={draft} rows={fresh ? 2 : 1} maxLength={2000} placeholder={placeholder} disabled={sending || preview}
+      <textarea value={draft} rows={fresh ? 2 : 1} maxLength={2000} placeholder={placeholder} disabled={sending || preview || !conversation}
         aria-label={t("plan.composer.label")} onChange={(event) => setDraft(event.target.value)}
         onKeyDown={(event) => { if (event.key === "Enter" && !event.shiftKey && !event.nativeEvent.isComposing) { event.preventDefault(); void ask(draft); } }} />
     </label>
       <div className="plan-input-foot">
         <CurrencySwitch value={currency} onChange={value => void chooseCurrency(value)} disabled={sending || !conversation} />
         <button type="submit" className="primary plan-send" aria-label={sending ? t("plan.composer.sending") : t("plan.composer.send")}
-          disabled={sending || preview || !draft.trim()}><ArrowUp size={20} aria-hidden="true" /></button>
+          disabled={sending || preview || !conversation || !draft.trim()}><ArrowUp size={20} aria-hidden="true" /></button>
       </div>
     </div>
   </form>;
@@ -348,12 +342,12 @@ export function PlanApp({ preview, initialStage = "plan" }: { account?: string; 
               <span className="plan-who"><span className="plan-avatar" aria-hidden="true"><Sparkle size={16} weight="fill" /></span> StudyFlow
                 {stamp && <time className="plan-time" dateTime={turn.created_at}>{stamp.time}</time>}</span>
               {turn.final_answer && <Markdown className="plan-answer" text={turn.final_answer} />}
-              {turn.cards.map((card, index) => <CardSummary key={index} id={`${turn.id}:${index}`} card={card} actions={actions} />)}
+              {turn.cards.map((card, index) => <CardSummary key={index} id={`${turn.id}:${index}`} card={card}
+                actions={card.type === "loan_advice" && (card !== latestAdvice || plan?.status !== "DRAFT") ? { ...actions, readOnly: true } : actions} />)}
             </div>}
             {turn.status === "RUNNING" && <div className="plan-bubble plan-bubble-agent plan-thinking" role="status">{t("plan.composer.sending")}</div>}
           </li>; })}
-          {plan && <JourneyGuide plan={plan} phase={phase} pending={enrollment} life={life.data} ask={text => void ask(text)}
-            confirm={setConfirmId} disabled={preview || busy || sending} />}
+          {plan && <JourneyGuide plan={plan} life={life.data} />}
         </ol>}
         {composer}
       </>}
@@ -362,9 +356,9 @@ export function PlanApp({ preview, initialStage = "plan" }: { account?: string; 
     <ToolSlot kind="life"><StudyLifePanel control={life} preview={preview} ask={text => void ask(text)} /></ToolSlot>
     <ToolSlot kind="compare"><CompareHistory rows={cardRows} /></ToolSlot>
     <ToolSlot kind="funding"><AssessmentPanel plan={plan} client={client} preview={preview} onConfirmed={() => refresh().catch(() => setError(t("ws.stale")))} /></ToolSlot>
-    <ToolSlot kind="family-links"><FamilyPanel links={family} role={conversation?.profile.role || null} client={client} preview={preview}
-      onRefresh={loadSide}
-      onLinked={async () => { setNotice(t("plan.family.linked")); await loadSide(); }} onError={fail} /></ToolSlot>
+    {loanReview && !preview && <LoanApplicationReview key={`${loanReview.quoteId}:${loanReview.assessmentVersion}`} review={loanReview} client={client}
+      onClose={() => setLoanReview(null)} onLatest={() => { setLoanReview(null); workspace?.open({ kind: "funding" }); }}
+      onApplied={async () => { await refresh().catch(() => setError(t("ws.stale"))); workspace?.open({ kind: "funding" }); }} />}
     <ToolSlot kind="card"><CardDetail key={workspace?.target?.cardId} card={selectedCard ?? null} actions={actions} /></ToolSlot>
     {confirmId && moneyAction && <MoneyConfirm action={moneyAction} client={client} onClose={() => setConfirmId(null)}
       onDone={async message => { setConfirmId(null); setNotice(message); await refresh().catch(() => setError(t("ws.stale"))); }} />}
@@ -389,94 +383,21 @@ function PlanSummary({ plan, onRefresh }: { plan: Conversation["plan"]; onRefres
   const show = useShow();
   const cur = plan?.currency ?? plan?.school?.currency ?? "";
   const loan = plan?.loan;
-  // Shares of the plan's own total and gap (same currency); the loan share is shown only when it is in that currency too.
-  const total = Number(plan?.total ?? 0), gap = Math.max(0, Number(plan?.gap ?? 0));
-  const coverage = plan && total > 0 && plan.gap != null && gap <= total ? { covered: total - gap, gap,
-    loanShare: loan && gap > 0 && loan.currency === cur ? Math.min(100, Math.round(Number(loan.principal) / gap * 100)) : null } : null;
   return <section className="plan-tool" id="plan-summary" aria-labelledby="plan-summary-title">
     <ToolPanel label={t("plan.side.plan")} notices={stale}
       footer={plan && <><span className="panel-footer-note"><PanelInfo>{t("status.estimateNote")}</PanelInfo></span>
-        <button type="button" className="secondary" onClick={() => workspace?.open({ kind: plan.status === "ENROLLED" ? "loans" : "funding" })}>{t(plan.status === "ENROLLED" ? "side.loans" : "side.funding")}</button></>}>
+        <button type="button" className="secondary" onClick={() => workspace?.open({ kind: "funding" })}>{t("side.funding")}</button></>}>
       <div className="panel-card-head"><h3 id="plan-summary-title">{plan ? pick(plan.school?.name, lang) || plan.school_key : t("plan.side.plan")}</h3>
         {plan && <span className={`status-chip status-${plan.status.toLowerCase()}`}>{t(`plan.plan.status.${plan.status}`)}</span>}</div>
       {plan ? <>
         <PanelHero label={t("plan.plan.total")} value={show(plan.total, cur, lang).main}>
           <span className="panel-muted">{t("plan.plan.years")} {plan.years} · {t("plan.plan.start")} {day(plan.start_date, lang)}</span></PanelHero>
-        {coverage && <div className="fx-figure"><div className="panel-section-title">{t("plan.coverage")}</div>
-          <StackBar label={t("plan.coverage")} parts={[
-            { key: "covered", value: coverage.covered, tone: "mint", label: t("plan.covered", { amount: money(coverage.covered, cur, lang) }) },
-            { key: "gap", value: coverage.gap, tone: "gold", label: t("plan.gapPart", { amount: money(coverage.gap, cur, lang) }) }]} />
-          {coverage.loanShare !== null && <small className="panel-muted">{t("plan.loanCovers", { share: coverage.loanShare })}</small>}</div>}
-        <div className="panel-grid-2">
-          <div className="panel-tile"><span>{t("plan.plan.funds")}</span>
-            <strong>{plan.available_funds ? money(plan.available_funds, plan.funds_currency ?? "", lang) : t("plan.plan.noFunds")}</strong></div>
-          {plan.gap != null && <div className="panel-tile"><span>{t("plan.plan.gap")}</span>
-            <strong className={Number(plan.gap) > 0 ? "plan-gap" : ""}>{show(plan.gap, cur, lang).main}</strong></div>}
-        </div>
         {loan && <>
           <h4 className="panel-muted">{t("plan.loan.title")}</h4>
           <PanelFacts items={[[t("plan.loan.principal"), money(loan.principal, loan.currency, lang)], [t("plan.loan.months"), t("plan.loan.monthsValue", { months: loan.months })],
             [t("plan.loan.monthly"), money(loan.monthly_payment, loan.currency, lang)], [t("plan.loan.total"), money(loan.total_repayment, loan.currency, lang)]]} />
         </>}
       </> : <PanelEmpty title={t("plan.plan.none")} />}
-    </ToolPanel>
-  </section>;
-}
-
-
-function FamilyPanel({ links, role, client, preview, onLinked, onError, onRefresh }: { links: FamilyLink[]; role: Role | null; client: WalletClient;
-  preview: boolean; onLinked: () => Promise<void>; onError: (err: unknown) => void; onRefresh: () => Promise<void> }) {
-  const { lang, t } = useI18n();
-  const [token, setToken] = useState("");
-  useClearWhenHidden(() => setToken(""));
-  const [busy, setBusy] = useState(false);
-  const [panelError, setPanelError] = useState("");
-  const stale = useToolRefresh(onRefresh);
-
-  async function link(event: React.FormEvent) {
-    event.preventDefault();
-    if (preview || !token.trim()) return;
-    setBusy(true); setPanelError("");
-    try {
-      await client.post("planning/family-links/", {}, `family-link:${token.trim()}`, { "X-Sponsor-Token": token.trim() });
-      setToken("");
-      await onLinked();
-    } catch (err) { setPanelError(describe(err, t)); onError(err); } finally { setBusy(false); }
-  }
-
-  const [index, setIndex] = useState(0);
-  const item = links[Math.min(index, links.length - 1)];
-  const school = item?.in_school?.enrolled ? item.in_school : null;
-  const linkForm = role !== "student" && <form id="plan-family-form" className="panel-view" onSubmit={link}>
-    <div className="panel-section-title">{t("plan.family.linkTitle")}<PanelInfo>{t("plan.family.linkText")}</PanelInfo></div>
-    <label className="panel-form" style={{ gridTemplateColumns: "1fr" }}><span>{t("plan.family.token")}</span><input data-sensitive="true" value={token} maxLength={64} disabled={preview || busy}
-      autoComplete="off" onChange={(event) => setToken(event.target.value.trim())} /></label>
-  </form>;
-  return <section className="plan-tool" id="plan-family" aria-labelledby="plan-family-title">
-    <ToolPanel label={t("plan.family.title")} notices={(stale || panelError) && <>{stale}{panelError && <PanelAlert message={panelError} />}</>}
-      footer={role !== "student" && <button type="submit" form="plan-family-form" className="primary" disabled={preview || busy || token.length !== 64}>{t("plan.family.link")}</button>}>
-      <div className="panel-card-head"><h2 id="plan-family-title">{t("fl.linked")}</h2>
-        <PanelPager index={Math.min(index, links.length - 1)} count={links.length} onChange={setIndex} label={t("fl.linked")} /></div>
-      {!item ? <PanelEmpty icon={UsersThree} title={t("fl.none")} text={t("plan.family.none")} /> : <article className="panel-view plan-family">
-        <div className="panel-row"><strong>{t(item.relation === "child" ? "plan.family.child" : "plan.family.parent", { account: item.account })}</strong>
-          {item.plan && <span className={`status-chip status-${item.plan.status.toLowerCase()}`}>{t(`plan.plan.status.${item.plan.status}`)}</span>}</div>
-        {item.plan && <p className="panel-muted">{t("plan.family.childPlan", { school: pick(item.plan.school?.name, lang) || item.plan.school_key,
-          status: t(`plan.plan.status.${item.plan.status}`) })}</p>}
-        {school && <>
-          <PanelHero label={t("plan.spending.title", { month: school.spending.month })} value={money(school.spending.spent, school.spending.currency, lang)}>
-            <LevelBar value={Number(school.spending.budget)} max={Number(school.spending.budget)} after={Math.min(Number(school.spending.spent), Number(school.spending.budget))}
-              tone={school.spending.over_budget ? "warn" : undefined} />
-            <span className="panel-muted">{t("plan.family.childSpending", { month: school.spending.month, spent: money(school.spending.spent, school.spending.currency, lang),
-              budget: money(school.spending.budget, school.spending.currency, lang) })}</span></PanelHero>
-          {school.upcoming_bills[0] && <div className="panel-timeline">
-            <time dateTime={school.upcoming_bills[0].due_date}><strong>{Number(school.upcoming_bills[0].due_date.slice(8, 10))}</strong>
-              <span>{new Date(`${school.upcoming_bills[0].due_date}T00:00:00`).toLocaleDateString(lang, { month: "short" })}</span></time>
-            <div><span className="panel-muted">{pick(school.upcoming_bills[0].label, lang)}</span>
-              <strong>{money(school.upcoming_bills[0].amount, school.upcoming_bills[0].currency, lang)}</strong></div></div>}
-          <p className="panel-note">{t("plan.family.private")}</p>
-        </>}
-      </article>}
-      {linkForm}
     </ToolPanel>
   </section>;
 }

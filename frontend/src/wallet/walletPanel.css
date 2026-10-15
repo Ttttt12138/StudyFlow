@@ -45,18 +45,49 @@
 .money-hub .panel-card-head { padding-right: 48px; }
 .student-workspace .tool-panel .panel-footer-center > button { min-width: 120px; }
 
-/* Pay tab: the study plan's bills */
-.plan-bills-pay { display: grid; gap: 12px; padding: 16px; }
+/* Pay tab: each plan bill once — what the family pays (by due date), then the loan's direct payments folded */
+.plan-bills-pay { min-width: 0; gap: 14px; padding: 16px; container-type: inline-size; }
+.plan-bills-pay > * { flex-shrink: 0; }
+.plan-bills-pay .panel-card-head { padding-right: 0; }
 .plan-bills-pay .panel-card-head h2 { margin: 0; font-size: 18px; }
-.plan-bills-list { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
-.plan-bills-list li { display: grid; grid-template-columns: 1fr auto; gap: 6px 12px; align-items: center; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; }
-.plan-bills-list li > span:first-child { display: grid; gap: 2px; min-width: 0; }
-.plan-bills-list li small { color: var(--text-2); font-size: 12px; }
-.plan-bills-list li button { grid-column: 1 / -1; justify-self: end; }
-.plan-bills-amount { font-weight: 700; font-variant-numeric: tabular-nums; }
-.plan-bills-list.is-quiet li { background: var(--surface-2); border-color: transparent; }
-
-/* Top-up: inline under a short plan bill, or in the balance view's sheet */
-.plan-bills-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
-.plan-bills-list li > .plan-bills-topup { grid-column: 1 / -1; padding: 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-2); }
+.plan-bills-loan-notice { display: grid; gap: 10px; }
+.plan-bills-loan-notice p { margin: 0; }
+.plan-bills-loan-notice button { justify-self: start; }
+.bill-summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 0; }
+.bill-summary > div { display: grid; gap: 2px; align-content: start; padding: 8px 10px; border-radius: 12px; background: var(--surface-2); min-width: 0; }
+.bill-summary dt { color: var(--text-2); font-size: 12px; }
+.bill-summary dd { margin: 0; font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.bill-summary small { color: var(--text-2); font-size: 12px; }
+.bill-summary .link-button { justify-self: start; font-size: 12px; padding: 0; }
+.bill-section { display: grid; gap: 10px; }
+.bill-section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.bill-section-head h3 { margin: 0; font-size: 15px; }
+.bill-section-head small { color: var(--text-2); font-size: 12px; font-variant-numeric: tabular-nums; }
+.bill-date-group { display: grid; gap: 6px; }
+.bill-date-group h4 { margin: 0; color: var(--text-2); font-size: 12px; font-weight: 600; }
+.bill-rows { display: grid; margin: 0; padding: 0; list-style: none; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.bill-rows li { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 4px 12px; align-items: center; padding: 10px 12px; }
+.bill-rows li + li { border-top: 1px solid var(--line); }
+.bill-rows.is-quiet { background: var(--surface-2); border-color: transparent; }
+.bill-name { display: grid; gap: 2px; min-width: 0; }
+.bill-name small { color: var(--text-2); font-size: 12px; }
+.bill-amount { font-weight: 700; font-variant-numeric: tabular-nums; text-align: right; }
+.bill-action { display: flex; gap: 6px; justify-content: flex-end; }
+.bill-action button { min-height: 32px; padding: 4px 12px; font-size: 13px; }
+.bill-rows li > .plan-bills-topup { grid-column: 1 / -1; padding: 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-2); }
+.plan-bills-topup .top-up-actions { flex-wrap: wrap; }
+.bill-loan { padding: 0; }
+.bill-loan > :not(summary) { margin: 10px 0 0; }
+.bill-loan > summary { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; cursor: pointer; list-style: none; }
+.bill-loan > summary::-webkit-details-marker { display: none; }
+.bill-loan > summary::after { content: "›"; color: var(--text-2); font-size: 18px; transition: transform .15s; }
+.bill-loan[open] > summary::after { transform: rotate(90deg); }
+.bill-loan > summary span { display: grid; gap: 2px; min-width: 0; }
+.bill-loan > summary small { color: var(--text-2); font-size: 12px; }
+@media (prefers-reduced-motion: reduce) { .bill-loan > summary::after { transition: none; } }
 .top-up-actions { display: flex; justify-content: flex-end; gap: 8px; }
+@container (max-width: 400px) {
+  .bill-rows li { grid-template-columns: minmax(0, 1fr) auto; }
+  .bill-action { grid-column: 1 / -1; }
+  .plan-bills-topup .panel-form { grid-template-columns: minmax(0, 1fr); }
+}

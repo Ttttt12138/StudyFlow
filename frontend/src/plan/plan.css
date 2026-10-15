@@ -106,7 +106,6 @@
 .plan-totals > div { display: grid; gap: 2px; border: 1px solid var(--line); border-radius: 12px; padding: 8px 10px; }
 .plan-totals span { font-size: 12px; color: var(--text-3); }
 .plan-totals strong { font-size: 15px; }
-.plan-gap { color: var(--warm-text); }
 
 .plan-lines { margin-top: 8px; border-top: 1px solid var(--line); padding-top: 8px; }
 .plan-lines summary { cursor: pointer; font-size: 13px; font-weight: 600; }
@@ -116,15 +115,10 @@
 .plan-lines td:nth-child(n+2), .plan-lines th:nth-child(n+2) { text-align: right; white-space: nowrap; }
 .plan-lines small { color: var(--text-3); }
 
-.plan-bills, .plan-categories, .plan-family { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 6px; }
+.plan-bills { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 6px; }
 .plan-bills li { display: grid; grid-template-columns: auto 1fr auto; gap: 4px 10px; align-items: center; font-size: 12px; border-top: 1px solid var(--line); padding-top: 6px; }
 .plan-bills li > :nth-child(n+4) { grid-column: 2 / -1; justify-self: start; }
-.plan-categories li { display: flex; justify-content: space-between; gap: 10px; font-size: 12px; border-top: 1px solid var(--line); padding-top: 5px; }
-.plan-family li { display: grid; gap: 2px; font-size: 13px; border-top: 1px solid var(--line); padding-top: 6px; }
 
-.plan-meter { height: 6px; border-radius: 3px; background: var(--surface-2); overflow: hidden; margin: 6px 0; }
-.plan-meter span { display: block; height: 100%; background: var(--accent); }
-.plan-meter span.is-over { background: var(--danger); }
 
 .plan-expense { margin-top: 10px; }
 .plan-expense-row { display: grid; grid-template-columns: 1fr 70px 1fr; gap: 8px; }

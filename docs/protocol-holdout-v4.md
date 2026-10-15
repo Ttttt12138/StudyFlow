@@ -1,3 +1,5 @@
+> Frozen evaluation protocol (original Chinese text, kept unchanged because evaluation code and hashes reference it).
+
 # 独立盲测 v4 协议
 
 状态：**决策已于 2026-10-07 由用户确认，待实现**。本协议在构建 v4 数据、运行任何规则或模型之前冻结进 `studyflow-ai/evals/copilot-holdout-v4/protocol.json`，之后不得修改。v2、v3 在旧标准下的“不通过”记录永久保留，本协议只对 v4 及以后生效，不用于追溯改判。

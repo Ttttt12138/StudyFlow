@@ -1,14 +1,16 @@
-# Gemini 扫描件输入：中文与英文
+# Gemini Scanned-Document Input: Chinese and English
 
-本轮交付 Django 接入、C 转录适配器、前端接口契约及合成验收材料，没有新建前端。
-支持 PNG/JPEG、扫描 PDF、部分页面无文字层的 PDF；文字 PDF 继续本地提取文字层。
-Gemini 只转录，不计算金额、不核验收款人、不授权付款。转录文字进入原有 C 材料提取与 Django 用户确认流程。
+> Status: the OCR import endpoints live under the readiness (enrollment budget) module, which is retired from the product on 2026-10-15 (backend only). The current frontend does not call these endpoints; this document describes the backend contract that remains in the code and tests.
 
-## 启用配置
+This round delivered the Django integration, the C transcription adapter, the frontend API contract and synthetic acceptance material; no new frontend was built.
+Supported inputs are PNG/JPEG, scanned PDFs, and PDFs in which some pages have no text layer; text PDFs still have their text layer extracted locally.
+Gemini only transcribes: it does not compute amounts, verify payees or authorize payments. The transcribed text enters the existing C material extraction and the Django user confirmation flow.
 
-安装更新后的依赖并在 `backend/` 下执行 `python manage.py migrate`。Gemini API 和 OCR 配置统一放在 **C 模块 `studyflow-ai/.env`**，模板见 `studyflow-ai/.env.example`。`backend/.env` 仅保留 Django、数据库等后端配置，其中 `STUDYFLOW_READINESS_ENABLED=true` 用于开启后端接口。
+## Enabling
 
-在 `studyflow-ai/.env` 配置：
+Install the updated dependencies and run `python manage.py migrate` in `backend/`. Gemini API and OCR settings all live in the **C module's `studyflow-ai/.env`**; the template is `studyflow-ai/.env.example`. `backend/.env` keeps only Django, database and other backend settings; there, `STUDYFLOW_READINESS_ENABLED=true` turns on the backend endpoints.
+
+In `studyflow-ai/.env`:
 
 ```dotenv
 STUDYFLOW_OCR_ENABLED=true
@@ -23,24 +25,24 @@ STUDYFLOW_OCR_REQUESTS_PER_HOUR=10
 STUDYFLOW_DOCUMENT_RETENTION_DAYS=30
 ```
 
-C 模块的 `OcrSettings` 负责读取和校验配置；识别及文件处理实现也位于 `studyflow_ai`。Django HTTP 服务、`readiness_worker` 和 `verify_document_ocr` 启动时调用 C 的配置入口读取 `studyflow-ai/.env`，无需传 `--env-file`。后端保留用户授权、任务、限流审计和复核。修改后重启 HTTP 服务和 worker。
-`studyflow-ai/.env` 已被 Git 忽略；示例文件只保存空密钥和默认值。进程原有的同名环境变量优先于 C 的 `.env`；根目录 `.env` 的 Gemini 字段不作为配置来源。
+The C module's `OcrSettings` reads and validates the configuration; recognition and file handling are also implemented in `studyflow_ai`. The Django HTTP server, `readiness_worker` and `verify_document_ocr` call C's configuration entry point at startup to read `studyflow-ai/.env`, so no `--env-file` is needed. The backend keeps user authorization, jobs, throttling, audit and review. Restart the HTTP server and the worker after changes.
+`studyflow-ai/.env` is ignored by Git; the example file holds only empty keys and defaults. Environment variables already set in the process take precedence over C's `.env`; Gemini fields in the root `.env` are not a configuration source.
 
-两个 `CONFIRMED` 开关是运营对服务条款及部署范围的确认，不是自动核验账单账户、用户年龄或安全认证。
-默认全部关闭；密钥、模型为空时返回 `OCR_NOT_CONFIGURED`。必须由运营核实付费项目、可用地区、面向成年人的适用条件。
-不要将真实个人资料发往不适用的数据处理服务。付费不代表零留存，也不代表自动满足所有学校或司法辖区的要求。
+The two `CONFIRMED` switches record the operator's confirmation of the service terms and deployment scope; they do not automatically verify the billing account, the user's age or any security certification.
+Everything is off by default; an empty key or model returns `OCR_NOT_CONFIGURED`. The operator must check the paid project, available regions and the adults-only conditions.
+Do not send real personal data to a data-processing service that does not apply. Paying does not mean zero retention, nor does it automatically satisfy the requirements of every school or jurisdiction.
 
-`STUDYFLOW_MODE=mock` 仅控制现有 C 提取服务；**启用 Gemini OCR 后，即使 C 为 mock，OCR 仍是真实外部请求**。
-如果使用 C 的 live 模式，转录文字还可能发送至其已配置服务商；OCR 告知接口会明确显示当前提取模式。
-HTTP 服务和持久 worker 必须使用相同配置。服务端不读取前端传入的 API key、模型或供应商 URL。
+`STUDYFLOW_MODE=mock` controls only the existing C extraction service; **once Gemini OCR is enabled, OCR is a real external request even when C is in mock mode**.
+In C's live mode, the transcribed text may also be sent to C's configured provider; the OCR notice endpoint states the current extraction mode explicitly.
+The HTTP server and the persistent worker must use the same configuration. The server never reads an API key, model or provider URL supplied by the frontend.
 
-## 前端接入顺序
+## Frontend integration order
 
-所有接口需要登录。写操作继续要求 `Idempotency-Key`；版本上下文为 `semester_id/state_version/budget_version`。
+All endpoints require sign-in. Writes still require `Idempotency-Key`; the version context is `semester_id/state_version/budget_version`.
 
-1. `GET /api/v2/readiness/imports/ocr-notice/` 获取 `version/text_zh/text_en/languages/enabled/configured/policy_configured/extraction_mode/retention_days`。
-2. 显示中英文告知并提供未预选的同意项；保留人工输入选项。用户同意的是该文件，不是所有未来文件。
-3. 上传 `POST /api/v2/readiness/imports/`，multipart 示例字段：
+1. `GET /api/v2/readiness/imports/ocr-notice/` returns `version/text_zh/text_en/languages/enabled/configured/policy_configured/extraction_mode/retention_days`.
+2. Show the Chinese and English notice with a consent checkbox that is not pre-ticked; keep the manual-entry option. The user consents for this file, not for all future files.
+3. Upload with `POST /api/v2/readiness/imports/`; example multipart fields:
 
 ```text
 semester_id=<uuid>
@@ -53,70 +55,70 @@ ocr_notice_version=gemini-ocr-v1
 file=<PNG/JPEG/PDF bytes>
 ```
 
-`language` 只接受 `zh/en/zh-en`，默认 `zh-en`；提示识别范围始终覆盖中英文，保留原文不翻译。
-`ocr_consent` 默认 false。旧客户端不传新增字段仍可使用本地文字 PDF、文本及人工转录。
-重复文件沿用原导入记录；重新上传不会偷偷升级原授权。使用下面的独立授权接口。
+`language` accepts only `zh/en/zh-en`, default `zh-en`; the prompt always covers both Chinese and English and keeps the original text untranslated.
+`ocr_consent` defaults to false. Older clients that do not send the new fields can still use local text PDFs, text and manual transcription.
+A duplicate file reuses the original import record; re-uploading never silently upgrades the original consent. Use the separate authorization endpoint below.
 
-4. 轮询 `GET /api/v2/readiness/imports/{id}/`：
+4. Poll `GET /api/v2/readiness/imports/{id}/`:
 
-| 状态/字段 | 前端动作 |
+| Status / field | Frontend action |
 |---|---|
-| `QUEUED`，job `QUEUED/RUNNING/RETRY` | 显示处理中；不要自动重复上传或授权 |
-| `NEEDS_REVIEW` | 原文与识别结果对照，复核金额、币种、日期、发票号及收款人 |
-| `processing.ocr.pages` | 详情返回逐页 `number/text/language/uncertain`；列表与命令响应不复制转录全文 |
-| `processing.consent` | 当前告知版本、同意时间、操作者和提取模式；历史同意元数据保留在审计记录 |
-| `source_type=gemini_ocr` | 显示“AI 识别，待人工复核”，不能显示银行核验或身份核验 |
-| `original_sha256`、`processing.ocr.model/rule_version` | 原文件指纹、请求模型、转录规则版本 |
-| `OCR_UNCERTAIN_TEXT` | 标出不确定页，要求核对或修正；缺失内容不得补猜 |
-| `NEEDS_MANUAL_INPUT` | 显示具体失败码，选择人工转录或显式重新授权 |
-| `REJECTED` | 文件损坏、加密、不支持格式或安全检查不通过；要求更换文件 |
+| `QUEUED`, job `QUEUED/RUNNING/RETRY` | Show processing; do not automatically re-upload or re-authorize |
+| `NEEDS_REVIEW` | Show the original next to the recognized result; review amount, currency, date, invoice number and payee |
+| `processing.ocr.pages` | Details return per-page `number/text/language/uncertain`; list and command responses do not copy the full transcription |
+| `processing.consent` | Current notice version, consent time, actor and extraction mode; historical consent metadata stays in the audit log |
+| `source_type=gemini_ocr` | Show "AI-recognized, pending human review"; never show it as bank or identity verification |
+| `original_sha256`, `processing.ocr.model/rule_version` | Original file fingerprint, requested model, transcription rule version |
+| `OCR_UNCERTAIN_TEXT` | Mark uncertain pages and require checking or correction; never guess missing content |
+| `NEEDS_MANUAL_INPUT` | Show the specific failure code; choose manual transcription or explicit re-authorization |
+| `REJECTED` | File damaged, encrypted, unsupported or failed a safety check; ask for a different file |
 
-5. 沿用 `POST .../{id}/confirm/` 提交用户核对的 draft、issuer、selected_cost_ids 和冲突处理。付款仍有独立受益人核验和授权检查。
+5. Keep using `POST .../{id}/confirm/` to submit the user-checked draft, issuer, selected_cost_ids and conflict handling. Payments still have their own beneficiary verification and authorization checks.
 
-`POST .../{id}/authorize-ocr/` 在 `NEEDS_MANUAL_INPUT` 时接受版本上下文及 `ocr_consent=true/ocr_notice_version/language`，创建一个新任务。
-运行中的任务返回 409，应刷新状态；同一幂等键不重复创建任务。更换 C 提取模式后需重新告知。
-`POST .../{id}/transcribe/` 保留原有人工输入流程。
+`POST .../{id}/authorize-ocr/` accepts, in `NEEDS_MANUAL_INPUT`, the version context plus `ocr_consent=true/ocr_notice_version/language`, and creates a new job.
+A running job returns 409 and the client should refresh the status; the same idempotency key never creates a second job. Changing C's extraction mode requires a new notice.
+`POST .../{id}/transcribe/` keeps the existing manual-entry flow.
 
-## 失败、并发与请求边界
+## Failures, concurrency and request boundaries
 
-- 文件上限 5 MiB；PDF 最多 50 页；图片仅静态 PNG/JPEG、最多 2000 万像素。检查实际格式，不信任扩展名或客户端 MIME。
-- 图片重编码并移除 EXIF 等附带元数据；PDF 重建页面并移除文档及页面元数据，拒绝 JavaScript、自动动作、嵌入附件和表单。页面可见个人信息不会自动脱敏。
-- 固定 HTTPS 官方主机；API key 只在请求头，禁止重定向和环境代理；不使用 Files API、搜索、URL 抓取、函数或代码执行工具，`store=false` 禁用可选请求日志。
-- 这不能承诺 Google 的安全监测零留存，也不替代部署环境的存储加密、网络出口策略或文件解析进程资源隔离。
-- 默认每用户每小时最多 10 次外发尝试；基于数据库行锁及审计计数。worker 在外发前写入尝试记录，进程中断后不会自动重发。
-- 服务商临时故障（503/5xx、429、超时、连接错误）在同一任务内做有上限的重试：按 `STUDYFLOW_OCR_MODEL` → `STUDYFLOW_OCR_FALLBACK_MODELS` 顺序轮换，每次间隔带随机抖动的指数退避（约 0.5–4.5 秒），总请求数不超过 `STUDYFLOW_OCR_MAX_ATTEMPTS`（1–5，默认 3，设为 1 即关闭），总时长不超过 180 秒以留在 5 分钟 worker 租约内。重试发送的是用户已同意的同一份处理后文件，发往同一服务商；每用户每小时限额按任务计数，一个任务最多产生 `MAX_ATTEMPTS` 次外发请求。`processing.ocr.model` 记录实际成功的模型。
-- 鉴权错误、安全拦截、截断、缺页、非中英文或非法 JSON 不重试；重试耗尽后同样返回固定 `OCR_*` 错误码，任务结束并转人工，不存供应商原始错误响应。
-- OCR 成功后缓存经过契约校验的转录；下游提取暂时失败时复用缓存，不重复发送原文件。旧 lease 不能覆盖新结果。
-- 文件中的提示指令是不可信数据；现有可疑指令检测与确认阻断继续生效。检测规则并非完整的提示注入防御，付款权限隔离才是必要边界。
+- File limit 5 MiB; PDFs at most 50 pages; images only static PNG/JPEG, at most 20 megapixels. The actual format is checked; the extension and client MIME type are not trusted.
+- Images are re-encoded and EXIF and other attached metadata removed; PDFs have their pages rebuilt and document and page metadata removed, and JavaScript, automatic actions, embedded attachments and forms are rejected. Personal information visible on the page is not redacted automatically.
+- Fixed official HTTPS host; the API key is sent only in a header; redirects and environment proxies are disabled; no Files API, search, URL fetching, function or code execution tools are used, and `store=false` disables optional request logging.
+- This cannot promise zero retention for Google's safety monitoring, and it does not replace storage encryption, network egress policy or resource isolation of the file-parsing process in the deployment.
+- By default each user gets at most 10 outbound attempts per hour, based on database row locks and audit counts. The worker records the attempt before sending, so an interrupted process does not resend automatically.
+- Transient provider failures (503/5xx, 429, timeouts, connection errors) are retried within the same job up to a limit: models rotate in the order `STUDYFLOW_OCR_MODEL` → `STUDYFLOW_OCR_FALLBACK_MODELS`, with exponential backoff and random jitter between attempts (about 0.5–4.5 seconds); total requests do not exceed `STUDYFLOW_OCR_MAX_ATTEMPTS` (1–5, default 3; 1 turns retry off), and total time does not exceed 180 seconds to stay within the 5-minute worker lease. Retries send the same processed file the user consented to, to the same provider; the per-user hourly limit counts jobs, and one job makes at most `MAX_ATTEMPTS` outbound requests. `processing.ocr.model` records the model that actually succeeded.
+- Authentication errors, safety blocks, truncation, missing pages, languages other than Chinese and English, or invalid JSON are not retried; once retries are exhausted a fixed `OCR_*` error code is returned as well, the job ends and falls back to manual input, and the provider's raw error response is not stored.
+- After a successful OCR, the contract-validated transcription is cached; if downstream extraction fails temporarily, the cache is reused and the original file is not sent again. A stale lease cannot overwrite a newer result.
+- Prompt instructions inside the file are untrusted data; the existing suspicious-instruction detection and confirmation block stay in force. The detection rules are not a complete prompt-injection defense; isolating payment permissions is the necessary boundary.
 
-## 原件保留与删除
+## Original retention and deletion
 
-`POST .../{id}/discard-source/` 使用版本上下文和幂等键，删除原始二进制及该材料的 OCR 全文缓存；运行中拒绝。
-它**不是完整个人数据删除接口**：已提取的证据、用户确认、财务记录及相关幂等响应仍按业务记录保留。
-源文件删除后不能再次 OCR，但已有待复核数据和财务记录保留。
+`POST .../{id}/discard-source/` takes the version context and an idempotency key, and deletes the original binary and that material's full-text OCR cache; it is refused while a job is running.
+It is **not a complete personal-data deletion endpoint**: extracted evidence, user confirmations, financial records and related idempotent responses are kept as business records.
+After the source file is deleted it cannot be OCR'd again, but existing review data and financial records are kept.
 
-部署时每天定时运行 `python manage.py purge_document_sources`，清理默认超过 30 天的已结束材料原件及 OCR 缓存。
-本轮提供清理命令，不修改操作系统计划任务。尚在排队/运行的任务跳过清理；超过保留期限的文件不允许再外发 OCR。
-请求采用 inline bytes，没有远端 Files API 文件需要清理；供应商自身保留政策仍适用。
+In deployment, run `python manage.py purge_document_sources` daily; it removes originals and OCR caches of finished materials older than 30 days by default.
+This round provides the cleanup command but does not modify operating-system scheduled tasks. Jobs still queued or running are skipped; files past the retention period may no longer be sent for OCR.
+Requests use inline bytes, so there are no remote Files API files to clean up; the provider's own retention policy still applies.
 
-## 可复现验收
+## Reproducible acceptance
 
-`backend/examples/ocr/v1/` 包含中文、英文、中英混排的 3 个 PNG 及对应纯扫描 PDF，全部明确标注 Synthetic。
-`manifest.json` 含版本、文件校验值和金额/日期/发票号的预期文本。生成方式：
+`backend/examples/ocr/v1/` contains 3 PNGs in Chinese, English and mixed Chinese/English, plus matching pure-scan PDFs, all clearly labeled Synthetic.
+`manifest.json` contains the version, file checksums and the expected text for amounts, dates and invoice numbers. To generate:
 
 ```powershell
 Set-Location backend
 ../studyFlow/Scripts/python.exe scripts/build_ocr_fixtures.py --font C:/Windows/Fonts/msyh.ttc
 ```
 
-部署配置完成后，在 `backend/` 下显式执行：
+After deployment configuration, run explicitly in `backend/`:
 
 ```text
 python manage.py verify_document_ocr --live --output output/ocr-live.json
 ```
 
-该命令只发送上述六份合成样本，生成每份通过/失败结果，不读取用户材料，不输出密钥。
-不同字体/渲染版本可能改变文件校验值；重建时会更新清单。六份清晰样本通过也不意味着拍照模糊、手写或所有版式已验证。
-自动化测试使用 MockTransport 或模拟识别结果，只证明请求边界、契约和状态机行为；真实识别效果必须以上述 live 结果及后续样本评测为准。
+The command sends only the six synthetic samples above and produces a pass/fail result for each; it reads no user material and prints no keys.
+Different fonts or rendering versions may change the file checksums; rebuilding updates the manifest. Passing on six clear samples does not mean blurry photos, handwriting or every layout has been verified.
+Automated tests use MockTransport or simulated recognition results, which only prove request boundaries, contracts and state-machine behavior; real recognition quality must be judged from the live results above and later sample evaluations.
 
-参考：[Gemini 文档理解](https://ai.google.dev/gemini-api/docs/document-processing)、[generateContent API](https://ai.google.dev/api/generate-content)、[服务与数据条款](https://ai.google.dev/gemini-api/terms)。
+References: [Gemini document understanding](https://ai.google.dev/gemini-api/docs/document-processing), [generateContent API](https://ai.google.dev/api/generate-content), [Terms of service and data use](https://ai.google.dev/gemini-api/terms).

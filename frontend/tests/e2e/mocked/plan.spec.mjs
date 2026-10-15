@@ -1,143 +1,193 @@
-import { test } from "@playwright/test";
-import assert from "node:assert/strict";
+import { test, expect } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { screenshot } from "../../support.mjs";
-
-const base = process.env.TEST_URL || "http://127.0.0.1:5173";
-// The same recordings the preview uses (backend/auto_test/fixture_plan_preview.py).
-const recorded = name => JSON.parse(readFileSync(new URL(`../../../src/plan/preview-data/${name}.json`, import.meta.url), "utf-8"));
+const recorded = name => JSON.parse(readFileSync(new URL(`../../../src/plan/preview-data/${name}.json`, import.meta.url), "utf8"));
 const tools = page => page.getByRole("navigation", { name: "Tools" });
 
-test.describe("Planner preview", () => {
-  test("shows the recorded price conversation and the in-school stage without calling Django", async ({ page }) => {
-    const errors = [];
-    let apiCalls = 0;
-    page.on("pageerror", error => errors.push(error.message));
-    await page.route("**/api/**", route => { apiCalls++; return route.abort(); });
-    await page.setViewportSize({ width: 1360, height: 900 });
-    await page.goto(`${base}/?plan=preview`);
-    await page.getByRole("heading", { level: 1, name: "Study planner" }).waitFor({ state: "attached" });
-    const chat = page.locator("#plan-chat");
-    await chat.getByText("What does 4 years at Chulalongkorn cost in total?", { exact: true }).first().waitFor();
-    // Whole-course price card with the total in the chosen currency; its line items open beside the chat.
-    const price = chat.getByRole("article", { name: "Chulalongkorn University · 4-year total" });
-    await price.getByText("฿2,351,350", { exact: true }).waitFor();
-    await price.getByRole("button", { name: "Line items" }).click();
-    await page.locator(".workspace-dock").waitFor();
-    await page.getByRole("button", { name: "Close tool" }).click();
-    // The comparison marks the lowest total; the plan shows the gap, the simulated loan and the confirmation.
-    const compare = chat.getByRole("article", { name: "2 schools, whole-course totals" });
-    await compare.getByText("Lowest current estimate", { exact: true }).waitFor();
-    await chat.getByText("Funding gap about 851,350 THB", { exact: false }).waitFor();
-    await chat.getByRole("heading", { name: "Simulated loan · 48 months" }).waitFor();
-    await chat.getByRole("heading", { name: "Confirm the study plan" }).waitFor();
-    assert.equal(await chat.getByRole("button", { name: "Confirm", exact: true }).count(), 0, "preview never offers a decision");
-    assert.ok(await chat.getByText("Sample data", { exact: true }).count() > 0, "school figures are labelled as sample data");
-    // The plan card opens the funding panel; its 90-day forecast is on the details page. The sidebar item carries a funding-gap dot.
-    await chat.getByRole("button", { name: "View my plan" }).click();
-    const dock = page.locator(".workspace-dock");
-    await dock.getByRole("heading", { name: "Where the money goes" }).waitFor();
-    await dock.getByRole("button", { name: /^Details and sources/ }).click();
-    await dock.getByText("Short from 2027-08-02", { exact: false }).waitFor();
-    await dock.getByRole("button", { name: "Back to the list" }).click();
-    await dock.getByRole("heading", { name: "Where the money goes" }).waitFor();
-    await tools(page).getByRole("button", { name: /^My plan/ }).getByRole("img", { name: "Funding gap" }).waitFor();
-    await page.getByRole("button", { name: "Close tool" }).click();
-    await page.screenshot({ path: screenshot("plan-preview-desktop-en.png"), fullPage: true });
-
-    await chat.getByRole("button", { name: "Which schools are there?" }).click();
-    await page.getByText("The preview is read-only. Sign in to talk to the assistant.").waitFor();
-
-    // The stage switch lives in the sidebar settings menu.
-    await tools(page).getByRole("button", { name: "Settings", exact: true }).click();
-    await page.locator("#side-settings").getByRole("button", { name: "In school", exact: true }).click();
-    await tools(page).getByRole("button", { name: "This month", exact: true }).click();
-    await page.locator(".life-panel .life-list").first().waitFor();
-    await page.locator(".life-panel .life-filter").getByRole("button", { name: /^Later \d+$/ }).waitFor();
-    await chat.getByText("I spent 120 THB on lunch today", { exact: true }).first().waitFor();
-
-    await page.getByRole("button", { name: "Close tool" }).click();
-    await page.getByRole("button", { name: "中文" }).click();
-    await page.getByRole("heading", { level: 1, name: "留学规划助手" }).waitFor({ state: "attached" });
-    await chat.getByText("今天午饭花了120泰铢", { exact: true }).first().waitFor();
-    await page.getByRole("button", { name: "English" }).click();
-
-    await page.setViewportSize({ width: 375, height: 812 });
-    await page.getByRole("heading", { level: 1, name: "Study planner" }).waitFor({ state: "attached" });
-    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
-    await page.screenshot({ path: screenshot("plan-preview-mobile-en.png"), fullPage: true });
-    assert.equal(apiCalls, 0);
-    assert.deepEqual(errors, []);
-  });
+test("recorded price and application previews are read-only and share the live contract", async ({ page }) => {
+  const errors = [], calls = [];
+  page.on("pageerror", e => errors.push(e.message));
+  await page.route("**/api/**", route => { calls.push(route.request().url()); return route.abort(); });
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/?plan=preview");
+  await expect(page.locator("#plan-chat")).toContainText("What does 4 years at Chulalongkorn cost in total?");
+  await expect(page.getByRole("article", { name: "Chulalongkorn University · 4-year total" })).toContainText("฿2,351,350");
+  await tools(page).getByRole("button", { name: "My plan", exact: true }).click();
+  await expect(page.locator(".assessment-panel")).toContainText("48 months");
+  await expect(page.locator(".assessment-panel").getByRole("button", { name: "Confirm plan and apply", exact: true })).toHaveCount(0);
+  await page.goto("/?plan=preview&stage=prepare&tool=funding");
+  await expect(page.locator(".assessment-panel").getByRole("img", { name: "Where the money goes", exact: true })).toBeVisible();
+  const notice = page.getByRole("checkbox", { name: /Simulated admission notice/ });
+  await expect(notice).toBeChecked();
+  await expect(notice).toBeDisabled();
+  await expect(tools(page).getByRole("button", { name: "Wallet & payments", exact: true })).toBeVisible();
+  await page.screenshot({ path: screenshot("simplified-application-desktop.png") });
+  // Approved but unsigned: reminders count only what the family pays; the loan's share is set aside.
+  await page.goto("/?plan=preview&stage=prepare&tool=life");
+  const life = page.locator(".tool-content:not([hidden]) .life-panel");
+  await life.getByRole("button", { name: /^Later/ }).click();
+  await expect(life).toContainText("Once signed, the loan pays THB 111,950.00; you pay THB 5,650.00");
+  await expect(life).toContainText("The loan pays this to the school once it is approved and signed");
+  await expect(life).not.toContainText(/family support/i);
+  await life.locator(".life-item", { hasText: "The loan pays this to the school once it is approved and signed" }).first().locator(".life-item-main").click();
+  const detail = page.locator(".tool-content:not([hidden]) .life-detail");
+  const payActions = /^(Pay from wallet|Record as paid)$/;
+  await expect(detail.getByRole("button", { name: payActions })).toHaveCount(0);
+  // A bill the family pays itself still offers both.
+  await page.getByRole("button", { name: "Back to the list", exact: true }).click();
+  await life.locator(".life-item", { hasText: "Student health insurance" }).first().locator(".life-item-main").click();
+  await expect(detail.getByRole("button", { name: payActions })).toHaveCount(2);
+  expect(calls).toEqual([]); expect(errors).toEqual([]);
 });
 
-test.describe("Planner with mocked Django", () => {
-  test.use({ viewport: { width: 1360, height: 900 } });
-
-  test("sends messages, renders the returned cards and confirms the plan proposal", async ({ page }) => {
-    const errors = [];
-    page.on("pageerror", error => errors.push(error.message));
-    const script = recorded("plan.en").conversation;
-    const expires = new Date(Date.now() + 600000).toISOString();
-    for (const turn of script.turns) {
-      for (const pending of turn.pending_actions) pending.expires_at = expires;
-      for (const card of turn.cards) if (card.type === "confirmation") card.expires_at = expires;
+test("loan amount is required, estimate precedes submission, and application unlocks tools", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  const draft = recorded("plan.en"), applied = recorded("prepare.en");
+  const conversation = structuredClone(draft.conversation);
+  let assessment = structuredClone(draft.assessment);
+  assessment.quotes = []; assessment.inputs.loan.principal = null;
+  const submissions = [], saves = [];
+  const life = recorded("life.prepare.en");
+  await page.route("**/api/auth/session/", route => route.fulfill({ json: { authenticated: true, username: "student", csrf_token: "mock" } }));
+  await page.route("**/api/v2/**", route => {
+    const req = route.request(), path = new URL(req.url()).pathname.replace("/api/v2/", "");
+    const ok = data => route.fulfill({ json: { data } });
+    if (path === "planning/assessment/" && req.method() === "POST") {
+      const body = req.postDataJSON(); saves.push(body);
+      assessment = { ...assessment, inputs: body.inputs, version: assessment.version + 1, draft: body.draft,
+        quotes: body.draft ? [] : structuredClone(draft.assessment.quotes) };
+      return ok(assessment);
     }
-    const [greeting, ...turns] = script.turns;
-    const conversation = { ...script, plan: null, profile: { role: null, home_currency: "CNY" }, turns: [greeting] };
-    const calls = [];
-    const json = (route, status, body) => route.fulfill({ status, contentType: "application/json", body: JSON.stringify(body) });
-    await page.route("**/api/auth/session/", route => json(route, 200, { authenticated: true, username: "student", csrf_token: "test-csrf" }));
-    await page.route("**/api/v2/**", async route => {
-      const request = route.request();
-      const path = new URL(request.url()).pathname.replace("/api/v2/", "");
-      calls.push(`${request.method()} ${path}`);
-      if (request.method() === "POST") assert.ok(request.headers()["idempotency-key"], `${path} needs an Idempotency-Key`);
-      if (path === "agent/conversations/" && request.method() === "GET") return json(route, 200, { data: [] });
-      if (path === "agent/conversations/") return json(route, 201, { data: conversation });
-      if (path.endsWith("/messages/")) {
-        const text = request.postDataJSON().text;
-        const next = turns.shift();
-        assert.equal(text, next.goal);
-        conversation.turns.push(next);
-        const plan = next.cards.find(card => card.plan)?.plan;
-        if (plan) conversation.plan = plan;
-        return json(route, 201, { data: next });
-      }
-      if (path.startsWith("agent/conversations/")) return json(route, 200, { data: conversation });
-      if (path.startsWith("agent/pending-actions/") && path.endsWith("/confirm/")) {
-        const pending = conversation.turns.flatMap(turn => turn.pending_actions).find(item => path.includes(item.id));
-        pending.status = "CONFIRMED";
-        conversation.plan = { ...conversation.plan, status: "CONFIRMED" };
-        return json(route, 201, { data: pending });
-      }
-      if (path === "planning/in-school/") return json(route, 200, { data: { enrolled: false } });
-      if (path === "planning/family-links/") return json(route, 200, { data: [] });
-      return json(route, 404, { detail: "not mocked" });
-    });
-
-    await page.goto(`${base}/`);
-    const chat = page.locator("#plan-chat");
-    // No role question any more: before the first question the price hero holds the composer.
-    await chat.getByRole("heading", { name: "Know what studying abroad costs before you go" }).waitFor();
-    for (const turn of [...turns]) {
-      await chat.getByLabel("Message the assistant").fill(turn.goal);
-      await chat.getByLabel("Message the assistant").press("Enter");
-      await chat.getByText(turn.final_answer.slice(0, 40), { exact: false }).first().waitFor();
+    if (path === "planning/plan/confirm/") {
+      submissions.push(req.postDataJSON()); conversation.plan = applied.conversation.plan;
+      assessment = { ...applied.assessment, version: assessment.version, plan: conversation.plan };
+      return ok(assessment);
     }
-    await chat.getByRole("article", { name: /Chulalongkorn University · 4-year total/ }).waitFor();
-    await chat.getByText("Chulalongkorn University · Draft", { exact: true }).waitFor();
-    await chat.locator(".plan-card-confirm").getByRole("button", { name: "Confirm", exact: true }).click();
-    await page.getByRole("dialog", { name: "Review and confirm" }).getByRole("button", { name: "Confirm", exact: true }).click();
-    await page.getByText("Done. The plan is updated.").waitFor();
-    // A confirmed plan moves to preparing: the sidebar offers This month and the stage summary (right rail) its to-dos.
-    await page.locator(".workspace-stage").getByText("Preparing to leave").waitFor();
-    await tools(page).getByRole("button", { name: "This month", exact: true }).waitFor();
-    // The rail gives way to an open tool, so close it first.
-    if (await page.locator(".workspace-dock").isVisible()) await page.getByRole("button", { name: "Close tool" }).click();
-    await page.locator(".workspace-rail #plan-journey-guide").getByRole("button", { name: /^To do/ }).click();
-    await page.locator("#workspace-tool-title").getByText("This month", { exact: true }).waitFor();
-    assert.ok(calls.some(call => /^POST agent\/pending-actions\/.+\/confirm\/$/.test(call)));
-    assert.deepEqual(errors, []);
+    if (path === "planning/loan-preview/") return ok({ ...draft.assessment.quotes[0].result,
+      principal: req.postDataJSON().principal, product: "custom", months: 48, method: "amortized",
+      annual_rate: "0.06", monthly_payment: "4697.01", schedule: [], currency: "THB" });
+    if (path === "agent/conversations/") return ok([{ id: conversation.id }]);
+    if (path.startsWith("agent/conversations/")) return ok(conversation);
+    if (path === "planning/assessment/") return ok(assessment);
+    if (path === "planning/history/") return ok({ prices: [], drafts: [], draft_limit: 3 });
+    if (path === "planning/life/") return ok(life);
+    return ok([]);
   });
+  await page.goto("/?tool=funding");
+  const dock = page.locator(".assessment-panel");
+  await expect(dock.getByRole("img", { name: "Where the money goes", exact: true })).toBeVisible();
+  await expect(dock.getByRole("button", { name: "Estimate repayments", exact: true })).toBeDisabled();
+  await expect(dock.getByText(/No loan,|Family covers it/)).toHaveCount(0);
+  await dock.getByRole("spinbutton", { name: "Loan amount", exact: true }).fill("200000");
+  await dock.getByRole("button", { name: "Estimate repayments", exact: true }).click();
+  await dock.getByRole("button", { name: "Confirm plan and apply", exact: true }).click();
+  const dialog = page.getByRole("dialog");
+  await expect(dialog).toContainText("simulated admission notice");
+  expect(submissions).toEqual([]);
+  await dialog.getByRole("button", { name: "Confirm plan and apply", exact: true }).click();
+  await expect(tools(page).getByRole("button", { name: "Wallet & payments", exact: true })).toBeVisible();
+  expect(submissions).toHaveLength(1);
+  expect(submissions[0].quote_id).toBe(draft.assessment.quotes[0].id);
+  expect(saves.find(row => !row.draft).inputs.loan.principal).toBe("200000.00");
+  expect(Object.keys(saves[0].inputs).sort()).toEqual(["borrower", "loan"]);
+  await expect(dock.getByRole("heading", { name: "Complete signing", exact: true })).toBeInViewport({ ratio: 1 });
+  await expect(dock.getByRole("button", { name: "Sign the loan", exact: true })).toBeDisabled();
+  await expect(dock).toContainText("Complete the 2 remaining documents before signing.");
+  await expect(dock.locator(".plan-visual")).toHaveCount(0);
+  await page.reload();
+  await expect(dock.getByRole("heading", { name: "Complete signing", exact: true })).toBeInViewport({ ratio: 1 });
+  await page.getByRole("button", { name: "Back to the list", exact: true }).click();
+  const next = dock.getByRole("button", { name: "Next: complete signing", exact: true });
+  await expect(next).toBeInViewport({ ratio: 1 });
+  await expect(dock).toContainText("The loan has not been signed yet.");
+  await expect(dock.getByRole("img", { name: "Where the money goes", exact: true })).toBeVisible();
+  await next.click();
+  await expect(dock.getByRole("heading", { name: "Complete signing", exact: true })).toBeInViewport({ ratio: 1 });
+  expect(submissions).toHaveLength(1);
+});
+
+for (const width of [390, 1440]) test(`signing is the next step and documents still need confirmation at ${width}px`, async ({ page }) => {
+  await page.setViewportSize({ width, height: 900 });
+  const applied = recorded("prepare.en"), assessment = applied.assessment;
+  const posts = [];
+  await page.route("**/api/auth/session/", route => route.fulfill({ json: { authenticated: true, username: "student", csrf_token: "mock" } }));
+  await page.route("**/api/v2/**", route => {
+    const request = route.request(), path = new URL(request.url()).pathname.replace("/api/v2/", "");
+    const ok = data => route.fulfill({ json: { data } });
+    if (path === "agent/conversations/") return ok([{ id: applied.conversation.id }]);
+    if (path.startsWith("agent/conversations/")) return ok(applied.conversation);
+    if (request.method() === "POST") {
+      posts.push(path);
+      if (path === "planning/loan/documents/") {
+        const body = request.postDataJSON();
+        const doc = assessment.loan_stage.documents.find(d => d.id === body.task_id);
+        expect(body.expected_version).toBe(doc.version);
+        doc.done = body.done; doc.version++;
+        return ok(assessment);
+      }
+      if (path === "planning/loan/sign/") {
+        expect(request.postDataJSON()).toEqual({ application_id: assessment.lifecycle.applications[0].id,
+          expected_version: assessment.lifecycle.applications[0].version });
+        assessment.loan_stage.signed = true;
+        assessment.lifecycle.applications[0].status = "DISBURSED";
+        return ok(assessment);
+      }
+      return route.fulfill({ status: 500, json: { detail: `Unexpected POST ${path}` } });
+    }
+    if (path === "planning/assessment/") return ok(assessment);
+    if (path === "planning/history/") return ok({ prices: [], drafts: [], draft_limit: 3 });
+    if (path === "planning/life/") return ok(recorded("life.prepare.en"));
+    return ok([]);
+  });
+  await page.goto("/?tool=funding");
+  await page.getByRole("button", { name: "中文", exact: true }).click();
+  const panel = page.locator(".assessment-panel");
+  await expect(panel.getByRole("heading", { name: "完成签约", exact: true })).toBeInViewport({ ratio: 1 });
+  await expect(panel.getByRole("button", { name: "签约", exact: true })).toBeDisabled();
+  await expect(panel).toContainText("请先补齐剩余 2 项材料，再完成签约。");
+  expect(posts).toEqual([]);
+  await page.locator(".workspace-dock").screenshot({ path: screenshot(`signing-documents-${width}-zh.png`), animations: "disabled" });
+  for (const doc of assessment.loan_stage.documents.filter(d => !d.auto)) {
+    await panel.getByRole("checkbox", { name: new RegExp(doc.title.zh) }).click();
+    await expect(panel.getByRole("checkbox", { name: new RegExp(doc.title.zh) })).toBeEnabled();
+    await expect.poll(() => posts.filter(p => p === "planning/loan/documents/").length).toBeGreaterThan(0);
+    await expect(panel.getByRole("checkbox", { name: new RegExp(doc.title.zh) })).toBeChecked();
+  }
+  await expect(panel.getByRole("button", { name: "签约", exact: true })).toBeEnabled();
+  await expect(panel).toContainText("材料已齐备，请核对贷款信息并确认签约。");
+  await page.locator(".workspace-dock").screenshot({ path: screenshot(`signing-ready-${width}-zh.png`), animations: "disabled" });
+  expect(posts).not.toContain("planning/loan/sign/");
+  await panel.getByRole("button", { name: "签约", exact: true }).click();
+  const dialog = page.getByRole("dialog", { name: "确认签约", exact: true });
+  await expect(dialog).toContainText("贷款按学期直接付给学校");
+  await dialog.getByRole("button", { name: "返回", exact: true }).click();
+  expect(posts).not.toContain("planning/loan/sign/");
+  await panel.getByRole("button", { name: "签约", exact: true }).click();
+  await dialog.getByRole("button", { name: "签约", exact: true }).click();
+  await expect(panel.getByRole("heading", { name: "已签约", exact: true })).toBeInViewport({ ratio: 1 });
+  expect(posts.filter(p => p === "planning/loan/sign/")).toHaveLength(1);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.locator(".workspace-dock").screenshot({ path: screenshot(`signing-complete-${width}-zh.png`), animations: "disabled" });
+});
+
+test("cost composition stays visible in both languages on desktop and phone", async ({ page }) => {
+  await page.route("**/api/**", route => route.abort());
+  for (const width of [1440, 390]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/?plan=preview&tool=funding");
+    for (const language of ["English", "中文"]) {
+      await page.getByRole("button", { name: language, exact: true }).click();
+      const visual = page.locator(".plan-visual");
+      await expect(visual.getByRole("img", { name: language === "English" ? "Where the money goes" : "钱花在哪里", exact: true })).toBeVisible();
+      await expect(visual).toContainText("฿2,351,350");
+      await expect(visual).toContainText("฿675,250");
+      await expect(visual.locator(".chart-legend li")).toHaveCount(3);
+      await expect(visual.locator(".chart-legend")).toContainText("43.8%");
+      await expect(visual.locator(".chart-legend")).toContainText("49.6%");
+      await expect(visual.locator(".chart-legend")).toContainText("6.6%");
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+      await page.locator(".workspace-dock").screenshot({ path: screenshot(`cost-composition-${width}-${language === "English" ? "en" : "zh"}.png`) });
+      await visual.screenshot({ path: screenshot(`cost-summary-${width}-${language === "English" ? "en" : "zh"}.png`) });
+    }
+  }
 });

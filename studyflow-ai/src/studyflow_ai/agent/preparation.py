@@ -1,16 +1,5 @@
-"""Read-only preparation guidance and conservative arrival intent for the mock planner."""
-
-import re
-
-
-def arrival_reported(text):
-    if any(word in text for word in ("没", "未", "明天", "将", "准备", "如何", "怎么", "是否", "吗", "?", "？")):
-        return False
-    if re.search(r"\b(not|never|tomorrow|will|how|when|whether)\b|haven't|hasn't|isn't", text):
-        return False
-    return any(word in text for word in ("已入学", "已经入学", "入学了", "已完成报到", "已经报到", "报到了", "已经到校",
-        "i have enrolled", "i'm enrolled", "i am enrolled", "i have arrived", "i've arrived", "i'm on campus",
-        "completed registration", "has enrolled", "has arrived"))
+"""Read-only preparation guidance for the mock planner."""
+from .funnel import invite
 
 
 def _money(value, currency):
@@ -20,37 +9,34 @@ def _money(value, currency):
 def first_month_reply(month):
     """The first month after arrival from the plan's sample costs, in plain words."""
     c = month["currency"]
-    zh = (f"按学校费用示例估算，到校第一个月大约需要 {_money(month['first_month_total'], c)}："
+    zh = (f"按学校的费用示例算，到校第一个月大约要准备 {_money(month['first_month_total'], c)}："
           f"每月吃饭、交通、通讯约 {_money(month['monthly_total'], c)}，"
           f"加上押金、签证、安家等一次性开支约 {_money(month['one_off_total'], c)}。"
-          f"开学时到期的学费、住宿、保险等账单约 {_money(month['bills_at_start_total'], c)}，已列在「本月」里，不用重复准备。"
-          "住宿已经定好了吗？确定后可以按实际押金再调整。")
+          f"开学时要交的学费、住宿、保险等约 {_money(month['bills_at_start_total'], c)}，已经单独列在账单里，不用重复准备。"
+          "住宿定好了吗？定了的话可以按实际押金再调一调。")
     en = (f"From the school's sample costs, the first month after arrival needs about {_money(month['first_month_total'], c)}: "
           f"about {_money(month['monthly_total'], c)} a month for food, transport and phone, plus about "
           f"{_money(month['one_off_total'], c)} once for the deposit, visa and settling in. The tuition, housing and insurance bills "
-          f"due at the start (about {_money(month['bills_at_start_total'], c)}) are already in This month. "
+          f"due at the start (about {_money(month['bills_at_start_total'], c)}) are listed separately as plan bills. "
           "Is your housing arranged? We can adjust with the actual deposit.")
     return zh, en
 
 
 def preparation_reply(text, status, locale, plan=None):
     if any(word in text for word in ("日期有变化", "延期", "推迟", "start date has changed", "postpone", "defer")):
-        pair = ("先不确认入学。新的开学日期是什么，是否已得到学校确认？目前我还不能修改计划日期；这条消息不会改变计划、账单或还款日期。",
-                "Let's hold off on enrollment. What is the new start date, and has the school confirmed it? I cannot update the plan date yet; this message changes no plan, bill or repayment dates.")
-    elif any(word in text for word in ("还在准备", "还没报到", "还没入学", "尚未报到", "尚未入学", "未入学", "still preparing", "not arrived", "not enrolled", "haven't arrived", "明天去报到", "how do i enroll")):
-        pair = ("明白，先继续准备，不会据此确认入学。你现在最需要处理住宿、出发安排，还是首月预算？完成报到后再告诉我。",
-                "Understood. We can continue preparing; I will not confirm enrollment from this. Would housing, departure preparation or the first-month budget help most? Tell me once registration is complete.")
+        pair = ("开学日期有变化呀。新的日期是哪天，学校确认了吗？这里暂时还改不了方案里的日期，账单和还款日期也会先保持不变。",
+                "Your start date changed? What's the new date, and has the school confirmed it? I can't change the plan date here yet, so bills and repayment dates stay as they are for now.")
     elif any(word in text for word in ("出发准备", "departure preparation")):
-        pair = ("可以先梳理录取与报到材料、旅行证件、到达交通和首晚住宿。具体要求与日期需要向学校核实。你已经获得录取了吗，预计什么时候出发？这里只讨论准备事项，不代表已订票或完成手续。",
-                "Let's review admission and registration documents, travel documents, arrival transport and the first night's accommodation. Verify requirements and dates with the school. Do you have an offer, and when do you expect to travel? This discussion does not book travel or complete any process.")
-    elif status != "ENROLLED" and any(word in text for word in ("首月预算", "first-month budget")) and (plan or {}).get("first_month"):
+        pair = ("出发前可以先把这几样理一理：录取和报到材料、护照签证、落地后的交通，还有第一晚住哪儿。具体要求和日期以学校通知为准。你打算什么时候出发？",
+                "Before you leave, it helps to sort out a few things: admission and registration documents, passport and visa, getting from the airport, and where you'll stay the first night. Go by the school's notices for exact requirements and dates. When are you planning to fly out?")
+    elif any(word in text for word in ("首月预算", "首月开支", "first-month budget", "first-month costs")) and (plan or {}).get("first_month"):
         pair = first_month_reply(plan["first_month"])
-    elif status != "ENROLLED" and any(word in text for word in ("首月预算", "first-month budget")):
-        pair = ("首月预算需要区分一次性开支和每月开支：住宿押金、安置用品，以及房租、吃饭和交通。先从学校费用示例核对，再用已确认的实际金额完善；目前没有生成新预算或账单。住宿是否已确定，有没有押金金额？",
-                "Separate one-off arrival costs from recurring costs: housing deposit and setup items, then rent, food and transport. Check the school's sample costs before using confirmed actual amounts. No new budget or bill has been created. Have you arranged housing, and do you know the deposit?")
+    elif any(word in text for word in ("首月预算", "首月开支", "first-month budget", "first-month costs")):
+        pair = ("首月的钱可以分两块看：一次性的（住宿押金、安家用品）和每月都有的（房租、吃饭、交通）。先参考学校的费用示例，等实际金额定了再细调。住宿定下来了吗？",
+                "Think of the first month in two parts: one-off costs (housing deposit, setting up) and monthly ones (rent, food, transport). Start from the school's sample costs and adjust once the real amounts are known. Have you sorted out housing?")
     elif status == "CONFIRMED" and text.strip() in ("确认", "confirm"):
-        pair = ("你是想继续准备，还是已经完成报到？确认留学计划不代表录取或入学；完成报到后才能确认进入日常生活阶段。",
-                "Do you want to continue preparing, or have you completed registration? Confirming a study plan does not mean admission or enrollment. Confirm enrollment after registration.")
+        pair = ("你的方案和贷款申请都已经提交好了。" + invite("applied", "zh"),
+                "Your plan and loan application are both in. " + invite("applied", "en"))
     else:
         return None
     return pair[0 if locale == "zh" else 1]

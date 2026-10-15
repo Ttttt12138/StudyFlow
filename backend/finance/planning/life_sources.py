@@ -16,16 +16,20 @@ def task_rows(user, plan):
         rows.append({"source_key": f"task:{t.id}", "kind": "task", "title": template or t.title,
              "due_date": t.due_date, "amount": str(t.amount) if t.amount is not None else None,
              "currency": t.currency, "done": t.done, "estimated": False, "source_text": t.source_text,
-             "source_version": t.version, "target": "life", "template": bool(t.template_key)})
+             "source_version": t.version, "target": "life", "template": bool(t.template_key), "auto": t.template_key == "loan_doc:admission"})
     return rows
 
 
 def bill_rows(user, plan):
-    # Loan repayments come only from actual loan accounts, never the old plan estimate.
+    from .loan_stage import pending_bills
+
+    # A submitted loan not yet signed already has its share of each bill worked out (`loan_pending`), so the
+    # reminders count only what the family will pay. Loan repayments come only from actual loan accounts.
+    pending = pending_bills(plan)
     return [{"source_key": f"bill:{b.id}", "kind": "bill", "title": b.label,
              "due_date": b.due_date, "amount": str(b.amount), "currency": b.currency,
              "done": b.status == "PAID", "estimated": True, "source_version": b.status,
-             "target": "bills", "paid_by_loan": _loan_part(b)}
+             "target": "bills", "paid_by_loan": _loan_part(b), "loan_pending": pending.get(b.id)}
             for b in PlanBill.objects.filter(owner=user, plan=plan).exclude(kind="loan").select_related("payout")]
 
 
@@ -48,7 +52,7 @@ def loan_rows(user):
         rows.append({"source_key": f"loan:{account.id}:{due.number}", "kind": "loan",
             "title": {"en": f"Loan installment {due.number}", "zh": f"贷款第 {due.number} 期还款"},
             "due_date": due.due_on, "amount": str(due.amount), "currency": "THB", "done": False,
-            "estimated": False, "source_version": account.version, "target": "loans",
+            "estimated": False, "source_version": account.version, "target": "funding",
             "wallet_gap": str(max(Decimal(0), due.amount - balance)) if balance is not None else None,
             "account_id": str(account.id)})
     return rows
@@ -56,13 +60,7 @@ def loan_rows(user):
 
 def source_rows(user, plan):
     rows = task_rows(user, plan) + bill_rows(user, plan) if plan else []
-    if plan and plan.status == "CONFIRMED":
-        rows.append({"source_key": f"enrollment:{plan.id}", "kind": "enrollment",
-            "title": {"en": "Confirm arrival and enrollment", "zh": "核对报到与入学进度"},
-            "due_date": plan.start_date, "amount": None, "currency": "", "done": False,
-            "estimated": True, "source_version": plan.version, "target": "enrollment"})
-    from .credit import rows as credit_rows
-    return rows + loan_rows(user) + (credit_rows(user) if plan else [])
+    return rows + loan_rows(user)
 
 
 def balances(user):

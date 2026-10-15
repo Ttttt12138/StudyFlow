@@ -1,14 +1,13 @@
-import { Bank } from "@phosphor-icons/react/dist/csr/Bank";
+import { ArrowsLeftRight } from "@phosphor-icons/react/dist/csr/ArrowsLeftRight";
 import { CaretDoubleLeft } from "@phosphor-icons/react/dist/csr/CaretDoubleLeft";
 import { CaretDoubleRight } from "@phosphor-icons/react/dist/csr/CaretDoubleRight";
 import { CalendarCheck } from "@phosphor-icons/react/dist/csr/CalendarCheck";
 import { Coins } from "@phosphor-icons/react/dist/csr/Coins";
 import { Compass } from "@phosphor-icons/react/dist/csr/Compass";
 import { GearSix } from "@phosphor-icons/react/dist/csr/GearSix";
-import { LinkSimple } from "@phosphor-icons/react/dist/csr/LinkSimple";
 import { Plus } from "@phosphor-icons/react/dist/csr/Plus";
 import { Scales } from "@phosphor-icons/react/dist/csr/Scales";
-import { ShieldCheck } from "@phosphor-icons/react/dist/csr/ShieldCheck";
+import { LockSimple } from "@phosphor-icons/react/dist/csr/LockSimple";
 import { SignOut } from "@phosphor-icons/react/dist/csr/SignOut";
 import { X } from "@phosphor-icons/react/dist/csr/X";
 import { useEffect, useRef, useState, type ComponentType } from "react";
@@ -24,16 +23,16 @@ import type { Card, PlanHistory } from "../plan/types";
 type Icon = ComponentType<{ size?: number; weight?: "light" | "regular" | "fill"; "aria-hidden"?: boolean | "true" }>;
 type Item = { target: ToolTarget; label: MessageKey; icon: Icon };
 
-/** Price lookup first. A confirmed plan adds "This month" (to-dos, payments and, once enrolled, spending);
- *  enrollment adds the wallet that pays the bills. The credit record is not a daily tool: it sits in the settings menu. */
+/** Price lookup and comparison first, then the loan panel. Submitting the loan application (plan CONFIRMED) opens the
+ *  plan tools: to-dos with bills and due reminders, and the wallet that pays what the loan does not cover. */
 const planning: Item[] = [
   { target: { kind: "compare" }, label: "simple.compare", icon: Scales },
   { target: { kind: "funding" }, label: "simple.plan", icon: Coins },
-  { target: { kind: "loans" }, label: "simple.loans", icon: Bank },
 ];
-const todo: Item = { target: { kind: "life" }, label: "life.title", icon: CalendarCheck };
-const wallet: Item = { target: { kind: "wallet" }, label: "money.title", icon: ArrowsLeftRight };
-const extras: Item[] = [{ target: { kind: "trust" }, label: "side.trust", icon: ShieldCheck }];
+const planTools: Item[] = [
+  { target: { kind: "life" }, label: "life.title", icon: CalendarCheck },
+  { target: { kind: "wallet" }, label: "money.title", icon: ArrowsLeftRight },
+];
 
 const same = (a: ToolTarget | null, b: ToolTarget) => !!a && a.kind === b.kind;
 const SHOWN = 3;
@@ -49,18 +48,17 @@ function priceLabel(card: Card, t: ReturnType<typeof useI18n>["t"], lang: Return
  * The workspace's left sidebar: new price question, the tools for the current stage, then tour and settings.
  * `compact` shows icons only; `drawer` is the phone layout, opened from the top bar.
  */
-export function ToolSidebar({ active, status, gap, compact, drawer, preview, stage, account, signingOut, history = null, onOpenDraft,
+export function ToolSidebar({ active, status, compact, drawer, preview, stage, account, signingOut, history = null, onOpenDraft,
   onOpen, onNewChat, onToggle, onClose, onStage, onSignOut }: {
-  active: ToolTarget | null; status: PlanState["status"]; gap: boolean; compact: boolean; drawer: boolean; preview: boolean;
+  active: ToolTarget | null; status: PlanState["status"]; compact: boolean; drawer: boolean; preview: boolean;
   history?: PlanHistory | null; onOpenDraft?: (id: string) => void;
   stage: PreviewStage; account: string; signingOut: boolean;
   onOpen: (target: ToolTarget) => void; onNewChat: () => void; onToggle: () => void; onClose: () => void;
   onStage: (stage: PreviewStage) => void; onSignOut: () => void;
 }) {
   const { t, lang } = useI18n();
-  const enrolled = status === "ENROLLED";
+  const applied = status === "CONFIRMED";
   const [allPrices, setAllPrices] = useState(false);
-  const life = enrolled ? [todo, wallet] : status === "CONFIRMED" ? [todo] : [];
   const [settings, setSettings] = useState(false);
   const menu = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -74,13 +72,11 @@ export function ToolSidebar({ active, status, gap, compact, drawer, preview, sta
   const button = (item: Item) => {
     const Icon = item.icon;
     const current = same(active, item.target);
-    const dot = item.target.kind === "funding" && gap;
     return <li key={item.label}>
       <button type="button" className="side-item" aria-current={current ? "true" : undefined} title={compact ? t(item.label) : undefined}
         aria-label={compact ? t(item.label) : undefined} onClick={() => onOpen(item.target)}>
         <Icon size={20} weight={current ? "fill" : "regular"} aria-hidden="true" />
         <span className="side-label">{t(item.label)}</span>
-        {dot && <span className="side-dot" aria-label={t("side.gap")} role="img" />}
       </button>
       {!compact && item.target.kind === "compare" && history && history.prices.length > 0 && <>
         <ul className="side-history" aria-label={t("side.history.prices")}>
@@ -122,12 +118,12 @@ export function ToolSidebar({ active, status, gap, compact, drawer, preview, sta
       disabled={preview} onClick={onNewChat}><Plus size={20} aria-hidden="true" /><span className="side-label">{t("side.new")}</span></button>
     <div className="side-scroll">
       <p className="side-group">{t("side.group.price")}</p>
-      <ul>{planning.filter(item => item.target.kind !== "loans" || enrolled).map(button)}</ul>
-      {life.length > 0 && <>
+      <ul>{planning.map(button)}</ul>
+      {applied ? <>
         <p className="side-group side-group-life">{t("side.group.life")}</p>
-        <ul>{life.map(button)}</ul>
-      </>}
-      {!enrolled && !compact && <p className="side-later">{t(status === "CONFIRMED" ? "side.laterEnrolled" : "side.later")}</p>}
+        <ul>{planTools.map(button)}</ul>
+      </> : !compact ? <p className="side-later">{t("side.later")}</p>
+        : <span className="side-item side-locked" title={t("side.later")} aria-label={t("side.later")} role="img"><LockSimple size={18} aria-hidden="true" /></span>}
     </div>
     <div className="side-foot" ref={menu}>
       <a className="side-item" href="/?tour=1" title={compact ? t("side.tour") : undefined} aria-label={compact ? t("side.tour") : undefined}>
@@ -138,10 +134,6 @@ export function ToolSidebar({ active, status, gap, compact, drawer, preview, sta
       {settings && <div id="side-settings" className="side-settings">
         <p className="side-account">{account || t("ws.signedOut")}</p>
         {preview && <><strong>{t("plan.preview.stage")}</strong><PreviewStageSwitch stage={stage} onChange={value => { setSettings(false); onStage(value); }} /></>}
-        <button type="button" className="side-menu-item" onClick={() => { setSettings(false); onOpen({ kind: "family-links" }); }}>
-          <LinkSimple size={18} aria-hidden="true" />{t("side.familyLinks")}</button>
-        {enrolled && extras.map(item => { const Icon = item.icon; return <button key={item.label} type="button" className="side-menu-item"
-          onClick={() => { setSettings(false); onOpen(item.target); }}><Icon size={18} aria-hidden="true" />{t(item.label)}</button>; })}
         <a className="side-menu-item" href="/intro">{t("sim.intro")}</a>
         <div className="side-role"><strong>{t("role.label")}</strong><RoleSwitch /></div>
         {account && !preview && <button type="button" className="side-menu-item" disabled={signingOut} onClick={onSignOut}>
@@ -150,4 +142,3 @@ export function ToolSidebar({ active, status, gap, compact, drawer, preview, sta
     </div>
   </nav>;
 }
-import { ArrowsLeftRight } from "@phosphor-icons/react/dist/csr/ArrowsLeftRight";

@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
 import { mkdirSync, writeFileSync } from 'node:fs';
-import { root, outputDir, backend, python, enroll } from '../../support.mjs';
+import { root, outputDir, backend, python, submittedPlan } from '../../support.mjs';
 
 // Student, verifier and approver each sign in with their own browser context.
 test('real Django/PostgreSQL wallet, fixture quotes, T2/T3, expiry, permissions, safe retries and reload.', async ({ browser }, testInfo) => {
@@ -12,7 +12,7 @@ test('real Django/PostgreSQL wallet, fixture quotes, T2/T3, expiry, permissions,
   const names={student:`wallet-uat-${randomUUID()}`,verifier:`verifier-${randomUUID()}`,approver:`approver-${randomUUID()}`};
   const passwords={student:randomUUID(),verifier:randomUUID(),approver:randomUUID()};
   execFileSync(python,['manage.py','shell','-c','import os,json; from django.contrib.auth import get_user_model; from finance.corridors import ensure_default_corridors; from finance.policy_defaults import ensure_default_limits; names=json.loads(os.environ["UAT_NAMES"]); passwords=json.loads(os.environ["UAT_PASSWORDS"]); [get_user_model().objects.create_user(username=n,password=passwords[k],is_staff=k!="student") for k,n in names.items()]; ensure_default_corridors(); ensure_default_limits()'],{cwd:backend,env:{...process.env,UAT_NAMES:JSON.stringify(names),UAT_PASSWORDS:JSON.stringify(passwords)},stdio:'pipe'});
-  enroll(names.student);
+  submittedPlan(names.student);
   const contexts={},pages={},endpoints=new Set(),errors=[];
   async function login(kind){const ctx=await browser.newContext({ locale: "en-US", viewport:{width:1440,height:1000}});contexts[kind]=ctx;const page=await ctx.newPage();pages[kind]=page;page.on('pageerror',e=>errors.push(e.message));page.on('request',req=>{const p=new URL(req.url()).pathname;if(p.startsWith('/api/'))endpoints.add(`${kind}: ${req.method()} ${p}`);});await page.goto(`${origin}/api/auth/login/?next=${encodeURIComponent(origin+'/?wallet=1')}`);await page.getByLabel('Username').fill(names[kind]);await page.getByLabel('Password').fill(passwords[kind]);await page.getByRole('button',{name:'Log in',exact:true}).click();if(kind==='student')await page.getByRole('heading',{name:'Wallet & payments',exact:true}).waitFor();else await page.waitForURL(url=>!url.pathname.startsWith('/api/auth/login'));}
   async function get(path,kind='student'){endpoints.add(`${kind}: GET /api/v2/${path}`);const r=await contexts[kind].request.get(`${origin}/api/v2/${path}`);assert.equal(r.status(),200,`${path}: ${await r.text()}`);const p=await r.json();return p.data??p;}

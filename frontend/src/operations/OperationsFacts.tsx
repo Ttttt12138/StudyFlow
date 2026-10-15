@@ -25,8 +25,6 @@ export function OperationsFacts({ item, operatorId }: { item: OpsItem; operatorI
       [p.t("ops.loans.reason"), item.record.decision_reason]]}/>
       {item.record.status === "UNDER_REVIEW" && <p className="service-alert">{p.t("ops.loans.assessment", { status: item.record.assessment.status ?? "—" })}
         {!!item.record.assessment.missing_inputs?.length && <span> · {p.t("ops.loans.missing", { items: item.record.assessment.missing_inputs.join(", ") })}</span>}</p>}</>;
-    case "sponsor": return <Facts rows={[[p.t("ops.target.purpose"), item.record.purpose], [p.t("ops.sponsors.availableOn", { date: "" }), formatDate(item.record.source.available_on, p.lang)],
-      [p.t("ops.sponsors.linkExpires", { time: "" }), p.when(item.record.token_expires_at)]]}/>;
   }
 }
 

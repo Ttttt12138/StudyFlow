@@ -14,7 +14,6 @@ function previewItems(queue: OpsQueue, now: number): OpsItem[] {
   queue.remittance_orders.forEach(row => add("order", row));
   queue.beneficiaries.forEach(row => add("payee", row));
   queue.applications.forEach(row => add("loan", row));
-  queue.sponsor_requests.forEach(row => add("sponsor", row));
   return all;
 }
 

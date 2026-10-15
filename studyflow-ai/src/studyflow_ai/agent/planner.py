@@ -7,7 +7,13 @@ from decimal import Decimal, InvalidOperation
 from pydantic import ValidationError
 
 from studyflow_ai.agent import prompts
-from studyflow_ai.agent.models import AgentContext, FinalStep, PlannerOutput, ToolCallStep
+from studyflow_ai.agent.models import (
+    AgentContext,
+    FinalStep,
+    PlannerOutput,
+    ProseVerdict,
+    ToolCallStep,
+)
 from studyflow_ai.agent.planning_rules import PlanningRules
 from studyflow_ai.models import CallRecord
 from studyflow_ai.providers.base import ProviderFailure
@@ -60,12 +66,13 @@ def validate_call(step, context, record):
 
 
 def _leading_envelope(text):
-    """Observed live: a complete JSON envelope followed by stray closing brackets ("}}}").
+    """Observed live: a complete JSON envelope followed by stray closing brackets ("}}}"), or with raw
+    line breaks inside the answer string (a markdown list or table).
 
-    Only that exact shape is recovered, and the result is validated like any other reply.
+    Only those shapes are recovered, and the result is validated like any other reply.
     """
     try:
-        value, end = json.JSONDecoder().raw_decode(text)
+        value, end = json.JSONDecoder(strict=False).raw_decode(text)
     except ValueError:
         return None
     if text[end:].strip(" \t\r\n}]"):
@@ -76,6 +83,15 @@ def _leading_envelope(text):
         return None
 
 
+def _rules_fallback(context, finishing):
+    """The rules may start a turn; once the model has looked something up, they answer from those results
+    (briefly, ending with the next step in the flow) instead of looking up anything else."""
+    rules = PlanningRules()
+    if not finishing and not context.observations:
+        return rules.next_step(context)
+    return rules.finish(context)
+
+
 class LiveAgentProvider:
     def __init__(self, openai_provider):
         self.provider = openai_provider
@@ -83,8 +99,8 @@ class LiveAgentProvider:
     # An unstructured gateway reply is not a validated decision or a user-facing answer.
     FORMAT_RETRIES = 2
 
-    def _request(self, context, instruction):
-        attempts, elapsed = 0, 0
+    def _request(self, context, base):
+        attempts, elapsed, instruction = 0, 0, base
         for attempt in range(self.FORMAT_RETRIES + 1):
             try:
                 output, record = self.provider._request("plan", context.model_dump_json(), PlannerOutput, instruction)
@@ -95,22 +111,55 @@ class LiveAgentProvider:
                 attempts += exc.record.attempts
                 elapsed += exc.record.duration_ms
                 text = (getattr(exc, "raw_output", None) or "").strip()
-                unstructured = exc.code == "INVALID_MODEL_OUTPUT" and not text.startswith(("{", "["))
-                if not unstructured or attempt == self.FORMAT_RETRIES:
+                malformed = exc.code == "INVALID_MODEL_OUTPUT"
+                step = _leading_envelope(text) if malformed else None
+                # Prose may be retried twice; broken JSON once, and only in planning conversations.
+                structured = text.startswith(("{", "["))
+                if step is None and malformed and text and not structured and context.planning:
+                    # A short, separate check decides whether the prose is a finished answer; only then is
+                    # it shown. Reasoning or tool talk still goes back for a structured retry.
+                    step, judged = self._judge(context, text)
+                    attempts += judged.attempts
+                    elapsed += judged.duration_ms
+                if step is not None or not malformed or attempt == self.FORMAT_RETRIES or (
+                        structured and (attempt > 0 or not context.planning)):
                     exc.record.attempts, exc.record.duration_ms = attempts, elapsed
-                    raise
-                instruction += "\nReturn only the required JSON object with a step; no unstructured prose."
+                    if malformed:
+                        exc.record.raw_excerpt = text[:300] or None
+                    if step is None:
+                        raise
+                    exc.record.error_code = None
+                    return PlannerOutput(step=step), exc.record
+                instruction = base + "\nReturn only the required JSON object with a step; no unstructured prose."
+                if text and not structured and context.planning:
+                    # Observed live (planning-2.2): final answers arrive as prose while tool calls stay JSON.
+                    # The model re-decides through the validated schema; the prose itself is never shown.
+                    instruction += (
+                        "\nYour previous reply was plain text:\n<<<\n" + text[:1500] + "\n>>>\n"
+                        "If it is a complete answer addressed to the user in their language, return kind=final "
+                        "with that text as the answer. If it is your own reasoning or plan, return the step it "
+                        "describes instead.")
 
-    def _call(self, context, instruction):
+    def _judge(self, context, text):
+        if len(text) > 2000 or re.search(r'"\s*[}\]]+\s*$', text):
+            return None, CallRecord(provider="openai", purpose="plan", model="", mode="live", attempts=0)
+        payload = json.dumps({"user_message": context.goal, "assistant_reply": text}, ensure_ascii=False)
+        try:
+            verdict, record = self.provider._request("plan", payload, ProseVerdict, prompts.PROSE_VERDICT)
+        except ProviderFailure as exc:
+            return None, exc.record
+        return (FinalStep(answer=text) if verdict.user_facing else None), record
+
+    def _call(self, context, instruction, finishing=False):
         try:
             output, record = self._request(context, instruction)
         except ProviderFailure as exc:
             exc.record.prompt_version = prompts.version(context)
-            text = (getattr(exc, "raw_output", None) or "").strip()
-            step = _leading_envelope(text) if exc.code == "INVALID_MODEL_OUTPUT" else None
-            if step is not None:
-                exc.record.error_code = None
-                return step, exc.record
+            if exc.code == "INVALID_MODEL_OUTPUT" and context.planning:
+                # Observed live (planning-2.2): short or ambiguous questions ("如果贷款证明算") get prose on
+                # every retry. The prose is never shown; the deterministic planning rules decide this step.
+                exc.record.mode, exc.record.error_code = "rules", None
+                return _rules_fallback(context, finishing), exc.record
             raise
         record.prompt_version = prompts.version(context)
         return output.step, record
@@ -119,7 +168,7 @@ class LiveAgentProvider:
         return self._call(context, prompts.instruction(context))
 
     def finish(self, context):
-        step, record = self._call(context, prompts.instruction(context) + "\nReturn kind=final now.")
+        step, record = self._call(context, prompts.instruction(context) + "\nReturn kind=final now.", finishing=True)
         if not isinstance(step, FinalStep):
             record.error_code = "INVALID_TOOL_CALL"
             raise ProviderFailure("INVALID_TOOL_CALL", record)
@@ -358,8 +407,7 @@ class RuleAgentProvider:
         if order is None:
             arguments = {"quote_id": recommended,
                          "recipient": "BENEFICIARY" if beneficiary else "SELF",
-                         "purpose": "tuition" if intent.tuition else
-                         "family_support" if intent.family else "other"}
+                         "purpose": "tuition" if intent.tuition else "other"}
             if beneficiary:
                 arguments["beneficiary_id"] = beneficiary.get("id")
             if intent.deadline:

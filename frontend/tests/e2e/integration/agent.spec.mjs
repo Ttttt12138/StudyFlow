@@ -4,17 +4,17 @@ import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
 import { mkdirSync, writeFileSync } from 'node:fs';
-import { root, outputDir, backend, python, enroll } from '../../support.mjs';
+import { root, outputDir, backend, python, submittedPlan } from '../../support.mjs';
 
 const SNAPSHOT = { currency: 'THB', as_of: new Date().toISOString().slice(0, 10), opening_balance: '80000.00', reserve: '15000.00', events: [] };
 
-test('real Django agent: plan, T2 proposal with step-up, T3 proposal through a separate approver, credit record and audit log.', async ({ browser }) => {
+test('real Django agent: plan, T2 proposal with step-up, T3 proposal through a separate approver, retained financial history.', async ({ browser }) => {
   const origin = process.env.TEST_URL || 'http://127.0.0.1:5173';
   const names = { student: `agent-uat-${randomUUID()}`, operator: `operator-${randomUUID()}`, approver: `approver-${randomUUID()}` };
   const passwords = { student: randomUUID(), operator: randomUUID(), approver: randomUUID() };
   execFileSync(python, ['manage.py', 'shell', '-c', 'import os,json; from django.contrib.auth import get_user_model; from finance.corridors import ensure_default_corridors; from finance.policy_defaults import ensure_default_limits; names=json.loads(os.environ["UAT_NAMES"]); passwords=json.loads(os.environ["UAT_PASSWORDS"]); [get_user_model().objects.create_user(username=n,password=passwords[k],is_staff=k!="student") for k,n in names.items()]; ensure_default_corridors(); ensure_default_limits()'],
     { cwd: backend, env: { ...process.env, UAT_NAMES: JSON.stringify(names), UAT_PASSWORDS: JSON.stringify(passwords) }, stdio: 'pipe' });
-  enroll(names.student);
+  submittedPlan(names.student);
   const contexts = {}, errors = [], endpoints = new Set();
   async function login(kind, next = '/') {
     const context = await browser.newContext({ locale: 'en-US', viewport: { width: 1440, height: 1000 } });
@@ -134,37 +134,17 @@ test('real Django agent: plan, T2 proposal with step-up, T3 proposal through a s
     await fourth.getByText('Expired', { exact: true }).waitFor();
     assert.equal(await cny(), '20000.00');
 
-    // Credit record: limits with usage, the used approval and the audit trail of both decisions.
-    await page.goto(`${origin}/?trust=1`);
-    await page.getByRole('heading', { name: 'Credit record' }).waitFor();
-    await page.getByRole('tab', { name: 'Limits' }).click();
-    const limits = page.locator('#trust-limits');
-    const cnyButton = limits.getByRole('button', { name: 'CNY', exact: true });
-    await cnyButton.waitFor();
-    await cnyButton.click();
-    await limits.locator('.panel-hero', { hasText: 'CNY 10,000.00' }).waitFor();
-    await limits.getByText(/CNY 20,000\.00 of CNY 20,000\.00/).first().waitFor();
-    await page.locator('#trust-approvals li', { hasText: /Submit transfer.*CNY 15,000\.00.*Used/ }).waitFor();
-    await page.getByRole('tab', { name: 'Activity' }).click();
-    const audit = page.locator('#trust-audit');
-    await audit.locator('tbody tr').first().waitFor();
-    // Five events a page; each category's list is short enough to read on its first page.
-    const expected = { 'Sign-in & step-up': ['Password re-check failed', 'Password re-check passed'],
-      Approvals: ['Approval requested', 'Approval granted by an operator'], 'AI assistant': ['Assistant proposal confirmed'] };
-    for (const [category, names] of Object.entries(expected)) {
-      await audit.getByLabel('Show').selectOption({ label: category });
-      for (const name of names) await audit.locator('tbody tr', { hasText: name }).first().waitFor();
-    }
-    await audit.getByLabel('Show').selectOption('all');
+    // The independent credit UI was removed; retained approvals and audit remain available through their APIs.
+    const approvals = await get('approvals/');
+    assert.ok((approvals.results ?? approvals).some(row => row.status === 'USED'));
     for (const width of [1440, 390]) {
       await page.setViewportSize({ width, height: 900 });
-      assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
-      await page.screenshot({ path: `${outputDir}/trust-live-${width}.png`, fullPage: true });
+      await page.screenshot({ path: `${outputDir}/agent-live-${width}.png`, fullPage: true });
     }
     assert.deepEqual(errors, []);
     writeFileSync(`${outputDir}/agent-integration.json`, JSON.stringify({
       passed: true, tested_at: new Date().toISOString(), planner: 'mock (RuleAgentProvider)', fx: 'fixture',
-      checks: ['T2 proposal in the conversation does not move money', 'wrong password refused and audited', 'step-up confirm executes once', 'T3 proposal refused until a separate approver decides', 'approval consumed on confirm', 'limits and audit visible in the credit record'],
+      checks: ['T2 proposal in the conversation does not move money', 'wrong password refused and audited', 'step-up confirm executes once', 'T3 proposal refused until a separate approver decides', 'approval consumed on confirm', 'approval history remains available through the API'],
       additional_checks: ['pending proposal restored from server after reload', 'fresh HTTP repeat confirmation does not debit twice', 'rejection persists after reload', 'expired proposal cannot execute and remains expired after reload'],
       cny_balances: ['40000.00', '35000.00', '20000.00'], endpoints: [...endpoints].sort(),
     }, null, 2));

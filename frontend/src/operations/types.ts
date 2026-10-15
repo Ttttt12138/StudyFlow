@@ -32,12 +32,6 @@ export type OpsApplication = Student & {
     maximum_installment: string; affordability_status?: string; months: number; annual_rate: string };
 };
 
-export type OpsSponsorRequest = Student & {
-  id: string; status: "PENDING" | "EXPIRED" | "CONFIRMED"; terms_version: number; purpose: string; created_at: string;
-  token_expires_at: string | null; confirmed_at: string | null;
-  source: { id: string; amount: string; currency: string; available_on: string; received: boolean };
-};
-
 export type OpsQueue = {
   operator: { id: number; username: string };
   approvals: OpsApproval[];
@@ -46,15 +40,14 @@ export type OpsQueue = {
   remittance_orders: OpsOrder[];
   beneficiaries: OpsBeneficiary[];
   applications: OpsApplication[];
-  sponsor_requests: OpsSponsorRequest[];
   is_simulated: boolean;
 };
 
-export type OpsGroup = "approvals" | "transactions" | "payees" | "loans" | "sponsors";
+export type OpsGroup = "approvals" | "transactions" | "payees" | "loans";
 export type OpsAttention = "all" | "expiring" | "unknown";
 export type OpsNavigation = { view: "overview" | "tasks" | "history"; kind: OpsGroup | "all"; attention: OpsAttention };
 export type OpsFilters = { student: string; kind: OpsGroup | "all"; attention: OpsAttention; page: number };
-type OpsRecords = { approval: OpsApproval; payment: OpsPayment; order: OpsOrder; payee: OpsBeneficiary; loan: OpsApplication; sponsor: OpsSponsorRequest };
+type OpsRecords = { approval: OpsApproval; payment: OpsPayment; order: OpsOrder; payee: OpsBeneficiary; loan: OpsApplication };
 export type OpsItem = { [K in keyof OpsRecords]: { kind: K; record: OpsRecords[K]; queued_at: string; attention: Exclude<OpsAttention, "all"> | null } }[keyof OpsRecords];
 export type OpsSummary = { total: number; expiring: number; unknown: number; unverified: number; by_kind: Record<OpsGroup, number> };
 export type OpsWorkbench = {
@@ -62,4 +55,3 @@ export type OpsWorkbench = {
   pagination: { page: number; page_size: number; total: number; pages: number };
   generated_at: string; is_simulated: boolean;
 };
-export type IssuedLink = { id: string; url: string; expires: string };

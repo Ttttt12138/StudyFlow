@@ -156,7 +156,7 @@ function budget(ctx: Ctx, c: string) {
   });
 }
 
-// ---------- 02 funding gap & simulated loan: savings vs target, a repayment curve, family support ----------
+// ---------- 02 loan amount & estimate: the amount typed against the full-course cap, a repayment curve, the documents ----------
 function agent(ctx: Ctx, c: string) {
   const x0 = 0, x1 = 1152, y = 46, h = 66, split = x0 + (x1 - x0) * 0.62;
   path(ctx, x0, y, x1 - x0, h, 20);
@@ -172,9 +172,9 @@ function agent(ctx: Ctx, c: string) {
   path(ctx, split, y, x1 - split, h, 0);
   line(ctx, [[split, y], [x1 - 20, y]], rgba(c, 0.85), 2, [10, 8]);
   line(ctx, [[split, y + h], [x1 - 20, y + h]], rgba(c, 0.85), 2, [10, 8]);
-  label(ctx, "62%", x0 + 30, y + 45, 32, DARK, "left", 600);
+  label(ctx, "850,000", x0 + 30, y + 45, 32, DARK, "left", 600);
   line(ctx, [[split + 4, 30], [split + 4, 20], [x1 - 4, 20], [x1 - 4, 30]], rgba(c, 0.8), 2);
-  glow(ctx, rgba(c, 0.8), 22, () => label(ctx, "−184,000", (split + x1) / 2, 8, 30, c, "center"));
+  glow(ctx, rgba(c, 0.8), 22, () => label(ctx, "≤ 2,351,350", (split + x1) / 2, 8, 30, c, "center"));
 
   glass(ctx, 0, 164, 720, 276, 24, c, 0.8);
   const left = 40, right = 680, top = 222, bottom = 404, n = 24;
@@ -204,15 +204,14 @@ function agent(ctx: Ctx, c: string) {
   label(ctx, "+ 7,200", right, 252, 22, c, "right");
 
   const me: [number, number] = [968, 246];
-  const family: [number, number][] = [[852, 392], [968, 404], [1084, 392]];
+  // The application's documents: the admission notice attached automatically, then the two the family confirms.
+  const documents: [number, number][] = [[852, 392], [968, 404], [1084, 392]];
   line(ctx, [[me[0], me[1] - 52], [me[0], y + h + 8]], rgba(c, 0.7), 2, [6, 8]);
-  family.forEach(([fx, fy], i) => {
+  documents.forEach(([fx, fy], i) => {
     line(ctx, [[fx, fy], me], rgba(c, 0.5), 2, [6, 8]);
-    const t = 0.35 + i * 0.15;
-    glow(ctx, c, 14, () => dot(ctx, fx + (me[0] - fx) * t, fy + (me[1] - fy) * t, 5, c));
     dot(ctx, fx, fy, 34, "rgba(10, 26, 24, 0.95)");
     ring(ctx, fx, fy, 34, rgba(c, 0.55));
-    person(ctx, fx, fy, 34, rgba(c, 0.75));
+    check(ctx, fx, fy, 20, i === 0 ? c : rgba(c, 0.6));
   });
   glow(ctx, rgba(c, 0.8), 26, () => dot(ctx, me[0], me[1], 50, "rgba(10, 26, 24, 1)"));
   ring(ctx, me[0], me[1], 50, c, 3);
@@ -439,14 +438,11 @@ function icon(ctx: Ctx, tier: number, x: number, y: number, c: string) {
   }
 }
 
-// ---------- 07 on-time payment record: twelve on-time months lifting the level, a limit gauge, an audit log ----------
-function credit(ctx: Ctx, c: string) {
+// ---------- 07 repayment: twelve installments paid bring the principal down, a progress gauge, the receipts ----------
+function repay(ctx: Ctx, c: string) {
   glass(ctx, 0, 0, 760, 440, 26, c);
-  const levels = [362, 290, 218, 146];
-  levels.forEach((y, i) => {
-    line(ctx, [[86, y], [724, y]], "rgba(220, 240, 234, 0.06)", 2);
-    label(ctx, `L${i + 1}`, 36, y + 8, 22, i === 3 ? c : DIM, "left", 600);
-  });
+  const levels = [146, 218, 290, 362];
+  levels.forEach(y => line(ctx, [[86, y], [724, y]], "rgba(220, 240, 234, 0.06)", 2));
   const mx = (m: number) => 100 + m * 56;
   const steps: [number, number][] = [];
   for (let m = 0; m < 12; m++) {
@@ -466,7 +462,7 @@ function credit(ctx: Ctx, c: string) {
   ctx.fill();
   glow(ctx, rgba(c, 0.9), 18, () => line(ctx, steps, c, 4));
   for (let m = 0; m < 12; m++) check(ctx, mx(m), 404, 15, m === 11 ? c : rgba(c, 0.75));
-  label(ctx, "12 / 12", 724, 62, 30, INK, "right");
+  label(ctx, "12 / 48", 724, 62, 30, INK, "right");
 
   ["#3fa9e1", "#b7204c", "#08d6f3"].forEach((hash, i) => {
     const y = 26 + i * 44;
@@ -484,17 +480,17 @@ function credit(ctx: Ctx, c: string) {
   ctx.stroke();
   glow(ctx, rgba(c, 0.9), 24, () => {
     ctx.beginPath();
-    ctx.arc(gx, gy, gr, from, from + (to - from) * 0.78);
+    ctx.arc(gx, gy, gr, from, from + (to - from) * 0.25);
     ctx.strokeStyle = c;
     ctx.lineWidth = 20;
     ctx.lineCap = "round";
     ctx.stroke();
   });
-  label(ctx, "L4", gx, gy + 22, 72, INK, "center", 600);
-  label(ctx, "80,000", gx, gy + 104, 26, c, "center");
+  label(ctx, "25%", gx, gy + 22, 72, INK, "center", 600);
+  label(ctx, "3,850", gx, gy + 104, 26, c, "center");
 }
 
-const painters: Record<FeatureId, (ctx: Ctx, color: string) => void> = { budget, agent, calendar, wallet, remit, tiers, credit };
+const painters: Record<FeatureId, (ctx: Ctx, color: string) => void> = { budget, agent, calendar, wallet, remit, tiers, repay };
 
 /** Draws one feature's artwork with its top-left corner at (x, y), scaled by `scale`. */
 export function drawIllustration(ctx: Ctx, id: FeatureId, color: string, x: number, y: number, scale = 1) {

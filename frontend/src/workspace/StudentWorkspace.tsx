@@ -15,22 +15,17 @@ import "./workspace.css";
 import "./panel-system.css";
 import "./mobile.css";
 
-// The finance sub-assistant and the comparison copilot are merged into the planner conversation, and spending
-// insights into the monthly spending panel; navigation.ts sends their old links there.
+// The finance sub-assistant is merged into the planner conversation; navigation.ts sends its old links there.
 const components: Partial<Record<StudentTool, ReturnType<typeof lazy>>> = {
   // Wallet, exchange, transfers and payments are one money tool; ?payments= links open its Pay tab.
   wallet: lazy(() => import("../wallet/MoneyHub").then(m => ({ default: m.MoneyHub }))),
-  trust: lazy(() => import("../trust/TrustApp").then(m => ({ default: m.TrustApp }))),
-  loans: lazy(() => import("../loans/LoansApp").then(m => ({ default: m.LoansApp }))),
-  family: lazy(() => import("../family/FamilyApp").then(m => ({ default: m.FamilyApp }))),
 };
 const labels: Record<ToolTarget["kind"], MessageKey> = {
-  life: "life.title",
-  plan: "ws.plan", compare: "simple.compare", funding: "simple.plan", bills: "ws.record", spending: "plan.monthly.title",
-  "family-links": "side.familyLinks", card: "ws.history", agent: "ws.finance", wallet: "money.title", payments: "money.title",
-  trust: "side.trust", loans: "simple.loans", insights: "nav.insights", family: "side.family", copilot: "side.copilot",
+  life: "life.title", plan: "ws.plan", compare: "simple.compare", funding: "simple.plan",
+  card: "ws.history", agent: "ws.finance", wallet: "money.title", payments: "money.title",
 };
-const STAGE: Record<string, MessageKey> = { DRAFT: "side.stage.plan", CONFIRMED: "side.stage.prepare", ENROLLED: "side.stage.school" };
+/** Two stages: choosing a school and the loan, then the loan application submitted (plan CONFIRMED). */
+const STAGE: Record<string, MessageKey> = { DRAFT: "side.stage.plan", CONFIRMED: "side.stage.applied" };
 const COLLAPSED = "studyflow.sidebar.collapsed";
 
 function readCollapsed() {
@@ -63,7 +58,7 @@ export function StudentWorkspace({ preview, onExternal }: { preview: boolean; on
 function WorkspaceBody({ username, preview, onExternal }: { username: string; preview: boolean; onExternal: (kind: Module, preview: boolean) => void }) {
   const { t } = useI18n();
   const control = useWorkspaceNavigation(preview);
-  const { route, menu, setMenu, expanded, setExpanded, open, close, back, backTarget, registerBack } = control;
+  const { route, menu, setMenu, expanded, setExpanded, open, close, back, backTarget, backPageLabel, registerBack } = control;
   const [host, setHost] = useState<HTMLDivElement | null>(null);
   const [bellHost, setBellHost] = useState<HTMLDivElement | null>(null);
   const [guideHost, setGuideHost] = useState<HTMLElement | null>(null);
@@ -77,20 +72,20 @@ function WorkspaceBody({ username, preview, onExternal }: { username: string; pr
   const small = useSmallScreen();
   // Wide screens get a right rail beside the conversation for the stage summary; it gives way to an open tool.
   const wide = useWideScreen();
-  const enrolled = plan ? plan.status === "ENROLLED" : null;
-  // A money tool asked for before enrollment (an old link, another module's button) waits for the plan, then is refused.
-  const blocked = !!route.tool && !toolAvailable(route.tool.kind, enrolled);
+  const confirmed = plan ? plan.status === "CONFIRMED" : null;
+  // A plan tool asked for before the loan application (an old link, a reminder) waits for the plan, then is refused.
+  const blocked = !!route.tool && !toolAvailable(route.tool.kind, confirmed);
   const tool = blocked ? null : route.tool;
   useStripHeight(frame);
   useDockKeyboard(dock, { targetKey: JSON.stringify(tool), modal: small || expanded, menu }, close);
   useEffect(() => {
-    if (!blocked || enrolled === null) return;
+    if (!blocked || confirmed === null) return;
     close(); setNotice(t("side.lockedNotice"));
-  }, [blocked, enrolled, close, t]);
+  }, [blocked, confirmed, close, t]);
   useEffect(() => { if (tool) setNotice(""); }, [tool]);
   useEffect(() => {
-    if (route.tool?.kind === "payments" && enrolled) open({ kind: "wallet", section: "pay" });
-  }, [route.tool?.kind, enrolled]); // eslint-disable-line react-hooks/exhaustive-deps
+    if (route.tool?.kind === "payments" && confirmed) open({ kind: "wallet", section: "pay" });
+  }, [route.tool?.kind, confirmed]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (route.tool?.kind !== "agent") return;
     close(); setNotice(t("side.agentMerged"));
@@ -116,13 +111,13 @@ function WorkspaceBody({ username, preview, onExternal }: { username: string; pr
       else onExternal(kind, asPreview);
     }, openAssistant: () => { close(); requestAnimationFrame(() => document.querySelector<HTMLTextAreaElement>(".plan-composer textarea")?.focus()); },
   };
-  const sidebar = (drawer: boolean) => <ToolSidebar active={tool} status={plan?.status ?? null} gap={!!plan?.gap} drawer={drawer}
+  const sidebar = (drawer: boolean) => <ToolSidebar active={tool} status={plan?.status ?? null} drawer={drawer}
     history={plan?.history ?? null} onOpenDraft={plan?.openDraft}
     compact={!drawer && (collapsed || !!tool)} preview={route.preview} stage={route.stage} account={username} signingOut={signingOut}
     onOpen={open} onClose={close} onToggle={drawer ? () => setMenu(false) : toggleCollapsed}
     onNewChat={() => { setMenu(false); close(); window.dispatchEvent(new Event("studyflow:new-conversation")); }}
     onStage={stage => { setMenu(false); control.setStage(stage); }} onSignOut={() => void signOut()} />;
-  const backLabel = backTarget === "page" ? t("ws.backToList") : backTarget ? t("ws.backTo", { name: t(labels[backTarget.kind]) }) : undefined;
+  const backLabel = backTarget === "page" ? backPageLabel ?? t("ws.backToList") : backTarget ? t("ws.backTo", { name: t(labels[backTarget.kind]) }) : undefined;
   return <ModuleNavContext.Provider value={nav}><WorkspaceContext.Provider value={{ target: tool, host, bellHost, guideHost, open: target => open(target), close,
     setStage: control.setStage, account: username, reportPlan, registerBack }}>
     <div ref={frame} className={`student-workspace${tool ? " has-tool" : ""}${expanded ? " tool-expanded" : ""}`}>

@@ -70,9 +70,33 @@ Fonts are imported by `frontend/src/main.tsx` and `frontend/src/intro/IntroApp.t
 
 The current October 14 full-flow film uses Microsoft's online `en-US-AvaNeural` voice through `edge-tts` 7.3.1 for synthetic English narration and word timestamps. The user explicitly authorized sending the English script to Microsoft. Twelve complete paragraphs were synthesized at `rate=-10%`, then processed locally at 1.20× tempo, matching the approved audition; five numeric sentences use 1.12× for clarity. Only narration text was sent for production: recordings, screenshots, credentials and personal documents were not sent to this service. This is a video-production dependency, not an application runtime integration.
 
-Installed `edge-tts` 7.3.1 metadata identifies LGPLv3; its client license does not license Microsoft's voice service. The client and its dependencies remain in the local production environment and are not bundled as application binaries. The installed Arial font supplies editorial titles/captions; the font and voice model binaries are not bundled. Microsoft service and font use remain subject to their applicable terms. The previous Windows Zira/SAPI narration is retained only in the [historical film archive](../evidence/demo-full-live-20261014/formal-zira-previous-20261014/README.md).
+Installed `edge-tts` 7.3.1 metadata identifies LGPLv3; its client license does not license Microsoft's voice service. The client and its dependencies remain in the local production environment and are not bundled as application binaries. The installed Arial font supplies editorial titles/captions; the font and voice model binaries are not bundled. Microsoft service and font use remain subject to their applicable terms. The earlier Windows Zira/SAPI narration film is no longer in the repository (git history only).
 
 The local encoder is FFmpeg `7.1-essentials_build-www.gyan.dev`, whose `-L` output identifies GPL version 3 or later. It was supplied by `imageio-ffmpeg` 0.6.0 (wrapper: BSD-2-Clause), with libx264 and libass enabled. The executable remains under the ignored `output/video-tools/` directory and is not part of the application or submitted source archive. The delivered artifact is an H.264/AAC MP4 with generated narration, app footage and captions; no stock music is used. Pillow 12.3.0 (listed above) generates the surrounding editorial graphics.
+
+### 30-second promo film (`output/promo-30s/`)
+
+The October 15 promo is an HTML/SVG animation (`output/promo-30s/ad/`) captured frame by frame with Playwright's bundled Chromium (development tool, Apache-2.0) and encoded with the FFmpeg n5.1.6 build that ships with the locally installed Live2D Cubism 5.3 (`libopenh264` H.264, BSD-2-Clause; the build's own configuration was not audited). Neither tool is bundled with the app. Type is the bundled Space Grotesk (OFL-1.1); the baht sign falls back to the system's Segoe UI. The soundtrack is synthesised from scratch in `music.py`; no samples or stock music are used.
+
+Fifteen photographs come from [Unsplash](https://unsplash.com) under the [Unsplash License](https://unsplash.com/license), which allows commercial use without attribution. They are credited anyway. The photos show generic places and people; none is presented as a specific partner school, and no school logos are used. A copy of this list travels with the film as `output/promo-30s/CREDITS.md` (the `output/` folder is not committed).
+
+| In the film | Photo | Photographer |
+|---|---|---|
+| Opening tiles (0.9–2.3 s) | [Man at an airport window](https://unsplash.com/photos/a-man-standing-in-front-of-an-airport-window-BRCqmRoNUio) | [@cameroncox](https://unsplash.com/@cameroncox) |
+| Opening tiles | [Passport on a world map](https://unsplash.com/photos/united-states-passport-on-world-map-Cg3fyYZMQ58) | [@globalresidenceindex](https://unsplash.com/@globalresidenceindex) |
+| Opening tiles | [Blue suitcase](https://unsplash.com/photos/a-blue-suitcase-sitting-on-top-of-a-wooden-floor-166umbWL6Ec) | [@americangreentravel](https://unsplash.com/@americangreentravel) |
+| Opening tiles | [Campus walkway](https://unsplash.com/photos/people-walking-near-paccar-hall-university-of-washington-during-daytime-6zlgM-GUd6I) | [@wonderlane](https://unsplash.com/@wonderlane) |
+| "Tuition" (2.3–3.0 s) | [White and red building among trees](https://unsplash.com/photos/a-white-and-red-building-surrounded-by-trees-YuwXAyYjBNU) | [@center999](https://unsplash.com/@center999) |
+| "Rent" | [White desk near a bed](https://unsplash.com/photos/white-wooden-desk-near-bed-inside-the-room-WuQME0I_oZA) | [@gbeaudry](https://unsplash.com/@gbeaudry) |
+| "Food" | [Street food stall](https://unsplash.com/photos/woman-cooking-street-foods-QAkqxrH6mvc) | [@thevernon](https://unsplash.com/@thevernon) |
+| "Flights" | [Airplane at the gate](https://unsplash.com/photos/airplane-parked-near-passenger-pathway-DDBDkz0p918) | [@oskark](https://unsplash.com/@oskark) |
+| "Visa" | [Passports with boarding passes](https://unsplash.com/photos/passports-with-boarding-passes-for-travel-addEU6TScGI) | [@globalresidenceindex](https://unsplash.com/@globalresidenceindex) |
+| Phone scene (6.6–9.0 s) | [Hands holding a blank phone](https://unsplash.com/photos/a-person-holding-a-phone-with-a-white-screen-HezR2XxIHxw) | [@personal_graphic](https://unsplash.com/@personal_graphic) |
+| PSU Phuket card | [Phuket Old Town shophouses](https://unsplash.com/photos/a-row-of-multicolored-buildings-on-a-city-street-4fHhzdafw_k) | [@dearsadiq](https://unsplash.com/@dearsadiq) |
+| "Wallets in ฿ ¥ $" | [Student with a laptop by a window](https://unsplash.com/photos/woman-using-silver-macbook-beside-clear-glass-window-VEKWzpQu-5M) | [@mimithian](https://unsplash.com/@mimithian) |
+| "Your ¥1,000, settled" | [Fresh produce market](https://unsplash.com/photos/fresh-produce-is-sold-at-a-bustling-market-qaynct8o8NM) | [@limamauro23](https://unsplash.com/@limamauro23) |
+| "Bills, 90 days ahead" | [Student with a laptop at a street café](https://unsplash.com/photos/young-woman-in-red-hat-using-laptop-outdoors-sbfGiw1df5I) | [@annemopo](https://unsplash.com/@annemopo) |
+| "On-time record" | [Graduate throwing a cap](https://unsplash.com/photos/a-man-in-a-graduation-gown-throwing-a-hat-in-the-air-huHkFmVglLk) | [@ugip](https://unsplash.com/@ugip) |
 
 ## Container images
 

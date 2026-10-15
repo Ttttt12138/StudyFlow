@@ -5,10 +5,10 @@ import { useOpsPresentation } from "./presenters";
 import { OperationsFacts } from "./OperationsFacts";
 import { useOperationsCommands, type OpsCommand } from "./useOperationsCommands";
 import { operationOptions } from "./operationOptions";
-import type { IssuedLink, OpsItem } from "./types";
+import type { OpsItem } from "./types";
 
 type Props = { item: OpsItem; operatorId: number; client: WalletClient; locked: boolean; busy: boolean;
-  notice: string; error: string; refreshError: string; issued: IssuedLink | null; setIssued: (link: IssuedLink) => void;
+  notice: string; error: string; refreshError: string;
   onClose: () => void; onRun: (command: OpsCommand) => Promise<void>; onRetry: () => void };
 
 export function OperationsDetail(props: Props) {
@@ -16,7 +16,7 @@ export function OperationsDetail(props: Props) {
   const dialog = useRef<HTMLDialogElement>(null);
   const [pending, setPending] = useState<OpsCommand | null>(null);
   const [note, setNote] = useState("");
-  const commands = useOperationsCommands(props.client, props.setIssued);
+  const commands = useOperationsCommands(props.client);
   const version = JSON.stringify(props.item.record);
   useEffect(() => { setPending(null); }, [version, props.locked]);
   useEffect(() => {
@@ -47,7 +47,6 @@ export function OperationsDetail(props: Props) {
       {props.error && <p className="ops-error" role="alert">{props.error}</p>}
       {props.refreshError && <div className="ops-error" role="alert">{props.refreshError} <button className="ops-view" disabled={props.busy} onClick={props.onRetry}>{p.t("ops.w.retry")}</button></div>}
       <OperationsFacts item={props.item} operatorId={props.operatorId}/>
-      {props.issued?.id === props.item.record.id && <SponsorLink link={props.issued}/>}
       {props.item.kind === "approval" && props.item.record.can_decide && <label className="service-field">{p.t("ops.approvals.note")}
         <input value={note} disabled={props.locked || props.busy} maxLength={500} onChange={event => changeNote(event.target.value)} placeholder={p.t("ops.approvals.notePlaceholder")}/></label>}
     </div>
@@ -62,17 +61,4 @@ export function OperationsDetail(props: Props) {
         disabled={props.locked || props.busy} onClick={() => setPending(option.command())}>{p.t(option.label)}</button>)}</div>}
     </div>
   </dialog>;
-}
-
-function SponsorLink({ link }: { link: IssuedLink }) {
-  const { t, when } = useOpsPresentation();
-  const [message, setMessage] = useState("");
-  const copy = async () => {
-    try { await navigator.clipboard.writeText(link.url); setMessage(t("ops.w.copied")); }
-    catch { setMessage(t("ops.w.copyFailed")); }
-  };
-  return <div className="ops-link-box"><p>{t("ops.sponsors.linkReady", { time: when(link.expires) })}</p>
-    <input className="ops-link" readOnly value={link.url} aria-label={t("ops.sponsors.link")} onFocus={event => event.currentTarget.select()}/>
-    <button className="ops-view" onClick={() => void copy()}>{t("ops.sponsors.copy")}</button>{message && <p role="status">{message}</p>}
-  </div>;
 }

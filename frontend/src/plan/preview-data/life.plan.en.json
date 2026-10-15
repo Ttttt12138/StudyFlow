@@ -1,29 +1,9 @@
 {
- "today": "2027-07-26",
+ "today": "2026-10-15",
  "is_simulated": true,
  "in_app_only": true,
  "items": [],
  "upcoming": [],
  "attention_count": 0,
- "unread_count": 0,
- "funding": {
-  "current": false,
-  "as_of": null,
-  "end_date": null,
-  "gap": null,
-  "first_gap_date": null
- },
- "budget": null,
- "credit": {
-  "currency": "THB",
-  "limit": "0.00",
-  "used": "0.00",
-  "available": "0.00",
-  "monthly_room": null,
-  "basis_known": false,
-  "term_days": 30,
-  "cap": "20000.00",
-  "is_simulated": true,
-  "charges": []
- }
+ "unread_count": 0
 }

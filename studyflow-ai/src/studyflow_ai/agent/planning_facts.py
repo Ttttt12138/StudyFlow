@@ -1,13 +1,12 @@
-"""Extract explicit labelled amounts without mistaking tuition, dates or terms for savings."""
+"""Extract an explicit labelled loan amount without mistaking tuition, dates or terms for it."""
 import re
 from decimal import Decimal
 
 LABELS = {
-    "available_funds": r"存款|积蓄|准备了|有存|savings|saved|we have",
-    "support_amount": r"家(?:人|里|庭)(?:还会|将|预计|会)?(?:支持|资助)|family support",
-    "principal": r"(?:想|拟|要)?借(?:款)?|borrow(?:ing)?",
+    "principal": r"(?:想|拟|要)?借(?:款)?|贷(?:款)?|borrow(?:ing)?|loan(?: amount)?",
 }
-NUMBER = r"(\d[\d,]*(?:\.\d+)?)\s*(万|千|k)?"
+# A term ("36 个月", "4 years") or a rate after the number is not an amount.
+NUMBER = r"(\d[\d,]*(?:\.\d+)?)(?![\d.])\s*(万|千|k)?(?!\s*(?:个?月|年|期|%|months?|years?|yrs?))"
 CURRENCY = r"THB|CNY|USD|GBP|AUD|SGD|JPY|MYR|EUR|人民币|泰铢|美元|英镑|澳元|日元|令吉"
 CODES = {"人民币": "CNY", "泰铢": "THB", "美元": "USD", "英镑": "GBP", "澳元": "AUD", "日元": "JPY", "令吉": "MYR"}
 
@@ -38,10 +37,5 @@ def amounts(text):
             result[key] = f"{number * factor:.2f}"
             currency = found.group(1) or found.group(4)
             if currency:
-                field = "funds_currency" if key == "available_funds" else "support_currency" if key == "support_amount" else key + "_currency"
-                result[field] = CODES.get(currency, currency.upper())
-    if "support_amount" in result:
-        found = re.search(r"(?:家庭|家人|家里|family support)[^。;；\n]*?(20\d{2}-\d{2}-\d{2})", text, re.I)
-        if found:
-            result["support_date"] = found.group(1)
+                result[key + "_currency"] = CODES.get(currency, currency.upper())
     return result

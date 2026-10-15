@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { WalletApiError, type WalletClient } from "../wallet/client";
 import type { OpsFilters, OpsWorkbench } from "./types";
-import { workbenchPath } from "./workbench";
+import { itemGroups, workbenchPath } from "./workbench";
 
 export function useWorkbench(client: WalletClient, filters: OpsFilters) {
   const path = workbenchPath(filters);
@@ -11,7 +11,9 @@ export function useWorkbench(client: WalletClient, filters: OpsFilters) {
     const request = ++sequence.current;
     setState(previous => ({ ...previous, loading: true }));
     try {
-      const data = await client.get<OpsWorkbench>(path);
+      const response = await client.get<OpsWorkbench>(path);
+      // The server may still list kinds this console no longer handles (e.g. retired sponsor requests): skip them.
+      const data = { ...response, items: response.items.filter(item => item.kind in itemGroups) };
       if (request !== sequence.current) return null;
       setState({ data, error: null, loading: false, path });
       return data;

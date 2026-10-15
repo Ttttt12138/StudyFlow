@@ -1,120 +1,100 @@
 # StudyFlow — Formal English Product Narrative
 
-[Current formal MP4](../evidence/demo-live-20261014/StudyFlow_Demo_EN.mp4) · [Full acceptance and originals](../evidence/demo-full-live-20261014/README.md)
+[Current formal video](../evidence/demo-current-live-20261015/StudyFlow_Demo_EN.mp4) · [Current acceptance and originals](../evidence/demo-current-live-20261015/README.md)
 
-Runtime: **4 minutes 05 seconds** (245.333 seconds). The 46 accepted feature shots are retained and connected by 12 continuous narration paragraphs. Microsoft Ava uses the approved audition voice and pace: `en-US-AvaNeural`, synthesis `-10%`, followed by local `atempo=1.20`. Five sentences containing key amounts or terms use `1.12` for clarity. All transactions are simulated; model calls in the retained take-07 are live.
-
-StudyFlow is spoken as **Study Flow** and displayed as **StudyFlow**. Currency names are Thai baht, Chinese yuan and US dollars. Amounts and terms are spelled out in the narration. English captions use the service's word timestamps mapped through the actual local tempo segments. Cuts follow sentence meaning and pauses; narration continues across cuts within each chapter.
+Runtime: **04:25** (264.867 seconds). 54 shots, 8 continuous paragraphs. Ava voice and pace retained: `en-US-AvaNeural`, synthesis `-10%`, local tempo `1.20` with selected amount sentences at `1.12`. StudyFlow is spoken as Study Flow; amounts are spelled out. All financial transactions are simulated.
 
 ## Continuous narration
 
-### 00:00:00–00:00:07 · The whole journey
+### 00:00–00:10 · A clearer way to plan
 
-Before studying abroad, every student faces the same question: can I afford the whole journey? This is StudyFlow.
+Studying abroad starts with a practical question: what will the whole journey cost? StudyFlow connects that answer to a loan plan and controlled payments.
 
-### 00:00:07–00:00:30 · Understand the full cost
+### 00:10–00:51 · Know the full cost
 
-Your first answer brings tuition, living costs and essential expenses into one full-course total. Each line distinguishes sourced fees from estimates, so you can see what the total depends on. With four universities side by side, course length and total cost become easier to compare. The same comparison is available in Thai baht and Chinese yuan, or US dollars, using reference exchange rates.
+Ask in your own words. Tuition, living costs and essential expenses appear together as a full-course estimate. The breakdown keeps sourced fees and estimates visible, so you can see what the total depends on. Housing and everyday living costs are included, along with essentials such as insurance, visa costs and travel. With four universities side by side, you can compare the whole course, its length and its annual cost. Switch the same comparison into Chinese yuan, or U.S. dollars, using reference exchange rates. When a ranking is unavailable, the assistant says so and points to a source for checking. It can also explain the campus and nearby food before bringing you back to the next decision.
 
-### 00:00:30–00:01:03 · Connect costs to funding
+### 00:51–01:55 · A loan plan you can discuss
 
-Your declared savings carry into a saved plan, making the funding gap clear. The borrowing ceiling is simulated, not a bank offer. If an assumption changes, updating one fee revises the estimate. The forecast then connects those costs to payment dates and sources. For the gap that remains, custom and commercial loan examples show different repayment paths. One defers principal during study, with the full schedule available. Here, we choose twenty thousand baht over sixty months, with principal and interest paid from the start.
+Once you choose a school, the conversation carries that context forward and asks how much you want to borrow. Here, forty-eight thousand baht produces a recommended plan with the monthly payment, interest, fees and total repayment. Other calculated plans remain available when you want to compare the options. The loan panel also keeps the inputs and full repayment schedule available for a closer look. If the monthly payment feels too high, say so. StudyFlow recalculates and shows how both the payment and total interest change. The study-loan example also shows interest-only payments during study, followed by principal and interest repayments. Prefer less interest overall? The assistant compares shorter terms and makes the higher monthly commitment visible. You can reduce the amount too. This plan now borrows thirty thousand baht; the school cost never silently becomes the requested loan. If you are not interested, recommendations pause, even while you ask another school question. An explicit request resumes the discussion. Earlier recommendations cannot submit an outdated plan.
 
-### 00:01:03–00:01:25 · Turn a plan into an agreement
+### 01:55–02:27 · From discussion to agreement
 
-Once the student confirms the plan, it becomes a simulated loan application. The checklist records demo declarations; it does not verify uploaded documents. A separate signing step makes consent and the school recipient explicit. The signed agreement schedules payments directly to the school's account, verified within this simulation, without adding loan funds to the student's wallet.
+Asking to apply opens a review of the current terms. Only the student's confirmation submits the application. A simulated admission notice is attached automatically. It is not a real university offer or a bank approval. The bills already show the loan's proposed share, while payment waits for signing. The student marks the remaining demo document declarations ready, then reviews and explicitly signs the agreement as a separate action. The signed loan schedules payments to the school's verified simulation account, without putting the loan proceeds in the student's wallet.
 
-### 00:01:25–00:01:41 · Bring family support into the plan
+### 02:27–02:57 · Keep bills and preparation together
 
-Family support covers another part of the plan: first-month housing. A private link lets a family member confirm the promise, while the wallet stays unchanged. Only when the operator records a simulated receipt does the wallet gain six thousand five hundred baht.
+Preparation stays in the conversation: a dated request becomes a saved reminder. Mark a task completed when it is done, or undo that update if it still needs attention. A partly covered tuition bill shows the loan's share and the amount the student still needs to pay, together. When the wallet is short, the demo offers a clearly marked simulated top-up for the remainder. The student then confirms the payment with a password. The bill and balance update together, and the loan-covered amount cannot be charged again.
 
-### 00:01:41–00:01:58 · Get ready for arrival
+### 02:57–03:35 · Move money with control
 
-Preparation stays in the same conversation. A dated reminder can be acknowledged, then completed. When registration is finished, the student explicitly confirms enrollment. That opens daily-life tools; the date alone neither enrolls the student nor pays a bill.
+Separate currency balances keep the source of each simulated payment clear. For an exchange, the assistant compares quotes and prepares a proposal for the student to review. A wrong password stops the action and leaves the balance unchanged. Only after authorization are five hundred yuan converted into Thai baht. For a transfer, routes, fees and expected arrival come before commitment. Confirmation debits one thousand yuan and creates a traceable transfer order. We advance the clearly labelled demo date to the delivery window's final day. The simulated channel marks the transfer delivered, and its status is visible in the history.
 
-### 00:01:58–00:02:13 · Make everyday spending simple
+### 03:35–03:51 · Complete the repayment
 
-A monthly budget of six thousand baht keeps upcoming payments and shortfalls in view. Just tell StudyFlow what you spent on lunch. It records the expense and updates your remaining budget. Made a mistake? Undoing the entry restores the budget immediately.
+When a loan installment falls due, it appears with its amount and date. Before committing, the student reviews the installment, then authorizes the repayment with a password. The installment becomes paid, the wallet is debited, and the movement remains in the ledger.
 
-### 00:02:13–00:02:47 · Stay in control of money
+### 03:51–04:25 · Independent operational approval
 
-Separate currency balances make spending easier to follow. All funds shown here come from simulated top-ups and receipts. For an exchange, the assistant compares quotes and prepares a proposal, awaiting your approval. A wrong password stops the action and leaves balances unchanged. With the correct password and confirmation, five hundred yuan is converted into baht. The same principle applies to remittances: routes, fees and arrival estimates come before commitment. Once confirmed, the transfer debits the source balance and creates an order you can track.
-
-### 00:02:47–00:03:05 · Pay the right bill once
-
-When tuition is due, the Pay tab separates your own bills from those covered by the loan. A visible shortfall leads to a top-up for exactly the missing amount. Reviewing the payee and entering the password authorizes payment. The bill is marked paid, while a loan-covered bill is protected against a duplicate charge.
-
-### 00:03:05–00:03:30 · Keep repayment visible
-
-Repayment follows the same consent flow. We advance the demo date, then authorize the first installment with a password. The paid installment appears in the loan history. For smaller bills, the fixed demo credit line provides funds repayable within thirty days. Repaying that credit requires a password and debits the simulated wallet. The available line is restored, with an on-time record when repayment meets the due date.
-
-### 00:03:30–00:03:54 · Make trust inspectable
-
-These safeguards also set boundaries. An over-limit transfer is blocked without operator approval, even with the correct password. The audit trail records authorization attempts and completed actions. Eligible payments build StudyFlow's internal on-time record, rather than an external credit score. A signed statement can be checked by a separate visitor without logging in. Changing its contents makes verification fail.
-
-### 00:03:54–00:04:05 · Clear costs. User control.
-
-From the first cost comparison to student life, StudyFlow keeps decisions connected: live AI proposes, the server enforces, and the student authorizes.
+For a new recipient, an operator first reviews and verifies the payee. Even a correct password cannot bypass a transfer limit. The request enters the operations workbench for review. The person who verified the payee cannot approve the transfer. A separate operator checks the amount, recipient and purpose, then explicitly confirms the decision. The approval is recorded, but moves no money. The student must still authorize submission with a password. Clear costs, informed decisions and controlled payments: all demonstrated with simulated funds.
 
 ## Complete shot coverage
 
 | Shot | Time | Visible feature |
 |---|---|---|
-| 01 | 00:00:00–00:00:07 | Your study journey, connected |
-| 02 | 00:00:07–00:00:13 | One full-course total |
-| 03 | 00:00:13–00:00:18 | Transparent assumptions |
-| 04 | 00:00:18–00:00:24 | Four schools, one view |
-| 05 | 00:00:24–00:00:27 | Costs in your currency |
-| 06 | 00:00:27–00:00:30 | A shared comparison |
-| 07 | 00:00:30–00:00:38 | Known funds, clear gap |
-| 08 | 00:00:38–00:00:43 | Flexible estimates |
-| 09 | 00:00:43–00:00:47 | Costs mapped to dates |
-| 10 | 00:00:47–00:00:52 | Repayment choices |
-| 11 | 00:00:52–00:00:56 | Support during study |
-| 12 | 00:00:56–00:01:03 | A plan for repayment |
-| 13 | 00:01:03–00:01:07 | Your confirmed application |
-| 14 | 00:01:07–00:01:12 | Clear document status |
-| 15 | 00:01:12–00:01:17 | Consent before signing |
-| 16 | 00:01:17–00:01:25 | Funding goes to the school |
-| 17 | 00:01:25–00:01:30 | Support from family |
-| 18 | 00:01:30–00:01:35 | A promise stays a promise |
-| 19 | 00:01:35–00:01:41 | Receipt updates the wallet |
-| 20 | 00:01:41–00:01:47 | Preparation in one place |
-| 21 | 00:01:47–00:01:52 | Enrollment by confirmation |
-| 22 | 00:01:52–00:01:58 | Ready for student life |
-| 23 | 00:01:58–00:02:03 | A budget you can follow |
-| 24 | 00:02:03–00:02:08 | Lunch, recorded naturally |
-| 25 | 00:02:08–00:02:13 | An easy correction |
-| 26 | 00:02:13–00:02:20 | Balances by currency |
-| 27 | 00:02:20–00:02:25 | A proposal before an exchange |
-| 28 | 00:02:25–00:02:30 | A wrong password stops here |
-| 29 | 00:02:30–00:02:35 | An authorized conversion |
-| 30 | 00:02:35–00:02:42 | Routes before commitment |
-| 31 | 00:02:42–00:02:47 | A transfer you can track |
-| 32 | 00:02:47–00:02:52 | A clear tuition shortfall |
-| 33 | 00:02:52–00:02:56 | Exactly the missing amount |
-| 34 | 00:02:56–00:03:00 | Consent before payment |
-| 35 | 00:03:00–00:03:05 | A bill paid once |
-| 36 | 00:03:05–00:03:12 | Repayment under your control |
-| 37 | 00:03:12–00:03:15 | A visible repayment history |
-| 38 | 00:03:15–00:03:21 | Credit for smaller bills |
-| 39 | 00:03:21–00:03:25 | Repayment from the wallet |
-| 40 | 00:03:25–00:03:30 | Available credit restored |
-| 41 | 00:03:30–00:03:38 | Limits enforced by the server |
-| 42 | 00:03:38–00:03:42 | A traceable activity record |
-| 43 | 00:03:42–00:03:48 | Your internal on-time record |
-| 44 | 00:03:48–00:03:51 | A statement anyone can check |
-| 45 | 00:03:51–00:03:54 | Changes are detected |
-| 46 | 00:03:54–00:04:05 | Clear costs. User control. |
+| 01 | 00:00–00:10 | Plan the whole journey |
+| 02 | 00:10–00:17 | The full course |
+| 03 | 00:17–00:22 | Check the assumptions |
+| 04 | 00:22–00:25 | Include everyday costs |
+| 05 | 00:25–00:29 | Remember arrival costs |
+| 06 | 00:29–00:35 | Compare schools |
+| 07 | 00:35–00:37 | Compare in your currency |
+| 08 | 00:37–00:40 | A consistent comparison |
+| 09 | 00:40–00:46 | Know the data boundary |
+| 10 | 00:46–00:51 | Explore the campus |
+| 11 | 00:51–00:57 | Keep the context |
+| 12 | 00:57–01:05 | One clear recommendation |
+| 13 | 01:05–01:09 | See the alternatives |
+| 14 | 01:09–01:14 | Adjust the details |
+| 15 | 01:14–01:21 | Lower the monthly payment |
+| 16 | 01:21–01:28 | Understand both phases |
+| 17 | 01:28–01:34 | Pay less total interest |
+| 18 | 01:34–01:43 | Borrow only what you choose |
+| 19 | 01:43–01:48 | Pause the discussion |
+| 20 | 01:48–01:55 | Resume when ready |
+| 21 | 01:55–02:01 | Review before applying |
+| 22 | 02:01–02:08 | A simulated application |
+| 23 | 02:08–02:12 | See what the loan covers |
+| 24 | 02:12–02:16 | Prepare the documents |
+| 25 | 02:16–02:20 | Sign explicitly |
+| 26 | 02:20–02:27 | Pay the school directly |
+| 27 | 02:27–02:32 | Remember the next task |
+| 28 | 02:32–02:35 | Keep tasks up to date |
+| 29 | 02:35–02:38 | Correct a mistaken update |
+| 30 | 02:38–02:43 | One bill, two sources |
+| 31 | 02:43–02:48 | Cover the remainder |
+| 32 | 02:48–02:51 | Authorize the payment |
+| 33 | 02:51–02:57 | Check the result |
+| 34 | 02:57–03:01 | Separate currency balances |
+| 35 | 03:01–03:06 | Compare before converting |
+| 36 | 03:06–03:10 | A real authorization check |
+| 37 | 03:10–03:15 | Confirm the exchange |
+| 38 | 03:15–03:20 | Understand the transfer |
+| 39 | 03:20–03:25 | Track the order |
+| 40 | 03:25–03:29 | Advance the demonstration date |
+| 41 | 03:29–03:35 | See the delivery |
+| 42 | 03:35–03:39 | An installment becomes due |
+| 43 | 03:39–03:42 | Review the installment |
+| 44 | 03:42–03:45 | Authorize repayment |
+| 45 | 03:45–03:51 | Keep a payment record |
+| 46 | 03:51–03:56 | Verify the recipient |
+| 47 | 03:56–03:59 | Limits still apply |
+| 48 | 03:59–04:02 | An independent review |
+| 49 | 04:02–04:06 | Separate responsibilities |
+| 50 | 04:06–04:10 | Review the payment |
+| 51 | 04:10–04:12 | Confirm the decision |
+| 52 | 04:12–04:15 | Approval is recorded |
+| 53 | 04:15–04:18 | The student stays in control |
+| 54 | 04:18–04:25 | A controlled result |
 
-## Production and verification
-
-The user explicitly authorized sending this English script to Microsoft's online speech service. Recordings, screenshots and credentials were not sent. Editing, mixing and the speech-recognition check ran locally. No background music is used.
-
-Full decoding passed with zero errors. The decoded audio and video both end at 245.333 seconds. All 46 sampled audio placements match the continuous PCM reference at 1 ms measurement resolution. This confirms placement in the final file; provider word timestamps are not an independently measured phonetic alignment score. The offline recognition check recovered every spoken amount and term, with 3.16% normalized word differences, including currency spelling and proper-name recognition differences.
-
-The footage and its original acceptance remain unchanged: 12 completed live-AI turns, 43 planner decisions and 16 explicit feature checks. Waits are shortened and recorded final frames are held. The narration revision does not constitute a new AI acceptance run.
-
-[English SRT](../evidence/demo-full-live-20261014/StudyFlow_Demo_EN.srt) · [Edit manifest](../evidence/demo-full-live-20261014/edit-manifest.json) · [Media verification](../evidence/demo-full-live-20261014/verification.json) · [Speech check](../evidence/demo-full-live-20261014/speech-check.json) · [Reproduction](../evidence/demo-full-live-20261014/README.md#reproduce)
-
-Production scripts: [story](../scripts/neural_demo_story.py), [authorized synthesis](../scripts/narrate_neural_demo.py), [audio timing](../scripts/neural_demo_audio.py), [editing](../scripts/edit_neural_demo.py), [media checks](../scripts/verify_neural_demo.py), [offline speech check](../scripts/verify_neural_speech.py).
+See the current evidence README for the accepted source snapshot, simulated-account operation logs, mode boundaries, authorization checks and synchronization measurements.

@@ -2,18 +2,12 @@ import { ArrowLeft } from "@phosphor-icons/react/dist/csr/ArrowLeft";
 import { ArrowsClockwise } from "@phosphor-icons/react/dist/csr/ArrowsClockwise";
 import { ArrowsIn } from "@phosphor-icons/react/dist/csr/ArrowsIn";
 import { ArrowsOut } from "@phosphor-icons/react/dist/csr/ArrowsOut";
-import { Bank } from "@phosphor-icons/react/dist/csr/Bank";
-import { ChartLineUp } from "@phosphor-icons/react/dist/csr/ChartLineUp";
-import { ChartPie } from "@phosphor-icons/react/dist/csr/ChartPie";
+import { CalendarCheck } from "@phosphor-icons/react/dist/csr/CalendarCheck";
 import { ChatCircleText } from "@phosphor-icons/react/dist/csr/ChatCircleText";
 import { CreditCard } from "@phosphor-icons/react/dist/csr/CreditCard";
-import { LinkSimple } from "@phosphor-icons/react/dist/csr/LinkSimple";
 import { Notebook } from "@phosphor-icons/react/dist/csr/Notebook";
-import { Receipt } from "@phosphor-icons/react/dist/csr/Receipt";
 import { Robot } from "@phosphor-icons/react/dist/csr/Robot";
 import { Scales } from "@phosphor-icons/react/dist/csr/Scales";
-import { ShieldCheck } from "@phosphor-icons/react/dist/csr/ShieldCheck";
-import { UsersThree } from "@phosphor-icons/react/dist/csr/UsersThree";
 import { Wallet } from "@phosphor-icons/react/dist/csr/Wallet";
 import { Coins } from "@phosphor-icons/react/dist/csr/Coins";
 import { X } from "@phosphor-icons/react/dist/csr/X";
@@ -22,9 +16,8 @@ import { useI18n, type MessageKey } from "../i18n";
 import type { ToolKind } from "./navigation";
 
 const ICONS: Record<ToolKind, ComponentType<{ size?: number; weight?: "light" | "regular"; "aria-hidden"?: boolean | "true" }>> = {
-  life: Notebook,
-  wallet: Wallet, payments: CreditCard, agent: Robot, trust: ShieldCheck, loans: Bank, insights: ChartLineUp, family: UsersThree,
-  copilot: Scales, compare: Scales, funding: Coins, plan: Notebook, bills: Receipt, spending: ChartPie, "family-links": LinkSimple, card: ChatCircleText,
+  life: CalendarCheck, wallet: Wallet, payments: CreditCard, agent: Robot,
+  compare: Scales, funding: Coins, plan: Notebook, card: ChatCircleText,
 };
 
 /**

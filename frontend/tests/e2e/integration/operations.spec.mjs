@@ -84,7 +84,7 @@ test('real Django operations console: payee verification, separation of duties, 
     // Student: an over-limit CNY transfer to that payee needs an approval (T3).
     const corridor = (await ok('student', 'corridors/')).find(row => row.source_currency === 'CNY' && row.target_currency === 'THB');
     const quote = await ok('student', 'fx-quotes/live/', { corridor_id: corridor.id, send_amount: '15000.00' });
-    const order = await ok('student', 'remittance-orders/', { quote_id: quote.id, recipient: 'BENEFICIARY', beneficiary_id: payee.id, purpose: 'family_support' });
+    const order = await ok('student', 'remittance-orders/', { quote_id: quote.id, recipient: 'BENEFICIARY', beneficiary_id: payee.id, purpose: 'living' });
     const refused = await call('student', `remittance-orders/${order.id}/submit/`, { expected_version: order.version });
     assert.equal(refused.data.detail, 'APPROVAL_REQUIRED');
     const reason = `UAT family transfer ${randomUUID().slice(0, 6)}`;

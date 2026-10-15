@@ -19,12 +19,12 @@ test("intro deep links open the planner preview at a stage, old journey links st
   await page.getByRole("heading", { level: 1, name: "Study planner" }).waitFor({ state: "attached" });
   assert.equal(await (await stageButton(page, "Choosing a school")).getAttribute("aria-pressed"), "true");
 
-  // The /intro money links carry stage=school, where the life tools exist.
-  await page.goto(`${base}/?plan=preview&stage=school`);
-  assert.equal(await (await stageButton(page, "In school")).getAttribute("aria-pressed"), "true");
+  // The /intro money links carry stage=prepare, where the life tools exist.
+  await page.goto(`${base}/?plan=preview&stage=prepare`);
+  assert.equal(await (await stageButton(page, "Application submitted")).getAttribute("aria-pressed"), "true");
   await page.keyboard.press("Escape");
-  await page.getByRole("navigation", { name: "Tools" }).getByRole("button", { name: "This month", exact: true }).click();
-  await page.locator(".life-spending").getByRole("heading", { name: "Spending this month" }).waitFor();
+  await page.getByRole("navigation", { name: "Tools" }).getByRole("button", { name: "To-dos and bills", exact: true }).click();
+  await page.locator(".life-panel .life-list").first().waitFor();
 
   // The funding link from /intro opens the funding panel in the consultation stage.
   await page.goto(`${base}/?plan=preview&tool=funding`);

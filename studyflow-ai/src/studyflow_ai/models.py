@@ -130,6 +130,8 @@ class CallRecord(Contract):
     error_code: str | None = None
     request_id: str | None = None
     http_status: int | None = None
+    # The start of a reply that failed the output contract, so a live failure can be diagnosed.
+    raw_excerpt: str | None = Field(default=None, max_length=300)
 
 
 class Classification(Contract):

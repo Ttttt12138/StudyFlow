@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { WalletApiError } from "../wallet/client";
 import { money, pick } from "./format";
 import { createPlanPreview } from "./preview";
-import type { Conversation, InSchool } from "./types";
+import { shownCard, type Conversation } from "./types";
 
 describe("planner money format", () => {
   it("drops cents on large amounts and keeps them on small ones", () => {
@@ -31,22 +31,31 @@ describe("planner preview client", () => {
     await expect(client.post(`agent/conversations/${summary.id}/messages/`, { text: "hi" })).rejects.toBeInstanceOf(WalletApiError);
   });
 
-  it("has a confirmed, not yet enrolled preparing stage in both languages", async () => {
+  it("has a submitted application stage in both languages", async () => {
     for (const lang of ["en", "zh"] as const) {
       const client = createPlanPreview(lang, "prepare");
       const [summary] = await client.get<{ id: string }[]>("agent/conversations/");
       const conversation = await client.get<Conversation>(`agent/conversations/${summary.id}/`);
       expect(conversation.plan?.status).toBe("CONFIRMED");
       expect(conversation.turns.some((turn) => turn.pending_actions.some((action) => action.action === "plan.enroll"))).toBe(false);
-      expect((await client.get<InSchool>("planning/in-school/")).enrolled).toBe(false);
+      await expect(client.get("planning/in-school/")).rejects.toBeInstanceOf(WalletApiError);
     }
   });
 
-  it("has an enrolled in-school stage in both languages", async () => {
-    for (const lang of ["en", "zh"] as const) {
-      const school = await createPlanPreview(lang, "school").get<InSchool>("planning/in-school/");
-      expect(school.enrolled).toBe(true);
-      if (school.enrolled) expect(school.upcoming_bills.length).toBeGreaterThan(0);
+  it("does not expose retired endpoints in preview", async () => {
+    const client = createPlanPreview("en", "prepare");
+    for (const route of ["planning/family-links/", "planning/expenses/", "planning/credit/"]) {
+      await expect(client.get(route)).rejects.toBeInstanceOf(WalletApiError);
     }
+  });
+});
+
+describe("stored cards of retired features", () => {
+  it("render nothing instead of failing", () => {
+    expect(shownCard({ type: "spending" })).toBe(false);
+    expect(shownCard({ type: "confirmation", action: "plan.enroll" })).toBe(false);
+    expect(shownCard({ type: "something_new" })).toBe(false);
+    expect(shownCard({ type: "confirmation", action: "plan.confirm" })).toBe(true);
+    expect(shownCard({ type: "cost" })).toBe(true);
   });
 });

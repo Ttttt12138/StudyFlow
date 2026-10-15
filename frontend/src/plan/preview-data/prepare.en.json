@@ -1,24 +1,21 @@
 {
  "conversation": {
-  "id": "253ea1db-1fd7-40eb-a2c7-f48603250fd6",
+  "id": "785bb3c7-40a1-4bbc-a533-384c39cfcd8a",
   "locale": "en",
-  "created_at": "2026-10-13T11:21:32.802741+00:00",
-  "updated_at": "2026-10-13T11:21:33.179476+00:00",
+  "created_at": "2026-10-15T15:01:00.960879+00:00",
+  "updated_at": "2026-10-15T15:01:01.518673+00:00",
   "profile": {
    "role": null,
    "home_currency": "THB"
   },
   "plan": {
-   "id": "7c5dd1d8-851f-4944-a27d-82647c0a71eb",
+   "id": "1bcbabc7-425b-461d-941a-efe71331b72a",
    "status": "CONFIRMED",
    "school_key": "chulalongkorn",
    "years": 4,
    "start_date": "2027-08-02",
-   "version": 3,
-   "available_funds": "1500000.00",
-   "funds_currency": "THB",
-   "confirmed_at": "2026-10-13T11:21:33.072487+00:00",
-   "enrolled_at": null,
+   "version": 2,
+   "confirmed_at": "2026-10-15T15:01:01.390404+00:00",
    "is_simulated": true,
    "school": {
     "name": {
@@ -29,33 +26,24 @@
    },
    "total": "2351350.00",
    "currency": "THB",
-   "converted": null,
-   "available": "1500000.00",
-   "gap": "851350.00",
-   "loan": {
-    "id": "dcb02102-73a9-482f-ad94-cfcaedbacb94",
-    "currency": "THB",
-    "principal": "851350.00",
-    "months": 48,
-    "annual_rate": "0.06",
-    "monthly_payment": "19993.98",
-    "total_repayment": "959711.01"
-   }
+   "duration_months": 48,
+   "complete": true,
+   "converted": null
   },
   "turns": [
    {
-    "id": "9da21b62-e7ef-4c66-ac12-fca8f0d9542e",
+    "id": "4a9b0532-9ed9-43ee-ac63-399a57981a3b",
     "type": "agentsession",
-    "created_at": "2026-10-13T11:21:32.804Z",
+    "created_at": "2026-10-15T15:01:00.965Z",
     "goal": "",
     "locale": "en",
     "mode": "system",
     "status": "COMPLETED",
-    "final_answer": "Hi! I'm StudyFlow. Tell me the school you have in mind and I'll work out the full-course total for tuition, housing and living costs, or compare what several schools would cost.",
+    "final_answer": "Hi, I'm StudyFlow. Not knowing what studying abroad will cost is the hardest part. Tell me the school you have in mind and I'll work out the full cost, or compare a few. If you're still short, tell me how much you'd like to borrow and I'll find a suitable loan with a clear monthly payment.",
     "error_code": "",
     "write_count": 0,
-    "updated_at": "2026-10-13T11:21:32.804Z",
-    "conversation": "253ea1db-1fd7-40eb-a2c7-f48603250fd6",
+    "updated_at": "2026-10-15T15:01:00.965Z",
+    "conversation": "785bb3c7-40a1-4bbc-a533-384c39cfcd8a",
     "cards": [],
     "steps": [],
     "pending_actions": [],
@@ -63,18 +51,18 @@
     "kind": "assistant"
    },
    {
-    "id": "f2cbb8fb-0598-4c7c-ac3e-afffa323a6ce",
+    "id": "63d033e3-882a-4a8a-817b-2ccf570abce9",
     "type": "agentsession",
-    "created_at": "2026-10-13T11:21:32.819Z",
+    "created_at": "2026-10-15T15:01:00.982Z",
     "goal": "What does 4 years at Chulalongkorn cost in total?",
     "locale": "en",
     "mode": "mock",
     "status": "COMPLETED",
-    "final_answer": "4 year(s) total about 2,351,350 THB: tuition 1,028,850 THB, living 1,166,400 THB, essentials 156,100 THB; range 2,118,650 THB-2,584,050 THB, about 29% estimated. (Sample data from public sources; confirm with the school before paying.)",
+    "final_answer": "Over 4 year(s) it comes to about 2,351,350 THB: tuition 1,028,850 THB, living 1,166,400 THB, essentials 156,100 THB. (Sample data from public sources; please confirm with the school before paying.)Want to put another school next to it? If this is the one, just tap “Choose” on its card.",
     "error_code": "",
     "write_count": 0,
-    "updated_at": "2026-10-13T11:21:32.834Z",
-    "conversation": "253ea1db-1fd7-40eb-a2c7-f48603250fd6",
+    "updated_at": "2026-10-15T15:01:01.009Z",
+    "conversation": "785bb3c7-40a1-4bbc-a533-384c39cfcd8a",
     "cards": [
      {
       "type": "cost",
@@ -116,15 +104,32 @@
           "zh": "每学期学费及杂费（第一年含 50,000 确认费）"
          },
          "lower": null,
+         "quote": "117,600",
          "total": "940800.00",
          "upper": null,
          "amount": "117600.00",
          "period": "semester",
+         "status": "known",
          "cost_id": "tuition_semester",
          "category": "tuition",
          "estimate": false,
          "per_year": "235200.00",
-         "source_url": "https://bba.acc.chula.ac.th/tuition-and-fees"
+         "total_low": "940800.00",
+         "source_url": "https://bba.acc.chula.ac.th/tuition-and-fees",
+         "total_high": "940800.00",
+         "observed_at": "2026-10-12",
+         "occurrences": 8,
+         "start_month": 0,
+         "period_amounts": [
+          "117600.00",
+          "117600.00",
+          "117600.00",
+          "117600.00",
+          "117600.00",
+          "117600.00",
+          "117600.00",
+          "117600.00"
+         ]
         },
         {
          "group": "tuition",
@@ -133,15 +138,25 @@
           "zh": "入学预备课程（第一年前 6-7 月）"
          },
          "lower": null,
+         "quote": "41,400",
          "total": "41400.00",
          "upper": null,
          "amount": "41400.00",
          "period": "once",
+         "status": "known",
          "cost_id": "preparation_course",
          "category": "tuition",
          "estimate": false,
-         "per_year": "0.00",
-         "source_url": "https://bba.acc.chula.ac.th/tuition-and-fees"
+         "per_year": "41400.00",
+         "total_low": "41400.00",
+         "source_url": "https://bba.acc.chula.ac.th/tuition-and-fees",
+         "total_high": "41400.00",
+         "observed_at": "2026-10-12",
+         "occurrences": 1,
+         "start_month": 0,
+         "period_amounts": [
+          "41400.00"
+         ]
         },
         {
          "group": "tuition",
@@ -150,15 +165,25 @@
           "zh": "第一年暑期学期"
          },
          "lower": null,
+         "quote": "46,650",
          "total": "46650.00",
          "upper": null,
          "amount": "46650.00",
          "period": "once",
+         "status": "known",
          "cost_id": "summer_session_year1",
          "category": "tuition",
          "estimate": false,
-         "per_year": "0.00",
-         "source_url": "https://bba.acc.chula.ac.th/tuition-and-fees"
+         "per_year": "46650.00",
+         "total_low": "46650.00",
+         "source_url": "https://bba.acc.chula.ac.th/tuition-and-fees",
+         "total_high": "46650.00",
+         "observed_at": "2026-10-12",
+         "occurrences": 1,
+         "start_month": 0,
+         "period_amounts": [
+          "46650.00"
+         ]
         },
         {
          "group": "living",
@@ -167,15 +192,72 @@
           "zh": "CU iHouse 单间公寓，6 个月以上合同（两人合住可分摊）"
          },
          "lower": null,
+         "quote": "13,000 THB",
          "total": "624000.00",
          "upper": null,
          "amount": "13000.00",
          "period": "month",
+         "status": "known",
          "cost_id": "ihouse_studio",
          "category": "housing",
          "estimate": false,
          "per_year": "156000.00",
-         "source_url": "https://www.inter.chula.ac.th/international-students/campus-life/accommodation/"
+         "total_low": "624000.00",
+         "source_url": "https://www.inter.chula.ac.th/international-students/campus-life/accommodation/",
+         "total_high": "624000.00",
+         "observed_at": "2026-10-12",
+         "occurrences": 48,
+         "start_month": 0,
+         "period_amounts": [
+          "13000.00",
+          "13000.00",
+          "13000.00",
+          "13000.00",
+          "13000.00",
+          "13000.00",
+          "13000.00",
+          "13000.00",
+          "13000.00",
+          "13000.00",
+          "13000.00",
+          "13000.00",
+          "13000.00",
+          "13000.00",
+          "13000.00",
+          "13000.00",
+          "13000.00",
+          "13000.00",
+          "13000.00",
+          "13000.00",
+          "13000.00",
+          "13000.00",
+          "13000.00",
+          "13000.00",
+          "13000.00",
+          "13000.00",
+          "13000.00",
+          "13000.00",
+          "13000.00",
+          "13000.00",
+          "13000.00",
+          "13000.00",
+          "13000.00",
+          "13000.00",
+          "13000.00",
+          "13000.00",
+          "13000.00",
+          "13000.00",
+          "13000.00",
+          "13000.00",
+          "13000.00",
+          "13000.00",
+          "13000.00",
+          "13000.00",
+          "13000.00",
+          "13000.00",
+          "13000.00",
+          "13000.00"
+         ]
         },
         {
          "group": "essentials",
@@ -184,15 +266,25 @@
           "zh": "住宿押金"
          },
          "lower": "13000.00",
+         "quote": null,
          "total": "19500.00",
          "upper": "26000.00",
          "amount": "19500.00",
          "period": "once",
+         "status": "estimated",
          "cost_id": "housing_deposit",
          "category": "deposit",
          "estimate": true,
-         "per_year": "0.00",
-         "source_url": null
+         "per_year": "19500.00",
+         "total_low": "13000.00",
+         "source_url": null,
+         "total_high": "26000.00",
+         "observed_at": "2026-10-12",
+         "occurrences": 1,
+         "start_month": 0,
+         "period_amounts": [
+          "19500.00"
+         ]
         },
         {
          "group": "living",
@@ -201,15 +293,72 @@
           "zh": "水电费（不含在房租内）"
          },
          "lower": "800.00",
+         "quote": null,
          "total": "67200.00",
          "upper": "2000.00",
          "amount": "1400.00",
          "period": "month",
+         "status": "estimated",
          "cost_id": "utilities",
          "category": "housing",
          "estimate": true,
          "per_year": "16800.00",
-         "source_url": null
+         "total_low": "38400.00",
+         "source_url": null,
+         "total_high": "96000.00",
+         "observed_at": "2026-10-12",
+         "occurrences": 48,
+         "start_month": 0,
+         "period_amounts": [
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00"
+         ]
         },
         {
          "group": "living",
@@ -218,15 +367,72 @@
           "zh": "餐饮（食堂、美食广场、街头小吃）"
          },
          "lower": "6000.00",
+         "quote": null,
          "total": "384000.00",
          "upper": "10000.00",
          "amount": "8000.00",
          "period": "month",
+         "status": "estimated",
          "cost_id": "food_monthly",
          "category": "food",
          "estimate": true,
          "per_year": "96000.00",
-         "source_url": null
+         "total_low": "288000.00",
+         "source_url": null,
+         "total_high": "480000.00",
+         "observed_at": "2026-10-12",
+         "occurrences": 48,
+         "start_month": 0,
+         "period_amounts": [
+          "8000.00",
+          "8000.00",
+          "8000.00",
+          "8000.00",
+          "8000.00",
+          "8000.00",
+          "8000.00",
+          "8000.00",
+          "8000.00",
+          "8000.00",
+          "8000.00",
+          "8000.00",
+          "8000.00",
+          "8000.00",
+          "8000.00",
+          "8000.00",
+          "8000.00",
+          "8000.00",
+          "8000.00",
+          "8000.00",
+          "8000.00",
+          "8000.00",
+          "8000.00",
+          "8000.00",
+          "8000.00",
+          "8000.00",
+          "8000.00",
+          "8000.00",
+          "8000.00",
+          "8000.00",
+          "8000.00",
+          "8000.00",
+          "8000.00",
+          "8000.00",
+          "8000.00",
+          "8000.00",
+          "8000.00",
+          "8000.00",
+          "8000.00",
+          "8000.00",
+          "8000.00",
+          "8000.00",
+          "8000.00",
+          "8000.00",
+          "8000.00",
+          "8000.00",
+          "8000.00",
+          "8000.00"
+         ]
         },
         {
          "group": "living",
@@ -235,15 +441,72 @@
           "zh": "轻轨/地铁、公交和出租车"
          },
          "lower": "800.00",
+         "quote": null,
          "total": "67200.00",
          "upper": "2000.00",
          "amount": "1400.00",
          "period": "month",
+         "status": "estimated",
          "cost_id": "transport_monthly",
          "category": "transport",
          "estimate": true,
          "per_year": "16800.00",
-         "source_url": null
+         "total_low": "38400.00",
+         "source_url": null,
+         "total_high": "96000.00",
+         "observed_at": "2026-10-12",
+         "occurrences": 48,
+         "start_month": 0,
+         "period_amounts": [
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00",
+          "1400.00"
+         ]
         },
         {
          "group": "living",
@@ -252,15 +515,72 @@
           "zh": "手机套餐及流量"
          },
          "lower": "300.00",
+         "quote": null,
          "total": "24000.00",
          "upper": "700.00",
          "amount": "500.00",
          "period": "month",
+         "status": "estimated",
          "cost_id": "phone_internet",
          "category": "communications",
          "estimate": true,
          "per_year": "6000.00",
-         "source_url": null
+         "total_low": "14400.00",
+         "source_url": null,
+         "total_high": "33600.00",
+         "observed_at": "2026-10-12",
+         "occurrences": 48,
+         "start_month": 0,
+         "period_amounts": [
+          "500.00",
+          "500.00",
+          "500.00",
+          "500.00",
+          "500.00",
+          "500.00",
+          "500.00",
+          "500.00",
+          "500.00",
+          "500.00",
+          "500.00",
+          "500.00",
+          "500.00",
+          "500.00",
+          "500.00",
+          "500.00",
+          "500.00",
+          "500.00",
+          "500.00",
+          "500.00",
+          "500.00",
+          "500.00",
+          "500.00",
+          "500.00",
+          "500.00",
+          "500.00",
+          "500.00",
+          "500.00",
+          "500.00",
+          "500.00",
+          "500.00",
+          "500.00",
+          "500.00",
+          "500.00",
+          "500.00",
+          "500.00",
+          "500.00",
+          "500.00",
+          "500.00",
+          "500.00",
+          "500.00",
+          "500.00",
+          "500.00",
+          "500.00",
+          "500.00",
+          "500.00",
+          "500.00",
+          "500.00"
+         ]
         },
         {
          "group": "essentials",
@@ -269,15 +589,28 @@
           "zh": "学生医疗保险"
          },
          "lower": "5000.00",
+         "quote": null,
          "total": "40000.00",
          "upper": "15000.00",
          "amount": "10000.00",
          "period": "year",
+         "status": "estimated",
          "cost_id": "health_insurance",
          "category": "insurance",
          "estimate": true,
          "per_year": "10000.00",
-         "source_url": null
+         "total_low": "20000.00",
+         "source_url": null,
+         "total_high": "60000.00",
+         "observed_at": "2026-10-12",
+         "occurrences": 4,
+         "start_month": 0,
+         "period_amounts": [
+          "10000.00",
+          "10000.00",
+          "10000.00",
+          "10000.00"
+         ]
         },
         {
          "group": "essentials",
@@ -286,15 +619,25 @@
           "zh": "非移民教育签证（单次入境）"
          },
          "lower": null,
+         "quote": "2,000",
          "total": "2000.00",
          "upper": null,
          "amount": "2000.00",
          "period": "once",
+         "status": "known",
          "cost_id": "visa_non_immigrant",
          "category": "visa",
          "estimate": false,
-         "per_year": "0.00",
-         "source_url": "https://bangkok.immigration.go.th/en/fee_en/"
+         "per_year": "2000.00",
+         "total_low": "2000.00",
+         "source_url": "https://bangkok.immigration.go.th/en/fee_en/",
+         "total_high": "2000.00",
+         "observed_at": "2026-10-12",
+         "occurrences": 1,
+         "start_month": 0,
+         "period_amounts": [
+          "2000.00"
+         ]
         },
         {
          "group": "essentials",
@@ -303,15 +646,28 @@
           "zh": "每年居留延期费"
          },
          "lower": null,
+         "quote": "1,900",
          "total": "7600.00",
          "upper": null,
          "amount": "1900.00",
          "period": "year",
+         "status": "known",
          "cost_id": "visa_extension",
          "category": "visa",
          "estimate": false,
          "per_year": "1900.00",
-         "source_url": "https://bangkok.immigration.go.th/en/fee_en/"
+         "total_low": "7600.00",
+         "source_url": "https://bangkok.immigration.go.th/en/fee_en/",
+         "total_high": "7600.00",
+         "observed_at": "2026-10-12",
+         "occurrences": 4,
+         "start_month": 0,
+         "period_amounts": [
+          "1900.00",
+          "1900.00",
+          "1900.00",
+          "1900.00"
+         ]
         },
         {
          "group": "essentials",
@@ -320,15 +676,28 @@
           "zh": "回国往返机票（经济舱）"
          },
          "lower": "6000.00",
+         "quote": null,
          "total": "52000.00",
          "upper": "20000.00",
          "amount": "13000.00",
          "period": "year",
+         "status": "estimated",
          "cost_id": "home_trip",
          "category": "travel",
          "estimate": true,
          "per_year": "13000.00",
-         "source_url": null
+         "total_low": "24000.00",
+         "source_url": null,
+         "total_high": "80000.00",
+         "observed_at": "2026-10-12",
+         "occurrences": 4,
+         "start_month": 0,
+         "period_amounts": [
+          "13000.00",
+          "13000.00",
+          "13000.00",
+          "13000.00"
+         ]
         },
         {
          "group": "essentials",
@@ -337,15 +706,25 @@
           "zh": "安家费用（床品、电话卡、日用品）"
          },
          "lower": "4000.00",
+         "quote": null,
          "total": "7000.00",
          "upper": "10000.00",
          "amount": "7000.00",
          "period": "once",
+         "status": "estimated",
          "cost_id": "settling_in",
          "category": "settlement",
          "estimate": true,
-         "per_year": "0.00",
-         "source_url": null
+         "per_year": "7000.00",
+         "total_low": "4000.00",
+         "source_url": null,
+         "total_high": "10000.00",
+         "observed_at": "2026-10-12",
+         "occurrences": 1,
+         "start_month": 0,
+         "period_amounts": [
+          "7000.00"
+         ]
         },
         {
          "group": "essentials",
@@ -354,15 +733,32 @@
           "zh": "教材、软件及文具"
          },
          "lower": "2000.00",
+         "quote": null,
          "total": "28000.00",
          "upper": "5000.00",
          "amount": "3500.00",
          "period": "semester",
+         "status": "estimated",
          "cost_id": "books_supplies",
          "category": "study_materials",
          "estimate": true,
          "per_year": "7000.00",
-         "source_url": null
+         "total_low": "16000.00",
+         "source_url": null,
+         "total_high": "40000.00",
+         "observed_at": "2026-10-12",
+         "occurrences": 8,
+         "start_month": 0,
+         "period_amounts": [
+          "3500.00",
+          "3500.00",
+          "3500.00",
+          "3500.00",
+          "3500.00",
+          "3500.00",
+          "3500.00",
+          "3500.00"
+         ]
         }
        ],
        "total": "2351350.00",
@@ -373,20 +769,30 @@
         "essentials": "156100.00"
        },
        "sample": true,
+       "program": {
+        "en": "BBA International Program, Chulalongkorn Business School",
+        "zh": "工商管理学士国际课程（朱拉隆功商学院）"
+       },
+       "complete": true,
        "currency": "THB",
        "total_low": "2118650.00",
        "first_year": "675250.00",
        "school_key": "chulalongkorn",
        "total_high": "2584050.00",
-       "catalog_version": 1,
-       "estimated_share": "29.30"
+       "observed_at": "2026-10-12",
+       "known_subtotal": "2351350.00",
+       "catalog_version": 2,
+       "duration_months": 48,
+       "estimated_share": "29.30",
+       "total_semesters": 8,
+       "missing_cost_ids": []
       }
      }
     ],
     "steps": [
      {
-      "id": "50ca1439-820f-4ffc-acd3-57ebf28ed4fd",
-      "created_at": "2026-10-13T11:21:32.832Z",
+      "id": "ba0d294c-cd96-4322-8f3e-d09f8072304f",
+      "created_at": "2026-10-15T15:01:01.005Z",
       "number": 1,
       "tool": "estimate_total_cost",
       "tier": "T0",
@@ -405,14 +811,24 @@
         "essentials": "156100.00"
        },
        "sample": true,
+       "program": {
+        "en": "BBA International Program, Chulalongkorn Business School",
+        "zh": "工商管理学士国际课程（朱拉隆功商学院）"
+       },
+       "complete": true,
        "currency": "THB",
        "total_low": "2118650.00",
        "first_year": "675250.00",
        "line_count": 15,
        "school_key": "chulalongkorn",
        "total_high": "2584050.00",
-       "catalog_version": 1,
-       "estimated_share": "29.30"
+       "observed_at": "2026-10-12",
+       "known_subtotal": "2351350.00",
+       "catalog_version": 2,
+       "duration_months": 48,
+       "estimated_share": "29.30",
+       "total_semesters": 8,
+       "missing_cost_ids": []
       },
       "call": {
        "mode": "mock",
@@ -424,14 +840,15 @@
        "request_id": null,
        "duration_ms": 0.0,
        "http_status": null,
+       "raw_excerpt": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.2"
+       "prompt_version": "planning-2.4"
       }
      },
      {
-      "id": "6737af45-3c81-4aa2-ae55-4320a5331dea",
-      "created_at": "2026-10-13T11:21:32.833Z",
+      "id": "8fe9f1c3-b3d8-4d16-9b5a-4e3bc4ea7419",
+      "created_at": "2026-10-15T15:01:01.006Z",
       "number": 2,
       "tool": "",
       "tier": "",
@@ -439,7 +856,7 @@
       "rationale": "",
       "status": "FINAL",
       "result": {
-       "answer": "4 year(s) total about 2,351,350 THB: tuition 1,028,850 THB, living 1,166,400 THB, essentials 156,100 THB; range 2,118,650 THB-2,584,050 THB, about 29% estimated. (Sample data from public sources; confirm with the school before paying.)"
+       "answer": "Over 4 year(s) it comes to about 2,351,350 THB: tuition 1,028,850 THB, living 1,166,400 THB, essentials 156,100 THB. (Sample data from public sources; please confirm with the school before paying.)Want to put another school next to it? If this is the one, just tap “Choose” on its card."
       },
       "call": {
        "mode": "mock",
@@ -451,9 +868,10 @@
        "request_id": null,
        "duration_ms": 0.0,
        "http_status": null,
+       "raw_excerpt": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.2"
+       "prompt_version": "planning-2.4"
       }
      }
     ],
@@ -462,18 +880,18 @@
     "kind": "user"
    },
    {
-    "id": "3fe54ac5-42d4-4470-9485-0cb0702e154e",
+    "id": "8f2be085-784e-41fd-ac05-637667583d60",
     "type": "agentsession",
-    "created_at": "2026-10-13T11:21:32.847Z",
+    "created_at": "2026-10-15T15:01:01.025Z",
     "goal": "Compare Manchester and Melbourne",
     "locale": "en",
     "mode": "mock",
     "status": "COMPLETED",
-    "final_answer": "Comparison: The University of Manchester (Alliance Manchester Business School) 3 year(s) total about 148,643 GBP (≈6,243,006 THB); The University of Melbourne 3 year(s) total about 303,082 AUD (≈6,516,252 THB). Lowest full-course total: The University of Manchester (Alliance Manchester Business School), about 273,246 THB less than the most expensive. (Sample data from public sources; confirm with the school before paying.)",
+    "final_answer": "Side by side, The University of Manchester (Alliance Manchester Business School) costs the least overall, about 273,246 THB less than the most expensive; the details are in the card below. (Sample data from public sources; please confirm with the school before paying.)Which one feels right? Tap “Choose” on its card and we'll look at loan options next.",
     "error_code": "",
     "write_count": 0,
-    "updated_at": "2026-10-13T11:21:32.865Z",
-    "conversation": "253ea1db-1fd7-40eb-a2c7-f48603250fd6",
+    "updated_at": "2026-10-15T15:01:01.051Z",
+    "conversation": "785bb3c7-40a1-4bbc-a533-384c39cfcd8a",
     "cards": [
      {
       "type": "comparison",
@@ -501,27 +919,74 @@
          "en": "BSc (Hons) Management (International Business Economics)",
          "zh": "管理学（国际商务经济方向）荣誉理学士"
         },
+        "sources": [
+         {
+          "url": "https://www.alliancembs.manchester.ac.uk/study/undergraduate/bsc-hons-management-international-business-economics/",
+          "title": "AMBS - BSc (Hons) Management (International Business Economics): fees",
+          "accessed": "2026-10-12"
+         },
+         {
+          "url": "https://www.alliancembs.manchester.ac.uk/study/undergraduate/fees-and-scholarships/",
+          "title": "AMBS - Undergraduate fees and scholarships",
+          "accessed": "2026-10-12"
+         },
+         {
+          "url": "https://www.manchester.ac.uk/study/accommodation/student-accommodation/search/",
+          "title": "University of Manchester - Accommodation search (2026/27 prices)",
+          "accessed": "2026-10-12"
+         },
+         {
+          "url": "https://www.manchester.ac.uk/study/accommodation/student-accommodation/",
+          "title": "University of Manchester - Student accommodation, let lengths 2026/27",
+          "accessed": "2026-10-12"
+         },
+         {
+          "url": "https://www.manchester.ac.uk/discover/key-dates/",
+          "title": "University of Manchester - Key dates",
+          "accessed": "2026-10-12"
+         },
+         {
+          "url": "https://www.gov.uk/student-visa",
+          "title": "GOV.UK - Student visa",
+          "accessed": "2026-10-12"
+         },
+         {
+          "url": "https://www.gov.uk/healthcare-immigration-application/how-much-pay",
+          "title": "GOV.UK - Immigration Health Surcharge: how much you pay",
+          "accessed": "2026-10-12"
+         },
+         {
+          "url": "https://www.gov.uk/student-visa/money",
+          "title": "GOV.UK - Student visa: money you need",
+          "accessed": "2026-10-12"
+         }
+        ],
+        "website": "https://www.alliancembs.manchester.ac.uk/study/undergraduate/bsc-hons-management-international-business-economics/",
+        "complete": true,
         "currency": "GBP",
         "total_low": "134522.00",
         "start_date": "2027-09-27",
         "total_high": "162764.00",
+        "observed_at": "2026-10-12",
         "duration_years": 3,
+        "duration_months": 36,
         "living_per_year": "12014.00",
         "total_converted": {
          "rate": "42.0000000000",
          "amount": "6243006.00",
          "source": "fixture",
          "currency": "THB",
-         "rate_date": "2026-10-13"
+         "rate_date": "2026-10-15"
         },
         "first_year_total": "50263.00",
+        "missing_cost_ids": [],
         "tuition_per_year": "35300.00",
         "first_year_converted": {
          "rate": "42.0000000000",
          "amount": "2111046.00",
          "source": "fixture",
          "currency": "THB",
-         "rate_date": "2026-10-13"
+         "rate_date": "2026-10-15"
         }
        },
        {
@@ -546,27 +1011,64 @@
          "en": "Bachelor of Commerce (B-COM)",
          "zh": "商学学士（B-COM）"
         },
+        "sources": [
+         {
+          "url": "https://study.unimelb.edu.au/find/courses/undergraduate/bachelor-of-commerce/fees/",
+          "title": "University of Melbourne - Bachelor of Commerce fees (international, 2027; figures read from the page's fee data feed)",
+          "accessed": "2026-10-12"
+         },
+         {
+          "url": "https://study.unimelb.edu.au/accommodation",
+          "title": "University of Melbourne - University Accommodation 2027 cost (read via Wayback snapshot 2026-09-18)",
+          "accessed": "2026-10-12"
+         },
+         {
+          "url": "https://www.unimelb.edu.au/dates?queries_year_fquery=next_year",
+          "title": "University of Melbourne - Key dates 2027",
+          "accessed": "2026-10-12"
+         },
+         {
+          "url": "https://study.unimelb.edu.au/student-life/cost-of-living",
+          "title": "University of Melbourne - Cost of living",
+          "accessed": "2026-10-12"
+         },
+         {
+          "url": "https://students.unimelb.edu.au/support-and-wellbeing/international-student-support/visas/arrange-your-oshc",
+          "title": "University of Melbourne - Arrange your OSHC",
+          "accessed": "2026-10-12"
+         },
+         {
+          "url": "https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/student-500",
+          "title": "Department of Home Affairs - Student visa (subclass 500)",
+          "accessed": "2026-10-12"
+         }
+        ],
+        "website": "https://study.unimelb.edu.au/find/courses/undergraduate/bachelor-of-commerce/",
+        "complete": true,
         "currency": "AUD",
         "total_low": "268387.00",
         "start_date": "2027-03-01",
         "total_high": "337776.00",
+        "observed_at": "2026-10-12",
         "duration_years": 3,
+        "duration_months": 36,
         "living_per_year": "37128.00",
         "total_converted": {
          "rate": "21.5000000000",
          "amount": "6516252.25",
          "source": "fixture",
          "currency": "THB",
-         "rate_date": "2026-10-13"
+         "rate_date": "2026-10-15"
         },
         "first_year_total": "103310.50",
+        "missing_cost_ids": [],
         "tuition_per_year": "59832.50",
         "first_year_converted": {
          "rate": "21.5000000000",
          "amount": "2221175.75",
          "source": "fixture",
          "currency": "THB",
-         "rate_date": "2026-10-13"
+         "rate_date": "2026-10-15"
         }
        }
       ],
@@ -576,8 +1078,8 @@
     ],
     "steps": [
      {
-      "id": "030c99bf-e114-4a42-909e-fb1186087238",
-      "created_at": "2026-10-13T11:21:32.863Z",
+      "id": "db9328c7-d834-4f05-a7b4-2d9fca8f2df7",
+      "created_at": "2026-10-15T15:01:01.047Z",
       "number": 1,
       "tool": "compare_schools",
       "tier": "T0",
@@ -614,27 +1116,31 @@
           "en": "BSc (Hons) Management (International Business Economics)",
           "zh": "管理学（国际商务经济方向）荣誉理学士"
          },
+         "complete": true,
          "currency": "GBP",
          "total_low": "134522.00",
          "start_date": "2027-09-27",
          "total_high": "162764.00",
+         "observed_at": "2026-10-12",
          "duration_years": 3,
+         "duration_months": 36,
          "living_per_year": "12014.00",
          "total_converted": {
           "rate": "42.0000000000",
           "amount": "6243006.00",
           "source": "fixture",
           "currency": "THB",
-          "rate_date": "2026-10-13"
+          "rate_date": "2026-10-15"
          },
          "first_year_total": "50263.00",
+         "missing_cost_ids": [],
          "tuition_per_year": "35300.00",
          "first_year_converted": {
           "rate": "42.0000000000",
           "amount": "2111046.00",
           "source": "fixture",
           "currency": "THB",
-          "rate_date": "2026-10-13"
+          "rate_date": "2026-10-15"
          }
         },
         {
@@ -659,27 +1165,31 @@
           "en": "Bachelor of Commerce (B-COM)",
           "zh": "商学学士（B-COM）"
          },
+         "complete": true,
          "currency": "AUD",
          "total_low": "268387.00",
          "start_date": "2027-03-01",
          "total_high": "337776.00",
+         "observed_at": "2026-10-12",
          "duration_years": 3,
+         "duration_months": 36,
          "living_per_year": "37128.00",
          "total_converted": {
           "rate": "21.5000000000",
           "amount": "6516252.25",
           "source": "fixture",
           "currency": "THB",
-          "rate_date": "2026-10-13"
+          "rate_date": "2026-10-15"
          },
          "first_year_total": "103310.50",
+         "missing_cost_ids": [],
          "tuition_per_year": "59832.50",
          "first_year_converted": {
           "rate": "21.5000000000",
           "amount": "2221175.75",
           "source": "fixture",
           "currency": "THB",
-          "rate_date": "2026-10-13"
+          "rate_date": "2026-10-15"
          }
         }
        ],
@@ -696,14 +1206,15 @@
        "request_id": null,
        "duration_ms": 0.0,
        "http_status": null,
+       "raw_excerpt": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.2"
+       "prompt_version": "planning-2.4"
       }
      },
      {
-      "id": "93be0ad4-d86f-4922-8f5a-4864ffa46f99",
-      "created_at": "2026-10-13T11:21:32.864Z",
+      "id": "83c98b00-d616-4f97-962b-7c64a70e523a",
+      "created_at": "2026-10-15T15:01:01.048Z",
       "number": 2,
       "tool": "",
       "tier": "",
@@ -711,7 +1222,7 @@
       "rationale": "",
       "status": "FINAL",
       "result": {
-       "answer": "Comparison: The University of Manchester (Alliance Manchester Business School) 3 year(s) total about 148,643 GBP (≈6,243,006 THB); The University of Melbourne 3 year(s) total about 303,082 AUD (≈6,516,252 THB). Lowest full-course total: The University of Manchester (Alliance Manchester Business School), about 273,246 THB less than the most expensive. (Sample data from public sources; confirm with the school before paying.)"
+       "answer": "Side by side, The University of Manchester (Alliance Manchester Business School) costs the least overall, about 273,246 THB less than the most expensive; the details are in the card below. (Sample data from public sources; please confirm with the school before paying.)Which one feels right? Tap “Choose” on its card and we'll look at loan options next."
       },
       "call": {
        "mode": "mock",
@@ -723,9 +1234,10 @@
        "request_id": null,
        "duration_ms": 0.0,
        "http_status": null,
+       "raw_excerpt": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.2"
+       "prompt_version": "planning-2.4"
       }
      }
     ],
@@ -734,724 +1246,22 @@
     "kind": "user"
    },
    {
-    "id": "bf13531d-a5fb-451f-8ee7-1d52978b4c91",
+    "id": "20ed0dc9-d2cc-439b-a142-50e7eaf61577",
     "type": "agentsession",
-    "created_at": "2026-10-13T11:21:32.878Z",
-    "goal": "What food and fun is near Waseda?",
+    "created_at": "2026-10-15T15:01:01.064Z",
+    "goal": "Choose Chulalongkorn",
     "locale": "en",
     "mode": "mock",
     "status": "COMPLETED",
-    "final_answer": "Waseda University (School of Political Science and Economics) is in Shinjuku, Tokyo. Campus has Waseda University Central Library, Okuma Auditorium, Building 3 (School of Political Science and Economics); nearby food: Okuma Garden House cafeteria (Waseda Co-op), Takadanobaba station area eateries, Waseda-dori student restaurants; weekends: Okuma Garden, Kanda River cherry blossom walk (Edogawa Park), Rikugien Garden. (Sample data from public sources; confirm with the school before paying.)",
+    "final_answer": "Great, Chulalongkorn University it is! Over 4 years it comes to about 2,351,350 THB. For the loan, I'd start with the commercial study loan example: 4.5% a year in this example, repaid in monthly installments. If you're still short, tell me how much you'd like to borrow and I'll find a plan and work out the monthly payment. Just so you know: loans and money here are simulated.",
     "error_code": "",
-    "write_count": 0,
-    "updated_at": "2026-10-13T11:21:32.893Z",
-    "conversation": "253ea1db-1fd7-40eb-a2c7-f48603250fd6",
-    "cards": [
-     {
-      "type": "school",
-      "sample": true,
-      "school": {
-       "key": "waseda",
-       "food": [
-        {
-         "kind": "canteen",
-         "name": {
-          "en": "Okuma Garden House cafeteria (Waseda Co-op)",
-          "zh": "大隈花园楼食堂（早大生协）"
-         },
-         "note": {
-          "en": "Large student cafeteria on campus.",
-          "zh": "校内大型学生食堂。"
-         },
-         "source_url": null,
-         "distance_km": 0.2,
-         "typical_cost": "550.00"
-        },
-        {
-         "kind": "district",
-         "name": {
-          "en": "Takadanobaba station area eateries",
-          "zh": "高田马场站周边餐馆"
-         },
-         "note": {
-          "en": "Ramen, set meals and Asian food popular with students.",
-          "zh": "拉面、定食与亚洲料理，学生常去。"
-         },
-         "source_url": null,
-         "distance_km": 1.5,
-         "typical_cost": "1000.00"
-        },
-        {
-         "kind": "street",
-         "name": {
-          "en": "Waseda-dori student restaurants",
-          "zh": "早稻田通学生餐馆"
-         },
-         "note": {
-          "en": "Cheap curry, donburi and set-meal shops near campus.",
-          "zh": "校园附近的咖喱、盖饭和定食小店。"
-         },
-         "source_url": null,
-         "distance_km": 0.3,
-         "typical_cost": "800.00"
-        }
-       ],
-       "costs": [
-        {
-         "label": {
-          "en": "Enrollment fee (first year only)",
-          "zh": "入学金（仅第一年）"
-         },
-         "lower": null,
-         "quote": "Enrollment Fee | 200,000",
-         "upper": null,
-         "amount": "200000.00",
-         "period": "once",
-         "cost_id": "enrollment_fee",
-         "category": "tuition",
-         "estimate": false,
-         "source_url": "https://www.waseda.jp/fpse/pse/en/applicants/tuition/"
-        },
-        {
-         "label": {
-          "en": "Faculty entrance fee (first year only)",
-          "zh": "学部入会费（仅第一年）"
-         },
-         "lower": null,
-         "quote": "Entrance Fee | 2,000",
-         "upper": null,
-         "amount": "2000.00",
-         "period": "once",
-         "cost_id": "faculty_entrance_fee",
-         "category": "tuition",
-         "estimate": false,
-         "source_url": "https://www.waseda.jp/fpse/pse/en/applicants/tuition/"
-        },
-        {
-         "label": {
-          "en": "Tuition, first year, per semester (from year 2: 640,500 per semester)",
-          "zh": "第一年学费，每学期（第二年起每学期 640,500）"
-         },
-         "lower": null,
-         "quote": "Tuition | 540,500 | 540,500 | 1,081,000",
-         "upper": null,
-         "amount": "540500.00",
-         "period": "semester",
-         "cost_id": "tuition_semester",
-         "category": "tuition",
-         "estimate": false,
-         "source_url": "https://www.waseda.jp/fpse/pse/en/applicants/tuition/"
-        },
-        {
-         "label": {
-          "en": "Library, faculty and student health mutual-aid fees, per semester",
-          "zh": "图书馆费、学部年费、学生健康互助会费（每学期）"
-         },
-         "lower": null,
-         "quote": "Library Fee | 250 … Annual Fee | 750 … Membership Fee of Student Health Promotion Mutual Aid Association | 1,500",
-         "upper": null,
-         "amount": "2500.00",
-         "period": "semester",
-         "cost_id": "other_school_fees",
-         "category": "tuition",
-         "estimate": false,
-         "source_url": "https://www.waseda.jp/fpse/pse/en/applicants/tuition/"
-        },
-        {
-         "label": {
-          "en": "Dormitory or share house / small apartment in Tokyo",
-          "zh": "东京宿舍、合租屋或小公寓"
-         },
-         "lower": "60000.00",
-         "quote": null,
-         "upper": "100000.00",
-         "amount": null,
-         "period": "month",
-         "cost_id": "housing_month",
-         "category": "housing",
-         "estimate": true,
-         "source_url": null
-        },
-        {
-         "label": {
-          "en": "Move-in costs (deposit, key money, agent fee); lower for dorms",
-          "zh": "入住初期费用（押金、礼金、中介费）；宿舍较低"
-         },
-         "lower": "30000.00",
-         "quote": null,
-         "upper": "200000.00",
-         "amount": null,
-         "period": "once",
-         "cost_id": "housing_deposit",
-         "category": "deposit",
-         "estimate": true,
-         "source_url": null
-        },
-        {
-         "label": {
-          "en": "Groceries, co-op cafeterias and eating out",
-          "zh": "日常伙食（超市、学生食堂与外食）"
-         },
-         "lower": "35000.00",
-         "quote": null,
-         "upper": "55000.00",
-         "amount": null,
-         "period": "month",
-         "cost_id": "food_monthly",
-         "category": "food",
-         "estimate": true,
-         "source_url": null
-        },
-        {
-         "label": {
-          "en": "Train/metro commuter pass",
-          "zh": "电车/地铁通学定期票"
-         },
-         "lower": "5000.00",
-         "quote": null,
-         "upper": "10000.00",
-         "amount": null,
-         "period": "month",
-         "cost_id": "transport_monthly",
-         "category": "transport",
-         "estimate": true,
-         "source_url": null
-        },
-        {
-         "label": {
-          "en": "Mobile plan (budget carrier)",
-          "zh": "手机套餐（廉价运营商）"
-         },
-         "lower": "2000.00",
-         "quote": null,
-         "upper": "5000.00",
-         "amount": null,
-         "period": "month",
-         "cost_id": "phone_internet",
-         "category": "communications",
-         "estimate": true,
-         "source_url": null
-        },
-        {
-         "label": {
-          "en": "National Health Insurance (compulsory for residents)",
-          "zh": "国民健康保险（在日居民强制加入）"
-         },
-         "lower": "1500.00",
-         "quote": null,
-         "upper": "2500.00",
-         "amount": null,
-         "period": "month",
-         "cost_id": "nhi_month",
-         "category": "insurance",
-         "estimate": true,
-         "source_url": null
-        },
-        {
-         "label": {
-          "en": "Student visa issuance fee at a Japanese consulate (CoE itself is free)",
-          "zh": "留学签证签发费（在留资格认定证明书免费）"
-         },
-         "lower": "3000.00",
-         "quote": null,
-         "upper": "15000.00",
-         "amount": null,
-         "period": "once",
-         "cost_id": "student_visa",
-         "category": "visa",
-         "estimate": true,
-         "source_url": null
-        },
-        {
-         "label": {
-          "en": "Return flight China-Tokyo, once a year",
-          "zh": "中国往返东京机票（每年一次）"
-         },
-         "lower": "40000.00",
-         "quote": null,
-         "upper": "120000.00",
-         "amount": null,
-         "period": "year",
-         "cost_id": "flights_home",
-         "category": "travel",
-         "estimate": true,
-         "source_url": null
-        },
-        {
-         "label": {
-          "en": "Furniture, bedding and household items",
-          "zh": "家具、床品及生活用品"
-         },
-         "lower": "50000.00",
-         "quote": null,
-         "upper": "100000.00",
-         "amount": null,
-         "period": "once",
-         "cost_id": "settling_in",
-         "category": "settlement",
-         "estimate": true,
-         "source_url": null
-        },
-        {
-         "label": {
-          "en": "Textbooks and printing",
-          "zh": "教材及打印"
-         },
-         "lower": "20000.00",
-         "quote": null,
-         "upper": "50000.00",
-         "amount": null,
-         "period": "year",
-         "cost_id": "books_supplies",
-         "category": "study_materials",
-         "estimate": true,
-         "source_url": null
-        }
-       ],
-       "notes": [
-        {
-         "en": "Sample data from public sources; confirm with the school before paying.",
-         "zh": "示例数据，来自公开资料；付款前请向学校确认。"
-        },
-        {
-         "en": "Fees are 'based on 2025 figures' on the school page; year 1 totals 1,288,000 yen, year 2 onward 1,286,000 yen a year, plus 40,000 yen alumni fee in year 4.",
-         "zh": "学部页面注明按 2025 年标准；第一年合计 1,288,000 日元，第二年起每年 1,286,000 日元，第四年另收校友会费 40,000 日元。"
-        },
-        {
-         "en": "Fall 2027 dates are projected from the 2026 calendar (Fall classes from 21 Sep to 2 Feb).",
-         "zh": "2027 秋季日期按 2026 校历推算（秋学期 9 月 21 日至次年 2 月 2 日）。"
-        },
-        {
-         "en": "Housing, insurance, visa and living costs are estimates; Waseda's housing site blocked automated access. Japan has announced plans to raise visa fees, so check the consulate.",
-         "zh": "住宿、保险、签证及生活费为估算；早大住宿网站拦截自动访问。日本已宣布计划上调签证费，请以领馆为准。"
-        }
-       ],
-       "sample": true,
-       "school": {
-        "city": {
-         "en": "Shinjuku, Tokyo",
-         "zh": "东京新宿区"
-        },
-        "name": {
-         "en": "Waseda University (School of Political Science and Economics)",
-         "zh": "早稻田大学（政治经济学部）"
-        },
-        "campus": "Waseda",
-        "country": {
-         "en": "Japan",
-         "zh": "日本"
-        },
-        "program": {
-         "en": "English-based Degree Program in Political Science and Economics (EDESSA)",
-         "zh": "政治经济学部英语学位项目（EDESSA）"
-        },
-        "website": "https://www.waseda.jp/fpse/pse/en/",
-        "currency": "JPY",
-        "language": "English",
-        "country_code": "JP",
-        "duration_years": 4
-       },
-       "sources": [
-        {
-         "url": "https://www.waseda.jp/fpse/pse/en/applicants/tuition/",
-         "title": "Waseda SPSE - Tuition and Scholarships (based on 2025 figures)",
-         "accessed": "2026-10-12"
-        },
-        {
-         "url": "https://www.waseda.jp/top/en/about/work/organizations/academic-affairs-division/academic-calendar",
-         "title": "Waseda University - Academic calendar",
-         "accessed": "2026-10-12"
-        }
-       ],
-       "version": 1,
-       "calendar": {
-        "intake": "2027-09",
-        "end_date": "2028-02-02",
-        "source_url": "https://www.waseda.jp/top/en/about/work/organizations/academic-affairs-division/academic-calendar",
-        "start_date": "2027-09-21",
-        "semesters_per_year": 2
-       },
-       "facilities": [
-        {
-         "kind": "library",
-         "name": {
-          "en": "Waseda University Central Library",
-          "zh": "早稻田大学中央图书馆"
-         },
-         "note": {
-          "en": "Main library near Okuma Auditorium.",
-          "zh": "大隈讲堂旁的主图书馆。"
-         },
-         "source_url": null,
-         "distance_km": 0.3,
-         "typical_cost": null
-        },
-        {
-         "kind": "landmark",
-         "name": {
-          "en": "Okuma Auditorium",
-          "zh": "大隈讲堂"
-         },
-         "note": {
-          "en": "Campus symbol used for ceremonies and lectures.",
-          "zh": "早大标志性建筑，用于典礼和讲座。"
-         },
-         "source_url": null,
-         "distance_km": 0.2,
-         "typical_cost": null
-        },
-        {
-         "kind": "faculty building",
-         "name": {
-          "en": "Building 3 (School of Political Science and Economics)",
-          "zh": "3 号馆（政治经济学部）"
-         },
-         "note": {
-          "en": "Home building of the school.",
-          "zh": "政治经济学部所在教学楼。"
-         },
-         "source_url": null,
-         "distance_km": 0.0,
-         "typical_cost": null
-        },
-        {
-         "kind": "sports",
-         "name": {
-          "en": "Waseda Arena (Toyama campus)",
-          "zh": "早稻田体育馆（户山校区）"
-         },
-         "note": {
-          "en": "Gym and sports facilities.",
-          "zh": "体育馆与运动设施。"
-         },
-         "source_url": null,
-         "distance_km": 0.6,
-         "typical_cost": null
-        },
-        {
-         "kind": "museum",
-         "name": {
-          "en": "Tsubouchi Memorial Theatre Museum",
-          "zh": "坪内博士纪念演剧博物馆"
-         },
-         "note": {
-          "en": "Theatre museum on campus; free.",
-          "zh": "校内戏剧博物馆，免费。"
-         },
-         "source_url": null,
-         "distance_km": 0.2,
-         "typical_cost": null
-        }
-       ],
-       "attractions": [
-        {
-         "kind": "park",
-         "name": {
-          "en": "Okuma Garden",
-          "zh": "大隈庭园"
-         },
-         "note": {
-          "en": "Japanese garden on campus; free.",
-          "zh": "校内日式庭园，免费。"
-         },
-         "source_url": null,
-         "distance_km": 0.2,
-         "typical_cost": "0.00"
-        },
-        {
-         "kind": "nature",
-         "name": {
-          "en": "Kanda River cherry blossom walk (Edogawa Park)",
-          "zh": "神田川赏樱步道（江户川公园）"
-         },
-         "note": {
-          "en": "Riverside walk, best in spring.",
-          "zh": "河边步道，春季赏樱。"
-         },
-         "source_url": null,
-         "distance_km": 1.0,
-         "typical_cost": "0.00"
-        },
-        {
-         "kind": "park",
-         "name": {
-          "en": "Rikugien Garden",
-          "zh": "六义园"
-         },
-         "note": {
-          "en": "Edo-period landscape garden (small entry fee).",
-          "zh": "江户时代回游式庭园（少量门票）。"
-         },
-         "source_url": null,
-         "distance_km": 4.0,
-         "typical_cost": "300.00"
-        },
-        {
-         "kind": "park",
-         "name": {
-          "en": "Shinjuku Gyoen National Garden",
-          "zh": "新宿御苑"
-         },
-         "note": {
-          "en": "Large national garden (entry fee).",
-          "zh": "大型国家庭园（需门票）。"
-         },
-         "source_url": null,
-         "distance_km": 4.0,
-         "typical_cost": "500.00"
-        },
-        {
-         "kind": "shrine",
-         "name": {
-          "en": "Meiji Jingu",
-          "zh": "明治神宫"
-         },
-         "note": {
-          "en": "Forest shrine near Harajuku; free.",
-          "zh": "原宿旁的森林神社，免费。"
-         },
-         "source_url": null,
-         "distance_km": 5.0,
-         "typical_cost": "0.00"
-        }
-       ],
-       "observed_at": "2026-10-12"
-      }
-     }
-    ],
-    "steps": [
-     {
-      "id": "bbc0df69-7745-44f2-9ded-9221635b7f2a",
-      "created_at": "2026-10-13T11:21:32.892Z",
-      "number": 1,
-      "tool": "get_school_profile",
-      "tier": "T0",
-      "arguments": {
-       "school_key": "waseda"
-      },
-      "rationale": "Campus life for the school",
-      "status": "OK",
-      "result": {
-       "key": "waseda",
-       "city": {
-        "en": "Shinjuku, Tokyo",
-        "zh": "东京新宿区"
-       },
-       "food": [
-        {
-         "kind": "canteen",
-         "name": {
-          "en": "Okuma Garden House cafeteria (Waseda Co-op)",
-          "zh": "大隈花园楼食堂（早大生协）"
-         },
-         "distance_km": 0.2,
-         "typical_cost": "550.00"
-        },
-        {
-         "kind": "district",
-         "name": {
-          "en": "Takadanobaba station area eateries",
-          "zh": "高田马场站周边餐馆"
-         },
-         "distance_km": 1.5,
-         "typical_cost": "1000.00"
-        },
-        {
-         "kind": "street",
-         "name": {
-          "en": "Waseda-dori student restaurants",
-          "zh": "早稻田通学生餐馆"
-         },
-         "distance_km": 0.3,
-         "typical_cost": "800.00"
-        }
-       ],
-       "name": {
-        "en": "Waseda University (School of Political Science and Economics)",
-        "zh": "早稻田大学（政治经济学部）"
-       },
-       "total": "11829000.00",
-       "years": 4,
-       "intake": "2027-09",
-       "sample": true,
-       "country": {
-        "en": "Japan",
-        "zh": "日本"
-       },
-       "program": {
-        "en": "English-based Degree Program in Political Science and Economics (EDESSA)",
-        "zh": "政治经济学部英语学位项目（EDESSA）"
-       },
-       "website": "https://www.waseda.jp/fpse/pse/en/",
-       "currency": "JPY",
-       "language": "English",
-       "total_low": "9837000.00",
-       "facilities": [
-        {
-         "kind": "library",
-         "name": {
-          "en": "Waseda University Central Library",
-          "zh": "早稻田大学中央图书馆"
-         },
-         "distance_km": 0.3,
-         "typical_cost": null
-        },
-        {
-         "kind": "landmark",
-         "name": {
-          "en": "Okuma Auditorium",
-          "zh": "大隈讲堂"
-         },
-         "distance_km": 0.2,
-         "typical_cost": null
-        },
-        {
-         "kind": "faculty building",
-         "name": {
-          "en": "Building 3 (School of Political Science and Economics)",
-          "zh": "3 号馆（政治经济学部）"
-         },
-         "distance_km": 0.0,
-         "typical_cost": null
-        },
-        {
-         "kind": "sports",
-         "name": {
-          "en": "Waseda Arena (Toyama campus)",
-          "zh": "早稻田体育馆（户山校区）"
-         },
-         "distance_km": 0.6,
-         "typical_cost": null
-        },
-        {
-         "kind": "museum",
-         "name": {
-          "en": "Tsubouchi Memorial Theatre Museum",
-          "zh": "坪内博士纪念演剧博物馆"
-         },
-         "distance_km": 0.2,
-         "typical_cost": null
-        }
-       ],
-       "start_date": "2027-09-21",
-       "total_high": "13821000.00",
-       "attractions": [
-        {
-         "kind": "park",
-         "name": {
-          "en": "Okuma Garden",
-          "zh": "大隈庭园"
-         },
-         "distance_km": 0.2,
-         "typical_cost": "0.00"
-        },
-        {
-         "kind": "nature",
-         "name": {
-          "en": "Kanda River cherry blossom walk (Edogawa Park)",
-          "zh": "神田川赏樱步道（江户川公园）"
-         },
-         "distance_km": 1.0,
-         "typical_cost": "0.00"
-        },
-        {
-         "kind": "park",
-         "name": {
-          "en": "Rikugien Garden",
-          "zh": "六义园"
-         },
-         "distance_km": 4.0,
-         "typical_cost": "300.00"
-        },
-        {
-         "kind": "park",
-         "name": {
-          "en": "Shinjuku Gyoen National Garden",
-          "zh": "新宿御苑"
-         },
-         "distance_km": 4.0,
-         "typical_cost": "500.00"
-        },
-        {
-         "kind": "shrine",
-         "name": {
-          "en": "Meiji Jingu",
-          "zh": "明治神宫"
-         },
-         "distance_km": 5.0,
-         "typical_cost": "0.00"
-        }
-       ],
-       "duration_years": 4,
-       "living_per_year": "1632000.00",
-       "first_year_total": "3258000.00",
-       "tuition_per_year": "1086000.00"
-      },
-      "call": {
-       "mode": "mock",
-       "model": "agent-rules",
-       "purpose": "plan",
-       "attempts": 1,
-       "provider": "rules",
-       "error_code": null,
-       "request_id": null,
-       "duration_ms": 0.0,
-       "http_status": null,
-       "input_tokens": 0,
-       "output_tokens": 0,
-       "prompt_version": "planning-1.2"
-      }
-     },
-     {
-      "id": "ee9fbcf0-9afb-445e-9a22-efb03550e012",
-      "created_at": "2026-10-13T11:21:32.893Z",
-      "number": 2,
-      "tool": "",
-      "tier": "",
-      "arguments": {},
-      "rationale": "",
-      "status": "FINAL",
-      "result": {
-       "answer": "Waseda University (School of Political Science and Economics) is in Shinjuku, Tokyo. Campus has Waseda University Central Library, Okuma Auditorium, Building 3 (School of Political Science and Economics); nearby food: Okuma Garden House cafeteria (Waseda Co-op), Takadanobaba station area eateries, Waseda-dori student restaurants; weekends: Okuma Garden, Kanda River cherry blossom walk (Edogawa Park), Rikugien Garden. (Sample data from public sources; confirm with the school before paying.)"
-      },
-      "call": {
-       "mode": "mock",
-       "model": "agent-rules",
-       "purpose": "plan",
-       "attempts": 1,
-       "provider": "rules",
-       "error_code": null,
-       "request_id": null,
-       "duration_ms": 0.0,
-       "http_status": null,
-       "input_tokens": 0,
-       "output_tokens": 0,
-       "prompt_version": "planning-1.2"
-      }
-     }
-    ],
-    "pending_actions": [],
-    "is_simulated": true,
-    "kind": "user"
-   },
-   {
-    "id": "85c18cff-b6b6-46a3-89ca-c85df113922f",
-    "type": "agentsession",
-    "created_at": "2026-10-13T11:21:32.906Z",
-    "goal": "We have savings of 1500000 THB, choose Chulalongkorn",
-    "locale": "en",
-    "mode": "mock",
-    "status": "COMPLETED",
-    "final_answer": "Plan: Chulalongkorn University, 4 year(s), status: draft, total about 2,351,350 THB. Funding gap about 851,350 THB; I can simulate a loan if you like.",
-    "error_code": "",
-    "write_count": 1,
-    "updated_at": "2026-10-13T11:21:32.926Z",
-    "conversation": "253ea1db-1fd7-40eb-a2c7-f48603250fd6",
+    "write_count": 2,
+    "updated_at": "2026-10-15T15:01:01.123Z",
+    "conversation": "785bb3c7-40a1-4bbc-a533-384c39cfcd8a",
     "cards": [
      {
       "plan": {
-       "id": "7c5dd1d8-851f-4944-a27d-82647c0a71eb",
-       "gap": "851350.00",
+       "id": "1bcbabc7-425b-461d-941a-efe71331b72a",
        "total": "2351350.00",
        "years": 4,
        "school": {
@@ -1463,38 +1273,60 @@
        },
        "status": "DRAFT",
        "version": 1,
+       "complete": true,
        "currency": "THB",
-       "available": "1500000.00",
        "converted": null,
        "school_key": "chulalongkorn",
        "start_date": "2027-08-02",
-       "enrolled_at": null,
        "confirmed_at": null,
        "is_simulated": true,
-       "funds_currency": "THB",
-       "available_funds": "1500000.00"
+       "duration_months": 48
       },
       "type": "plan"
+     },
+     {
+      "type": "loan_advice",
+      "advice": {
+       "intent": "recommend",
+       "status": "needs_amount",
+       "product": {
+        "key": "commercial_student_demo",
+        "terms": [
+         24,
+         36,
+         48,
+         60
+        ],
+        "methods": [
+         "amortized",
+         "interest_only"
+        ],
+        "annual_rate": "0.045"
+       },
+       "constraints": {},
+       "plan_version": 1,
+       "ready_to_apply": false,
+       "assessment_version": 1
+      },
+      "plan_id": "1bcbabc7-425b-461d-941a-efe71331b72a",
+      "is_simulated": true
      }
     ],
     "steps": [
      {
-      "id": "4c570a2d-6316-49eb-94e8-637bb5bfd475",
-      "created_at": "2026-10-13T11:21:32.925Z",
+      "id": "e9a1b96d-a00c-4517-affc-76dba117b71c",
+      "created_at": "2026-10-15T15:01:01.095Z",
       "number": 1,
       "tool": "save_plan",
       "tier": "T1",
       "arguments": {
-       "school_key": "chulalongkorn",
-       "funds_currency": "THB",
-       "available_funds": "1500000.00"
+       "school_key": "chulalongkorn"
       },
       "rationale": "Save the chosen school",
       "status": "OK",
       "result": {
        "plan": {
-        "id": "7c5dd1d8-851f-4944-a27d-82647c0a71eb",
-        "gap": "851350.00",
+        "id": "1bcbabc7-425b-461d-941a-efe71331b72a",
         "total": "2351350.00",
         "years": 4,
         "school": {
@@ -1506,17 +1338,17 @@
         },
         "status": "DRAFT",
         "version": 1,
+        "complete": true,
         "currency": "THB",
-        "available": "1500000.00",
         "converted": null,
         "school_key": "chulalongkorn",
         "start_date": "2027-08-02",
-        "enrolled_at": null,
         "confirmed_at": null,
         "is_simulated": true,
-        "funds_currency": "THB",
-        "available_funds": "1500000.00"
-       }
+        "duration_months": 48
+       },
+       "loan_principal": null,
+       "withdrawn_application": false
       },
       "call": {
        "mode": "mock",
@@ -1528,36 +1360,68 @@
        "request_id": null,
        "duration_ms": 0.0,
        "http_status": null,
+       "raw_excerpt": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.2"
+       "prompt_version": "planning-2.4"
       }
      },
      {
-      "id": "ceef879d-ab9c-4239-9ce3-45eabb5ade0a",
-      "created_at": "2026-10-13T11:21:32.926Z",
+      "id": "1be1696e-1d57-489f-8cb7-93e4e8ac3a6f",
+      "created_at": "2026-10-15T15:01:01.118Z",
       "number": 2,
+      "tool": "simulate_loan",
+      "tier": "T1",
+      "arguments": {},
+      "rationale": "Recommend after choosing a school",
+      "status": "OK",
+      "result": {
+       "advice": {
+        "intent": "recommend",
+        "status": "needs_amount",
+        "product": {
+         "key": "commercial_student_demo",
+         "terms": [
+          24,
+          36,
+          48,
+          60
+         ],
+         "methods": [
+          "amortized",
+          "interest_only"
+         ],
+         "annual_rate": "0.045"
+        },
+        "constraints": {},
+        "plan_version": 1,
+        "ready_to_apply": false,
+        "assessment_version": 1
+       },
+       "plan_id": "1bcbabc7-425b-461d-941a-efe71331b72a",
+       "is_simulated": true
+      },
+      "call": {
+       "purpose": "loan_advice",
+       "provider": "system"
+      }
+     },
+     {
+      "id": "39735d30-adbd-4dce-80c3-cb6e92331240",
+      "created_at": "2026-10-15T15:01:01.119Z",
+      "number": 3,
       "tool": "",
       "tier": "",
       "arguments": {},
       "rationale": "",
       "status": "FINAL",
       "result": {
-       "answer": "Plan: Chulalongkorn University, 4 year(s), status: draft, total about 2,351,350 THB. Funding gap about 851,350 THB; I can simulate a loan if you like."
+       "answer": "Great, Chulalongkorn University it is! Over 4 years it comes to about 2,351,350 THB. For the loan, I'd start with the commercial study loan example: 4.5% a year in this example, repaid in monthly installments. If you're still short, tell me how much you'd like to borrow and I'll find a plan and work out the monthly payment."
       },
       "call": {
-       "mode": "mock",
-       "model": "agent-rules",
-       "purpose": "plan",
-       "attempts": 1,
-       "provider": "rules",
-       "error_code": null,
-       "request_id": null,
-       "duration_ms": 0.0,
-       "http_status": null,
-       "input_tokens": 0,
-       "output_tokens": 0,
-       "prompt_version": "planning-1.2"
+       "mode": "deterministic",
+       "purpose": "loan_advice_reply",
+       "provider": "system"
       }
      }
     ],
@@ -1566,122 +1430,133 @@
     "kind": "user"
    },
    {
-    "id": "2431cbb4-b454-4d75-a7e5-1fcbf42aa46d",
+    "id": "b90b493b-15f3-44dd-b722-043ab5baadef",
     "type": "agentsession",
-    "created_at": "2026-10-13T11:21:32.940Z",
-    "goal": "Simulate a loan over 48 months",
+    "created_at": "2026-10-15T15:01:01.138Z",
+    "goal": "I want to borrow 200000 THB",
     "locale": "en",
     "mode": "mock",
     "status": "COMPLETED",
-    "final_answer": "Simulated loan: principal 851,350 THB, 48 months, 6.0% a year, up to about 19,994 THB a month. Say \"confirm plan\" when ready. All money and loans are simulated.",
+    "final_answer": "After comparing the available loans, I recommend the commercial study loan example: 200,000.00 THB over 48 installments at 4.5% a year. You'd pay at most 4,560.70 THB a month, 18,913.45 THB in interest and 0.00 THB in fees, 218,913.45 THB in total. If this plan works for you, tap “Apply with this plan”; if the monthly payment or interest feels high, just tell me.",
     "error_code": "",
     "write_count": 1,
-    "updated_at": "2026-10-13T11:21:32.968Z",
-    "conversation": "253ea1db-1fd7-40eb-a2c7-f48603250fd6",
+    "updated_at": "2026-10-15T15:01:01.224Z",
+    "conversation": "785bb3c7-40a1-4bbc-a533-384c39cfcd8a",
     "cards": [
      {
-      "gap": "851350.00",
-      "plan": {
-       "id": "7c5dd1d8-851f-4944-a27d-82647c0a71eb",
-       "gap": "851350.00",
-       "loan": {
-        "id": "dcb02102-73a9-482f-ad94-cfcaedbacb94",
+      "type": "loan_advice",
+      "advice": {
+       "change": null,
+       "intent": "recommend",
+       "status": "recommended",
+       "quote_id": "8fb0bf1b-49d2-4c0b-b65e-d4feb19ab08f",
+       "selected": {
+        "fees": "0.00",
+        "method": "amortized",
         "months": 48,
+        "product": "commercial_student_demo",
         "currency": "THB",
-        "principal": "851350.00",
-        "annual_rate": "0.06",
-        "monthly_payment": "19993.98",
-        "total_repayment": "959711.01"
+        "principal": "200000.00",
+        "annual_rate": "0.045",
+        "net_proceeds": "200000.00",
+        "last_due_date": "2031-08-01",
+        "first_due_date": "2027-09-01",
+        "total_interest": "18913.45",
+        "monthly_payment": "4560.70",
+        "total_repayment": "218913.45",
+        "interest_only_months": 0,
+        "interest_only_payment": null
        },
-       "total": "2351350.00",
-       "years": 4,
-       "school": {
-        "name": {
-         "en": "Chulalongkorn University",
-         "zh": "朱拉隆功大学"
-        },
-        "currency": "THB"
-       },
-       "status": "DRAFT",
-       "version": 2,
-       "currency": "THB",
-       "available": "1500000.00",
-       "converted": null,
-       "school_key": "chulalongkorn",
-       "start_date": "2027-08-02",
-       "enrolled_at": null,
-       "confirmed_at": null,
-       "is_simulated": true,
-       "funds_currency": "THB",
-       "available_funds": "1500000.00"
+       "constraints": {},
+       "alternatives": [
+        {
+         "fees": "0.00",
+         "method": "amortized",
+         "months": 48,
+         "product": "custom",
+         "currency": "THB",
+         "principal": "200000.00",
+         "annual_rate": "0.06",
+         "net_proceeds": "200000.00",
+         "last_due_date": "2031-08-01",
+         "first_due_date": "2027-09-01",
+         "total_interest": "25456.26",
+         "monthly_payment": "4697.01",
+         "total_repayment": "225456.26",
+         "interest_only_months": 0,
+         "interest_only_payment": null
+        }
+       ],
+       "plan_version": 1,
+       "ready_to_apply": false,
+       "assessment_version": 2
       },
-      "type": "loan",
-      "gap_currency": "THB",
-      "principal_fx": {
-       "rate": "1",
-       "amount": "851350.00",
-       "source": null,
-       "currency": "THB",
-       "rate_date": null
-      }
+      "plan_id": "1bcbabc7-425b-461d-941a-efe71331b72a",
+      "is_simulated": true
      }
     ],
     "steps": [
      {
-      "id": "c3eb1ce1-6c45-4c1a-98c9-8f3f7e97c94c",
-      "created_at": "2026-10-13T11:21:32.967Z",
+      "id": "550bfd22-a04e-4bd8-9c14-f2a6413d75a1",
+      "created_at": "2026-10-15T15:01:01.220Z",
       "number": 1,
       "tool": "simulate_loan",
       "tier": "T1",
       "arguments": {
-       "months": 48
+       "principal": "200000.00",
+       "principal_currency": "THB"
       },
-      "rationale": "Simulate a loan for the gap",
+      "rationale": "Recommend a loan and address the user's concern",
       "status": "OK",
       "result": {
-       "gap": "851350.00",
-       "plan": {
-        "id": "7c5dd1d8-851f-4944-a27d-82647c0a71eb",
-        "gap": "851350.00",
-        "loan": {
-         "id": "dcb02102-73a9-482f-ad94-cfcaedbacb94",
+       "advice": {
+        "change": null,
+        "intent": "recommend",
+        "status": "recommended",
+        "quote_id": "8fb0bf1b-49d2-4c0b-b65e-d4feb19ab08f",
+        "selected": {
+         "fees": "0.00",
+         "method": "amortized",
          "months": 48,
+         "product": "commercial_student_demo",
          "currency": "THB",
-         "principal": "851350.00",
-         "annual_rate": "0.06",
-         "monthly_payment": "19993.98",
-         "total_repayment": "959711.01"
+         "principal": "200000.00",
+         "annual_rate": "0.045",
+         "net_proceeds": "200000.00",
+         "last_due_date": "2031-08-01",
+         "first_due_date": "2027-09-01",
+         "total_interest": "18913.45",
+         "monthly_payment": "4560.70",
+         "total_repayment": "218913.45",
+         "interest_only_months": 0,
+         "interest_only_payment": null
         },
-        "total": "2351350.00",
-        "years": 4,
-        "school": {
-         "name": {
-          "en": "Chulalongkorn University",
-          "zh": "朱拉隆功大学"
-         },
-         "currency": "THB"
-        },
-        "status": "DRAFT",
-        "version": 2,
-        "currency": "THB",
-        "available": "1500000.00",
-        "converted": null,
-        "school_key": "chulalongkorn",
-        "start_date": "2027-08-02",
-        "enrolled_at": null,
-        "confirmed_at": null,
-        "is_simulated": true,
-        "funds_currency": "THB",
-        "available_funds": "1500000.00"
+        "constraints": {},
+        "alternatives": [
+         {
+          "fees": "0.00",
+          "method": "amortized",
+          "months": 48,
+          "product": "custom",
+          "currency": "THB",
+          "principal": "200000.00",
+          "annual_rate": "0.06",
+          "net_proceeds": "200000.00",
+          "last_due_date": "2031-08-01",
+          "first_due_date": "2027-09-01",
+          "total_interest": "25456.26",
+          "monthly_payment": "4697.01",
+          "total_repayment": "225456.26",
+          "interest_only_months": 0,
+          "interest_only_payment": null
+         }
+        ],
+        "plan_version": 1,
+        "ready_to_apply": false,
+        "assessment_version": 2
        },
-       "gap_currency": "THB",
-       "principal_fx": {
-        "rate": "1",
-        "amount": "851350.00",
-        "source": null,
-        "currency": "THB",
-        "rate_date": null
-       }
+       "plan_id": "1bcbabc7-425b-461d-941a-efe71331b72a",
+       "is_simulated": true
       },
       "call": {
        "mode": "mock",
@@ -1693,14 +1568,15 @@
        "request_id": null,
        "duration_ms": 0.0,
        "http_status": null,
+       "raw_excerpt": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.2"
+       "prompt_version": "planning-2.4"
       }
      },
      {
-      "id": "d7f914dc-6060-4a10-9aac-4a8fa498ef2d",
-      "created_at": "2026-10-13T11:21:32.968Z",
+      "id": "7a8ca046-e10a-446a-91e4-7ca358ff35ca",
+      "created_at": "2026-10-15T15:01:01.221Z",
       "number": 2,
       "tool": "",
       "tier": "",
@@ -1708,21 +1584,12 @@
       "rationale": "",
       "status": "FINAL",
       "result": {
-       "answer": "Simulated loan: principal 851,350 THB, 48 months, 6.0% a year, up to about 19,994 THB a month. Say \"confirm plan\" when ready. All money and loans are simulated."
+       "answer": "After comparing the available loans, I recommend the commercial study loan example: 200,000.00 THB over 48 installments at 4.5% a year. You'd pay at most 4,560.70 THB a month, 18,913.45 THB in interest and 0.00 THB in fees, 218,913.45 THB in total. If this plan works for you, tap “Apply with this plan”; if the monthly payment or interest feels high, just tell me."
       },
       "call": {
-       "mode": "mock",
-       "model": "agent-rules",
-       "purpose": "plan",
-       "attempts": 1,
-       "provider": "rules",
-       "error_code": null,
-       "request_id": null,
-       "duration_ms": 0.0,
-       "http_status": null,
-       "input_tokens": 0,
-       "output_tokens": 0,
-       "prompt_version": "planning-1.2"
+       "mode": "deterministic",
+       "purpose": "loan_advice_reply",
+       "provider": "system"
       }
      }
     ],
@@ -1731,219 +1598,18 @@
     "kind": "user"
    },
    {
-    "id": "5a390dca-7f29-4a57-9357-c139e15537f3",
+    "id": "81556c27-6a73-4817-9a1a-36e4f262521a",
     "type": "agentsession",
-    "created_at": "2026-10-13T11:21:32.982Z",
-    "goal": "Confirm the plan",
-    "locale": "en",
-    "mode": "mock",
-    "status": "COMPLETED",
-    "final_answer": "A plan confirmation is ready; confirm it on the card below.",
-    "error_code": "",
-    "write_count": 0,
-    "updated_at": "2026-10-13T11:21:33.011Z",
-    "conversation": "253ea1db-1fd7-40eb-a2c7-f48603250fd6",
-    "cards": [
-     {
-      "plan": {
-       "id": "7c5dd1d8-851f-4944-a27d-82647c0a71eb",
-       "gap": "851350.00",
-       "loan": {
-        "id": "dcb02102-73a9-482f-ad94-cfcaedbacb94",
-        "months": 48,
-        "currency": "THB",
-        "principal": "851350.00",
-        "annual_rate": "0.06",
-        "monthly_payment": "19993.98",
-        "total_repayment": "959711.01"
-       },
-       "total": "2351350.00",
-       "years": 4,
-       "school": {
-        "name": {
-         "en": "Chulalongkorn University",
-         "zh": "朱拉隆功大学"
-        },
-        "currency": "THB"
-       },
-       "status": "DRAFT",
-       "version": 2,
-       "currency": "THB",
-       "available": "1500000.00",
-       "converted": null,
-       "school_key": "chulalongkorn",
-       "start_date": "2027-08-02",
-       "enrolled_at": null,
-       "confirmed_at": null,
-       "is_simulated": true,
-       "funds_currency": "THB",
-       "available_funds": "1500000.00"
-      },
-      "type": "confirmation",
-      "action": "plan.confirm",
-      "details": {
-       "gap": "851350.00",
-       "total": "2351350.00",
-       "years": 4,
-       "plan_id": "7c5dd1d8-851f-4944-a27d-82647c0a71eb",
-       "currency": "THB",
-       "school_key": "chulalongkorn"
-      },
-      "expires_at": "2026-10-13T11:36:33.004332+00:00",
-      "pending_action_id": "7e217805-7576-4c7f-9b72-ef5925fab401"
-     }
-    ],
-    "steps": [
-     {
-      "id": "d2b130d7-f563-46dd-b05c-bea23308d419",
-      "created_at": "2026-10-13T11:21:33.004Z",
-      "number": 1,
-      "tool": "confirm_plan",
-      "tier": "T2",
-      "arguments": {},
-      "rationale": "The user wants to finalise the plan",
-      "status": "PROPOSED",
-      "result": {
-       "action": "plan.confirm",
-       "amount": null,
-       "details": {
-        "gap": "851350.00",
-        "total": "2351350.00",
-        "years": 4,
-        "plan_id": "7c5dd1d8-851f-4944-a27d-82647c0a71eb",
-        "currency": "THB",
-        "school_key": "chulalongkorn"
-       },
-       "currency": "",
-       "executed": false,
-       "requires": [
-        "user_confirmation"
-       ],
-       "target_id": "7c5dd1d8-851f-4944-a27d-82647c0a71eb",
-       "expires_at": "2026-10-13T11:36:33.004332+00:00",
-       "pending_action_id": "7e217805-7576-4c7f-9b72-ef5925fab401"
-      },
-      "call": {
-       "mode": "mock",
-       "model": "agent-rules",
-       "purpose": "plan",
-       "attempts": 1,
-       "provider": "rules",
-       "error_code": null,
-       "request_id": null,
-       "duration_ms": 0.0,
-       "http_status": null,
-       "input_tokens": 0,
-       "output_tokens": 0,
-       "prompt_version": "planning-1.2"
-      }
-     },
-     {
-      "id": "3e306b56-c647-4a93-b409-d8edb60d9ac7",
-      "created_at": "2026-10-13T11:21:33.010Z",
-      "number": 2,
-      "tool": "",
-      "tier": "",
-      "arguments": {},
-      "rationale": "",
-      "status": "FINAL",
-      "result": {
-       "answer": "A plan confirmation is ready; confirm it on the card below."
-      },
-      "call": {
-       "mode": "mock",
-       "model": "agent-rules",
-       "purpose": "plan",
-       "attempts": 1,
-       "provider": "rules",
-       "error_code": null,
-       "request_id": null,
-       "duration_ms": 0.0,
-       "http_status": null,
-       "input_tokens": 0,
-       "output_tokens": 0,
-       "prompt_version": "planning-1.2"
-      }
-     }
-    ],
-    "pending_actions": [
-     {
-      "id": "7e217805-7576-4c7f-9b72-ef5925fab401",
-      "type": "agentpendingaction",
-      "created_at": "2026-10-13T11:21:33.005Z",
-      "session": "5a390dca-7f29-4a57-9357-c139e15537f3",
-      "step": "d2b130d7-f563-46dd-b05c-bea23308d419",
-      "action": "plan.confirm",
-      "tool": "confirm_plan",
-      "arguments": {
-       "gap": "851350.00",
-       "total": "2351350.00",
-       "years": 4,
-       "plan_id": "7c5dd1d8-851f-4944-a27d-82647c0a71eb",
-       "currency": "THB",
-       "school_key": "chulalongkorn"
-      },
-      "target_id": "7c5dd1d8-851f-4944-a27d-82647c0a71eb",
-      "amount": null,
-      "currency": "",
-      "status": "CONFIRMED",
-      "expires_at": "2026-10-13T11:36:33.004Z",
-      "decided_at": "2026-10-13T11:21:33.077Z",
-      "result": {
-       "plan": {
-        "id": "7c5dd1d8-851f-4944-a27d-82647c0a71eb",
-        "gap": "851350.00",
-        "loan": {
-         "id": "dcb02102-73a9-482f-ad94-cfcaedbacb94",
-         "months": 48,
-         "currency": "THB",
-         "principal": "851350.00",
-         "annual_rate": "0.06",
-         "monthly_payment": "19993.98",
-         "total_repayment": "959711.01"
-        },
-        "total": "2351350.00",
-        "years": 4,
-        "school": {
-         "name": {
-          "en": "Chulalongkorn University",
-          "zh": "朱拉隆功大学"
-         },
-         "currency": "THB"
-        },
-        "status": "CONFIRMED",
-        "version": 3,
-        "currency": "THB",
-        "available": "1500000.00",
-        "converted": null,
-        "school_key": "chulalongkorn",
-        "start_date": "2027-08-02",
-        "enrolled_at": null,
-        "confirmed_at": "2026-10-13T11:21:33.072487+00:00",
-        "is_simulated": true,
-        "funds_currency": "THB",
-        "available_funds": "1500000.00"
-       }
-      },
-      "version": 2
-     }
-    ],
-    "is_simulated": true,
-    "kind": "user"
-   },
-   {
-    "id": "88920baf-d3cd-4a2d-811a-a88be5fe1ddb",
-    "type": "agentsession",
-    "created_at": "2026-10-13T11:21:33.082Z",
+    "created_at": "2026-10-15T15:01:01.458Z",
     "goal": "",
     "locale": "en",
     "mode": "system",
     "status": "COMPLETED",
-    "final_answer": "Your study plan is saved. Let's start preparing for enrollment. A confirmed plan is not an admission offer: are you awaiting an offer, holding an offer, or preparing to travel? We can discuss housing, departure preparation or your first-month budget. School questions are still welcome.",
+    "final_answer": "Your plan and loan application are in, with a simulated admission notice attached. To-dos, bills and the wallet are open now. Next, check the documents in your to-dos and sign. When you need to exchange or send money to the school, I'm here.",
     "error_code": "",
     "write_count": 0,
-    "updated_at": "2026-10-13T11:21:33.082Z",
-    "conversation": "253ea1db-1fd7-40eb-a2c7-f48603250fd6",
+    "updated_at": "2026-10-15T15:01:01.458Z",
+    "conversation": "785bb3c7-40a1-4bbc-a533-384c39cfcd8a",
     "cards": [],
     "steps": [],
     "pending_actions": [],
@@ -1951,761 +1617,398 @@
     "kind": "assistant"
    },
    {
-    "id": "19cd4217-90f1-4b82-9554-afc34ecd676b",
+    "id": "8e0b9421-65ef-445f-9530-b163a151d6b9",
     "type": "agentsession",
-    "created_at": "2026-10-13T11:21:33.098Z",
-    "goal": "What are the school's dorms and surroundings like?",
+    "created_at": "2026-10-15T15:01:01.486Z",
+    "goal": "Which bills are due?",
     "locale": "en",
     "mode": "mock",
     "status": "COMPLETED",
-    "final_answer": "Chulalongkorn University is in Bangkok. Campus has Chulalongkorn University Central Library, CU iHouse, CU Sports Complex; nearby food: Faculty canteens, Samyan Mitrtown food court, Banthat Thong Road street food; weekends: Siam Square, Lumphini Park, Jim Thompson House. (Sample data from public sources; confirm with the school before paying.)",
+    "final_answer": "Coming up: 2027-08-02 Student health insurance 10,000 THB; 2027-08-02 Preparation course (June-July before year 1) 41,400 THB; 2027-08-02 Year 1 summer session 46,650 THB; 2027-08-02 Tuition and fees per semester (includes 50,000 confirmation fee in year 1) 117,600 THB. Next, check the documents in your to-dos and sign. When you need to exchange or send money to the school, I'm here.",
     "error_code": "",
     "write_count": 0,
-    "updated_at": "2026-10-13T11:21:33.120Z",
-    "conversation": "253ea1db-1fd7-40eb-a2c7-f48603250fd6",
+    "updated_at": "2026-10-15T15:01:01.517Z",
+    "conversation": "785bb3c7-40a1-4bbc-a533-384c39cfcd8a",
     "cards": [
      {
-      "type": "school",
-      "sample": true,
-      "school": {
-       "key": "chulalongkorn",
-       "food": [
-        {
-         "kind": "canteen",
-         "name": {
-          "en": "Faculty canteens",
-          "zh": "各学院食堂"
-         },
-         "note": {
-          "en": "Cheapest meals on campus.",
-          "zh": "校内最便宜的餐食。"
-         },
-         "source_url": null,
-         "distance_km": 0.0,
-         "typical_cost": "50.00"
+      "type": "bills",
+      "bills": [
+       {
+        "id": "a06f0ab1-cc76-433f-8a26-85a59def542f",
+        "kind": "insurance",
+        "label": {
+         "en": "Student health insurance",
+         "zh": "学生医疗保险"
         },
-        {
-         "kind": "food court",
-         "name": {
-          "en": "Samyan Mitrtown food court",
-          "zh": "Samyan Mitrtown 美食广场"
-         },
-         "note": {
-          "en": "24-hour mall next to campus.",
-          "zh": "校园旁的 24 小时商场。"
-         },
-         "source_url": null,
-         "distance_km": 0.5,
-         "typical_cost": "90.00"
-        },
-        {
-         "kind": "street food",
-         "name": {
-          "en": "Banthat Thong Road street food",
-          "zh": "班塔通路街头美食"
-         },
-         "note": {
-          "en": "Well-known evening food street beside campus.",
-          "zh": "校园旁知名的夜间美食街。"
-         },
-         "source_url": null,
-         "distance_km": 0.8,
-         "typical_cost": "80.00"
-        },
-        {
-         "kind": "food court",
-         "name": {
-          "en": "MBK Center food court",
-          "zh": "MBK 中心美食广场"
-         },
-         "note": {
-          "en": "Budget mall food court near National Stadium BTS.",
-          "zh": "国家体育场站附近的平价商场美食广场。"
-         },
-         "source_url": null,
-         "distance_km": 1.5,
-         "typical_cost": "80.00"
-        },
-        {
-         "kind": "food court",
-         "name": {
-          "en": "Siam Paragon Food Hall",
-          "zh": "暹罗百丽宫美食广场"
-         },
-         "note": {
-          "en": "Wider choice, higher prices.",
-          "zh": "选择更多，价格偏高。"
-         },
-         "source_url": null,
-         "distance_km": 2.0,
-         "typical_cost": "150.00"
-        }
-       ],
-       "costs": [
-        {
-         "label": {
-          "en": "Tuition and fees per semester (includes 50,000 confirmation fee in year 1)",
-          "zh": "每学期学费及杂费（第一年含 50,000 确认费）"
-         },
-         "lower": null,
-         "quote": "117,600",
-         "upper": null,
-         "amount": "117600.00",
-         "period": "semester",
-         "cost_id": "tuition_semester",
-         "category": "tuition",
-         "estimate": false,
-         "source_url": "https://bba.acc.chula.ac.th/tuition-and-fees"
-        },
-        {
-         "label": {
-          "en": "Preparation course (June-July before year 1)",
-          "zh": "入学预备课程（第一年前 6-7 月）"
-         },
-         "lower": null,
-         "quote": "41,400",
-         "upper": null,
-         "amount": "41400.00",
-         "period": "once",
-         "cost_id": "preparation_course",
-         "category": "tuition",
-         "estimate": false,
-         "source_url": "https://bba.acc.chula.ac.th/tuition-and-fees"
-        },
-        {
-         "label": {
-          "en": "Year 1 summer session",
-          "zh": "第一年暑期学期"
-         },
-         "lower": null,
-         "quote": "46,650",
-         "upper": null,
-         "amount": "46650.00",
-         "period": "once",
-         "cost_id": "summer_session_year1",
-         "category": "tuition",
-         "estimate": false,
-         "source_url": "https://bba.acc.chula.ac.th/tuition-and-fees"
-        },
-        {
-         "label": {
-          "en": "CU iHouse studio, 6+ month contract (two sharers split it)",
-          "zh": "CU iHouse 单间公寓，6 个月以上合同（两人合住可分摊）"
-         },
-         "lower": null,
-         "quote": "13,000 THB",
-         "upper": null,
-         "amount": "13000.00",
-         "period": "month",
-         "cost_id": "ihouse_studio",
-         "category": "housing",
-         "estimate": false,
-         "source_url": "https://www.inter.chula.ac.th/international-students/campus-life/accommodation/"
-        },
-        {
-         "label": {
-          "en": "Room security deposit",
-          "zh": "住宿押金"
-         },
-         "lower": "13000.00",
-         "quote": null,
-         "upper": "26000.00",
-         "amount": null,
-         "period": "once",
-         "cost_id": "housing_deposit",
-         "category": "deposit",
-         "estimate": true,
-         "source_url": null
-        },
-        {
-         "label": {
-          "en": "Electricity and water (not included in rent)",
-          "zh": "水电费（不含在房租内）"
-         },
-         "lower": "800.00",
-         "quote": null,
-         "upper": "2000.00",
-         "amount": null,
-         "period": "month",
-         "cost_id": "utilities",
-         "category": "housing",
-         "estimate": true,
-         "source_url": null
-        },
-        {
-         "label": {
-          "en": "Food (canteens, food courts, street food)",
-          "zh": "餐饮（食堂、美食广场、街头小吃）"
-         },
-         "lower": "6000.00",
-         "quote": null,
-         "upper": "10000.00",
-         "amount": null,
-         "period": "month",
-         "cost_id": "food_monthly",
-         "category": "food",
-         "estimate": true,
-         "source_url": null
-        },
-        {
-         "label": {
-          "en": "BTS/MRT, buses and taxis",
-          "zh": "轻轨/地铁、公交和出租车"
-         },
-         "lower": "800.00",
-         "quote": null,
-         "upper": "2000.00",
-         "amount": null,
-         "period": "month",
-         "cost_id": "transport_monthly",
-         "category": "transport",
-         "estimate": true,
-         "source_url": null
-        },
-        {
-         "label": {
-          "en": "Mobile plan with data",
-          "zh": "手机套餐及流量"
-         },
-         "lower": "300.00",
-         "quote": null,
-         "upper": "700.00",
-         "amount": null,
-         "period": "month",
-         "cost_id": "phone_internet",
-         "category": "communications",
-         "estimate": true,
-         "source_url": null
-        },
-        {
-         "label": {
-          "en": "Student health insurance",
-          "zh": "学生医疗保险"
-         },
-         "lower": "5000.00",
-         "quote": null,
-         "upper": "15000.00",
-         "amount": null,
-         "period": "year",
-         "cost_id": "health_insurance",
-         "category": "insurance",
-         "estimate": true,
-         "source_url": null
-        },
-        {
-         "label": {
-          "en": "Non-Immigrant ED visa, single entry",
-          "zh": "非移民教育签证（单次入境）"
-         },
-         "lower": null,
-         "quote": "2,000",
-         "upper": null,
-         "amount": "2000.00",
-         "period": "once",
-         "cost_id": "visa_non_immigrant",
-         "category": "visa",
-         "estimate": false,
-         "source_url": "https://bangkok.immigration.go.th/en/fee_en/"
-        },
-        {
-         "label": {
-          "en": "Annual extension of stay",
-          "zh": "每年居留延期费"
-         },
-         "lower": null,
-         "quote": "1,900",
-         "upper": null,
-         "amount": "1900.00",
-         "period": "year",
-         "cost_id": "visa_extension",
-         "category": "visa",
-         "estimate": false,
-         "source_url": "https://bangkok.immigration.go.th/en/fee_en/"
-        },
-        {
-         "label": {
-          "en": "Return trip home (economy flight)",
-          "zh": "回国往返机票（经济舱）"
-         },
-         "lower": "6000.00",
-         "quote": null,
-         "upper": "20000.00",
-         "amount": null,
-         "period": "year",
-         "cost_id": "home_trip",
-         "category": "travel",
-         "estimate": true,
-         "source_url": null
-        },
-        {
-         "label": {
-          "en": "Settling in (bedding, SIM, household items)",
-          "zh": "安家费用（床品、电话卡、日用品）"
-         },
-         "lower": "4000.00",
-         "quote": null,
-         "upper": "10000.00",
-         "amount": null,
-         "period": "once",
-         "cost_id": "settling_in",
-         "category": "settlement",
-         "estimate": true,
-         "source_url": null
-        },
-        {
-         "label": {
-          "en": "Books, laptop software and supplies",
-          "zh": "教材、软件及文具"
-         },
-         "lower": "2000.00",
-         "quote": null,
-         "upper": "5000.00",
-         "amount": null,
-         "period": "semester",
-         "cost_id": "books_supplies",
-         "category": "study_materials",
-         "estimate": true,
-         "source_url": null
-        }
-       ],
-       "notes": [
-        {
-         "en": "Sample data from public sources; confirm with the school before paying.",
-         "zh": "示例数据，来自公开资料；付款前请向学校确认。"
-        },
-        {
-         "en": "Fee table applies to students admitted from 2026 onward; the 50,000 enrollment confirmation is paid early and counted in year 1 semester 1.",
-         "zh": "费用表适用于 2026 年及以后入学者；50,000 入学确认费提前缴纳，计入第一年第一学期。"
-        },
-        {
-         "en": "2026 international admits received first-year scholarships; 2027 offers are not confirmed.",
-         "zh": "2026 级国际学生获得第一年奖学金；2027 级是否提供尚未确认。"
-        },
-        {
-         "en": "2027 dates are projected from the 2026 calendar (3 Aug to 5 Dec 2026).",
-         "zh": "2027 年日期根据 2026 年校历（2026 年 8 月 3 日至 12 月 5 日）推算。"
-        },
-        {
-         "en": "Food, transport, utilities, insurance, deposit, travel and supplies are estimates.",
-         "zh": "餐饮、交通、水电、保险、押金、旅行和学习用品为估算值。"
-        }
-       ],
-       "sample": true,
-       "school": {
-        "city": {
-         "en": "Bangkok",
-         "zh": "曼谷"
-        },
-        "name": {
-         "en": "Chulalongkorn University",
-         "zh": "朱拉隆功大学"
-        },
-        "campus": "Pathum Wan",
-        "country": {
-         "en": "Thailand",
-         "zh": "泰国"
-        },
-        "program": {
-         "en": "BBA International Program, Chulalongkorn Business School",
-         "zh": "工商管理学士国际课程（朱拉隆功商学院）"
-        },
-        "website": "https://bba.acc.chula.ac.th/",
+        "amount": "10000.00",
+        "status": "DUE",
+        "paid_at": null,
         "currency": "THB",
-        "language": "English",
-        "country_code": "TH",
-        "duration_years": 4
+        "due_date": "2027-08-02",
+        "is_simulated": true,
+        "paid_by_loan": false
        },
-       "sources": [
-        {
-         "url": "https://bba.acc.chula.ac.th/tuition-and-fees",
-         "title": "BBA International, Chulalongkorn - Tuition & Fees",
-         "accessed": "2026-10-12"
+       {
+        "id": "01f916b2-7ea8-4288-bca1-bc68751078e0",
+        "kind": "tuition",
+        "label": {
+         "en": "Preparation course (June-July before year 1)",
+         "zh": "入学预备课程（第一年前 6-7 月）"
         },
-        {
-         "url": "https://bba.acc.chula.ac.th/international-students",
-         "title": "BBA International, Chulalongkorn - International Students (scholarships)",
-         "accessed": "2026-10-12"
-        },
-        {
-         "url": "https://bba.acc.chula.ac.th/academic-calendar",
-         "title": "BBA International, Chulalongkorn - Academic Calendar AY2026",
-         "accessed": "2026-10-12"
-        },
-        {
-         "url": "https://www.inter.chula.ac.th/international-students/campus-life/accommodation/",
-         "title": "Chulalongkorn OIA - Accommodation (CU iHouse)",
-         "accessed": "2026-10-12"
-        },
-        {
-         "url": "https://bangkok.immigration.go.th/en/fee_en/",
-         "title": "Immigration Division 1 - Fees",
-         "accessed": "2026-10-12"
-        }
-       ],
-       "version": 1,
-       "calendar": {
-        "intake": "2027-08",
-        "end_date": "2027-12-04",
-        "source_url": "https://bba.acc.chula.ac.th/academic-calendar",
-        "start_date": "2027-08-02",
-        "semesters_per_year": 2
+        "amount": "41400.00",
+        "status": "DUE",
+        "paid_at": null,
+        "currency": "THB",
+        "due_date": "2027-08-02",
+        "is_simulated": true,
+        "paid_by_loan": false
        },
-       "facilities": [
-        {
-         "kind": "library",
-         "name": {
-          "en": "Chulalongkorn University Central Library",
-          "zh": "朱拉隆功大学中央图书馆"
-         },
-         "note": {
-          "en": "Main library with long opening hours and study rooms.",
-          "zh": "主图书馆，开放时间长，设有自习室。"
-         },
-         "source_url": null,
-         "distance_km": null,
-         "typical_cost": null
+       {
+        "id": "ac15adda-ab27-4df7-b12b-8c973d2a599b",
+        "kind": "tuition",
+        "label": {
+         "en": "Year 1 summer session",
+         "zh": "第一年暑期学期"
         },
-        {
-         "kind": "dormitory",
-         "name": {
-          "en": "CU iHouse",
-          "zh": "CU iHouse 国际公寓"
-         },
-         "note": {
-          "en": "26-storey on-campus residence for international students.",
-          "zh": "面向国际学生的 26 层校内公寓。"
-         },
-         "source_url": null,
-         "distance_km": null,
-         "typical_cost": null
+        "amount": "46650.00",
+        "status": "DUE",
+        "paid_at": null,
+        "currency": "THB",
+        "due_date": "2027-08-02",
+        "is_simulated": true,
+        "paid_by_loan": false
+       },
+       {
+        "id": "a5cc5c11-9a0b-461b-af3a-476b7d6e27df",
+        "kind": "tuition",
+        "label": {
+         "en": "Tuition and fees per semester (includes 50,000 confirmation fee in year 1)",
+         "zh": "每学期学费及杂费（第一年含 50,000 确认费）"
         },
-        {
-         "kind": "sports",
-         "name": {
-          "en": "CU Sports Complex",
-          "zh": "朱拉隆功大学体育中心"
-         },
-         "note": {
-          "en": "Pools, gym, courts and a stadium.",
-          "zh": "游泳池、健身房、球场和体育场。"
-         },
-         "source_url": null,
-         "distance_km": null,
-         "typical_cost": null
+        "amount": "117600.00",
+        "status": "DUE",
+        "paid_at": null,
+        "currency": "THB",
+        "due_date": "2027-08-02",
+        "is_simulated": true,
+        "paid_by_loan": false
+       },
+       {
+        "id": "29c1c35b-71a7-4e54-b21e-705fee125d1c",
+        "kind": "visa",
+        "label": {
+         "en": "Annual extension of stay",
+         "zh": "每年居留延期费"
         },
-        {
-         "kind": "clinic",
-         "name": {
-          "en": "CU Health Service Center",
-          "zh": "朱拉隆功大学健康服务中心"
-         },
-         "note": {
-          "en": "On-campus clinic for students.",
-          "zh": "面向学生的校内诊所。"
-         },
-         "source_url": null,
-         "distance_km": null,
-         "typical_cost": null
+        "amount": "1900.00",
+        "status": "DUE",
+        "paid_at": null,
+        "currency": "THB",
+        "due_date": "2027-08-02",
+        "is_simulated": true,
+        "paid_by_loan": false
+       },
+       {
+        "id": "61f6635f-1485-4d52-9303-592555a9e229",
+        "kind": "visa",
+        "label": {
+         "en": "Non-Immigrant ED visa, single entry",
+         "zh": "非移民教育签证（单次入境）"
         },
-        {
-         "kind": "counseling",
-         "name": {
-          "en": "Chula Student Wellness",
-          "zh": "朱拉学生身心健康中心"
-         },
-         "note": {
-          "en": "Counselling and mental health support.",
-          "zh": "提供心理咨询和支持。"
-         },
-         "source_url": null,
-         "distance_km": null,
-         "typical_cost": null
+        "amount": "2000.00",
+        "status": "DUE",
+        "paid_at": null,
+        "currency": "THB",
+        "due_date": "2027-08-02",
+        "is_simulated": true,
+        "paid_by_loan": false
+       },
+       {
+        "id": "b1e13816-0bb1-4a3f-91a9-cd4e514d9274",
+        "kind": "tuition",
+        "label": {
+         "en": "Tuition and fees per semester (includes 50,000 confirmation fee in year 1)",
+         "zh": "每学期学费及杂费（第一年含 50,000 确认费）"
         },
-        {
-         "kind": "park",
-         "name": {
-          "en": "Chulalongkorn Centenary Park",
-          "zh": "朱拉隆功百年纪念公园"
-         },
-         "note": {
-          "en": "Green park next to campus.",
-          "zh": "校园旁的绿地公园。"
-         },
-         "source_url": null,
-         "distance_km": null,
-         "typical_cost": null
-        }
-       ],
-       "attractions": [
-        {
-         "kind": "shopping",
-         "name": {
-          "en": "Siam Square",
-          "zh": "暹罗广场"
-         },
-         "note": {
-          "en": "Shopping and youth hub next to campus.",
-          "zh": "校园旁的购物和年轻人聚集区。"
-         },
-         "source_url": null,
-         "distance_km": 1.0,
-         "typical_cost": "0.00"
+        "amount": "117600.00",
+        "status": "DUE",
+        "paid_at": null,
+        "currency": "THB",
+        "due_date": "2028-02-02",
+        "is_simulated": true,
+        "paid_by_loan": false
+       },
+       {
+        "id": "6af96df1-6409-4e20-bee8-ec9973e22f18",
+        "kind": "insurance",
+        "label": {
+         "en": "Student health insurance",
+         "zh": "学生医疗保险"
         },
-        {
-         "kind": "park",
-         "name": {
-          "en": "Lumphini Park",
-          "zh": "伦披尼公园"
-         },
-         "note": {
-          "en": "Large city park for running and outdoor exercise.",
-          "zh": "大型城市公园，适合跑步和户外运动。"
-         },
-         "source_url": null,
-         "distance_km": 2.0,
-         "typical_cost": "0.00"
+        "amount": "10000.00",
+        "status": "DUE",
+        "paid_at": null,
+        "currency": "THB",
+        "due_date": "2028-08-02",
+        "is_simulated": true,
+        "paid_by_loan": false
+       },
+       {
+        "id": "b7c3bf96-d74c-4e8f-a69d-ab1b0a08ba32",
+        "kind": "tuition",
+        "label": {
+         "en": "Tuition and fees per semester (includes 50,000 confirmation fee in year 1)",
+         "zh": "每学期学费及杂费（第一年含 50,000 确认费）"
         },
-        {
-         "kind": "museum",
-         "name": {
-          "en": "Jim Thompson House",
-          "zh": "金·汤普森之家"
-         },
-         "note": {
-          "en": "Traditional Thai house museum; entry fee applies.",
-          "zh": "泰式传统建筑博物馆，需购票。"
-         },
-         "source_url": null,
-         "distance_km": 2.0,
-         "typical_cost": null
+        "amount": "117600.00",
+        "status": "DUE",
+        "paid_at": null,
+        "currency": "THB",
+        "due_date": "2028-08-02",
+        "is_simulated": true,
+        "paid_by_loan": false
+       },
+       {
+        "id": "9899309c-382d-42fb-80b3-fba148d6a108",
+        "kind": "visa",
+        "label": {
+         "en": "Annual extension of stay",
+         "zh": "每年居留延期费"
         },
-        {
-         "kind": "temple",
-         "name": {
-          "en": "Wat Pho",
-          "zh": "卧佛寺"
-         },
-         "note": {
-          "en": "Reclining Buddha temple; entry fee for foreigners.",
-          "zh": "卧佛寺，外国游客需购票。"
-         },
-         "source_url": null,
-         "distance_km": 7.0,
-         "typical_cost": null
+        "amount": "1900.00",
+        "status": "DUE",
+        "paid_at": null,
+        "currency": "THB",
+        "due_date": "2028-08-02",
+        "is_simulated": true,
+        "paid_by_loan": false
+       },
+       {
+        "id": "b5fee856-cd3c-4f6d-a5e4-48c5028d9da1",
+        "kind": "tuition",
+        "label": {
+         "en": "Tuition and fees per semester (includes 50,000 confirmation fee in year 1)",
+         "zh": "每学期学费及杂费（第一年含 50,000 确认费）"
         },
-        {
-         "kind": "landmark",
-         "name": {
-          "en": "Grand Palace",
-          "zh": "大皇宫"
-         },
-         "note": {
-          "en": "Royal palace and Wat Phra Kaew; entry fee for foreigners.",
-          "zh": "大皇宫和玉佛寺，外国游客需购票。"
-         },
-         "source_url": null,
-         "distance_km": 7.0,
-         "typical_cost": null
-        }
-       ],
-       "observed_at": "2026-10-12"
-      }
+        "amount": "117600.00",
+        "status": "DUE",
+        "paid_at": null,
+        "currency": "THB",
+        "due_date": "2029-02-02",
+        "is_simulated": true,
+        "paid_by_loan": false
+       },
+       {
+        "id": "85c042d0-fd2d-4c03-a85a-c3b17b0bc04b",
+        "kind": "insurance",
+        "label": {
+         "en": "Student health insurance",
+         "zh": "学生医疗保险"
+        },
+        "amount": "10000.00",
+        "status": "DUE",
+        "paid_at": null,
+        "currency": "THB",
+        "due_date": "2029-08-02",
+        "is_simulated": true,
+        "paid_by_loan": false
+       }
+      ]
      }
     ],
     "steps": [
      {
-      "id": "ccf61675-862c-431d-9f23-d07bdcc6b02e",
-      "created_at": "2026-10-13T11:21:33.118Z",
+      "id": "a41b8fca-be6f-4d00-89ca-175eee06e79f",
+      "created_at": "2026-10-15T15:01:01.511Z",
       "number": 1,
-      "tool": "get_school_profile",
+      "tool": "list_bills",
       "tier": "T0",
-      "arguments": {
-       "school_key": "chulalongkorn"
-      },
-      "rationale": "Campus life for the school",
+      "arguments": {},
+      "rationale": "Upcoming bills",
       "status": "OK",
       "result": {
-       "key": "chulalongkorn",
-       "city": {
-        "en": "Bangkok",
-        "zh": "曼谷"
-       },
-       "food": [
+       "bills": [
         {
-         "kind": "canteen",
-         "name": {
-          "en": "Faculty canteens",
-          "zh": "各学院食堂"
+         "id": "a06f0ab1-cc76-433f-8a26-85a59def542f",
+         "kind": "insurance",
+         "label": {
+          "en": "Student health insurance",
+          "zh": "学生医疗保险"
          },
-         "distance_km": 0.0,
-         "typical_cost": "50.00"
+         "amount": "10000.00",
+         "status": "DUE",
+         "paid_at": null,
+         "currency": "THB",
+         "due_date": "2027-08-02",
+         "is_simulated": true,
+         "paid_by_loan": false
         },
         {
-         "kind": "food court",
-         "name": {
-          "en": "Samyan Mitrtown food court",
-          "zh": "Samyan Mitrtown 美食广场"
+         "id": "01f916b2-7ea8-4288-bca1-bc68751078e0",
+         "kind": "tuition",
+         "label": {
+          "en": "Preparation course (June-July before year 1)",
+          "zh": "入学预备课程（第一年前 6-7 月）"
          },
-         "distance_km": 0.5,
-         "typical_cost": "90.00"
+         "amount": "41400.00",
+         "status": "DUE",
+         "paid_at": null,
+         "currency": "THB",
+         "due_date": "2027-08-02",
+         "is_simulated": true,
+         "paid_by_loan": false
         },
         {
-         "kind": "street food",
-         "name": {
-          "en": "Banthat Thong Road street food",
-          "zh": "班塔通路街头美食"
+         "id": "ac15adda-ab27-4df7-b12b-8c973d2a599b",
+         "kind": "tuition",
+         "label": {
+          "en": "Year 1 summer session",
+          "zh": "第一年暑期学期"
          },
-         "distance_km": 0.8,
-         "typical_cost": "80.00"
+         "amount": "46650.00",
+         "status": "DUE",
+         "paid_at": null,
+         "currency": "THB",
+         "due_date": "2027-08-02",
+         "is_simulated": true,
+         "paid_by_loan": false
         },
         {
-         "kind": "food court",
-         "name": {
-          "en": "MBK Center food court",
-          "zh": "MBK 中心美食广场"
+         "id": "a5cc5c11-9a0b-461b-af3a-476b7d6e27df",
+         "kind": "tuition",
+         "label": {
+          "en": "Tuition and fees per semester (includes 50,000 confirmation fee in year 1)",
+          "zh": "每学期学费及杂费（第一年含 50,000 确认费）"
          },
-         "distance_km": 1.5,
-         "typical_cost": "80.00"
+         "amount": "117600.00",
+         "status": "DUE",
+         "paid_at": null,
+         "currency": "THB",
+         "due_date": "2027-08-02",
+         "is_simulated": true,
+         "paid_by_loan": false
         },
         {
-         "kind": "food court",
-         "name": {
-          "en": "Siam Paragon Food Hall",
-          "zh": "暹罗百丽宫美食广场"
+         "id": "29c1c35b-71a7-4e54-b21e-705fee125d1c",
+         "kind": "visa",
+         "label": {
+          "en": "Annual extension of stay",
+          "zh": "每年居留延期费"
          },
-         "distance_km": 2.0,
-         "typical_cost": "150.00"
+         "amount": "1900.00",
+         "status": "DUE",
+         "paid_at": null,
+         "currency": "THB",
+         "due_date": "2027-08-02",
+         "is_simulated": true,
+         "paid_by_loan": false
+        },
+        {
+         "id": "61f6635f-1485-4d52-9303-592555a9e229",
+         "kind": "visa",
+         "label": {
+          "en": "Non-Immigrant ED visa, single entry",
+          "zh": "非移民教育签证（单次入境）"
+         },
+         "amount": "2000.00",
+         "status": "DUE",
+         "paid_at": null,
+         "currency": "THB",
+         "due_date": "2027-08-02",
+         "is_simulated": true,
+         "paid_by_loan": false
+        },
+        {
+         "id": "b1e13816-0bb1-4a3f-91a9-cd4e514d9274",
+         "kind": "tuition",
+         "label": {
+          "en": "Tuition and fees per semester (includes 50,000 confirmation fee in year 1)",
+          "zh": "每学期学费及杂费（第一年含 50,000 确认费）"
+         },
+         "amount": "117600.00",
+         "status": "DUE",
+         "paid_at": null,
+         "currency": "THB",
+         "due_date": "2028-02-02",
+         "is_simulated": true,
+         "paid_by_loan": false
+        },
+        {
+         "id": "6af96df1-6409-4e20-bee8-ec9973e22f18",
+         "kind": "insurance",
+         "label": {
+          "en": "Student health insurance",
+          "zh": "学生医疗保险"
+         },
+         "amount": "10000.00",
+         "status": "DUE",
+         "paid_at": null,
+         "currency": "THB",
+         "due_date": "2028-08-02",
+         "is_simulated": true,
+         "paid_by_loan": false
+        },
+        {
+         "id": "b7c3bf96-d74c-4e8f-a69d-ab1b0a08ba32",
+         "kind": "tuition",
+         "label": {
+          "en": "Tuition and fees per semester (includes 50,000 confirmation fee in year 1)",
+          "zh": "每学期学费及杂费（第一年含 50,000 确认费）"
+         },
+         "amount": "117600.00",
+         "status": "DUE",
+         "paid_at": null,
+         "currency": "THB",
+         "due_date": "2028-08-02",
+         "is_simulated": true,
+         "paid_by_loan": false
+        },
+        {
+         "id": "9899309c-382d-42fb-80b3-fba148d6a108",
+         "kind": "visa",
+         "label": {
+          "en": "Annual extension of stay",
+          "zh": "每年居留延期费"
+         },
+         "amount": "1900.00",
+         "status": "DUE",
+         "paid_at": null,
+         "currency": "THB",
+         "due_date": "2028-08-02",
+         "is_simulated": true,
+         "paid_by_loan": false
+        },
+        {
+         "id": "b5fee856-cd3c-4f6d-a5e4-48c5028d9da1",
+         "kind": "tuition",
+         "label": {
+          "en": "Tuition and fees per semester (includes 50,000 confirmation fee in year 1)",
+          "zh": "每学期学费及杂费（第一年含 50,000 确认费）"
+         },
+         "amount": "117600.00",
+         "status": "DUE",
+         "paid_at": null,
+         "currency": "THB",
+         "due_date": "2029-02-02",
+         "is_simulated": true,
+         "paid_by_loan": false
+        },
+        {
+         "id": "85c042d0-fd2d-4c03-a85a-c3b17b0bc04b",
+         "kind": "insurance",
+         "label": {
+          "en": "Student health insurance",
+          "zh": "学生医疗保险"
+         },
+         "amount": "10000.00",
+         "status": "DUE",
+         "paid_at": null,
+         "currency": "THB",
+         "due_date": "2029-08-02",
+         "is_simulated": true,
+         "paid_by_loan": false
         }
-       ],
-       "name": {
-        "en": "Chulalongkorn University",
-        "zh": "朱拉隆功大学"
-       },
-       "total": "2351350.00",
-       "years": 4,
-       "intake": "2027-08",
-       "sample": true,
-       "country": {
-        "en": "Thailand",
-        "zh": "泰国"
-       },
-       "program": {
-        "en": "BBA International Program, Chulalongkorn Business School",
-        "zh": "工商管理学士国际课程（朱拉隆功商学院）"
-       },
-       "website": "https://bba.acc.chula.ac.th/",
-       "currency": "THB",
-       "language": "English",
-       "total_low": "2118650.00",
-       "facilities": [
-        {
-         "kind": "library",
-         "name": {
-          "en": "Chulalongkorn University Central Library",
-          "zh": "朱拉隆功大学中央图书馆"
-         },
-         "distance_km": null,
-         "typical_cost": null
-        },
-        {
-         "kind": "dormitory",
-         "name": {
-          "en": "CU iHouse",
-          "zh": "CU iHouse 国际公寓"
-         },
-         "distance_km": null,
-         "typical_cost": null
-        },
-        {
-         "kind": "sports",
-         "name": {
-          "en": "CU Sports Complex",
-          "zh": "朱拉隆功大学体育中心"
-         },
-         "distance_km": null,
-         "typical_cost": null
-        },
-        {
-         "kind": "clinic",
-         "name": {
-          "en": "CU Health Service Center",
-          "zh": "朱拉隆功大学健康服务中心"
-         },
-         "distance_km": null,
-         "typical_cost": null
-        },
-        {
-         "kind": "counseling",
-         "name": {
-          "en": "Chula Student Wellness",
-          "zh": "朱拉学生身心健康中心"
-         },
-         "distance_km": null,
-         "typical_cost": null
-        },
-        {
-         "kind": "park",
-         "name": {
-          "en": "Chulalongkorn Centenary Park",
-          "zh": "朱拉隆功百年纪念公园"
-         },
-         "distance_km": null,
-         "typical_cost": null
-        }
-       ],
-       "start_date": "2027-08-02",
-       "total_high": "2584050.00",
-       "attractions": [
-        {
-         "kind": "shopping",
-         "name": {
-          "en": "Siam Square",
-          "zh": "暹罗广场"
-         },
-         "distance_km": 1.0,
-         "typical_cost": "0.00"
-        },
-        {
-         "kind": "park",
-         "name": {
-          "en": "Lumphini Park",
-          "zh": "伦披尼公园"
-         },
-         "distance_km": 2.0,
-         "typical_cost": "0.00"
-        },
-        {
-         "kind": "museum",
-         "name": {
-          "en": "Jim Thompson House",
-          "zh": "金·汤普森之家"
-         },
-         "distance_km": 2.0,
-         "typical_cost": null
-        },
-        {
-         "kind": "temple",
-         "name": {
-          "en": "Wat Pho",
-          "zh": "卧佛寺"
-         },
-         "distance_km": 7.0,
-         "typical_cost": null
-        },
-        {
-         "kind": "landmark",
-         "name": {
-          "en": "Grand Palace",
-          "zh": "大皇宫"
-         },
-         "distance_km": 7.0,
-         "typical_cost": null
-        }
-       ],
-       "duration_years": 4,
-       "living_per_year": "291600.00",
-       "first_year_total": "675250.00",
-       "tuition_per_year": "235200.00"
+       ]
       },
       "call": {
        "mode": "mock",
@@ -2717,14 +2020,15 @@
        "request_id": null,
        "duration_ms": 0.0,
        "http_status": null,
+       "raw_excerpt": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.2"
+       "prompt_version": "planning-2.4"
       }
      },
      {
-      "id": "1841dea2-3273-427b-81b8-e5aa320c7c49",
-      "created_at": "2026-10-13T11:21:33.119Z",
+      "id": "ccbbbe37-d378-4876-a280-465d673a13e9",
+      "created_at": "2026-10-15T15:01:01.513Z",
       "number": 2,
       "tool": "",
       "tier": "",
@@ -2732,7 +2036,7 @@
       "rationale": "",
       "status": "FINAL",
       "result": {
-       "answer": "Chulalongkorn University is in Bangkok. Campus has Chulalongkorn University Central Library, CU iHouse, CU Sports Complex; nearby food: Faculty canteens, Samyan Mitrtown food court, Banthat Thong Road street food; weekends: Siam Square, Lumphini Park, Jim Thompson House. (Sample data from public sources; confirm with the school before paying.)"
+       "answer": "Coming up: 2027-08-02 Student health insurance 10,000 THB; 2027-08-02 Preparation course (June-July before year 1) 41,400 THB; 2027-08-02 Year 1 summer session 46,650 THB; 2027-08-02 Tuition and fees per semester (includes 50,000 confirmation fee in year 1) 117,600 THB. Next, check the documents in your to-dos and sign. When you need to exchange or send money to the school, I'm here."
       },
       "call": {
        "mode": "mock",
@@ -2744,103 +2048,10 @@
        "request_id": null,
        "duration_ms": 0.0,
        "http_status": null,
+       "raw_excerpt": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-1.2"
-      }
-     }
-    ],
-    "pending_actions": [],
-    "is_simulated": true,
-    "kind": "user"
-   },
-   {
-    "id": "8b38608b-0c39-4a44-90ee-d53d3ef323f1",
-    "type": "agentsession",
-    "created_at": "2026-10-13T11:21:33.134Z",
-    "goal": "Departure preparation",
-    "locale": "en",
-    "mode": "mock",
-    "status": "COMPLETED",
-    "final_answer": "Let's review admission and registration documents, travel documents, arrival transport and the first night's accommodation. Verify requirements and dates with the school. Do you have an offer, and when do you expect to travel? This discussion does not book travel or complete any process.",
-    "error_code": "",
-    "write_count": 0,
-    "updated_at": "2026-10-13T11:21:33.150Z",
-    "conversation": "253ea1db-1fd7-40eb-a2c7-f48603250fd6",
-    "cards": [],
-    "steps": [
-     {
-      "id": "aab7ae90-0cea-48c6-aaa8-1c10a6e8039e",
-      "created_at": "2026-10-13T11:21:33.149Z",
-      "number": 1,
-      "tool": "",
-      "tier": "",
-      "arguments": {},
-      "rationale": "",
-      "status": "FINAL",
-      "result": {
-       "answer": "Let's review admission and registration documents, travel documents, arrival transport and the first night's accommodation. Verify requirements and dates with the school. Do you have an offer, and when do you expect to travel? This discussion does not book travel or complete any process."
-      },
-      "call": {
-       "mode": "mock",
-       "model": "agent-rules",
-       "purpose": "plan",
-       "attempts": 1,
-       "provider": "rules",
-       "error_code": null,
-       "request_id": null,
-       "duration_ms": 0.0,
-       "http_status": null,
-       "input_tokens": 0,
-       "output_tokens": 0,
-       "prompt_version": "planning-1.2"
-      }
-     }
-    ],
-    "pending_actions": [],
-    "is_simulated": true,
-    "kind": "user"
-   },
-   {
-    "id": "149fa6dc-d321-46f4-be19-ee76f244bcff",
-    "type": "agentsession",
-    "created_at": "2026-10-13T11:21:33.163Z",
-    "goal": "First-month budget",
-    "locale": "en",
-    "mode": "mock",
-    "status": "COMPLETED",
-    "final_answer": "Separate one-off arrival costs from recurring costs: housing deposit and setup items, then rent, food and transport. Check the school's sample costs before using confirmed actual amounts. No new budget or bill has been created. Have you arranged housing, and do you know the deposit?",
-    "error_code": "",
-    "write_count": 0,
-    "updated_at": "2026-10-13T11:21:33.178Z",
-    "conversation": "253ea1db-1fd7-40eb-a2c7-f48603250fd6",
-    "cards": [],
-    "steps": [
-     {
-      "id": "08291ace-1e74-43c6-958d-e14f26cb78f3",
-      "created_at": "2026-10-13T11:21:33.177Z",
-      "number": 1,
-      "tool": "",
-      "tier": "",
-      "arguments": {},
-      "rationale": "",
-      "status": "FINAL",
-      "result": {
-       "answer": "Separate one-off arrival costs from recurring costs: housing deposit and setup items, then rent, food and transport. Check the school's sample costs before using confirmed actual amounts. No new budget or bill has been created. Have you arranged housing, and do you know the deposit?"
-      },
-      "call": {
-       "mode": "mock",
-       "model": "agent-rules",
-       "purpose": "plan",
-       "attempts": 1,
-       "provider": "rules",
-       "error_code": null,
-       "request_id": null,
-       "duration_ms": 0.0,
-       "http_status": null,
-       "input_tokens": 0,
-       "output_tokens": 0,
-       "prompt_version": "planning-1.2"
+       "prompt_version": "planning-2.4"
       }
      }
     ],
@@ -2851,9 +2062,1895 @@
   ],
   "is_simulated": true
  },
- "in_school": {
-  "enrolled": false,
-  "bills": []
- },
- "family": []
+ "assessment": {
+  "draft": false,
+  "quotes": [
+   {
+    "id": "8fb0bf1b-49d2-4c0b-b65e-d4feb19ab08f",
+    "type": "loansimulation",
+    "inputs": {
+     "fees": "0.00",
+     "months": 48,
+     "product": "commercial_student_demo",
+     "currency": "THB",
+     "principal": "200000.00",
+     "annual_rate": "0.045",
+     "grace_months": 0,
+     "first_due_date": "2027-09-01"
+    },
+    "result": {
+     "fees": "0.00",
+     "terms": {
+      "fees": "0.00",
+      "months": 48,
+      "product": "commercial_student_demo",
+      "currency": "THB",
+      "principal": "200000.00",
+      "annual_rate": "0.045",
+      "grace_months": 0,
+      "first_due_date": "2027-09-01"
+     },
+     "currency": "THB",
+     "schedule": [
+      {
+       "phase": "repayment",
+       "amount": "4560.70",
+       "number": 1,
+       "payment": "4560.70",
+       "due_date": "2027-09-01",
+       "interest": "750.00",
+       "principal": "3810.70",
+       "closing_balance": "196189.30",
+       "opening_balance": "200000.00",
+       "remaining_principal": "196189.30"
+      },
+      {
+       "phase": "repayment",
+       "amount": "4560.70",
+       "number": 2,
+       "payment": "4560.70",
+       "due_date": "2027-10-01",
+       "interest": "735.71",
+       "principal": "3824.99",
+       "closing_balance": "192364.31",
+       "opening_balance": "196189.30",
+       "remaining_principal": "192364.31"
+      },
+      {
+       "phase": "repayment",
+       "amount": "4560.70",
+       "number": 3,
+       "payment": "4560.70",
+       "due_date": "2027-11-01",
+       "interest": "721.37",
+       "principal": "3839.33",
+       "closing_balance": "188524.98",
+       "opening_balance": "192364.31",
+       "remaining_principal": "188524.98"
+      },
+      {
+       "phase": "repayment",
+       "amount": "4560.70",
+       "number": 4,
+       "payment": "4560.70",
+       "due_date": "2027-12-01",
+       "interest": "706.97",
+       "principal": "3853.73",
+       "closing_balance": "184671.25",
+       "opening_balance": "188524.98",
+       "remaining_principal": "184671.25"
+      },
+      {
+       "phase": "repayment",
+       "amount": "4560.70",
+       "number": 5,
+       "payment": "4560.70",
+       "due_date": "2028-01-01",
+       "interest": "692.52",
+       "principal": "3868.18",
+       "closing_balance": "180803.07",
+       "opening_balance": "184671.25",
+       "remaining_principal": "180803.07"
+      },
+      {
+       "phase": "repayment",
+       "amount": "4560.70",
+       "number": 6,
+       "payment": "4560.70",
+       "due_date": "2028-02-01",
+       "interest": "678.01",
+       "principal": "3882.69",
+       "closing_balance": "176920.38",
+       "opening_balance": "180803.07",
+       "remaining_principal": "176920.38"
+      },
+      {
+       "phase": "repayment",
+       "amount": "4560.70",
+       "number": 7,
+       "payment": "4560.70",
+       "due_date": "2028-03-01",
+       "interest": "663.45",
+       "principal": "3897.25",
+       "closing_balance": "173023.13",
+       "opening_balance": "176920.38",
+       "remaining_principal": "173023.13"
+      },
+      {
+       "phase": "repayment",
+       "amount": "4560.70",
+       "number": 8,
+       "payment": "4560.70",
+       "due_date": "2028-04-01",
+       "interest": "648.84",
+       "principal": "3911.86",
+       "closing_balance": "169111.27",
+       "opening_balance": "173023.13",
+       "remaining_principal": "169111.27"
+      },
+      {
+       "phase": "repayment",
+       "amount": "4560.70",
+       "number": 9,
+       "payment": "4560.70",
+       "due_date": "2028-05-01",
+       "interest": "634.17",
+       "principal": "3926.53",
+       "closing_balance": "165184.74",
+       "opening_balance": "169111.27",
+       "remaining_principal": "165184.74"
+      },
+      {
+       "phase": "repayment",
+       "amount": "4560.70",
+       "number": 10,
+       "payment": "4560.70",
+       "due_date": "2028-06-01",
+       "interest": "619.44",
+       "principal": "3941.26",
+       "closing_balance": "161243.48",
+       "opening_balance": "165184.74",
+       "remaining_principal": "161243.48"
+      },
+      {
+       "phase": "repayment",
+       "amount": "4560.70",
+       "number": 11,
+       "payment": "4560.70",
+       "due_date": "2028-07-01",
+       "interest": "604.66",
+       "principal": "3956.04",
+       "closing_balance": "157287.44",
+       "opening_balance": "161243.48",
+       "remaining_principal": "157287.44"
+      },
+      {
+       "phase": "repayment",
+       "amount": "4560.70",
+       "number": 12,
+       "payment": "4560.70",
+       "due_date": "2028-08-01",
+       "interest": "589.83",
+       "principal": "3970.87",
+       "closing_balance": "153316.57",
+       "opening_balance": "157287.44",
+       "remaining_principal": "153316.57"
+      },
+      {
+       "phase": "repayment",
+       "amount": "4560.70",
+       "number": 13,
+       "payment": "4560.70",
+       "due_date": "2028-09-01",
+       "interest": "574.94",
+       "principal": "3985.76",
+       "closing_balance": "149330.81",
+       "opening_balance": "153316.57",
+       "remaining_principal": "149330.81"
+      },
+      {
+       "phase": "repayment",
+       "amount": "4560.70",
+       "number": 14,
+       "payment": "4560.70",
+       "due_date": "2028-10-01",
+       "interest": "559.99",
+       "principal": "4000.71",
+       "closing_balance": "145330.10",
+       "opening_balance": "149330.81",
+       "remaining_principal": "145330.10"
+      },
+      {
+       "phase": "repayment",
+       "amount": "4560.70",
+       "number": 15,
+       "payment": "4560.70",
+       "due_date": "2028-11-01",
+       "interest": "544.99",
+       "principal": "4015.71",
+       "closing_balance": "141314.39",
+       "opening_balance": "145330.10",
+       "remaining_principal": "141314.39"
+      },
+      {
+       "phase": "repayment",
+       "amount": "4560.70",
+       "number": 16,
+       "payment": "4560.70",
+       "due_date": "2028-12-01",
+       "interest": "529.93",
+       "principal": "4030.77",
+       "closing_balance": "137283.62",
+       "opening_balance": "141314.39",
+       "remaining_principal": "137283.62"
+      },
+      {
+       "phase": "repayment",
+       "amount": "4560.70",
+       "number": 17,
+       "payment": "4560.70",
+       "due_date": "2029-01-01",
+       "interest": "514.81",
+       "principal": "4045.89",
+       "closing_balance": "133237.73",
+       "opening_balance": "137283.62",
+       "remaining_principal": "133237.73"
+      },
+      {
+       "phase": "repayment",
+       "amount": "4560.70",
+       "number": 18,
+       "payment": "4560.70",
+       "due_date": "2029-02-01",
+       "interest": "499.64",
+       "principal": "4061.06",
+       "closing_balance": "129176.67",
+       "opening_balance": "133237.73",
+       "remaining_principal": "129176.67"
+      },
+      {
+       "phase": "repayment",
+       "amount": "4560.70",
+       "number": 19,
+       "payment": "4560.70",
+       "due_date": "2029-03-01",
+       "interest": "484.41",
+       "principal": "4076.29",
+       "closing_balance": "125100.38",
+       "opening_balance": "129176.67",
+       "remaining_principal": "125100.38"
+      },
+      {
+       "phase": "repayment",
+       "amount": "4560.70",
+       "number": 20,
+       "payment": "4560.70",
+       "due_date": "2029-04-01",
+       "interest": "469.13",
+       "principal": "4091.57",
+       "closing_balance": "121008.81",
+       "opening_balance": "125100.38",
+       "remaining_principal": "121008.81"
+      },
+      {
+       "phase": "repayment",
+       "amount": "4560.70",
+       "number": 21,
+       "payment": "4560.70",
+       "due_date": "2029-05-01",
+       "interest": "453.78",
+       "principal": "4106.92",
+       "closing_balance": "116901.89",
+       "opening_balance": "121008.81",
+       "remaining_principal": "116901.89"
+      },
+      {
+       "phase": "repayment",
+       "amount": "4560.70",
+       "number": 22,
+       "payment": "4560.70",
+       "due_date": "2029-06-01",
+       "interest": "438.38",
+       "principal": "4122.32",
+       "closing_balance": "112779.57",
+       "opening_balance": "116901.89",
+       "remaining_principal": "112779.57"
+      },
+      {
+       "phase": "repayment",
+       "amount": "4560.70",
+       "number": 23,
+       "payment": "4560.70",
+       "due_date": "2029-07-01",
+       "interest": "422.92",
+       "principal": "4137.78",
+       "closing_balance": "108641.79",
+       "opening_balance": "112779.57",
+       "remaining_principal": "108641.79"
+      },
+      {
+       "phase": "repayment",
+       "amount": "4560.70",
+       "number": 24,
+       "payment": "4560.70",
+       "due_date": "2029-08-01",
+       "interest": "407.41",
+       "principal": "4153.29",
+       "closing_balance": "104488.50",
+       "opening_balance": "108641.79",
+       "remaining_principal": "104488.50"
+      },
+      {
+       "phase": "repayment",
+       "amount": "4560.70",
+       "number": 25,
+       "payment": "4560.70",
+       "due_date": "2029-09-01",
+       "interest": "391.83",
+       "principal": "4168.87",
+       "closing_balance": "100319.63",
+       "opening_balance": "104488.50",
+       "remaining_principal": "100319.63"
+      },
+      {
+       "phase": "repayment",
+       "amount": "4560.70",
+       "number": 26,
+       "payment": "4560.70",
+       "due_date": "2029-10-01",
+       "interest": "376.20",
+       "principal": "4184.50",
+       "closing_balance": "96135.13",
+       "opening_balance": "100319.63",
+       "remaining_principal": "96135.13"
+      },
+      {
+       "phase": "repayment",
+       "amount": "4560.70",
+       "number": 27,
+       "payment": "4560.70",
+       "due_date": "2029-11-01",
+       "interest": "360.51",
+       "principal": "4200.19",
+       "closing_balance": "91934.94",
+       "opening_balance": "96135.13",
+       "remaining_principal": "91934.94"
+      },
+      {
+       "phase": "repayment",
+       "amount": "4560.70",
+       "number": 28,
+       "payment": "4560.70",
+       "due_date": "2029-12-01",
+       "interest": "344.76",
+       "principal": "4215.94",
+       "closing_balance": "87719.00",
+       "opening_balance": "91934.94",
+       "remaining_principal": "87719.00"
+      },
+      {
+       "phase": "repayment",
+       "amount": "4560.70",
+       "number": 29,
+       "payment": "4560.70",
+       "due_date": "2030-01-01",
+       "interest": "328.95",
+       "principal": "4231.75",
+       "closing_balance": "83487.25",
+       "opening_balance": "87719.00",
+       "remaining_principal": "83487.25"
+      },
+      {
+       "phase": "repayment",
+       "amount": "4560.70",
+       "number": 30,
+       "payment": "4560.70",
+       "due_date": "2030-02-01",
+       "interest": "313.08",
+       "principal": "4247.62",
+       "closing_balance": "79239.63",
+       "opening_balance": "83487.25",
+       "remaining_principal": "79239.63"
+      },
+      {
+       "phase": "repayment",
+       "amount": "4560.70",
+       "number": 31,
+       "payment": "4560.70",
+       "due_date": "2030-03-01",
+       "interest": "297.15",
+       "principal": "4263.55",
+       "closing_balance": "74976.08",
+       "opening_balance": "79239.63",
+       "remaining_principal": "74976.08"
+      },
+      {
+       "phase": "repayment",
+       "amount": "4560.70",
+       "number": 32,
+       "payment": "4560.70",
+       "due_date": "2030-04-01",
+       "interest": "281.16",
+       "principal": "4279.54",
+       "closing_balance": "70696.54",
+       "opening_balance": "74976.08",
+       "remaining_principal": "70696.54"
+      },
+      {
+       "phase": "repayment",
+       "amount": "4560.70",
+       "number": 33,
+       "payment": "4560.70",
+       "due_date": "2030-05-01",
+       "interest": "265.11",
+       "principal": "4295.59",
+       "closing_balance": "66400.95",
+       "opening_balance": "70696.54",
+       "remaining_principal": "66400.95"
+      },
+      {
+       "phase": "repayment",
+       "amount": "4560.70",
+       "number": 34,
+       "payment": "4560.70",
+       "due_date": "2030-06-01",
+       "interest": "249.00",
+       "principal": "4311.70",
+       "closing_balance": "62089.25",
+       "opening_balance": "66400.95",
+       "remaining_principal": "62089.25"
+      },
+      {
+       "phase": "repayment",
+       "amount": "4560.70",
+       "number": 35,
+       "payment": "4560.70",
+       "due_date": "2030-07-01",
+       "interest": "232.83",
+       "principal": "4327.87",
+       "closing_balance": "57761.38",
+       "opening_balance": "62089.25",
+       "remaining_principal": "57761.38"
+      },
+      {
+       "phase": "repayment",
+       "amount": "4560.70",
+       "number": 36,
+       "payment": "4560.70",
+       "due_date": "2030-08-01",
+       "interest": "216.61",
+       "principal": "4344.09",
+       "closing_balance": "53417.29",
+       "opening_balance": "57761.38",
+       "remaining_principal": "53417.29"
+      },
+      {
+       "phase": "repayment",
+       "amount": "4560.70",
+       "number": 37,
+       "payment": "4560.70",
+       "due_date": "2030-09-01",
+       "interest": "200.31",
+       "principal": "4360.39",
+       "closing_balance": "49056.90",
+       "opening_balance": "53417.29",
+       "remaining_principal": "49056.90"
+      },
+      {
+       "phase": "repayment",
+       "amount": "4560.70",
+       "number": 38,
+       "payment": "4560.70",
+       "due_date": "2030-10-01",
+       "interest": "183.96",
+       "principal": "4376.74",
+       "closing_balance": "44680.16",
+       "opening_balance": "49056.90",
+       "remaining_principal": "44680.16"
+      },
+      {
+       "phase": "repayment",
+       "amount": "4560.70",
+       "number": 39,
+       "payment": "4560.70",
+       "due_date": "2030-11-01",
+       "interest": "167.55",
+       "principal": "4393.15",
+       "closing_balance": "40287.01",
+       "opening_balance": "44680.16",
+       "remaining_principal": "40287.01"
+      },
+      {
+       "phase": "repayment",
+       "amount": "4560.70",
+       "number": 40,
+       "payment": "4560.70",
+       "due_date": "2030-12-01",
+       "interest": "151.08",
+       "principal": "4409.62",
+       "closing_balance": "35877.39",
+       "opening_balance": "40287.01",
+       "remaining_principal": "35877.39"
+      },
+      {
+       "phase": "repayment",
+       "amount": "4560.70",
+       "number": 41,
+       "payment": "4560.70",
+       "due_date": "2031-01-01",
+       "interest": "134.54",
+       "principal": "4426.16",
+       "closing_balance": "31451.23",
+       "opening_balance": "35877.39",
+       "remaining_principal": "31451.23"
+      },
+      {
+       "phase": "repayment",
+       "amount": "4560.70",
+       "number": 42,
+       "payment": "4560.70",
+       "due_date": "2031-02-01",
+       "interest": "117.94",
+       "principal": "4442.76",
+       "closing_balance": "27008.47",
+       "opening_balance": "31451.23",
+       "remaining_principal": "27008.47"
+      },
+      {
+       "phase": "repayment",
+       "amount": "4560.70",
+       "number": 43,
+       "payment": "4560.70",
+       "due_date": "2031-03-01",
+       "interest": "101.28",
+       "principal": "4459.42",
+       "closing_balance": "22549.05",
+       "opening_balance": "27008.47",
+       "remaining_principal": "22549.05"
+      },
+      {
+       "phase": "repayment",
+       "amount": "4560.70",
+       "number": 44,
+       "payment": "4560.70",
+       "due_date": "2031-04-01",
+       "interest": "84.56",
+       "principal": "4476.14",
+       "closing_balance": "18072.91",
+       "opening_balance": "22549.05",
+       "remaining_principal": "18072.91"
+      },
+      {
+       "phase": "repayment",
+       "amount": "4560.70",
+       "number": 45,
+       "payment": "4560.70",
+       "due_date": "2031-05-01",
+       "interest": "67.77",
+       "principal": "4492.93",
+       "closing_balance": "13579.98",
+       "opening_balance": "18072.91",
+       "remaining_principal": "13579.98"
+      },
+      {
+       "phase": "repayment",
+       "amount": "4560.70",
+       "number": 46,
+       "payment": "4560.70",
+       "due_date": "2031-06-01",
+       "interest": "50.92",
+       "principal": "4509.78",
+       "closing_balance": "9070.20",
+       "opening_balance": "13579.98",
+       "remaining_principal": "9070.20"
+      },
+      {
+       "phase": "repayment",
+       "amount": "4560.70",
+       "number": 47,
+       "payment": "4560.70",
+       "due_date": "2031-07-01",
+       "interest": "34.01",
+       "principal": "4526.69",
+       "closing_balance": "4543.51",
+       "opening_balance": "9070.20",
+       "remaining_principal": "4543.51"
+      },
+      {
+       "phase": "repayment",
+       "amount": "4560.55",
+       "number": 48,
+       "payment": "4560.55",
+       "due_date": "2031-08-01",
+       "interest": "17.04",
+       "principal": "4543.51",
+       "closing_balance": "0.00",
+       "opening_balance": "4543.51",
+       "remaining_principal": "0.00"
+      }
+     ],
+     "principal": "200000.00",
+     "simulated": true,
+     "repayments": [
+      {
+       "amount": "4560.70",
+       "number": 1,
+       "due_date": "2027-09-01",
+       "interest": "750.00",
+       "principal": "3810.70",
+       "remaining_principal": "196189.30"
+      },
+      {
+       "amount": "4560.70",
+       "number": 2,
+       "due_date": "2027-10-01",
+       "interest": "735.71",
+       "principal": "3824.99",
+       "remaining_principal": "192364.31"
+      },
+      {
+       "amount": "4560.70",
+       "number": 3,
+       "due_date": "2027-11-01",
+       "interest": "721.37",
+       "principal": "3839.33",
+       "remaining_principal": "188524.98"
+      },
+      {
+       "amount": "4560.70",
+       "number": 4,
+       "due_date": "2027-12-01",
+       "interest": "706.97",
+       "principal": "3853.73",
+       "remaining_principal": "184671.25"
+      },
+      {
+       "amount": "4560.70",
+       "number": 5,
+       "due_date": "2028-01-01",
+       "interest": "692.52",
+       "principal": "3868.18",
+       "remaining_principal": "180803.07"
+      },
+      {
+       "amount": "4560.70",
+       "number": 6,
+       "due_date": "2028-02-01",
+       "interest": "678.01",
+       "principal": "3882.69",
+       "remaining_principal": "176920.38"
+      },
+      {
+       "amount": "4560.70",
+       "number": 7,
+       "due_date": "2028-03-01",
+       "interest": "663.45",
+       "principal": "3897.25",
+       "remaining_principal": "173023.13"
+      },
+      {
+       "amount": "4560.70",
+       "number": 8,
+       "due_date": "2028-04-01",
+       "interest": "648.84",
+       "principal": "3911.86",
+       "remaining_principal": "169111.27"
+      },
+      {
+       "amount": "4560.70",
+       "number": 9,
+       "due_date": "2028-05-01",
+       "interest": "634.17",
+       "principal": "3926.53",
+       "remaining_principal": "165184.74"
+      },
+      {
+       "amount": "4560.70",
+       "number": 10,
+       "due_date": "2028-06-01",
+       "interest": "619.44",
+       "principal": "3941.26",
+       "remaining_principal": "161243.48"
+      },
+      {
+       "amount": "4560.70",
+       "number": 11,
+       "due_date": "2028-07-01",
+       "interest": "604.66",
+       "principal": "3956.04",
+       "remaining_principal": "157287.44"
+      },
+      {
+       "amount": "4560.70",
+       "number": 12,
+       "due_date": "2028-08-01",
+       "interest": "589.83",
+       "principal": "3970.87",
+       "remaining_principal": "153316.57"
+      },
+      {
+       "amount": "4560.70",
+       "number": 13,
+       "due_date": "2028-09-01",
+       "interest": "574.94",
+       "principal": "3985.76",
+       "remaining_principal": "149330.81"
+      },
+      {
+       "amount": "4560.70",
+       "number": 14,
+       "due_date": "2028-10-01",
+       "interest": "559.99",
+       "principal": "4000.71",
+       "remaining_principal": "145330.10"
+      },
+      {
+       "amount": "4560.70",
+       "number": 15,
+       "due_date": "2028-11-01",
+       "interest": "544.99",
+       "principal": "4015.71",
+       "remaining_principal": "141314.39"
+      },
+      {
+       "amount": "4560.70",
+       "number": 16,
+       "due_date": "2028-12-01",
+       "interest": "529.93",
+       "principal": "4030.77",
+       "remaining_principal": "137283.62"
+      },
+      {
+       "amount": "4560.70",
+       "number": 17,
+       "due_date": "2029-01-01",
+       "interest": "514.81",
+       "principal": "4045.89",
+       "remaining_principal": "133237.73"
+      },
+      {
+       "amount": "4560.70",
+       "number": 18,
+       "due_date": "2029-02-01",
+       "interest": "499.64",
+       "principal": "4061.06",
+       "remaining_principal": "129176.67"
+      },
+      {
+       "amount": "4560.70",
+       "number": 19,
+       "due_date": "2029-03-01",
+       "interest": "484.41",
+       "principal": "4076.29",
+       "remaining_principal": "125100.38"
+      },
+      {
+       "amount": "4560.70",
+       "number": 20,
+       "due_date": "2029-04-01",
+       "interest": "469.13",
+       "principal": "4091.57",
+       "remaining_principal": "121008.81"
+      },
+      {
+       "amount": "4560.70",
+       "number": 21,
+       "due_date": "2029-05-01",
+       "interest": "453.78",
+       "principal": "4106.92",
+       "remaining_principal": "116901.89"
+      },
+      {
+       "amount": "4560.70",
+       "number": 22,
+       "due_date": "2029-06-01",
+       "interest": "438.38",
+       "principal": "4122.32",
+       "remaining_principal": "112779.57"
+      },
+      {
+       "amount": "4560.70",
+       "number": 23,
+       "due_date": "2029-07-01",
+       "interest": "422.92",
+       "principal": "4137.78",
+       "remaining_principal": "108641.79"
+      },
+      {
+       "amount": "4560.70",
+       "number": 24,
+       "due_date": "2029-08-01",
+       "interest": "407.41",
+       "principal": "4153.29",
+       "remaining_principal": "104488.50"
+      },
+      {
+       "amount": "4560.70",
+       "number": 25,
+       "due_date": "2029-09-01",
+       "interest": "391.83",
+       "principal": "4168.87",
+       "remaining_principal": "100319.63"
+      },
+      {
+       "amount": "4560.70",
+       "number": 26,
+       "due_date": "2029-10-01",
+       "interest": "376.20",
+       "principal": "4184.50",
+       "remaining_principal": "96135.13"
+      },
+      {
+       "amount": "4560.70",
+       "number": 27,
+       "due_date": "2029-11-01",
+       "interest": "360.51",
+       "principal": "4200.19",
+       "remaining_principal": "91934.94"
+      },
+      {
+       "amount": "4560.70",
+       "number": 28,
+       "due_date": "2029-12-01",
+       "interest": "344.76",
+       "principal": "4215.94",
+       "remaining_principal": "87719.00"
+      },
+      {
+       "amount": "4560.70",
+       "number": 29,
+       "due_date": "2030-01-01",
+       "interest": "328.95",
+       "principal": "4231.75",
+       "remaining_principal": "83487.25"
+      },
+      {
+       "amount": "4560.70",
+       "number": 30,
+       "due_date": "2030-02-01",
+       "interest": "313.08",
+       "principal": "4247.62",
+       "remaining_principal": "79239.63"
+      },
+      {
+       "amount": "4560.70",
+       "number": 31,
+       "due_date": "2030-03-01",
+       "interest": "297.15",
+       "principal": "4263.55",
+       "remaining_principal": "74976.08"
+      },
+      {
+       "amount": "4560.70",
+       "number": 32,
+       "due_date": "2030-04-01",
+       "interest": "281.16",
+       "principal": "4279.54",
+       "remaining_principal": "70696.54"
+      },
+      {
+       "amount": "4560.70",
+       "number": 33,
+       "due_date": "2030-05-01",
+       "interest": "265.11",
+       "principal": "4295.59",
+       "remaining_principal": "66400.95"
+      },
+      {
+       "amount": "4560.70",
+       "number": 34,
+       "due_date": "2030-06-01",
+       "interest": "249.00",
+       "principal": "4311.70",
+       "remaining_principal": "62089.25"
+      },
+      {
+       "amount": "4560.70",
+       "number": 35,
+       "due_date": "2030-07-01",
+       "interest": "232.83",
+       "principal": "4327.87",
+       "remaining_principal": "57761.38"
+      },
+      {
+       "amount": "4560.70",
+       "number": 36,
+       "due_date": "2030-08-01",
+       "interest": "216.61",
+       "principal": "4344.09",
+       "remaining_principal": "53417.29"
+      },
+      {
+       "amount": "4560.70",
+       "number": 37,
+       "due_date": "2030-09-01",
+       "interest": "200.31",
+       "principal": "4360.39",
+       "remaining_principal": "49056.90"
+      },
+      {
+       "amount": "4560.70",
+       "number": 38,
+       "due_date": "2030-10-01",
+       "interest": "183.96",
+       "principal": "4376.74",
+       "remaining_principal": "44680.16"
+      },
+      {
+       "amount": "4560.70",
+       "number": 39,
+       "due_date": "2030-11-01",
+       "interest": "167.55",
+       "principal": "4393.15",
+       "remaining_principal": "40287.01"
+      },
+      {
+       "amount": "4560.70",
+       "number": 40,
+       "due_date": "2030-12-01",
+       "interest": "151.08",
+       "principal": "4409.62",
+       "remaining_principal": "35877.39"
+      },
+      {
+       "amount": "4560.70",
+       "number": 41,
+       "due_date": "2031-01-01",
+       "interest": "134.54",
+       "principal": "4426.16",
+       "remaining_principal": "31451.23"
+      },
+      {
+       "amount": "4560.70",
+       "number": 42,
+       "due_date": "2031-02-01",
+       "interest": "117.94",
+       "principal": "4442.76",
+       "remaining_principal": "27008.47"
+      },
+      {
+       "amount": "4560.70",
+       "number": 43,
+       "due_date": "2031-03-01",
+       "interest": "101.28",
+       "principal": "4459.42",
+       "remaining_principal": "22549.05"
+      },
+      {
+       "amount": "4560.70",
+       "number": 44,
+       "due_date": "2031-04-01",
+       "interest": "84.56",
+       "principal": "4476.14",
+       "remaining_principal": "18072.91"
+      },
+      {
+       "amount": "4560.70",
+       "number": 45,
+       "due_date": "2031-05-01",
+       "interest": "67.77",
+       "principal": "4492.93",
+       "remaining_principal": "13579.98"
+      },
+      {
+       "amount": "4560.70",
+       "number": 46,
+       "due_date": "2031-06-01",
+       "interest": "50.92",
+       "principal": "4509.78",
+       "remaining_principal": "9070.20"
+      },
+      {
+       "amount": "4560.70",
+       "number": 47,
+       "due_date": "2031-07-01",
+       "interest": "34.01",
+       "principal": "4526.69",
+       "remaining_principal": "4543.51"
+      },
+      {
+       "amount": "4560.55",
+       "number": 48,
+       "due_date": "2031-08-01",
+       "interest": "17.04",
+       "principal": "4543.51",
+       "remaining_principal": "0.00"
+      }
+     ],
+     "is_simulated": true,
+     "net_proceeds": "200000.00",
+     "withheld_fee": "0.00",
+     "total_interest": "18913.45",
+     "total_repayment": "218913.45",
+     "maximum_installment": "4560.70",
+     "affordability_status": "insufficient_information",
+     "total_cost_over_net_proceeds": "18913.45"
+    },
+    "assessment": {
+     "status": "NOT_ASSESSED",
+     "missing_inputs": [],
+     "shortfall_months": []
+    },
+    "created_at": "2026-10-15T15:01:01.187Z",
+    "is_simulated": true,
+    "engine_version": "b-monthly-amortization-v1"
+   }
+  ],
+  "estimate": {
+   "lines": [
+    {
+     "group": "tuition",
+     "label": {
+      "en": "Tuition and fees per semester (includes 50,000 confirmation fee in year 1)",
+      "zh": "每学期学费及杂费（第一年含 50,000 确认费）"
+     },
+     "lower": null,
+     "quote": "117,600",
+     "total": "940800.00",
+     "upper": null,
+     "amount": "117600.00",
+     "period": "semester",
+     "status": "known",
+     "cost_id": "tuition_semester",
+     "category": "tuition",
+     "estimate": false,
+     "per_year": "235200.00",
+     "total_low": "940800.00",
+     "source_url": "https://bba.acc.chula.ac.th/tuition-and-fees",
+     "total_high": "940800.00",
+     "observed_at": "2026-10-12",
+     "occurrences": 8,
+     "start_month": 0,
+     "period_amounts": [
+      "117600.00",
+      "117600.00",
+      "117600.00",
+      "117600.00",
+      "117600.00",
+      "117600.00",
+      "117600.00",
+      "117600.00"
+     ]
+    },
+    {
+     "group": "tuition",
+     "label": {
+      "en": "Preparation course (June-July before year 1)",
+      "zh": "入学预备课程（第一年前 6-7 月）"
+     },
+     "lower": null,
+     "quote": "41,400",
+     "total": "41400.00",
+     "upper": null,
+     "amount": "41400.00",
+     "period": "once",
+     "status": "known",
+     "cost_id": "preparation_course",
+     "category": "tuition",
+     "estimate": false,
+     "per_year": "41400.00",
+     "total_low": "41400.00",
+     "source_url": "https://bba.acc.chula.ac.th/tuition-and-fees",
+     "total_high": "41400.00",
+     "observed_at": "2026-10-12",
+     "occurrences": 1,
+     "start_month": 0,
+     "period_amounts": [
+      "41400.00"
+     ]
+    },
+    {
+     "group": "tuition",
+     "label": {
+      "en": "Year 1 summer session",
+      "zh": "第一年暑期学期"
+     },
+     "lower": null,
+     "quote": "46,650",
+     "total": "46650.00",
+     "upper": null,
+     "amount": "46650.00",
+     "period": "once",
+     "status": "known",
+     "cost_id": "summer_session_year1",
+     "category": "tuition",
+     "estimate": false,
+     "per_year": "46650.00",
+     "total_low": "46650.00",
+     "source_url": "https://bba.acc.chula.ac.th/tuition-and-fees",
+     "total_high": "46650.00",
+     "observed_at": "2026-10-12",
+     "occurrences": 1,
+     "start_month": 0,
+     "period_amounts": [
+      "46650.00"
+     ]
+    },
+    {
+     "group": "living",
+     "label": {
+      "en": "CU iHouse studio, 6+ month contract (two sharers split it)",
+      "zh": "CU iHouse 单间公寓，6 个月以上合同（两人合住可分摊）"
+     },
+     "lower": null,
+     "quote": "13,000 THB",
+     "total": "624000.00",
+     "upper": null,
+     "amount": "13000.00",
+     "period": "month",
+     "status": "known",
+     "cost_id": "ihouse_studio",
+     "category": "housing",
+     "estimate": false,
+     "per_year": "156000.00",
+     "total_low": "624000.00",
+     "source_url": "https://www.inter.chula.ac.th/international-students/campus-life/accommodation/",
+     "total_high": "624000.00",
+     "observed_at": "2026-10-12",
+     "occurrences": 48,
+     "start_month": 0,
+     "period_amounts": [
+      "13000.00",
+      "13000.00",
+      "13000.00",
+      "13000.00",
+      "13000.00",
+      "13000.00",
+      "13000.00",
+      "13000.00",
+      "13000.00",
+      "13000.00",
+      "13000.00",
+      "13000.00",
+      "13000.00",
+      "13000.00",
+      "13000.00",
+      "13000.00",
+      "13000.00",
+      "13000.00",
+      "13000.00",
+      "13000.00",
+      "13000.00",
+      "13000.00",
+      "13000.00",
+      "13000.00",
+      "13000.00",
+      "13000.00",
+      "13000.00",
+      "13000.00",
+      "13000.00",
+      "13000.00",
+      "13000.00",
+      "13000.00",
+      "13000.00",
+      "13000.00",
+      "13000.00",
+      "13000.00",
+      "13000.00",
+      "13000.00",
+      "13000.00",
+      "13000.00",
+      "13000.00",
+      "13000.00",
+      "13000.00",
+      "13000.00",
+      "13000.00",
+      "13000.00",
+      "13000.00",
+      "13000.00"
+     ]
+    },
+    {
+     "group": "essentials",
+     "label": {
+      "en": "Room security deposit",
+      "zh": "住宿押金"
+     },
+     "lower": "13000.00",
+     "quote": null,
+     "total": "19500.00",
+     "upper": "26000.00",
+     "amount": "19500.00",
+     "period": "once",
+     "status": "estimated",
+     "cost_id": "housing_deposit",
+     "category": "deposit",
+     "estimate": true,
+     "per_year": "19500.00",
+     "total_low": "13000.00",
+     "source_url": null,
+     "total_high": "26000.00",
+     "observed_at": "2026-10-12",
+     "occurrences": 1,
+     "start_month": 0,
+     "period_amounts": [
+      "19500.00"
+     ]
+    },
+    {
+     "group": "living",
+     "label": {
+      "en": "Electricity and water (not included in rent)",
+      "zh": "水电费（不含在房租内）"
+     },
+     "lower": "800.00",
+     "quote": null,
+     "total": "67200.00",
+     "upper": "2000.00",
+     "amount": "1400.00",
+     "period": "month",
+     "status": "estimated",
+     "cost_id": "utilities",
+     "category": "housing",
+     "estimate": true,
+     "per_year": "16800.00",
+     "total_low": "38400.00",
+     "source_url": null,
+     "total_high": "96000.00",
+     "observed_at": "2026-10-12",
+     "occurrences": 48,
+     "start_month": 0,
+     "period_amounts": [
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00"
+     ]
+    },
+    {
+     "group": "living",
+     "label": {
+      "en": "Food (canteens, food courts, street food)",
+      "zh": "餐饮（食堂、美食广场、街头小吃）"
+     },
+     "lower": "6000.00",
+     "quote": null,
+     "total": "384000.00",
+     "upper": "10000.00",
+     "amount": "8000.00",
+     "period": "month",
+     "status": "estimated",
+     "cost_id": "food_monthly",
+     "category": "food",
+     "estimate": true,
+     "per_year": "96000.00",
+     "total_low": "288000.00",
+     "source_url": null,
+     "total_high": "480000.00",
+     "observed_at": "2026-10-12",
+     "occurrences": 48,
+     "start_month": 0,
+     "period_amounts": [
+      "8000.00",
+      "8000.00",
+      "8000.00",
+      "8000.00",
+      "8000.00",
+      "8000.00",
+      "8000.00",
+      "8000.00",
+      "8000.00",
+      "8000.00",
+      "8000.00",
+      "8000.00",
+      "8000.00",
+      "8000.00",
+      "8000.00",
+      "8000.00",
+      "8000.00",
+      "8000.00",
+      "8000.00",
+      "8000.00",
+      "8000.00",
+      "8000.00",
+      "8000.00",
+      "8000.00",
+      "8000.00",
+      "8000.00",
+      "8000.00",
+      "8000.00",
+      "8000.00",
+      "8000.00",
+      "8000.00",
+      "8000.00",
+      "8000.00",
+      "8000.00",
+      "8000.00",
+      "8000.00",
+      "8000.00",
+      "8000.00",
+      "8000.00",
+      "8000.00",
+      "8000.00",
+      "8000.00",
+      "8000.00",
+      "8000.00",
+      "8000.00",
+      "8000.00",
+      "8000.00",
+      "8000.00"
+     ]
+    },
+    {
+     "group": "living",
+     "label": {
+      "en": "BTS/MRT, buses and taxis",
+      "zh": "轻轨/地铁、公交和出租车"
+     },
+     "lower": "800.00",
+     "quote": null,
+     "total": "67200.00",
+     "upper": "2000.00",
+     "amount": "1400.00",
+     "period": "month",
+     "status": "estimated",
+     "cost_id": "transport_monthly",
+     "category": "transport",
+     "estimate": true,
+     "per_year": "16800.00",
+     "total_low": "38400.00",
+     "source_url": null,
+     "total_high": "96000.00",
+     "observed_at": "2026-10-12",
+     "occurrences": 48,
+     "start_month": 0,
+     "period_amounts": [
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00",
+      "1400.00"
+     ]
+    },
+    {
+     "group": "living",
+     "label": {
+      "en": "Mobile plan with data",
+      "zh": "手机套餐及流量"
+     },
+     "lower": "300.00",
+     "quote": null,
+     "total": "24000.00",
+     "upper": "700.00",
+     "amount": "500.00",
+     "period": "month",
+     "status": "estimated",
+     "cost_id": "phone_internet",
+     "category": "communications",
+     "estimate": true,
+     "per_year": "6000.00",
+     "total_low": "14400.00",
+     "source_url": null,
+     "total_high": "33600.00",
+     "observed_at": "2026-10-12",
+     "occurrences": 48,
+     "start_month": 0,
+     "period_amounts": [
+      "500.00",
+      "500.00",
+      "500.00",
+      "500.00",
+      "500.00",
+      "500.00",
+      "500.00",
+      "500.00",
+      "500.00",
+      "500.00",
+      "500.00",
+      "500.00",
+      "500.00",
+      "500.00",
+      "500.00",
+      "500.00",
+      "500.00",
+      "500.00",
+      "500.00",
+      "500.00",
+      "500.00",
+      "500.00",
+      "500.00",
+      "500.00",
+      "500.00",
+      "500.00",
+      "500.00",
+      "500.00",
+      "500.00",
+      "500.00",
+      "500.00",
+      "500.00",
+      "500.00",
+      "500.00",
+      "500.00",
+      "500.00",
+      "500.00",
+      "500.00",
+      "500.00",
+      "500.00",
+      "500.00",
+      "500.00",
+      "500.00",
+      "500.00",
+      "500.00",
+      "500.00",
+      "500.00",
+      "500.00"
+     ]
+    },
+    {
+     "group": "essentials",
+     "label": {
+      "en": "Student health insurance",
+      "zh": "学生医疗保险"
+     },
+     "lower": "5000.00",
+     "quote": null,
+     "total": "40000.00",
+     "upper": "15000.00",
+     "amount": "10000.00",
+     "period": "year",
+     "status": "estimated",
+     "cost_id": "health_insurance",
+     "category": "insurance",
+     "estimate": true,
+     "per_year": "10000.00",
+     "total_low": "20000.00",
+     "source_url": null,
+     "total_high": "60000.00",
+     "observed_at": "2026-10-12",
+     "occurrences": 4,
+     "start_month": 0,
+     "period_amounts": [
+      "10000.00",
+      "10000.00",
+      "10000.00",
+      "10000.00"
+     ]
+    },
+    {
+     "group": "essentials",
+     "label": {
+      "en": "Non-Immigrant ED visa, single entry",
+      "zh": "非移民教育签证（单次入境）"
+     },
+     "lower": null,
+     "quote": "2,000",
+     "total": "2000.00",
+     "upper": null,
+     "amount": "2000.00",
+     "period": "once",
+     "status": "known",
+     "cost_id": "visa_non_immigrant",
+     "category": "visa",
+     "estimate": false,
+     "per_year": "2000.00",
+     "total_low": "2000.00",
+     "source_url": "https://bangkok.immigration.go.th/en/fee_en/",
+     "total_high": "2000.00",
+     "observed_at": "2026-10-12",
+     "occurrences": 1,
+     "start_month": 0,
+     "period_amounts": [
+      "2000.00"
+     ]
+    },
+    {
+     "group": "essentials",
+     "label": {
+      "en": "Annual extension of stay",
+      "zh": "每年居留延期费"
+     },
+     "lower": null,
+     "quote": "1,900",
+     "total": "7600.00",
+     "upper": null,
+     "amount": "1900.00",
+     "period": "year",
+     "status": "known",
+     "cost_id": "visa_extension",
+     "category": "visa",
+     "estimate": false,
+     "per_year": "1900.00",
+     "total_low": "7600.00",
+     "source_url": "https://bangkok.immigration.go.th/en/fee_en/",
+     "total_high": "7600.00",
+     "observed_at": "2026-10-12",
+     "occurrences": 4,
+     "start_month": 0,
+     "period_amounts": [
+      "1900.00",
+      "1900.00",
+      "1900.00",
+      "1900.00"
+     ]
+    },
+    {
+     "group": "essentials",
+     "label": {
+      "en": "Return trip home (economy flight)",
+      "zh": "回国往返机票（经济舱）"
+     },
+     "lower": "6000.00",
+     "quote": null,
+     "total": "52000.00",
+     "upper": "20000.00",
+     "amount": "13000.00",
+     "period": "year",
+     "status": "estimated",
+     "cost_id": "home_trip",
+     "category": "travel",
+     "estimate": true,
+     "per_year": "13000.00",
+     "total_low": "24000.00",
+     "source_url": null,
+     "total_high": "80000.00",
+     "observed_at": "2026-10-12",
+     "occurrences": 4,
+     "start_month": 0,
+     "period_amounts": [
+      "13000.00",
+      "13000.00",
+      "13000.00",
+      "13000.00"
+     ]
+    },
+    {
+     "group": "essentials",
+     "label": {
+      "en": "Settling in (bedding, SIM, household items)",
+      "zh": "安家费用（床品、电话卡、日用品）"
+     },
+     "lower": "4000.00",
+     "quote": null,
+     "total": "7000.00",
+     "upper": "10000.00",
+     "amount": "7000.00",
+     "period": "once",
+     "status": "estimated",
+     "cost_id": "settling_in",
+     "category": "settlement",
+     "estimate": true,
+     "per_year": "7000.00",
+     "total_low": "4000.00",
+     "source_url": null,
+     "total_high": "10000.00",
+     "observed_at": "2026-10-12",
+     "occurrences": 1,
+     "start_month": 0,
+     "period_amounts": [
+      "7000.00"
+     ]
+    },
+    {
+     "group": "essentials",
+     "label": {
+      "en": "Books, laptop software and supplies",
+      "zh": "教材、软件及文具"
+     },
+     "lower": "2000.00",
+     "quote": null,
+     "total": "28000.00",
+     "upper": "5000.00",
+     "amount": "3500.00",
+     "period": "semester",
+     "status": "estimated",
+     "cost_id": "books_supplies",
+     "category": "study_materials",
+     "estimate": true,
+     "per_year": "7000.00",
+     "total_low": "16000.00",
+     "source_url": null,
+     "total_high": "40000.00",
+     "observed_at": "2026-10-12",
+     "occurrences": 8,
+     "start_month": 0,
+     "period_amounts": [
+      "3500.00",
+      "3500.00",
+      "3500.00",
+      "3500.00",
+      "3500.00",
+      "3500.00",
+      "3500.00",
+      "3500.00"
+     ]
+    }
+   ],
+   "total": "2351350.00",
+   "years": 4,
+   "groups": {
+    "living": "1166400.00",
+    "tuition": "1028850.00",
+    "essentials": "156100.00"
+   },
+   "sample": true,
+   "program": {
+    "en": "BBA International Program, Chulalongkorn Business School",
+    "zh": "工商管理学士国际课程（朱拉隆功商学院）"
+   },
+   "complete": true,
+   "currency": "THB",
+   "total_low": "2118650.00",
+   "first_year": "675250.00",
+   "school_key": "chulalongkorn",
+   "total_high": "2584050.00",
+   "observed_at": "2026-10-12",
+   "known_subtotal": "2351350.00",
+   "catalog_version": 2,
+   "duration_months": 48,
+   "estimated_share": "29.30",
+   "total_semesters": 8,
+   "missing_cost_ids": []
+  },
+  "loan_advice": {
+   "change": null,
+   "intent": "recommend",
+   "status": "recommended",
+   "quote_id": "8fb0bf1b-49d2-4c0b-b65e-d4feb19ab08f",
+   "selected": {
+    "fees": "0.00",
+    "method": "amortized",
+    "months": 48,
+    "product": "commercial_student_demo",
+    "currency": "THB",
+    "principal": "200000.00",
+    "annual_rate": "0.045",
+    "net_proceeds": "200000.00",
+    "last_due_date": "2031-08-01",
+    "first_due_date": "2027-09-01",
+    "total_interest": "18913.45",
+    "monthly_payment": "4560.70",
+    "total_repayment": "218913.45",
+    "interest_only_months": 0,
+    "interest_only_payment": null
+   },
+   "constraints": {},
+   "alternatives": [
+    {
+     "fees": "0.00",
+     "method": "amortized",
+     "months": 48,
+     "product": "custom",
+     "currency": "THB",
+     "principal": "200000.00",
+     "annual_rate": "0.06",
+     "net_proceeds": "200000.00",
+     "last_due_date": "2031-08-01",
+     "first_due_date": "2027-09-01",
+     "total_interest": "25456.26",
+     "monthly_payment": "4697.01",
+     "total_repayment": "225456.26",
+     "interest_only_months": 0,
+     "interest_only_payment": null
+    }
+   ],
+   "plan_version": 1,
+   "ready_to_apply": false,
+   "assessment_version": 2
+  },
+  "loan_stage": {
+   "documents": [
+    {
+     "id": "f98cb1e2-9287-4d76-a3fa-2e2c888ec988",
+     "key": "loan_doc:admission",
+     "title": {
+      "en": "Simulated admission notice (attached automatically)",
+      "zh": "模拟录取通知（已自动附加）"
+     },
+     "done": true,
+     "auto": true,
+     "due_date": "2027-07-03",
+     "version": 1
+    },
+    {
+     "id": "7da902b7-7d72-4c47-86f1-cab3a4dd62ec",
+     "key": "loan_doc:identity",
+     "title": {
+      "en": "Provide a passport or ID",
+      "zh": "提供护照或身份证件"
+     },
+     "done": false,
+     "auto": false,
+     "due_date": "2027-07-03",
+     "version": 1
+    },
+    {
+     "id": "bf19b881-698b-4296-86b0-80456a9219c4",
+     "key": "loan_doc:income:student_with_parent",
+     "title": {
+      "en": "Income proof of the co-borrower (parent)",
+      "zh": "共同借款人（家长）收入证明"
+     },
+     "done": false,
+     "auto": false,
+     "due_date": "2027-07-03",
+     "version": 1
+    }
+   ],
+   "payouts": [],
+   "signed": false,
+   "school_payee": {
+    "id": "a8ff6873-9c4e-49e9-93bc-9675a0edbf54",
+    "name": "Chulalongkorn University",
+    "account": "Tuition account (simulated)",
+    "verified": true
+   }
+  },
+  "plan": {
+   "id": "1bcbabc7-425b-461d-941a-efe71331b72a",
+   "status": "CONFIRMED",
+   "school_key": "chulalongkorn",
+   "years": 4,
+   "start_date": "2027-08-02",
+   "version": 2,
+   "confirmed_at": "2026-10-15T15:01:01.390404+00:00",
+   "is_simulated": true,
+   "school": {
+    "name": {
+     "en": "Chulalongkorn University",
+     "zh": "朱拉隆功大学"
+    },
+    "currency": "THB"
+   },
+   "total": "2351350.00",
+   "currency": "THB",
+   "duration_months": 48,
+   "complete": true,
+   "converted": null
+  },
+  "inputs": {
+   "borrower": "student_with_parent",
+   "loan": {
+    "product": "commercial_student_demo",
+    "principal": "200000.00",
+    "annual_rate": "0.06",
+    "fees": "0.00",
+    "first_due_date": "2027-09-01",
+    "months": 48,
+    "method": "amortized"
+   }
+  },
+  "products": [
+   {
+    "key": "custom",
+    "annual_rate": "0.06",
+    "terms": [
+     24,
+     36,
+     48
+    ],
+    "methods": [
+     "amortized"
+    ]
+   },
+   {
+    "key": "commercial_student_demo",
+    "annual_rate": "0.045",
+    "terms": [
+     24,
+     36,
+     48,
+     60
+    ],
+    "methods": [
+     "amortized",
+     "interest_only"
+    ]
+   }
+  ],
+  "limit": {
+   "max_principal": "2351350.00",
+   "currency": "THB"
+  },
+  "version": 2,
+  "plan_version": 2,
+  "stale": false,
+  "lifecycle": {
+   "applications": [
+    {
+     "id": "acc50417-ffdd-4210-8af7-e4963e22c7f9",
+     "type": "simulatedapplication",
+     "created_at": "2026-10-15T15:01:01.345Z",
+     "version": 2,
+     "loan": "8fb0bf1b-49d2-4c0b-b65e-d4feb19ab08f",
+     "status": "APPROVED",
+     "assessment": {
+      "status": "WITHIN_LIMIT",
+      "max_principal": "2351350.00"
+     },
+     "decision_reason": "",
+     "is_simulated": true
+    }
+   ],
+   "accounts": [],
+   "disbursements": []
+  },
+  "is_simulated": true
+ }
 }

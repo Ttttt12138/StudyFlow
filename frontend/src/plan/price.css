@@ -40,12 +40,6 @@
   color: var(--accent-strong); font: inherit; font-size: 13px; cursor: pointer; }
 .compare-grid .chip:hover:not(:disabled) { border-color: var(--accent); transform: none; }
 
-.gap-card { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; padding: 18px 20px; border-radius: 18px; background: var(--warm-soft); }
-.gap-card > div:first-child { display: flex; flex-direction: column; gap: 2px; }
-.gap-card p { margin: 0; font-size: 14px; color: #8a3a0f; }
-.gap-card strong { font-size: 28px; font-weight: 700; color: var(--warm-text); font-variant-numeric: tabular-nums; line-height: 1.2; }
-.gap-card small { font-size: 13px; color: #8a3a0f; }
-.gap-card .secondary { background: var(--surface-1); }
 
 .price-terms { display: flex; gap: 8px; }
 .price-terms .chip { min-height: 36px; padding: 0 14px; border: 1px solid var(--line-2); border-radius: 18px; background: var(--surface-1); color: var(--text); font: inherit; font-size: 14px; cursor: pointer; }
@@ -80,7 +74,7 @@
 .price-option span { display: flex; flex-direction: column; gap: 2px; }
 .price-option small { font-size: 13px; color: var(--text-3); }
 .price-option:hover { border-color: var(--accent); transform: none; }
-.tool-panel .gap-card, .tool-panel .price-card { padding: 16px; }
+.tool-panel .price-card { padding: 16px; }
 
 @media (max-width: 600px) {
   .price-card { padding: 16px; border-radius: 16px; }
@@ -92,7 +86,6 @@
   .compare-grid > li > .price-tag-space { display: none; }
   .compare-total { grid-column: 2; grid-row: span 2; text-align: right; font-size: 18px; }
   .compare-grid .chip { grid-column: 1 / -1; }
-  .gap-card strong { font-size: 24px; }
 }
 
 /* Money proposals confirmed in the conversation: amount first, then the password or the approval request. */
@@ -101,3 +94,18 @@
 .money-confirm form { display: flex; flex-direction: column; gap: 12px; }
 .money-field { display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: var(--text-3); }
 .money-field input, .money-field textarea { width: 100%; min-height: 44px; padding: 10px 12px; box-sizing: border-box; font: inherit; font-size: 15px; }
+
+.loan-advice-card { border-color: var(--accent); }
+.loan-advice-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.loan-advice-concerns { display: flex; flex-wrap: wrap; gap: 8px; width: 100%; }
+.loan-advice-concerns .chip { min-height: 40px; white-space: normal; }
+.loan-advice-change { padding: 12px; border-radius: 12px; background: var(--surface-2); font-size: 13px; }
+.loan-advice-change p { margin: 4px 0 0; }
+.loan-advice-alternatives { font-size: 13px; }
+.loan-advice-alternatives summary { cursor: pointer; min-height: 40px; align-content: center; color: var(--accent-strong); }
+.loan-advice-alternatives > div { padding: 10px 0; border-top: 1px solid var(--line); }
+@media (max-width: 600px) {
+  .loan-advice-facts { grid-template-columns: minmax(0, 1fr); }
+  .loan-advice-facts dd { text-align: right; }
+  .loan-advice-card .price-actions > .primary { width: 100%; }
+}
