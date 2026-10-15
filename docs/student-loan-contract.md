@@ -4,9 +4,17 @@ Effective 2026-10-15. This supersedes earlier student-flow descriptions involvin
 
 ## Flow
 
-Price lookup → compare whole-course costs → choose a school → enter a positive loan amount → choose product, term and repayment method → estimate → confirm plan and submit application → automatic simulated admission notice and approval → complete other documents → explicitly sign → scheduled school payouts → repay installments.
+Price lookup → compare whole-course costs → choose a school → Agent recommends a product and asks only for the desired loan amount → one quoted plan → discuss and recalculate concerns → review and explicitly submit application → automatic simulated admission notice and approval → complete other documents → explicitly sign → scheduled school payouts → repay installments. Manual amount/product/term/method selection remains available in My plan.
 
 There is no no-loan confirmation branch. Estimates do not write wallet balances. Submission does not sign or disburse. The school payee must be verified for signing and tuition payouts.
+
+### Conversational recommendation
+
+`simulate_loan` prepares a versioned assessment and one quote. Its optional `intent` is `recommend`, `lower_monthly`, `lower_interest`, `reduce_amount`, `apply`, `pause` or `resume`; optional settings are `principal`, `principal_currency`, `product`, `months`, and `method`. Stated amounts use the existing conversion service. School costs and missing amounts are never inferred as principal.
+
+The default compares product costs at the current term (initially 48 months). Lower-monthly and lower-interest requests rank actual calculator results. Explicit product/method choices persist; an objection can change the term. Borrowing less without a new amount asks only for that amount. Results contain all costs, both interest-only phases when relevant, and changes from the previous quote. One `loan_advice` card shows the recommendation and expandable alternatives. A successful calculation ends the tool cycle with a server-authored factual reply; model calls and deterministic replies are recorded separately.
+
+The latest assessment stores recommendation state, including pauses after refusal. Unrelated turns do not restart a paused pitch. `apply` prepares review only: the card checks the exact plan, assessment version and quote before opening `planning/plan/confirm/`. Historical cards have no active sales controls, and stale quotes cannot submit. No Agent tool submits, signs or pays a planning loan. After explicit submission, the existing documents/signing panel opens.
 
 ## Inputs and responses
 
@@ -60,4 +68,4 @@ Underlying legacy B/C platform APIs (readiness, consumption, copilot, sponsor op
 
 `python backend/manage.py test auto_test.fixture_plan_preview` records both languages through real API calls with the rule planner in Django's test database. Each stage stores its own conversation and assessment; life records are captured in the same transaction. Stages are `plan` and `prepare`. The `prepare` notice is checked and every mutation is disabled in preview.
 
-See [verification record](verification-student-loan-20261015.md) for current results. Earlier evidence remains historical and does not establish live-model or real-money acceptance of this flow.
+See [loan adviser verification](verification-loan-advice-20261015.md) for the conversation changes and targeted live regression, and [student flow verification](verification-student-loan-20261015.md) for the underlying amount/application simplification. Earlier evidence remains historical and does not establish real-money acceptance of this flow.

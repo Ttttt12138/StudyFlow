@@ -1,11 +1,11 @@
 # StudyFlow
 
-**A study-abroad finance assistant that starts with the price.** Look up whole-course costs, compare schools in THB, CNY or USD, then enter the amount to borrow. Choose a product, term and repayment method, review the estimate and submit the simulated loan application. Submission attaches a simulated admission notice automatically and unlocks to-dos, bills and the wallet.
+**A study-abroad finance assistant that starts with the price.** Look up whole-course costs, compare schools in THB, CNY or USD, then tell the Agent the amount to borrow. It recommends one loan plan, recalculates when monthly payments, interest or the amount concern you, and guides you to review and explicitly submit the simulated application. Submission attaches a simulated admission notice automatically and unlocks to-dos, bills and the wallet.
 
 | Stage | Behavior |
 | --- | --- |
 | Price lookup and comparison | Whole-course totals and sources; saved school drafts |
-| Loan selection | User-entered principal, product/term/method, repayment estimate; cap is the full-course cost, excluding loan fees |
+| Loan selection | Agent recommendation from user-entered principal; concern-based recalculation, exact costs and explicit application review; full-course cap excluding fees |
 | Application submitted | Automatic simulated notice and approval, remaining documents, explicit signing, school payouts and loan repayment; wallet/FX/remittance available |
 
 The [shared student-flow contract](docs/student-loan-contract.md) defines interfaces, state migration and the deletion list. Family support, monthly bookkeeping, independent credit records, enrollment confirmation and the no-loan confirmation branch are removed from the student app.
