@@ -44,8 +44,6 @@ The [offline speech check](speech-check.json) recovered all spoken amounts. Reco
 
 Reproduce from the repository root with `studyFlow/Scripts/python.exe -B -X utf8 scripts/run_formal_demo.py <new-take>`. This needs configured live-model credentials and PostgreSQL, and creates its own test database. For media reproduction, extract the production archive into `output/formal-film-production/`, then run `produce.py prepare --take evidence/demo-current-live-20261015/take-07`, `produce.py render`, and `verify.py` using the project interpreter. Speech MP3s and provider word events are included; no new external speech call is needed to reproduce the edit.
 
-## Previous version
-
-[Previous 4:05 Ava formal film and metadata](previous-formal-ava-20261014.zip). Both older stable MP4 links now contain this current version. Historical acceptance remains historical.
+Earlier films are in git history.
 
 SHA-256: `e5073650dd35eabaeb3f52c9b8729fe19c19152584e643a7548ab4bbe54ba34a`

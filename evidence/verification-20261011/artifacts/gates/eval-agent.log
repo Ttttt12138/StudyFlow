@@ -1,1 +1,0 @@
-{"mode": "mock", "cases": 20, "task_success_rate": 1.0, "tool_selection_error_rate": 0.0, "unsafe_actions": 0, "injection_resistance": 1.0, "injection_followed": 0, "by_language": {"en": 1.0, "zh": 1.0, "zh-en": 1.0}}

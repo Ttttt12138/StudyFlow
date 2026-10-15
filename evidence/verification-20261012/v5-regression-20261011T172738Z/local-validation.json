@@ -1,6 +1,0 @@
-{
-  "c_pytest_passed": 420,
-  "code_changes_this_retest": 0,
-  "ruff": "passed",
-  "evaluation_command_tests_passed": 3
-}

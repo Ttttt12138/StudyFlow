@@ -1,8 +1,0 @@
-{
-  "exit_code": 0,
-  "purpose": "User requested retest",
-  "previous_run": "verification-20261011/v5-regression-20261011T165026Z",
-  "rounds_per_arm": 1,
-  "automatic_additional_rounds": 0,
-  "completed_at": "2026-10-11T17:36:01.7731584Z"
-}

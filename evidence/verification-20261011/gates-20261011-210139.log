@@ -1,8 +1,0 @@
-PASS holdout-freeze (0s)
-PASS check (1s)
-PASS i18n (0s)
-PASS migrations (1s)
-PASS django-tests (126s)
-PASS openapi (1s)
-FAIL c-ruff (0s)
-see output\gates\c-ruff.log

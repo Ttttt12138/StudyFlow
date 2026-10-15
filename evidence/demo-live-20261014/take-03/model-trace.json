@@ -1,8 +1,0 @@
-{
-  "planner": "live external model",
-  "turns": [],
-  "model_calls": 0,
-  "all_calls_live": false,
-  "models": [],
-  "prompt_versions": []
-}
