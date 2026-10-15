@@ -49,7 +49,7 @@ def saved(status="DRAFT"):
 
 
 def test_prompt_version_and_planning_prompt_describe_the_loan_panel_flow():
-    assert prompts.PLANNING_VERSION == "planning-2.1"
+    assert prompts.PLANNING_VERSION == "planning-2.2"
     text = " ".join(prompts.PLANNING.split())
     for removed in ("confirm_plan", "confirm_enrollment", "record_expense", "get_spending", "available_funds",
                     "support_amount", "prequal", "ENROLLED", "funding gap", "monthly budget"):
@@ -106,7 +106,7 @@ def test_a_loan_amount_said_in_chat_goes_to_save_plan_principal():
     assert args(english) == {"school_key": "waseda", "years": 4, "principal": "500000.00",
                              "principal_currency": "THB"}
     # A stated amount for an existing plan is saved too; a term is not an amount.
-    assert args(step("贷款20万泰铢", plan=DRAFT)) == {"school_key": "waseda", "principal": "200000.00",
+    assert args(step("贷款20万泰铢", plan=DRAFT)) == {"principal": "200000.00",
                                                      "principal_currency": "THB"}
     assert args(step("帮我贷款，分36个月", plan=DRAFT)) == {"months": 36}
 

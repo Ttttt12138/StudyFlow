@@ -8,6 +8,7 @@ import json
 import re
 from decimal import Decimal
 
+from studyflow_ai.agent import loan_rules
 from studyflow_ai.agent.models import FinalStep, ToolCallStep
 from studyflow_ai.agent.planning_facts import ambiguities
 from studyflow_ai.agent.planning_facts import amounts as labelled_amounts
@@ -275,6 +276,8 @@ class PlanningRules:
         text = m.text
         if _has(text, SPENT) and m.amount is not None and not m.facts:
             return None  # answer() says spending is not recorded
+        if loan_rules.relevant(m) and not m.schools:
+            return self._loan(context, m)
         if m.confirmed and _has(text, BILLS):
             return None if _tried(context, "list_bills") else self._call("list_bills", "Upcoming bills")
         if _has(text, LOAN):
@@ -332,11 +335,14 @@ class PlanningRules:
         status = ((saved.result.get("plan") or {}).get("status") if saved else None)
         # After choosing a school everyone continues in the loan panel.
         if status == "DRAFT" and context.tool("simulate_loan") and not _tried(context, "simulate_loan"):
-            return self._call("simulate_loan", "Open the loan panel for the chosen school")
+            arguments = loan_rules.arguments(m)
+            arguments.pop("principal", None)
+            arguments.pop("principal_currency", None)
+            return self._call("simulate_loan", "Recommend a loan for the chosen school", **arguments)
         return None
 
     def _loan(self, context, m):
-        if m.schools or m.facts:
+        if m.schools or (m.facts and not m.plan):
             if not _tried(context, "save_plan"):
                 return self._save(context, m)
         if not _tried(context, "simulate_loan"):
@@ -346,15 +352,21 @@ class PlanningRules:
                 plan = saved.result.get("plan") or {}
             if not plan:
                 return None  # answer() asks for the school first
-            if plan.get("status") == "CONFIRMED":
+            if plan.get("status") == "CONFIRMED" and not _has(m.text, ("推荐", "recommend")):
                 return None  # answer() says the application is already submitted
-            arguments = {"months": m.months} if m.months and 6 <= m.months <= 60 else {}
-            return self._call("simulate_loan", "Open the loan panel", **arguments)
+            arguments = loan_rules.arguments(m)
+            if _ok(context, "save_plan"):
+                arguments.pop("principal", None)
+                arguments.pop("principal_currency", None)
+            return self._call("simulate_loan", "Recommend a loan and address the user's concern", **arguments)
         return None
 
     # answering --------------------------------------------------------------------------------
 
     def answer(self, context, m):
+        advice = _ok(context, "simulate_loan")
+        if advice and advice.result.get("advice"):
+            return FinalStep(answer=loan_rules.advice_reply(advice.result["advice"], context.locale))
         zh, en = [], []
         for item in context.observations:
             if item.status in ("ERROR", "DENIED"):
@@ -525,8 +537,9 @@ class PlanningRules:
                 zh.append(AMOUNT_FILLED["zh"].format(amount=_money(principal, "THB"), said=note[0]))
                 en.append(AMOUNT_FILLED["en"].format(amount=_money(principal, "THB"), said=note[1]))
             else:
-                zh.append(LOAN_PANEL["zh"])
-                en.append(LOAN_PANEL["en"])
+                if (m.plan or {}).get("loan_advice", {}).get("status") != "paused":
+                    zh.append(LOAN_PANEL["zh"])
+                    en.append(LOAN_PANEL["en"])
             simulated = True
         loan = _ok(context, "simulate_loan")
         if loan and not loan.result.get("open_assessment"):
