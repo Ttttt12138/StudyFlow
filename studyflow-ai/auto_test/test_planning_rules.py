@@ -9,6 +9,7 @@ from studyflow_ai.agent import (
     Observation,
     RuleAgentProvider,
     ToolSpec,
+    funnel,
     prompts,
 )
 
@@ -49,12 +50,21 @@ def saved(status="DRAFT"):
 
 
 def test_prompt_version_and_planning_prompt_describe_the_loan_panel_flow():
-    assert prompts.PLANNING_VERSION == "planning-2.2"
+    assert prompts.PLANNING_VERSION == "planning-2.4"
     text = " ".join(prompts.PLANNING.split())
     for removed in ("confirm_plan", "confirm_enrollment", "record_expense", "get_spending", "available_funds",
                     "support_amount", "prequal", "ENROLLED", "funding gap", "monthly budget"):
         assert removed not in text, removed
     assert "principal" in text and "simulate_loan" in text and "admission notice" in text
+
+
+def test_missing_data_is_stated_once_with_a_source_and_an_offer_never_a_question():
+    # Observed live (planning-2.2): "那个大学排名更高" -> "QS or THE, which year?" -> "qs" -> "which year?" ...
+    text = " ".join(prompts.PLANNING.split())
+    for phrase in ("memory.data_coverage", "without calling a tool", "school's website",
+                   "Never ask which list, year, edition or source", "never ask the user to supply the data",
+                   "memory.funnel.invite"):
+        assert phrase in text, phrase
 
 
 def test_no_role_is_needed_and_prices_come_first():
@@ -84,7 +94,9 @@ def test_comparison_answer_uses_full_course_totals_and_names_the_cheapest():
             row("waseda", "早稻田大学", "Waseda University", "2000000.00", None),
             row("chulalongkorn", "朱拉隆功大学", "Chulalongkorn University", "1500000.00", None)]})
     answer = step("比较早稻田和朱拉隆功", observations=[compared]).answer
-    assert "2,000,000 THB" in answer and "1,500,000 THB" in answer and "最低的是朱拉隆功大学，比最贵的一所少约 500,000 THB" in answer
+    # The card lists each school; the reply names the cheapest and the gap, then invites a choice.
+    assert "最低的是朱拉隆功大学，比最贵的一所少约 500,000 THB" in answer
+    assert answer.endswith(funnel.invite("choose", "zh"))
 
 
 def test_country_filter_and_comparison():
@@ -113,16 +125,16 @@ def test_a_loan_amount_said_in_chat_goes_to_save_plan_principal():
 
 def test_ambiguous_loan_amount_is_asked_once():
     result = step("想借20万泰铢，或者借款30万泰铢", plan=DRAFT)
-    assert isinstance(result, FinalStep) and "拟借金额" in result.answer
+    assert isinstance(result, FinalStep) and "借款金额" in result.answer and result.answer.count("？") == 1
 
 
-def test_after_choosing_a_school_the_loan_panel_opens():
+def test_after_choosing_a_school_the_reply_asks_how_much_to_borrow():
     result = step("就选早稻田", observations=[saved()])
     assert result.tool == "simulate_loan"
     opened = Observation(tool="simulate_loan", status="OK", arguments={}, result={
         **saved().result, "open_assessment": True})
     answer = step("就选早稻田", observations=[saved(), opened]).answer
-    assert "贷款面板" in answer and "填写想借的金额" in answer and "模拟录取通知" in answer
+    assert answer.endswith(funnel.invite("amount", "zh")) and "贷款面板" not in answer
     assert "缺口" not in answer and "存款" not in answer
 
 
@@ -137,20 +149,20 @@ def test_a_stored_loan_amount_is_repeated_in_the_reply():
 
     thb = stored({"principal": "200000.00", "principal_currency": "THB"}, "200000.00")
     answer = step("贷款20万泰铢", plan=DRAFT, observations=[thb, opened(thb)]).answer
-    assert "已把贷款金额 200,000 THB 填入贷款面板" in answer and "填写想借的金额" not in answer
-    assert "选择产品、期限和还款方式" in answer and "模拟录取通知" in answer
+    assert "想借的 200,000 THB 我记下了" in answer and "告诉我想借多少" not in answer
     # An amount said in another currency is repeated as stored (THB) and as said.
     cny = stored({"principal": "50000.00", "principal_currency": "CNY"}, "245000.00")
     english = step("We want to borrow 50,000 CNY", plan=DRAFT, locale="en", observations=[cny, opened(cny)]).answer
-    assert "loan amount of 245,000 THB (converted from 50,000 CNY) into the loan panel" in english
-    # Without a stored amount the reply still asks for it in the panel.
+    assert "the 245,000 THB (converted from 50,000 CNY) you'd like to borrow" in english
+    # Without a stored amount the reply asks for it.
     plain = step("就选早稻田", observations=[saved(), opened(saved())]).answer
-    assert "填写想借的金额" in plain and "已把贷款金额" not in plain
+    assert "告诉我想借多少" in plain and "我记下了" not in plain
 
 
 def test_loan_needs_a_school_first():
     asks = step("帮我贷款")
-    assert isinstance(asks, FinalStep) and "学校" in asks.answer and "贷款面板" in asks.answer
+    assert isinstance(asks, FinalStep) and "先选定学校" in asks.answer
+    assert asks.answer.endswith(funnel.invite("price", "zh"))
     assert "存款" not in asks.answer and "缺口" not in asks.answer
     assert args(step("帮我贷款，分36个月", plan=DRAFT)) == {"months": 36}
 
@@ -161,7 +173,7 @@ def test_finalising_a_draft_opens_the_loan_panel_instead_of_confirming_in_chat()
         assert result.tool == "simulate_loan", (goal, result)
     english = step("Confirm my plan", plan=DRAFT, locale="en", observations=[Observation(
         tool="simulate_loan", status="OK", arguments={}, result={**saved().result, "open_assessment": True})])
-    assert "submit the loan application" in english.answer and "admission notice" in english.answer
+    assert english.answer.endswith(funnel.invite("amount", "en"))
 
 
 def test_removed_tools_are_never_called():
@@ -177,7 +189,7 @@ def test_spending_is_not_recorded():
     for goal, locale in [("今天午饭花了120泰铢", "zh"), ("I spent 85 THB on a taxi", "en")]:
         result = step(goal, plan=CONFIRMED, locale=locale)
         assert isinstance(result, FinalStep), (goal, result)
-        assert "不记录日常花销" in result.answer or "not recorded" in result.answer
+        assert "不做记录" in result.answer or "isn't tracked" in result.answer
 
 
 def test_answers_only_quote_numbers_from_observations():
@@ -186,7 +198,8 @@ def test_answers_only_quote_numbers_from_observations():
         "estimated_share": "31.4", "groups": {"tuition": "6000000.00", "living": "2500000.00",
                                               "essentials": "500000.00"}})
     answer = step("早稻田全部费用", observations=[estimate]).answer
-    assert "9,000,000 JPY" in answer and "31%" in answer and "示例数据" in answer
+    assert "9,000,000 JPY" in answer and "6,000,000 JPY" in answer and "示例数据" in answer
+    assert answer.endswith(funnel.invite("compare", "zh"))
 
 
 def test_confirmed_plans_ask_for_bills_and_reach_the_finance_rules():
@@ -201,9 +214,9 @@ def test_money_tools_wait_for_the_loan_application():
         for goal in ["人民币兑泰铢汇率是多少", "我的余额是多少", "把1000人民币换成泰铢", "汇款5000泰铢给学校"]:
             result = step(goal, plan=plan)
             assert isinstance(result, FinalStep), (goal, plan, result)
-            assert "提交贷款申请后开放" in result.answer and "入学" not in result.answer
+            assert "贷款申请提交后才会开放" in result.answer and "入学" not in result.answer
     english = step("What is my balance?", locale="en")
-    assert isinstance(english, FinalStep) and "after you submit the loan application" in english.answer
+    assert isinstance(english, FinalStep) and "once your loan application is submitted" in english.answer
     assert "enrollment" not in english.answer
     # Planning questions that merely mention status are not wallet requests.
     assert step("我的计划进度").tool == "get_plan"
@@ -219,8 +232,8 @@ def test_the_on_time_record_is_not_offered_in_planning_chat():
 
 def test_submitted_application_is_not_reopened_from_chat():
     result = step("帮我贷款", plan=CONFIRMED)
-    assert isinstance(result, FinalStep) and "贷款申请已提交" in result.answer
-    assert "已提交" in step("确认", plan=CONFIRMED).answer
+    assert isinstance(result, FinalStep) and "贷款申请已经提交好了" in result.answer
+    assert "提交好了" in step("确认", plan=CONFIRMED).answer
 
 
 def test_preparation_topics_are_read_only_and_campus_questions_stay_available():

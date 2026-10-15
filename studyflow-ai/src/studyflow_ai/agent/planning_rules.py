@@ -9,6 +9,7 @@ import re
 from decimal import Decimal
 
 from studyflow_ai.agent import loan_rules
+from studyflow_ai.agent.funnel import invite, stage
 from studyflow_ai.agent.models import FinalStep, ToolCallStep
 from studyflow_ai.agent.planning_facts import ambiguities
 from studyflow_ai.agent.planning_facts import amounts as labelled_amounts
@@ -47,46 +48,25 @@ CURRENCIES = [("人民币", "CNY"), ("美元", "USD"), ("泰铢", "THB"), ("英�
               ("元", "CNY"), ("rmb", "CNY"), ("cny", "CNY"), ("usd", "USD"), ("thb", "THB"),
               ("gbp", "GBP"), ("jpy", "JPY"), ("aud", "AUD"), ("sgd", "SGD"), ("myr", "MYR"),
               ("eur", "EUR"), ("baht", "THB"), ("yuan", "CNY")]
-STATUS = {"DRAFT": ("草稿", "draft"), "CONFIRMED": ("已确认", "confirmed")}
-SAMPLE = {"zh": "（示例数据，来自公开资料，付款前请向学校确认。）",
-          "en": "(Sample data from public sources; confirm with the school before paying.)"}
-SIMULATED = {"zh": "所有资金与贷款均为模拟。", "en": "All money and loans are simulated."}
+SAMPLE = {"zh": "（以上是根据公开资料整理的示例数据，付款前请再向学校确认。）",
+          "en": "(Sample data from public sources; please confirm with the school before paying.)"}
 AFTER_APPLICATION = {
-    "zh": "钱包、换汇和汇款工具会在你于贷款面板提交贷款申请后开放。现在可以先查学校总价、比较几所学校，或打开贷款面板试算还款。",
-    "en": "Wallet, currency exchange and remittance tools open after you submit the loan application in the loan "
-          "panel. For now I can look up a school's total cost, compare schools, or open the loan panel to estimate "
-          "repayments.",
+    "zh": "钱包、换汇和汇款要等贷款申请提交后才会开放，到时候我陪你一步步来。",
+    "en": "The wallet, currency exchange and transfers open once your loan application is submitted; "
+          "I'll walk you through them then. ",
 }
 HELP = {
-    "zh": "告诉我想去的学校，我来算学费、住宿和生活费的全程总价；也可以比较几所学校。选定学校后，在贷款面板填写想借的金额，就能看到还款试算。",
-    "en": "Tell me a school and I'll work out the full-course total for tuition, housing and living costs; "
-          "I can also compare schools. Once you choose a school, type the amount to borrow in the loan panel "
-          "to see the repayment estimate.",
+    "zh": "我可以帮你算留学的全程总价、把几所学校放在一起比，再按你想借的金额推荐贷款方案。",
+    "en": "I can work out the full cost of studying abroad, compare schools side by side, and suggest a loan "
+          "for the amount you'd like to borrow. ",
 }
-LOAN_PANEL = {
-    "zh": "下一步在贷款面板：填写想借的金额，选择产品、期限和还款方式，查看每月还款、总利息和总还款，然后确认计划并提交贷款申请；"
-          "提交时会自动附上模拟录取通知。",
-    "en": "Next, in the loan panel: type the amount to borrow, choose the product, term and repayment method, check "
-          "the monthly payment, total interest and total repayment, then confirm the plan and submit the loan "
-          "application. A simulated admission notice is attached automatically.",
-}
-AMOUNT_FILLED = {
-    "zh": "已把贷款金额 {amount}{said} 填入贷款面板。下一步：在面板选择产品、期限和还款方式，查看每月还款、总利息和总还款，"
-          "然后确认计划并提交贷款申请；提交时会自动附上模拟录取通知。",
-    "en": "I've put the loan amount of {amount}{said} into the loan panel. Next, in the panel: choose the product, term "
-          "and repayment method, check the monthly payment, total interest and total repayment, then confirm the plan "
-          "and submit the loan application. A simulated admission notice is attached automatically.",
-}
-SUBMITTED = {
-    "zh": "贷款申请已提交，可在待办里确认其余材料并签约；钱包、换汇和汇款工具已开放。",
-    "en": "The loan application is submitted. Confirm the other documents and sign in your to-dos; wallet, "
-          "currency exchange and remittance tools are open.",
-}
+SUBMITTED = {"zh": "你的贷款申请已经提交好了。", "en": "Your loan application is already in. "}
 NO_EXPENSES = {
-    "zh": "这里不记录日常花销。我可以查看接下来的账单和还款，或在钱包里换汇、汇款。",
-    "en": "Day-to-day spending is not recorded here. I can show upcoming bills and repayments, or exchange and "
-          "send money from the wallet.",
+    "zh": "日常花销这里不做记录，不过接下来要交的账单和还款，我可以帮你看看。",
+    "en": "Day-to-day spending isn't tracked here, but I can show you upcoming bills and repayments. ",
 }
+FAILED = {"zh": "有一项信息刚才没查到，", "en": "One lookup didn't go through just now; "}
+FAILED_ONLY = {"zh": "这一步刚才没查成功，可以再发一次试试。", "en": "That didn't go through just now; try sending it again. "}
 
 
 def _has(text, words):
@@ -213,15 +193,16 @@ class PlanningRules:
         if m.ambiguous:
             if m.facts and m.focus and not _tried(context, "save_plan"):
                 return self._save(context, m)
-            labels = {"principal": ("拟借金额", "borrowing amount")}
-            return self._final(context, "仅需确认：" + "、".join(labels[k][0] for k in m.ambiguous) + "有多个数值或币种，应使用哪一个？其他已知资料会保留。",
-                "Please clarify only " + ", ".join(labels[k][1] for k in m.ambiguous) + ": which amount and currency should I use? Other known details are retained.")
+            labels = {"principal": ("借款金额", "borrowing amount")}
+            return self._final(context, "你提到了好几个" + "、".join(labels[k][0] for k in m.ambiguous) + "，想用哪一个？告诉我一个就行，其他信息我都记着。",
+                "You mentioned more than one " + ", ".join(labels[k][1] for k in m.ambiguous) + ". Which one should I use? The rest is noted.")
         guidance = preparation_reply(m.text, (m.plan or {}).get("status"), context.locale, m.plan)
         if guidance:
             return FinalStep(answer=guidance)
         finance = self._finance(context, m)
         if finance == "locked":
-            return FinalStep(answer=AFTER_APPLICATION[context.locale])
+            return self._final(context, *(AFTER_APPLICATION[k] + invite(stage(context.memory, context.observations), k)
+                                          for k in ("zh", "en")))
         if finance is not None:
             provider, intent = finance
             if provider._failed_twice(context):
@@ -239,7 +220,8 @@ class PlanningRules:
             return life
         finance = self._finance(context, Message(context))
         if finance == "locked":
-            return FinalStep(answer=AFTER_APPLICATION[context.locale])
+            return self._final(context, *(AFTER_APPLICATION[k] + invite(stage(context.memory, context.observations), k)
+                                          for k in ("zh", "en")))
         if finance is not None:
             provider, intent = finance
             return provider._summary(context, intent)
@@ -368,63 +350,69 @@ class PlanningRules:
         if advice and advice.result.get("advice"):
             return FinalStep(answer=loan_rules.advice_reply(advice.result["advice"], context.locale))
         zh, en = [], []
-        for item in context.observations:
-            if item.status in ("ERROR", "DENIED"):
-                code = item.result.get("error")
-                code = code if isinstance(code, str) else json.dumps(code, ensure_ascii=False)[:120]
-                zh.append(f"{item.tool} 没有成功（{code}）。")
-                en.append(f"{item.tool} did not succeed ({code}).")
         sample = False
-        sample |= self._schools_text(context, m, zh, en)
+        sample |= self._schools_text(context, zh, en)
         sample |= self._profile_text(context, zh, en)
         sample |= self._compare_text(context, zh, en)
         sample |= self._estimate_text(context, zh, en)
-        simulated = self._plan_text(context, m, zh, en)
-        simulated |= self._bills_text(context, zh, en)
+        amount_noted = self._plan_text(context, zh, en)
+        self._bills_text(context, zh, en)
+        if any(item.status in ("ERROR", "DENIED") for item in context.observations):
+            zh.insert(0, FAILED["zh"] if zh else FAILED_ONLY["zh"])
+            en.insert(0, FAILED["en"] if en else FAILED_ONLY["en"])
         if sample:
             zh.append(SAMPLE["zh"])
             en.append(SAMPLE["en"])
-        if simulated:
-            zh.append(SIMULATED["zh"])
-            en.append(SIMULATED["en"])
+        asks_loan = _has(m.text, LOAN) or _has(m.text, CONFIRM)
         if not zh:
             if _has(m.text, SPENT) and m.amount is not None:
                 zh.append(NO_EXPENSES["zh"])
                 en.append(NO_EXPENSES["en"])
-            elif m.confirmed and (_has(m.text, LOAN) or _has(m.text, CONFIRM)):
+            elif m.confirmed and asks_loan:
                 zh.append(SUBMITTED["zh"])
                 en.append(SUBMITTED["en"])
-            elif _has(m.text, LOAN) or _has(m.text, CONFIRM):
-                zh.append("先告诉我选哪所学校。" + LOAN_PANEL["zh"])
-                en.append("Tell me the school first. " + LOAN_PANEL["en"])
-            else:
+            elif not asks_loan:
                 zh.append(HELP["zh"])
                 en.append(HELP["en"])
-        return self._final(context, "".join(zh), " ".join(en))
+        next_step = stage(context.memory, context.observations)
+        if asks_loan and next_step in ("price", "compare", "choose"):
+            # Loans follow a chosen school: say so instead of only a generic invitation.
+            zh.append("贷款要先选定学校再算。")
+            en.append("A loan is worked out once you've chosen a school. ")
+        if not amount_noted:  # that sentence already says what happens next
+            zh.append(invite(next_step, "zh"))
+            en.append(invite(next_step, "en"))
+        return self._final(context, "".join(zh), "".join(en).strip())
 
-    def _schools_text(self, context, m, zh, en):
+    def _schools_text(self, context, zh, en):
         listed = _ok(context, "list_schools")
         if not listed:
             return False
         rows = listed.result.get("schools", [])
         if not rows:
             zh.append("目录里暂时没有符合条件的学校。")
-            en.append("No catalog school matches that yet.")
+            en.append("No school in the catalog matches that yet. ")
             return False
-        parts_zh, parts_en = [], []
-        for row in rows:
-            converted = row.get("first_year_converted") or {}
-            if row.get("first_year_home"):
-                converted = {"amount": row["first_year_home"], "currency": row.get("home_currency")}
-            extra = f"≈{_money(converted.get('amount'), converted.get('currency'))}" if converted else ""
-            parts_zh.append(f"{_name(row, 'zh')}（{row['country']['zh']}，首年约 "
-                            f"{_money(row['first_year_total'], row['currency'])}{extra}）")
-            parts_en.append(f"{_name(row, 'en')} ({row['country']['en']}, first year about "
-                            f"{_money(row['first_year_total'], row['currency'])}{' ' + extra if extra else ''})")
-        zh.append(f"目录里有 {len(rows)} 所学校：" + "；".join(parts_zh) + "。")
-        en.append(f"{len(rows)} schools in the catalog: " + "; ".join(parts_en) + ".")
-        zh.append("说出学校名，我把全程总价算给你，也可以比较几所学校。")
-        en.append("Name a school and I'll give you the full-course total, or compare a few.")
+        home = rows[0].get("home_currency")
+        totals = [(Decimal(str(r["total_home"])), r) for r in rows
+                  if r.get("total_home") is not None and r.get("home_currency") == home]
+        countries = {((r.get("country") or {}).get("zh"), (r.get("country") or {}).get("en")) for r in rows}
+        scope_zh, scope_en = next(iter(countries)) if len(countries) == 1 else ("目录里", "the catalog")
+        if len(rows) == 1:
+            row = rows[0]
+            zh.append(f"{scope_zh}有 1 所学校：{_name(row, 'zh')}，全程约 {_money(row.get('total'), row.get('currency'))}。")
+            en.append(f"There is one school in {scope_en}: {_name(row, 'en')}, about "
+                      f"{_money(row.get('total'), row.get('currency'))} in total. ")
+        elif len(totals) == len(rows):
+            low, high = min(totals, key=lambda t: t[0]), max(totals, key=lambda t: t[0])
+            zh.append(f"{scope_zh}有 {len(rows)} 所学校，全程总价从约 {_money(low[0], home)}（{_name(low[1], 'zh')}）"
+                      f"到约 {_money(high[0], home)}（{_name(high[1], 'zh')}），每所的明细都在下方卡片里。")
+            en.append(f"There are {len(rows)} schools in {scope_en}, from about {_money(low[0], home)} "
+                      f"({_name(low[1], 'en')}) to about {_money(high[0], home)} ({_name(high[1], 'en')}) in total; "
+                      "each one's details are in the cards below. ")
+        else:
+            zh.append(f"{scope_zh}有 {len(rows)} 所学校，每所的全程总价都在下方卡片里。")
+            en.append(f"There are {len(rows)} schools in {scope_en}; each one's full cost is in the cards below. ")
         return True
 
     def _profile_text(self, context, zh, en):
@@ -436,10 +424,10 @@ class PlanningRules:
         def names(rows, locale, limit=3):
             return ("、" if locale == "zh" else ", ").join(_name(r, locale) for r in rows[:limit])
 
-        zh.append(f"{_name(p, 'zh')}在{p['city']['zh']}。校内有{names(p['facilities'], 'zh')}；附近可以吃"
-                  f"{names(p['food'], 'zh')}；周末可以去{names(p['attractions'], 'zh')}。")
-        en.append(f"{_name(p, 'en')} is in {p['city']['en']}. Campus has {names(p['facilities'], 'en')}; "
-                  f"nearby food: {names(p['food'], 'en')}; weekends: {names(p['attractions'], 'en')}.")
+        zh.append(f"{_name(p, 'zh')}在{p['city']['zh']}。校内有{names(p['facilities'], 'zh')}；附近能吃到"
+                  f"{names(p['food'], 'zh')}；周末可以去{names(p['attractions'], 'zh')}逛逛。")
+        en.append(f"{_name(p, 'en')} is in {p['city']['en']}. On campus: {names(p['facilities'], 'en')}; "
+                  f"food nearby: {names(p['food'], 'en')}; for weekends: {names(p['attractions'], 'en')}. ")
         return True
 
     def _compare_text(self, context, zh, en):
@@ -447,34 +435,23 @@ class PlanningRules:
         if not found:
             return False
         rows = found.result.get("schools", [])
-        part_zh, part_en = [], []
-        for row in rows:
-            if row.get("total") is None:  # older result shape: first-year only
-                converted = row.get("first_year_converted") or {}
-                home = f"（≈{_money(converted.get('amount'), converted.get('currency'))}）" if converted else ""
-                part_zh.append(f"{_name(row, 'zh')} 首年约 {_money(row['first_year_total'], row['currency'])}{home}")
-                part_en.append(f"{_name(row, 'en')} first year about "
-                               f"{_money(row['first_year_total'], row['currency'])}{' ' + home if home else ''}")
-                continue
-            converted = row.get("total_converted") or {}
-            home = _money(converted.get("amount"), converted.get("currency")) if converted else ""
-            years = row.get("years") or row.get("duration_years")
-            part_zh.append(f"{_name(row, 'zh')} 读 {years} 年总价约 {_money(row['total'], row['currency'])}"
-                           f"{f'（≈{home}）' if home else ''}")
-            part_en.append(f"{_name(row, 'en')} {years} year(s) total about {_money(row['total'], row['currency'])}"
-                           f"{f' (≈{home})' if home else ''}")
-        zh.append("对比：" + "；".join(part_zh) + "。")
-        en.append("Comparison: " + "; ".join(part_en) + ".")
         cheapest = next((r for r in rows if r.get("key") == found.result.get("cheapest")), None)
-        if cheapest is not None:
-            home_currency = found.result.get("home_currency")
-            totals = [_home_total(r, home_currency) for r in rows]
-            more_zh = more_en = ""
-            if len(rows) > 1 and None not in totals:
-                gap = _money(max(totals) - min(totals), home_currency)
-                more_zh, more_en = f"，比最贵的一所少约 {gap}", f", about {gap} less than the most expensive"
-            zh.append(f"全程总价最低的是{_name(cheapest, 'zh')}{more_zh}。")
-            en.append(f"Lowest full-course total: {_name(cheapest, 'en')}{more_en}.")
+        if cheapest is None:
+            zh.append("几所学校的对比都在下方卡片里。")
+            en.append("The comparison is in the card below. ")
+            return True
+        home_currency = found.result.get("home_currency")
+        totals = [_home_total(r, home_currency) for r in rows]
+        more_zh = more_en = ""
+        if len(rows) > 1 and None not in totals:
+            gap = _money(max(totals) - min(totals), home_currency)
+            more_zh, more_en = f"，比最贵的一所少约 {gap}", f", about {gap} less than the most expensive"
+        # A school list in the same reply already points to the cards.
+        listed = _ok(context, "list_schools") is not None
+        zh.append(f"比下来，全程总价最低的是{_name(cheapest, 'zh')}{more_zh}"
+                  f"{'。' if listed else '；各校明细在下方卡片里。'}")
+        en.append(f"Side by side, {_name(cheapest, 'en')} costs the least overall{more_en}"
+                  f"{'. ' if listed else '; the details are in the card below. '}")
         return True
 
     def _estimate_text(self, context, zh, en):
@@ -484,75 +461,55 @@ class PlanningRules:
         e = found.result
         cur = e["currency"]
         converted = e.get("converted") or {}
-        home_zh = f"（≈{_money(converted.get('amount'), converted.get('currency'))}）" if converted else ""
+        home = _money(converted.get("amount"), converted.get("currency")) if converted else ""
         g = e["groups"]
-        zh.append(f"读 {e['years']} 年预计全部费用约 {_money(e['total'], cur)}{home_zh}：学费 {_money(g['tuition'], cur)}，"
-                  f"生活费 {_money(g['living'], cur)}，必要开支 {_money(g['essentials'], cur)}；"
-                  f"区间 {_money(e['total_low'], cur)}–{_money(e['total_high'], cur)}，约 {Decimal(e['estimated_share']):.0f}% 为估算。")
-        en.append(f"{e['years']} year(s) total about {_money(e['total'], cur)}{' ' + home_zh if home_zh else ''}: "
+        zh.append(f"读 {e['years']} 年，全程大约 {_money(e['total'], cur)}{f'（约 {home}）' if home else ''}，"
+                  f"其中学费 {_money(g['tuition'], cur)}、生活费 {_money(g['living'], cur)}、必要开支 {_money(g['essentials'], cur)}。")
+        en.append(f"Over {e['years']} year(s) it comes to about {_money(e['total'], cur)}{f' (about {home})' if home else ''}: "
                   f"tuition {_money(g['tuition'], cur)}, living {_money(g['living'], cur)}, essentials "
-                  f"{_money(g['essentials'], cur)}; range {_money(e['total_low'], cur)}-{_money(e['total_high'], cur)}, "
-                  f"about {Decimal(e['estimated_share']):.0f}% estimated.")
+                  f"{_money(g['essentials'], cur)}. ")
         return True
 
     def _bills_text(self, context, zh, en):
-        shown = False
         listed = _ok(context, "list_bills")
-        if listed:
-            rows = listed.result.get("bills", [])[:4]
-            if rows:
-                zh.append("接下来的账单：" + "；".join(f"{b['due_date']} {b['label'].get('zh')} "
-                                                     f"{_money(b['amount'], b['currency'])}" for b in rows) + "。")
-                en.append("Upcoming bills: " + "; ".join(f"{b['due_date']} {b['label'].get('en')} "
-                                                         f"{_money(b['amount'], b['currency'])}" for b in rows) + ".")
-            else:
-                zh.append("目前没有待付账单。")
-                en.append("No bills are due.")
-            shown = True
-        return shown
+        if not listed:
+            return
+        rows = listed.result.get("bills", [])[:4]
+        if rows:
+            zh.append("接下来要交的有：" + "；".join(f"{b['due_date']} {b['label'].get('zh')} "
+                                                   f"{_money(b['amount'], b['currency'])}" for b in rows) + "。")
+            en.append("Coming up: " + "; ".join(f"{b['due_date']} {b['label'].get('en')} "
+                                                f"{_money(b['amount'], b['currency'])}" for b in rows) + ". ")
+        else:
+            zh.append("最近没有要交的账单。")
+            en.append("Nothing is due right now. ")
 
-    def _plan_text(self, context, m, zh, en):
-        simulated = False
-        saved = _ok(context, "simulate_loan") or _ok(context, "save_plan") or _ok(context, "get_plan")
+    def _plan_text(self, context, zh, en):
+        saved = _ok(context, "save_plan") or _ok(context, "get_plan")
         plan = (saved.result.get("plan") if saved else None) or None
-        if plan:
-            school = (plan.get("school") or {}).get("name", {})
-            cur = plan.get("currency")
-            years = plan.get("duration_months", plan.get("years", 1) * 12) / 12
-            status = STATUS.get(plan.get("status"), (plan.get("status"), plan.get("status")))
-            zh.append(f"计划：{school.get('zh', plan.get('school_key'))}，{years:g} 年，状态：{status[0]}，"
-                      f"全部费用约 {_money(plan.get('total'), cur)}。")
-            en.append(f"Plan: {school.get('en', plan.get('school_key'))}, {years:g} year(s), "
-                      f"status: {status[1]}, total about {_money(plan.get('total'), cur)}.")
-            stored = _ok(context, "save_plan")
-            principal = stored.result.get("loan_principal") if stored else None
-            if plan.get("status") == "CONFIRMED":
-                zh.append(SUBMITTED["zh"])
-                en.append(SUBMITTED["en"])
-            elif principal is not None:
-                # The amount the backend stored (THB); a figure said in another currency is shown as said too.
-                said, currency = stored.arguments.get("principal"), (stored.arguments.get("principal_currency") or "THB").upper()
-                note = ("", "") if currency == "THB" or said is None else (
-                    f"（按 {_money(said, currency)} 折算）", f" (converted from {_money(said, currency)})")
-                zh.append(AMOUNT_FILLED["zh"].format(amount=_money(principal, "THB"), said=note[0]))
-                en.append(AMOUNT_FILLED["en"].format(amount=_money(principal, "THB"), said=note[1]))
-            else:
-                if (m.plan or {}).get("loan_advice", {}).get("status") != "paused":
-                    zh.append(LOAN_PANEL["zh"])
-                    en.append(LOAN_PANEL["en"])
-            simulated = True
-        loan = _ok(context, "simulate_loan")
-        if loan and not loan.result.get("open_assessment"):
-            info = (loan.result.get("plan") or {}).get("loan") or {}
-            zh.append(f"模拟贷款：本金 {_money(info.get('principal'), 'THB')}，{info.get('months')} 个月，"
-                      f"年利率 {Decimal(str(info.get('annual_rate') or 0)) * 100:.1f}%，每月最多约 "
-                      f"{_money(info.get('monthly_payment'), 'THB')}。确认无误后在贷款面板提交申请。")
-            en.append(f"Simulated loan: principal {_money(info.get('principal'), 'THB')}, {info.get('months')} months, "
-                      f"{Decimal(str(info.get('annual_rate') or 0)) * 100:.1f}% a year, up to about "
-                      f"{_money(info.get('monthly_payment'), 'THB')} a month. Submit the application in the loan panel "
-                      "when ready.")
-            simulated = True
-        return simulated
+        if not plan:
+            return False
+        school = (plan.get("school") or {}).get("name", {})
+        cur = plan.get("currency")
+        years = plan.get("duration_months", plan.get("years", 1) * 12) / 12
+        zh.append(f"你的方案是{school.get('zh', plan.get('school_key'))}，读 {years:g} 年，全程约 {_money(plan.get('total'), cur)}。")
+        en.append(f"Your plan: {school.get('en', plan.get('school_key'))} for {years:g} year(s), about "
+                  f"{_money(plan.get('total'), cur)} in total. ")
+        stored = _ok(context, "save_plan")
+        principal = stored.result.get("loan_principal") if stored else None
+        if plan.get("status") == "CONFIRMED":
+            zh.append(SUBMITTED["zh"])
+            en.append(SUBMITTED["en"])
+        elif principal is not None:
+            # The amount the backend stored (THB); a figure said in another currency is shown as said too.
+            said, currency = stored.arguments.get("principal"), (stored.arguments.get("principal_currency") or "THB").upper()
+            note = ("", "") if currency == "THB" or said is None else (
+                f"（按 {_money(said, currency)} 折算）", f" (converted from {_money(said, currency)})")
+            zh.append(f"想借的 {_money(principal, 'THB')}{note[0]} 我记下了，这就按这个金额帮你挑贷款方案。")
+            en.append(f"I've noted the {_money(principal, 'THB')}{note[1]} you'd like to borrow and will find a "
+                      "loan plan for it. ")
+            return True
+        return False
 
 
 def _FinanceRules():

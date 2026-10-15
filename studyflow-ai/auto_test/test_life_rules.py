@@ -27,13 +27,13 @@ def test_uncertain_date_is_preserved_unknown_and_success_not_repeated():
     observation = Observation(tool="create_study_task", status="OK", arguments={},
                               result={"task_id": "a", "title": text, "due_date": None})
     answer = step(text, [observation]).answer
-    assert "已添加" in answer and "日期待补" in answer
+    assert "记下了" in answer and "日期还没定" in answer
 
 
 def test_list_is_read_only_and_failure_does_not_claim_success():
     assert step("有哪些待办和提醒").tool == "get_study_life"
     failed = Observation(tool="create_study_task", status="ERROR", arguments={}, result={})
-    assert "未保存" in step("提醒我明天报到", [failed]).answer
+    assert "没存上" in step("提醒我明天报到", [failed]).answer
 
 
 def test_one_sentence_keeps_a_labelled_amount_and_ambiguous_amount_stays_unknown():

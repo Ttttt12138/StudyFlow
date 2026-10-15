@@ -2,6 +2,7 @@
 import re
 from decimal import Decimal
 
+from .funnel import invite
 from .planning_facts import CODES, CURRENCY, NUMBER
 
 INTENTS = {
@@ -95,19 +96,21 @@ def advice_reply(advice, locale):
     zh = locale == "zh"
     status = advice["status"]
     if status == "paused":
-        return "好的，已暂停贷款推荐。需要时告诉我继续即可。" if zh else "Loan recommendations are paused. Tell me when you want to resume."
+        return ("好的，贷款推荐先停下，什么时候想继续跟我说一声就行。" if zh else
+                "Sure, I'll hold off on loan suggestions; just tell me whenever you'd like to pick them up again. "
+                ) + invite("paused", locale)
     if status == "submitted":
-        return ("贷款申请已提交，接下来核对其余材料并签约。所有贷款与资金均为模拟。" if zh else
-                "Your loan application is submitted. Review the remaining documents, then sign. All loans and funds are simulated.")
+        return ("贷款申请已经提交好了。" if zh else "Your loan application is in. ") + invite("applied", locale)
     if status == "needs_amount":
         if advice.get("intent") == "reduce_amount":
-            return "可以减少借款。你想把贷款金额调整到多少？原方案保留，我会重新测算月供和总利息。" if zh else "We can reduce the amount. How much would you like to borrow? I'll recalculate the monthly payment and total interest."
+            return ("没问题，可以少借一些。你想借多少？原来的方案我先留着，新金额一到就帮你重新算月供和总利息。" if zh else
+                    "No problem, you can borrow less. How much would you like? I'll keep the current plan and "
+                    "recalculate the monthly payment and total interest once you tell me.")
         product = advice["product"]
         rate = (Decimal(product["annual_rate"]) * 100).normalize()
-        return (f"我推荐先看{_name(product['key'], locale)}，当前示例年利率 {rate:g}%，支持分期还款。"
-                "你希望借多少？告诉我金额，我会选出一个方案，列明月供和全部费用，再带你提交贷款申请。所有贷款均为模拟。" if zh else
-                f"I recommend starting with the {_name(product['key'], locale)} at {rate:g}% annual interest. "
-                "How much would you like to borrow? I'll prepare a plan with monthly payments and all costs, then guide you to apply. Loans are simulated.")
+        return (f"贷款方面，我推荐先看{_name(product['key'], locale)}：示例年利率 {rate:g}%，可以按月分期还。" if zh else
+                f"For the loan, I'd start with the {_name(product['key'], locale)}: {rate:g}% a year in this example, "
+                "repaid in monthly installments. ") + invite("amount", locale)
     return _recommended_reply(advice, locale)
 
 
@@ -115,19 +118,19 @@ def _recommended_reply(advice, locale):
     row = advice["selected"]
     zh = locale == "zh"
     name, rate = _name(row["product"], locale), (Decimal(row["annual_rate"]) * 100).normalize()
-    reason = {"lower_monthly": ("优先降低月供", "to lower the monthly payment"),
-              "lower_interest": ("优先减少总利息", "to reduce total interest"),
-              "reduce_amount": ("按你调整的金额", "for your updated amount")}.get(advice.get("intent"),
-                 ("按当前产品费用比较", "based on the available product costs"))[0 if zh else 1]
-    intro = (f"{reason}，推荐{name}：借款 {_cash(row['principal'])}，{row['months']} 期，年利率 {rate:g}%。"
-             f"月供最高 {_cash(row['monthly_payment'])}，总利息 {_cash(row['total_interest'])}，"
-             f"手续费 {_cash(row['fees'])}，总还款 {_cash(row['total_repayment'])}。" if zh else
-             f"I recommend the {name} {reason}: {_cash(row['principal'])}, {row['months']} installments at {rate:g}% annually. "
-             f"Monthly payment up to {_cash(row['monthly_payment'])}; interest {_cash(row['total_interest'])}; "
-             f"fees {_cash(row['fees'])}; total repayment {_cash(row['total_repayment'])}. ")
+    reason = {"lower_monthly": ("为了让月供轻一些", "To keep the monthly payment lighter"),
+              "lower_interest": ("为了少付些利息", "To pay less interest"),
+              "reduce_amount": ("按你调整后的金额", "For your new amount")}.get(advice.get("intent"),
+                 ("比较了现有的贷款产品", "After comparing the available loans"))[0 if zh else 1]
+    intro = (f"{reason}，推荐{name}：借 {_cash(row['principal'])}，分 {row['months']} 期，年利率 {rate:g}%。"
+             f"每月最多还 {_cash(row['monthly_payment'])}，总利息 {_cash(row['total_interest'])}，"
+             f"手续费 {_cash(row['fees'])}，一共还 {_cash(row['total_repayment'])}。" if zh else
+             f"{reason}, I recommend the {name}: {_cash(row['principal'])} over {row['months']} installments at "
+             f"{rate:g}% a year. You'd pay at most {_cash(row['monthly_payment'])} a month, "
+             f"{_cash(row['total_interest'])} in interest and {_cash(row['fees'])} in fees, "
+             f"{_cash(row['total_repayment'])} in total. ")
     if row.get("interest_only_months"):
-        intro += (f"在校期间先付息 {row['interest_only_months']} 个月，每月最高 {_cash(row['interest_only_payment'])}，之后再还上述本金分期。" if zh else
-                  f"First, {row['interest_only_months']} interest-only months up to {_cash(row['interest_only_payment'])}, followed by those installments. ")
-    next_step = ("点击「按此方案申请」核对并提交贷款申请；提交时会附上模拟录取通知。" if zh else
-                 "Choose Apply with this plan to review and submit; a simulated admission notice is attached on submission. ")
-    return intro + _changes(advice.get("change"), locale) + next_step + ("所有贷款均为模拟。" if zh else "All loans are simulated.")
+        intro += (f"在校期间前 {row['interest_only_months']} 个月只付利息，每月最多 {_cash(row['interest_only_payment'])}，之后再按上面的月供还本金。" if zh else
+                  f"While studying, the first {row['interest_only_months']} months are interest-only, up to "
+                  f"{_cash(row['interest_only_payment'])} a month, then the installments above. ")
+    return intro + _changes(advice.get("change"), locale) + invite("apply", locale)
