@@ -164,7 +164,7 @@ def submit(actor, data, order):
     return order_record(order)
 
 
-def adapter_event(actor, data, order):
+def adapter_event(actor, data, order, delivered_on=None):
     outcome = data["outcome"]
     if order.status in SETTLED_BY[outcome]:
         return order_record(order)
@@ -176,7 +176,7 @@ def adapter_event(actor, data, order):
     item = wallet(order.owner)
     if outcome == "delivered":
         require(order.status in TRANSITIONS["delivered"][0], "INVALID_TRANSITION")
-        order.delivered_on = item.clock
+        order.delivered_on = delivered_on or item.clock
         details = {}
         if order.recipient == "SELF":
             entry = post(item, order.receive_currency, order.receive_amount,
@@ -194,6 +194,22 @@ def adapter_event(actor, data, order):
     else:
         _transition(order, outcome, actor, note)
     return order_record(order)
+
+
+def settle_due(user, today):
+    """The simulated channel delivers every order still on its way once the demo date passes its delivery window.
+
+    It arrives on the window's last day, so moving the date far ahead never makes it late. An order an operator
+    marked UNKNOWN stays with the operator."""
+    from .remittance_models import RemittanceOrder
+
+    delivered = 0
+    for order in RemittanceOrder.objects.select_for_update().filter(
+            owner=user, status__in=["SUBMITTED", "IN_TRANSIT"], expected_latest__lt=today).order_by("expected_latest"):
+        adapter_event(user, {"outcome": "delivered", "expected_version": order.version,
+                             "note": "Simulated channel: delivered within its window"}, order, order.expected_latest)
+        delivered += 1
+    return delivered
 
 
 def reconcile(actor, data, order):

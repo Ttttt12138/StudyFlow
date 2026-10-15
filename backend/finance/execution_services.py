@@ -37,9 +37,12 @@ def advance_clock(actor,data,obj=None):
     item.clock = data["date"]
     item.save(update_fields=["clock"])
     audit(actor,actor,"demo.clock_advanced",item)
-    # Whichever tool moves the demo date, the signed loan pays the school every tranche due by then.
+    # Whichever tool moves the demo date, the signed loan pays the school every tranche due by then, and
+    # transfers whose delivery window has passed arrive.
     from .planning.loan_stage import settle_payouts
+    from .remittance_orders import settle_due
     settle_payouts(actor,data["date"])
+    settle_due(actor,data["date"])
     return record(item)
 
 def create_beneficiary(actor,data,obj=None):

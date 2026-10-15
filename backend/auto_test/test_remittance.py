@@ -938,6 +938,10 @@ class RemittanceApiTests(RemittanceHarness, APITestCase):
         for order in orders:
             self.submit(order)
         self.adapter(refunded, "failed")
+        # Moving the demo date delivers whatever is still on its way once its window has passed (settle_due); an
+        # order arrives late only after an operator took it over, so these two are first marked UNKNOWN.
+        self.adapter(late, "unknown")
+        self.adapter(undelivered, "unknown")
         self.set_clock(day(2))
         for order in (boundary, on_time, no_deadline, self_on_time, self_late):
             self.adapter(order, "delivered")         # boundary: delivered_on == deadline -> on time
@@ -968,6 +972,24 @@ class RemittanceApiTests(RemittanceHarness, APITestCase):
         again = self.credit_profile()
         self.assertEqual(again["as_of"], today.isoformat())
         self.assertEqual((again["on_time"], again["late"], again["overdue"]), (2, 1, 0))
+
+    def test_moving_the_demo_date_past_the_window_delivers_on_time(self):
+        """The simulated channel: advancing the demo date settles orders whose window has passed (settle_due)."""
+        clock = self.wallet_clock()
+        out = {"recipient": "BENEFICIARY", "beneficiary": self.beneficiary(), "purpose": "tuition"}
+        due, _ = self.new_order(amount="1000.00", deadline=(clock + timedelta(days=30)).isoformat(), **out)
+        held, _ = self.new_order(amount="1000.00", **out)
+        for order in (due, held):
+            self.submit(order)
+        self.adapter(held, "unknown")
+        window_end = self.db(due).expected_latest
+        self.set_clock(window_end.isoformat())  # its last day: still on its way
+        self.assertEqual(self.db(due).status, "SUBMITTED")
+        self.set_clock((clock + timedelta(days=400)).isoformat())  # far past the window and the deadline
+        delivered = self.db(due)
+        self.assertEqual((delivered.status, delivered.delivered_on), ("DELIVERED", window_end))
+        self.assertIs(self.detail(due)["on_time"], True)
+        self.assertEqual(self.db(held).status, "UNKNOWN")  # an operator's order stays with the operator
 
     def test_self_orders_alone_never_build_credit(self):
         # Regression: six cheap on-time self-transfers used to lift the level to GOOD.
