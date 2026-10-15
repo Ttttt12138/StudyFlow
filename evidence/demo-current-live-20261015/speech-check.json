@@ -1,0 +1,104 @@
+{
+  "method": "Offline SenseVoice on all eight mastered paragraphs; no audio uploaded",
+  "limitation": "ASR differences do not measure human listening quality or phonetic timing",
+  "word_error_rate": 0.04647887323943662,
+  "numbers_match": true,
+  "paragraphs": [
+    {
+      "id": "chapter-01",
+      "transcript": "Studying abroad starts with a practical question, what will the whole journey cost Sty F connects that answer to a loan plan and controlled payments.",
+      "expected": "Studying abroad starts with a practical question: what will the whole journey cost? StudyFlow connects that answer to a loan plan and controlled payments.",
+      "word_errors": 2,
+      "reference_words": 24,
+      "numbers_expected": [],
+      "numbers_observed": [],
+      "clipped_sample_ratio": 0.0
+    },
+    {
+      "id": "chapter-02",
+      "transcript": "Ask in your own words tuition, Living costs and essential expenses appear together as a full course estimate The breakdown keeps source fees and estimates visible, so you can see what the total depends on housinging and everyday living costs are included along with essentials such as insurance visa costs and travel with four universities side by side you can compare the whole course its length and its annual cost Sw the same comparison into Chinese yuan or U dollars using reference exchange. When a ranking is unavailable, the assistant says so and points to a source for checking it can also explain the campus and nearby food before bringing you back to the next decision.",
+      "expected": "Ask in your own words. Tuition, living costs and essential expenses appear together as a full-course estimate. The breakdown keeps sourced fees and estimates visible, so you can see what the total depends on. Housing and everyday living costs are included, along with essentials such as insurance, visa costs and travel. With four universities side by side, you can compare the whole course, its length and its annual cost. Switch the same comparison into Chinese yuan, or U.S. dollars, using reference exchange rates. When a ranking is unavailable, the assistant says so and points to a source for checking. It can also explain the campus and nearby food before bringing you back to the next decision.",
+      "word_errors": 5,
+      "reference_words": 117,
+      "numbers_expected": [
+        "4"
+      ],
+      "numbers_observed": [
+        "4"
+      ],
+      "clipped_sample_ratio": 0.0
+    },
+    {
+      "id": "chapter-03",
+      "transcript": "Once you choose a school, the conversation carries that context forward and asks how much you want to borrow here, 48,000 Bt produces a recommended plan with a monthly payment interest fees and total repayment other calculated plans remain available when you want to compare the options the loan panel also keeps the inputs and full repayment schedule available for a closer look if the monthly payment feels too high, say so Sty flow recculates and shows how both the payment and total interest. The study loan example also shows interest only payments during study, followed by principal and interest repayments prefer less interest overall, the assistant compares shorter terms and makes the higher monthly commitment visible you can reduce the amount to this plan now borrows 30,000t the school cost never silently becomes the requested loan If you are not interested, recommendations pause even while you ask another school question an explicit request resumes the discussion. Earlier recommendations cannot submit an outdated plan.",
+      "expected": "Once you choose a school, the conversation carries that context forward and asks how much you want to borrow. Here, forty-eight thousand baht produces a recommended plan with the monthly payment, interest, fees and total repayment. Other calculated plans remain available when you want to compare the options. The loan panel also keeps the inputs and full repayment schedule available for a closer look. If the monthly payment feels too high, say so. StudyFlow recalculates and shows how both the payment and total interest change. The study-loan example also shows interest-only payments during study, followed by principal and interest repayments. Prefer less interest overall? The assistant compares shorter terms and makes the higher monthly commitment visible. You can reduce the amount too. This plan now borrows thirty thousand baht; the school cost never silently becomes the requested loan. If you are not interested, recommendations pause, even while you ask another school question. An explicit request resumes the discussion. Earlier recommendations cannot submit an outdated plan.",
+      "word_errors": 9,
+      "reference_words": 165,
+      "numbers_expected": [
+        "48000",
+        "30000"
+      ],
+      "numbers_observed": [
+        "48000",
+        "30000"
+      ],
+      "clipped_sample_ratio": 0.0
+    },
+    {
+      "id": "chapter-04",
+      "transcript": "Asking to apply opens a review of the current terms, only the student's confirmation submits the application a simulated admission notice is attached automatically it is not a real university offer or a bank approval the bills already show the loanss proposed share while payment weights for signing the student marks the remaining demo document declarations ready, then reviews and explicitly signs the agreement as a separate action the signed loan schedules payments to the school's verified simulation account without putting. Loan proceeds in a student's wallet.",
+      "expected": "Asking to apply opens a review of the current terms. Only the student's confirmation submits the application. A simulated admission notice is attached automatically. It is not a real university offer or a bank approval. The bills already show the loan's proposed share, while payment waits for signing. The student marks the remaining demo document declarations ready, then reviews and explicitly signs the agreement as a separate action. The signed loan schedules payments to the school's verified simulation account, without putting the loan proceeds in the student's wallet.",
+      "word_errors": 5,
+      "reference_words": 92,
+      "numbers_expected": [],
+      "numbers_observed": [],
+      "clipped_sample_ratio": 0.0
+    },
+    {
+      "id": "chapter-05",
+      "transcript": "Preparation stays in the conversation a dated request becomes a saved reminder mark a task completed when it is done or undo that update if it still needs attention a partly covered tuition bill shows the loan share and the amount the student still needs to pay together when the wallet is short the demo offers a clearly marked simulated top up for the remainder the student then confirms the payment with a password the bill and balance update together and the loan covered amount cannot be charged again.",
+      "expected": "Preparation stays in the conversation: a dated request becomes a saved reminder. Mark a task completed when it is done, or undo that update if it still needs attention. A partly covered tuition bill shows the loan's share and the amount the student still needs to pay, together. When the wallet is short, the demo offers a clearly marked simulated top-up for the remainder. The student then confirms the payment with a password. The bill and balance update together, and the loan-covered amount cannot be charged again.",
+      "word_errors": 1,
+      "reference_words": 90,
+      "numbers_expected": [],
+      "numbers_observed": [],
+      "clipped_sample_ratio": 0.0
+    },
+    {
+      "id": "chapter-06",
+      "transcript": "Separate currency balances keep the source of each simulated payment clear For an exchange, the assistant compares quotes and prepares a proposal for the student to review a wrong password stops the action and leaves the balance unchanged only after authorization are 500 yuan converted into Tbot for a transfer routes, fees and expected arrival come before commitment confirmation debits 1000 yuon and creates a traceable transfer order We advance the clearly labelbeled demo. Date to the delivery Windows final day, the simulated channel marks the transfer delivered and its status is visible in the history.",
+      "expected": "Separate currency balances keep the source of each simulated payment clear. For an exchange, the assistant compares quotes and prepares a proposal for the student to review. A wrong password stops the action and leaves the balance unchanged. Only after authorization are five hundred yuan converted into Thai baht. For a transfer, routes, fees and expected arrival come before commitment. Confirmation debits one thousand yuan and creates a traceable transfer order. We advance the clearly labelled demo date to the delivery window's final day. The simulated channel marks the transfer delivered, and its status is visible in the history.",
+      "word_errors": 6,
+      "reference_words": 98,
+      "numbers_expected": [
+        "500",
+        "1000"
+      ],
+      "numbers_observed": [
+        "500",
+        "1000"
+      ],
+      "clipped_sample_ratio": 0.0
+    },
+    {
+      "id": "chapter-07",
+      "transcript": "When a loan installment falls due, it appears with its amount and date before committing, the student reviews the installment, then authorizes the repayment with a password, the installment becomes paid, the wallet is debitted, and the movement remains in the ledger.",
+      "expected": "When a loan installment falls due, it appears with its amount and date. Before committing, the student reviews the installment, then authorizes the repayment with a password. The installment becomes paid, the wallet is debited, and the movement remains in the ledger.",
+      "word_errors": 1,
+      "reference_words": 42,
+      "numbers_expected": [],
+      "numbers_observed": [],
+      "clipped_sample_ratio": 0.0
+    },
+    {
+      "id": "chapter-08",
+      "transcript": "For a new recipient, an operator first reviews and verifies the pay, Even a correct password cannot bypass a transfer limit The request enters the operations workbench for review the person who verified the pay cannot approve the transfer a separate operator checks the amount, recipient and purpose, then explicitly confirms the decision the approval is recorded, but moves no money, the student must still authorize submission with a password Cl costs informed decisions, Controlled payments all demonstrated with simulated funds.",
+      "expected": "For a new recipient, an operator first reviews and verifies the payee. Even a correct password cannot bypass a transfer limit. The request enters the operations workbench for review. The person who verified the payee cannot approve the transfer. A separate operator checks the amount, recipient and purpose, then explicitly confirms the decision. The approval is recorded, but moves no money. The student must still authorize submission with a password. Clear costs, informed decisions and controlled payments: all demonstrated with simulated funds.",
+      "word_errors": 4,
+      "reference_words": 82,
+      "numbers_expected": [],
+      "numbers_observed": [],
+      "clipped_sample_ratio": 0.0
+    }
+  ]
+}

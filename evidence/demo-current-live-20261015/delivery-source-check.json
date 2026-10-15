@@ -1,0 +1,12 @@
+{
+  "runtime_source_unchanged": true,
+  "snapshot_file_count": 1022,
+  "post_recording_changes": [
+    {
+      "path": "studyflow-ai/auto_test/test_planning_rules.py",
+      "recorded_sha256": "26c9ddc63626f0f5e46e018383c68825e1fb059fa95b97a83638fb5a995419a9",
+      "current_sha256": "5a7cb6983a65eaab0bf58af65dec9d1f5f8e6d89d07f3a4d888fc9738ac5b6f8"
+    }
+  ],
+  "explanation": "Only the prompt-version test assertion was updated from planning-2.4 to planning-2.6 after recording; all 21 planning-rule tests then passed. Recorded application code is unchanged."
+}

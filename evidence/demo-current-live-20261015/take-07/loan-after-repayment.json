@@ -1,0 +1,1638 @@
+{
+  "draft": false,
+  "quotes": [
+    {
+      "id": "2a5f4a64-4381-4a16-9594-9829f2b2ca60",
+      "type": "loansimulation",
+      "inputs": {
+        "fees": "0.00",
+        "months": 24,
+        "product": "commercial_student_demo",
+        "currency": "THB",
+        "principal": "30000.00",
+        "annual_rate": "0.045",
+        "grace_months": 0,
+        "first_due_date": "2027-09-08"
+      },
+      "result": {
+        "fees": "0.00",
+        "terms": {
+          "fees": "0.00",
+          "months": 24,
+          "product": "commercial_student_demo",
+          "currency": "THB",
+          "principal": "30000.00",
+          "annual_rate": "0.045",
+          "grace_months": 0,
+          "first_due_date": "2027-09-08"
+        },
+        "currency": "THB",
+        "schedule": [
+          {
+            "phase": "repayment",
+            "amount": "1309.43",
+            "number": 1,
+            "payment": "1309.43",
+            "due_date": "2027-09-08",
+            "interest": "112.50",
+            "principal": "1196.93",
+            "closing_balance": "28803.07",
+            "opening_balance": "30000.00",
+            "remaining_principal": "28803.07"
+          },
+          {
+            "phase": "repayment",
+            "amount": "1309.43",
+            "number": 2,
+            "payment": "1309.43",
+            "due_date": "2027-10-08",
+            "interest": "108.01",
+            "principal": "1201.42",
+            "closing_balance": "27601.65",
+            "opening_balance": "28803.07",
+            "remaining_principal": "27601.65"
+          },
+          {
+            "phase": "repayment",
+            "amount": "1309.43",
+            "number": 3,
+            "payment": "1309.43",
+            "due_date": "2027-11-08",
+            "interest": "103.51",
+            "principal": "1205.92",
+            "closing_balance": "26395.73",
+            "opening_balance": "27601.65",
+            "remaining_principal": "26395.73"
+          },
+          {
+            "phase": "repayment",
+            "amount": "1309.43",
+            "number": 4,
+            "payment": "1309.43",
+            "due_date": "2027-12-08",
+            "interest": "98.98",
+            "principal": "1210.45",
+            "closing_balance": "25185.28",
+            "opening_balance": "26395.73",
+            "remaining_principal": "25185.28"
+          },
+          {
+            "phase": "repayment",
+            "amount": "1309.43",
+            "number": 5,
+            "payment": "1309.43",
+            "due_date": "2028-01-08",
+            "interest": "94.44",
+            "principal": "1214.99",
+            "closing_balance": "23970.29",
+            "opening_balance": "25185.28",
+            "remaining_principal": "23970.29"
+          },
+          {
+            "phase": "repayment",
+            "amount": "1309.43",
+            "number": 6,
+            "payment": "1309.43",
+            "due_date": "2028-02-08",
+            "interest": "89.89",
+            "principal": "1219.54",
+            "closing_balance": "22750.75",
+            "opening_balance": "23970.29",
+            "remaining_principal": "22750.75"
+          },
+          {
+            "phase": "repayment",
+            "amount": "1309.43",
+            "number": 7,
+            "payment": "1309.43",
+            "due_date": "2028-03-08",
+            "interest": "85.32",
+            "principal": "1224.11",
+            "closing_balance": "21526.64",
+            "opening_balance": "22750.75",
+            "remaining_principal": "21526.64"
+          },
+          {
+            "phase": "repayment",
+            "amount": "1309.43",
+            "number": 8,
+            "payment": "1309.43",
+            "due_date": "2028-04-08",
+            "interest": "80.72",
+            "principal": "1228.71",
+            "closing_balance": "20297.93",
+            "opening_balance": "21526.64",
+            "remaining_principal": "20297.93"
+          },
+          {
+            "phase": "repayment",
+            "amount": "1309.43",
+            "number": 9,
+            "payment": "1309.43",
+            "due_date": "2028-05-08",
+            "interest": "76.12",
+            "principal": "1233.31",
+            "closing_balance": "19064.62",
+            "opening_balance": "20297.93",
+            "remaining_principal": "19064.62"
+          },
+          {
+            "phase": "repayment",
+            "amount": "1309.43",
+            "number": 10,
+            "payment": "1309.43",
+            "due_date": "2028-06-08",
+            "interest": "71.49",
+            "principal": "1237.94",
+            "closing_balance": "17826.68",
+            "opening_balance": "19064.62",
+            "remaining_principal": "17826.68"
+          },
+          {
+            "phase": "repayment",
+            "amount": "1309.43",
+            "number": 11,
+            "payment": "1309.43",
+            "due_date": "2028-07-08",
+            "interest": "66.85",
+            "principal": "1242.58",
+            "closing_balance": "16584.10",
+            "opening_balance": "17826.68",
+            "remaining_principal": "16584.10"
+          },
+          {
+            "phase": "repayment",
+            "amount": "1309.43",
+            "number": 12,
+            "payment": "1309.43",
+            "due_date": "2028-08-08",
+            "interest": "62.19",
+            "principal": "1247.24",
+            "closing_balance": "15336.86",
+            "opening_balance": "16584.10",
+            "remaining_principal": "15336.86"
+          },
+          {
+            "phase": "repayment",
+            "amount": "1309.43",
+            "number": 13,
+            "payment": "1309.43",
+            "due_date": "2028-09-08",
+            "interest": "57.51",
+            "principal": "1251.92",
+            "closing_balance": "14084.94",
+            "opening_balance": "15336.86",
+            "remaining_principal": "14084.94"
+          },
+          {
+            "phase": "repayment",
+            "amount": "1309.43",
+            "number": 14,
+            "payment": "1309.43",
+            "due_date": "2028-10-08",
+            "interest": "52.82",
+            "principal": "1256.61",
+            "closing_balance": "12828.33",
+            "opening_balance": "14084.94",
+            "remaining_principal": "12828.33"
+          },
+          {
+            "phase": "repayment",
+            "amount": "1309.43",
+            "number": 15,
+            "payment": "1309.43",
+            "due_date": "2028-11-08",
+            "interest": "48.11",
+            "principal": "1261.32",
+            "closing_balance": "11567.01",
+            "opening_balance": "12828.33",
+            "remaining_principal": "11567.01"
+          },
+          {
+            "phase": "repayment",
+            "amount": "1309.43",
+            "number": 16,
+            "payment": "1309.43",
+            "due_date": "2028-12-08",
+            "interest": "43.38",
+            "principal": "1266.05",
+            "closing_balance": "10300.96",
+            "opening_balance": "11567.01",
+            "remaining_principal": "10300.96"
+          },
+          {
+            "phase": "repayment",
+            "amount": "1309.43",
+            "number": 17,
+            "payment": "1309.43",
+            "due_date": "2029-01-08",
+            "interest": "38.63",
+            "principal": "1270.80",
+            "closing_balance": "9030.16",
+            "opening_balance": "10300.96",
+            "remaining_principal": "9030.16"
+          },
+          {
+            "phase": "repayment",
+            "amount": "1309.43",
+            "number": 18,
+            "payment": "1309.43",
+            "due_date": "2029-02-08",
+            "interest": "33.86",
+            "principal": "1275.57",
+            "closing_balance": "7754.59",
+            "opening_balance": "9030.16",
+            "remaining_principal": "7754.59"
+          },
+          {
+            "phase": "repayment",
+            "amount": "1309.43",
+            "number": 19,
+            "payment": "1309.43",
+            "due_date": "2029-03-08",
+            "interest": "29.08",
+            "principal": "1280.35",
+            "closing_balance": "6474.24",
+            "opening_balance": "7754.59",
+            "remaining_principal": "6474.24"
+          },
+          {
+            "phase": "repayment",
+            "amount": "1309.43",
+            "number": 20,
+            "payment": "1309.43",
+            "due_date": "2029-04-08",
+            "interest": "24.28",
+            "principal": "1285.15",
+            "closing_balance": "5189.09",
+            "opening_balance": "6474.24",
+            "remaining_principal": "5189.09"
+          },
+          {
+            "phase": "repayment",
+            "amount": "1309.43",
+            "number": 21,
+            "payment": "1309.43",
+            "due_date": "2029-05-08",
+            "interest": "19.46",
+            "principal": "1289.97",
+            "closing_balance": "3899.12",
+            "opening_balance": "5189.09",
+            "remaining_principal": "3899.12"
+          },
+          {
+            "phase": "repayment",
+            "amount": "1309.43",
+            "number": 22,
+            "payment": "1309.43",
+            "due_date": "2029-06-08",
+            "interest": "14.62",
+            "principal": "1294.81",
+            "closing_balance": "2604.31",
+            "opening_balance": "3899.12",
+            "remaining_principal": "2604.31"
+          },
+          {
+            "phase": "repayment",
+            "amount": "1309.43",
+            "number": 23,
+            "payment": "1309.43",
+            "due_date": "2029-07-08",
+            "interest": "9.77",
+            "principal": "1299.66",
+            "closing_balance": "1304.65",
+            "opening_balance": "2604.31",
+            "remaining_principal": "1304.65"
+          },
+          {
+            "phase": "repayment",
+            "amount": "1309.54",
+            "number": 24,
+            "payment": "1309.54",
+            "due_date": "2029-08-08",
+            "interest": "4.89",
+            "principal": "1304.65",
+            "closing_balance": "0.00",
+            "opening_balance": "1304.65",
+            "remaining_principal": "0.00"
+          }
+        ],
+        "principal": "30000.00",
+        "simulated": true,
+        "repayments": [
+          {
+            "amount": "1309.43",
+            "number": 1,
+            "due_date": "2027-09-08",
+            "interest": "112.50",
+            "principal": "1196.93",
+            "remaining_principal": "28803.07"
+          },
+          {
+            "amount": "1309.43",
+            "number": 2,
+            "due_date": "2027-10-08",
+            "interest": "108.01",
+            "principal": "1201.42",
+            "remaining_principal": "27601.65"
+          },
+          {
+            "amount": "1309.43",
+            "number": 3,
+            "due_date": "2027-11-08",
+            "interest": "103.51",
+            "principal": "1205.92",
+            "remaining_principal": "26395.73"
+          },
+          {
+            "amount": "1309.43",
+            "number": 4,
+            "due_date": "2027-12-08",
+            "interest": "98.98",
+            "principal": "1210.45",
+            "remaining_principal": "25185.28"
+          },
+          {
+            "amount": "1309.43",
+            "number": 5,
+            "due_date": "2028-01-08",
+            "interest": "94.44",
+            "principal": "1214.99",
+            "remaining_principal": "23970.29"
+          },
+          {
+            "amount": "1309.43",
+            "number": 6,
+            "due_date": "2028-02-08",
+            "interest": "89.89",
+            "principal": "1219.54",
+            "remaining_principal": "22750.75"
+          },
+          {
+            "amount": "1309.43",
+            "number": 7,
+            "due_date": "2028-03-08",
+            "interest": "85.32",
+            "principal": "1224.11",
+            "remaining_principal": "21526.64"
+          },
+          {
+            "amount": "1309.43",
+            "number": 8,
+            "due_date": "2028-04-08",
+            "interest": "80.72",
+            "principal": "1228.71",
+            "remaining_principal": "20297.93"
+          },
+          {
+            "amount": "1309.43",
+            "number": 9,
+            "due_date": "2028-05-08",
+            "interest": "76.12",
+            "principal": "1233.31",
+            "remaining_principal": "19064.62"
+          },
+          {
+            "amount": "1309.43",
+            "number": 10,
+            "due_date": "2028-06-08",
+            "interest": "71.49",
+            "principal": "1237.94",
+            "remaining_principal": "17826.68"
+          },
+          {
+            "amount": "1309.43",
+            "number": 11,
+            "due_date": "2028-07-08",
+            "interest": "66.85",
+            "principal": "1242.58",
+            "remaining_principal": "16584.10"
+          },
+          {
+            "amount": "1309.43",
+            "number": 12,
+            "due_date": "2028-08-08",
+            "interest": "62.19",
+            "principal": "1247.24",
+            "remaining_principal": "15336.86"
+          },
+          {
+            "amount": "1309.43",
+            "number": 13,
+            "due_date": "2028-09-08",
+            "interest": "57.51",
+            "principal": "1251.92",
+            "remaining_principal": "14084.94"
+          },
+          {
+            "amount": "1309.43",
+            "number": 14,
+            "due_date": "2028-10-08",
+            "interest": "52.82",
+            "principal": "1256.61",
+            "remaining_principal": "12828.33"
+          },
+          {
+            "amount": "1309.43",
+            "number": 15,
+            "due_date": "2028-11-08",
+            "interest": "48.11",
+            "principal": "1261.32",
+            "remaining_principal": "11567.01"
+          },
+          {
+            "amount": "1309.43",
+            "number": 16,
+            "due_date": "2028-12-08",
+            "interest": "43.38",
+            "principal": "1266.05",
+            "remaining_principal": "10300.96"
+          },
+          {
+            "amount": "1309.43",
+            "number": 17,
+            "due_date": "2029-01-08",
+            "interest": "38.63",
+            "principal": "1270.80",
+            "remaining_principal": "9030.16"
+          },
+          {
+            "amount": "1309.43",
+            "number": 18,
+            "due_date": "2029-02-08",
+            "interest": "33.86",
+            "principal": "1275.57",
+            "remaining_principal": "7754.59"
+          },
+          {
+            "amount": "1309.43",
+            "number": 19,
+            "due_date": "2029-03-08",
+            "interest": "29.08",
+            "principal": "1280.35",
+            "remaining_principal": "6474.24"
+          },
+          {
+            "amount": "1309.43",
+            "number": 20,
+            "due_date": "2029-04-08",
+            "interest": "24.28",
+            "principal": "1285.15",
+            "remaining_principal": "5189.09"
+          },
+          {
+            "amount": "1309.43",
+            "number": 21,
+            "due_date": "2029-05-08",
+            "interest": "19.46",
+            "principal": "1289.97",
+            "remaining_principal": "3899.12"
+          },
+          {
+            "amount": "1309.43",
+            "number": 22,
+            "due_date": "2029-06-08",
+            "interest": "14.62",
+            "principal": "1294.81",
+            "remaining_principal": "2604.31"
+          },
+          {
+            "amount": "1309.43",
+            "number": 23,
+            "due_date": "2029-07-08",
+            "interest": "9.77",
+            "principal": "1299.66",
+            "remaining_principal": "1304.65"
+          },
+          {
+            "amount": "1309.54",
+            "number": 24,
+            "due_date": "2029-08-08",
+            "interest": "4.89",
+            "principal": "1304.65",
+            "remaining_principal": "0.00"
+          }
+        ],
+        "is_simulated": true,
+        "net_proceeds": "30000.00",
+        "withheld_fee": "0.00",
+        "total_interest": "1426.43",
+        "total_repayment": "31426.43",
+        "maximum_installment": "1309.54",
+        "affordability_status": "insufficient_information",
+        "total_cost_over_net_proceeds": "1426.43"
+      },
+      "assessment": {
+        "status": "NOT_ASSESSED",
+        "missing_inputs": [],
+        "shortfall_months": []
+      },
+      "created_at": "2026-10-15T15:51:29.956Z",
+      "is_simulated": true,
+      "engine_version": "b-monthly-amortization-v1"
+    }
+  ],
+  "estimate": {
+    "lines": [
+      {
+        "group": "tuition",
+        "label": {
+          "en": "Tuition per semester",
+          "zh": "每学期学费"
+        },
+        "lower": null,
+        "quote": "Tuition per semester: 41,000",
+        "total": "410000.00",
+        "upper": null,
+        "amount": "41000.00",
+        "period": "semester",
+        "status": "known",
+        "cost_id": "tuition_semester",
+        "category": "tuition",
+        "estimate": false,
+        "per_year": "123000.00",
+        "total_low": "410000.00",
+        "source_url": "https://sites.google.com/phuket.psu.ac.th/fispsuphuket/International-Students",
+        "total_high": "410000.00",
+        "observed_at": "2026-10-12",
+        "occurrences": 10,
+        "start_month": 0,
+        "period_amounts": [
+          "41000.00",
+          "41000.00",
+          "41000.00",
+          "41000.00",
+          "41000.00",
+          "41000.00",
+          "41000.00",
+          "41000.00",
+          "41000.00",
+          "41000.00"
+        ]
+      },
+      {
+        "group": "tuition",
+        "label": {
+          "en": "Enrollment fee (one-time)",
+          "zh": "入学注册费（一次性）"
+        },
+        "lower": null,
+        "quote": "Enrollment Fee: 20,000",
+        "total": "20000.00",
+        "upper": null,
+        "amount": "20000.00",
+        "period": "once",
+        "status": "known",
+        "cost_id": "enrollment_fee",
+        "category": "tuition",
+        "estimate": false,
+        "per_year": "20000.00",
+        "total_low": "20000.00",
+        "source_url": "https://sites.google.com/phuket.psu.ac.th/fispsuphuket/International-Students",
+        "total_high": "20000.00",
+        "observed_at": "2026-10-12",
+        "occurrences": 1,
+        "start_month": 0,
+        "period_amounts": [
+          "20000.00"
+        ]
+      },
+      {
+        "group": "living",
+        "label": {
+          "en": "On-campus air-conditioned dorm, 2 per room",
+          "zh": "校内空调宿舍（双人间）"
+        },
+        "lower": null,
+        "quote": "Price/ Person : 11,250 THB",
+        "total": "112500.00",
+        "upper": null,
+        "amount": "11250.00",
+        "period": "semester",
+        "status": "known",
+        "cost_id": "dorm_shared",
+        "category": "housing",
+        "estimate": false,
+        "per_year": "33750.00",
+        "total_low": "112500.00",
+        "source_url": "https://sites.google.com/phuket.psu.ac.th/fispsuphuket/International-Students",
+        "total_high": "112500.00",
+        "observed_at": "2026-10-12",
+        "occurrences": 10,
+        "start_month": 0,
+        "period_amounts": [
+          "11250.00",
+          "11250.00",
+          "11250.00",
+          "11250.00",
+          "11250.00",
+          "11250.00",
+          "11250.00",
+          "11250.00",
+          "11250.00",
+          "11250.00"
+        ]
+      },
+      {
+        "group": "essentials",
+        "label": {
+          "en": "Dorm deposit, charged once",
+          "zh": "宿舍押金（一次性）"
+        },
+        "lower": null,
+        "quote": "3,000 THB",
+        "total": "3000.00",
+        "upper": null,
+        "amount": "3000.00",
+        "period": "once",
+        "status": "known",
+        "cost_id": "dorm_deposit",
+        "category": "deposit",
+        "estimate": false,
+        "per_year": "3000.00",
+        "total_low": "3000.00",
+        "source_url": "https://sites.google.com/phuket.psu.ac.th/fispsuphuket/International-Students",
+        "total_high": "3000.00",
+        "observed_at": "2026-10-12",
+        "occurrences": 1,
+        "start_month": 0,
+        "period_amounts": [
+          "3000.00"
+        ]
+      },
+      {
+        "group": "living",
+        "label": {
+          "en": "Food (canteen and local eateries)",
+          "zh": "餐饮（食堂及周边小吃店）"
+        },
+        "lower": "4500.00",
+        "quote": null,
+        "total": "252000.00",
+        "upper": "7500.00",
+        "amount": "6000.00",
+        "period": "month",
+        "status": "estimated",
+        "cost_id": "food_monthly",
+        "category": "food",
+        "estimate": true,
+        "per_year": "72000.00",
+        "total_low": "189000.00",
+        "source_url": null,
+        "total_high": "315000.00",
+        "observed_at": "2026-10-12",
+        "occurrences": 42,
+        "start_month": 0,
+        "period_amounts": [
+          "6000.00",
+          "6000.00",
+          "6000.00",
+          "6000.00",
+          "6000.00",
+          "6000.00",
+          "6000.00",
+          "6000.00",
+          "6000.00",
+          "6000.00",
+          "6000.00",
+          "6000.00",
+          "6000.00",
+          "6000.00",
+          "6000.00",
+          "6000.00",
+          "6000.00",
+          "6000.00",
+          "6000.00",
+          "6000.00",
+          "6000.00",
+          "6000.00",
+          "6000.00",
+          "6000.00",
+          "6000.00",
+          "6000.00",
+          "6000.00",
+          "6000.00",
+          "6000.00",
+          "6000.00",
+          "6000.00",
+          "6000.00",
+          "6000.00",
+          "6000.00",
+          "6000.00",
+          "6000.00",
+          "6000.00",
+          "6000.00",
+          "6000.00",
+          "6000.00",
+          "6000.00",
+          "6000.00"
+        ]
+      },
+      {
+        "group": "living",
+        "label": {
+          "en": "Local transport (songthaew, Grab or scooter rental)",
+          "zh": "本地交通（双条车、Grab 或租摩托车）"
+        },
+        "lower": "800.00",
+        "quote": null,
+        "total": "79800.00",
+        "upper": "3000.00",
+        "amount": "1900.00",
+        "period": "month",
+        "status": "estimated",
+        "cost_id": "transport_monthly",
+        "category": "transport",
+        "estimate": true,
+        "per_year": "22800.00",
+        "total_low": "33600.00",
+        "source_url": null,
+        "total_high": "126000.00",
+        "observed_at": "2026-10-12",
+        "occurrences": 42,
+        "start_month": 0,
+        "period_amounts": [
+          "1900.00",
+          "1900.00",
+          "1900.00",
+          "1900.00",
+          "1900.00",
+          "1900.00",
+          "1900.00",
+          "1900.00",
+          "1900.00",
+          "1900.00",
+          "1900.00",
+          "1900.00",
+          "1900.00",
+          "1900.00",
+          "1900.00",
+          "1900.00",
+          "1900.00",
+          "1900.00",
+          "1900.00",
+          "1900.00",
+          "1900.00",
+          "1900.00",
+          "1900.00",
+          "1900.00",
+          "1900.00",
+          "1900.00",
+          "1900.00",
+          "1900.00",
+          "1900.00",
+          "1900.00",
+          "1900.00",
+          "1900.00",
+          "1900.00",
+          "1900.00",
+          "1900.00",
+          "1900.00",
+          "1900.00",
+          "1900.00",
+          "1900.00",
+          "1900.00",
+          "1900.00",
+          "1900.00"
+        ]
+      },
+      {
+        "group": "living",
+        "label": {
+          "en": "Mobile plan with data",
+          "zh": "手机套餐及流量"
+        },
+        "lower": "300.00",
+        "quote": null,
+        "total": "18900.00",
+        "upper": "600.00",
+        "amount": "450.00",
+        "period": "month",
+        "status": "estimated",
+        "cost_id": "phone_internet",
+        "category": "communications",
+        "estimate": true,
+        "per_year": "5400.00",
+        "total_low": "12600.00",
+        "source_url": null,
+        "total_high": "25200.00",
+        "observed_at": "2026-10-12",
+        "occurrences": 42,
+        "start_month": 0,
+        "period_amounts": [
+          "450.00",
+          "450.00",
+          "450.00",
+          "450.00",
+          "450.00",
+          "450.00",
+          "450.00",
+          "450.00",
+          "450.00",
+          "450.00",
+          "450.00",
+          "450.00",
+          "450.00",
+          "450.00",
+          "450.00",
+          "450.00",
+          "450.00",
+          "450.00",
+          "450.00",
+          "450.00",
+          "450.00",
+          "450.00",
+          "450.00",
+          "450.00",
+          "450.00",
+          "450.00",
+          "450.00",
+          "450.00",
+          "450.00",
+          "450.00",
+          "450.00",
+          "450.00",
+          "450.00",
+          "450.00",
+          "450.00",
+          "450.00",
+          "450.00",
+          "450.00",
+          "450.00",
+          "450.00",
+          "450.00",
+          "450.00"
+        ]
+      },
+      {
+        "group": "essentials",
+        "label": {
+          "en": "Student health insurance",
+          "zh": "学生医疗保险"
+        },
+        "lower": "4000.00",
+        "quote": null,
+        "total": "28000.00",
+        "upper": "10000.00",
+        "amount": "7000.00",
+        "period": "year",
+        "status": "estimated",
+        "cost_id": "health_insurance",
+        "category": "insurance",
+        "estimate": true,
+        "per_year": "7000.00",
+        "total_low": "16000.00",
+        "source_url": null,
+        "total_high": "40000.00",
+        "observed_at": "2026-10-12",
+        "occurrences": 4,
+        "start_month": 0,
+        "period_amounts": [
+          "7000.00",
+          "7000.00",
+          "7000.00",
+          "7000.00"
+        ]
+      },
+      {
+        "group": "essentials",
+        "label": {
+          "en": "Non-Immigrant ED visa, single entry",
+          "zh": "非移民教育签证（单次入境）"
+        },
+        "lower": null,
+        "quote": "2,000",
+        "total": "2000.00",
+        "upper": null,
+        "amount": "2000.00",
+        "period": "once",
+        "status": "known",
+        "cost_id": "visa_non_immigrant",
+        "category": "visa",
+        "estimate": false,
+        "per_year": "2000.00",
+        "total_low": "2000.00",
+        "source_url": "https://bangkok.immigration.go.th/en/fee_en/",
+        "total_high": "2000.00",
+        "observed_at": "2026-10-12",
+        "occurrences": 1,
+        "start_month": 0,
+        "period_amounts": [
+          "2000.00"
+        ]
+      },
+      {
+        "group": "essentials",
+        "label": {
+          "en": "Annual extension of stay",
+          "zh": "每年居留延期费"
+        },
+        "lower": null,
+        "quote": "1,900",
+        "total": "7600.00",
+        "upper": null,
+        "amount": "1900.00",
+        "period": "year",
+        "status": "known",
+        "cost_id": "visa_extension",
+        "category": "visa",
+        "estimate": false,
+        "per_year": "1900.00",
+        "total_low": "7600.00",
+        "source_url": "https://bangkok.immigration.go.th/en/fee_en/",
+        "total_high": "7600.00",
+        "observed_at": "2026-10-12",
+        "occurrences": 4,
+        "start_month": 0,
+        "period_amounts": [
+          "1900.00",
+          "1900.00",
+          "1900.00",
+          "1900.00"
+        ]
+      },
+      {
+        "group": "essentials",
+        "label": {
+          "en": "Return trip home (economy flight)",
+          "zh": "回国往返机票（经济舱）"
+        },
+        "lower": "6000.00",
+        "quote": null,
+        "total": "52000.00",
+        "upper": "20000.00",
+        "amount": "13000.00",
+        "period": "year",
+        "status": "estimated",
+        "cost_id": "home_trip",
+        "category": "travel",
+        "estimate": true,
+        "per_year": "13000.00",
+        "total_low": "24000.00",
+        "source_url": null,
+        "total_high": "80000.00",
+        "observed_at": "2026-10-12",
+        "occurrences": 4,
+        "start_month": 0,
+        "period_amounts": [
+          "13000.00",
+          "13000.00",
+          "13000.00",
+          "13000.00"
+        ]
+      },
+      {
+        "group": "essentials",
+        "label": {
+          "en": "Settling in (bedding, SIM, household items)",
+          "zh": "安家费用（床品、电话卡、日用品）"
+        },
+        "lower": "3000.00",
+        "quote": null,
+        "total": "5500.00",
+        "upper": "8000.00",
+        "amount": "5500.00",
+        "period": "once",
+        "status": "estimated",
+        "cost_id": "settling_in",
+        "category": "settlement",
+        "estimate": true,
+        "per_year": "5500.00",
+        "total_low": "3000.00",
+        "source_url": null,
+        "total_high": "8000.00",
+        "observed_at": "2026-10-12",
+        "occurrences": 1,
+        "start_month": 0,
+        "period_amounts": [
+          "5500.00"
+        ]
+      },
+      {
+        "group": "essentials",
+        "label": {
+          "en": "Books, printing and supplies",
+          "zh": "教材、打印及文具"
+        },
+        "lower": "1500.00",
+        "quote": null,
+        "total": "22500.00",
+        "upper": "3000.00",
+        "amount": "2250.00",
+        "period": "semester",
+        "status": "estimated",
+        "cost_id": "books_supplies",
+        "category": "study_materials",
+        "estimate": true,
+        "per_year": "6750.00",
+        "total_low": "15000.00",
+        "source_url": null,
+        "total_high": "30000.00",
+        "observed_at": "2026-10-12",
+        "occurrences": 10,
+        "start_month": 0,
+        "period_amounts": [
+          "2250.00",
+          "2250.00",
+          "2250.00",
+          "2250.00",
+          "2250.00",
+          "2250.00",
+          "2250.00",
+          "2250.00",
+          "2250.00",
+          "2250.00"
+        ]
+      }
+    ],
+    "total": "1013800.00",
+    "years": 3.5,
+    "groups": {
+      "living": "463200.00",
+      "tuition": "430000.00",
+      "essentials": "120600.00"
+    },
+    "sample": true,
+    "program": {
+      "en": "BBA in International Business (Faculty of International Studies)",
+      "zh": "国际商务工商管理学士（国际研究学院）"
+    },
+    "complete": true,
+    "currency": "THB",
+    "total_low": "848300.00",
+    "first_year": "316100.00",
+    "school_key": "psu-phuket",
+    "total_high": "1179300.00",
+    "observed_at": "2026-10-12",
+    "known_subtotal": "1013800.00",
+    "catalog_version": 3,
+    "duration_months": 42,
+    "estimated_share": "45.25",
+    "total_semesters": 10,
+    "missing_cost_ids": []
+  },
+  "loan_advice": {
+    "change": {
+      "principal": "0.00",
+      "total_interest": "0.00",
+      "monthly_payment": "0.00",
+      "total_repayment": "0.00"
+    },
+    "intent": "resume",
+    "status": "recommended",
+    "quote_id": "2a5f4a64-4381-4a16-9594-9829f2b2ca60",
+    "selected": {
+      "fees": "0.00",
+      "method": "amortized",
+      "months": 24,
+      "product": "commercial_student_demo",
+      "currency": "THB",
+      "principal": "30000.00",
+      "annual_rate": "0.045",
+      "net_proceeds": "30000.00",
+      "last_due_date": "2029-08-08",
+      "first_due_date": "2027-09-08",
+      "total_interest": "1426.43",
+      "monthly_payment": "1309.54",
+      "total_repayment": "31426.43",
+      "interest_only_months": 0,
+      "interest_only_payment": null
+    },
+    "constraints": {},
+    "alternatives": [
+      {
+        "fees": "0.00",
+        "method": "amortized",
+        "months": 24,
+        "product": "custom",
+        "currency": "THB",
+        "principal": "30000.00",
+        "annual_rate": "0.06",
+        "net_proceeds": "30000.00",
+        "last_due_date": "2029-08-08",
+        "first_due_date": "2027-09-08",
+        "total_interest": "1910.82",
+        "monthly_payment": "1329.62",
+        "total_repayment": "31910.82",
+        "interest_only_months": 0,
+        "interest_only_payment": null
+      }
+    ],
+    "plan_version": 1,
+    "ready_to_apply": false,
+    "assessment_version": 9
+  },
+  "loan_stage": {
+    "documents": [
+      {
+        "id": "581a500a-8b2e-447d-b01e-8e984b7e43db",
+        "key": "loan_doc:admission",
+        "title": {
+          "en": "Simulated admission notice (attached automatically)",
+          "zh": "模拟录取通知（已自动附加）"
+        },
+        "done": true,
+        "auto": true,
+        "due_date": "2027-07-10",
+        "version": 1
+      },
+      {
+        "id": "4701913e-3f47-4a62-a23b-7dd947547001",
+        "key": "loan_doc:identity",
+        "title": {
+          "en": "Provide a passport or ID",
+          "zh": "提供护照或身份证件"
+        },
+        "done": true,
+        "auto": false,
+        "due_date": "2027-07-10",
+        "version": 2
+      },
+      {
+        "id": "d0bbd1c6-dbc2-4efd-9db4-4d38187abe63",
+        "key": "loan_doc:income:student_with_parent",
+        "title": {
+          "en": "Income proof of the co-borrower (parent)",
+          "zh": "共同借款人（家长）收入证明"
+        },
+        "done": true,
+        "auto": false,
+        "due_date": "2027-07-10",
+        "version": 2
+      }
+    ],
+    "payouts": [
+      {
+        "id": "2afab6d5-5e71-4158-af46-6903c8ba4191",
+        "type": "loanpayout",
+        "created_at": "2026-10-15T15:52:09.759Z",
+        "plan": "2d9ed47f-4d0c-4d48-8219-acefbf244ab0",
+        "application": "f458f59c-f681-4d39-87d7-f0737fba318b",
+        "bill": "e30007a6-55a4-417c-9bbe-064f6d954c4f",
+        "amount": "20000.00",
+        "bill_amount": "20000.00",
+        "due_date": "2027-08-09",
+        "status": "PAID",
+        "paid_on": "2027-09-08",
+        "bill_label": {
+          "en": "Enrollment fee (one-time)",
+          "zh": "入学注册费（一次性）"
+        },
+        "bill_currency": "THB",
+        "kind": "tuition"
+      },
+      {
+        "id": "ee64014c-6c30-4254-a7be-28dc59ca4f9b",
+        "type": "loanpayout",
+        "created_at": "2026-10-15T15:52:09.763Z",
+        "plan": "2d9ed47f-4d0c-4d48-8219-acefbf244ab0",
+        "application": "f458f59c-f681-4d39-87d7-f0737fba318b",
+        "bill": "1fdf7860-addd-45e0-8a11-15f37620f680",
+        "amount": "10000.00",
+        "bill_amount": "10000.00",
+        "due_date": "2027-08-09",
+        "status": "PAID",
+        "paid_on": "2027-09-08",
+        "bill_label": {
+          "en": "Tuition per semester",
+          "zh": "每学期学费"
+        },
+        "bill_currency": "THB",
+        "kind": "tuition"
+      }
+    ],
+    "signed": true,
+    "school_payee": {
+      "id": "d3676a84-bb42-40da-b7d5-694f7992b097",
+      "name": "Prince of Songkla University, Phuket Campus",
+      "account": "Tuition account (simulated)",
+      "verified": true
+    }
+  },
+  "plan": {
+    "id": "2d9ed47f-4d0c-4d48-8219-acefbf244ab0",
+    "status": "CONFIRMED",
+    "school_key": "psu-phuket",
+    "years": 3.5,
+    "start_date": "2027-08-09",
+    "version": 2,
+    "confirmed_at": "2026-10-15T15:51:48.872976+00:00",
+    "is_simulated": true,
+    "school": {
+      "name": {
+        "en": "Prince of Songkla University, Phuket Campus",
+        "zh": "宋卡王子大学（普吉校区）"
+      },
+      "currency": "THB"
+    },
+    "total": "1013800.00",
+    "currency": "THB",
+    "duration_months": 42,
+    "complete": true,
+    "converted": null
+  },
+  "inputs": {
+    "borrower": "student_with_parent",
+    "loan": {
+      "product": "commercial_student_demo",
+      "principal": "30000.00",
+      "annual_rate": "0.06",
+      "fees": "0.00",
+      "first_due_date": "2027-09-08",
+      "months": 24,
+      "method": "amortized"
+    }
+  },
+  "products": [
+    {
+      "key": "custom",
+      "annual_rate": "0.06",
+      "terms": [
+        24,
+        36,
+        48
+      ],
+      "methods": [
+        "amortized"
+      ]
+    },
+    {
+      "key": "commercial_student_demo",
+      "annual_rate": "0.045",
+      "terms": [
+        24,
+        36,
+        48,
+        60
+      ],
+      "methods": [
+        "amortized",
+        "interest_only"
+      ]
+    }
+  ],
+  "limit": {
+    "max_principal": "1013800.00",
+    "currency": "THB"
+  },
+  "version": 9,
+  "plan_version": 2,
+  "stale": false,
+  "lifecycle": {
+    "applications": [
+      {
+        "id": "f458f59c-f681-4d39-87d7-f0737fba318b",
+        "type": "simulatedapplication",
+        "created_at": "2026-10-15T15:51:48.819Z",
+        "version": 3,
+        "loan": "2a5f4a64-4381-4a16-9594-9829f2b2ca60",
+        "status": "DISBURSED",
+        "assessment": {
+          "status": "WITHIN_LIMIT",
+          "max_principal": "1013800.00"
+        },
+        "decision_reason": "",
+        "is_simulated": true
+      }
+    ],
+    "accounts": [
+      {
+        "id": "078f813e-03c0-45cd-bbfb-40f9f8062ee4",
+        "type": "loanaccount",
+        "created_at": "2026-10-15T15:52:09.722Z",
+        "disbursement": "54154812-2300-4ee4-b80c-629d43448ad6",
+        "status": "ACTIVE",
+        "version": 2,
+        "outstanding_principal": "28803.07",
+        "is_simulated": true,
+        "installments": [
+          {
+            "id": "c426fae5-3db1-4182-af94-3c0b2ac7b22c",
+            "type": "loaninstallment",
+            "created_at": "2026-10-15T15:52:09.724Z",
+            "account": "078f813e-03c0-45cd-bbfb-40f9f8062ee4",
+            "number": 1,
+            "due_on": "2027-09-08",
+            "amount": "1309.43",
+            "principal": "1196.93",
+            "paid_on": "2027-09-08",
+            "is_simulated": true,
+            "status": "PAID"
+          },
+          {
+            "id": "124957a7-74c8-436b-a1fd-ec7c5455eb5d",
+            "type": "loaninstallment",
+            "created_at": "2026-10-15T15:52:09.724Z",
+            "account": "078f813e-03c0-45cd-bbfb-40f9f8062ee4",
+            "number": 2,
+            "due_on": "2027-10-08",
+            "amount": "1309.43",
+            "principal": "1201.42",
+            "paid_on": null,
+            "is_simulated": true,
+            "status": "SCHEDULED"
+          },
+          {
+            "id": "64c685d6-32ab-4a8d-914b-0272338479b3",
+            "type": "loaninstallment",
+            "created_at": "2026-10-15T15:52:09.724Z",
+            "account": "078f813e-03c0-45cd-bbfb-40f9f8062ee4",
+            "number": 3,
+            "due_on": "2027-11-08",
+            "amount": "1309.43",
+            "principal": "1205.92",
+            "paid_on": null,
+            "is_simulated": true,
+            "status": "SCHEDULED"
+          },
+          {
+            "id": "c5b35b39-3a5c-4c4a-9f7c-8267d9c3619c",
+            "type": "loaninstallment",
+            "created_at": "2026-10-15T15:52:09.724Z",
+            "account": "078f813e-03c0-45cd-bbfb-40f9f8062ee4",
+            "number": 4,
+            "due_on": "2027-12-08",
+            "amount": "1309.43",
+            "principal": "1210.45",
+            "paid_on": null,
+            "is_simulated": true,
+            "status": "SCHEDULED"
+          },
+          {
+            "id": "b33a224e-8b0f-4428-ae33-484edab87ab8",
+            "type": "loaninstallment",
+            "created_at": "2026-10-15T15:52:09.724Z",
+            "account": "078f813e-03c0-45cd-bbfb-40f9f8062ee4",
+            "number": 5,
+            "due_on": "2028-01-08",
+            "amount": "1309.43",
+            "principal": "1214.99",
+            "paid_on": null,
+            "is_simulated": true,
+            "status": "SCHEDULED"
+          },
+          {
+            "id": "98c7257f-b243-4cea-838c-636cb491502d",
+            "type": "loaninstallment",
+            "created_at": "2026-10-15T15:52:09.724Z",
+            "account": "078f813e-03c0-45cd-bbfb-40f9f8062ee4",
+            "number": 6,
+            "due_on": "2028-02-08",
+            "amount": "1309.43",
+            "principal": "1219.54",
+            "paid_on": null,
+            "is_simulated": true,
+            "status": "SCHEDULED"
+          },
+          {
+            "id": "c3635dac-1b7f-46f9-9771-b3045d0def5b",
+            "type": "loaninstallment",
+            "created_at": "2026-10-15T15:52:09.724Z",
+            "account": "078f813e-03c0-45cd-bbfb-40f9f8062ee4",
+            "number": 7,
+            "due_on": "2028-03-08",
+            "amount": "1309.43",
+            "principal": "1224.11",
+            "paid_on": null,
+            "is_simulated": true,
+            "status": "SCHEDULED"
+          },
+          {
+            "id": "743dfc14-bdda-439e-b422-724cc993698d",
+            "type": "loaninstallment",
+            "created_at": "2026-10-15T15:52:09.724Z",
+            "account": "078f813e-03c0-45cd-bbfb-40f9f8062ee4",
+            "number": 8,
+            "due_on": "2028-04-08",
+            "amount": "1309.43",
+            "principal": "1228.71",
+            "paid_on": null,
+            "is_simulated": true,
+            "status": "SCHEDULED"
+          },
+          {
+            "id": "c77be96d-8117-4890-8739-a632ab1d476b",
+            "type": "loaninstallment",
+            "created_at": "2026-10-15T15:52:09.724Z",
+            "account": "078f813e-03c0-45cd-bbfb-40f9f8062ee4",
+            "number": 9,
+            "due_on": "2028-05-08",
+            "amount": "1309.43",
+            "principal": "1233.31",
+            "paid_on": null,
+            "is_simulated": true,
+            "status": "SCHEDULED"
+          },
+          {
+            "id": "2ad534b7-a718-46a2-bb1a-4c0bf7aba164",
+            "type": "loaninstallment",
+            "created_at": "2026-10-15T15:52:09.724Z",
+            "account": "078f813e-03c0-45cd-bbfb-40f9f8062ee4",
+            "number": 10,
+            "due_on": "2028-06-08",
+            "amount": "1309.43",
+            "principal": "1237.94",
+            "paid_on": null,
+            "is_simulated": true,
+            "status": "SCHEDULED"
+          },
+          {
+            "id": "41eee3fa-ec4e-4709-9197-5d339165456d",
+            "type": "loaninstallment",
+            "created_at": "2026-10-15T15:52:09.724Z",
+            "account": "078f813e-03c0-45cd-bbfb-40f9f8062ee4",
+            "number": 11,
+            "due_on": "2028-07-08",
+            "amount": "1309.43",
+            "principal": "1242.58",
+            "paid_on": null,
+            "is_simulated": true,
+            "status": "SCHEDULED"
+          },
+          {
+            "id": "fdeed592-f22e-40a3-b784-de42454b6a8c",
+            "type": "loaninstallment",
+            "created_at": "2026-10-15T15:52:09.724Z",
+            "account": "078f813e-03c0-45cd-bbfb-40f9f8062ee4",
+            "number": 12,
+            "due_on": "2028-08-08",
+            "amount": "1309.43",
+            "principal": "1247.24",
+            "paid_on": null,
+            "is_simulated": true,
+            "status": "SCHEDULED"
+          },
+          {
+            "id": "b64d1505-800b-4afc-b8dc-5d0aa6fa4913",
+            "type": "loaninstallment",
+            "created_at": "2026-10-15T15:52:09.724Z",
+            "account": "078f813e-03c0-45cd-bbfb-40f9f8062ee4",
+            "number": 13,
+            "due_on": "2028-09-08",
+            "amount": "1309.43",
+            "principal": "1251.92",
+            "paid_on": null,
+            "is_simulated": true,
+            "status": "SCHEDULED"
+          },
+          {
+            "id": "8b3bd64e-8338-4a4a-b8dc-1c0ce41c98ad",
+            "type": "loaninstallment",
+            "created_at": "2026-10-15T15:52:09.724Z",
+            "account": "078f813e-03c0-45cd-bbfb-40f9f8062ee4",
+            "number": 14,
+            "due_on": "2028-10-08",
+            "amount": "1309.43",
+            "principal": "1256.61",
+            "paid_on": null,
+            "is_simulated": true,
+            "status": "SCHEDULED"
+          },
+          {
+            "id": "bf7e1b45-0805-4b74-813d-f5aee2c1e43b",
+            "type": "loaninstallment",
+            "created_at": "2026-10-15T15:52:09.724Z",
+            "account": "078f813e-03c0-45cd-bbfb-40f9f8062ee4",
+            "number": 15,
+            "due_on": "2028-11-08",
+            "amount": "1309.43",
+            "principal": "1261.32",
+            "paid_on": null,
+            "is_simulated": true,
+            "status": "SCHEDULED"
+          },
+          {
+            "id": "a25df6a1-94b3-4967-bf99-a3ee6738aa5a",
+            "type": "loaninstallment",
+            "created_at": "2026-10-15T15:52:09.724Z",
+            "account": "078f813e-03c0-45cd-bbfb-40f9f8062ee4",
+            "number": 16,
+            "due_on": "2028-12-08",
+            "amount": "1309.43",
+            "principal": "1266.05",
+            "paid_on": null,
+            "is_simulated": true,
+            "status": "SCHEDULED"
+          },
+          {
+            "id": "c427d6e8-5daf-494f-83e9-80724ab94dbb",
+            "type": "loaninstallment",
+            "created_at": "2026-10-15T15:52:09.724Z",
+            "account": "078f813e-03c0-45cd-bbfb-40f9f8062ee4",
+            "number": 17,
+            "due_on": "2029-01-08",
+            "amount": "1309.43",
+            "principal": "1270.80",
+            "paid_on": null,
+            "is_simulated": true,
+            "status": "SCHEDULED"
+          },
+          {
+            "id": "25da23d5-47bd-4fca-a8b8-684417997ee2",
+            "type": "loaninstallment",
+            "created_at": "2026-10-15T15:52:09.724Z",
+            "account": "078f813e-03c0-45cd-bbfb-40f9f8062ee4",
+            "number": 18,
+            "due_on": "2029-02-08",
+            "amount": "1309.43",
+            "principal": "1275.57",
+            "paid_on": null,
+            "is_simulated": true,
+            "status": "SCHEDULED"
+          },
+          {
+            "id": "262b74df-08f6-426a-9461-049407a84e94",
+            "type": "loaninstallment",
+            "created_at": "2026-10-15T15:52:09.724Z",
+            "account": "078f813e-03c0-45cd-bbfb-40f9f8062ee4",
+            "number": 19,
+            "due_on": "2029-03-08",
+            "amount": "1309.43",
+            "principal": "1280.35",
+            "paid_on": null,
+            "is_simulated": true,
+            "status": "SCHEDULED"
+          },
+          {
+            "id": "1e8929d5-0aeb-45ba-b29c-2f8363fb74da",
+            "type": "loaninstallment",
+            "created_at": "2026-10-15T15:52:09.724Z",
+            "account": "078f813e-03c0-45cd-bbfb-40f9f8062ee4",
+            "number": 20,
+            "due_on": "2029-04-08",
+            "amount": "1309.43",
+            "principal": "1285.15",
+            "paid_on": null,
+            "is_simulated": true,
+            "status": "SCHEDULED"
+          },
+          {
+            "id": "56ee9b33-0b09-46c2-9aae-f1003db4da8d",
+            "type": "loaninstallment",
+            "created_at": "2026-10-15T15:52:09.724Z",
+            "account": "078f813e-03c0-45cd-bbfb-40f9f8062ee4",
+            "number": 21,
+            "due_on": "2029-05-08",
+            "amount": "1309.43",
+            "principal": "1289.97",
+            "paid_on": null,
+            "is_simulated": true,
+            "status": "SCHEDULED"
+          },
+          {
+            "id": "d0dd7e1d-2fa0-4d5a-86e2-53593a1ea782",
+            "type": "loaninstallment",
+            "created_at": "2026-10-15T15:52:09.724Z",
+            "account": "078f813e-03c0-45cd-bbfb-40f9f8062ee4",
+            "number": 22,
+            "due_on": "2029-06-08",
+            "amount": "1309.43",
+            "principal": "1294.81",
+            "paid_on": null,
+            "is_simulated": true,
+            "status": "SCHEDULED"
+          },
+          {
+            "id": "d58f7198-f8c7-49c9-be12-d574187fd891",
+            "type": "loaninstallment",
+            "created_at": "2026-10-15T15:52:09.724Z",
+            "account": "078f813e-03c0-45cd-bbfb-40f9f8062ee4",
+            "number": 23,
+            "due_on": "2029-07-08",
+            "amount": "1309.43",
+            "principal": "1299.66",
+            "paid_on": null,
+            "is_simulated": true,
+            "status": "SCHEDULED"
+          },
+          {
+            "id": "b6ce8db1-664c-427e-a529-170d34b7a32e",
+            "type": "loaninstallment",
+            "created_at": "2026-10-15T15:52:09.724Z",
+            "account": "078f813e-03c0-45cd-bbfb-40f9f8062ee4",
+            "number": 24,
+            "due_on": "2029-08-08",
+            "amount": "1309.54",
+            "principal": "1304.65",
+            "paid_on": null,
+            "is_simulated": true,
+            "status": "SCHEDULED"
+          }
+        ]
+      }
+    ],
+    "disbursements": [
+      {
+        "id": "54154812-2300-4ee4-b80c-629d43448ad6",
+        "type": "disbursement",
+        "created_at": "2026-10-15T15:52:09.721Z",
+        "application": "f458f59c-f681-4d39-87d7-f0737fba318b",
+        "amount": "30000.00",
+        "scheduled_on": "2026-10-15",
+        "status": "school",
+        "is_simulated": true
+      }
+    ]
+  },
+  "is_simulated": true
+}

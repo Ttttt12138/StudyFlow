@@ -1,0 +1,20 @@
+{
+  "source_files_verified": 1022,
+  "live_conversation_turns": 19,
+  "acceptance_checks": 13,
+  "call_modes": {
+    "deterministic": 10,
+    "live": 48,
+    "system": 1
+  },
+  "live_attempts": 55,
+  "models": [
+    "openai/gpt-6-luna"
+  ],
+  "raw_video_sha256": {
+    "raw/student/page@91855f6cb29bc8b55721257400af4fae.webm": "52379cd0235c0566f02198dbfb86f1d75bb8e5df8e91cc973cc8567b5b60bdb8",
+    "raw/operator/page@2ca9dfed2854fb94cc6416363d6c6c2c.webm": "8011117fc98b987fec82ccfa266e082dd589d0a93c8b415b8a8f9bf29eb1614e",
+    "raw/approver/page@e1429c634a844623f99010bc4d3c76f8.webm": "409ef68fab451b3d7e209708e994ff78c8f51411986ba45b04c754065eb5f130"
+  },
+  "no_rule_or_mock_fallback": true
+}

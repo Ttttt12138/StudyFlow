@@ -1,19 +1,37 @@
 {
-  "reviewed_by": "Codex visual inspection",
-  "all_46_shots_reviewed_in_contact_sheets": true,
-  "full_size_shots": [
-    12,
-    29,
-    35,
-    40,
-    44,
-    45
+  "passed": true,
+  "date": "2026-10-15",
+  "reviewer": "Codex visual inspection",
+  "video_sha256": "e5073650dd35eabaeb3f52c9b8729fe19c19152584e643a7548ab4bbe54ba34a",
+  "scope": "All five final contact sheets (54 shots), selected full-resolution frames, and all seven action-shot endings; this is frame-based visual QA, not a claim of human listening.",
+  "contact_sheets": [
+    "contact-sheet-1.jpg",
+    "contact-sheet-2.jpg",
+    "contact-sheet-3.jpg",
+    "contact-sheet-4.jpg",
+    "contact-sheet-5.jpg"
   ],
+  "full_resolution_key_frames": [
+    46,
+    51,
+    52,
+    53,
+    54
+  ],
+  "action_endings": "action-end-review.jpg",
+  "layout_check": "matte-check.json",
   "observations": [
-    "All accepted source ranges retained",
-    "Captions placed below the application viewport",
-    "Numeric loan terms and confirmed conversion match the narration",
-    "Paid tuition, completed credit repayment and valid/invalid statement results remain visible"
+    "Current cost comparison, conversational loan choices, application/signing, reminders, split tuition, exchange/remittance, delivery, repayment and ledger are visible.",
+    "Operator payee verification, blocked over-limit transfer, separation of duties, independent approval confirmation and approval record are visible.",
+    "Final student authorization shows the actual masked-password frame, followed by the recorded confirmed result.",
+    "English captions stay below the recorded app and match the intended feature shots.",
+    "Stable shot endings were trimmed before following reloads; the final held frames match their source references.",
+    "All 54 header and side-panel layouts match their expected rendered artwork within encoding tolerance.",
+    "The persistent film header and app simulation label identify simulated financial transactions."
   ],
-  "scope": "Edited desktop film; no new browser acceptance or physical-device claim"
+  "limits": [
+    "Waiting is shortened and actual recorded frames are held for narration.",
+    "The brief final password dialog is held from raw student timestamp 536.800 seconds.",
+    "The uncut recordings and model trace retain the complete operations and live model evidence."
+  ]
 }

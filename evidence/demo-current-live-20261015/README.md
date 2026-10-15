@@ -1,0 +1,51 @@
+# StudyFlow — Current Formal English Demo
+
+[Watch the formal video](StudyFlow_Demo_EN.mp4) · [English subtitles](StudyFlow_Demo_EN.srt) · [Verification](verification.json)
+
+Runtime: **04:25** (264.867 seconds), 1920 × 1080, 30 fps. 54 feature shots in 8 connected narration paragraphs. Microsoft `en-US-AvaNeural`, synthesis `-10%`, local tempo `1.20`; key amount sentences use `1.12`. The user authorized sending the English narration to Microsoft. No Chinese review copy is included.
+
+## Current acceptance
+
+The film uses **take-07**, recorded on 2026-10-15 against the working tree based on commit `88665b79c1f159e56a8e0509547c12183221d00a`. The frozen source archive, per-file hashes and post-run hash check identify the actual version, including the recorded fixes. This is a live browser acceptance run and production replay, not a new frozen model benchmark.
+
+**19 user turns**, **13 checked scenarios**. Call modes: `{"deterministic": 10, "live": 48, "system": 1}`. Every conversational request invoked the external model; deterministic server replies are counted separately. No rule or mock fallback occurred in the accepted take. Model: `openai/gpt-6-luna`; prompt `planning-2.6`.
+
+[Delivery source check](delivery-source-check.json): recorded application code still matches the accepted snapshot. After recording, the planning-rule test's expected prompt version was updated from `planning-2.4` to `planning-2.6`; all 21 tests in that file then passed. The original source snapshot is preserved.
+
+All wallets, loans, university notices, payments and approvals are simulated in a disposable PostgreSQL test database. FX is fixture-based; school costs are sourced sample data and estimates. The student, payee verifier and approver are separate synthetic accounts. Actual UI interactions and server persistence are exercised; approval simulation is disabled so the separate staff account decides. Setup includes a CNY 30,000 simulated top-up, a synthetic housing payee and a THB 10,000 repayment top-up. These setup API calls are recorded in the harness, not described as AI actions.
+
+[Uncut role recordings](take-07/raw/) · [Conversation and tool results](take-07/turns.json) · [Full model trace](take-07/model-trace.json) · [Scenario assertions](take-07/coverage.json) · [Frozen source](take-07/accepted-source.zip) · [Source hash check](take-07/source-check.json)
+
+## Coverage
+
+The current path covers costs and sources; four-school and THB/CNY/USD comparison; missing-data disclosure; school selection; borrowing amount, alternative loans, monthly-payment/interest tradeoffs and study-period payments; manual loan controls; pause/resume and stale-quote rejection; explicit application, simulated notice, documents and signing; school-directed payouts; reminders with completion and undo; split tuition and password-authorized wallet payment; exchange, wrong-password denial, remittance and delivery; loan repayment; over-limit rejection, payee verification, separation of duties, independent approval and final student submission.
+
+Only the successful take is kept. Six earlier attempts on the same day stopped on recorder selectors or on two prompt issues (default loan inputs treated as explicit preferences, and an unnecessary catalog listing before a named-school comparison); both prompt issues were fixed before take-07, and malformed JSON-tail replies are now retried instead of shown.
+
+In [`coverage.json`](take-07/coverage.json) the loan rows copy the saved plan inputs, whose `annual_rate` field is the custom-loan default (0.06). The commercial study loan example is priced at its fixed 4.5%, as the turns, cards and signed schedule show. The harness now records the priced rate.
+
+After recording, the server was changed to refuse wallet, exchange and remittance tools in a planning conversation until the loan application is submitted (previously only the prompt said so). The film uses those tools only after submission, so the recorded flow is unaffected; the frozen snapshot shows the recorded version.
+
+Simulated-account operation logs: [`financial-audit.json`](take-07/financial-audit.json) holds the newest 50 of the 82 audit events (15:52 onward: reminders, exchange, remittance, approval, tuition and repayment); the recorder saved only the first API page, and the disposable test database no longer exists. The earlier steps are recorded in [`turns.json`](take-07/turns.json) (every agent tool call and result), [`loan-after-signing.json`](take-07/loan-after-signing.json), [`loan-after-repayment.json`](take-07/loan-after-repayment.json), [`approval-records.json`](take-07/approval-records.json) and the uncut recordings. The recorder now saves every page.
+
+The [10 financial regression tests](financial-regression.txt) additionally exercise wallet-bill and operations permissions against a separate test database. Their authenticated duplicate-payment case verifies the loan-covered bill guard. The uncredentialed duplicate call in the live browser harness only establishes step-up denial; it is not evidence of that deeper guard by itself.
+
+## Editing and verification
+
+The formal edit removes waiting and uses actual recorded frames. Review shots retain the recorded click and resulting state where practical; stable frames may be held for the narration. No fabricated product screens or substituted AI responses are used. The uncut role recordings preserve the full operations.
+
+The final student authorization was brief in the automated recording. Its actual masked-password frame at 536.800 seconds of the student recording is held while that step is narrated; the following shot shows the recorded confirmed result. This frame is extracted from the accepted raw video.
+
+Full decoding passed. Audio/video endpoint difference: 0.008000 s. Maximum measured narration placement difference: 0.000 s. Every caption matches the narration text and stays inside its corresponding shot. Provider word timing is mapped through local tempo changes; waveform checks verify encoding placement, not independent phonetic alignment. Contact sheets and selected full-resolution frames were reviewed.
+
+The [offline speech check](speech-check.json) recovered all spoken amounts. Recognition differences are not a human listening score; no audio was uploaded for this local check.
+
+[Edit manifest](edit-manifest.json) · [Source-frame alignment](source-alignment.json) · [Production archive](production-assets.zip) · [Production hashes](production-manifest.json)
+
+Reproduce from the repository root with `studyFlow/Scripts/python.exe -B -X utf8 scripts/run_formal_demo.py <new-take>`. This needs configured live-model credentials and PostgreSQL, and creates its own test database. For media reproduction, extract the production archive into `output/formal-film-production/`, then run `produce.py prepare --take evidence/demo-current-live-20261015/take-07`, `produce.py render`, and `verify.py` using the project interpreter. Speech MP3s and provider word events are included; no new external speech call is needed to reproduce the edit.
+
+## Previous version
+
+[Previous 4:05 Ava formal film and metadata](previous-formal-ava-20261014.zip). Both older stable MP4 links now contain this current version. Historical acceptance remains historical.
+
+SHA-256: `e5073650dd35eabaeb3f52c9b8729fe19c19152584e643a7548ab4bbe54ba34a`

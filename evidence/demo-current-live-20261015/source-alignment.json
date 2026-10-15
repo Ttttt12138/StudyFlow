@@ -1,0 +1,590 @@
+[
+  {
+    "marker": "opening",
+    "offset": 0,
+    "difference": 1.4344197530864198,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 1.4344197530864198
+      }
+    ]
+  },
+  {
+    "marker": "cost-card",
+    "offset": 0,
+    "difference": 1.656716049382716,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 1.656716049382716
+      }
+    ]
+  },
+  {
+    "marker": "cost-sources",
+    "offset": 0,
+    "difference": 1.4315349794238683,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 1.4315349794238683
+      }
+    ]
+  },
+  {
+    "marker": "cost-living",
+    "offset": 0,
+    "difference": 1.5184814814814815,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 1.5184814814814815
+      }
+    ]
+  },
+  {
+    "marker": "cost-essentials",
+    "offset": 0,
+    "difference": 1.4607201646090537,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 1.4607201646090537
+      }
+    ]
+  },
+  {
+    "marker": "comparison-card",
+    "offset": 0,
+    "difference": 1.407432098765432,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 1.407432098765432
+      }
+    ]
+  },
+  {
+    "marker": "comparison-cny",
+    "offset": 0,
+    "difference": 1.443432098765432,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 1.443432098765432
+      }
+    ]
+  },
+  {
+    "marker": "comparison-usd",
+    "offset": 0,
+    "difference": 1.4575473251028808,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 1.4575473251028808
+      }
+    ]
+  },
+  {
+    "marker": "missing-ranking",
+    "offset": 0,
+    "difference": 1.5060658436213992,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 1.5060658436213992
+      }
+    ]
+  },
+  {
+    "marker": "school-profile",
+    "offset": 0,
+    "difference": 1.6282263374485595,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 1.6282263374485595
+      }
+    ]
+  },
+  {
+    "marker": "school-chosen",
+    "offset": 0,
+    "difference": 1.5584979423868315,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 1.5584979423868315
+      }
+    ]
+  },
+  {
+    "marker": "loan-card",
+    "offset": 0,
+    "difference": 1.3445267489711934,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 1.3445267489711934
+      }
+    ]
+  },
+  {
+    "marker": "loan-alternatives",
+    "offset": 0,
+    "difference": 1.3301769547325104,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 1.3301769547325104
+      }
+    ]
+  },
+  {
+    "marker": "manual-loan-controls",
+    "offset": 0,
+    "difference": 0.5275432098765432,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 0.5275432098765432
+      }
+    ]
+  },
+  {
+    "marker": "monthly-change",
+    "offset": 0,
+    "difference": 1.4012880658436213,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 1.4012880658436213
+      }
+    ]
+  },
+  {
+    "marker": "interest-only-card",
+    "offset": 0,
+    "difference": 1.4241975308641974,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 1.4241975308641974
+      }
+    ]
+  },
+  {
+    "marker": "interest-change",
+    "offset": 0,
+    "difference": 1.428917695473251,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 1.428917695473251
+      }
+    ]
+  },
+  {
+    "marker": "reduced-card",
+    "offset": 0,
+    "difference": 1.3930658436213992,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 1.3930658436213992
+      }
+    ]
+  },
+  {
+    "marker": "pause-loan",
+    "offset": 0,
+    "difference": 1.6799382716049382,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 1.6799382716049382
+      }
+    ]
+  },
+  {
+    "marker": "resume-loan",
+    "offset": 0,
+    "difference": 1.599255144032922,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 1.599255144032922
+      }
+    ]
+  },
+  {
+    "marker": "application-review",
+    "offset": 0,
+    "difference": 0.8266954732510289,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 0.8266954732510289
+      }
+    ]
+  },
+  {
+    "marker": "application-submitted",
+    "offset": 0,
+    "difference": 1.3579753086419755,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 1.3579753086419755
+      }
+    ]
+  },
+  {
+    "marker": "unsigned-bill-coverage",
+    "offset": 0,
+    "difference": 1.0202674897119342,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 1.0202674897119342
+      }
+    ]
+  },
+  {
+    "marker": "documents-ready",
+    "offset": 0,
+    "difference": 0.4735514403292181,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 0.4735514403292181
+      }
+    ]
+  },
+  {
+    "marker": "signing-review",
+    "offset": 0,
+    "difference": 0.7836337448559672,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 0.7836337448559672
+      }
+    ]
+  },
+  {
+    "marker": "school-payout-schedule",
+    "offset": 0,
+    "difference": 0.3854691358024691,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 0.3854691358024691
+      }
+    ]
+  },
+  {
+    "marker": "reminder-created",
+    "offset": 0,
+    "difference": 1.373872427983539,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 1.373872427983539
+      }
+    ]
+  },
+  {
+    "marker": "reminder-completed",
+    "offset": 0,
+    "difference": 0.27759670781893003,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 0.27759670781893003
+      }
+    ]
+  },
+  {
+    "marker": "reminder-reopened",
+    "offset": 0,
+    "difference": 0.4064320987654321,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 0.4064320987654321
+      }
+    ]
+  },
+  {
+    "marker": "partial-tuition",
+    "offset": 0,
+    "difference": 0.9277366255144033,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 0.9277366255144033
+      }
+    ]
+  },
+  {
+    "marker": "tuition-topup",
+    "offset": 0,
+    "difference": 0.853238683127572,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 0.853238683127572
+      }
+    ]
+  },
+  {
+    "marker": "tuition-authorization",
+    "offset": 0,
+    "difference": 1.393502057613169,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 1.393502057613169
+      }
+    ]
+  },
+  {
+    "marker": "tuition-paid",
+    "offset": 0,
+    "difference": 0.6681975308641975,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 0.6681975308641975
+      }
+    ]
+  },
+  {
+    "marker": "currency-balances",
+    "offset": 0,
+    "difference": 0.30021399176954733,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 0.30021399176954733
+      }
+    ]
+  },
+  {
+    "marker": "exchange-review",
+    "offset": 0,
+    "difference": 1.6498559670781894,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 1.6498559670781894
+      }
+    ]
+  },
+  {
+    "marker": "wrong-password-blocked",
+    "offset": 0,
+    "difference": 1.0726707818930041,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 1.0726707818930041
+      }
+    ]
+  },
+  {
+    "marker": "exchange-confirmed",
+    "offset": 0,
+    "difference": 2.0566255144032923,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 2.0566255144032923
+      }
+    ]
+  },
+  {
+    "marker": "remittance-review",
+    "offset": 0,
+    "difference": 1.6537901234567902,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 1.6537901234567902
+      }
+    ]
+  },
+  {
+    "marker": "remittance-history",
+    "offset": 0,
+    "difference": 0.3067078189300411,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 0.3067078189300411
+      }
+    ]
+  },
+  {
+    "marker": "remittance-arrival-clock",
+    "offset": 0,
+    "difference": 0.4595185185185185,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 0.4595185185185185
+      }
+    ]
+  },
+  {
+    "marker": "remittance-delivered",
+    "offset": 0,
+    "difference": 0.29517695473251027,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 0.29517695473251027
+      }
+    ]
+  },
+  {
+    "marker": "repayment-review",
+    "offset": 0,
+    "difference": 0.6753909465020577,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 0.6753909465020577
+      }
+    ]
+  },
+  {
+    "marker": "repayment-review",
+    "offset": 0,
+    "difference": 0.6753909465020577,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 0.6753909465020577
+      }
+    ]
+  },
+  {
+    "marker": "repayment-authorization",
+    "offset": 0,
+    "difference": 0.6968189300411524,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 0.6968189300411524
+      }
+    ]
+  },
+  {
+    "marker": "final-ledger",
+    "offset": 0,
+    "difference": 0.6226090534979424,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 0.6226090534979424
+      }
+    ]
+  },
+  {
+    "marker": "payee-review",
+    "offset": 0,
+    "difference": 0.2885020576131687,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 0.2885020576131687
+      }
+    ]
+  },
+  {
+    "marker": "large-transfer-blocked",
+    "offset": 0,
+    "difference": 1.0507654320987656,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 1.0507654320987656
+      }
+    ]
+  },
+  {
+    "marker": "operations-overview",
+    "offset": 0,
+    "difference": 0.40338271604938275,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 0.40338271604938275
+      }
+    ]
+  },
+  {
+    "marker": "separation-of-duties",
+    "offset": 0,
+    "difference": 0.26222633744855967,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 0.26222633744855967
+      }
+    ]
+  },
+  {
+    "marker": "approval-details",
+    "offset": 0,
+    "difference": 0.3120288065843621,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 0.3120288065843621
+      }
+    ]
+  },
+  {
+    "marker": "approval-confirmation",
+    "offset": 0,
+    "difference": 0.2613991769547325,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 0.2613991769547325
+      }
+    ]
+  },
+  {
+    "marker": "approval-record",
+    "offset": 0,
+    "difference": 0.29333744855967075,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 0.29333744855967075
+      }
+    ]
+  },
+  {
+    "marker": "approved-transfer-authorization",
+    "source_time": 536.8,
+    "method": "Manually inspected actual raw frame; no screenshot substitution"
+  },
+  {
+    "marker": "approved-transfer-submitted",
+    "offset": 0,
+    "difference": 1.6666748971193417,
+    "candidates": [
+      {
+        "offset": 0,
+        "difference": 1.6666748971193417
+      }
+    ]
+  }
+]
