@@ -1,0 +1,246 @@
+{
+  "mode": "live",
+  "database": "studyflow_loan_advice_browser_20261015",
+  "turns": [
+    {
+      "goal": "比较一下泰国的大学",
+      "answer": "泰国这几所大学的全程费用估算如下（样本数据，费用含学费、住宿生活及必要开支）：普吉宋卡王子大学约 1,013,800 泰铢，合艾宋卡王子大学约 1,020,700 泰铢，法政大学约 2,301,000 泰铢，朱拉隆功大学约 2,351,350 泰铢，玛希敦大学国际学院约 2,372,550 泰铢。按全程总费用，普吉校区最低。点你想选的学校卡片上的「选这所」继续。\"}",
+      "checks": {
+        "completed": true,
+        "no_internal_words": true,
+        "points_to_next_step": true,
+        "avoids": true,
+        "one_question_at_most": true,
+        "plain_text": true
+      },
+      "tools": [
+        "list_schools"
+      ],
+      "calls": [
+        {
+          "mode": "live",
+          "attempts": 1,
+          "prompt_version": "planning-2.4",
+          "raw_excerpt": null
+        },
+        {
+          "mode": "live",
+          "attempts": 2,
+          "prompt_version": "planning-2.4",
+          "raw_excerpt": "泰国这几所大学的全程费用估算如下（样本数据，费用含学费、住宿生活及必要开支）：普吉宋卡王子大学约 1,013,800 泰铢，合艾宋卡王子大学约 1,020,700 泰铢，法政大学约 2,301,000 泰铢，朱拉隆功大学约 2,351,350 泰铢，玛希敦大学国际学院约 2,372,550 泰铢。按全程总费用，普吉校区最低。点你想选的学校卡片上的「选这所」继续。\"}"
+        }
+      ]
+    },
+    {
+      "goal": "朱拉隆功的QS排名怎么样",
+      "answer": "朱拉隆功大学的 QS 排名我这里没有收录；可以查看 QS 官方网站核实。看下来哪所最合心意？点它卡片上的「选这所」，我们接着看贷款方案。",
+      "checks": {
+        "completed": true,
+        "no_internal_words": true,
+        "points_to_next_step": true,
+        "avoids": true,
+        "one_question_at_most": true,
+        "plain_text": true
+      },
+      "tools": [],
+      "calls": [
+        {
+          "mode": "live",
+          "attempts": 2,
+          "prompt_version": "planning-2.4",
+          "raw_excerpt": "朱拉隆功大学的 QS 排名我这里没有收录；可以查看 QS 官方网站核实。看下来哪所最合心意？点它卡片上的「选这所」，我们接着看贷款方案。"
+        }
+      ]
+    },
+    {
+      "goal": "普吉校区周边有什么好吃的",
+      "answer": "普吉校区附近可以在校园食堂吃饭，约 50 泰铢；卡图本地小吃摊约 60 泰铢，距校区约 2 公里。想逛夜市的话，Naka 市场和普吉镇周日步行街约 12 公里，参考餐费约 80 泰铢。你考虑好普吉校区了吗？点卡片上的「选这所」继续。",
+      "checks": {
+        "completed": true,
+        "no_internal_words": true,
+        "points_to_next_step": true,
+        "avoids": true,
+        "one_question_at_most": true,
+        "plain_text": true
+      },
+      "tools": [
+        "get_school_profile"
+      ],
+      "calls": [
+        {
+          "mode": "live",
+          "attempts": 1,
+          "prompt_version": "planning-2.4",
+          "raw_excerpt": null
+        },
+        {
+          "mode": "live",
+          "attempts": 2,
+          "prompt_version": "planning-2.4",
+          "raw_excerpt": "普吉校区附近可以在校园食堂吃饭，约 50 泰铢；卡图本地小吃摊约 60 泰铢，距校区约 2 公里。想逛夜市的话，Naka 市场和普吉镇周日步行街约 12 公里，参考餐费约 80 泰铢。你考虑好普吉校区了吗？点卡片上的「选这所」继续。"
+        }
+      ]
+    },
+    {
+      "goal": "就选宋卡王子大学普吉校区",
+      "answer": "好，就定宋卡王子大学（普吉校区）了！按 3.5 年算，全程约 1,013,800 THB。贷款方面，我推荐先看商业留学贷款示例：示例年利率 4.5%，可以按月分期还。如果钱还差一些，告诉我想借多少，我帮你挑方案、算清月供。温馨提示：这里的贷款和资金都是模拟的。",
+      "checks": {
+        "completed": true,
+        "no_internal_words": true,
+        "points_to_next_step": true,
+        "avoids": true,
+        "one_question_at_most": true,
+        "plain_text": true
+      },
+      "tools": [
+        "save_plan",
+        "simulate_loan"
+      ],
+      "calls": [
+        {
+          "mode": "live",
+          "attempts": 1,
+          "prompt_version": "planning-2.4",
+          "raw_excerpt": null
+        },
+        {
+          "mode": null,
+          "attempts": null,
+          "prompt_version": null,
+          "raw_excerpt": null
+        },
+        {
+          "mode": "deterministic",
+          "attempts": null,
+          "prompt_version": null,
+          "raw_excerpt": null
+        }
+      ]
+    },
+    {
+      "goal": "我想借30万泰铢",
+      "answer": "比较了现有的贷款产品，推荐商业留学贷款示例：借 300,000.00 THB，分 48 期，年利率 4.5%。每月最多还 6,841.05 THB，总利息 28,370.19 THB，手续费 0.00 THB，一共还 328,370.19 THB。这个方案合适的话，点「按此方案申请」就行；觉得月供或利息高了，也可以直接告诉我。",
+      "checks": {
+        "completed": true,
+        "no_internal_words": true,
+        "points_to_next_step": true,
+        "avoids": true,
+        "one_question_at_most": true,
+        "plain_text": true
+      },
+      "tools": [
+        "simulate_loan"
+      ],
+      "calls": [
+        {
+          "mode": "live",
+          "attempts": 1,
+          "prompt_version": "planning-2.4",
+          "raw_excerpt": null
+        },
+        {
+          "mode": "deterministic",
+          "attempts": null,
+          "prompt_version": null,
+          "raw_excerpt": null
+        }
+      ]
+    },
+    {
+      "goal": "月供太高了",
+      "answer": "为了让月供轻一些，推荐商业留学贷款示例：借 300,000.00 THB，分 60 期，年利率 4.5%。每月最多还 5,592.91 THB，总利息 35,574.30 THB，手续费 0.00 THB，一共还 335,574.30 THB。与上一方案相比，月供减少1,248.14 THB，总利息增加7,204.11 THB。这个方案合适的话，点「按此方案申请」就行；觉得月供或利息高了，也可以直接告诉我。",
+      "checks": {
+        "completed": true,
+        "no_internal_words": true,
+        "points_to_next_step": true,
+        "avoids": true,
+        "one_question_at_most": true,
+        "plain_text": true
+      },
+      "tools": [
+        "simulate_loan"
+      ],
+      "calls": [
+        {
+          "mode": "live",
+          "attempts": 1,
+          "prompt_version": "planning-2.4",
+          "raw_excerpt": null
+        },
+        {
+          "mode": "deterministic",
+          "attempts": null,
+          "prompt_version": null,
+          "raw_excerpt": null
+        }
+      ]
+    },
+    {
+      "goal": "暂时不考虑贷款",
+      "answer": "好的，贷款推荐先停下，什么时候想继续跟我说一声就行。还想再比比别的学校吗？说个名字，我帮你算全程总价。",
+      "checks": {
+        "completed": true,
+        "no_internal_words": true,
+        "points_to_next_step": true,
+        "avoids": true,
+        "one_question_at_most": true,
+        "plain_text": true
+      },
+      "tools": [
+        "simulate_loan"
+      ],
+      "calls": [
+        {
+          "mode": "live",
+          "attempts": 1,
+          "prompt_version": "planning-2.4",
+          "raw_excerpt": null
+        },
+        {
+          "mode": "deterministic",
+          "attempts": null,
+          "prompt_version": null,
+          "raw_excerpt": null
+        }
+      ]
+    },
+    {
+      "goal": "还有别的学校推荐吗",
+      "answer": "有。可以先看宋卡王子大学合艾校区，全程约 1,020,700 泰铢；马来亚大学已知全程约 1,096,558 泰铢，但还缺部分费用，不能直接和完整估算排名。以上是样本估算。想换学校的话，点对应卡片上的「选这所」。",
+      "checks": {
+        "completed": true,
+        "no_internal_words": true,
+        "points_to_next_step": true,
+        "avoids": true,
+        "one_question_at_most": true,
+        "plain_text": true
+      },
+      "tools": [
+        "list_schools",
+        "compare_schools"
+      ],
+      "calls": [
+        {
+          "mode": "live",
+          "attempts": 1,
+          "prompt_version": "planning-2.4",
+          "raw_excerpt": null
+        },
+        {
+          "mode": "live",
+          "attempts": 1,
+          "prompt_version": "planning-2.4",
+          "raw_excerpt": null
+        },
+        {
+          "mode": "live",
+          "attempts": 2,
+          "prompt_version": "planning-2.4",
+          "raw_excerpt": "有。可以先看宋卡王子大学合艾校区，全程约 1,020,700 泰铢；马来亚大学已知全程约 1,096,558 泰铢，但还缺部分费用，不能直接和完整估算排名。以上是样本估算。想换学校的话，点对应卡片上的「选这所」。"
+        }
+      ]
+    }
+  ],
+  "failures": [],
+  "passed": true
+}

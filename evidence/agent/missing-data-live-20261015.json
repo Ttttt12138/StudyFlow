@@ -1,0 +1,140 @@
+{
+  "mode": "live",
+  "database": "studyflow_loan_advice_browser_20261015",
+  "conversations": {
+    "ranking": [
+      {
+        "goal": "曼彻斯特大学和墨尔本大学哪个排名更高",
+        "status": "COMPLETED",
+        "error": "",
+        "answer": "这个我这里没有收录。可以查 QS 官网的最新排名。想去哪所学校或哪个国家？告诉我，我先帮你算算读完一共要多少钱。",
+        "tools": [],
+        "calls": [
+          {
+            "mode": "live",
+            "attempts": 2,
+            "prompt_version": "planning-2.4"
+          }
+        ],
+        "checks": {
+          "completed": true,
+          "no_tool_call": true,
+          "names_a_source": true,
+          "no_question_about_the_gap": true,
+          "only_catalog_links": true
+        }
+      },
+      {
+        "goal": "qs",
+        "status": "COMPLETED",
+        "error": "",
+        "answer": "QS 排名我这里没有收录，可以查 QS 官网。想去哪所学校或哪个国家？告诉我，我先帮你算算读完一共要多少钱。",
+        "tools": [],
+        "calls": [
+          {
+            "mode": "live",
+            "attempts": 1,
+            "prompt_version": "planning-2.4"
+          }
+        ],
+        "checks": {
+          "completed": true,
+          "no_tool_call": true,
+          "names_a_source": true,
+          "no_question_about_the_gap": true,
+          "only_catalog_links": true
+        }
+      },
+      {
+        "goal": "现有的",
+        "status": "COMPLETED",
+        "error": "",
+        "answer": "目前的 QS 排名我这里没有收录，可以查 QS 官网。想去哪所学校或哪个国家？告诉我，我先帮你算算读完一共要多少钱。",
+        "tools": [],
+        "calls": [
+          {
+            "mode": "live",
+            "attempts": 2,
+            "prompt_version": "planning-2.4"
+          }
+        ],
+        "checks": {
+          "completed": true,
+          "no_tool_call": true,
+          "names_a_source": true,
+          "no_question_about_the_gap": true,
+          "only_catalog_links": true
+        }
+      }
+    ],
+    "admission": [
+      {
+        "goal": "朱拉隆功大学的录取要求是什么",
+        "status": "COMPLETED",
+        "error": "",
+        "answer": "朱拉隆功大学的录取要求我这里没有收录。请查看该校官网：https://bba.acc.chula.ac.th/。如果你愿意，我可以先帮你估算在朱拉隆功大学读完整个项目的总费用。",
+        "tools": [],
+        "calls": [
+          {
+            "mode": "live",
+            "attempts": 2,
+            "prompt_version": "planning-2.4"
+          }
+        ],
+        "checks": {
+          "completed": true,
+          "no_tool_call": true,
+          "names_a_source": true,
+          "no_question_about_the_gap": true,
+          "only_catalog_links": true
+        }
+      },
+      {
+        "goal": "雅思要多少分",
+        "status": "COMPLETED",
+        "error": "",
+        "answer": "朱拉隆功大学的雅思要求我这里没有收录，可以查看该校官网：https://bba.acc.chula.ac.th/。要不要我先帮你估算在朱拉隆功大学读完整个项目的总费用？",
+        "tools": [],
+        "calls": [
+          {
+            "mode": "live",
+            "attempts": 1,
+            "prompt_version": "planning-2.4"
+          }
+        ],
+        "checks": {
+          "completed": true,
+          "no_tool_call": true,
+          "names_a_source": true,
+          "no_question_about_the_gap": true,
+          "only_catalog_links": true
+        }
+      }
+    ],
+    "visa": [
+      {
+        "goal": "去泰国读书的学生签证怎么办",
+        "status": "COMPLETED",
+        "error": "",
+        "answer": "泰国学生签证的具体要求我这里没有收录，建议查看泰国驻你所在地使领馆的官网。想去泰国哪所学校？告诉我校名，我先帮你估算读完整个项目的费用。",
+        "tools": [],
+        "calls": [
+          {
+            "mode": "live",
+            "attempts": 2,
+            "prompt_version": "planning-2.4"
+          }
+        ],
+        "checks": {
+          "completed": true,
+          "no_tool_call": true,
+          "names_a_source": true,
+          "no_question_about_the_gap": true,
+          "only_catalog_links": true
+        }
+      }
+    ]
+  },
+  "failures": [],
+  "passed": true
+}
