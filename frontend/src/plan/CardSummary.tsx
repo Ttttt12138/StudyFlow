@@ -6,6 +6,7 @@ import { money, pick } from "./format";
 import { CardView, type CardActions } from "./cards";
 import { CompareCard, LoanOffer, PriceCard } from "./priceCards";
 import { useShow } from "./currency";
+import { LoanAdviceCard } from "./LoanAdviceCard";
 import type { Card, Plan } from "./types";
 
 /**
@@ -17,6 +18,7 @@ export function CardSummary({ card, id, actions }: { card: Card; id: string; act
   const workspace = useWorkspace();
   const show = useShow();
   if (card.type === "role") return null;
+  if (card.type === "loan_advice") return <LoanAdviceCard card={card} actions={actions} />;
   if (card.type === "confirmation" || card.type === "spending" && card.expense) return <CardView card={card} actions={actions} />;
   if (card.type === "cost") return <PriceCard id={id} name={card.school.name} estimate={card.estimate} actions={actions} />;
   if (card.type === "comparison" || card.type === "school_list") return <CompareCard id={id} schools={card.schools} actions={actions} list={card.type === "school_list"} />;

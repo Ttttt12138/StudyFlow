@@ -4,10 +4,13 @@ import { day, money, percent, pick } from "./format";
 import { useShow } from "./currency";
 import { moneyActionName } from "./MoneyConfirm";
 import { formatRate } from "../backend/presenters";
+import { LoanAdviceCard } from "./LoanAdviceCard";
+import type { LoanReview } from "./loanAdvice";
 import type { Bill, Card, CatalogEntry, Estimate, Place, Plan, SchoolBrief, Spending } from "./types";
 
 export type CardActions = {
   ask(text: string): void;
+  reviewLoan?(review: LoanReview): void;
   /** Saves the school as the plan straight away (no model call) and opens the funding panel. */
   choose(schoolKey: string, name: string, years?: number): void;
   confirm(pendingId: string): void;
@@ -247,6 +250,8 @@ export function CardView({ card, actions }: { card: Card; actions: CardActions }
       return <PlanCard plan={card.plan} />;
     case "loan":
       return <LoanCard plan={card.plan} />;
+    case "loan_advice":
+      return <LoanAdviceCard card={card} actions={actions} />;
     case "confirmation":
       return <Confirmation card={card} actions={actions} />;
     case "bills":

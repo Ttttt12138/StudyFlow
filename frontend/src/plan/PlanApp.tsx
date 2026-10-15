@@ -18,6 +18,8 @@ import { day, money, pick } from "./format";
 import { CompareHistory } from "./PricePanels";
 import { AssessmentPanel } from "./AssessmentPanel";
 import { MoneyConfirm } from "./MoneyConfirm";
+import { LoanApplicationReview } from "./LoanApplicationReview";
+import type { LoanReview } from "./loanAdvice";
 import { createPlanPreview, type PreviewStage } from "./preview";
 import type { Conversation, ConversationSummary, PlanHistory, SchoolBrief, Turn } from "./types";
 import { Markdown } from "./Markdown";
@@ -98,6 +100,7 @@ export function PlanApp({ preview, initialStage = "plan" }: { account?: string; 
   const [sending, setSending] = useState(false);
   const [busy, setBusy] = useState(false);
   const [confirmId, setConfirmId] = useState<string | null>(null);
+  const [loanReview, setLoanReview] = useState<LoanReview | null>(null);
   const [history, setHistory] = useState<PlanHistory | null>(null);
   const [replacing, setReplacing] = useState<{ key: string; name: string; years?: number } | null>(null);
   const [signedOut, setSignedOut] = useState(false);
@@ -184,7 +187,11 @@ export function PlanApp({ preview, initialStage = "plan" }: { account?: string; 
     try {
       const completed = await client.post<Turn>(`agent/conversations/${conversation.id}/messages/`, { text: trimmed }, `message:${conversation.id}:${pending.id}`);
       setConversation(current => current && ({ ...current, turns: current.turns.map(turn => turn.id === pending.id ? completed : turn) }));
-      if (completed.cards.some(card => card.type === "plan" || card.type === "loan")) workspace?.open({ kind: "funding" });
+      const advice = [...completed.cards].reverse().find(card => card.type === "loan_advice");
+      if (advice?.type === "loan_advice" && advice.advice.ready_to_apply && advice.advice.quote_id) {
+        setLoanReview({ planId: advice.plan_id, quoteId: advice.advice.quote_id,
+          assessmentVersion: advice.advice.assessment_version!, planVersion: advice.advice.plan_version! });
+      } else if (!advice && completed.cards.some(card => card.type === "plan" || card.type === "loan")) workspace?.open({ kind: "funding" });
       await refresh().catch(() => setError(t("ws.stale")));
       if (completed.status === "COMPLETED" && /提醒我|待办|我的提醒|有哪些提醒|remind me|my tasks|my reminders|add (a )?task/i.test(trimmed)) workspace?.open({ kind: "life" });
     } catch (err) {
@@ -213,7 +220,7 @@ export function PlanApp({ preview, initialStage = "plan" }: { account?: string; 
       const chosen = await client.post<Turn>(`agent/conversations/${conversation.id}/choose/`,
         { school_key: key, ...(years ? { years } : {}) }, `choose:${conversation.id}:${pending.id}`);
       setConversation(current => current && ({ ...current, turns: current.turns.map(turn => turn.id === pending.id ? chosen : turn) }));
-      workspace?.open({ kind: "funding" });
+      if (!chosen.cards.some(card => card.type === "loan_advice")) workspace?.open({ kind: "funding" });
       await refresh().catch(() => setError(t("ws.stale")));
     } catch (err) {
       setConversation(conversation);
@@ -251,6 +258,7 @@ export function PlanApp({ preview, initialStage = "plan" }: { account?: string; 
   }, [conversation]);
 
   const actions: CardActions = {
+    reviewLoan: review => { if (!preview) setLoanReview(review); },
     ask: (text) => void ask(text), choose, confirm: (id) => setConfirmId(id), reject: (id) => void decide(id, "reject"),
     busy: busy || sending, readOnly: preview, pendingStatus,
   };
@@ -265,9 +273,12 @@ export function PlanApp({ preview, initialStage = "plan" }: { account?: string; 
     if (signedOut || failed && !conversation) report({ status: null });
     else if (conversation) report({ status: plan?.status ?? null, history: preview ? null : history, openDraft: id => void openDraft(id) });
   }, [report, signedOut, failed, conversation, plan?.status, history]);
-  const suggestions = SUGGESTIONS[lang][phase === 1 ? "preparing" : "consult"];
   const stale = useToolRefresh(refresh);
   const cardRows = conversation?.turns.flatMap(turn => turn.cards.map((card, index) => ({ card, id: `${turn.id}:${index}` }))) ?? [];
+  const latestAdvice = [...cardRows].reverse().find(row => row.card.type === "loan_advice")?.card;
+  const adviceStatus = plan?.status === "DRAFT" && latestAdvice?.type === "loan_advice" ? latestAdvice.advice.status : null;
+  const discussingLoan = adviceStatus === "recommended" || adviceStatus === "needs_amount";
+  const suggestions = discussingLoan ? [] : SUGGESTIONS[lang][phase === 1 ? "preparing" : "consult"];
   // A card opened from the sidebar history may come from another conversation of this account.
   const selectedCard = [...cardRows, ...(history?.prices ?? [])].find(item => item.id === workspace?.target?.cardId)?.card;
   const confirming = conversation?.turns.flatMap(turn => turn.cards).find(card => card.type === "confirmation" && card.pending_action_id === confirmId);
@@ -276,23 +287,24 @@ export function PlanApp({ preview, initialStage = "plan" }: { account?: string; 
     ? conversation?.turns.flatMap(turn => turn.pending_actions).find(action => action.id === confirmId) : undefined;
   // First screen: nothing asked yet, so the page leads with the price question instead of an empty chat.
   const fresh = !!conversation && !conversation.turns.some(turn => turn.goal) && phase === 0;
-  const placeholder = t(phase === 1 ? "plan.journey.preparingPlaceholder" : "plan.composer.placeholder");
+  const placeholder = t(adviceStatus === "needs_amount" ? "advice.amountPlaceholder" : adviceStatus === "recommended" ? "advice.concernPlaceholder"
+    : phase === 1 ? "plan.journey.preparingPlaceholder" : "plan.composer.placeholder");
 
   // Suggested questions sit above the input, so they read as the next step before typing.
   const composer = <form className={`plan-composer${fresh ? " is-hero" : ""}`} onSubmit={(event) => { event.preventDefault(); void ask(draft); }}>
-    <div className="agent-suggestions" aria-label={t("plan.composer.suggestions")}>
+    {!!suggestions.length && <div className="agent-suggestions" aria-label={t("plan.composer.suggestions")}>
       {suggestions.map((text) => <button type="button" key={text} className="chip" disabled={sending || !conversation}
         onClick={() => void ask(text)}>{text}</button>)}
-    </div>
+    </div>}
     <div className="plan-input-wrap"><label className="service-field"><span className="sr-only">{t("plan.composer.label")}</span>
-      <textarea value={draft} rows={fresh ? 2 : 1} maxLength={2000} placeholder={placeholder} disabled={sending || preview}
+      <textarea value={draft} rows={fresh ? 2 : 1} maxLength={2000} placeholder={placeholder} disabled={sending || preview || !conversation}
         aria-label={t("plan.composer.label")} onChange={(event) => setDraft(event.target.value)}
         onKeyDown={(event) => { if (event.key === "Enter" && !event.shiftKey && !event.nativeEvent.isComposing) { event.preventDefault(); void ask(draft); } }} />
     </label>
       <div className="plan-input-foot">
         <CurrencySwitch value={currency} onChange={value => void chooseCurrency(value)} disabled={sending || !conversation} />
         <button type="submit" className="primary plan-send" aria-label={sending ? t("plan.composer.sending") : t("plan.composer.send")}
-          disabled={sending || preview || !draft.trim()}><ArrowUp size={20} aria-hidden="true" /></button>
+          disabled={sending || preview || !conversation || !draft.trim()}><ArrowUp size={20} aria-hidden="true" /></button>
       </div>
     </div>
   </form>;
@@ -330,7 +342,8 @@ export function PlanApp({ preview, initialStage = "plan" }: { account?: string; 
               <span className="plan-who"><span className="plan-avatar" aria-hidden="true"><Sparkle size={16} weight="fill" /></span> StudyFlow
                 {stamp && <time className="plan-time" dateTime={turn.created_at}>{stamp.time}</time>}</span>
               {turn.final_answer && <Markdown className="plan-answer" text={turn.final_answer} />}
-              {turn.cards.map((card, index) => <CardSummary key={index} id={`${turn.id}:${index}`} card={card} actions={actions} />)}
+              {turn.cards.map((card, index) => <CardSummary key={index} id={`${turn.id}:${index}`} card={card}
+                actions={card.type === "loan_advice" && (card !== latestAdvice || plan?.status !== "DRAFT") ? { ...actions, readOnly: true } : actions} />)}
             </div>}
             {turn.status === "RUNNING" && <div className="plan-bubble plan-bubble-agent plan-thinking" role="status">{t("plan.composer.sending")}</div>}
           </li>; })}
@@ -343,6 +356,9 @@ export function PlanApp({ preview, initialStage = "plan" }: { account?: string; 
     <ToolSlot kind="life"><StudyLifePanel control={life} preview={preview} ask={text => void ask(text)} /></ToolSlot>
     <ToolSlot kind="compare"><CompareHistory rows={cardRows} /></ToolSlot>
     <ToolSlot kind="funding"><AssessmentPanel plan={plan} client={client} preview={preview} onConfirmed={() => refresh().catch(() => setError(t("ws.stale")))} /></ToolSlot>
+    {loanReview && !preview && <LoanApplicationReview key={`${loanReview.quoteId}:${loanReview.assessmentVersion}`} review={loanReview} client={client}
+      onClose={() => setLoanReview(null)} onLatest={() => { setLoanReview(null); workspace?.open({ kind: "funding" }); }}
+      onApplied={async () => { await refresh().catch(() => setError(t("ws.stale"))); workspace?.open({ kind: "funding" }); }} />}
     <ToolSlot kind="card"><CardDetail key={workspace?.target?.cardId} card={selectedCard ?? null} actions={actions} /></ToolSlot>
     {confirmId && moneyAction && <MoneyConfirm action={moneyAction} client={client} onClose={() => setConfirmId(null)}
       onDone={async message => { setConfirmId(null); setNotice(message); await refresh().catch(() => setError(t("ws.stale"))); }} />}

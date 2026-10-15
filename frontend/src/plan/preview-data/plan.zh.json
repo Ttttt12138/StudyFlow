@@ -1,20 +1,20 @@
 {
  "conversation": {
-  "id": "8221afcb-810d-498f-b534-d32bd133b7de",
+  "id": "ae2c379e-1eaf-4629-b919-08b72a43727f",
   "locale": "zh",
-  "created_at": "2026-10-15T12:27:00.507109+00:00",
-  "updated_at": "2026-10-15T12:27:00.688859+00:00",
+  "created_at": "2026-10-15T13:19:58.792219+00:00",
+  "updated_at": "2026-10-15T13:19:59.006251+00:00",
   "profile": {
    "role": null,
    "home_currency": "THB"
   },
   "plan": {
-   "id": "9ecadcea-1f41-4a64-b15f-13269b598d38",
+   "id": "6a6c55af-2737-4e1e-8e80-0511f846d368",
    "status": "DRAFT",
    "school_key": "chulalongkorn",
    "years": 4,
    "start_date": "2027-08-02",
-   "version": 2,
+   "version": 1,
    "confirmed_at": null,
    "is_simulated": true,
    "school": {
@@ -32,9 +32,9 @@
   },
   "turns": [
    {
-    "id": "b2b498fd-02a0-45b5-8e5b-c14c4e74a0ed",
+    "id": "51affa6e-6ea1-436c-ad0b-5d623e92d78a",
     "type": "agentsession",
-    "created_at": "2026-10-15T12:27:00.510Z",
+    "created_at": "2026-10-15T13:19:58.794Z",
     "goal": "",
     "locale": "zh",
     "mode": "system",
@@ -42,8 +42,8 @@
     "final_answer": "你好！我是 StudyFlow。告诉我想去的学校，我来算学费、住宿和生活费的全程总价，也可以帮你比较几所学校差多少。",
     "error_code": "",
     "write_count": 0,
-    "updated_at": "2026-10-15T12:27:00.510Z",
-    "conversation": "8221afcb-810d-498f-b534-d32bd133b7de",
+    "updated_at": "2026-10-15T13:19:58.794Z",
+    "conversation": "ae2c379e-1eaf-4629-b919-08b72a43727f",
     "cards": [],
     "steps": [],
     "pending_actions": [],
@@ -51,9 +51,9 @@
     "kind": "assistant"
    },
    {
-    "id": "beee8ecd-e99a-41bf-8906-38b51ac5575a",
+    "id": "70090e52-2098-4b1b-81d6-4929fb1d76d3",
     "type": "agentsession",
-    "created_at": "2026-10-15T12:27:00.528Z",
+    "created_at": "2026-10-15T13:19:58.808Z",
     "goal": "朱拉隆功读4年一共多少钱？",
     "locale": "zh",
     "mode": "mock",
@@ -61,8 +61,8 @@
     "final_answer": "读 4 年预计全部费用约 2,351,350 THB：学费 1,028,850 THB，生活费 1,166,400 THB，必要开支 156,100 THB；区间 2,118,650 THB–2,584,050 THB，约 29% 为估算。（示例数据，来自公开资料，付款前请向学校确认。）",
     "error_code": "",
     "write_count": 0,
-    "updated_at": "2026-10-15T12:27:00.547Z",
-    "conversation": "8221afcb-810d-498f-b534-d32bd133b7de",
+    "updated_at": "2026-10-15T13:19:58.821Z",
+    "conversation": "ae2c379e-1eaf-4629-b919-08b72a43727f",
     "cards": [
      {
       "type": "cost",
@@ -791,8 +791,8 @@
     ],
     "steps": [
      {
-      "id": "536b1b92-806a-43f4-9ee5-8f3c28d9953e",
-      "created_at": "2026-10-15T12:27:00.545Z",
+      "id": "2b73078a-8723-4d81-84d8-5aef1e6cb4f0",
+      "created_at": "2026-10-15T13:19:58.820Z",
       "number": 1,
       "tool": "estimate_total_cost",
       "tier": "T0",
@@ -842,12 +842,12 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-2.1"
+       "prompt_version": "planning-2.2"
       }
      },
      {
-      "id": "676b4b86-5298-413c-ad7f-ea1ddb3633d2",
-      "created_at": "2026-10-15T12:27:00.546Z",
+      "id": "55a9b853-a557-4b3c-9d5c-47d3a20ff5a3",
+      "created_at": "2026-10-15T13:19:58.821Z",
       "number": 2,
       "tool": "",
       "tier": "",
@@ -869,7 +869,7 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-2.1"
+       "prompt_version": "planning-2.2"
       }
      }
     ],
@@ -878,9 +878,9 @@
     "kind": "user"
    },
    {
-    "id": "26c33bbd-724b-48c4-9881-af8046b9eebe",
+    "id": "806f2750-f848-47ff-b5c0-a37cb1e3e2ff",
     "type": "agentsession",
-    "created_at": "2026-10-15T12:27:00.562Z",
+    "created_at": "2026-10-15T13:19:58.833Z",
     "goal": "比较曼彻斯特和墨尔本",
     "locale": "zh",
     "mode": "mock",
@@ -888,8 +888,8 @@
     "final_answer": "对比：曼彻斯特大学（联盟曼彻斯特商学院） 读 3 年总价约 148,643 GBP（≈6,243,006 THB）；墨尔本大学 读 3 年总价约 303,082 AUD（≈6,516,252 THB）。全程总价最低的是曼彻斯特大学（联盟曼彻斯特商学院），比最贵的一所少约 273,246 THB。（示例数据，来自公开资料，付款前请向学校确认。）",
     "error_code": "",
     "write_count": 0,
-    "updated_at": "2026-10-15T12:27:00.584Z",
-    "conversation": "8221afcb-810d-498f-b534-d32bd133b7de",
+    "updated_at": "2026-10-15T13:19:58.852Z",
+    "conversation": "ae2c379e-1eaf-4629-b919-08b72a43727f",
     "cards": [
      {
       "type": "comparison",
@@ -1076,8 +1076,8 @@
     ],
     "steps": [
      {
-      "id": "5868dba4-0487-40e3-bd6c-b937b807d428",
-      "created_at": "2026-10-15T12:27:00.582Z",
+      "id": "0fd61965-dcaf-4bd9-8c1f-9fd7a7c4274d",
+      "created_at": "2026-10-15T13:19:58.850Z",
       "number": 1,
       "tool": "compare_schools",
       "tier": "T0",
@@ -1206,12 +1206,12 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-2.1"
+       "prompt_version": "planning-2.2"
       }
      },
      {
-      "id": "9fa14e84-5c19-4889-a15e-f829110dd0e9",
-      "created_at": "2026-10-15T12:27:00.583Z",
+      "id": "3e6d5e37-305c-46b7-b4ca-ce353200c4ae",
+      "created_at": "2026-10-15T13:19:58.851Z",
       "number": 2,
       "tool": "",
       "tier": "",
@@ -1233,7 +1233,7 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-2.1"
+       "prompt_version": "planning-2.2"
       }
      }
     ],
@@ -1242,22 +1242,22 @@
     "kind": "user"
    },
    {
-    "id": "03900d66-39ea-44b2-a1c8-e9237fa9d1b9",
+    "id": "f91223c8-bd36-4983-a4da-7ac0e4cdce84",
     "type": "agentsession",
-    "created_at": "2026-10-15T12:27:00.598Z",
+    "created_at": "2026-10-15T13:19:58.864Z",
     "goal": "就选朱拉隆功",
     "locale": "zh",
     "mode": "mock",
     "status": "COMPLETED",
-    "final_answer": "计划：朱拉隆功大学，4 年，状态：草稿，全部费用约 2,351,350 THB。下一步在贷款面板：填写想借的金额，选择产品、期限和还款方式，查看每月还款、总利息和总还款，然后确认计划并提交贷款申请；提交时会自动附上模拟录取通知。所有资金与贷款均为模拟。",
+    "final_answer": "我推荐先看商业留学贷款示例，当前示例年利率 4.5%，支持分期还款。你希望借多少？告诉我金额，我会选出一个方案，列明月供和全部费用，再带你提交贷款申请。所有贷款均为模拟。",
     "error_code": "",
     "write_count": 2,
-    "updated_at": "2026-10-15T12:27:00.634Z",
-    "conversation": "8221afcb-810d-498f-b534-d32bd133b7de",
+    "updated_at": "2026-10-15T13:19:58.904Z",
+    "conversation": "ae2c379e-1eaf-4629-b919-08b72a43727f",
     "cards": [
      {
       "plan": {
-       "id": "9ecadcea-1f41-4a64-b15f-13269b598d38",
+       "id": "6a6c55af-2737-4e1e-8e80-0511f846d368",
        "total": "2351350.00",
        "years": 4,
        "school": {
@@ -1279,12 +1279,39 @@
        "duration_months": 48
       },
       "type": "plan"
+     },
+     {
+      "type": "loan_advice",
+      "advice": {
+       "intent": "recommend",
+       "status": "needs_amount",
+       "product": {
+        "key": "commercial_student_demo",
+        "terms": [
+         24,
+         36,
+         48,
+         60
+        ],
+        "methods": [
+         "amortized",
+         "interest_only"
+        ],
+        "annual_rate": "0.045"
+       },
+       "constraints": {},
+       "plan_version": 1,
+       "ready_to_apply": false,
+       "assessment_version": 1
+      },
+      "plan_id": "6a6c55af-2737-4e1e-8e80-0511f846d368",
+      "is_simulated": true
      }
     ],
     "steps": [
      {
-      "id": "6f6e7c4f-998e-4e5f-bc5c-c0e42da9cd69",
-      "created_at": "2026-10-15T12:27:00.625Z",
+      "id": "dd9392de-4366-43d2-8a48-e1230d5d29b1",
+      "created_at": "2026-10-15T13:19:58.886Z",
       "number": 1,
       "tool": "save_plan",
       "tier": "T1",
@@ -1295,7 +1322,7 @@
       "status": "OK",
       "result": {
        "plan": {
-        "id": "9ecadcea-1f41-4a64-b15f-13269b598d38",
+        "id": "6a6c55af-2737-4e1e-8e80-0511f846d368",
         "total": "2351350.00",
         "years": 4,
         "school": {
@@ -1331,46 +1358,43 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-2.1"
+       "prompt_version": "planning-2.2"
       }
      },
      {
-      "id": "29bc6249-c750-4a5a-8f6b-28945987dff5",
-      "created_at": "2026-10-15T12:27:00.633Z",
+      "id": "4c06b024-326f-4f5c-a891-d6ae63aa800f",
+      "created_at": "2026-10-15T13:19:58.903Z",
       "number": 2,
       "tool": "simulate_loan",
       "tier": "T1",
       "arguments": {},
-      "rationale": "Open the loan panel for the chosen school",
+      "rationale": "Recommend a loan for the chosen school",
       "status": "OK",
       "result": {
-       "plan": {
-        "id": "9ecadcea-1f41-4a64-b15f-13269b598d38",
-        "total": "2351350.00",
-        "years": 4,
-        "school": {
-         "name": {
-          "en": "Chulalongkorn University",
-          "zh": "朱拉隆功大学"
-         },
-         "currency": "THB"
+       "advice": {
+        "intent": "recommend",
+        "status": "needs_amount",
+        "product": {
+         "key": "commercial_student_demo",
+         "terms": [
+          24,
+          36,
+          48,
+          60
+         ],
+         "methods": [
+          "amortized",
+          "interest_only"
+         ],
+         "annual_rate": "0.045"
         },
-        "status": "DRAFT",
-        "version": 1,
-        "complete": true,
-        "currency": "THB",
-        "converted": null,
-        "school_key": "chulalongkorn",
-        "start_date": "2027-08-02",
-        "confirmed_at": null,
-        "is_simulated": true,
-        "duration_months": 48
+        "constraints": {},
+        "plan_version": 1,
+        "ready_to_apply": false,
+        "assessment_version": 1
        },
-       "profile": {
-        "role": null,
-        "home_currency": "THB"
-       },
-       "open_assessment": true
+       "plan_id": "6a6c55af-2737-4e1e-8e80-0511f846d368",
+       "is_simulated": true
       },
       "call": {
        "mode": "mock",
@@ -1384,12 +1408,12 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-2.1"
+       "prompt_version": "planning-2.2"
       }
      },
      {
-      "id": "da9c6dd3-1b2f-4e68-a9ec-aebaf5d65a38",
-      "created_at": "2026-10-15T12:27:00.634Z",
+      "id": "b53145d1-14d1-4022-8295-da61741b4290",
+      "created_at": "2026-10-15T13:19:58.904Z",
       "number": 3,
       "tool": "",
       "tier": "",
@@ -1397,21 +1421,12 @@
       "rationale": "",
       "status": "FINAL",
       "result": {
-       "answer": "计划：朱拉隆功大学，4 年，状态：草稿，全部费用约 2,351,350 THB。下一步在贷款面板：填写想借的金额，选择产品、期限和还款方式，查看每月还款、总利息和总还款，然后确认计划并提交贷款申请；提交时会自动附上模拟录取通知。所有资金与贷款均为模拟。"
+       "answer": "我推荐先看商业留学贷款示例，当前示例年利率 4.5%，支持分期还款。你希望借多少？告诉我金额，我会选出一个方案，列明月供和全部费用，再带你提交贷款申请。所有贷款均为模拟。"
       },
       "call": {
-       "mode": "mock",
-       "model": "agent-rules",
-       "purpose": "plan",
-       "attempts": 1,
-       "provider": "rules",
-       "error_code": null,
-       "request_id": null,
-       "duration_ms": 0.0,
-       "http_status": null,
-       "input_tokens": 0,
-       "output_tokens": 0,
-       "prompt_version": "planning-2.1"
+       "mode": "deterministic",
+       "purpose": "loan_advice_reply",
+       "provider": "system"
       }
      }
     ],
@@ -1420,84 +1435,133 @@
     "kind": "user"
    },
    {
-    "id": "95ee1737-85e3-4d10-8966-83b684aa2334",
+    "id": "a687f984-448c-4c94-a7c5-62d43946fd82",
     "type": "agentsession",
-    "created_at": "2026-10-15T12:27:00.646Z",
+    "created_at": "2026-10-15T13:19:58.916Z",
     "goal": "我想贷款20万泰铢",
     "locale": "zh",
     "mode": "mock",
     "status": "COMPLETED",
-    "final_answer": "计划：朱拉隆功大学，4 年，状态：草稿，全部费用约 2,351,350 THB。已把贷款金额 200,000 THB 填入贷款面板。下一步：在面板选择产品、期限和还款方式，查看每月还款、总利息和总还款，然后确认计划并提交贷款申请；提交时会自动附上模拟录取通知。所有资金与贷款均为模拟。",
+    "final_answer": "按当前产品费用比较，推荐商业留学贷款示例：借款 200,000.00 THB，48 期，年利率 4.5%。月供最高 4,560.70 THB，总利息 18,913.45 THB，手续费 0.00 THB，总还款 218,913.45 THB。点击「按此方案申请」核对并提交贷款申请；提交时会附上模拟录取通知。所有贷款均为模拟。",
     "error_code": "",
-    "write_count": 2,
-    "updated_at": "2026-10-15T12:27:00.687Z",
-    "conversation": "8221afcb-810d-498f-b534-d32bd133b7de",
+    "write_count": 1,
+    "updated_at": "2026-10-15T13:19:59.005Z",
+    "conversation": "ae2c379e-1eaf-4629-b919-08b72a43727f",
     "cards": [
      {
-      "plan": {
-       "id": "9ecadcea-1f41-4a64-b15f-13269b598d38",
-       "total": "2351350.00",
-       "years": 4,
-       "school": {
-        "name": {
-         "en": "Chulalongkorn University",
-         "zh": "朱拉隆功大学"
-        },
-        "currency": "THB"
+      "type": "loan_advice",
+      "advice": {
+       "change": null,
+       "intent": "recommend",
+       "status": "recommended",
+       "quote_id": "b75f6c9a-a722-4361-b3f1-c35d0f9ec20c",
+       "selected": {
+        "fees": "0.00",
+        "method": "amortized",
+        "months": 48,
+        "product": "commercial_student_demo",
+        "currency": "THB",
+        "principal": "200000.00",
+        "annual_rate": "0.045",
+        "net_proceeds": "200000.00",
+        "last_due_date": "2031-08-01",
+        "first_due_date": "2027-09-01",
+        "total_interest": "18913.45",
+        "monthly_payment": "4560.70",
+        "total_repayment": "218913.45",
+        "interest_only_months": 0,
+        "interest_only_payment": null
        },
-       "status": "DRAFT",
-       "version": 2,
-       "complete": true,
-       "currency": "THB",
-       "converted": null,
-       "school_key": "chulalongkorn",
-       "start_date": "2027-08-02",
-       "confirmed_at": null,
-       "is_simulated": true,
-       "duration_months": 48
+       "constraints": {},
+       "alternatives": [
+        {
+         "fees": "0.00",
+         "method": "amortized",
+         "months": 48,
+         "product": "custom",
+         "currency": "THB",
+         "principal": "200000.00",
+         "annual_rate": "0.06",
+         "net_proceeds": "200000.00",
+         "last_due_date": "2031-08-01",
+         "first_due_date": "2027-09-01",
+         "total_interest": "25456.26",
+         "monthly_payment": "4697.01",
+         "total_repayment": "225456.26",
+         "interest_only_months": 0,
+         "interest_only_payment": null
+        }
+       ],
+       "plan_version": 1,
+       "ready_to_apply": false,
+       "assessment_version": 2
       },
-      "type": "plan"
+      "plan_id": "6a6c55af-2737-4e1e-8e80-0511f846d368",
+      "is_simulated": true
      }
     ],
     "steps": [
      {
-      "id": "08898113-76c5-4e93-87b1-6b20b0db9a8c",
-      "created_at": "2026-10-15T12:27:00.679Z",
+      "id": "2a502f04-63d5-4bed-9b9d-ae9a2dd77f9f",
+      "created_at": "2026-10-15T13:19:59.003Z",
       "number": 1,
-      "tool": "save_plan",
+      "tool": "simulate_loan",
       "tier": "T1",
       "arguments": {
        "principal": "200000.00",
-       "school_key": "chulalongkorn",
        "principal_currency": "THB"
       },
-      "rationale": "Save the chosen school",
+      "rationale": "Recommend a loan and address the user's concern",
       "status": "OK",
       "result": {
-       "plan": {
-        "id": "9ecadcea-1f41-4a64-b15f-13269b598d38",
-        "total": "2351350.00",
-        "years": 4,
-        "school": {
-         "name": {
-          "en": "Chulalongkorn University",
-          "zh": "朱拉隆功大学"
-         },
-         "currency": "THB"
+       "advice": {
+        "change": null,
+        "intent": "recommend",
+        "status": "recommended",
+        "quote_id": "b75f6c9a-a722-4361-b3f1-c35d0f9ec20c",
+        "selected": {
+         "fees": "0.00",
+         "method": "amortized",
+         "months": 48,
+         "product": "commercial_student_demo",
+         "currency": "THB",
+         "principal": "200000.00",
+         "annual_rate": "0.045",
+         "net_proceeds": "200000.00",
+         "last_due_date": "2031-08-01",
+         "first_due_date": "2027-09-01",
+         "total_interest": "18913.45",
+         "monthly_payment": "4560.70",
+         "total_repayment": "218913.45",
+         "interest_only_months": 0,
+         "interest_only_payment": null
         },
-        "status": "DRAFT",
-        "version": 2,
-        "complete": true,
-        "currency": "THB",
-        "converted": null,
-        "school_key": "chulalongkorn",
-        "start_date": "2027-08-02",
-        "confirmed_at": null,
-        "is_simulated": true,
-        "duration_months": 48
+        "constraints": {},
+        "alternatives": [
+         {
+          "fees": "0.00",
+          "method": "amortized",
+          "months": 48,
+          "product": "custom",
+          "currency": "THB",
+          "principal": "200000.00",
+          "annual_rate": "0.06",
+          "net_proceeds": "200000.00",
+          "last_due_date": "2031-08-01",
+          "first_due_date": "2027-09-01",
+          "total_interest": "25456.26",
+          "monthly_payment": "4697.01",
+          "total_repayment": "225456.26",
+          "interest_only_months": 0,
+          "interest_only_payment": null
+         }
+        ],
+        "plan_version": 1,
+        "ready_to_apply": false,
+        "assessment_version": 2
        },
-       "loan_principal": "200000.00",
-       "withdrawn_application": false
+       "plan_id": "6a6c55af-2737-4e1e-8e80-0511f846d368",
+       "is_simulated": true
       },
       "call": {
        "mode": "mock",
@@ -1511,87 +1575,25 @@
        "http_status": null,
        "input_tokens": 0,
        "output_tokens": 0,
-       "prompt_version": "planning-2.1"
+       "prompt_version": "planning-2.2"
       }
      },
      {
-      "id": "b656b382-3215-4fc9-bf79-54fd6b9ac566",
-      "created_at": "2026-10-15T12:27:00.686Z",
+      "id": "c323ee18-35af-43b8-a99e-3198d69f2d20",
+      "created_at": "2026-10-15T13:19:59.004Z",
       "number": 2,
-      "tool": "simulate_loan",
-      "tier": "T1",
-      "arguments": {},
-      "rationale": "Open the loan panel",
-      "status": "OK",
-      "result": {
-       "plan": {
-        "id": "9ecadcea-1f41-4a64-b15f-13269b598d38",
-        "total": "2351350.00",
-        "years": 4,
-        "school": {
-         "name": {
-          "en": "Chulalongkorn University",
-          "zh": "朱拉隆功大学"
-         },
-         "currency": "THB"
-        },
-        "status": "DRAFT",
-        "version": 2,
-        "complete": true,
-        "currency": "THB",
-        "converted": null,
-        "school_key": "chulalongkorn",
-        "start_date": "2027-08-02",
-        "confirmed_at": null,
-        "is_simulated": true,
-        "duration_months": 48
-       },
-       "profile": {
-        "role": null,
-        "home_currency": "THB"
-       },
-       "open_assessment": true
-      },
-      "call": {
-       "mode": "mock",
-       "model": "agent-rules",
-       "purpose": "plan",
-       "attempts": 1,
-       "provider": "rules",
-       "error_code": null,
-       "request_id": null,
-       "duration_ms": 0.0,
-       "http_status": null,
-       "input_tokens": 0,
-       "output_tokens": 0,
-       "prompt_version": "planning-2.1"
-      }
-     },
-     {
-      "id": "17e904a2-549a-4184-85a3-d465be7dd0bf",
-      "created_at": "2026-10-15T12:27:00.687Z",
-      "number": 3,
       "tool": "",
       "tier": "",
       "arguments": {},
       "rationale": "",
       "status": "FINAL",
       "result": {
-       "answer": "计划：朱拉隆功大学，4 年，状态：草稿，全部费用约 2,351,350 THB。已把贷款金额 200,000 THB 填入贷款面板。下一步：在面板选择产品、期限和还款方式，查看每月还款、总利息和总还款，然后确认计划并提交贷款申请；提交时会自动附上模拟录取通知。所有资金与贷款均为模拟。"
+       "answer": "按当前产品费用比较，推荐商业留学贷款示例：借款 200,000.00 THB，48 期，年利率 4.5%。月供最高 4,560.70 THB，总利息 18,913.45 THB，手续费 0.00 THB，总还款 218,913.45 THB。点击「按此方案申请」核对并提交贷款申请；提交时会附上模拟录取通知。所有贷款均为模拟。"
       },
       "call": {
-       "mode": "mock",
-       "model": "agent-rules",
-       "purpose": "plan",
-       "attempts": 1,
-       "provider": "rules",
-       "error_code": null,
-       "request_id": null,
-       "duration_ms": 0.0,
-       "http_status": null,
-       "input_tokens": 0,
-       "output_tokens": 0,
-       "prompt_version": "planning-2.1"
+       "mode": "deterministic",
+       "purpose": "loan_advice_reply",
+       "provider": "system"
       }
      }
     ],
@@ -1606,15 +1608,15 @@
   "draft": false,
   "quotes": [
    {
-    "id": "2a065e9b-ca40-46c4-90d8-015a649d9aa0",
+    "id": "b75f6c9a-a722-4361-b3f1-c35d0f9ec20c",
     "type": "loansimulation",
     "inputs": {
      "fees": "0.00",
      "months": 48,
-     "product": "custom",
+     "product": "commercial_student_demo",
      "currency": "THB",
      "principal": "200000.00",
-     "annual_rate": "0.06000000",
+     "annual_rate": "0.045",
      "grace_months": 0,
      "first_due_date": "2027-09-01"
     },
@@ -1623,10 +1625,10 @@
      "terms": {
       "fees": "0.00",
       "months": 48,
-      "product": "custom",
+      "product": "commercial_student_demo",
       "currency": "THB",
       "principal": "200000.00",
-      "annual_rate": "0.06000000",
+      "annual_rate": "0.045",
       "grace_months": 0,
       "first_due_date": "2027-09-01"
      },
@@ -1634,578 +1636,578 @@
      "schedule": [
       {
        "phase": "repayment",
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 1,
-       "payment": "4697.01",
+       "payment": "4560.70",
        "due_date": "2027-09-01",
-       "interest": "1000.00",
-       "principal": "3697.01",
-       "closing_balance": "196302.99",
+       "interest": "750.00",
+       "principal": "3810.70",
+       "closing_balance": "196189.30",
        "opening_balance": "200000.00",
-       "remaining_principal": "196302.99"
+       "remaining_principal": "196189.30"
       },
       {
        "phase": "repayment",
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 2,
-       "payment": "4697.01",
+       "payment": "4560.70",
        "due_date": "2027-10-01",
-       "interest": "981.51",
-       "principal": "3715.50",
-       "closing_balance": "192587.49",
-       "opening_balance": "196302.99",
-       "remaining_principal": "192587.49"
+       "interest": "735.71",
+       "principal": "3824.99",
+       "closing_balance": "192364.31",
+       "opening_balance": "196189.30",
+       "remaining_principal": "192364.31"
       },
       {
        "phase": "repayment",
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 3,
-       "payment": "4697.01",
+       "payment": "4560.70",
        "due_date": "2027-11-01",
-       "interest": "962.94",
-       "principal": "3734.07",
-       "closing_balance": "188853.42",
-       "opening_balance": "192587.49",
-       "remaining_principal": "188853.42"
+       "interest": "721.37",
+       "principal": "3839.33",
+       "closing_balance": "188524.98",
+       "opening_balance": "192364.31",
+       "remaining_principal": "188524.98"
       },
       {
        "phase": "repayment",
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 4,
-       "payment": "4697.01",
+       "payment": "4560.70",
        "due_date": "2027-12-01",
-       "interest": "944.27",
-       "principal": "3752.74",
-       "closing_balance": "185100.68",
-       "opening_balance": "188853.42",
-       "remaining_principal": "185100.68"
+       "interest": "706.97",
+       "principal": "3853.73",
+       "closing_balance": "184671.25",
+       "opening_balance": "188524.98",
+       "remaining_principal": "184671.25"
       },
       {
        "phase": "repayment",
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 5,
-       "payment": "4697.01",
+       "payment": "4560.70",
        "due_date": "2028-01-01",
-       "interest": "925.50",
-       "principal": "3771.51",
-       "closing_balance": "181329.17",
-       "opening_balance": "185100.68",
-       "remaining_principal": "181329.17"
+       "interest": "692.52",
+       "principal": "3868.18",
+       "closing_balance": "180803.07",
+       "opening_balance": "184671.25",
+       "remaining_principal": "180803.07"
       },
       {
        "phase": "repayment",
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 6,
-       "payment": "4697.01",
+       "payment": "4560.70",
        "due_date": "2028-02-01",
-       "interest": "906.65",
-       "principal": "3790.36",
-       "closing_balance": "177538.81",
-       "opening_balance": "181329.17",
-       "remaining_principal": "177538.81"
+       "interest": "678.01",
+       "principal": "3882.69",
+       "closing_balance": "176920.38",
+       "opening_balance": "180803.07",
+       "remaining_principal": "176920.38"
       },
       {
        "phase": "repayment",
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 7,
-       "payment": "4697.01",
+       "payment": "4560.70",
        "due_date": "2028-03-01",
-       "interest": "887.69",
-       "principal": "3809.32",
-       "closing_balance": "173729.49",
-       "opening_balance": "177538.81",
-       "remaining_principal": "173729.49"
+       "interest": "663.45",
+       "principal": "3897.25",
+       "closing_balance": "173023.13",
+       "opening_balance": "176920.38",
+       "remaining_principal": "173023.13"
       },
       {
        "phase": "repayment",
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 8,
-       "payment": "4697.01",
+       "payment": "4560.70",
        "due_date": "2028-04-01",
-       "interest": "868.65",
-       "principal": "3828.36",
-       "closing_balance": "169901.13",
-       "opening_balance": "173729.49",
-       "remaining_principal": "169901.13"
+       "interest": "648.84",
+       "principal": "3911.86",
+       "closing_balance": "169111.27",
+       "opening_balance": "173023.13",
+       "remaining_principal": "169111.27"
       },
       {
        "phase": "repayment",
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 9,
-       "payment": "4697.01",
+       "payment": "4560.70",
        "due_date": "2028-05-01",
-       "interest": "849.51",
-       "principal": "3847.50",
-       "closing_balance": "166053.63",
-       "opening_balance": "169901.13",
-       "remaining_principal": "166053.63"
+       "interest": "634.17",
+       "principal": "3926.53",
+       "closing_balance": "165184.74",
+       "opening_balance": "169111.27",
+       "remaining_principal": "165184.74"
       },
       {
        "phase": "repayment",
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 10,
-       "payment": "4697.01",
+       "payment": "4560.70",
        "due_date": "2028-06-01",
-       "interest": "830.27",
-       "principal": "3866.74",
-       "closing_balance": "162186.89",
-       "opening_balance": "166053.63",
-       "remaining_principal": "162186.89"
+       "interest": "619.44",
+       "principal": "3941.26",
+       "closing_balance": "161243.48",
+       "opening_balance": "165184.74",
+       "remaining_principal": "161243.48"
       },
       {
        "phase": "repayment",
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 11,
-       "payment": "4697.01",
+       "payment": "4560.70",
        "due_date": "2028-07-01",
-       "interest": "810.93",
-       "principal": "3886.08",
-       "closing_balance": "158300.81",
-       "opening_balance": "162186.89",
-       "remaining_principal": "158300.81"
+       "interest": "604.66",
+       "principal": "3956.04",
+       "closing_balance": "157287.44",
+       "opening_balance": "161243.48",
+       "remaining_principal": "157287.44"
       },
       {
        "phase": "repayment",
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 12,
-       "payment": "4697.01",
+       "payment": "4560.70",
        "due_date": "2028-08-01",
-       "interest": "791.50",
-       "principal": "3905.51",
-       "closing_balance": "154395.30",
-       "opening_balance": "158300.81",
-       "remaining_principal": "154395.30"
+       "interest": "589.83",
+       "principal": "3970.87",
+       "closing_balance": "153316.57",
+       "opening_balance": "157287.44",
+       "remaining_principal": "153316.57"
       },
       {
        "phase": "repayment",
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 13,
-       "payment": "4697.01",
+       "payment": "4560.70",
        "due_date": "2028-09-01",
-       "interest": "771.98",
-       "principal": "3925.03",
-       "closing_balance": "150470.27",
-       "opening_balance": "154395.30",
-       "remaining_principal": "150470.27"
+       "interest": "574.94",
+       "principal": "3985.76",
+       "closing_balance": "149330.81",
+       "opening_balance": "153316.57",
+       "remaining_principal": "149330.81"
       },
       {
        "phase": "repayment",
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 14,
-       "payment": "4697.01",
+       "payment": "4560.70",
        "due_date": "2028-10-01",
-       "interest": "752.35",
-       "principal": "3944.66",
-       "closing_balance": "146525.61",
-       "opening_balance": "150470.27",
-       "remaining_principal": "146525.61"
+       "interest": "559.99",
+       "principal": "4000.71",
+       "closing_balance": "145330.10",
+       "opening_balance": "149330.81",
+       "remaining_principal": "145330.10"
       },
       {
        "phase": "repayment",
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 15,
-       "payment": "4697.01",
+       "payment": "4560.70",
        "due_date": "2028-11-01",
-       "interest": "732.63",
-       "principal": "3964.38",
-       "closing_balance": "142561.23",
-       "opening_balance": "146525.61",
-       "remaining_principal": "142561.23"
+       "interest": "544.99",
+       "principal": "4015.71",
+       "closing_balance": "141314.39",
+       "opening_balance": "145330.10",
+       "remaining_principal": "141314.39"
       },
       {
        "phase": "repayment",
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 16,
-       "payment": "4697.01",
+       "payment": "4560.70",
        "due_date": "2028-12-01",
-       "interest": "712.81",
-       "principal": "3984.20",
-       "closing_balance": "138577.03",
-       "opening_balance": "142561.23",
-       "remaining_principal": "138577.03"
+       "interest": "529.93",
+       "principal": "4030.77",
+       "closing_balance": "137283.62",
+       "opening_balance": "141314.39",
+       "remaining_principal": "137283.62"
       },
       {
        "phase": "repayment",
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 17,
-       "payment": "4697.01",
+       "payment": "4560.70",
        "due_date": "2029-01-01",
-       "interest": "692.89",
-       "principal": "4004.12",
-       "closing_balance": "134572.91",
-       "opening_balance": "138577.03",
-       "remaining_principal": "134572.91"
+       "interest": "514.81",
+       "principal": "4045.89",
+       "closing_balance": "133237.73",
+       "opening_balance": "137283.62",
+       "remaining_principal": "133237.73"
       },
       {
        "phase": "repayment",
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 18,
-       "payment": "4697.01",
+       "payment": "4560.70",
        "due_date": "2029-02-01",
-       "interest": "672.86",
-       "principal": "4024.15",
-       "closing_balance": "130548.76",
-       "opening_balance": "134572.91",
-       "remaining_principal": "130548.76"
+       "interest": "499.64",
+       "principal": "4061.06",
+       "closing_balance": "129176.67",
+       "opening_balance": "133237.73",
+       "remaining_principal": "129176.67"
       },
       {
        "phase": "repayment",
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 19,
-       "payment": "4697.01",
+       "payment": "4560.70",
        "due_date": "2029-03-01",
-       "interest": "652.74",
-       "principal": "4044.27",
-       "closing_balance": "126504.49",
-       "opening_balance": "130548.76",
-       "remaining_principal": "126504.49"
+       "interest": "484.41",
+       "principal": "4076.29",
+       "closing_balance": "125100.38",
+       "opening_balance": "129176.67",
+       "remaining_principal": "125100.38"
       },
       {
        "phase": "repayment",
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 20,
-       "payment": "4697.01",
+       "payment": "4560.70",
        "due_date": "2029-04-01",
-       "interest": "632.52",
-       "principal": "4064.49",
-       "closing_balance": "122440.00",
-       "opening_balance": "126504.49",
-       "remaining_principal": "122440.00"
+       "interest": "469.13",
+       "principal": "4091.57",
+       "closing_balance": "121008.81",
+       "opening_balance": "125100.38",
+       "remaining_principal": "121008.81"
       },
       {
        "phase": "repayment",
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 21,
-       "payment": "4697.01",
+       "payment": "4560.70",
        "due_date": "2029-05-01",
-       "interest": "612.20",
-       "principal": "4084.81",
-       "closing_balance": "118355.19",
-       "opening_balance": "122440.00",
-       "remaining_principal": "118355.19"
+       "interest": "453.78",
+       "principal": "4106.92",
+       "closing_balance": "116901.89",
+       "opening_balance": "121008.81",
+       "remaining_principal": "116901.89"
       },
       {
        "phase": "repayment",
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 22,
-       "payment": "4697.01",
+       "payment": "4560.70",
        "due_date": "2029-06-01",
-       "interest": "591.78",
-       "principal": "4105.23",
-       "closing_balance": "114249.96",
-       "opening_balance": "118355.19",
-       "remaining_principal": "114249.96"
+       "interest": "438.38",
+       "principal": "4122.32",
+       "closing_balance": "112779.57",
+       "opening_balance": "116901.89",
+       "remaining_principal": "112779.57"
       },
       {
        "phase": "repayment",
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 23,
-       "payment": "4697.01",
+       "payment": "4560.70",
        "due_date": "2029-07-01",
-       "interest": "571.25",
-       "principal": "4125.76",
-       "closing_balance": "110124.20",
-       "opening_balance": "114249.96",
-       "remaining_principal": "110124.20"
+       "interest": "422.92",
+       "principal": "4137.78",
+       "closing_balance": "108641.79",
+       "opening_balance": "112779.57",
+       "remaining_principal": "108641.79"
       },
       {
        "phase": "repayment",
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 24,
-       "payment": "4697.01",
+       "payment": "4560.70",
        "due_date": "2029-08-01",
-       "interest": "550.62",
-       "principal": "4146.39",
-       "closing_balance": "105977.81",
-       "opening_balance": "110124.20",
-       "remaining_principal": "105977.81"
+       "interest": "407.41",
+       "principal": "4153.29",
+       "closing_balance": "104488.50",
+       "opening_balance": "108641.79",
+       "remaining_principal": "104488.50"
       },
       {
        "phase": "repayment",
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 25,
-       "payment": "4697.01",
+       "payment": "4560.70",
        "due_date": "2029-09-01",
-       "interest": "529.89",
-       "principal": "4167.12",
-       "closing_balance": "101810.69",
-       "opening_balance": "105977.81",
-       "remaining_principal": "101810.69"
+       "interest": "391.83",
+       "principal": "4168.87",
+       "closing_balance": "100319.63",
+       "opening_balance": "104488.50",
+       "remaining_principal": "100319.63"
       },
       {
        "phase": "repayment",
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 26,
-       "payment": "4697.01",
+       "payment": "4560.70",
        "due_date": "2029-10-01",
-       "interest": "509.05",
-       "principal": "4187.96",
-       "closing_balance": "97622.73",
-       "opening_balance": "101810.69",
-       "remaining_principal": "97622.73"
+       "interest": "376.20",
+       "principal": "4184.50",
+       "closing_balance": "96135.13",
+       "opening_balance": "100319.63",
+       "remaining_principal": "96135.13"
       },
       {
        "phase": "repayment",
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 27,
-       "payment": "4697.01",
+       "payment": "4560.70",
        "due_date": "2029-11-01",
-       "interest": "488.11",
-       "principal": "4208.90",
-       "closing_balance": "93413.83",
-       "opening_balance": "97622.73",
-       "remaining_principal": "93413.83"
+       "interest": "360.51",
+       "principal": "4200.19",
+       "closing_balance": "91934.94",
+       "opening_balance": "96135.13",
+       "remaining_principal": "91934.94"
       },
       {
        "phase": "repayment",
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 28,
-       "payment": "4697.01",
+       "payment": "4560.70",
        "due_date": "2029-12-01",
-       "interest": "467.07",
-       "principal": "4229.94",
-       "closing_balance": "89183.89",
-       "opening_balance": "93413.83",
-       "remaining_principal": "89183.89"
+       "interest": "344.76",
+       "principal": "4215.94",
+       "closing_balance": "87719.00",
+       "opening_balance": "91934.94",
+       "remaining_principal": "87719.00"
       },
       {
        "phase": "repayment",
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 29,
-       "payment": "4697.01",
+       "payment": "4560.70",
        "due_date": "2030-01-01",
-       "interest": "445.92",
-       "principal": "4251.09",
-       "closing_balance": "84932.80",
-       "opening_balance": "89183.89",
-       "remaining_principal": "84932.80"
+       "interest": "328.95",
+       "principal": "4231.75",
+       "closing_balance": "83487.25",
+       "opening_balance": "87719.00",
+       "remaining_principal": "83487.25"
       },
       {
        "phase": "repayment",
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 30,
-       "payment": "4697.01",
+       "payment": "4560.70",
        "due_date": "2030-02-01",
-       "interest": "424.66",
-       "principal": "4272.35",
-       "closing_balance": "80660.45",
-       "opening_balance": "84932.80",
-       "remaining_principal": "80660.45"
+       "interest": "313.08",
+       "principal": "4247.62",
+       "closing_balance": "79239.63",
+       "opening_balance": "83487.25",
+       "remaining_principal": "79239.63"
       },
       {
        "phase": "repayment",
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 31,
-       "payment": "4697.01",
+       "payment": "4560.70",
        "due_date": "2030-03-01",
-       "interest": "403.30",
-       "principal": "4293.71",
-       "closing_balance": "76366.74",
-       "opening_balance": "80660.45",
-       "remaining_principal": "76366.74"
+       "interest": "297.15",
+       "principal": "4263.55",
+       "closing_balance": "74976.08",
+       "opening_balance": "79239.63",
+       "remaining_principal": "74976.08"
       },
       {
        "phase": "repayment",
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 32,
-       "payment": "4697.01",
+       "payment": "4560.70",
        "due_date": "2030-04-01",
-       "interest": "381.83",
-       "principal": "4315.18",
-       "closing_balance": "72051.56",
-       "opening_balance": "76366.74",
-       "remaining_principal": "72051.56"
+       "interest": "281.16",
+       "principal": "4279.54",
+       "closing_balance": "70696.54",
+       "opening_balance": "74976.08",
+       "remaining_principal": "70696.54"
       },
       {
        "phase": "repayment",
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 33,
-       "payment": "4697.01",
+       "payment": "4560.70",
        "due_date": "2030-05-01",
-       "interest": "360.26",
-       "principal": "4336.75",
-       "closing_balance": "67714.81",
-       "opening_balance": "72051.56",
-       "remaining_principal": "67714.81"
+       "interest": "265.11",
+       "principal": "4295.59",
+       "closing_balance": "66400.95",
+       "opening_balance": "70696.54",
+       "remaining_principal": "66400.95"
       },
       {
        "phase": "repayment",
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 34,
-       "payment": "4697.01",
+       "payment": "4560.70",
        "due_date": "2030-06-01",
-       "interest": "338.57",
-       "principal": "4358.44",
-       "closing_balance": "63356.37",
-       "opening_balance": "67714.81",
-       "remaining_principal": "63356.37"
+       "interest": "249.00",
+       "principal": "4311.70",
+       "closing_balance": "62089.25",
+       "opening_balance": "66400.95",
+       "remaining_principal": "62089.25"
       },
       {
        "phase": "repayment",
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 35,
-       "payment": "4697.01",
+       "payment": "4560.70",
        "due_date": "2030-07-01",
-       "interest": "316.78",
-       "principal": "4380.23",
-       "closing_balance": "58976.14",
-       "opening_balance": "63356.37",
-       "remaining_principal": "58976.14"
+       "interest": "232.83",
+       "principal": "4327.87",
+       "closing_balance": "57761.38",
+       "opening_balance": "62089.25",
+       "remaining_principal": "57761.38"
       },
       {
        "phase": "repayment",
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 36,
-       "payment": "4697.01",
+       "payment": "4560.70",
        "due_date": "2030-08-01",
-       "interest": "294.88",
-       "principal": "4402.13",
-       "closing_balance": "54574.01",
-       "opening_balance": "58976.14",
-       "remaining_principal": "54574.01"
+       "interest": "216.61",
+       "principal": "4344.09",
+       "closing_balance": "53417.29",
+       "opening_balance": "57761.38",
+       "remaining_principal": "53417.29"
       },
       {
        "phase": "repayment",
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 37,
-       "payment": "4697.01",
+       "payment": "4560.70",
        "due_date": "2030-09-01",
-       "interest": "272.87",
-       "principal": "4424.14",
-       "closing_balance": "50149.87",
-       "opening_balance": "54574.01",
-       "remaining_principal": "50149.87"
+       "interest": "200.31",
+       "principal": "4360.39",
+       "closing_balance": "49056.90",
+       "opening_balance": "53417.29",
+       "remaining_principal": "49056.90"
       },
       {
        "phase": "repayment",
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 38,
-       "payment": "4697.01",
+       "payment": "4560.70",
        "due_date": "2030-10-01",
-       "interest": "250.75",
-       "principal": "4446.26",
-       "closing_balance": "45703.61",
-       "opening_balance": "50149.87",
-       "remaining_principal": "45703.61"
+       "interest": "183.96",
+       "principal": "4376.74",
+       "closing_balance": "44680.16",
+       "opening_balance": "49056.90",
+       "remaining_principal": "44680.16"
       },
       {
        "phase": "repayment",
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 39,
-       "payment": "4697.01",
+       "payment": "4560.70",
        "due_date": "2030-11-01",
-       "interest": "228.52",
-       "principal": "4468.49",
-       "closing_balance": "41235.12",
-       "opening_balance": "45703.61",
-       "remaining_principal": "41235.12"
+       "interest": "167.55",
+       "principal": "4393.15",
+       "closing_balance": "40287.01",
+       "opening_balance": "44680.16",
+       "remaining_principal": "40287.01"
       },
       {
        "phase": "repayment",
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 40,
-       "payment": "4697.01",
+       "payment": "4560.70",
        "due_date": "2030-12-01",
-       "interest": "206.18",
-       "principal": "4490.83",
-       "closing_balance": "36744.29",
-       "opening_balance": "41235.12",
-       "remaining_principal": "36744.29"
+       "interest": "151.08",
+       "principal": "4409.62",
+       "closing_balance": "35877.39",
+       "opening_balance": "40287.01",
+       "remaining_principal": "35877.39"
       },
       {
        "phase": "repayment",
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 41,
-       "payment": "4697.01",
+       "payment": "4560.70",
        "due_date": "2031-01-01",
-       "interest": "183.72",
-       "principal": "4513.29",
-       "closing_balance": "32231.00",
-       "opening_balance": "36744.29",
-       "remaining_principal": "32231.00"
+       "interest": "134.54",
+       "principal": "4426.16",
+       "closing_balance": "31451.23",
+       "opening_balance": "35877.39",
+       "remaining_principal": "31451.23"
       },
       {
        "phase": "repayment",
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 42,
-       "payment": "4697.01",
+       "payment": "4560.70",
        "due_date": "2031-02-01",
-       "interest": "161.16",
-       "principal": "4535.85",
-       "closing_balance": "27695.15",
-       "opening_balance": "32231.00",
-       "remaining_principal": "27695.15"
+       "interest": "117.94",
+       "principal": "4442.76",
+       "closing_balance": "27008.47",
+       "opening_balance": "31451.23",
+       "remaining_principal": "27008.47"
       },
       {
        "phase": "repayment",
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 43,
-       "payment": "4697.01",
+       "payment": "4560.70",
        "due_date": "2031-03-01",
-       "interest": "138.48",
-       "principal": "4558.53",
-       "closing_balance": "23136.62",
-       "opening_balance": "27695.15",
-       "remaining_principal": "23136.62"
+       "interest": "101.28",
+       "principal": "4459.42",
+       "closing_balance": "22549.05",
+       "opening_balance": "27008.47",
+       "remaining_principal": "22549.05"
       },
       {
        "phase": "repayment",
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 44,
-       "payment": "4697.01",
+       "payment": "4560.70",
        "due_date": "2031-04-01",
-       "interest": "115.68",
-       "principal": "4581.33",
-       "closing_balance": "18555.29",
-       "opening_balance": "23136.62",
-       "remaining_principal": "18555.29"
+       "interest": "84.56",
+       "principal": "4476.14",
+       "closing_balance": "18072.91",
+       "opening_balance": "22549.05",
+       "remaining_principal": "18072.91"
       },
       {
        "phase": "repayment",
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 45,
-       "payment": "4697.01",
+       "payment": "4560.70",
        "due_date": "2031-05-01",
-       "interest": "92.78",
-       "principal": "4604.23",
-       "closing_balance": "13951.06",
-       "opening_balance": "18555.29",
-       "remaining_principal": "13951.06"
+       "interest": "67.77",
+       "principal": "4492.93",
+       "closing_balance": "13579.98",
+       "opening_balance": "18072.91",
+       "remaining_principal": "13579.98"
       },
       {
        "phase": "repayment",
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 46,
-       "payment": "4697.01",
+       "payment": "4560.70",
        "due_date": "2031-06-01",
-       "interest": "69.76",
-       "principal": "4627.25",
-       "closing_balance": "9323.81",
-       "opening_balance": "13951.06",
-       "remaining_principal": "9323.81"
+       "interest": "50.92",
+       "principal": "4509.78",
+       "closing_balance": "9070.20",
+       "opening_balance": "13579.98",
+       "remaining_principal": "9070.20"
       },
       {
        "phase": "repayment",
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 47,
-       "payment": "4697.01",
+       "payment": "4560.70",
        "due_date": "2031-07-01",
-       "interest": "46.62",
-       "principal": "4650.39",
-       "closing_balance": "4673.42",
-       "opening_balance": "9323.81",
-       "remaining_principal": "4673.42"
+       "interest": "34.01",
+       "principal": "4526.69",
+       "closing_balance": "4543.51",
+       "opening_balance": "9070.20",
+       "remaining_principal": "4543.51"
       },
       {
        "phase": "repayment",
-       "amount": "4696.79",
+       "amount": "4560.55",
        "number": 48,
-       "payment": "4696.79",
+       "payment": "4560.55",
        "due_date": "2031-08-01",
-       "interest": "23.37",
-       "principal": "4673.42",
+       "interest": "17.04",
+       "principal": "4543.51",
        "closing_balance": "0.00",
-       "opening_balance": "4673.42",
+       "opening_balance": "4543.51",
        "remaining_principal": "0.00"
       }
      ],
@@ -2213,405 +2215,405 @@
      "simulated": true,
      "repayments": [
       {
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 1,
        "due_date": "2027-09-01",
-       "interest": "1000.00",
-       "principal": "3697.01",
-       "remaining_principal": "196302.99"
+       "interest": "750.00",
+       "principal": "3810.70",
+       "remaining_principal": "196189.30"
       },
       {
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 2,
        "due_date": "2027-10-01",
-       "interest": "981.51",
-       "principal": "3715.50",
-       "remaining_principal": "192587.49"
+       "interest": "735.71",
+       "principal": "3824.99",
+       "remaining_principal": "192364.31"
       },
       {
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 3,
        "due_date": "2027-11-01",
-       "interest": "962.94",
-       "principal": "3734.07",
-       "remaining_principal": "188853.42"
+       "interest": "721.37",
+       "principal": "3839.33",
+       "remaining_principal": "188524.98"
       },
       {
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 4,
        "due_date": "2027-12-01",
-       "interest": "944.27",
-       "principal": "3752.74",
-       "remaining_principal": "185100.68"
+       "interest": "706.97",
+       "principal": "3853.73",
+       "remaining_principal": "184671.25"
       },
       {
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 5,
        "due_date": "2028-01-01",
-       "interest": "925.50",
-       "principal": "3771.51",
-       "remaining_principal": "181329.17"
+       "interest": "692.52",
+       "principal": "3868.18",
+       "remaining_principal": "180803.07"
       },
       {
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 6,
        "due_date": "2028-02-01",
-       "interest": "906.65",
-       "principal": "3790.36",
-       "remaining_principal": "177538.81"
+       "interest": "678.01",
+       "principal": "3882.69",
+       "remaining_principal": "176920.38"
       },
       {
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 7,
        "due_date": "2028-03-01",
-       "interest": "887.69",
-       "principal": "3809.32",
-       "remaining_principal": "173729.49"
+       "interest": "663.45",
+       "principal": "3897.25",
+       "remaining_principal": "173023.13"
       },
       {
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 8,
        "due_date": "2028-04-01",
-       "interest": "868.65",
-       "principal": "3828.36",
-       "remaining_principal": "169901.13"
+       "interest": "648.84",
+       "principal": "3911.86",
+       "remaining_principal": "169111.27"
       },
       {
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 9,
        "due_date": "2028-05-01",
-       "interest": "849.51",
-       "principal": "3847.50",
-       "remaining_principal": "166053.63"
+       "interest": "634.17",
+       "principal": "3926.53",
+       "remaining_principal": "165184.74"
       },
       {
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 10,
        "due_date": "2028-06-01",
-       "interest": "830.27",
-       "principal": "3866.74",
-       "remaining_principal": "162186.89"
+       "interest": "619.44",
+       "principal": "3941.26",
+       "remaining_principal": "161243.48"
       },
       {
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 11,
        "due_date": "2028-07-01",
-       "interest": "810.93",
-       "principal": "3886.08",
-       "remaining_principal": "158300.81"
+       "interest": "604.66",
+       "principal": "3956.04",
+       "remaining_principal": "157287.44"
       },
       {
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 12,
        "due_date": "2028-08-01",
-       "interest": "791.50",
-       "principal": "3905.51",
-       "remaining_principal": "154395.30"
+       "interest": "589.83",
+       "principal": "3970.87",
+       "remaining_principal": "153316.57"
       },
       {
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 13,
        "due_date": "2028-09-01",
-       "interest": "771.98",
-       "principal": "3925.03",
-       "remaining_principal": "150470.27"
+       "interest": "574.94",
+       "principal": "3985.76",
+       "remaining_principal": "149330.81"
       },
       {
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 14,
        "due_date": "2028-10-01",
-       "interest": "752.35",
-       "principal": "3944.66",
-       "remaining_principal": "146525.61"
+       "interest": "559.99",
+       "principal": "4000.71",
+       "remaining_principal": "145330.10"
       },
       {
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 15,
        "due_date": "2028-11-01",
-       "interest": "732.63",
-       "principal": "3964.38",
-       "remaining_principal": "142561.23"
+       "interest": "544.99",
+       "principal": "4015.71",
+       "remaining_principal": "141314.39"
       },
       {
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 16,
        "due_date": "2028-12-01",
-       "interest": "712.81",
-       "principal": "3984.20",
-       "remaining_principal": "138577.03"
+       "interest": "529.93",
+       "principal": "4030.77",
+       "remaining_principal": "137283.62"
       },
       {
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 17,
        "due_date": "2029-01-01",
-       "interest": "692.89",
-       "principal": "4004.12",
-       "remaining_principal": "134572.91"
+       "interest": "514.81",
+       "principal": "4045.89",
+       "remaining_principal": "133237.73"
       },
       {
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 18,
        "due_date": "2029-02-01",
-       "interest": "672.86",
-       "principal": "4024.15",
-       "remaining_principal": "130548.76"
+       "interest": "499.64",
+       "principal": "4061.06",
+       "remaining_principal": "129176.67"
       },
       {
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 19,
        "due_date": "2029-03-01",
-       "interest": "652.74",
-       "principal": "4044.27",
-       "remaining_principal": "126504.49"
+       "interest": "484.41",
+       "principal": "4076.29",
+       "remaining_principal": "125100.38"
       },
       {
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 20,
        "due_date": "2029-04-01",
-       "interest": "632.52",
-       "principal": "4064.49",
-       "remaining_principal": "122440.00"
+       "interest": "469.13",
+       "principal": "4091.57",
+       "remaining_principal": "121008.81"
       },
       {
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 21,
        "due_date": "2029-05-01",
-       "interest": "612.20",
-       "principal": "4084.81",
-       "remaining_principal": "118355.19"
+       "interest": "453.78",
+       "principal": "4106.92",
+       "remaining_principal": "116901.89"
       },
       {
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 22,
        "due_date": "2029-06-01",
-       "interest": "591.78",
-       "principal": "4105.23",
-       "remaining_principal": "114249.96"
+       "interest": "438.38",
+       "principal": "4122.32",
+       "remaining_principal": "112779.57"
       },
       {
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 23,
        "due_date": "2029-07-01",
-       "interest": "571.25",
-       "principal": "4125.76",
-       "remaining_principal": "110124.20"
+       "interest": "422.92",
+       "principal": "4137.78",
+       "remaining_principal": "108641.79"
       },
       {
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 24,
        "due_date": "2029-08-01",
-       "interest": "550.62",
-       "principal": "4146.39",
-       "remaining_principal": "105977.81"
+       "interest": "407.41",
+       "principal": "4153.29",
+       "remaining_principal": "104488.50"
       },
       {
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 25,
        "due_date": "2029-09-01",
-       "interest": "529.89",
-       "principal": "4167.12",
-       "remaining_principal": "101810.69"
+       "interest": "391.83",
+       "principal": "4168.87",
+       "remaining_principal": "100319.63"
       },
       {
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 26,
        "due_date": "2029-10-01",
-       "interest": "509.05",
-       "principal": "4187.96",
-       "remaining_principal": "97622.73"
+       "interest": "376.20",
+       "principal": "4184.50",
+       "remaining_principal": "96135.13"
       },
       {
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 27,
        "due_date": "2029-11-01",
-       "interest": "488.11",
-       "principal": "4208.90",
-       "remaining_principal": "93413.83"
+       "interest": "360.51",
+       "principal": "4200.19",
+       "remaining_principal": "91934.94"
       },
       {
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 28,
        "due_date": "2029-12-01",
-       "interest": "467.07",
-       "principal": "4229.94",
-       "remaining_principal": "89183.89"
+       "interest": "344.76",
+       "principal": "4215.94",
+       "remaining_principal": "87719.00"
       },
       {
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 29,
        "due_date": "2030-01-01",
-       "interest": "445.92",
-       "principal": "4251.09",
-       "remaining_principal": "84932.80"
+       "interest": "328.95",
+       "principal": "4231.75",
+       "remaining_principal": "83487.25"
       },
       {
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 30,
        "due_date": "2030-02-01",
-       "interest": "424.66",
-       "principal": "4272.35",
-       "remaining_principal": "80660.45"
+       "interest": "313.08",
+       "principal": "4247.62",
+       "remaining_principal": "79239.63"
       },
       {
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 31,
        "due_date": "2030-03-01",
-       "interest": "403.30",
-       "principal": "4293.71",
-       "remaining_principal": "76366.74"
+       "interest": "297.15",
+       "principal": "4263.55",
+       "remaining_principal": "74976.08"
       },
       {
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 32,
        "due_date": "2030-04-01",
-       "interest": "381.83",
-       "principal": "4315.18",
-       "remaining_principal": "72051.56"
+       "interest": "281.16",
+       "principal": "4279.54",
+       "remaining_principal": "70696.54"
       },
       {
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 33,
        "due_date": "2030-05-01",
-       "interest": "360.26",
-       "principal": "4336.75",
-       "remaining_principal": "67714.81"
+       "interest": "265.11",
+       "principal": "4295.59",
+       "remaining_principal": "66400.95"
       },
       {
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 34,
        "due_date": "2030-06-01",
-       "interest": "338.57",
-       "principal": "4358.44",
-       "remaining_principal": "63356.37"
+       "interest": "249.00",
+       "principal": "4311.70",
+       "remaining_principal": "62089.25"
       },
       {
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 35,
        "due_date": "2030-07-01",
-       "interest": "316.78",
-       "principal": "4380.23",
-       "remaining_principal": "58976.14"
+       "interest": "232.83",
+       "principal": "4327.87",
+       "remaining_principal": "57761.38"
       },
       {
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 36,
        "due_date": "2030-08-01",
-       "interest": "294.88",
-       "principal": "4402.13",
-       "remaining_principal": "54574.01"
+       "interest": "216.61",
+       "principal": "4344.09",
+       "remaining_principal": "53417.29"
       },
       {
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 37,
        "due_date": "2030-09-01",
-       "interest": "272.87",
-       "principal": "4424.14",
-       "remaining_principal": "50149.87"
+       "interest": "200.31",
+       "principal": "4360.39",
+       "remaining_principal": "49056.90"
       },
       {
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 38,
        "due_date": "2030-10-01",
-       "interest": "250.75",
-       "principal": "4446.26",
-       "remaining_principal": "45703.61"
+       "interest": "183.96",
+       "principal": "4376.74",
+       "remaining_principal": "44680.16"
       },
       {
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 39,
        "due_date": "2030-11-01",
-       "interest": "228.52",
-       "principal": "4468.49",
-       "remaining_principal": "41235.12"
+       "interest": "167.55",
+       "principal": "4393.15",
+       "remaining_principal": "40287.01"
       },
       {
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 40,
        "due_date": "2030-12-01",
-       "interest": "206.18",
-       "principal": "4490.83",
-       "remaining_principal": "36744.29"
+       "interest": "151.08",
+       "principal": "4409.62",
+       "remaining_principal": "35877.39"
       },
       {
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 41,
        "due_date": "2031-01-01",
-       "interest": "183.72",
-       "principal": "4513.29",
-       "remaining_principal": "32231.00"
+       "interest": "134.54",
+       "principal": "4426.16",
+       "remaining_principal": "31451.23"
       },
       {
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 42,
        "due_date": "2031-02-01",
-       "interest": "161.16",
-       "principal": "4535.85",
-       "remaining_principal": "27695.15"
+       "interest": "117.94",
+       "principal": "4442.76",
+       "remaining_principal": "27008.47"
       },
       {
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 43,
        "due_date": "2031-03-01",
-       "interest": "138.48",
-       "principal": "4558.53",
-       "remaining_principal": "23136.62"
+       "interest": "101.28",
+       "principal": "4459.42",
+       "remaining_principal": "22549.05"
       },
       {
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 44,
        "due_date": "2031-04-01",
-       "interest": "115.68",
-       "principal": "4581.33",
-       "remaining_principal": "18555.29"
+       "interest": "84.56",
+       "principal": "4476.14",
+       "remaining_principal": "18072.91"
       },
       {
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 45,
        "due_date": "2031-05-01",
-       "interest": "92.78",
-       "principal": "4604.23",
-       "remaining_principal": "13951.06"
+       "interest": "67.77",
+       "principal": "4492.93",
+       "remaining_principal": "13579.98"
       },
       {
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 46,
        "due_date": "2031-06-01",
-       "interest": "69.76",
-       "principal": "4627.25",
-       "remaining_principal": "9323.81"
+       "interest": "50.92",
+       "principal": "4509.78",
+       "remaining_principal": "9070.20"
       },
       {
-       "amount": "4697.01",
+       "amount": "4560.70",
        "number": 47,
        "due_date": "2031-07-01",
-       "interest": "46.62",
-       "principal": "4650.39",
-       "remaining_principal": "4673.42"
+       "interest": "34.01",
+       "principal": "4526.69",
+       "remaining_principal": "4543.51"
       },
       {
-       "amount": "4696.79",
+       "amount": "4560.55",
        "number": 48,
        "due_date": "2031-08-01",
-       "interest": "23.37",
-       "principal": "4673.42",
+       "interest": "17.04",
+       "principal": "4543.51",
        "remaining_principal": "0.00"
       }
      ],
      "is_simulated": true,
      "net_proceeds": "200000.00",
      "withheld_fee": "0.00",
-     "total_interest": "25456.26",
-     "total_repayment": "225456.26",
-     "maximum_installment": "4697.01",
+     "total_interest": "18913.45",
+     "total_repayment": "218913.45",
+     "maximum_installment": "4560.70",
      "affordability_status": "insufficient_information",
-     "total_cost_over_net_proceeds": "25456.26"
+     "total_cost_over_net_proceeds": "18913.45"
     },
     "assessment": {
      "status": "NOT_ASSESSED",
      "missing_inputs": [],
      "shortfall_months": []
     },
-    "created_at": "2026-10-15T12:27:00.719Z",
+    "created_at": "2026-10-15T13:19:58.967Z",
     "is_simulated": true,
     "engine_version": "b-monthly-amortization-v1"
    }
@@ -3308,6 +3310,52 @@
    "total_semesters": 8,
    "missing_cost_ids": []
   },
+  "loan_advice": {
+   "change": null,
+   "intent": "recommend",
+   "status": "recommended",
+   "quote_id": "b75f6c9a-a722-4361-b3f1-c35d0f9ec20c",
+   "selected": {
+    "fees": "0.00",
+    "method": "amortized",
+    "months": 48,
+    "product": "commercial_student_demo",
+    "currency": "THB",
+    "principal": "200000.00",
+    "annual_rate": "0.045",
+    "net_proceeds": "200000.00",
+    "last_due_date": "2031-08-01",
+    "first_due_date": "2027-09-01",
+    "total_interest": "18913.45",
+    "monthly_payment": "4560.70",
+    "total_repayment": "218913.45",
+    "interest_only_months": 0,
+    "interest_only_payment": null
+   },
+   "constraints": {},
+   "alternatives": [
+    {
+     "fees": "0.00",
+     "method": "amortized",
+     "months": 48,
+     "product": "custom",
+     "currency": "THB",
+     "principal": "200000.00",
+     "annual_rate": "0.06",
+     "net_proceeds": "200000.00",
+     "last_due_date": "2031-08-01",
+     "first_due_date": "2027-09-01",
+     "total_interest": "25456.26",
+     "monthly_payment": "4697.01",
+     "total_repayment": "225456.26",
+     "interest_only_months": 0,
+     "interest_only_payment": null
+    }
+   ],
+   "plan_version": 1,
+   "ready_to_apply": false,
+   "assessment_version": 2
+  },
   "loan_stage": {
    "documents": [],
    "payouts": [],
@@ -3315,12 +3363,12 @@
    "school_payee": null
   },
   "plan": {
-   "id": "9ecadcea-1f41-4a64-b15f-13269b598d38",
+   "id": "6a6c55af-2737-4e1e-8e80-0511f846d368",
    "status": "DRAFT",
    "school_key": "chulalongkorn",
    "years": 4,
    "start_date": "2027-08-02",
-   "version": 2,
+   "version": 1,
    "confirmed_at": null,
    "is_simulated": true,
    "school": {
@@ -3339,9 +3387,9 @@
   "inputs": {
    "borrower": "student_with_parent",
    "loan": {
-    "product": "custom",
+    "product": "commercial_student_demo",
     "principal": "200000.00",
-    "annual_rate": "0.06000000",
+    "annual_rate": "0.06",
     "fees": "0.00",
     "first_due_date": "2027-09-01",
     "months": 48,
@@ -3381,7 +3429,7 @@
    "currency": "THB"
   },
   "version": 2,
-  "plan_version": 2,
+  "plan_version": 1,
   "stale": false,
   "lifecycle": {
    "applications": [],

@@ -1,6 +1,6 @@
 # StudyFlow student frontend (Task A)
 
-The home page is the conversation-led Study planner. Price lookup and comparison lead to a user-entered loan amount, product/term/method, estimate and application. Backend responses own costs, caps, quotes, approval and ledger effects. See the [shared contract](../docs/student-loan-contract.md).
+The home page is the conversation-led Study planner. Price lookup and comparison lead to the Agent's recommendation using the user's loan amount. Concern shortcuts recalculate monthly payments, interest or principal; “Apply with this plan” opens explicit review of the current quote. Backend responses own costs, caps, quotes, approval and ledger effects. See the [shared contract](../docs/student-loan-contract.md).
 
 ## Conversation workspace
 
@@ -44,7 +44,7 @@ npm run test:agent-integration     # conversation T2/T3 confirmation with the mo
 | `npm run test:e2e` | Playwright project `mocked` (`tests/e2e/mocked/`): every journey against mocked or synthetic responses, desktop and phone widths | Chromium |
 | `npm run test:integration` / `test:wallet-integration` / `test:agent-integration` | Playwright project `integration` (`tests/e2e/integration/`): real HTTP against Django and PostgreSQL | Django on 127.0.0.1:8000, PostgreSQL, `readiness_worker --mode mock` |
 
-Playwright starts Vite (`playwright.config.mjs`) unless `TEST_URL` points at a running server, and pins the browser locale to `en-US`. The integration specs create unique synthetic accounts and durable demo records; they never print or save passwords and call Django through `../.venv` (set `PYTHON` for another interpreter). Set `DB_NAME` to an isolated browser database shared by the test runner, API server and worker. Do not run tests or migrations against the existing development database. Reports, failure screenshots and traces go to `STUDYFLOW_TEST_OUTPUT` when set, otherwise the ignored `../output/frontend/` (`report/`, `test-results/`); open a trace with `npx playwright show-trace <file>`.
+Playwright starts Vite (`playwright.config.mjs`) unless `TEST_URL` points at a running server, and pins the browser locale to `en-US`. The integration specs create unique synthetic accounts and durable demo records; they never print or save passwords and call Django through `../.venv` (set `PYTHON` for another interpreter). Set `DB_NAME` to an isolated browser database shared by the test runner, API server and worker. Set `STUDYFLOW_SIMULATED_APPROVAL_SECONDS=0` on the test API and runner: the integration suite checks a separate staff approver, so the development automatic-approval shortcut must be disabled. Do not run tests or migrations against the existing development database. Reports, failure screenshots and traces go to `STUDYFLOW_TEST_OUTPUT` when set, otherwise the ignored `../output/frontend/` (`report/`, `test-results/`); open a trace with `npx playwright show-trace <file>`.
 
 Vite proxies same-origin `/api` to Django at 127.0.0.1:8000 and preserves the browser Host/Origin for CSRF. Open the Vite dev origin and use **Sign in to StudyFlow**, the `/auth` page (the Django `/api/auth/login/` form also remains available). The browser returns to the frontend, reads `/api/auth/session/`, and sends cookies plus `X-CSRFToken`. A normal existing student account can be provisioned through Django admin; local demo credentials from `manage.py seed_demo` are also supported. There is no production student token entry or token stored in local/session storage.
 
@@ -65,7 +65,7 @@ The [shared contract](../docs/student-loan-contract.md) defines every planning r
 
 ## Retained tools
 
-The loan panel owns amount/product/term/method selection, quotes, application, documents, signing and installment repayment. The preparation panel contains to-dos, school bills and the demo date. The wallet contains balances, conversion, remittance, bill payments and ledger history. Removing the independent credit line does not remove wallet balances or loan repayment history.
+The loan card and panel share versioned assessments and quotes. The card reviews and submits through the same confirmation endpoint; the panel also supports manual amount/product/term/method selection, documents, signing and repayment. The preparation panel contains to-dos, school bills and the demo date. The wallet contains balances, conversion, remittance, bill payments and ledger history. Removing the independent credit line does not remove wallet balances or loan repayment history.
 
 Requests for transfers and conversion also work in the main conversation after application submission. A proposal requires explicit confirmation; the assistant does not execute protected money actions on its own.
 

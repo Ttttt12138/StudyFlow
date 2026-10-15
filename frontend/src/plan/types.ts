@@ -58,6 +58,7 @@ export type Card =
   | { type: "cost"; school: { key: string; name: Text }; estimate: Estimate; notes: Text[] }
   | { type: "plan"; plan: Plan }
   | { type: "loan"; plan: Plan; gap: string; gap_currency: string }
+  | { type: "loan_advice"; plan_id: string; advice: import("./loanAdvice").LoanAdvice }
   | { type: "confirmation"; action: string; pending_action_id: string; details: Record<string, unknown>; expires_at: string; plan?: Plan; amount?: string | null; currency?: string }
   | { type: "bills"; bills: Bill[] }
   | ({ type: "spending" } & Spending);

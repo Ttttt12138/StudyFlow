@@ -101,3 +101,18 @@
 .money-confirm form { display: flex; flex-direction: column; gap: 12px; }
 .money-field { display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: var(--text-3); }
 .money-field input, .money-field textarea { width: 100%; min-height: 44px; padding: 10px 12px; box-sizing: border-box; font: inherit; font-size: 15px; }
+
+.loan-advice-card { border-color: var(--accent); }
+.loan-advice-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.loan-advice-concerns { display: flex; flex-wrap: wrap; gap: 8px; width: 100%; }
+.loan-advice-concerns .chip { min-height: 40px; white-space: normal; }
+.loan-advice-change { padding: 12px; border-radius: 12px; background: var(--surface-2); font-size: 13px; }
+.loan-advice-change p { margin: 4px 0 0; }
+.loan-advice-alternatives { font-size: 13px; }
+.loan-advice-alternatives summary { cursor: pointer; min-height: 40px; align-content: center; color: var(--accent-strong); }
+.loan-advice-alternatives > div { padding: 10px 0; border-top: 1px solid var(--line); }
+@media (max-width: 600px) {
+  .loan-advice-facts { grid-template-columns: minmax(0, 1fr); }
+  .loan-advice-facts dd { text-align: right; }
+  .loan-advice-card .price-actions > .primary { width: 100%; }
+}
