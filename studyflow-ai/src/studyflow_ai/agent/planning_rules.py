@@ -11,12 +11,11 @@ from decimal import Decimal
 from studyflow_ai.agent.models import FinalStep, ToolCallStep
 from studyflow_ai.agent.planning_facts import ambiguities
 from studyflow_ai.agent.planning_facts import amounts as labelled_amounts
-from studyflow_ai.agent.preparation import arrival_reported, preparation_reply
+from studyflow_ai.agent.preparation import preparation_reply
 
 CONFIRM = ("确认计划", "确定计划", "定下来", "就这样", "确认", "confirm", "finalise", "finalize", "lock in")
 LOAN = ("贷款", "借款", "借钱", "loan", "borrow")
 CHOOSE = ("就选", "选择", "决定", "就读", "去这", "选这", "choose", "pick", "go with", "decide")
-FUNDS = ("存款", "积蓄", "预算", "准备了", "有存", "savings", "saved", "budget", "we have")
 COMPARE = ("比较", "对比", "哪个好", "区别", "compare", " vs", "versus", "difference")
 COST = ("费用", "学费", "生活费", "多少钱", "总共", "开支", "花费", "全部", "cost", "tuition", "fee",
         "expense", "how much", "total", "price")
@@ -25,10 +24,11 @@ PROFILE = ("设施", "美食", "好吃", "吃", "玩", "周边", "环境", "宿�
 SCHOOLS = ("学校", "推荐", "有哪些", "选项", "院校", "大学", "schools", "options", "universities",
            "recommend", "list")
 PLAN = ("我的计划", "计划", "进度", "my plan", "plan status")
-SPENT = ("花了", "花费了", "买了", "付了", "消费了", "spent", "paid", "bought")
-SPENDING = ("这个月", "本月", "花了多少", "开销", "预算", "超支", "spending", "this month", "budget", "how much have i")
+# Day-to-day spending is not recorded; such messages are neither remittances nor plan facts.
+SPENT = ("花了", "花费了", "买了", "付了", "消费了", "记账", "spent", "paid", "bought")
 BILLS = ("账单", "还款", "什么时候交", "要交", "到期", "bills", "due", "repayment", "installment")
-FINANCE_KINDS = ("remit", "convert", "rate", "balance", "orders", "credit")
+# The on-time record (credit) is not part of the planning chat.
+FINANCE_KINDS = ("remit", "convert", "rate", "balance", "orders")
 ALIASES = {
     "psu-phuket": ("普吉", "phuket", "宋卡王子大学普吉", "psu phuket"),
     "psu-hatyai": ("合艾", "hat yai", "hatyai", "psu hat yai"),
@@ -46,21 +46,45 @@ CURRENCIES = [("人民币", "CNY"), ("美元", "USD"), ("泰铢", "THB"), ("英�
               ("元", "CNY"), ("rmb", "CNY"), ("cny", "CNY"), ("usd", "USD"), ("thb", "THB"),
               ("gbp", "GBP"), ("jpy", "JPY"), ("aud", "AUD"), ("sgd", "SGD"), ("myr", "MYR"),
               ("eur", "EUR"), ("baht", "THB"), ("yuan", "CNY")]
-STATUS = {"DRAFT": ("草稿", "draft"), "CONFIRMED": ("已确认", "confirmed"), "ENROLLED": ("已入学", "enrolled")}
-CATEGORY_ZH = {"food": "餐饮", "transport": "交通", "housing": "住房", "study": "学习", "shopping": "购物", "fun": "娱乐",
-               "health": "医疗", "other": "其他"}
+STATUS = {"DRAFT": ("草稿", "draft"), "CONFIRMED": ("已确认", "confirmed")}
 SAMPLE = {"zh": "（示例数据，来自公开资料，付款前请向学校确认。）",
           "en": "(Sample data from public sources; confirm with the school before paying.)"}
 SIMULATED = {"zh": "所有资金与贷款均为模拟。", "en": "All money and loans are simulated."}
-AFTER_ENROLLMENT = {
-    "zh": "汇款、换汇、钱包等资金工具会在确认入学后开放。现在可以先查学校总价、比较几所学校，或看看资金缺口和贷款方案。",
-    "en": "Remittance, currency exchange and wallet tools open once enrollment is confirmed. For now I can look up "
-          "a school's total cost, compare schools, or work out your funding gap and a loan option.",
+AFTER_APPLICATION = {
+    "zh": "钱包、换汇和汇款工具会在你于贷款面板提交贷款申请后开放。现在可以先查学校总价、比较几所学校，或打开贷款面板试算还款。",
+    "en": "Wallet, currency exchange and remittance tools open after you submit the loan application in the loan "
+          "panel. For now I can look up a school's total cost, compare schools, or open the loan panel to estimate "
+          "repayments.",
 }
 HELP = {
-    "zh": "告诉我想去的学校，我来算学费、住宿和生活费的全程总价；也可以比较几所学校，或告诉我存款金额来算资金缺口。",
+    "zh": "告诉我想去的学校，我来算学费、住宿和生活费的全程总价；也可以比较几所学校。选定学校后，在贷款面板填写想借的金额，就能看到还款试算。",
     "en": "Tell me a school and I'll work out the full-course total for tuition, housing and living costs; "
-          "I can also compare schools, or use your savings to work out the funding gap.",
+          "I can also compare schools. Once you choose a school, type the amount to borrow in the loan panel "
+          "to see the repayment estimate.",
+}
+LOAN_PANEL = {
+    "zh": "下一步在贷款面板：填写想借的金额，选择产品、期限和还款方式，查看每月还款、总利息和总还款，然后确认计划并提交贷款申请；"
+          "提交时会自动附上模拟录取通知。",
+    "en": "Next, in the loan panel: type the amount to borrow, choose the product, term and repayment method, check "
+          "the monthly payment, total interest and total repayment, then confirm the plan and submit the loan "
+          "application. A simulated admission notice is attached automatically.",
+}
+AMOUNT_FILLED = {
+    "zh": "已把贷款金额 {amount}{said} 填入贷款面板。下一步：在面板选择产品、期限和还款方式，查看每月还款、总利息和总还款，"
+          "然后确认计划并提交贷款申请；提交时会自动附上模拟录取通知。",
+    "en": "I've put the loan amount of {amount}{said} into the loan panel. Next, in the panel: choose the product, term "
+          "and repayment method, check the monthly payment, total interest and total repayment, then confirm the plan "
+          "and submit the loan application. A simulated admission notice is attached automatically.",
+}
+SUBMITTED = {
+    "zh": "贷款申请已提交，可在待办里确认其余材料并签约；钱包、换汇和汇款工具已开放。",
+    "en": "The loan application is submitted. Confirm the other documents and sign in your to-dos; wallet, "
+          "currency exchange and remittance tools are open.",
+}
+NO_EXPENSES = {
+    "zh": "这里不记录日常花销。我可以查看接下来的账单和还款，或在钱包里换汇、汇款。",
+    "en": "Day-to-day spending is not recorded here. I can show upcoming bills and repayments, or exchange and "
+          "send money from the wallet.",
 }
 
 
@@ -132,7 +156,8 @@ class Message:
         recent = memory.get("recent_schools") or []
         plan_key = self.plan.get("school_key") if self.plan else None
         self.focus = self.schools[0] if self.schools else (plan_key or (recent[0] if recent else None))
-        self.enrolled = (self.plan or {}).get("status") == "ENROLLED"
+        # Confirming the plan and submitting the loan application are one action in the loan panel.
+        self.confirmed = (self.plan or {}).get("status") == "CONFIRMED"
         self.amount = _amount(re.sub(r"\d\s*(?:年|years?|个月|months?)", " ", self.text))
         self.currency = _currency(self.text)
         self.facts = labelled_amounts(self.text)
@@ -187,8 +212,7 @@ class PlanningRules:
         if m.ambiguous:
             if m.facts and m.focus and not _tried(context, "save_plan"):
                 return self._save(context, m)
-            labels = {"available_funds": ("可用资金", "available funds"),
-                      "support_amount": ("家庭支持", "family support"), "principal": ("拟借金额", "borrowing amount")}
+            labels = {"principal": ("拟借金额", "borrowing amount")}
             return self._final(context, "仅需确认：" + "、".join(labels[k][0] for k in m.ambiguous) + "有多个数值或币种，应使用哪一个？其他已知资料会保留。",
                 "Please clarify only " + ", ".join(labels[k][1] for k in m.ambiguous) + ": which amount and currency should I use? Other known details are retained.")
         guidance = preparation_reply(m.text, (m.plan or {}).get("status"), context.locale, m.plan)
@@ -196,7 +220,7 @@ class PlanningRules:
             return FinalStep(answer=guidance)
         finance = self._finance(context, m)
         if finance == "locked":
-            return FinalStep(answer=AFTER_ENROLLMENT[context.locale])
+            return FinalStep(answer=AFTER_APPLICATION[context.locale])
         if finance is not None:
             provider, intent = finance
             if provider._failed_twice(context):
@@ -214,7 +238,7 @@ class PlanningRules:
             return life
         finance = self._finance(context, Message(context))
         if finance == "locked":
-            return FinalStep(answer=AFTER_ENROLLMENT[context.locale])
+            return FinalStep(answer=AFTER_APPLICATION[context.locale])
         if finance is not None:
             provider, intent = finance
             return provider._summary(context, intent)
@@ -223,17 +247,18 @@ class PlanningRules:
     @staticmethod
     def _finance(context, m):
         """Wallet, FX and remittance requests go to the finance rules (the original agent) once the
-        student is enrolled; before that they return "locked" and the planner says when they open."""
+        plan is confirmed (the loan application is submitted); before that they return "locked" and
+        the planner says when they open."""
         from studyflow_ai.agent.planner import Intent
 
-        if _has(m.text, SPENT) or _has(m.text, BILLS) or _has(m.text, SPENDING) or _has(m.text, LOAN):
+        if _has(m.text, SPENT) or _has(m.text, BILLS) or _has(m.text, LOAN):
             return None
         intent = Intent(context.goal)
         if intent.kind not in FINANCE_KINDS:
             return None
         if intent.kind in ("remit", "convert") and intent.amount is None:
             return None
-        if not m.enrolled:
+        if not m.confirmed:
             # "My plan status" mentions status/进度 but is a planning question.
             if intent.kind == "orders" and _has(m.text, PLAN):
                 return None
@@ -248,21 +273,15 @@ class PlanningRules:
 
     def _plan(self, context, m):
         text = m.text
-        enrolled = m.enrolled
-        if enrolled:
-            step = self._in_school(context, m)
-            if step is not False:
-                return step
-        if not enrolled and arrival_reported(text):
-            if not _tried(context, "confirm_enrollment"):
-                return self._call("confirm_enrollment", "The user says the student has enrolled")
-            return None
+        if _has(text, SPENT) and m.amount is not None and not m.facts:
+            return None  # answer() says spending is not recorded
+        if m.confirmed and _has(text, BILLS):
+            return None if _tried(context, "list_bills") else self._call("list_bills", "Upcoming bills")
         if _has(text, LOAN):
             return self._loan(context, m)
         if _has(text, CONFIRM) and m.plan and m.plan.get("status") == "DRAFT" and not m.schools:
-            if not _tried(context, "confirm_plan"):
-                return self._call("confirm_plan", "The user wants to finalise the plan")
-            return None
+            # The plan is confirmed only together with the loan application, in the loan panel.
+            return self._loan(context, m)
         if (m.schools and _has(text, CHOOSE)) or (m.facts and m.focus and not _has(text, COMPARE)):
             return self._save(context, m)
         if _has(text, COMPARE) and len(m.schools) >= 2:
@@ -289,26 +308,6 @@ class PlanningRules:
                 return self._call("list_schools", "Show the catalog", **arguments)
         return None
 
-    def _in_school(self, context, m):
-        """False when the message is not about in-school money, so planning rules continue."""
-        text = m.text
-        if _has(text, SPENT) and m.amount is not None:
-            if _tried(context, "record_expense"):
-                return None
-            arguments = {"amount": f"{m.amount:.2f}", "note": context.goal[:200]}
-            if m.currency:
-                arguments["currency"] = m.currency
-            return self._call("record_expense", "Record what the student spent", **arguments)
-        if _has(text, BILLS):
-            return None if _tried(context, "list_bills") else self._call("list_bills", "Upcoming bills")
-        if _has(text, SPENDING):
-            if _tried(context, "get_spending"):
-                return None
-            month = re.search(r"(20\d\d-\d\d)", text)
-            arguments = {"month": month.group(1)} if month else {}
-            return self._call("get_spending", "This month's spending", **arguments)
-        return False
-
     def _estimate(self, context, m):
         if _tried(context, "estimate_total_cost"):
             return None
@@ -326,13 +325,14 @@ class PlanningRules:
             if m.years:
                 arguments["years"] = m.years
             arguments.update(m.facts)
-            if m.currency and "funds_currency" not in arguments and "available_funds" in arguments:
-                arguments["funds_currency"] = m.currency
+            if m.currency and "principal" in arguments and "principal_currency" not in arguments:
+                arguments["principal_currency"] = m.currency
             return self._call("save_plan", "Save the chosen school", **arguments)
         saved = _ok(context, "save_plan")
-        gap = ((saved.result.get("plan") or {}).get("gap") if saved else None)
-        if gap and Decimal(gap) > 0 and _has(m.text, LOAN) and not _tried(context, "simulate_loan"):
-            return self._call("simulate_loan", "Cover the funding gap")
+        status = ((saved.result.get("plan") or {}).get("status") if saved else None)
+        # After choosing a school everyone continues in the loan panel.
+        if status == "DRAFT" and context.tool("simulate_loan") and not _tried(context, "simulate_loan"):
+            return self._call("simulate_loan", "Open the loan panel for the chosen school")
         return None
 
     def _loan(self, context, m):
@@ -345,9 +345,11 @@ class PlanningRules:
             if saved:
                 plan = saved.result.get("plan") or {}
             if not plan:
-                return None  # answer() asks for the school or the savings first
+                return None  # answer() asks for the school first
+            if plan.get("status") == "CONFIRMED":
+                return None  # answer() says the application is already submitted
             arguments = {"months": m.months} if m.months and 6 <= m.months <= 60 else {}
-            return self._call("simulate_loan", "Simulate a loan for the gap", **arguments)
+            return self._call("simulate_loan", "Open the loan panel", **arguments)
         return None
 
     # answering --------------------------------------------------------------------------------
@@ -366,7 +368,7 @@ class PlanningRules:
         sample |= self._compare_text(context, zh, en)
         sample |= self._estimate_text(context, zh, en)
         simulated = self._plan_text(context, m, zh, en)
-        simulated |= self._in_school_text(context, zh, en)
+        simulated |= self._bills_text(context, zh, en)
         if sample:
             zh.append(SAMPLE["zh"])
             en.append(SAMPLE["en"])
@@ -374,9 +376,15 @@ class PlanningRules:
             zh.append(SIMULATED["zh"])
             en.append(SIMULATED["en"])
         if not zh:
-            if _has(m.text, LOAN):
-                zh.append("先告诉我选哪所学校、家里已准备多少钱，我来算资金缺口，再试算贷款。")
-                en.append("Tell me the school and how much the family has saved; I'll work out the gap, then a loan.")
+            if _has(m.text, SPENT) and m.amount is not None:
+                zh.append(NO_EXPENSES["zh"])
+                en.append(NO_EXPENSES["en"])
+            elif m.confirmed and (_has(m.text, LOAN) or _has(m.text, CONFIRM)):
+                zh.append(SUBMITTED["zh"])
+                en.append(SUBMITTED["en"])
+            elif _has(m.text, LOAN) or _has(m.text, CONFIRM):
+                zh.append("先告诉我选哪所学校。" + LOAN_PANEL["zh"])
+                en.append("Tell me the school first. " + LOAN_PANEL["en"])
             else:
                 zh.append(HELP["zh"])
                 en.append(HELP["en"])
@@ -475,27 +483,8 @@ class PlanningRules:
                   f"about {Decimal(e['estimated_share']):.0f}% estimated.")
         return True
 
-    def _in_school_text(self, context, zh, en):
+    def _bills_text(self, context, zh, en):
         shown = False
-        recorded = _ok(context, "record_expense")
-        if recorded:
-            e = recorded.result.get("expense") or {}
-            zh.append(f"已记下：{e.get('spent_on')} {_money(e.get('amount'), e.get('currency'))}"
-                      f"（{CATEGORY_ZH.get(e.get('category'), e.get('category'))}）。")
-            en.append(f"Recorded: {e.get('spent_on')} {_money(e.get('amount'), e.get('currency'))} ({e.get('category')}).")
-        spending = (recorded.result if recorded else None) or (_ok(context, "get_spending").result
-                                                               if _ok(context, "get_spending") else None)
-        if spending:
-            cur = spending.get("currency")
-            zh.append(f"{spending.get('month')} 已花 {_money(spending.get('spent'), cur)}，月度生活预算 "
-                      f"{_money(spending.get('budget'), cur)}，剩余 {_money(spending.get('remaining'), cur)}。")
-            en.append(f"{spending.get('month')}: spent {_money(spending.get('spent'), cur)} of a "
-                      f"{_money(spending.get('budget'), cur)} monthly living budget; "
-                      f"{_money(spending.get('remaining'), cur)} left.")
-            if spending.get("over_budget"):
-                zh.append("本月已经超出预算，接下来几天可以控制一下。")
-                en.append("You are over budget this month; ease off for the next few days.")
-            shown = True
         listed = _ok(context, "list_bills")
         if listed:
             rows = listed.result.get("bills", [])[:4]
@@ -523,25 +512,33 @@ class PlanningRules:
                       f"全部费用约 {_money(plan.get('total'), cur)}。")
             en.append(f"Plan: {school.get('en', plan.get('school_key'))}, {years:g} year(s), "
                       f"status: {status[1]}, total about {_money(plan.get('total'), cur)}.")
-            zh.append("已将已知资料带入‘我的方案’，集中补齐必要信息即可比较贷款与还款负担。")
-            en.append("Known details are in My plan. Complete the missing details together to compare loans and repayment capacity.")
+            stored = _ok(context, "save_plan")
+            principal = stored.result.get("loan_principal") if stored else None
+            if plan.get("status") == "CONFIRMED":
+                zh.append(SUBMITTED["zh"])
+                en.append(SUBMITTED["en"])
+            elif principal is not None:
+                # The amount the backend stored (THB); a figure said in another currency is shown as said too.
+                said, currency = stored.arguments.get("principal"), (stored.arguments.get("principal_currency") or "THB").upper()
+                note = ("", "") if currency == "THB" or said is None else (
+                    f"（按 {_money(said, currency)} 折算）", f" (converted from {_money(said, currency)})")
+                zh.append(AMOUNT_FILLED["zh"].format(amount=_money(principal, "THB"), said=note[0]))
+                en.append(AMOUNT_FILLED["en"].format(amount=_money(principal, "THB"), said=note[1]))
+            else:
+                zh.append(LOAN_PANEL["zh"])
+                en.append(LOAN_PANEL["en"])
+            simulated = True
         loan = _ok(context, "simulate_loan")
         if loan and not loan.result.get("open_assessment"):
             info = (loan.result.get("plan") or {}).get("loan") or {}
             zh.append(f"模拟贷款：本金 {_money(info.get('principal'), 'THB')}，{info.get('months')} 个月，"
                       f"年利率 {Decimal(str(info.get('annual_rate') or 0)) * 100:.1f}%，每月最多约 "
-                      f"{_money(info.get('monthly_payment'), 'THB')}。确认没问题就说“确认计划”。")
+                      f"{_money(info.get('monthly_payment'), 'THB')}。确认无误后在贷款面板提交申请。")
             en.append(f"Simulated loan: principal {_money(info.get('principal'), 'THB')}, {info.get('months')} months, "
                       f"{Decimal(str(info.get('annual_rate') or 0)) * 100:.1f}% a year, up to about "
-                      f"{_money(info.get('monthly_payment'), 'THB')} a month. Say \"confirm plan\" when ready.")
+                      f"{_money(info.get('monthly_payment'), 'THB')} a month. Submit the application in the loan panel "
+                      "when ready.")
             simulated = True
-        if _ok(context, "confirm_plan"):
-            zh.append("已生成计划确认请求，请在下方卡片上确认。")
-            en.append("A plan confirmation is ready; confirm it on the card below.")
-        if _ok(context, "confirm_enrollment"):
-            zh.append("已生成入学确认请求：确认后进入在校管理，学费和还款会按计划排进账单。请在卡片上确认。")
-            en.append("An enrollment confirmation is ready: once confirmed, tuition and repayments move into your "
-                      "in-school schedule. Confirm it on the card.")
         return simulated
 
 

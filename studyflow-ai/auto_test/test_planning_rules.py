@@ -13,18 +13,21 @@ from studyflow_ai.agent import (
 )
 
 PLANNING_TOOLS = ["list_schools", "get_school_profile", "compare_schools", "estimate_total_cost",
-                  "get_plan", "save_plan", "simulate_loan", "confirm_plan", "confirm_enrollment", "list_bills",
-                  "record_expense", "get_spending", "get_balances", "get_fx_rate", "list_corridors"]
+                  "get_plan", "save_plan", "simulate_loan", "list_bills", "get_balances", "get_fx_rate",
+                  "list_corridors", "get_credit_profile"]
+REMOVED_TOOLS = {"confirm_plan", "confirm_enrollment", "record_expense", "get_spending"}
 SCHOOLS = [{"key": "chulalongkorn", "name_en": "Chulalongkorn University", "name_zh": "朱拉隆功大学",
             "country_code": "TH", "country_en": "Thailand", "country_zh": "泰国"},
            {"key": "waseda", "name_en": "Waseda University", "name_zh": "早稻田大学",
             "country_code": "JP", "country_en": "Japan", "country_zh": "日本"}]
+DRAFT = {"status": "DRAFT", "school_key": "waseda"}
+CONFIRMED = {"status": "CONFIRMED", "school_key": "waseda"}
 
 
-def context(goal, observations=(), plan=None, locale="zh", **memory):
+def context(goal, observations=(), plan=None, locale="zh", tools=PLANNING_TOOLS, **memory):
     return AgentContext(
         goal=goal, locale=locale, steps_remaining=8,
-        tools=[ToolSpec(name=n, tier="T0", description=n) for n in PLANNING_TOOLS],
+        tools=[ToolSpec(name=n, tier="T0", description=n) for n in tools],
         observations=list(observations),
         memory={"plan": plan, "schools": SCHOOLS, "recent_schools": [], **memory})
 
@@ -39,6 +42,21 @@ def args(result):
     return json.loads(result.arguments_json)
 
 
+def saved(status="DRAFT"):
+    return Observation(tool="save_plan", status="OK", arguments={"school_key": "waseda"}, result={
+        "plan": {"status": status, "school_key": "waseda", "years": 4, "currency": "JPY", "total": "9000000.00",
+                 "school": {"name": {"zh": "早稻田大学", "en": "Waseda University"}}}})
+
+
+def test_prompt_version_and_planning_prompt_describe_the_loan_panel_flow():
+    assert prompts.PLANNING_VERSION == "planning-2.1"
+    text = " ".join(prompts.PLANNING.split())
+    for removed in ("confirm_plan", "confirm_enrollment", "record_expense", "get_spending", "available_funds",
+                    "support_amount", "prequal", "ENROLLED", "funding gap", "monthly budget"):
+        assert removed not in text, removed
+    assert "principal" in text and "simulate_loan" in text and "admission notice" in text
+
+
 def test_no_role_is_needed_and_prices_come_first():
     assert step("朱拉隆功贵吗").tool == "estimate_total_cost"
     assert args(step("朱拉隆功读4年一共多少钱？")) == {"school_key": "chulalongkorn", "years": 4}
@@ -48,6 +66,7 @@ def test_no_role_is_needed_and_prices_come_first():
         result = step(goal, locale=locale)
         assert isinstance(result, FinalStep)
         assert "家长" not in result.answer and "parent" not in result.answer.lower()
+        assert "存款" not in result.answer and "savings" not in result.answer.lower()
 
 
 def test_a_bare_school_name_estimates_the_total_cost():
@@ -73,23 +92,92 @@ def test_country_filter_and_comparison():
     assert args(step("比较早稻田和朱拉隆功")) == {"school_keys": ["waseda", "chulalongkorn"]}
 
 
-def test_savings_and_choice_save_the_plan_with_funds():
+def test_choosing_a_school_saves_the_plan_without_savings():
     result = step("我们有存款30万人民币，就选早稻田")
     assert result.tool == "save_plan"
-    assert args(result) == {"school_key": "waseda", "available_funds": "300000.00", "funds_currency": "CNY"}
+    assert args(result) == {"school_key": "waseda"}
 
 
-def test_loan_needs_a_gap_first():
+def test_a_loan_amount_said_in_chat_goes_to_save_plan_principal():
+    result = step("就选早稻田，想借30万泰铢")
+    assert result.tool == "save_plan"
+    assert args(result) == {"school_key": "waseda", "principal": "300000.00", "principal_currency": "THB"}
+    english = step("Go with Waseda for 4 years, we want to borrow 500,000 THB", locale="en")
+    assert args(english) == {"school_key": "waseda", "years": 4, "principal": "500000.00",
+                             "principal_currency": "THB"}
+    # A stated amount for an existing plan is saved too; a term is not an amount.
+    assert args(step("贷款20万泰铢", plan=DRAFT)) == {"school_key": "waseda", "principal": "200000.00",
+                                                     "principal_currency": "THB"}
+    assert args(step("帮我贷款，分36个月", plan=DRAFT)) == {"months": 36}
+
+
+def test_ambiguous_loan_amount_is_asked_once():
+    result = step("想借20万泰铢，或者借款30万泰铢", plan=DRAFT)
+    assert isinstance(result, FinalStep) and "拟借金额" in result.answer
+
+
+def test_after_choosing_a_school_the_loan_panel_opens():
+    result = step("就选早稻田", observations=[saved()])
+    assert result.tool == "simulate_loan"
+    opened = Observation(tool="simulate_loan", status="OK", arguments={}, result={
+        **saved().result, "open_assessment": True})
+    answer = step("就选早稻田", observations=[saved(), opened]).answer
+    assert "贷款面板" in answer and "填写想借的金额" in answer and "模拟录取通知" in answer
+    assert "缺口" not in answer and "存款" not in answer
+
+
+def test_a_stored_loan_amount_is_repeated_in_the_reply():
+    def stored(arguments, principal):
+        result = saved().result | {"loan_principal": principal}
+        return Observation(tool="save_plan", status="OK", arguments={"school_key": "waseda", **arguments}, result=result)
+
+    def opened(observation):
+        return Observation(tool="simulate_loan", status="OK", arguments={},
+                           result={**observation.result, "open_assessment": True})
+
+    thb = stored({"principal": "200000.00", "principal_currency": "THB"}, "200000.00")
+    answer = step("贷款20万泰铢", plan=DRAFT, observations=[thb, opened(thb)]).answer
+    assert "已把贷款金额 200,000 THB 填入贷款面板" in answer and "填写想借的金额" not in answer
+    assert "选择产品、期限和还款方式" in answer and "模拟录取通知" in answer
+    # An amount said in another currency is repeated as stored (THB) and as said.
+    cny = stored({"principal": "50000.00", "principal_currency": "CNY"}, "245000.00")
+    english = step("We want to borrow 50,000 CNY", plan=DRAFT, locale="en", observations=[cny, opened(cny)]).answer
+    assert "loan amount of 245,000 THB (converted from 50,000 CNY) into the loan panel" in english
+    # Without a stored amount the reply still asks for it in the panel.
+    plain = step("就选早稻田", observations=[saved(), opened(saved())]).answer
+    assert "填写想借的金额" in plain and "已把贷款金额" not in plain
+
+
+def test_loan_needs_a_school_first():
     asks = step("帮我贷款")
-    assert isinstance(asks, FinalStep) and "准备" in asks.answer
-    plan = {"status": "DRAFT", "school_key": "waseda", "gap": "1000.00"}
-    assert args(step("帮我贷款，分36个月", plan=plan)) == {"months": 36}
+    assert isinstance(asks, FinalStep) and "学校" in asks.answer and "贷款面板" in asks.answer
+    assert "存款" not in asks.answer and "缺口" not in asks.answer
+    assert args(step("帮我贷款，分36个月", plan=DRAFT)) == {"months": 36}
 
 
-def test_enrollment_and_confirmation_are_only_proposed():
-    plan = {"status": "DRAFT", "school_key": "waseda", "gap": "0.00"}
-    assert step("确认计划", plan=plan).tool == "confirm_plan"
-    assert step("孩子已经到校报到了").tool == "confirm_enrollment"
+def test_finalising_a_draft_opens_the_loan_panel_instead_of_confirming_in_chat():
+    for goal, locale in [("确认计划", "zh"), ("I want to finalise the plan", "en")]:
+        result = step(goal, plan=DRAFT, locale=locale)
+        assert result.tool == "simulate_loan", (goal, result)
+    english = step("Confirm my plan", plan=DRAFT, locale="en", observations=[Observation(
+        tool="simulate_loan", status="OK", arguments={}, result={**saved().result, "open_assessment": True})])
+    assert "submit the loan application" in english.answer and "admission notice" in english.answer
+
+
+def test_removed_tools_are_never_called():
+    tools = PLANNING_TOOLS + sorted(REMOVED_TOOLS)
+    for plan in (None, DRAFT, CONFIRMED):
+        for goal in ["确认计划", "孩子已经到校报到了", "我已完成报到", "I have enrolled", "今天午饭花了120泰铢",
+                     "这个月花了多少？", "打车花了85泰铢", "What did I spend this month?", "首月预算"]:
+            result = step(goal, plan=plan, tools=tools)
+            assert getattr(result, "tool", None) not in REMOVED_TOOLS, (goal, plan, result)
+
+
+def test_spending_is_not_recorded():
+    for goal, locale in [("今天午饭花了120泰铢", "zh"), ("I spent 85 THB on a taxi", "en")]:
+        result = step(goal, plan=CONFIRMED, locale=locale)
+        assert isinstance(result, FinalStep), (goal, result)
+        assert "不记录日常花销" in result.answer or "not recorded" in result.answer
 
 
 def test_answers_only_quote_numbers_from_observations():
@@ -101,67 +189,51 @@ def test_answers_only_quote_numbers_from_observations():
     assert "9,000,000 JPY" in answer and "31%" in answer and "示例数据" in answer
 
 
-ENROLLED = {"status": "ENROLLED", "school_key": "waseda", "gap": "0.00"}
+def test_confirmed_plans_ask_for_bills_and_reach_the_finance_rules():
+    assert step("接下来有哪些账单", plan=CONFIRMED).tool == "list_bills"
+    assert step("人民币兑泰铢汇率是多少", plan=CONFIRMED).tool == "get_fx_rate"
+    assert step("我的余额是多少", plan=CONFIRMED).tool == "get_balances"
+    assert step("把1000人民币换成泰铢", plan=CONFIRMED).tool == "get_balances"
 
 
-def test_enrolled_students_record_spending_and_ask_for_bills():
-    spent = step("今天午饭花了120泰铢", plan=ENROLLED)
-    assert spent.tool == "record_expense"
-    assert args(spent) == {"amount": "120.00", "note": "今天午饭花了120泰铢", "currency": "THB"}
-    assert step("这个月花了多少？", plan=ENROLLED).tool == "get_spending"
-    assert step("接下来有哪些账单", plan=ENROLLED).tool == "list_bills"
-
-
-def test_wallet_and_fx_requests_reach_the_finance_rules_after_enrollment():
-    assert step("人民币兑泰铢汇率是多少", plan=ENROLLED).tool == "get_fx_rate"
-    assert step("我的余额是多少", plan=ENROLLED).tool == "get_balances"
-    # A spending message with a currency word is not a conversion request.
-    assert step("打车花了85泰铢", plan=ENROLLED).tool == "record_expense"
-
-
-def test_spending_answer_uses_local_labels():
-    recorded = Observation(tool="record_expense", status="OK", arguments={"amount": "120.00"}, result={
-        "expense": {"spent_on": "2027-08-14", "amount": "120.00", "currency": "THB", "category": "food"},
-        "month": "2027-08", "currency": "THB", "spent": "120.00", "budget": "24300.00", "remaining": "24180.00",
-        "over_budget": False})
-    answer = step("午饭花了120泰铢", plan=ENROLLED, observations=[recorded]).answer
-    assert "餐饮" in answer and "food" not in answer and "24,180 THB" in answer
-
-
-def test_preparation_and_denied_arrival_never_propose_enrollment():
-    plan = {"status": "CONFIRMED", "school_key": "waseda"}
-    for goal in ["还没报到", "尚未入学", "还在准备", "I have not arrived", "I'm not enrolled yet", "Still preparing", "日期有变化", "My start date has changed", "明天去报到", "How do I enroll?"]:
-        result = step(goal, plan=plan, enrollment_due=True)
-        assert isinstance(result, FinalStep), (goal, result)
-
-
-def test_money_tools_are_locked_before_enrollment():
-    for plan in (None, {"status": "DRAFT", "school_key": "waseda"}, {"status": "CONFIRMED", "school_key": "waseda"}):
+def test_money_tools_wait_for_the_loan_application():
+    for plan in (None, DRAFT):
         for goal in ["人民币兑泰铢汇率是多少", "我的余额是多少", "把1000人民币换成泰铢", "汇款5000泰铢给学校"]:
             result = step(goal, plan=plan)
             assert isinstance(result, FinalStep), (goal, plan, result)
-            assert "确认入学后开放" in result.answer
+            assert "提交贷款申请后开放" in result.answer and "入学" not in result.answer
     english = step("What is my balance?", locale="en")
-    assert isinstance(english, FinalStep) and "once enrollment is confirmed" in english.answer
+    assert isinstance(english, FinalStep) and "after you submit the loan application" in english.answer
+    assert "enrollment" not in english.answer
     # Planning questions that merely mention status are not wallet requests.
     assert step("我的计划进度").tool == "get_plan"
-    # Loans stay available before enrollment.
-    plan = {"status": "DRAFT", "school_key": "waseda", "gap": "1000.00"}
-    assert step("帮我贷款，分36个月", plan=plan).tool == "simulate_loan"
+    # Loans stay available before the application.
+    assert step("帮我贷款，分36个月", plan=DRAFT).tool == "simulate_loan"
+
+
+def test_the_on_time_record_is_not_offered_in_planning_chat():
+    for plan in (DRAFT, CONFIRMED):
+        result = step("我的信用记录怎么样", plan=plan)
+        assert getattr(result, "tool", None) != "get_credit_profile"
+
+
+def test_submitted_application_is_not_reopened_from_chat():
+    result = step("帮我贷款", plan=CONFIRMED)
+    assert isinstance(result, FinalStep) and "贷款申请已提交" in result.answer
+    assert "已提交" in step("确认", plan=CONFIRMED).answer
 
 
 def test_preparation_topics_are_read_only_and_campus_questions_stay_available():
     assert isinstance(step("出发准备"), FinalStep)
-    plan = {"status": "CONFIRMED", "school_key": "waseda"}
-    for goal in ["出发准备", "首月预算", "Departure preparation", "First-month budget"]:
-        result = step(goal, plan=plan)
+    for goal in ["出发准备", "首月预算", "Departure preparation", "First-month budget", "日期有变化",
+                 "My start date has changed"]:
+        result = step(goal, plan=CONFIRMED)
         assert isinstance(result, FinalStep), (goal, result)
-    assert step("学校周边有什么好吃的？", plan=ENROLLED).tool == "get_school_profile"
-    assert args(step("What food is near my school?", plan=ENROLLED,
+        assert "入学" not in result.answer and "enrollment" not in result.answer.lower()
+    first_month = {"currency": "JPY", "first_month_total": "300000", "monthly_total": "150000",
+                   "one_off_total": "150000", "bills_at_start_total": "900000"}
+    answer = step("首月预算", plan={**CONFIRMED, "first_month": first_month}).answer
+    assert "300,000 JPY" in answer and "本月" not in answer
+    assert step("学校周边有什么好吃的？", plan=CONFIRMED).tool == "get_school_profile"
+    assert args(step("What food is near my school?", plan=CONFIRMED,
                      recent_schools=["chulalongkorn"])) == {"school_key": "waseda"}
-
-
-def test_due_date_alone_or_vague_confirmation_is_not_arrival():
-    plan = {"status": "CONFIRMED", "school_key": "waseda"}
-    assert isinstance(step("确认", plan=plan, enrollment_due=True), FinalStep)
-    assert step("我已完成报到", plan=plan).tool == "confirm_enrollment"
