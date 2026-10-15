@@ -79,9 +79,10 @@ def _assistant_turn(conversation, text, cards=None):
 
 # One price-first greeting; the product no longer asks whether a parent or the student is planning.
 GREETING = {
-    "zh": "你好！我是 StudyFlow。告诉我想去的学校，我来算学费、住宿和生活费的全程总价，也可以帮你比较几所学校差多少。",
-    "en": "Hi! I'm StudyFlow. Tell me the school you have in mind and I'll work out the full-course total for "
-          "tuition, housing and living costs, or compare what several schools would cost.",
+    "zh": "你好，我是 StudyFlow。留学花多少钱，最容易让人心里没底。告诉我想去的学校，我帮你算清全程总价，也能比比几所学校。要是还差一些，说个想借的数，我帮你挑合适的贷款，月供算得明明白白。",
+    "en": "Hi, I'm StudyFlow. Not knowing what studying abroad will cost is the hardest part. Tell me the school "
+          "you have in mind and I'll work out the full cost, or compare a few. If you're still short, tell me how "
+          "much you'd like to borrow and I'll find a suitable loan with a clear monthly payment.",
 }
 
 

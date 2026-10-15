@@ -39,7 +39,7 @@
     "locale": "en",
     "mode": "system",
     "status": "COMPLETED",
-    "final_answer": "Hi! I'm StudyFlow. Tell me the school you have in mind and I'll work out the full-course total for tuition, housing and living costs, or compare what several schools would cost.",
+    "final_answer": "Hi, I'm StudyFlow. Not knowing what studying abroad will cost is the hardest part. Tell me the school you have in mind and I'll work out the full cost, or compare a few. If you're still short, tell me how much you'd like to borrow and I'll find a suitable loan with a clear monthly payment.",
     "error_code": "",
     "write_count": 0,
     "updated_at": "2026-10-15T13:19:58.238Z",

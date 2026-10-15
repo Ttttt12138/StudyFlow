@@ -39,7 +39,7 @@
     "locale": "zh",
     "mode": "system",
     "status": "COMPLETED",
-    "final_answer": "你好！我是 StudyFlow。告诉我想去的学校，我来算学费、住宿和生活费的全程总价，也可以帮你比较几所学校差多少。",
+    "final_answer": "你好，我是 StudyFlow。留学花多少钱，最容易让人心里没底。告诉我想去的学校，我帮你算清全程总价，也能比比几所学校。要是还差一些，说个想借的数，我帮你挑合适的贷款，月供算得明明白白。",
     "error_code": "",
     "write_count": 0,
     "updated_at": "2026-10-15T13:19:58.794Z",
