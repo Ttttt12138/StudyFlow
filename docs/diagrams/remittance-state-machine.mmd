@@ -1,0 +1,15 @@
+stateDiagram-v2
+    [*] --> CREATED: create (T1)
+    CREATED --> SUBMITTED: submit (T2/T3) - debit send amount
+    CREATED --> CANCELLED: cancel
+    CREATED --> EXPIRED: quote expired - no debit
+    SUBMITTED --> IN_TRANSIT: dispatched (operator)
+    SUBMITTED --> UNKNOWN: unknown (operator)
+    IN_TRANSIT --> UNKNOWN: unknown (operator)
+    SUBMITTED --> DELIVERED: delivered
+    IN_TRANSIT --> DELIVERED: delivered
+    UNKNOWN --> DELIVERED: delivered
+    SUBMITTED --> REFUNDED: failed - full refund
+    IN_TRANSIT --> REFUNDED: failed - full refund
+    UNKNOWN --> REFUNDED: failed - full refund
+    DELIVERED --> RECONCILED: reconcile

@@ -1,0 +1,15 @@
+flowchart TD
+    goal["Student goal (zh/en)"] --> loop{"Steps used < 10<br/>and not stopped?"}
+    loop -- yes --> plan["Planner returns ONE step<br/>(tool call or final answer)"]
+    plan --> valid{"Known tool, JSON-object args,<br/>schema valid?"}
+    valid -- no --> fail["Session FAILED<br/>nothing executed"]
+    valid -- yes --> tier{"Tool tier"}
+    tier -- T0 --> run["Execute; result truncated to 4,000 chars,<br/>passed back as data"]
+    tier -- "T1 (4 writes max)" --> run
+    tier -- T2 --> prop["Create PENDING action only<br/>(expires in 15 min)"]
+    run --> stop{"Same tool failed twice,<br/>or no on-time route?"}
+    prop --> loop
+    stop -- yes --> final["Ask planner for the final answer"]
+    stop -- no --> loop
+    loop -- no --> final
+    prop -. student .-> confirm["Confirm with step-up<br/>(+ approval if T3)"]

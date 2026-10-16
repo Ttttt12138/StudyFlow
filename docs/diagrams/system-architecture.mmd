@@ -1,0 +1,32 @@
+flowchart LR
+    client["React 19 + Vite student workspace<br/>and staff operations workspace"]
+    web["nginx<br/>same-origin API proxy"]
+    subgraph django["Django 5.2 + DRF (one process, /api/v2/)"]
+        cmd["CommandView<br/>auth · idempotency · user lock · policy · audit<br/>(one DB transaction per command)"]
+        wallet["wallets / money<br/>multi-currency ledger"]
+        fx["fx_rates / corridors<br/>server-side quotes"]
+        remit["remittance_orders<br/>state machine"]
+        policy["policy / throttles<br/>T0–T3, step-up, approvals"]
+        credit["credit<br/>on-time record, multiplier"]
+        agent["agent_runner / agent_tools<br/>loop guards, proposals"]
+        planning["planning<br/>catalog, assessment, plan, tasks, bills"]
+        b["lending_core (B)<br/>loans and instalments"]
+    end
+    subgraph c["studyflow-ai (C package, imported in-process)"]
+        planner["agent planner<br/>(LLM or rule-based mock)"]
+        fxadapter["Frankfurter FX adapter"]
+        ocr["Gemini OCR, extraction,<br/>copilot classifiers"]
+    end
+    pg[("PostgreSQL 17<br/>constraints + triggers")]
+    ext1["Frankfurter API"]
+    ext2["LLM gateway<br/>(OpenAI-compatible)"]
+    ext3["Google Gemini"]
+
+    client -->|Session + CSRF| web --> cmd
+    cmd --> policy & wallet & remit & agent & planning & credit & b
+    planning --> b & wallet & agent
+    remit --> wallet
+    fx --> fxadapter --> ext1
+    agent --> planner --> ext2
+    ocr --> ext3
+    wallet & remit & policy & credit & agent & planning & b --> pg
