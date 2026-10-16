@@ -125,7 +125,17 @@ Fifteen photographs come from [Unsplash](https://unsplash.com) under the [Unspla
 
 ## School data and visual assets
 
-School JSON files under `backend/finance/planning/catalog/` contain short factual values, source URLs, observation dates, bilingual descriptions and estimates, marked `sample: true`. A public source URL supplies attribution, not a blanket reuse license. School names identify institutions and imply no affiliation or endorsement. Source-specific data and website permission review remains open for wider publication.
+School JSON files under `backend/finance/planning/catalog/` contain short factual values, source URLs, observation dates, bilingual descriptions and estimates, marked `sample: true`. A public source URL supplies attribution, not a blanket reuse license. School names identify institutions and imply no affiliation or endorsement. Website terms were reviewed on 2026-10-16 (a risk screen, not a legal opinion):
+
+| Sources | Terms | Use here |
+|---|---|---|
+| GOV.UK (Manchester visa, health surcharge, funds) | Open Government Licence v3.0 | Allowed with attribution; the source titles carry the licence |
+| Australian Department of Home Affairs (Melbourne visa) | CC BY 3.0 AU | Allowed with attribution; the source title carries it |
+| University of Melbourne | Non-commercial use of website content | Non-commercial competition entry |
+| NUS, Singapore ICA, University of Manchester, Waseda | Reproduction requires prior permission; personal or informational use allowed | Figures with attribution and short quotes; no permission requested yet |
+| Chulalongkorn, Mahidol (MUIC), Thammasat, PSU, Universiti Malaya, Thai Immigration | Copyright footer only; no specific terms page found | Figures with attribution and short quotes |
+
+Fee amounts are factual; the reproduced text is limited to short quotes beside each figure (longest 112 characters). The Mahidol tuition figures cite the live MUIC page, with a Wayback Machine copy listed as an archived reference. The PSU Hat Yai fee PDF is published by the PSU Faculty of Management Sciences International BBA programme (interbba.com) on its site's MakeWebEasy file host. The Internet Archive's own terms were not retrieved. For wider or commercial publication, ask NUS, Manchester and Waseda for permission or keep only figures and links.
 
 The introduction uses code-authored SVG and Three.js graphics. No external stock-photo or school-logo package is declared by the current frontend. Legacy files under `frontend/public/images/` remain in the repository; npm metadata does not establish their authorship or provenance. Review or exclude them from publication artifacts before asserting that all imagery has cleared rights. Newly added images, icons or fonts must carry their source and license.
 
