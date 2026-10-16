@@ -45,13 +45,9 @@ The repository holds three modules side by side: **A** `frontend/` (React studen
 
 One Django 5.2 + DRF server exposes everything under `/api/v2/` and stores it in PostgreSQL 17. The AI module `studyflow-ai/` is a Python package imported in-process, so it shares users, wallets, the ledger and database transactions with the API. Every write goes through a single command pipeline in one transaction: authentication → idempotency → user lock → policy (T2/T3) → handler → audit.
 
-```mermaid
-flowchart LR
-    client["frontend/ (A) · API client · Swagger UI"] -->|Token or session| api["backend/ (B)<br/>Django + DRF /api/v2/"]
-    api --> pg[("PostgreSQL 17")]
-    api --> c["studyflow-ai/ (C)<br/>(agent planner, FX adapter, OCR)"]
-    c -. live mode only .-> ext["LLM gateway · Frankfurter · Gemini"]
-```
+![Architecture overview: the React frontend calls the Django API, which stores data in PostgreSQL and imports the studyflow-ai package; live mode calls the LLM gateway, Frankfurter and Gemini](docs/diagrams/architecture-overview.svg)
+
+<sub>Diagram source: [architecture-overview.mmd](docs/diagrams/architecture-overview.mmd)</sub>
 
 The full architecture, algorithms and diagrams are in [docs/technical-overview.md](docs/technical-overview.md).
 
@@ -72,12 +68,12 @@ docker compose up --build
 
 Everything runs in **mock mode** with fixed FX rates, so nothing calls an external service.
 
-1. **Get the demo logins.** `manage.py seed_demo` writes the student and operator passwords and tokens inside the app container:
+1. **Get the demo logins.** `manage.py seed_demo` writes the student, operator and approver passwords and tokens inside the app container:
    ```bash
    docker compose exec app cat .demo-credentials.json
    ```
    The file lasts until the container is recreated (for example by a later `--build`); the users stay in the database. Set a new password with `docker compose exec app python manage.py changepassword demo-student`.
-2. **Open the student app.** Go to <http://localhost:8080>, choose **Sign in to StudyFlow** and log in as `demo-student`; Django's login page returns you to the app.
+2. **Open the student app.** Go to <http://localhost:8080>, choose **Sign in to StudyFlow** and log in as `demo-student`; after signing in you return to the app. The interface opens in English; a 中文 switch is in the top bar.
 3. **Browse the API.** Log in at <http://localhost:8080/api/auth/login/?next=/api/docs/> to open Swagger UI. `/api/docs/` requires login by design.
 4. **Run a full remittance scenario over real HTTP.** It compares routes, pays tuition to a verified payee, refunds a failed transfer, routes a T3 approval through a second operator, and updates the on-time record that scales limits:
    ```bash
@@ -111,7 +107,7 @@ The student frontend then runs with `npm ci && npm run dev` in `frontend/` ([fro
 
 | Setting | Default | Effect | Needs |
 |---|---|---|---|
-| `STUDYFLOW_MODE` | `mock` | `mock`: rule-based agent planner and extractors. `live`: LLM gateway | `OPENAI_API_KEY`, `OPENAI_BASE_URL`, `OPENAI_MODEL` (and `TYPESAFE_API_KEY` for the copilot) in `studyflow-ai/.env` |
+| `STUDYFLOW_MODE` | `mock` | `mock`: rule-based agent planner and extractors. `live`: LLM gateway | `OPENAI_API_KEY`, `OPENAI_BASE_URL`, `OPENAI_MODEL` in `studyflow-ai/.env` (`TYPESAFE_API_KEY` is used only by the retired copilot) |
 | `STUDYFLOW_FX_LIVE` | `false` | `true` fetches reference rates from Frankfurter | network access only |
 | `STUDYFLOW_OCR_ENABLED` | `false` | Gemini OCR for scanned documents, with per-file consent | `GEMINI_API_KEY` plus two operator attestations ([gemini-ocr.md](docs/gemini-ocr.md)) |
 | `DJANGO_SECURE` | `false` | HTTPS redirect, HSTS, secure cookies | an HTTPS deployment |

@@ -1,0 +1,5 @@
+flowchart LR
+    client["frontend/ (A) · API client · Swagger UI"] -->|Token or session| api["backend/ (B)<br/>Django + DRF /api/v2/"]
+    api --> pg[("PostgreSQL 17")]
+    api --> c["studyflow-ai/ (C)<br/>(agent planner, FX adapter, OCR)"]
+    c -. live mode only .-> ext["LLM gateway · Frankfurter · Gemini"]

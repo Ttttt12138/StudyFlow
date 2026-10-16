@@ -8,40 +8,9 @@ Updated 2026-10-15 for Topic C, including the React frontend, current planning a
 
 ## 1. Architecture
 
-```mermaid
-flowchart LR
-    client["React 19 + Vite student workspace<br/>and staff operations workspace"]
-    web["nginx<br/>same-origin API proxy"]
-    subgraph django["Django 5.2 + DRF (one process, /api/v2/)"]
-        cmd["CommandView<br/>auth · idempotency · user lock · policy · audit<br/>(one DB transaction per command)"]
-        wallet["wallets / money<br/>multi-currency ledger"]
-        fx["fx_rates / corridors<br/>server-side quotes"]
-        remit["remittance_orders<br/>state machine"]
-        policy["policy / throttles<br/>T0–T3, step-up, approvals"]
-        credit["credit<br/>on-time record, multiplier"]
-        agent["agent_runner / agent_tools<br/>loop guards, proposals"]
-        planning["planning<br/>catalog, assessment, plan, tasks, bills"]
-        b["lending_core (B)<br/>loans and instalments"]
-    end
-    subgraph c["studyflow-ai (C package, imported in-process)"]
-        planner["agent planner<br/>(LLM or rule-based mock)"]
-        fxadapter["Frankfurter FX adapter"]
-        ocr["Gemini OCR, extraction,<br/>copilot classifiers"]
-    end
-    pg[("PostgreSQL 17<br/>constraints + triggers")]
-    ext1["Frankfurter API"]
-    ext2["LLM gateway<br/>(OpenAI-compatible)"]
-    ext3["Google Gemini"]
+![System architecture: browser, nginx proxy, Django command pipeline and modules, PostgreSQL, and the studyflow-ai package with its external services](diagrams/system-architecture.svg)
 
-    client -->|Session + CSRF| web --> cmd
-    cmd --> policy & wallet & remit & agent & planning & credit & b
-    planning --> b & wallet & agent
-    remit --> wallet
-    fx --> fxadapter --> ext1
-    agent --> planner --> ext2
-    ocr --> ext3
-    wallet & remit & policy & credit & agent & planning & b --> pg
-```
+<sub>Diagram source: [system-architecture.mmd](diagrams/system-architecture.mmd)</sub>
 
 - **One application backend.** Django 5.2 + DRF serves `/api/v2/`; PostgreSQL 17 stores authoritative state. The C module is imported in-process. Compose runs nginx, Django, PostgreSQL and a separate readiness worker using the same application and database. The worker is required for background readiness jobs.
 - **Mock vs live.** Two independent switches control external calls. Both default to offline, so everything runs with no keys:
@@ -142,23 +111,9 @@ A security review found that a client-entered rate could once be used to create 
 
 ## 3. Remittance order state machine
 
-```mermaid
-stateDiagram-v2
-    [*] --> CREATED: create (T1)
-    CREATED --> SUBMITTED: submit (T2/T3) - debit send amount
-    CREATED --> CANCELLED: cancel
-    CREATED --> EXPIRED: quote expired - no debit
-    SUBMITTED --> IN_TRANSIT: dispatched (operator)
-    SUBMITTED --> UNKNOWN: unknown (operator)
-    IN_TRANSIT --> UNKNOWN: unknown (operator)
-    SUBMITTED --> DELIVERED: delivered
-    IN_TRANSIT --> DELIVERED: delivered
-    UNKNOWN --> DELIVERED: delivered
-    SUBMITTED --> REFUNDED: failed - full refund
-    IN_TRANSIT --> REFUNDED: failed - full refund
-    UNKNOWN --> REFUNDED: failed - full refund
-    DELIVERED --> RECONCILED: reconcile
-```
+![Remittance order state machine from CREATED through SUBMITTED, IN_TRANSIT and UNKNOWN to DELIVERED, RECONCILED, REFUNDED, CANCELLED or EXPIRED](diagrams/remittance-state-machine.svg)
+
+<sub>Diagram source: [remittance-state-machine.mmd](diagrams/remittance-state-machine.mmd)</sub>
 
 Source: `TRANSITIONS` in `backend/finance/remittance_orders.py`.
 - Each transition checks the order's version and appends one row to an immutable status history (a database trigger blocks updates and deletes).
@@ -225,23 +180,9 @@ Source: `backend/finance/wallets.py`, migrations `0015`–`0017`.
 
 Source: `backend/finance/agent_runner.py`, `backend/finance/agent_tools.py`, `studyflow-ai/src/studyflow_ai/agent/`.
 
-```mermaid
-flowchart TD
-    goal["Student goal (zh/en)"] --> loop{"Steps used < 10<br/>and not stopped?"}
-    loop -- yes --> plan["Planner returns ONE step<br/>(tool call or final answer)"]
-    plan --> valid{"Known tool, JSON-object args,<br/>schema valid?"}
-    valid -- no --> fail["Session FAILED<br/>nothing executed"]
-    valid -- yes --> tier{"Tool tier"}
-    tier -- T0 --> run["Execute; result truncated to 4,000 chars,<br/>passed back as data"]
-    tier -- "T1 (4 writes max)" --> run
-    tier -- T2 --> prop["Create PENDING action only<br/>(expires in 15 min)"]
-    run --> stop{"Same tool failed twice,<br/>or no on-time route?"}
-    prop --> loop
-    stop -- yes --> final["Ask planner for the final answer"]
-    stop -- no --> loop
-    loop -- no --> final
-    prop -. student .-> confirm["Confirm with step-up<br/>(+ approval if T3)"]
-```
+![Agent loop: the planner returns one step, the runner validates it, executes T0/T1 tools within budgets, turns T2 tools into pending actions for the student to confirm](diagrams/agent-loop.svg)
+
+<sub>Diagram source: [agent-loop.mmd](diagrams/agent-loop.mmd)</sub>
 
 | Guard | Value | Enforced by |
 |---|---|---|
