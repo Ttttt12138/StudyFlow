@@ -116,7 +116,7 @@ The student frontend then runs with `npm ci && npm run dev` in `frontend/` ([fro
 | `STUDYFLOW_OCR_ENABLED` | `false` | Gemini OCR for scanned documents, with per-file consent | `GEMINI_API_KEY` plus two operator attestations ([gemini-ocr.md](docs/gemini-ocr.md)) |
 | `DJANGO_SECURE` | `false` | HTTPS redirect, HSTS, secure cookies | an HTTPS deployment |
 
-The live LLM, live FX and OCR need your own credentials. We cannot ship them, so the committed run logs serve as evidence of the live results: [evidence/agent](evidence/agent/), [evidence/fx](evidence/fx/), [evidence/ocr](evidence/ocr/).
+The live LLM and Gemini OCR need API credentials, and live FX needs only network access. The credentials are not in this public repository; the team provides them in the competition submission files sent by email (`.env` files for `backend/` and `studyflow-ai/`). The committed run logs also serve as evidence of the live results: [evidence/agent](evidence/agent/), [evidence/fx](evidence/fx/), [evidence/ocr](evidence/ocr/).
 
 ## Testing
 
