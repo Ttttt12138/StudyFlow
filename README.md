@@ -153,6 +153,10 @@ Current suites (2026-10-16), all passing: **Django 632 tests** (2 opt-in live re
 
 The limitations behind these numbers are stated plainly in [docs/security-self-assessment.md §8](docs/security-self-assessment.md#8-known-risks) and [docs/agent-evaluation.md](docs/agent-evaluation.md#limitations). In particular, step-up is a password re-entry rather than a second factor, and the evaluation sets were written and reviewed by AI, not by humans.
 
+## School data sources and terms
+
+The ten schools in `backend/finance/planning/catalog/` are **sample data**. Each fee is a figure taken from a public page listed with its title and access date (most quotes are the figure itself), and the facility, food and place notes are the team's own one-line summaries. StudyFlow is not affiliated with or endorsed by these institutions, and rights in the cited pages stay with their owners; content is removed on request. UK figures contain public sector information licensed under the Open Government Licence v3.0; Australian visa figures are © Commonwealth of Australia (Department of Home Affairs), CC BY 3.0 AU. Details per source: [third-party licences](docs/third-party-licenses.md#school-data-and-visual-assets).
+
 ## Repository layout
 
 | Path | Contents |
