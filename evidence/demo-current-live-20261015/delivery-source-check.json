@@ -1,7 +1,7 @@
 {
   "runtime_source_unchanged": false,
   "recorded_snapshot": "take-07/accepted-source.zip (1022 files, recorded 15 Oct 2026 against the working tree based on 88665b7)",
-  "compared_with": "commit 3a969fb21975b528782018d1b481ea4204b5c597; later commits up to the submitted one change documentation and evidence only",
+  "compared_with": "commit 3a969fb21975b528782018d1b481ea4204b5c597; later commits up to the submitted one change documentation, evidence and two evaluation scripts only; no runtime file",
   "summary": {
     "changed": {
       "runtime": 54,
