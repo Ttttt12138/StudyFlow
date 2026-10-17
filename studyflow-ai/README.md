@@ -23,7 +23,7 @@ Python 3.11 or later. The repository's shared environment is `studyFlow/` at the
 ..\studyFlow\Scripts\python.exe -m ruff check src auto_test scripts
 ```
 
-On macOS/Linux use `../studyFlow/bin/python`. The suite (481 tests on 2026-10-15) runs offline.
+On macOS/Linux use `../studyFlow/bin/python`. The suite (481 tests on 2026-10-17) runs offline.
 
 ## Model configuration
 

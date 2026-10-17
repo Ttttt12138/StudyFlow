@@ -8,7 +8,7 @@ Run every command from the repository root. On Windows the interpreter is `study
 
 ## Current test status
 
-On 2026-10-16 the current code passed: Django **632 tests** (2 opt-in recordings skipped), C package (`studyflow-ai`) **481 tests**, frontend **81 unit + 54 mocked browser tests**. The archived gate run in `gates/` is a recorded run of an earlier commit (see §2).
+On 2026-10-17 the submitted code passed ([logs](demo-current-live-20261015/regression-20261017/)): Django **632 tests** (2 opt-in recordings skipped), C package (`studyflow-ai`) **481 tests**, frontend **81 unit + 54 mocked browser tests**. The archived gate run in `gates/` is a recorded run of an earlier commit (see §2).
 
 ## Contents
 
