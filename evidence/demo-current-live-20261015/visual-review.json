@@ -1,9 +1,9 @@
 {
   "passed": true,
-  "date": "2026-10-15",
+  "date": "2026-10-17",
   "reviewer": "Codex visual inspection",
-  "video_sha256": "e5073650dd35eabaeb3f52c9b8729fe19c19152584e643a7548ab4bbe54ba34a",
-  "scope": "All five final contact sheets (54 shots), selected full-resolution frames, and all seven action-shot endings; this is frame-based visual QA, not a claim of human listening.",
+  "video_sha256": "6e7f14380a4c6d0a7d75a6bc524653180a76796dcad38f690808bf83de3b1be3",
+  "scope": "Frame-based review of all 54 shots, all five contact sheets, selected full-resolution key frames and all seven action endings; no claim of human listening.",
   "contact_sheets": [
     "contact-sheet-1.jpg",
     "contact-sheet-2.jpg",
@@ -12,26 +12,33 @@
     "contact-sheet-5.jpg"
   ],
   "full_resolution_key_frames": [
-    46,
+    35,
+    36,
+    37,
+    49,
+    50,
     51,
     52,
     53,
     54
   ],
   "action_endings": "action-end-review.jpg",
+  "start_frame_check": "start-frame-check.json",
   "layout_check": "matte-check.json",
   "observations": [
-    "Current cost comparison, conversational loan choices, application/signing, reminders, split tuition, exchange/remittance, delivery, repayment and ledger are visible.",
-    "Operator payee verification, blocked over-limit transfer, separation of duties, independent approval confirmation and approval record are visible.",
-    "Final student authorization shows the actual masked-password frame, followed by the recorded confirmed result.",
-    "English captions stay below the recorded app and match the intended feature shots.",
-    "Stable shot endings were trimmed before following reloads; the final held frames match their source references.",
-    "All 54 header and side-panel layouts match their expected rendered artwork within encoding tolerance.",
-    "The persistent film header and app simulation label identify simulated financial transactions."
+    "All 54 product shots use take-08 raw recordings. Source-start matching and 47 held-ending checks pass.",
+    "The fee-adjusted exchange quote displays 500 CNY and 2290.81 THB; the rejected password, confirmation and green confirmed result are present.",
+    "Tuition authorization includes the actual confirmation click and paid result after shortening the recorded pause.",
+    "The payee-verifier sequence ends on the actual verified-payee success message, not the earlier disabled button.",
+    "Independent approval retains the distinct verifier and approver, separation-of-duties denial, explicit decision and approved record.",
+    "The final student password frame is actually recorded at take-08 student 521.800 seconds; its following shot shows confirmed submission.",
+    "English captions stay below the app and match the spoken sentence and feature shot.",
+    "All header and side-panel regions match their expected artwork within encoding tolerance.",
+    "Persistent film and application labels identify simulated financial transactions."
   ],
   "limits": [
-    "Waiting is shortened and actual recorded frames are held for narration.",
-    "The brief final password dialog is held from raw student timestamp 536.800 seconds.",
-    "The uncut recordings and model trace retain the complete operations and live model evidence."
+    "Waiting is shortened; actual stable frames are held for narration.",
+    "Seven action ranges may run faster to retain clicks/results within the sentence; exact speeds and source times are in edit-manifest.json.",
+    "Offline speech recognition and waveform checks are not human listening or independent phonetic ground truth."
   ]
 }

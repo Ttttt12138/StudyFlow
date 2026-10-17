@@ -2,7 +2,7 @@
 
 [Current formal video](../evidence/demo-current-live-20261015/StudyFlow_Demo_EN.mp4) · [Current acceptance and originals](../evidence/demo-current-live-20261015/README.md)
 
-Runtime: **04:25** (264.867 seconds). 54 shots, 8 continuous paragraphs. Ava voice and pace retained: `en-US-AvaNeural`, synthesis `-10%`, local tempo `1.20` with selected amount sentences at `1.12`. StudyFlow is spoken as Study Flow; amounts are spelled out. All financial transactions are simulated.
+Runtime: **04:28** (268.133 seconds). All 54 shots use take-08; 8 continuous paragraphs. Ava voice and pace retained: `en-US-AvaNeural`, synthesis `-10%`, local tempo `1.20` with selected amount sentences at `1.12`. Only shot 37 was synthesized again; the other original speech is retained. StudyFlow is spoken as Study Flow; amounts are spelled out. All financial transactions are simulated.
 
 ## Continuous narration
 
@@ -26,15 +26,15 @@ Asking to apply opens a review of the current terms. Only the student's confirma
 
 Preparation stays in the conversation: a dated request becomes a saved reminder. Mark a task completed when it is done, or undo that update if it still needs attention. A partly covered tuition bill shows the loan's share and the amount the student still needs to pay, together. When the wallet is short, the demo offers a clearly marked simulated top-up for the remainder. The student then confirms the payment with a password. The bill and balance update together, and the loan-covered amount cannot be charged again.
 
-### 02:57–03:35 · Move money with control
+### 02:57–03:38 · Move money with control
 
-Separate currency balances keep the source of each simulated payment clear. For an exchange, the assistant compares quotes and prepares a proposal for the student to review. A wrong password stops the action and leaves the balance unchanged. Only after authorization are five hundred yuan converted into Thai baht. For a transfer, routes, fees and expected arrival come before commitment. Confirmation debits one thousand yuan and creates a traceable transfer order. We advance the clearly labelled demo date to the delivery window's final day. The simulated channel marks the transfer delivered, and its status is visible in the history.
+Separate currency balances keep the source of each simulated payment clear. For an exchange, the assistant compares quotes and prepares a proposal for the student to review. A wrong password stops the action and leaves the balance unchanged. After password confirmation, five hundred yuan is debited, and the quoted amount in Thai baht is credited after fees. For a transfer, routes, fees and expected arrival come before commitment. Confirmation debits one thousand yuan and creates a traceable transfer order. We advance the clearly labelled demo date to the delivery window's final day. The simulated channel marks the transfer delivered, and its status is visible in the history.
 
-### 03:35–03:51 · Complete the repayment
+### 03:38–03:54 · Complete the repayment
 
 When a loan installment falls due, it appears with its amount and date. Before committing, the student reviews the installment, then authorizes the repayment with a password. The installment becomes paid, the wallet is debited, and the movement remains in the ledger.
 
-### 03:51–04:25 · Independent operational approval
+### 03:54–04:28 · Independent operational approval
 
 For a new recipient, an operator first reviews and verifies the payee. Even a correct password cannot bypass a transfer limit. The request enters the operations workbench for review. The person who verified the payee cannot approve the transfer. A separate operator checks the amount, recipient and purpose, then explicitly confirms the decision. The approval is recorded, but moves no money. The student must still authorize submission with a password. Clear costs, informed decisions and controlled payments: all demonstrated with simulated funds.
 
@@ -78,23 +78,23 @@ For a new recipient, an operator first reviews and verifies the payee. Even a co
 | 34 | 02:57–03:01 | Separate currency balances |
 | 35 | 03:01–03:06 | Compare before converting |
 | 36 | 03:06–03:10 | A real authorization check |
-| 37 | 03:10–03:15 | Confirm the exchange |
-| 38 | 03:15–03:20 | Understand the transfer |
-| 39 | 03:20–03:25 | Track the order |
-| 40 | 03:25–03:29 | Advance the demonstration date |
-| 41 | 03:29–03:35 | See the delivery |
-| 42 | 03:35–03:39 | An installment becomes due |
-| 43 | 03:39–03:42 | Review the installment |
-| 44 | 03:42–03:45 | Authorize repayment |
-| 45 | 03:45–03:51 | Keep a payment record |
-| 46 | 03:51–03:56 | Verify the recipient |
-| 47 | 03:56–03:59 | Limits still apply |
-| 48 | 03:59–04:02 | An independent review |
-| 49 | 04:02–04:06 | Separate responsibilities |
-| 50 | 04:06–04:10 | Review the payment |
-| 51 | 04:10–04:12 | Confirm the decision |
-| 52 | 04:12–04:15 | Approval is recorded |
-| 53 | 04:15–04:18 | The student stays in control |
-| 54 | 04:18–04:25 | A controlled result |
+| 37 | 03:10–03:18 | Confirm the exchange |
+| 38 | 03:18–03:23 | Understand the transfer |
+| 39 | 03:23–03:28 | Track the order |
+| 40 | 03:28–03:32 | Advance the demonstration date |
+| 41 | 03:32–03:38 | See the delivery |
+| 42 | 03:38–03:43 | An installment becomes due |
+| 43 | 03:43–03:46 | Review the installment |
+| 44 | 03:46–03:48 | Authorize repayment |
+| 45 | 03:48–03:54 | Keep a payment record |
+| 46 | 03:54–03:59 | Verify the recipient |
+| 47 | 03:59–04:02 | Limits still apply |
+| 48 | 04:02–04:06 | An independent review |
+| 49 | 04:06–04:09 | Separate responsibilities |
+| 50 | 04:09–04:13 | Review the payment |
+| 51 | 04:13–04:16 | Confirm the decision |
+| 52 | 04:16–04:19 | Approval is recorded |
+| 53 | 04:19–04:22 | The student stays in control |
+| 54 | 04:22–04:28 | A controlled result |
 
-See the current evidence README for the accepted source snapshot, simulated-account operation logs, mode boundaries, authorization checks and synchronization measurements.
+The exchange debits 500 CNY and credits 2,290.81 THB after fees. The actual final password modal comes from take-08 student timestamp 521.800 seconds. See the current evidence README for complete audit logs, the source snapshot, voice preservation and synchronization checks.

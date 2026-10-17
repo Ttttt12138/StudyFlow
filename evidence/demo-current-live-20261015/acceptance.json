@@ -1,5 +1,8 @@
 {
-  "source_files_verified": 1022,
+  "take": "take-08",
+  "audit_events": 82,
+  "complete_audit": true,
+  "source_files_verified": 990,
   "live_conversation_turns": 19,
   "acceptance_checks": 13,
   "call_modes": {
@@ -7,14 +10,14 @@
     "live": 48,
     "system": 1
   },
-  "live_attempts": 55,
+  "live_attempts": 57,
   "models": [
     "openai/gpt-6-luna"
   ],
   "raw_video_sha256": {
-    "raw/student/page@91855f6cb29bc8b55721257400af4fae.webm": "52379cd0235c0566f02198dbfb86f1d75bb8e5df8e91cc973cc8567b5b60bdb8",
-    "raw/operator/page@2ca9dfed2854fb94cc6416363d6c6c2c.webm": "8011117fc98b987fec82ccfa266e082dd589d0a93c8b415b8a8f9bf29eb1614e",
-    "raw/approver/page@e1429c634a844623f99010bc4d3c76f8.webm": "409ef68fab451b3d7e209708e994ff78c8f51411986ba45b04c754065eb5f130"
+    "raw/student/page@e1da7029e1af9e25b56d330b1278e5ed.webm": "b77d05e9a7044aad9fae30535df3215c870f07db58a62c71ee5ee7bc4090bee9",
+    "raw/operator/page@f87a4b48e043ec3b3c6dd324527ef61e.webm": "6e3a810e2bfb91b2c8443e4c7f78124c5e965b1e6d470eab55182b9aa53a55ce",
+    "raw/approver/page@3d4b8ca1ed8c08dbddcc67a057fea344.webm": "f4a60b86a97b96a37b16b1f8f45c40abcb626a9113df78c9a2badc9d6806170f"
   },
   "no_rule_or_mock_fallback": true
 }

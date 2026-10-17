@@ -1,5 +1,8 @@
 {
-  "source_files_verified": 1022,
+  "take": "take-08",
+  "audit_events": 82,
+  "complete_audit": true,
+  "source_files_verified": 990,
   "live_conversation_turns": 19,
   "acceptance_checks": 13,
   "call_modes": {
@@ -7,32 +10,32 @@
     "live": 48,
     "system": 1
   },
-  "live_attempts": 55,
+  "live_attempts": 57,
   "models": [
     "openai/gpt-6-luna"
   ],
   "raw_video_sha256": {
-    "raw/student/page@91855f6cb29bc8b55721257400af4fae.webm": "52379cd0235c0566f02198dbfb86f1d75bb8e5df8e91cc973cc8567b5b60bdb8",
-    "raw/operator/page@2ca9dfed2854fb94cc6416363d6c6c2c.webm": "8011117fc98b987fec82ccfa266e082dd589d0a93c8b415b8a8f9bf29eb1614e",
-    "raw/approver/page@e1429c634a844623f99010bc4d3c76f8.webm": "409ef68fab451b3d7e209708e994ff78c8f51411986ba45b04c754065eb5f130"
+    "raw/student/page@e1da7029e1af9e25b56d330b1278e5ed.webm": "b77d05e9a7044aad9fae30535df3215c870f07db58a62c71ee5ee7bc4090bee9",
+    "raw/operator/page@f87a4b48e043ec3b3c6dd324527ef61e.webm": "6e3a810e2bfb91b2c8443e4c7f78124c5e965b1e6d470eab55182b9aa53a55ce",
+    "raw/approver/page@3d4b8ca1ed8c08dbddcc67a057fea344.webm": "f4a60b86a97b96a37b16b1f8f45c40abcb626a9113df78c9a2badc9d6806170f"
   },
   "no_rule_or_mock_fallback": true,
   "shots": 54,
   "continuous_paragraphs": 8,
-  "caption_groups": 90,
+  "caption_groups": 91,
   "captions_within_matching_shot": true,
   "caption_text_matches_narration": true,
-  "duration_seconds": 264.86666633333334,
-  "audio_end_seconds": 264.8746663333334,
-  "av_endpoint_difference_seconds": 0.008000000000038199,
-  "video_frames": 7946,
+  "duration_seconds": 268.1333333333334,
+  "audio_end_seconds": 268.13866633333333,
+  "av_endpoint_difference_seconds": 0.005332999999950516,
+  "video_frames": 8044,
   "decode_errors": 0,
-  "integrated_loudness_lufs": -16.34,
-  "true_peak_dbfs": -1.31,
-  "loudness_range_lu": 2.4,
+  "integrated_loudness_lufs": -16.36,
+  "true_peak_dbfs": -1.36,
+  "loudness_range_lu": 2.3,
   "clipped_pcm_samples": 0,
   "passed": true,
-  "sha256": "e5073650dd35eabaeb3f52c9b8729fe19c19152584e643a7548ab4bbe54ba34a",
+  "sha256": "6e7f14380a4c6d0a7d75a6bc524653180a76796dcad38f690808bf83de3b1be3",
   "narration_alignment": [
     {
       "shot": "shot-01",
@@ -216,92 +219,92 @@
     },
     {
       "shot": "shot-37",
-      "correlation": 0.999985777710643,
+      "correlation": 0.9999927145988124,
       "offset_seconds": 0.0
     },
     {
       "shot": "shot-38",
-      "correlation": 0.9999987272248997,
+      "correlation": 0.9999989263317195,
       "offset_seconds": 0.0
     },
     {
       "shot": "shot-39",
-      "correlation": 0.9999845679872033,
+      "correlation": 0.9999707645088279,
       "offset_seconds": 0.0
     },
     {
       "shot": "shot-40",
-      "correlation": 0.999998742404088,
+      "correlation": 0.9999990370317737,
       "offset_seconds": 0.0
     },
     {
       "shot": "shot-41",
-      "correlation": 0.999996588460106,
+      "correlation": 0.9999971970721762,
       "offset_seconds": 0.0
     },
     {
       "shot": "shot-42",
-      "correlation": 0.9999986835760083,
+      "correlation": 0.9999992557925605,
       "offset_seconds": 0.0
     },
     {
       "shot": "shot-43",
-      "correlation": 0.9999974727156022,
+      "correlation": 0.9999986566667298,
       "offset_seconds": 0.0
     },
     {
       "shot": "shot-44",
-      "correlation": 0.9999957801543361,
+      "correlation": 0.9999958869078999,
       "offset_seconds": 0.0
     },
     {
       "shot": "shot-45",
-      "correlation": 0.9999969988919802,
+      "correlation": 0.9999983843548844,
       "offset_seconds": 0.0
     },
     {
       "shot": "shot-46",
-      "correlation": 0.9999991246876355,
+      "correlation": 0.9999990621405845,
       "offset_seconds": 0.0
     },
     {
       "shot": "shot-47",
-      "correlation": 0.9999852161207279,
+      "correlation": 0.9999712397462885,
       "offset_seconds": 0.0
     },
     {
       "shot": "shot-48",
-      "correlation": 0.9999926893631672,
+      "correlation": 0.9999892663222794,
       "offset_seconds": 0.0
     },
     {
       "shot": "shot-49",
-      "correlation": 0.9999929684581104,
+      "correlation": 0.9999879082531421,
       "offset_seconds": 0.0
     },
     {
       "shot": "shot-50",
-      "correlation": 0.999998522757335,
+      "correlation": 0.9999983798556903,
       "offset_seconds": 0.0
     },
     {
       "shot": "shot-51",
-      "correlation": 0.9999954980131186,
+      "correlation": 0.9999966437900671,
       "offset_seconds": 0.0
     },
     {
       "shot": "shot-52",
-      "correlation": 0.9999975600632751,
+      "correlation": 0.9999955309789763,
       "offset_seconds": 0.0
     },
     {
       "shot": "shot-53",
-      "correlation": 0.999990067964723,
+      "correlation": 0.9999890354856481,
       "offset_seconds": 0.0
     },
     {
       "shot": "shot-54",
-      "correlation": 0.9999929052226739,
+      "correlation": 0.9999832751925155,
       "offset_seconds": 0.0
     }
   ],
@@ -309,237 +312,237 @@
     {
       "shot": "shot-01",
       "marker": "opening",
-      "difference": 2.098312757201646
+      "difference": 2.114679012345679
     },
     {
       "shot": "shot-02",
       "marker": "cost-card",
-      "difference": 2.108201646090535
+      "difference": 2.115506172839506
     },
     {
       "shot": "shot-03",
       "marker": "cost-sources",
-      "difference": 2.1692551440329217
+      "difference": 2.092497942386831
     },
     {
       "shot": "shot-04",
       "marker": "cost-living",
-      "difference": 2.1461111111111113
+      "difference": 2.122987654320988
     },
     {
       "shot": "shot-05",
       "marker": "cost-essentials",
-      "difference": 2.1726543209876543
+      "difference": 2.126456790123457
     },
     {
       "shot": "shot-06",
       "marker": "comparison-card",
-      "difference": 2.077106995884774
+      "difference": 2.085633744855967
     },
     {
       "shot": "shot-07",
       "marker": "comparison-cny",
-      "difference": 2.111588477366255
+      "difference": 2.119358024691358
     },
     {
       "shot": "shot-08",
       "marker": "comparison-usd",
-      "difference": 2.108641975308642
+      "difference": 2.093687242798354
     },
     {
       "shot": "shot-09",
       "marker": "missing-ranking",
-      "difference": 2.0142716049382714
+      "difference": 2.0197366255144034
     },
     {
       "shot": "shot-10",
       "marker": "school-profile",
-      "difference": 1.9786995884773662
+      "difference": 1.7773744855967077
     },
     {
       "shot": "shot-11",
       "marker": "school-chosen",
-      "difference": 2.0063580246913584
+      "difference": 1.8024567901234567
     },
     {
       "shot": "shot-12",
       "marker": "loan-card",
-      "difference": 2.1190658436213994
+      "difference": 2.119119341563786
     },
     {
       "shot": "shot-13",
       "marker": "loan-alternatives",
-      "difference": 2.1049135802469134
+      "difference": 2.113102880658436
     },
     {
       "shot": "shot-14",
       "marker": "manual-loan-controls",
-      "difference": 1.9858106995884774
+      "difference": 1.9839711934156379
     },
     {
       "shot": "shot-15",
       "marker": "monthly-change",
-      "difference": 2.094592592592593
+      "difference": 2.0958189300411525
     },
     {
       "shot": "shot-16",
       "marker": "interest-only-card",
-      "difference": 2.088777777777778
+      "difference": 2.057378600823045
     },
     {
       "shot": "shot-17",
       "marker": "interest-change",
-      "difference": 2.1192592592592594
+      "difference": 2.1135185185185184
     },
     {
       "shot": "shot-18",
       "marker": "reduced-card",
-      "difference": 2.0958312757201645
+      "difference": 2.001827160493827
     },
     {
       "shot": "shot-19",
       "marker": "pause-loan",
-      "difference": 1.7023251028806585
+      "difference": 2.037090534979424
     },
     {
       "shot": "shot-20",
       "marker": "resume-loan",
-      "difference": 1.8850946502057615
+      "difference": 2.1244732510288067
     },
     {
       "shot": "shot-22",
       "marker": "application-submitted",
-      "difference": 2.0525020576131685
+      "difference": 2.0654979423868314
     },
     {
       "shot": "shot-23",
       "marker": "unsigned-bill-coverage",
-      "difference": 2.0981769547325104
+      "difference": 2.0432798353909463
     },
     {
       "shot": "shot-24",
       "marker": "documents-ready",
-      "difference": 1.9775432098765433
+      "difference": 1.9858806584362139
     },
     {
       "shot": "shot-26",
       "marker": "school-payout-schedule",
-      "difference": 2.0278683127572017
+      "difference": 2.0168189300411523
     },
     {
       "shot": "shot-27",
       "marker": "reminder-created",
-      "difference": 2.10880658436214
+      "difference": 2.0718559670781893
     },
     {
       "shot": "shot-28",
       "marker": "reminder-completed",
-      "difference": 1.9928230452674898
+      "difference": 2.0169259259259262
     },
     {
       "shot": "shot-29",
       "marker": "reminder-reopened",
-      "difference": 2.0068559670781894
+      "difference": 2.03182304526749
     },
     {
       "shot": "shot-30",
       "marker": "partial-tuition",
-      "difference": 1.9595720164609054
+      "difference": 1.9117119341563786
     },
     {
       "shot": "shot-31",
       "marker": "tuition-topup",
-      "difference": 1.9722427983539095
+      "difference": 1.958127572016461
     },
     {
       "shot": "shot-33",
       "marker": "tuition-paid",
-      "difference": 2.0327366255144033
+      "difference": 1.9980205761316874
     },
     {
       "shot": "shot-34",
       "marker": "currency-balances",
-      "difference": 2.0339176954732507
+      "difference": 2.0201893004115226
     },
     {
       "shot": "shot-35",
       "marker": "exchange-review",
-      "difference": 2.087477366255144
+      "difference": 2.089687242798354
     },
     {
       "shot": "shot-36",
       "marker": "wrong-password-blocked",
-      "difference": 2.0162469135802468
+      "difference": 1.552954732510288
     },
     {
       "shot": "shot-37",
       "marker": "exchange-confirmed",
-      "difference": 2.06198353909465
+      "difference": 2.0743374485596706
     },
     {
       "shot": "shot-38",
       "marker": "remittance-review",
-      "difference": 2.080312757201646
+      "difference": 2.113864197530864
     },
     {
       "shot": "shot-39",
       "marker": "remittance-history",
-      "difference": 2.0039465020576133
+      "difference": 2.002049382716049
     },
     {
       "shot": "shot-40",
       "marker": "remittance-arrival-clock",
-      "difference": 2.0054279835390947
+      "difference": 2.0219958847736623
     },
     {
       "shot": "shot-41",
       "marker": "remittance-delivered",
-      "difference": 2.008769547325103
+      "difference": 2.009172839506173
     },
     {
       "shot": "shot-42",
       "marker": "repayment-review",
-      "difference": 1.2508600823045268
+      "difference": 1.2812304526748972
     },
     {
       "shot": "shot-43",
       "marker": "repayment-review",
-      "difference": 1.2875349794238682
+      "difference": 1.2715020576131686
     },
     {
       "shot": "shot-45",
       "marker": "final-ledger",
-      "difference": 1.9799382716049383
+      "difference": 2.0055432098765436
     },
     {
       "shot": "shot-47",
       "marker": "large-transfer-blocked",
-      "difference": 1.514567901234568
+      "difference": 1.564650205761317
     },
     {
       "shot": "shot-48",
       "marker": "operations-overview",
-      "difference": 2.0259917695473253
+      "difference": 2.022514403292181
     },
     {
       "shot": "shot-49",
       "marker": "separation-of-duties",
-      "difference": 1.9549053497942388
+      "difference": 1.9535637860082307
     },
     {
       "shot": "shot-52",
       "marker": "approval-record",
-      "difference": 2.0077654320987652
+      "difference": 2.0079300411522634
     },
     {
       "shot": "shot-53",
       "marker": "approved-transfer-authorization",
-      "difference": 1.1059917695473251
+      "difference": 1.2132757201646092
     },
     {
       "shot": "shot-54",
       "marker": "approved-transfer-submitted",
-      "difference": 2.0779300411522637
+      "difference": 2.0908395061728395
     }
   ],
   "max_narration_offset_seconds": 0.0,
@@ -554,10 +557,10 @@
   ],
   "visual_review": {
     "passed": true,
-    "date": "2026-10-15",
+    "date": "2026-10-17",
     "reviewer": "Codex visual inspection",
-    "video_sha256": "e5073650dd35eabaeb3f52c9b8729fe19c19152584e643a7548ab4bbe54ba34a",
-    "scope": "All five final contact sheets (54 shots), selected full-resolution frames, and all seven action-shot endings; this is frame-based visual QA, not a claim of human listening.",
+    "video_sha256": "6e7f14380a4c6d0a7d75a6bc524653180a76796dcad38f690808bf83de3b1be3",
+    "scope": "Frame-based review of all 54 shots, all five contact sheets, selected full-resolution key frames and all seven action endings; no claim of human listening.",
     "contact_sheets": [
       "contact-sheet-1.jpg",
       "contact-sheet-2.jpg",
@@ -566,39 +569,419 @@
       "contact-sheet-5.jpg"
     ],
     "full_resolution_key_frames": [
-      46,
+      35,
+      36,
+      37,
+      49,
+      50,
       51,
       52,
       53,
       54
     ],
     "action_endings": "action-end-review.jpg",
+    "start_frame_check": "start-frame-check.json",
     "layout_check": "matte-check.json",
     "observations": [
-      "Current cost comparison, conversational loan choices, application/signing, reminders, split tuition, exchange/remittance, delivery, repayment and ledger are visible.",
-      "Operator payee verification, blocked over-limit transfer, separation of duties, independent approval confirmation and approval record are visible.",
-      "Final student authorization shows the actual masked-password frame, followed by the recorded confirmed result.",
-      "English captions stay below the recorded app and match the intended feature shots.",
-      "Stable shot endings were trimmed before following reloads; the final held frames match their source references.",
-      "All 54 header and side-panel layouts match their expected rendered artwork within encoding tolerance.",
-      "The persistent film header and app simulation label identify simulated financial transactions."
+      "All 54 product shots use take-08 raw recordings. Source-start matching and 47 held-ending checks pass.",
+      "The fee-adjusted exchange quote displays 500 CNY and 2290.81 THB; the rejected password, confirmation and green confirmed result are present.",
+      "Tuition authorization includes the actual confirmation click and paid result after shortening the recorded pause.",
+      "The payee-verifier sequence ends on the actual verified-payee success message, not the earlier disabled button.",
+      "Independent approval retains the distinct verifier and approver, separation-of-duties denial, explicit decision and approved record.",
+      "The final student password frame is actually recorded at take-08 student 521.800 seconds; its following shot shows confirmed submission.",
+      "English captions stay below the app and match the spoken sentence and feature shot.",
+      "All header and side-panel regions match their expected artwork within encoding tolerance.",
+      "Persistent film and application labels identify simulated financial transactions."
     ],
     "limits": [
-      "Waiting is shortened and actual recorded frames are held for narration.",
-      "The brief final password dialog is held from raw student timestamp 536.800 seconds.",
-      "The uncut recordings and model trace retain the complete operations and live model evidence."
+      "Waiting is shortened; actual stable frames are held for narration.",
+      "Seven action ranges may run faster to retain clicks/results within the sentence; exact speeds and source times are in edit-manifest.json.",
+      "Offline speech recognition and waveform checks are not human listening or independent phonetic ground truth."
     ]
   },
-  "delivery_source_check": {
-    "runtime_source_unchanged": true,
-    "snapshot_file_count": 1022,
-    "post_recording_changes": [
+  "all_footage_from_take08": true,
+  "start_frame_checks": [
+    {
+      "shot": "shot-01",
+      "marker": "opening",
+      "difference": 1.8581522633744854
+    },
+    {
+      "shot": "shot-02",
+      "marker": "cost-card",
+      "difference": 1.6816625514403292
+    },
+    {
+      "shot": "shot-03",
+      "marker": "cost-sources",
+      "difference": 1.4899423868312756
+    },
+    {
+      "shot": "shot-04",
+      "marker": "cost-living",
+      "difference": 1.4463004115226337
+    },
+    {
+      "shot": "shot-05",
+      "marker": "cost-essentials",
+      "difference": 1.5150534979423869
+    },
+    {
+      "shot": "shot-06",
+      "marker": "comparison-card",
+      "difference": 1.4195185185185186
+    },
+    {
+      "shot": "shot-07",
+      "marker": "comparison-cny",
+      "difference": 1.4610041152263376
+    },
+    {
+      "shot": "shot-08",
+      "marker": "comparison-usd",
+      "difference": 1.4280699588477368
+    },
+    {
+      "shot": "shot-09",
+      "marker": "missing-ranking",
+      "difference": 1.4388806584362142
+    },
+    {
+      "shot": "shot-10",
+      "marker": "school-profile",
+      "difference": 1.6547407407407408
+    },
+    {
+      "shot": "shot-11",
+      "marker": "school-chosen",
+      "difference": 1.5569588477366256
+    },
+    {
+      "shot": "shot-12",
+      "marker": "loan-card",
+      "difference": 1.448485596707819
+    },
+    {
+      "shot": "shot-13",
+      "marker": "loan-alternatives",
+      "difference": 1.3222263374485597
+    },
+    {
+      "shot": "shot-14",
+      "marker": "manual-loan-controls",
+      "difference": 0.5829588477366255
+    },
+    {
+      "shot": "shot-15",
+      "marker": "monthly-change",
+      "difference": 1.4093456790123458
+    },
+    {
+      "shot": "shot-16",
+      "marker": "interest-only-card",
+      "difference": 1.4008930041152263
+    },
+    {
+      "shot": "shot-17",
+      "marker": "interest-change",
+      "difference": 1.4375596707818932
+    },
+    {
+      "shot": "shot-18",
+      "marker": "reduced-card",
+      "difference": 1.3821399176954732
+    },
+    {
+      "shot": "shot-19",
+      "marker": "pause-loan",
+      "difference": 1.6065308641975307
+    },
+    {
+      "shot": "shot-20",
+      "marker": "resume-loan",
+      "difference": 1.4888930041152264
+    },
+    {
+      "shot": "shot-21",
+      "marker": "application-review",
+      "difference": 0.889238683127572
+    },
+    {
+      "shot": "shot-22",
+      "marker": "application-submitted",
+      "difference": 1.4462057613168724
+    },
+    {
+      "shot": "shot-23",
+      "marker": "unsigned-bill-coverage",
+      "difference": 1.0284938271604938
+    },
+    {
+      "shot": "shot-24",
+      "marker": "documents-ready",
+      "difference": 0.5267901234567901
+    },
+    {
+      "shot": "shot-25",
+      "marker": "signing-review",
+      "difference": 0.8031111111111112
+    },
+    {
+      "shot": "shot-26",
+      "marker": "school-payout-schedule",
+      "difference": 0.43725102880658434
+    },
+    {
+      "shot": "shot-27",
+      "marker": "reminder-created",
+      "difference": 1.281522633744856
+    },
+    {
+      "shot": "shot-28",
+      "marker": "reminder-completed",
+      "difference": 0.3049958847736626
+    },
+    {
+      "shot": "shot-29",
+      "marker": "reminder-reopened",
+      "difference": 0.3876584362139918
+    },
+    {
+      "shot": "shot-30",
+      "marker": "partial-tuition",
+      "difference": 0.9288189300411522
+    },
+    {
+      "shot": "shot-31",
+      "marker": "tuition-topup",
+      "difference": 0.9876748971193416
+    },
+    {
+      "shot": "shot-32",
+      "marker": "tuition-authorization",
+      "difference": 1.203559670781893
+    },
+    {
+      "shot": "shot-33",
+      "marker": "tuition-paid",
+      "difference": 0.6980329218106996
+    },
+    {
+      "shot": "shot-34",
+      "marker": "currency-balances",
+      "difference": 0.4039012345679012
+    },
+    {
+      "shot": "shot-35",
+      "marker": "exchange-review",
+      "difference": 1.6630493827160493
+    },
+    {
+      "shot": "shot-36",
+      "marker": "wrong-password-blocked",
+      "difference": 0.9450781893004114
+    },
+    {
+      "shot": "shot-37",
+      "marker": "exchange-confirmed",
+      "difference": 1.7977119341563785
+    },
+    {
+      "shot": "shot-38",
+      "marker": "remittance-review",
+      "difference": 1.6330123456790124
+    },
+    {
+      "shot": "shot-39",
+      "marker": "remittance-history",
+      "difference": 0.32309876543209876
+    },
+    {
+      "shot": "shot-40",
+      "marker": "remittance-arrival-clock",
+      "difference": 0.46770370370370373
+    },
+    {
+      "shot": "shot-41",
+      "marker": "remittance-delivered",
+      "difference": 0.30077366255144034
+    },
+    {
+      "shot": "shot-42",
+      "marker": "repayment-review",
+      "difference": 0.7512098765432098
+    },
+    {
+      "shot": "shot-43",
+      "marker": "repayment-review",
+      "difference": 0.7189753086419753
+    },
+    {
+      "shot": "shot-44",
+      "marker": "repayment-authorization",
+      "difference": 0.7172098765432099
+    },
+    {
+      "shot": "shot-45",
+      "marker": "final-ledger",
+      "difference": 0.6332592592592593
+    },
+    {
+      "shot": "shot-46",
+      "marker": "payee-review",
+      "difference": 0.2673374485596708
+    },
+    {
+      "shot": "shot-47",
+      "marker": "large-transfer-blocked",
+      "difference": 0.971477366255144
+    },
+    {
+      "shot": "shot-48",
+      "marker": "operations-overview",
+      "difference": 0.4507530864197531
+    },
+    {
+      "shot": "shot-49",
+      "marker": "separation-of-duties",
+      "difference": 0.4709423868312757
+    },
+    {
+      "shot": "shot-50",
+      "marker": "approval-details",
+      "difference": 0.34077366255144037
+    },
+    {
+      "shot": "shot-51",
+      "marker": "approval-confirmation",
+      "difference": 0.2944197530864197
+    },
+    {
+      "shot": "shot-52",
+      "marker": "approval-record",
+      "difference": 0.29265843621399174
+    },
+    {
+      "shot": "shot-53",
+      "marker": "approved-transfer-authorization",
+      "difference": 0.3327777777777778
+    },
+    {
+      "shot": "shot-54",
+      "marker": "approved-transfer-submitted",
+      "difference": 1.738814814814815
+    }
+  ],
+  "resolution": [
+    1920,
+    1080
+  ],
+  "fps": 30,
+  "audio_preservation": {
+    "shot": 37,
+    "old_text": "Only after authorization are five hundred yuan converted into Thai baht.",
+    "new_text": "After password confirmation, five hundred yuan is debited, and the quoted amount in Thai baht is credited after fees.",
+    "voice": "en-US-AvaNeural",
+    "rate": "-10%",
+    "local_tempo": 1.12,
+    "sample_rate": 48000,
+    "timing": {
+      "left": 16.4875,
+      "right": 21.4458125,
+      "trim_start": 0.0,
+      "trim_end": 8.613333333333333,
+      "insert_duration": 8.613333333333333
+    },
+    "replacement_gain_db": 0.9733215630244876,
+    "insert_only_fade_ms": 5,
+    "original_pcm_sha256": "c84e5cddf3958e8fc5a14d0d51c7dec635f69477ebf05fc8b708f5069c7eea2a",
+    "patched_pcm_sha256": "87310b7be7527f08976a5d10d7dac68869e9eee132b4495701d62359911172aa",
+    "original_prefix_sha256": "1897b19721a638f734ecf6bfe868edabda90beae213b0d1fe5ac573d52f7b044",
+    "patched_prefix_sha256": "1897b19721a638f734ecf6bfe868edabda90beae213b0d1fe5ac573d52f7b044",
+    "original_suffix_sha256": "81322086fd3b077a9c7f19adaef3a3360a3904501e802fb1520f5c90b85de3f1",
+    "patched_suffix_sha256": "81322086fd3b077a9c7f19adaef3a3360a3904501e802fb1520f5c90b85de3f1",
+    "outside_replaced_sentence_pcm_identical": true,
+    "original_mp3_and_tts_sha256": {
+      "chapter-01.mp3": "04e55d334ad6a2b01cd62d77abd883d4745589155410e70a894ad793aa690679",
+      "chapter-01.tts.json": "f052ad8d3b2f2df60f5fa03068452a80e61ce23149c2a8703e5954809828ea72",
+      "chapter-02.mp3": "0a7d3a4e85c271d3101c7e7ab5643fab771c4b0070032555189b747c4714614c",
+      "chapter-02.tts.json": "5125f3ae4cefe16294c8d41b8008ee8ab30de652d14735d8935d3c405a78ae62",
+      "chapter-03.mp3": "72b635c87b064ba2b55a93195ddf9cb7e510127342fb30e017bd9d058380de71",
+      "chapter-03.tts.json": "a20db117c0e06139dd25f58357b1cfd283cfa52e02ad6b3e27fe29e543f04f91",
+      "chapter-04.mp3": "27d4a74a5e445fb0d50414ac8ce80329219ac4e40ec9f8f07e78b58a6a8e8802",
+      "chapter-04.tts.json": "5ee54971dcf3d0c3a2cb00d99ec5517ff78ccc817d8a531f014b58b7e09b70e1",
+      "chapter-05.mp3": "e527811b266bf431d924b6dbf28a0c35ed892cff72228f8e62d05f47ce529671",
+      "chapter-05.tts.json": "9b83e5aa64577dee1e625e7c00fa2a9880419d0fc7125efc3ac98eff0d204631",
+      "chapter-06.mp3": "2a51e51b4ea75225b77aa55ed7aa8261e0f85c738ab6ad4dccfb80a8fd0f9bee",
+      "chapter-06.tts.json": "1b1089510f7f31b55655424387a9e8e97cf47470edd2748b0766943e5071ab68",
+      "chapter-07.mp3": "a2bd6d1f7b6b9dbea31f17029f7306e01862c02b17c861b83e9b7dbc9b23de53",
+      "chapter-07.tts.json": "046ea9fc51872687ebccef98576922e8ef019c264b0ffca2f2d8ae1c0ca9ec89",
+      "chapter-08.mp3": "7aa7bd4cb5400bc3c15c0bc8330d73315b8149b157a22916a3277907aa3fe215",
+      "chapter-08.tts.json": "f97e82fdb36c9b9a0b2a07686c42cb1bf4bb3099dd8a899bb90f0e56e4ab9a89"
+    },
+    "seams": [
       {
-        "path": "studyflow-ai/auto_test/test_planning_rules.py",
-        "recorded_sha256": "26c9ddc63626f0f5e46e018383c68825e1fb059fa95b97a83638fb5a995419a9",
-        "current_sha256": "5a7cb6983a65eaab0bf58af65dec9d1f5f8e6d89d07f3a4d888fc9738ac5b6f8"
+        "sample": 791400,
+        "rms_dbfs_10ms": -150.30899869919435,
+        "sample_jump": 0
+      },
+      {
+        "sample": 1204840,
+        "rms_dbfs_10ms": -87.58864770627719,
+        "sample_jump": 0
       }
     ],
-    "explanation": "Only the prompt-version test assertion was updated from planning-2.4 to planning-2.6 after recording; all 21 planning-rule tests then passed. Recorded application code is unchanged."
+    "replacement_mp3_sha256": "015940061a680a72edb73c97da9b59ea3f90d89da280bb1332e2b06541f0a1b3",
+    "replacement_tts_sha256": "0d8fde77abcbd2102c30c4454285422a99120f6026ded4bd32fb21c67c3250a9",
+    "method": "Sample-exact pause splice before local tempo and paragraph mastering; original PCM prefix/suffix unchanged",
+    "unchanged_mastered_paragraph_wav_sha256": {
+      "chapter-01.wav": "8a0db7135accd321545b4e1fe70e8aedc4be8ee41855f37b266864de4d0a3d79",
+      "chapter-02.wav": "f7c19b53e8759da67110f8106c3dfce2604241f5312a12699ef349ff7d94dcdd",
+      "chapter-03.wav": "60cc7f152c5edc35e4cfa20643c30faab3f9326d862a46b42d5c633cad93a3cb",
+      "chapter-04.wav": "33dcd986a4c180a026b54e90bc235e546b9ac97553c279e687344d5ba5d1b221",
+      "chapter-05.wav": "fad2b5897186c88a9230a8ac0e94f6b26bf6a904e7d7e434724e7bff81fb293b",
+      "chapter-07.wav": "b49dd4b424f52f0e07565d257a09399abd9fd4c1a8fd15aaa6ffe325d85fbfd7",
+      "chapter-08.wav": "5c86b219c08def465654251f48b0bf21c188d4e3e73091a72a5a8eafb73290b8"
+    },
+    "prior_production_archive_sha256": "80e26341708846302e76f1f8adb566c17c5e212fbfe64c37bac83eb6f1b55e3d"
+  },
+  "replacement_speech_review": {
+    "unprompted_exact_phrase_match": false,
+    "vocabulary_only_exact_phrase_match": true,
+    "note": "Unprompted currency spelling Tybot; currency-vocabulary pass yields Thai baht. Both transcripts are preserved; no human-listening claim."
+  },
+  "scope": "take-08 media update; accepted live run reused; no new model acceptance or runtime regression claimed",
+  "reproduction_check": {
+    "passed": true,
+    "scope": "Fresh archive extraction and offline prepare, without new TTS or a full MP4 rerender. SRT output uses LF to match delivery.",
+    "identical_sha256": {
+      "continuous-narration.wav": "2e315df8f7c822ac0b114cc44b542b0d250a310ceab16e49d47dcc492d65802e",
+      "chapter-06-patched.wav": "570cbb9eeaf3e4b6e76c271ae52b0c77faffb1016405d39c4ffb3eea83ce2b77",
+      "captions.ass": "93b80d3a0b3e2222f5f5d8e9e19876668d01bd653b86fb28a1ff401efc8adc79",
+      "candidate/StudyFlow_Demo_EN.srt": "1d28efd334fbb222af3683c0751068720d8a859bf0565d16125f133e9a8da4d1"
+    },
+    "shots_with_identical_source_ranges_and_timing": 54,
+    "duration_seconds": 268.1333333333333,
+    "production_archive_sha256": "288bbd9db16bc7145618fae5f5ad5f76be5fc9838b228f6f8a3e1482b6d9fb85"
+  },
+  "production_archive": {
+    "entries": 43,
+    "sha256": "288bbd9db16bc7145618fae5f5ad5f76be5fc9838b228f6f8a3e1482b6d9fb85",
+    "crc_and_entry_hashes_verified": true
+  },
+  "delivery_source_check": {
+    "date": "2026-10-17",
+    "take": "take-08",
+    "recorded_base_commit": "641432a84969c8fbfd27ee5ff93eb6bdeedac39e",
+    "delivery_head_before_media_update": "9b23f7954660bc78d9149d4d4affcd27e8456758",
+    "snapshot_file_count": 990,
+    "all_snapshot_files_match_current_files": true,
+    "runtime_source_unchanged": true,
+    "changed_snapshot_files": [],
+    "post_recording_tracked_changes_in_application_and_tools": [
+      "A\tscripts/check_planning_funnel_live.py",
+      "A\tscripts/check_planning_missing_data_live.py"
+    ],
+    "explanation": "All 990 recorded source files match. The later additions are two evaluation scripts, with no runtime source changes. This update changes media and its documentation only."
   }
 }

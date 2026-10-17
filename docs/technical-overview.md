@@ -204,7 +204,7 @@ API error responses carry a stable `code` and a localized `message` in Chinese o
 
 | Check | Command or evidence | Recorded result and boundary |
 |---|---|---|
-| Current full-flow live acceptance | [October 15 recording and evidence](../evidence/demo-current-live-20261015/README.md) | 19 completed live user turns; 48 recorded live decisions / 55 provider attempts, 10 deterministic replies and one system step; 13 scenario checks; current conversational loan flow and independent operations approval; new 4:25 Ava film with 54 shots. No rule/mock fallback; fixture FX and simulated funds |
+| Current full-flow live acceptance | [October 17 take-08 recording and evidence](../evidence/demo-current-live-20261015/README.md) | 19 completed live user turns; 48 recorded live decisions / 57 provider attempts, 10 deterministic replies and one system step; 13 scenario checks; current conversational loan flow and independent operations approval; 4:28 Ava film with all 54 shots from take-08 and all 82 audit events preserved. No rule/mock fallback; fixture FX and simulated funds |
 | Historical complete gates | `python scripts/run_gates.py` | 17/17 on 2026-10-07 ([evidence/gates](../evidence/gates/summary.txt)); not acceptance of later changes |
 | Simplified planning | [2026-10-13 record](../evidence/short-planning-20261013/verification.json) | 121 focused backend tests, 165 frontend units, 23 rule tests, five offline browser cases; dated results |
 | Current loan/browser journey | [2026-10-14 record](../evidence/short-planning-20261014/browser.json) | English desktop and Chinese phone: signing, school payout and repayment; real local HTTP/PostgreSQL, rule planner, simulated funds |

@@ -2,588 +2,589 @@
   {
     "marker": "opening",
     "offset": 0,
-    "difference": 1.4344197530864198,
+    "difference": 1.3928600823045267,
     "candidates": [
       {
         "offset": 0,
-        "difference": 1.4344197530864198
+        "difference": 1.3928600823045267
       }
     ]
   },
   {
     "marker": "cost-card",
     "offset": 0,
-    "difference": 1.656716049382716,
+    "difference": 1.6694732510288066,
     "candidates": [
       {
         "offset": 0,
-        "difference": 1.656716049382716
+        "difference": 1.6694732510288066
       }
     ]
   },
   {
     "marker": "cost-sources",
     "offset": 0,
-    "difference": 1.4315349794238683,
+    "difference": 1.5458518518518518,
     "candidates": [
       {
         "offset": 0,
-        "difference": 1.4315349794238683
+        "difference": 1.5458518518518518
       }
     ]
   },
   {
     "marker": "cost-living",
     "offset": 0,
-    "difference": 1.5184814814814815,
+    "difference": 1.5123909465020577,
     "candidates": [
       {
         "offset": 0,
-        "difference": 1.5184814814814815
+        "difference": 1.5123909465020577
       }
     ]
   },
   {
     "marker": "cost-essentials",
     "offset": 0,
-    "difference": 1.4607201646090537,
+    "difference": 1.5202921810699588,
     "candidates": [
       {
         "offset": 0,
-        "difference": 1.4607201646090537
+        "difference": 1.5202921810699588
       }
     ]
   },
   {
     "marker": "comparison-card",
     "offset": 0,
-    "difference": 1.407432098765432,
+    "difference": 1.4154320987654323,
     "candidates": [
       {
         "offset": 0,
-        "difference": 1.407432098765432
+        "difference": 1.4154320987654323
       }
     ]
   },
   {
     "marker": "comparison-cny",
     "offset": 0,
-    "difference": 1.443432098765432,
+    "difference": 1.4381399176954732,
     "candidates": [
       {
         "offset": 0,
-        "difference": 1.443432098765432
+        "difference": 1.4381399176954732
       }
     ]
   },
   {
     "marker": "comparison-usd",
     "offset": 0,
-    "difference": 1.4575473251028808,
+    "difference": 1.4368271604938272,
     "candidates": [
       {
         "offset": 0,
-        "difference": 1.4575473251028808
+        "difference": 1.4368271604938272
       }
     ]
   },
   {
     "marker": "missing-ranking",
     "offset": 0,
-    "difference": 1.5060658436213992,
+    "difference": 1.4340452674897117,
     "candidates": [
       {
         "offset": 0,
-        "difference": 1.5060658436213992
+        "difference": 1.4340452674897117
       }
     ]
   },
   {
     "marker": "school-profile",
     "offset": 0,
-    "difference": 1.6282263374485595,
+    "difference": 1.6691975308641975,
     "candidates": [
       {
         "offset": 0,
-        "difference": 1.6282263374485595
+        "difference": 1.6691975308641975
       }
     ]
   },
   {
     "marker": "school-chosen",
     "offset": 0,
-    "difference": 1.5584979423868315,
+    "difference": 1.5360370370370369,
     "candidates": [
       {
         "offset": 0,
-        "difference": 1.5584979423868315
+        "difference": 1.5360370370370369
       }
     ]
   },
   {
     "marker": "loan-card",
     "offset": 0,
-    "difference": 1.3445267489711934,
+    "difference": 1.4377448559670782,
     "candidates": [
       {
         "offset": 0,
-        "difference": 1.3445267489711934
+        "difference": 1.4377448559670782
       }
     ]
   },
   {
     "marker": "loan-alternatives",
     "offset": 0,
-    "difference": 1.3301769547325104,
+    "difference": 1.3324526748971193,
     "candidates": [
       {
         "offset": 0,
-        "difference": 1.3301769547325104
+        "difference": 1.3324526748971193
       }
     ]
   },
   {
     "marker": "manual-loan-controls",
     "offset": 0,
-    "difference": 0.5275432098765432,
+    "difference": 0.5495555555555556,
     "candidates": [
       {
         "offset": 0,
-        "difference": 0.5275432098765432
+        "difference": 0.5495555555555556
       }
     ]
   },
   {
     "marker": "monthly-change",
     "offset": 0,
-    "difference": 1.4012880658436213,
+    "difference": 1.411888888888889,
     "candidates": [
       {
         "offset": 0,
-        "difference": 1.4012880658436213
+        "difference": 1.411888888888889
       }
     ]
   },
   {
     "marker": "interest-only-card",
     "offset": 0,
-    "difference": 1.4241975308641974,
+    "difference": 1.392374485596708,
     "candidates": [
       {
         "offset": 0,
-        "difference": 1.4241975308641974
+        "difference": 1.392374485596708
       }
     ]
   },
   {
     "marker": "interest-change",
     "offset": 0,
-    "difference": 1.428917695473251,
+    "difference": 1.4004197530864195,
     "candidates": [
       {
         "offset": 0,
-        "difference": 1.428917695473251
+        "difference": 1.4004197530864195
       }
     ]
   },
   {
     "marker": "reduced-card",
     "offset": 0,
-    "difference": 1.3930658436213992,
+    "difference": 1.4280493827160494,
     "candidates": [
       {
         "offset": 0,
-        "difference": 1.3930658436213992
+        "difference": 1.4280493827160494
       }
     ]
   },
   {
     "marker": "pause-loan",
     "offset": 0,
-    "difference": 1.6799382716049382,
+    "difference": 1.6446831275720164,
     "candidates": [
       {
         "offset": 0,
-        "difference": 1.6799382716049382
+        "difference": 1.6446831275720164
       }
     ]
   },
   {
     "marker": "resume-loan",
     "offset": 0,
-    "difference": 1.599255144032922,
+    "difference": 1.545238683127572,
     "candidates": [
       {
         "offset": 0,
-        "difference": 1.599255144032922
+        "difference": 1.545238683127572
       }
     ]
   },
   {
     "marker": "application-review",
     "offset": 0,
-    "difference": 0.8266954732510289,
+    "difference": 0.8734814814814814,
     "candidates": [
       {
         "offset": 0,
-        "difference": 0.8266954732510289
+        "difference": 0.8734814814814814
       }
     ]
   },
   {
     "marker": "application-submitted",
     "offset": 0,
-    "difference": 1.3579753086419755,
+    "difference": 1.429679012345679,
     "candidates": [
       {
         "offset": 0,
-        "difference": 1.3579753086419755
+        "difference": 1.429679012345679
       }
     ]
   },
   {
     "marker": "unsigned-bill-coverage",
     "offset": 0,
-    "difference": 1.0202674897119342,
+    "difference": 1.056246913580247,
     "candidates": [
       {
         "offset": 0,
-        "difference": 1.0202674897119342
+        "difference": 1.056246913580247
       }
     ]
   },
   {
     "marker": "documents-ready",
     "offset": 0,
-    "difference": 0.4735514403292181,
+    "difference": 0.4926049382716049,
     "candidates": [
       {
         "offset": 0,
-        "difference": 0.4735514403292181
+        "difference": 0.4926049382716049
       }
     ]
   },
   {
     "marker": "signing-review",
     "offset": 0,
-    "difference": 0.7836337448559672,
+    "difference": 0.7697283950617284,
     "candidates": [
       {
         "offset": 0,
-        "difference": 0.7836337448559672
+        "difference": 0.7697283950617284
       }
     ]
   },
   {
     "marker": "school-payout-schedule",
     "offset": 0,
-    "difference": 0.3854691358024691,
+    "difference": 0.4201152263374486,
     "candidates": [
       {
         "offset": 0,
-        "difference": 0.3854691358024691
+        "difference": 0.4201152263374486
       }
     ]
   },
   {
     "marker": "reminder-created",
     "offset": 0,
-    "difference": 1.373872427983539,
+    "difference": 1.2857572016460905,
     "candidates": [
       {
         "offset": 0,
-        "difference": 1.373872427983539
+        "difference": 1.2857572016460905
       }
     ]
   },
   {
     "marker": "reminder-completed",
     "offset": 0,
-    "difference": 0.27759670781893003,
+    "difference": 0.2797695473251029,
     "candidates": [
       {
         "offset": 0,
-        "difference": 0.27759670781893003
+        "difference": 0.2797695473251029
       }
     ]
   },
   {
     "marker": "reminder-reopened",
     "offset": 0,
-    "difference": 0.4064320987654321,
+    "difference": 0.35648148148148145,
     "candidates": [
       {
         "offset": 0,
-        "difference": 0.4064320987654321
+        "difference": 0.35648148148148145
       }
     ]
   },
   {
     "marker": "partial-tuition",
     "offset": 0,
-    "difference": 0.9277366255144033,
+    "difference": 0.9685843621399176,
     "candidates": [
       {
         "offset": 0,
-        "difference": 0.9277366255144033
+        "difference": 0.9685843621399176
       }
     ]
   },
   {
     "marker": "tuition-topup",
     "offset": 0,
-    "difference": 0.853238683127572,
+    "difference": 0.9803621399176955,
     "candidates": [
       {
         "offset": 0,
-        "difference": 0.853238683127572
+        "difference": 0.9803621399176955
       }
     ]
   },
   {
     "marker": "tuition-authorization",
     "offset": 0,
-    "difference": 1.393502057613169,
+    "difference": 1.1812674897119342,
     "candidates": [
       {
         "offset": 0,
-        "difference": 1.393502057613169
+        "difference": 1.1812674897119342
       }
     ]
   },
   {
     "marker": "tuition-paid",
     "offset": 0,
-    "difference": 0.6681975308641975,
+    "difference": 0.6874814814814815,
     "candidates": [
       {
         "offset": 0,
-        "difference": 0.6681975308641975
+        "difference": 0.6874814814814815
       }
     ]
   },
   {
     "marker": "currency-balances",
     "offset": 0,
-    "difference": 0.30021399176954733,
+    "difference": 0.3905061728395061,
     "candidates": [
       {
         "offset": 0,
-        "difference": 0.30021399176954733
+        "difference": 0.3905061728395061
       }
     ]
   },
   {
     "marker": "exchange-review",
     "offset": 0,
-    "difference": 1.6498559670781894,
+    "difference": 1.633456790123457,
     "candidates": [
       {
         "offset": 0,
-        "difference": 1.6498559670781894
+        "difference": 1.633456790123457
       }
     ]
   },
   {
     "marker": "wrong-password-blocked",
     "offset": 0,
-    "difference": 1.0726707818930041,
+    "difference": 0.9215843621399177,
     "candidates": [
       {
         "offset": 0,
-        "difference": 1.0726707818930041
+        "difference": 0.9215843621399177
       }
     ]
   },
   {
     "marker": "exchange-confirmed",
     "offset": 0,
-    "difference": 2.0566255144032923,
+    "difference": 1.7627942386831277,
     "candidates": [
       {
         "offset": 0,
-        "difference": 2.0566255144032923
+        "difference": 1.7627942386831277
       }
     ]
   },
   {
     "marker": "remittance-review",
     "offset": 0,
-    "difference": 1.6537901234567902,
+    "difference": 1.6670288065843621,
     "candidates": [
       {
         "offset": 0,
-        "difference": 1.6537901234567902
+        "difference": 1.6670288065843621
       }
     ]
   },
   {
     "marker": "remittance-history",
     "offset": 0,
-    "difference": 0.3067078189300411,
+    "difference": 0.3082674897119342,
     "candidates": [
       {
         "offset": 0,
-        "difference": 0.3067078189300411
+        "difference": 0.3082674897119342
       }
     ]
   },
   {
     "marker": "remittance-arrival-clock",
     "offset": 0,
-    "difference": 0.4595185185185185,
+    "difference": 0.4262469135802469,
     "candidates": [
       {
         "offset": 0,
-        "difference": 0.4595185185185185
+        "difference": 0.4262469135802469
       }
     ]
   },
   {
     "marker": "remittance-delivered",
     "offset": 0,
-    "difference": 0.29517695473251027,
+    "difference": 0.3297736625514403,
     "candidates": [
       {
         "offset": 0,
-        "difference": 0.29517695473251027
+        "difference": 0.3297736625514403
       }
     ]
   },
   {
     "marker": "repayment-review",
     "offset": 0,
-    "difference": 0.6753909465020577,
+    "difference": 0.707724279835391,
     "candidates": [
       {
         "offset": 0,
-        "difference": 0.6753909465020577
+        "difference": 0.707724279835391
       }
     ]
   },
   {
     "marker": "repayment-review",
     "offset": 0,
-    "difference": 0.6753909465020577,
+    "difference": 0.707724279835391,
     "candidates": [
       {
         "offset": 0,
-        "difference": 0.6753909465020577
+        "difference": 0.707724279835391
       }
     ]
   },
   {
     "marker": "repayment-authorization",
     "offset": 0,
-    "difference": 0.6968189300411524,
+    "difference": 0.743074074074074,
     "candidates": [
       {
         "offset": 0,
-        "difference": 0.6968189300411524
+        "difference": 0.743074074074074
       }
     ]
   },
   {
     "marker": "final-ledger",
     "offset": 0,
-    "difference": 0.6226090534979424,
+    "difference": 0.6025843621399177,
     "candidates": [
       {
         "offset": 0,
-        "difference": 0.6226090534979424
+        "difference": 0.6025843621399177
       }
     ]
   },
   {
     "marker": "payee-review",
     "offset": 0,
-    "difference": 0.2885020576131687,
+    "difference": 0.26609876543209876,
     "candidates": [
       {
         "offset": 0,
-        "difference": 0.2885020576131687
+        "difference": 0.26609876543209876
       }
     ]
   },
   {
     "marker": "large-transfer-blocked",
     "offset": 0,
-    "difference": 1.0507654320987656,
+    "difference": 0.9533827160493827,
     "candidates": [
       {
         "offset": 0,
-        "difference": 1.0507654320987656
+        "difference": 0.9533827160493827
       }
     ]
   },
   {
     "marker": "operations-overview",
     "offset": 0,
-    "difference": 0.40338271604938275,
+    "difference": 0.3897119341563786,
     "candidates": [
       {
         "offset": 0,
-        "difference": 0.40338271604938275
+        "difference": 0.3897119341563786
       }
     ]
   },
   {
     "marker": "separation-of-duties",
     "offset": 0,
-    "difference": 0.26222633744855967,
+    "difference": 0.26308230452674897,
     "candidates": [
       {
         "offset": 0,
-        "difference": 0.26222633744855967
+        "difference": 0.26308230452674897
       }
     ]
   },
   {
     "marker": "approval-details",
     "offset": 0,
-    "difference": 0.3120288065843621,
+    "difference": 0.30731687242798356,
     "candidates": [
       {
         "offset": 0,
-        "difference": 0.3120288065843621
+        "difference": 0.30731687242798356
       }
     ]
   },
   {
     "marker": "approval-confirmation",
     "offset": 0,
-    "difference": 0.2613991769547325,
+    "difference": 0.26532510288065847,
     "candidates": [
       {
         "offset": 0,
-        "difference": 0.2613991769547325
+        "difference": 0.26532510288065847
       }
     ]
   },
   {
     "marker": "approval-record",
     "offset": 0,
-    "difference": 0.29333744855967075,
+    "difference": 0.2846378600823045,
     "candidates": [
       {
         "offset": 0,
-        "difference": 0.29333744855967075
+        "difference": 0.2846378600823045
       }
     ]
   },
   {
     "marker": "approved-transfer-authorization",
-    "source_time": 536.8,
-    "method": "Manually inspected actual raw frame; no screenshot substitution"
+    "take": "take-08",
+    "source_time": 521.8,
+    "method": "Per-take inspected raw frame; no screenshot substitution"
   },
   {
     "marker": "approved-transfer-submitted",
     "offset": 0,
-    "difference": 1.6666748971193417,
+    "difference": 1.7308847736625514,
     "candidates": [
       {
         "offset": 0,
-        "difference": 1.6666748971193417
+        "difference": 1.7308847736625514
       }
     ]
   }

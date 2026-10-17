@@ -19,7 +19,7 @@ The [shared student-flow contract](docs/student-loan-contract.md) defines interf
 | Checklist item | Where |
 |---|---|
 | Technical documentation (architecture, core algorithms, security design) | [docs/technical-overview.md](docs/technical-overview.md) |
-| Demo video (4:25) | [evidence/demo-current-live-20261015/StudyFlow_Demo_EN.mp4](evidence/demo-current-live-20261015/StudyFlow_Demo_EN.mp4) |
+| Demo video (4:28) | [evidence/demo-current-live-20261015/StudyFlow_Demo_EN.mp4](evidence/demo-current-live-20261015/StudyFlow_Demo_EN.mp4) |
 | Source code, deployment instructions and test cases | This README: [Quick start](#quick-start-docker-no-credentials-needed), [Local development](#local-development), [Testing](#testing) |
 | Security self-assessment (permission tiers, known risks) | [docs/security-self-assessment.md](docs/security-self-assessment.md) |
 | Execution evidence (simulated-account operation logs and demo video) | [evidence/demo-current-live-20261015/README.md](evidence/demo-current-live-20261015/README.md), [evidence index](evidence/README.md) |
@@ -183,7 +183,7 @@ The ten schools in `backend/finance/planning/catalog/` are **sample data**. Each
 
 ## Demo video
 
-[**Watch the English demo (4:25)**](evidence/demo-current-live-20261015/StudyFlow_Demo_EN.mp4)
+[**Watch the English demo (4:28)**](evidence/demo-current-live-20261015/StudyFlow_Demo_EN.mp4)
 
 1080p with English narration and subtitles. Fifty-four shots follow the current journey: cost comparison, conversational loan recommendation, application and signing, reminders, tuition, currency exchange, remittance, repayment and independent operations approval. It was cut from one live browser acceptance run (19 live-AI user turns, 13 scenario checks, no rule or mock fallback). All financial transactions are simulated.
 

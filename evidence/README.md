@@ -14,7 +14,7 @@ On 2026-10-16 the current code passed: Django **632 tests** (2 opt-in recordings
 
 | Folder | What it shows | Mode | Date |
 |---|---|---|---|
-| [`demo-current-live-20261015/`](demo-current-live-20261015/README.md) | **Current 4:25 English demo film** and its live acceptance run (take-07): 19 live-AI user turns, 13 scenario checks, separate payee verifier and approver, uncut recordings and simulated-account operation logs | live LLM / fixture FX / simulated funds | 2026-10-15 |
+| [`demo-current-live-20261015/`](demo-current-live-20261015/README.md) | **Current 4:28 English demo film** and its live acceptance run (take-08): 19 live-AI user turns, 13 scenario checks, separate payee verifier and approver, uncut recordings and complete simulated-account operation logs | live LLM / fixture FX / simulated funds | 2026-10-17 |
 | [`gates/`](gates/) | Full local gate suite (17 checks), recorded run of an earlier commit | mock | 2026-10-07 |
 | [`agent/`](agent/) | Agent task completion and safety: tuning set and frozen holdout | live LLM + mock | 2026-10-07 |
 | [`fx/`](fx/) | Server-side FX quotes from a live reference rate match the pricing formula | live FX | 2026-10-07 |
@@ -28,21 +28,21 @@ On 2026-10-16 the current code passed: Django **632 tests** (2 opt-in recordings
 
 ## 1. Demo film and 06 Execution evidence: `demo-current-live-20261015/`
 
-[Watch the 4:25 English film](demo-current-live-20261015/StudyFlow_Demo_EN.mp4) · [English subtitles](demo-current-live-20261015/StudyFlow_Demo_EN.srt) · [Acceptance details](demo-current-live-20261015/README.md)
+[Watch the 4:28 English film](demo-current-live-20261015/StudyFlow_Demo_EN.mp4) · [English subtitles](demo-current-live-20261015/StudyFlow_Demo_EN.srt) · [Acceptance details](demo-current-live-20261015/README.md)
 
-The film is edited only from the recorded take-07 browser run: real model calls, real local Django/PostgreSQL, simulated money. Only the English narration text was sent to Microsoft's speech service, with the user's explicit authorization.
+The film is edited only from the recorded take-08 browser run: real model calls, real local Django/PostgreSQL, simulated money. Only the English narration text was sent to Microsoft's speech service, with the user's explicit authorization.
 
 **Execution evidence (checklist item 06).** Operation logs of the simulated accounts used in the run:
 
 | File | Contents |
 |---|---|
-| [`take-07/financial-audit.json`](demo-current-live-20261015/take-07/financial-audit.json) | Audit events of the simulated accounts (newest 50 of 82: reminders, exchange, remittance, approval, tuition and repayment) |
-| [`take-07/turns.json`](demo-current-live-20261015/take-07/turns.json) | Every user turn, agent tool call and tool result |
-| [`take-07/model-trace.json`](demo-current-live-20261015/take-07/model-trace.json) | Full trace of the external model calls |
-| [`take-07/approval-records.json`](demo-current-live-20261015/take-07/approval-records.json) | Independent staff approval of the over-limit transfer |
-| [`take-07/loan-after-signing.json`](demo-current-live-20261015/take-07/loan-after-signing.json), [`loan-after-repayment.json`](demo-current-live-20261015/take-07/loan-after-repayment.json) | Simulated loan record after signing and after the repayment |
-| [`take-07/raw/`](demo-current-live-20261015/take-07/raw/) | Uncut student, payee-verifier and approver recordings |
-| [`take-07/coverage.json`](demo-current-live-20261015/take-07/coverage.json), [`accepted-source.zip`](demo-current-live-20261015/take-07/accepted-source.zip), [`source-check.json`](demo-current-live-20261015/take-07/source-check.json) | Scenario assertions, frozen source and post-run hash check |
+| [`take-08/financial-audit.json`](demo-current-live-20261015/take-08/financial-audit.json) | Audit events of the simulated accounts (all 82 events, every API page exported, including reminders, exchange, remittance, approval, tuition and repayment) |
+| [`take-08/turns.json`](demo-current-live-20261015/take-08/turns.json) | Every user turn, agent tool call and tool result |
+| [`take-08/model-trace.json`](demo-current-live-20261015/take-08/model-trace.json) | Full trace of the external model calls |
+| [`take-08/approval-records.json`](demo-current-live-20261015/take-08/approval-records.json) | Independent staff approval of the over-limit transfer |
+| [`take-08/loan-after-signing.json`](demo-current-live-20261015/take-08/loan-after-signing.json), [`loan-after-repayment.json`](demo-current-live-20261015/take-08/loan-after-repayment.json) | Simulated loan record after signing and after the repayment |
+| [`take-08/raw/`](demo-current-live-20261015/take-08/raw/) | Uncut student, payee-verifier and approver recordings |
+| [`take-08/coverage.json`](demo-current-live-20261015/take-08/coverage.json), [`accepted-source.zip`](demo-current-live-20261015/take-08/accepted-source.zip), [`source-check.json`](demo-current-live-20261015/take-08/source-check.json) | Scenario assertions, frozen source and post-run hash check |
 
 Reproduce a new take (needs live-model credentials and PostgreSQL; creates its own test database):
 
