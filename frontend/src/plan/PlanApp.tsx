@@ -154,11 +154,16 @@ export function PlanApp({ preview, initialStage = "plan" }: { account?: string; 
     }).catch(() => undefined);
     return () => { alive = false; };
   }, [client, preview]);
-  // The message list scrolls on its own; keep the newest message in view.
+  // The message list scrolls on its own; keep the newest message in view. An opened conversation starts at its end
+  // at once: a smooth scroll there would still be running, and drag the list back down, once the student scrolls up.
+  const shownId = useRef<string | null>(null);
+  const conversationId = conversation?.id ?? null;
   useEffect(() => {
     const list = listRef.current;
-    if (list) list.scrollTo({ top: list.scrollHeight, behavior: "smooth" });
-  }, [conversation?.turns.length, sending]);
+    const opened = shownId.current !== conversationId;
+    shownId.current = conversationId;
+    if (list) list.scrollTo({ top: list.scrollHeight, behavior: opened ? "instant" : "smooth" });
+  }, [conversationId, conversation?.turns.length, sending]);
 
   async function refresh() {
     if (!conversation) return;

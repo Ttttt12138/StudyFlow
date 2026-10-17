@@ -42,6 +42,8 @@ test('preview tools preserve chat and wallet drafts, history and all student too
   const messageCount = await conversation.locator('.plan-turn').count();
   // Read from the middle of the history, far from both ends, and remember the first message in view.
   const messages = page.locator('.plan-messages');
+  // The history opens at its newest message; scroll up only once it has landed there.
+  await expect.poll(() => messages.evaluate(element => element.scrollHeight - element.clientHeight - element.scrollTop)).toBeLessThan(2);
   const inView = (element, index) => {
     const box = element.getBoundingClientRect();
     const turn = element.querySelectorAll('.plan-turn')[index].getBoundingClientRect();
