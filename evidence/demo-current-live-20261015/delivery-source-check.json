@@ -1,12 +1,460 @@
 {
-  "runtime_source_unchanged": true,
-  "snapshot_file_count": 1022,
-  "post_recording_changes": [
+  "runtime_source_unchanged": false,
+  "recorded_snapshot": "take-07/accepted-source.zip (1022 files, recorded 15 Oct 2026 against the working tree based on 88665b7)",
+  "compared_with": "commit 3a969fb21975b528782018d1b481ea4204b5c597; later commits up to the submitted one change documentation and evidence only",
+  "summary": {
+    "changed": {
+      "runtime": 54,
+      "test": 12,
+      "tooling": 1
+    },
+    "removed": {
+      "runtime": 1,
+      "test": 7,
+      "tooling": 25
+    },
+    "added": {
+      "test": 1
+    },
+    "statement": "The submitted code is not byte-identical to the recorded code. 54 runtime files changed and 1 runtime file was removed after the October 15 recording. The film shows the recorded version; take-07/accepted-source.zip preserves it."
+  },
+  "post_recording_commits": [
     {
-      "path": "studyflow-ai/auto_test/test_planning_rules.py",
-      "recorded_sha256": "26c9ddc63626f0f5e46e018383c68825e1fb059fa95b97a83638fb5a995419a9",
-      "current_sha256": "5a7cb6983a65eaab0bf58af65dec9d1f5f8e6d89d07f3a4d888fc9738ac5b6f8"
+      "commit": "84aef19",
+      "runtime_files": 1,
+      "effect": "planning-2.6 prompt and JSON-tail retry, already active in the recorded working tree; the follow-up planning-rule test expectation changed from planning-2.4 to planning-2.6"
+    },
+    {
+      "commit": "8033323",
+      "runtime_files": 1,
+      "effect": "server refuses wallet, exchange and remittance agent tools in a planning conversation until the loan application is submitted (previously prompt-only); the film uses them only after submission"
+    },
+    {
+      "commit": "ba17964",
+      "runtime_files": 39,
+      "effect": "removes leftovers of retired family support, budgets, enrollment and credit UI (for example the family_support remittance purpose and sponsor link); no screen in the film depends on them"
+    },
+    {
+      "commit": "379935e",
+      "runtime_files": 5,
+      "effect": "translated messages for InputError, VersionConflict and ValueError codes; error codes unchanged"
+    },
+    {
+      "commit": "5bf0331",
+      "runtime_files": 1,
+      "effect": "catalog.py docstring now points to the current product document (comment only)"
+    },
+    {
+      "commit": "3ba0767",
+      "runtime_files": 1,
+      "effect": "interface defaults to English (the film was recorded in English); a chosen language is still remembered"
+    },
+    {
+      "commit": "70bfa00",
+      "runtime_files": 9,
+      "effect": "four catalog source titles gain licence or publisher attribution and the no-affiliation terms; no fee or figure changed"
+    },
+    {
+      "commit": "e8a8442, 6265f5a",
+      "runtime_files": 0,
+      "effect": "recorder now saves every audit page; retired demo scripts and archived evaluation drafts removed"
     }
   ],
-  "explanation": "Only the prompt-version test assertion was updated from planning-2.4 to planning-2.6 after recording; all 21 planning-rule tests then passed. Recorded application code is unchanged."
+  "regression_on_submitted_code": {
+    "date": "2026-10-17",
+    "django": "632 tests OK (2 opt-in live recordings skipped)",
+    "ai_module": "481 passed",
+    "frontend": "81 unit + 54 mocked browser passed",
+    "live_rerun": "take-08: 13/13 scenario checks, 19 live user turns, call modes {deterministic 10, live 48, system 1}, no rule fallback, 82/82 audit events exported",
+    "logs": "regression-20261017/ and take-08/"
+  },
+  "files": {
+    "changed": {
+      "test": [
+        {
+          "path": "backend/auto_test/test_planning.py",
+          "recorded_sha256": "1de806b3efe39781190f0f3ae806183405d541ebc6745b47c18a4e2c5add1112",
+          "submitted_sha256": "85f6aaf46fb1d284664e1c9f73e2874e2fa7442d8dec568e6dd80d2b53fd2251"
+        },
+        {
+          "path": "frontend/auto_test/formal-demo/payments.mjs",
+          "recorded_sha256": "755ea2206bab8efe874fdc3981cd979b39c1999d254c5129740d9c7d4e0f5fe1",
+          "submitted_sha256": "1c6e37177f817303c02f955addb7c631a521d5590fb7fa504ecff8bd9dbe8aa4"
+        },
+        {
+          "path": "frontend/auto_test/formal-demo/planning.mjs",
+          "recorded_sha256": "9c40fdca9c8d97b40435432044d495159d1f7d9433c129fe4d794f5acf04347b",
+          "submitted_sha256": "7365694124b864e2c9a3a71f9bc31f6a59b34948462372f1b2dd9b67026506e2"
+        },
+        {
+          "path": "frontend/auto_test/short-planning.browser.mjs",
+          "recorded_sha256": "26cb118c28258cd8a54688ee63be973005cf8febd3d5450ca0eb6c50be620903",
+          "submitted_sha256": "e883ed706e933382d8722763cb70196486bfe79184def00b9cf51ffccd5a387a"
+        },
+        {
+          "path": "frontend/src/operations/auto_test/workbench.test.ts",
+          "recorded_sha256": "2261fa1bfa33800f40335117ecbd0fcb700eed52185b6e858e33d1bff18b3b04",
+          "submitted_sha256": "ae514c2ea91b6160282cb9cc9d1e2c68ed01483aa153498faf837f8f2a26776b"
+        },
+        {
+          "path": "frontend/src/plan/plan.test.ts",
+          "recorded_sha256": "bbc64283a77576e10f6d240817c9adc9382ca87d7d2e70e29bcaab16a63b838e",
+          "submitted_sha256": "551a1e03d5ee7328330f4375617f9dd579ffd54527e19c4c421244f17c5d4357"
+        },
+        {
+          "path": "frontend/src/workspace/navigation.test.ts",
+          "recorded_sha256": "2ba1daf3b033cc8a35949ef824344cc6e6c41aefa32714502f4d713f35e28ff7",
+          "submitted_sha256": "888eb153a7e5cf7c0e30b62cc2b3f04ce2f1656b1346d1478d03de865ce6a668"
+        },
+        {
+          "path": "frontend/tests/e2e/integration/operations.spec.mjs",
+          "recorded_sha256": "7bfd28bbf56f55be3c6eb5d3794a5245d8a8534d677534e1154b4ca83a104aaa",
+          "submitted_sha256": "484a41ac67c2aec60959f432ec837458bbdd50e12cacb52811501e64c98d9503"
+        },
+        {
+          "path": "frontend/tests/e2e/mocked/agent.spec.mjs",
+          "recorded_sha256": "03c998f6101cfafdbb328054cb018097c0d2680de1f2b3e4d0e2075cbcdca2c0",
+          "submitted_sha256": "d23d1853c060453a2541fc4f139c58d579cbb971b35c806f64c2f66ab2347ddf"
+        },
+        {
+          "path": "frontend/tests/e2e/mocked/operations.spec.mjs",
+          "recorded_sha256": "a5028d5f568f782a44fc013796347b0c123edb2a09c3d8b254343c1cde0b781f",
+          "submitted_sha256": "73e73ce8635f5320f55fc331ab603954052a2cd909a114419f2987093341de16"
+        },
+        {
+          "path": "frontend/tests/operations-support.mjs",
+          "recorded_sha256": "06277055cd3d161353a6addefeb739c7eb31efc12061b0cd41c5c7e500261632",
+          "submitted_sha256": "5f4e4dc50feec0fc6e3f0a5d238217a8eae0613567b022df6ba7f44ca202d34f"
+        },
+        {
+          "path": "studyflow-ai/auto_test/test_planning_rules.py",
+          "recorded_sha256": "26c9ddc63626f0f5e46e018383c68825e1fb059fa95b97a83638fb5a995419a9",
+          "submitted_sha256": "5a7cb6983a65eaab0bf58af65dec9d1f5f8e6d89d07f3a4d888fc9738ac5b6f8"
+        }
+      ],
+      "runtime": [
+        {
+          "path": "backend/finance/agent_runner.py",
+          "recorded_sha256": "5c366582849e26e31480b4ff70a06ce0b453c1a6f2e2776632d24ae2ce56d8e5",
+          "submitted_sha256": "11f2d5d91c3b403d7f009f3dd1eb83c2bd8f235dc29255970739aac679c380e6"
+        },
+        {
+          "path": "backend/finance/agent_tools.py",
+          "recorded_sha256": "db1bc135ae11f1af5c71c167cfd783a116868ff32407a14c2bbfa110539776d3",
+          "submitted_sha256": "fd0ce07795d4488581ada55a8859433f9e36c468fd62147aabf638ca2dde55fd"
+        },
+        {
+          "path": "backend/finance/planning/cards.py",
+          "recorded_sha256": "94ada88802dfc6ff12362d59a89a959d8ac00936b8b1237313d2dd9c9a83a360",
+          "submitted_sha256": "9451442a1096687a138184bad51ca2e78d4f61cca667c4d9d38f59acb42e8d13"
+        },
+        {
+          "path": "backend/finance/planning/catalog.py",
+          "recorded_sha256": "31bb0a665355f60ebfec41cb9798957943a859f5e03414f23ecd9f345ddf4ac5",
+          "submitted_sha256": "8b95fcf27bf08094d7874577a20fede84b18c7c139e4fa7a9d3a6d971183bc72"
+        },
+        {
+          "path": "backend/finance/planning/catalog/mahidol.json",
+          "recorded_sha256": "e86d14f0cc9862947b0a47968ff10acafad71ca2e7c2424fd45f4f7e006ee87d",
+          "submitted_sha256": "cf7a1ef0ea8bd1f4504b1e32ad6c8bb2c6a71500b37badfa310c3dc953925b78"
+        },
+        {
+          "path": "backend/finance/planning/catalog/manchester.json",
+          "recorded_sha256": "831d680e95c82d1ccd8deb08c81257b6562286bf131c114a5a42140fb9daddbb",
+          "submitted_sha256": "0932f2bf067fbb4362f1cbd7c1abe3c574d51d13b2c2179d2b19e79cfc479934"
+        },
+        {
+          "path": "backend/finance/planning/catalog/melbourne.json",
+          "recorded_sha256": "c73c2f2e086dde2f2da9ad91e61de61de935ba5b248b5ff1941be32ef18cd0c4",
+          "submitted_sha256": "ce381940d791e4549cb31549c98b3757fb096820032a6ea3594124880b899e63"
+        },
+        {
+          "path": "backend/finance/planning/catalog/psu-hatyai.json",
+          "recorded_sha256": "485da5be1eb291ea1dd519c06ec4ef8c01c9bf5dbf85cedbab95c197a0687abe",
+          "submitted_sha256": "66f55427fdb75db79f775295e3e60a6b6c53f3d8d5f5afc1985c2e5bcb23dc05"
+        },
+        {
+          "path": "backend/finance/planning/loan_stage.py",
+          "recorded_sha256": "ac352b6efc65950bb185d2dc1381005feb72c3da5815454f24488b9f53609cf6",
+          "submitted_sha256": "f17b8fd6f0364cdb6fdca56dfb6003e958944d652a01f9a625ac40f1cce749e9"
+        },
+        {
+          "path": "backend/finance/planning/services.py",
+          "recorded_sha256": "72f0ab4cd1272d97371c13d474173f5902fff223c3ff30367e5fc704b3de6dd1",
+          "submitted_sha256": "d37d86315a03490b7017f815c9c624995a9bf67300b92c122254cca55c26c90c"
+        },
+        {
+          "path": "backend/locale/en/LC_MESSAGES/django.mo",
+          "recorded_sha256": "a09ef5574b21bf189979f6f0064c6ee78641a652f4f9629a260ba394f8d86468",
+          "submitted_sha256": "e2561ebc978d5b134628e9f76fd462fdebb0ce892269e26cd81c108a17ddc870"
+        },
+        {
+          "path": "backend/locale/en/LC_MESSAGES/django.po",
+          "recorded_sha256": "a66c3f961134afe085d96221989e14502f359a860c841819a60fd3e01233c2f7",
+          "submitted_sha256": "509e2061ad1827f0558eff6f53d64e83f817cb1d99f0890895dfaf5e4b4c4c7d"
+        },
+        {
+          "path": "backend/locale/zh_Hans/LC_MESSAGES/django.mo",
+          "recorded_sha256": "ee1c3478d5c4f09275abe563a197c89dd4350d59b0483a1db861968e01793ec5",
+          "submitted_sha256": "ab27f44a5827ff5a475b4002243d0ceb67c7ac81937be83ea30062f13be2e920"
+        },
+        {
+          "path": "backend/locale/zh_Hans/LC_MESSAGES/django.po",
+          "recorded_sha256": "5daadd64ea961de1493cce960a1608f7a92e98d41ef09a9b52ac9cde97c52078",
+          "submitted_sha256": "b6e897244418e971020550f5ad3525502ed8796214b82795398f7befd65b130b"
+        },
+        {
+          "path": "backend/scripts/i18n_messages.py",
+          "recorded_sha256": "d73ba94ae7194cc94dce3af13e12f914de2a42477793de5e1eb1272c2cf49f1f",
+          "submitted_sha256": "d92120a655ae8968e1126e3f27dcf512d35f82d5eb6a0d54d71f8789a757bcbf"
+        },
+        {
+          "path": "frontend/src/i18n/assessment.ts",
+          "recorded_sha256": "28a96ce526d7178606212ba0fe4ae323b79f11c1f6af5b76d899af56c235f58f",
+          "submitted_sha256": "5cb44bc162148a0213f45613a3d5097d4136796fc232579c71b9d159a04270c1"
+        },
+        {
+          "path": "frontend/src/i18n/index.ts",
+          "recorded_sha256": "6106917bcf60f3641f6c5c498cac40be1baeb45ef34700d2bca6bdf99c63c3ab",
+          "submitted_sha256": "c443e43655ba67de77dc46ebe360c8a7ef9a80e3ac244cf1f1eb51d1fcdfd688"
+        },
+        {
+          "path": "frontend/src/i18n/intro.ts",
+          "recorded_sha256": "1c46f5ca682ed11c23faa3c3d89d73d1afff61921d31bc4f04439f175017acdc",
+          "submitted_sha256": "24ce18b4713244d03a5f0233ff3ec48ea9d2cb727d6579b23ac673611ecdf044"
+        },
+        {
+          "path": "frontend/src/i18n/life.ts",
+          "recorded_sha256": "3dd1b306428dea5dc6c80ed46c4621f04a1a0c24c5c5e2559df4e20dfd86a9d0",
+          "submitted_sha256": "00e3195b6221f1113e3d32c5daeca5b420bdd2ded0af3fe7c13d14eb875558fe"
+        },
+        {
+          "path": "frontend/src/i18n/nav.ts",
+          "recorded_sha256": "e7ea771c63bd40f101619eea6c21a13d078a1f4cdaba34845a8268060132d65a",
+          "submitted_sha256": "45bb32294434e61ae4a94277cc78fd873dcbfc162efaf269784123ef1a6a391f"
+        },
+        {
+          "path": "frontend/src/i18n/operations.ts",
+          "recorded_sha256": "ad8134d8f0abc708e65c73328d458d059b106c6188dbb4c89b5219e43b5cc274",
+          "submitted_sha256": "48e3e0459f3597e8811b02cb870f49887903040a2c2df198758b72a4a84a19a6"
+        },
+        {
+          "path": "frontend/src/i18n/operationsWorkbench.ts",
+          "recorded_sha256": "2eecc78f69d458159db3adae706246e2cbd9e5f31406e5fc44987710a1f463c3",
+          "submitted_sha256": "0e47cd71f957dd85cfb2fbc57e6792a5386440d45d017808c281e2f6196284ca"
+        },
+        {
+          "path": "frontend/src/i18n/panel.ts",
+          "recorded_sha256": "452e07b01d86a10ecf0f792126fcaf17ae033d482993d5c54d0a0b6e1f3c80c2",
+          "submitted_sha256": "4ec0140d0deb8ccd4f44b8141a80c87dabc8e39bacafba85d04642b6d78953c9"
+        },
+        {
+          "path": "frontend/src/i18n/plan.ts",
+          "recorded_sha256": "168837f0d0fc788d595afd72f115d22638c2bdf98fd0bf92d97ef637a30dc51d",
+          "submitted_sha256": "b9359b032e7c03db405b18f09273ca54a6d5abed36463de5aac8a482a9f8b30a"
+        },
+        {
+          "path": "frontend/src/i18n/wallet.ts",
+          "recorded_sha256": "27371c162f5e84db7c87946228a125f9c1c318e593507d4e56c9d68c72709b03",
+          "submitted_sha256": "89a0e157a3be798232402e7453a45b037020f1bd1f320a8c5749828fa183714f"
+        },
+        {
+          "path": "frontend/src/operations/OperationsApp.tsx",
+          "recorded_sha256": "b22f50a4747285010bf768da4c6bd470b2c6f2dd8b6061cad3f0072160edf3c8",
+          "submitted_sha256": "b1488de44a00e3a120c54846ab751711a2895e2d2e060c87a625d7adec88076f"
+        },
+        {
+          "path": "frontend/src/operations/OperationsDetail.tsx",
+          "recorded_sha256": "26cb9b0a7284a19c734c90672a13244a1c957aa20447927af7b097580e883d60",
+          "submitted_sha256": "3b847549c9639dcf8b57ed099ba28ef38961f48c83b287a1e44f0703524615b0"
+        },
+        {
+          "path": "frontend/src/operations/OperationsFacts.tsx",
+          "recorded_sha256": "74d302e364129635b76ef86d78a4a7f476d6d1d9d4b3e43d136b1aea3efeb69b",
+          "submitted_sha256": "2e7730996fff7e73ff3c7c52dd5afe9b3d1ff6f3b7d7670d9006f5453adc15c8"
+        },
+        {
+          "path": "frontend/src/operations/OperationsOverview.tsx",
+          "recorded_sha256": "d5f954e61d1c4f28b991222f58f1d09f80a975471e30127bbabb5a4f99584f7e",
+          "submitted_sha256": "fee45f83d58b57a58939eccbbfa95e654f6dd0a0dba56ff9607aa6f6a0715bbd"
+        },
+        {
+          "path": "frontend/src/operations/operationOptions.ts",
+          "recorded_sha256": "18a4432a9b850e765ab5994632d374c024f32a85446f1e335811283027aed839",
+          "submitted_sha256": "0e1d7cd53e03d92bd9fe9e5512796d91e6e6a3ab7361496fae81fd2e00a61149"
+        },
+        {
+          "path": "frontend/src/operations/operations.css",
+          "recorded_sha256": "dbaa732bb73e32a6fa405c3f52be5471d7c21090f00f2f7e338ff93edd2605ee",
+          "submitted_sha256": "e281ba8570ddbe4a5b44fb39df1462552dbfe0cfe33df4fac0e2dadd1fc53640"
+        },
+        {
+          "path": "frontend/src/operations/presenters.ts",
+          "recorded_sha256": "8f3125fa0751e399834d45068a9d387277b64e3f5f534a2ebc2c9d5c2e2160dd",
+          "submitted_sha256": "6df65bd289f989857d82a13b2fd3e997d550e6f17eaf300919b01a5e6bbec7ff"
+        },
+        {
+          "path": "frontend/src/operations/previewAdapter.ts",
+          "recorded_sha256": "6caf773d4f541422b8971673457275fe2264130088def7a21b1e893678dfeaec",
+          "submitted_sha256": "f19c7e9f2cf34907e80857fc0cb82f1c9eca376d3fdaa7915d1bd3cd27d610a4"
+        },
+        {
+          "path": "frontend/src/operations/previewWorkbench.ts",
+          "recorded_sha256": "cbf57f357e705696d89dff045501fad145701303162eac866772137c141da8eb",
+          "submitted_sha256": "a90d0ff7e5851796fe385a8ae6960f0ec625082cf935c58d425202bae119f34b"
+        },
+        {
+          "path": "frontend/src/operations/types.ts",
+          "recorded_sha256": "92823afe725a49a1ad7ad1b0bf1c779d81546becf36527716e0e41382b26ea37",
+          "submitted_sha256": "49109fa82a6a0cca7089c087da1aaabf10c954117465c2d127117dd9798df0cb"
+        },
+        {
+          "path": "frontend/src/operations/useOperationsCommands.ts",
+          "recorded_sha256": "388e2fc4cd35610b834254f92c55abc0e481f31ff121eb2c85109410009efcaf",
+          "submitted_sha256": "1fd4bdffbdb73dd8c561f75217a7d4ab666892bbced92a77992f67d2c9a43896"
+        },
+        {
+          "path": "frontend/src/operations/useWorkbench.ts",
+          "recorded_sha256": "0253ddceafdc3eb16a6257795c38b26b73480d1587515e3e24fbc8dac1b8dce3",
+          "submitted_sha256": "72ffec7cd1450cf5cf84284662ec76216ff41aa835bc97727e2613a8e25abbcd"
+        },
+        {
+          "path": "frontend/src/operations/workbench.ts",
+          "recorded_sha256": "cc67191ecd58cea3bef4ac23e7b2e7ab33dead26427efd69ffa990b5db81349e",
+          "submitted_sha256": "030c789cff43559c2f94f84c71fef94e6871f3b55f431c7efc810ac5286ffb96"
+        },
+        {
+          "path": "frontend/src/plan/CardDetail.tsx",
+          "recorded_sha256": "23108ce81011ad143595dec02eb4e1608b79df446c2d2476f80a02aa2bca5217",
+          "submitted_sha256": "9417d780641face6f75a3a6ad95e000cf0a773c28503cbdf4232037516049675"
+        },
+        {
+          "path": "frontend/src/plan/CardSummary.tsx",
+          "recorded_sha256": "86aa05e7ae9d68ce38151869795c4c676c6a164a577391c70bf5b133385b2731",
+          "submitted_sha256": "12b0f1fc7a07549e4c306859136d2732e38ca95d00640b86fedad8530e44e85b"
+        },
+        {
+          "path": "frontend/src/plan/cards.tsx",
+          "recorded_sha256": "63f51bcaaad5e0ec094716f8e0c43f7a15543b6bdade1501ec42dccdff247b32",
+          "submitted_sha256": "7414ac4387e01f374b7eed338241e0c451b42c322a2025f918a6de4aadd92d6d"
+        },
+        {
+          "path": "frontend/src/plan/life.css",
+          "recorded_sha256": "a2d6ecdaac26a48b2c6ff075d7f577976d0e832a4948dd3e00ba38648f74cde7",
+          "submitted_sha256": "32f01e5bdc26bdbadaf68f9d6b0f4e5536a2cdb1ecdbe89e926b12709ed5e366"
+        },
+        {
+          "path": "frontend/src/plan/plan.css",
+          "recorded_sha256": "2a3424a4cc2ea0ea590471e74a318b2e2eeb06943e6d8ed746ae925ea1df51b0",
+          "submitted_sha256": "a530e074949e5f1637a4946e375440748d3ae7bcc0ec0ac3d69cc75487a51b09"
+        },
+        {
+          "path": "frontend/src/plan/preview-data/plan.en.json",
+          "recorded_sha256": "a4136484025f09226b01eccb47c9a749054a1980271003c57a3ffca87d663cb2",
+          "submitted_sha256": "24d092d6afd954c5c76ff827c7967b0f1f18d73b3a9d83d984a4d80a9bf5f9db"
+        },
+        {
+          "path": "frontend/src/plan/preview-data/plan.zh.json",
+          "recorded_sha256": "99f3a0ffe28dacdae3a6b3fd8deac546ad6603f06d8c93e74be0e23680cdc783",
+          "submitted_sha256": "414e290b2c6ae39e6f67b9d8472f7340129e887889847feb35ada5c10fc5e583"
+        },
+        {
+          "path": "frontend/src/plan/preview-data/prepare.en.json",
+          "recorded_sha256": "18b40f004eab814343de6745131303ba27bcb254c5a681fcc7390253fb0e054d",
+          "submitted_sha256": "1d3cdec3290c8035a4f108203d2652012e562aa860a33bc2553c6e73c0143c43"
+        },
+        {
+          "path": "frontend/src/plan/preview-data/prepare.zh.json",
+          "recorded_sha256": "6bb42c469880eb8ba79287828f0107c7afc0afff2c54dfb717811883fc0302e2",
+          "submitted_sha256": "e254cd10f340440e5386274889d16ef842ceb6e67dd1abdffffcdec30cfec7f8"
+        },
+        {
+          "path": "frontend/src/plan/price.css",
+          "recorded_sha256": "7e0930b5ca7a9f22984ac1c4475a312b7e9ce43fd0ab328299546690ad83a7b2",
+          "submitted_sha256": "a03588e0c6594eaebfbc8069664675f3ffa3067d059f63dcec26dd30f3d68112"
+        },
+        {
+          "path": "frontend/src/plan/types.ts",
+          "recorded_sha256": "66c06d08744a6cb7056cfb8dbe36ac7ef91db5034e25c2306102298fefa4503d",
+          "submitted_sha256": "56ac10df12a404961aa2b0681a5b64f04835d5498322eec5a8b2704912f3d1b1"
+        },
+        {
+          "path": "frontend/src/plan/verdict.ts",
+          "recorded_sha256": "4aaf48945e0656314af32df1a65e177a41ecf06ac0909084fbf64bb32d632f5f",
+          "submitted_sha256": "9525f1d57fd876c6d9dc95ac3b5c3eef592b84984ec58b6a08fd005a458fafa5"
+        },
+        {
+          "path": "frontend/src/wallet/WalletApp.tsx",
+          "recorded_sha256": "1af8dc2a39aa9828c080ca8794b8b3e84b9a88ee84e9895b0ccf9b47d1a4535a",
+          "submitted_sha256": "4ae26fe93922fd336f005160726f0bb68eeee2a6d9496d1edcff4bd31d769788"
+        },
+        {
+          "path": "frontend/src/wallet/client.ts",
+          "recorded_sha256": "320a5c73a740c062893089c5cf4898f705764cff1c50c65b0c858a29dfa17ff1",
+          "submitted_sha256": "f37731d1401e965ca1038eee16f78a72bfccdc7b5fa54a1d7056b8b3b8133bd6"
+        },
+        {
+          "path": "frontend/src/workspace/panel.css",
+          "recorded_sha256": "c087525dace52f51ae35a63068df3e8560ef325df7f87f850a8b50c7aacf80c5",
+          "submitted_sha256": "78d487c620fcbf63d4d63f58ec18c761617962705df2d424ed1faecb4deb41ae"
+        },
+        {
+          "path": "studyflow-ai/src/studyflow_ai/agent/planner.py",
+          "recorded_sha256": "6afce1934e978474df938ede2f22cd0e069ce36be21a60b0f3358c3e96c9dad9",
+          "submitted_sha256": "7747f643a2092e90a8e28564d1759b5232a16c6585b01d5bebb441eeab234c59"
+        }
+      ],
+      "tooling": [
+        {
+          "path": "frontend/playwright.config.mjs",
+          "recorded_sha256": "9ea21b776f60b84b133b084fac656dc4f664c3da0096dcdfdf9ff4f05edc5a2c",
+          "submitted_sha256": "3941e149d2ad165f9d1cd935c09d3083c5b537e66338d7a8b40167ba135aa723"
+        }
+      ]
+    },
+    "removed": {
+      "test": [
+        "backend/auto_test/test_full_demo_browser.py",
+        "backend/auto_test/test_study_life_browser.py",
+        "frontend/auto_test/full-demo-family.mjs",
+        "frontend/auto_test/full-demo-money.mjs",
+        "frontend/auto_test/full-demo.mjs",
+        "frontend/auto_test/study-life.browser.mjs",
+        "frontend/tests/e2e/demo/rehearsal.spec.mjs"
+      ],
+      "runtime": [
+        "frontend/src/operations/sponsorLink.ts"
+      ],
+      "tooling": [
+        "scripts/align_full_demo.py",
+        "scripts/archive_verification.py",
+        "scripts/build_demo_video.py",
+        "scripts/check_demo_planner_live.py",
+        "scripts/run_full_demo.py",
+        "scripts/summarize_v5_regression.py",
+        "scripts/v5_prior_regressions.py",
+        "scripts/verify_compose_persistence.py",
+        "studyflow-ai/evals/archive/copilot-holdout-v5-draft-1/manifest.json",
+        "studyflow-ai/evals/archive/copilot-holdout-v5-draft-1/model-configuration.proposed.json",
+        "studyflow-ai/evals/archive/copilot-holdout-v5-draft-1/overlap-audit.json",
+        "studyflow-ai/evals/archive/copilot-holdout-v5-draft-1/review-packet.html",
+        "studyflow-ai/evals/archive/copilot-holdout-v5-draft-1/review.pending.json",
+        "studyflow-ai/evals/archive/copilot-holdout-v5-draft-2/manifest.json",
+        "studyflow-ai/evals/archive/copilot-holdout-v5-draft-2/model-configuration.proposed.json",
+        "studyflow-ai/evals/archive/copilot-holdout-v5-draft-2/overlap-audit.json",
+        "studyflow-ai/evals/archive/copilot-holdout-v5-draft-2/overlap-review.html",
+        "studyflow-ai/evals/archive/copilot-holdout-v5-draft-2/review-packet.html",
+        "studyflow-ai/evals/archive/copilot-holdout-v5-draft-2/review.pending.json",
+        "studyflow-ai/evals/archive/copilot-holdout-v5-draft-3-before-approval/manifest.json",
+        "studyflow-ai/evals/archive/copilot-holdout-v5-draft-3-before-approval/model-configuration.proposed.json",
+        "studyflow-ai/evals/archive/copilot-holdout-v5-draft-3-before-approval/overlap-audit.json",
+        "studyflow-ai/evals/archive/copilot-holdout-v5-draft-3-before-approval/overlap-review.html",
+        "studyflow-ai/evals/archive/copilot-holdout-v5-draft-3-before-approval/review-packet.html",
+        "studyflow-ai/evals/archive/copilot-holdout-v5-draft-3-before-approval/review.pending.json"
+      ]
+    },
+    "added": [
+      "frontend/src/i18n/index.test.ts"
+    ]
+  }
 }

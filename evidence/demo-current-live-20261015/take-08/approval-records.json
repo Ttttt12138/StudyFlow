@@ -1,0 +1,27 @@
+{
+  "count": 1,
+  "next": null,
+  "previous": null,
+  "results": [
+    {
+      "id": "50d289b8-7141-488c-b5f4-a3bc4ba0e33c",
+      "type": "approvalrequest",
+      "created_at": "2026-10-17T06:08:41.029Z",
+      "action": "remittance.submit",
+      "target_id": "df605776-f096-461b-bed6-8fbc34b9a8eb",
+      "amount": "15000.00",
+      "currency": "CNY",
+      "reason": "Study housing payment: please verify payee and purpose.",
+      "status": "USED",
+      "requested_by": 1,
+      "decided_by": 3,
+      "decided_at": "2026-10-17T06:09:02.092Z",
+      "decision_note": "Payee, housing purpose and amount checked.",
+      "expires_at": "2026-10-18T06:08:41.029Z",
+      "used_at": "2026-10-17T06:09:06.915Z",
+      "version": 3,
+      "owner": 1,
+      "simulated_after_seconds": 0
+    }
+  ]
+}

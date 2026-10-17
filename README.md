@@ -122,7 +122,7 @@ One command runs all 17 gates: Django and C tests, migrations, OpenAPI validatio
 studyFlow/Scripts/python.exe scripts/run_gates.py
 ```
 
-Current suites (2026-10-16), all passing: **Django 632 tests** (2 opt-in live recordings skipped), **C package 481 tests**, **frontend 81 unit and 54 mocked browser tests**. An earlier full 17-gate run is logged in [evidence/gates/](evidence/gates/). CI runs the same suites on every push ([django.yml](.github/workflows/django.yml), [c-module.yml](.github/workflows/c-module.yml)), plus the frontend build and browser suites ([frontend.yml](.github/workflows/frontend.yml)).
+Current suites (re-run 2026-10-17 on the submitted code, logs in [evidence/demo-current-live-20261015/regression-20261017](evidence/demo-current-live-20261015/regression-20261017/)), all passing: **Django 632 tests** (2 opt-in live recordings skipped), **C package 481 tests**, **frontend 81 unit and 54 mocked browser tests**. An earlier full 17-gate run is logged in [evidence/gates/](evidence/gates/). CI runs the same suites on every push ([django.yml](.github/workflows/django.yml), [c-module.yml](.github/workflows/c-module.yml)), plus the frontend build and browser suites ([frontend.yml](.github/workflows/frontend.yml)).
 
 | Area | Test files | Test functions* | What they prove |
 |---|---|---:|---|

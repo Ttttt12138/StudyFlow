@@ -1,0 +1,13 @@
+{
+  "date": "2026-10-17",
+  "runtime_code": "identical to commit 3a969fb21975b528782018d1b481ea4204b5c597 (take-08/baseline.json records 641432a, which adds only a documentation change)",
+  "database": "local PostgreSQL 17 (docker compose service db), disposable test databases",
+  "suites": [
+    {"name": "Django backend", "command": "cd backend && python -B -X utf8 manage.py test finance auto_test --noinput", "result": "632 tests, OK (2 opt-in live recordings skipped)", "log": "django-tests.txt"},
+    {"name": "C package (AI module)", "command": "cd studyflow-ai && python -B -X utf8 -m pytest -q -p no:cacheprovider --basetemp=../output/pytest-ai-20261017", "result": "481 passed, 0 failed (quiet mode; one progress dot per test)", "log": "ai-module-tests.txt"},
+    {"name": "Frontend unit", "command": "cd frontend && npx vitest run", "result": "81 passed in 13 files", "log": "frontend-unit-tests.txt"},
+    {"name": "Frontend mocked browser", "command": "cd frontend && npx playwright test --project=mocked --reporter=list", "result": "54 passed", "log": "frontend-browser-tests.txt"},
+    {"name": "Live formal journey re-run", "command": "python -B -X utf8 scripts/run_formal_demo.py take-08", "result": "1 test OK in 561.6 s; 13/13 scenario checks, 19 live user turns, no page errors, source hash unchanged", "log": "../take-08/"}
+  ],
+  "note": "An earlier AI-module attempt in this session failed with 28 setup errors because pytest could not write to the user temp directory (PermissionError); it passed unchanged once --basetemp pointed inside the project."
+}

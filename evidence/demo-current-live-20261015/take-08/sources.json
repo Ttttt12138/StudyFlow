@@ -1,0 +1,17 @@
+[
+  {
+    "role": "student",
+    "path": "raw/student/page@e1da7029e1af9e25b56d330b1278e5ed.webm",
+    "timing": "performance timestamp before page creation; screenshot matching refines the video offset"
+  },
+  {
+    "role": "operator",
+    "path": "raw/operator/page@f87a4b48e043ec3b3c6dd324527ef61e.webm",
+    "timing": "performance timestamp before page creation; screenshot matching refines the video offset"
+  },
+  {
+    "role": "approver",
+    "path": "raw/approver/page@3d4b8ca1ed8c08dbddcc67a057fea344.webm",
+    "timing": "performance timestamp before page creation; screenshot matching refines the video offset"
+  }
+]

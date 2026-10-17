@@ -1,0 +1,979 @@
+{
+  "count": 82,
+  "next": null,
+  "previous": null,
+  "results": [
+    {
+      "id": "dbba5d9f-34e5-485e-aa5d-d0fe87405b04",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:09:27.712Z",
+      "action": "loan.REPAID",
+      "entity_id": "2baa0bd0-063c-45da-9aad-620a3b1300ad",
+      "details": {
+        "number": 1,
+        "actor_id": 1
+      }
+    },
+    {
+      "id": "b313b005-3dda-46b7-8107-102d4b247168",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:09:27.708Z",
+      "action": "state.loan_repaid",
+      "entity_id": "6b181d35-03de-41de-85be-ab3d0e7a8eb8",
+      "details": {
+        "version": 11,
+        "actor_id": 1
+      }
+    },
+    {
+      "id": "63a4941d-dd76-4f6a-b41e-789187bfce0f",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:09:27.619Z",
+      "action": "auth.step_up_granted",
+      "entity_id": "10e70c24-c49e-43e6-9ed0-e2f1d2afa49a",
+      "details": {
+        "action": "loan.repay",
+        "amount": "1309.43",
+        "actor_id": 1,
+        "currency": "THB",
+        "target_id": "2baa0bd0-063c-45da-9aad-620a3b1300ad"
+      }
+    },
+    {
+      "id": "1479a48c-fd8d-4809-a32b-92d537079167",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:09:15.669Z",
+      "action": "wallet.top_up",
+      "entity_id": "eb7f3867-862a-4d49-a008-33db0c3e5286",
+      "details": {
+        "amount": "10000.00",
+        "actor_id": 1,
+        "currency": "THB",
+        "is_simulated": true
+      }
+    },
+    {
+      "id": "2d320038-84fc-4eee-bae7-c938aef82c62",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:09:15.668Z",
+      "action": "state.wallet_top_up",
+      "entity_id": "8d0ea095-adf1-4c59-8c02-ffd65cd61602",
+      "details": {
+        "version": 10,
+        "actor_id": 1
+      }
+    },
+    {
+      "id": "c16ada5d-86e3-40b8-90e6-88dc9ed77ead",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:09:15.390Z",
+      "action": "remittance.delivered",
+      "entity_id": "df605776-f096-461b-bed6-8fbc34b9a8eb",
+      "details": {
+        "to": "DELIVERED",
+        "from": "SUBMITTED",
+        "actor_id": 1,
+        "is_simulated": true
+      }
+    },
+    {
+      "id": "d40170a0-e757-4090-a1dd-2b1c03b18f41",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:09:15.361Z",
+      "action": "demo.clock_advanced",
+      "entity_id": "03844a60-e193-4ffa-955a-d72d98ef4669",
+      "details": {
+        "actor_id": 1
+      }
+    },
+    {
+      "id": "c0b85f31-a844-4f79-aeb9-52e3a454ff05",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:09:06.913Z",
+      "action": "agent.action_confirmed",
+      "entity_id": "fd95b512-a536-4c88-8d8c-cf41b1056971",
+      "details": {
+        "action": "remittance.submit",
+        "actor_id": 1
+      }
+    },
+    {
+      "id": "a03a29bb-1e70-4dcc-be26-965169d6f18c",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:09:06.910Z",
+      "action": "remittance.submit",
+      "entity_id": "df605776-f096-461b-bed6-8fbc34b9a8eb",
+      "details": {
+        "to": "SUBMITTED",
+        "from": "CREATED",
+        "actor_id": 1,
+        "is_simulated": true
+      }
+    },
+    {
+      "id": "bb8cdf97-38c0-4039-b084-646c0637d6fc",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:09:06.822Z",
+      "action": "auth.step_up_granted",
+      "entity_id": "dac639db-9016-4c66-8615-841e19a325ab",
+      "details": {
+        "action": "remittance.submit",
+        "amount": "15000.00",
+        "actor_id": 1,
+        "currency": "CNY",
+        "target_id": "df605776-f096-461b-bed6-8fbc34b9a8eb"
+      }
+    },
+    {
+      "id": "68dc9002-f3ac-43f8-9c66-209ef35e9259",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:09:02.094Z",
+      "action": "approval.approved",
+      "entity_id": "50d289b8-7141-488c-b5f4-a3bc4ba0e33c",
+      "details": {
+        "action": "remittance.submit",
+        "actor_id": 3,
+        "target_id": "df605776-f096-461b-bed6-8fbc34b9a8eb"
+      }
+    },
+    {
+      "id": "1969b5f9-83a6-4a63-80d7-ab982dca0061",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:08:41.031Z",
+      "action": "approval.requested",
+      "entity_id": "50d289b8-7141-488c-b5f4-a3bc4ba0e33c",
+      "details": {
+        "action": "remittance.submit",
+        "amount": "15000.00",
+        "actor_id": 1,
+        "currency": "CNY",
+        "target_id": "df605776-f096-461b-bed6-8fbc34b9a8eb"
+      }
+    },
+    {
+      "id": "b12ad5bc-d059-44da-9378-45b33d2f5f95",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:08:36.250Z",
+      "action": "auth.step_up_granted",
+      "entity_id": "07dbdd06-b3b1-46f5-9f6e-504cb17573c6",
+      "details": {
+        "action": "remittance.submit",
+        "amount": "15000.00",
+        "actor_id": 1,
+        "currency": "CNY",
+        "target_id": "df605776-f096-461b-bed6-8fbc34b9a8eb"
+      }
+    },
+    {
+      "id": "a85946dd-92c2-410e-a937-0ec3a82b5476",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:08:21.596Z",
+      "action": "remittance.created",
+      "entity_id": "df605776-f096-461b-bed6-8fbc34b9a8eb",
+      "details": {
+        "actor_id": 1,
+        "quote_id": "32ae8422-391c-4742-9aef-55702caff8a9",
+        "is_simulated": true
+      }
+    },
+    {
+      "id": "e85490c9-5858-4359-89e1-de77325438ab",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:08:14.317Z",
+      "action": "fx.live_quote_created",
+      "entity_id": "32ae8422-391c-4742-9aef-55702caff8a9",
+      "details": {
+        "source": "fixture",
+        "actor_id": 1,
+        "corridor": "cny-thb-economy",
+        "mid_rate": "4.6000000000",
+        "rate_date": "2026-10-17",
+        "send_amount": "15000.00"
+      }
+    },
+    {
+      "id": "c241b6bb-c36b-4588-bda4-2f0d051a842c",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:08:11.134Z",
+      "action": "fx.live_quote_created",
+      "entity_id": "801536df-54b7-4c9b-94db-ff913c04b5d3",
+      "details": {
+        "source": "fixture",
+        "actor_id": 1,
+        "corridor": "cny-thb-standard",
+        "mid_rate": "4.6000000000",
+        "rate_date": "2026-10-17",
+        "send_amount": "15000.00"
+      }
+    },
+    {
+      "id": "4cab9b43-8e1a-4148-acc4-e2fbd9aa164f",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:08:07.807Z",
+      "action": "fx.live_quote_created",
+      "entity_id": "8b10a18a-3a1f-4337-b29b-dcd157511a51",
+      "details": {
+        "source": "fixture",
+        "actor_id": 1,
+        "corridor": "cny-thb-express",
+        "mid_rate": "4.6000000000",
+        "rate_date": "2026-10-17",
+        "send_amount": "15000.00"
+      }
+    },
+    {
+      "id": "6807e522-9bea-4b78-b68a-d8e2104e0ae0",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:07:50.658Z",
+      "action": "beneficiary.mock_verification",
+      "entity_id": "50cad688-01bf-41d2-80e2-375baaa4486f",
+      "details": {
+        "actor_id": 2
+      }
+    },
+    {
+      "id": "d5528490-167b-4a14-873e-906c99b05f59",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:07:45.618Z",
+      "action": "beneficiary.created",
+      "entity_id": "50cad688-01bf-41d2-80e2-375baaa4486f",
+      "details": {
+        "actor_id": 1
+      }
+    },
+    {
+      "id": "30404113-9cd6-4b6d-ad12-3d0812c44223",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:07:39.493Z",
+      "action": "remittance.delivered",
+      "entity_id": "d5d16889-7e7f-4856-8d53-d97968cfebf1",
+      "details": {
+        "to": "DELIVERED",
+        "from": "SUBMITTED",
+        "actor_id": 1,
+        "is_simulated": true
+      }
+    },
+    {
+      "id": "bb23b2c6-b8c8-4520-a8f1-81d508136e2c",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:07:39.487Z",
+      "action": "state.remittance_credit",
+      "entity_id": "a681affa-5284-44da-8622-333ce8b9628c",
+      "details": {
+        "version": 9,
+        "actor_id": 1
+      }
+    },
+    {
+      "id": "9c75297e-7780-42ab-9c85-0bf0b4b5b95d",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:07:39.459Z",
+      "action": "demo.clock_advanced",
+      "entity_id": "03844a60-e193-4ffa-955a-d72d98ef4669",
+      "details": {
+        "actor_id": 1
+      }
+    },
+    {
+      "id": "7f37c370-2a4a-459c-b5e7-4300ae221254",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:07:30.460Z",
+      "action": "agent.action_confirmed",
+      "entity_id": "0d4414a1-2234-4832-b176-1cdb38db9a4f",
+      "details": {
+        "action": "remittance.submit",
+        "actor_id": 1
+      }
+    },
+    {
+      "id": "865a7dd5-24f3-436c-ab87-4c68aaaab45f",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:07:30.456Z",
+      "action": "remittance.submit",
+      "entity_id": "d5d16889-7e7f-4856-8d53-d97968cfebf1",
+      "details": {
+        "to": "SUBMITTED",
+        "from": "CREATED",
+        "actor_id": 1,
+        "is_simulated": true
+      }
+    },
+    {
+      "id": "45b60e0d-8a0d-411f-9d93-58c4cec55e4f",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:07:30.372Z",
+      "action": "auth.step_up_granted",
+      "entity_id": "d3e1b9a4-0f0f-48d0-82cd-e3173a2844fe",
+      "details": {
+        "action": "remittance.submit",
+        "amount": "1000.00",
+        "actor_id": 1,
+        "currency": "CNY",
+        "target_id": "d5d16889-7e7f-4856-8d53-d97968cfebf1"
+      }
+    },
+    {
+      "id": "65fd7991-5ffd-4bef-94c6-8e756b6a0e50",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:07:11.876Z",
+      "action": "remittance.created",
+      "entity_id": "d5d16889-7e7f-4856-8d53-d97968cfebf1",
+      "details": {
+        "actor_id": 1,
+        "quote_id": "82de688f-359a-4d91-bebe-14220d76f693",
+        "is_simulated": true
+      }
+    },
+    {
+      "id": "11360f55-ec6b-4c92-bd07-8bc889c3cab5",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:07:05.404Z",
+      "action": "fx.live_quote_created",
+      "entity_id": "82de688f-359a-4d91-bebe-14220d76f693",
+      "details": {
+        "source": "fixture",
+        "actor_id": 1,
+        "corridor": "cny-thb-economy",
+        "mid_rate": "4.6000000000",
+        "rate_date": "2026-10-17",
+        "send_amount": "1000.00"
+      }
+    },
+    {
+      "id": "da107fd6-549d-442a-9c64-05c5625c0677",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:07:02.639Z",
+      "action": "fx.live_quote_created",
+      "entity_id": "75396eb6-4c67-48f6-b939-6217cdfd3b52",
+      "details": {
+        "source": "fixture",
+        "actor_id": 1,
+        "corridor": "cny-thb-standard",
+        "mid_rate": "4.6000000000",
+        "rate_date": "2026-10-17",
+        "send_amount": "1000.00"
+      }
+    },
+    {
+      "id": "40cceec4-3d9d-4f2b-b0cb-dd31e2f19924",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:06:59.767Z",
+      "action": "fx.live_quote_created",
+      "entity_id": "45c9d9d7-831d-4aef-b0a3-892266b33006",
+      "details": {
+        "source": "fixture",
+        "actor_id": 1,
+        "corridor": "cny-thb-express",
+        "mid_rate": "4.6000000000",
+        "rate_date": "2026-10-17",
+        "send_amount": "1000.00"
+      }
+    },
+    {
+      "id": "be0f4b17-0bfe-4cc8-b27c-5096f803851d",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:06:42.879Z",
+      "action": "agent.action_confirmed",
+      "entity_id": "c74a482b-bc01-4796-a7af-4788a6378931",
+      "details": {
+        "action": "wallet.convert",
+        "actor_id": 1
+      }
+    },
+    {
+      "id": "f39fd989-40b9-4a4f-952d-3b477bd53566",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:06:42.877Z",
+      "action": "wallet.conversion_settled",
+      "entity_id": "1b57179d-ab91-4632-b95d-ed2fb1562e41",
+      "details": {
+        "actor_id": 1,
+        "quote_id": "a9ec5804-548b-4dc3-a046-0e8ba59b3c70",
+        "is_simulated": true,
+        "source_amount": "500.00",
+        "target_amount": "2290.81",
+        "source_currency": "CNY",
+        "target_currency": "THB"
+      }
+    },
+    {
+      "id": "aff619f5-6594-473d-82bc-2bc30f1620a0",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:06:42.876Z",
+      "action": "state.conversion_settled",
+      "entity_id": "f045fc87-c796-48a7-8e4d-9e69d2815918",
+      "details": {
+        "version": 8,
+        "actor_id": 1
+      }
+    },
+    {
+      "id": "f6d3e4b3-9be7-4289-bf25-0310c04d7186",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:06:42.778Z",
+      "action": "auth.step_up_granted",
+      "entity_id": "5a3fae11-2197-4047-b378-4369f656d657",
+      "details": {
+        "action": "wallet.convert",
+        "amount": "500.00",
+        "actor_id": 1,
+        "currency": "CNY",
+        "target_id": "a9ec5804-548b-4dc3-a046-0e8ba59b3c70"
+      }
+    },
+    {
+      "id": "b1e6c678-5d92-47d5-93f2-bf2e5dd1a794",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:06:38.116Z",
+      "action": "auth.step_up_failed",
+      "entity_id": "a9ec5804-548b-4dc3-a046-0e8ba59b3c70",
+      "details": {
+        "action": "wallet.convert",
+        "actor_id": 1
+      }
+    },
+    {
+      "id": "e52ac9a3-9b96-4396-8049-09b08c3f1b47",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:06:15.472Z",
+      "action": "fx.live_quote_created",
+      "entity_id": "a9ec5804-548b-4dc3-a046-0e8ba59b3c70",
+      "details": {
+        "source": "fixture",
+        "actor_id": 1,
+        "corridor": "cny-thb-economy",
+        "mid_rate": "4.6000000000",
+        "rate_date": "2026-10-17",
+        "send_amount": "500.00"
+      }
+    },
+    {
+      "id": "2867ceb1-dc09-4ba1-80e8-ed582b31a3e2",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:06:12.666Z",
+      "action": "fx.live_quote_created",
+      "entity_id": "4617b87e-36c7-4763-86a7-ff9d136d1ca0",
+      "details": {
+        "source": "fixture",
+        "actor_id": 1,
+        "corridor": "cny-thb-standard",
+        "mid_rate": "4.6000000000",
+        "rate_date": "2026-10-17",
+        "send_amount": "500.00"
+      }
+    },
+    {
+      "id": "7269761e-74ab-4410-82de-f6a80c9ce235",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:06:08.462Z",
+      "action": "fx.live_quote_created",
+      "entity_id": "61d9d6a9-9dc1-40ba-b6b9-39277a40d753",
+      "details": {
+        "source": "fixture",
+        "actor_id": 1,
+        "corridor": "cny-thb-express",
+        "mid_rate": "4.6000000000",
+        "rate_date": "2026-10-17",
+        "send_amount": "500.00"
+      }
+    },
+    {
+      "id": "a61271cf-7209-4969-aa61-40e731c9864b",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:05:52.204Z",
+      "action": "wallet.top_up",
+      "entity_id": "30627899-66ee-4f93-b764-edecbfb0f008",
+      "details": {
+        "amount": "30000.00",
+        "actor_id": 1,
+        "currency": "CNY",
+        "is_simulated": true
+      }
+    },
+    {
+      "id": "4bb86662-c314-4e39-bfc8-5c8bd6e2f90d",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:05:47.419Z",
+      "action": "planning.bill_paid",
+      "entity_id": "7512d560-1ee4-453e-be67-5299a0b9e598",
+      "details": {
+        "amount": "31000.00",
+        "actor_id": 1,
+        "currency": "THB"
+      }
+    },
+    {
+      "id": "248c55ec-6e34-4c21-975c-7fe28969a0d0",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:05:47.410Z",
+      "action": "state.plan_bill_paid",
+      "entity_id": "02b918c9-14a5-4600-b6e0-8c978ce8061d",
+      "details": {
+        "version": 7,
+        "actor_id": 1
+      }
+    },
+    {
+      "id": "8bb2d8da-0f6f-495a-906b-754b9f5282c0",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:05:47.328Z",
+      "action": "auth.step_up_granted",
+      "entity_id": "8a7d0955-4395-4c8d-999e-bcbafde47179",
+      "details": {
+        "action": "bill.pay",
+        "amount": "31000.00",
+        "actor_id": 1,
+        "currency": "THB",
+        "target_id": "7512d560-1ee4-453e-be67-5299a0b9e598"
+      }
+    },
+    {
+      "id": "7fd1ab54-c7b2-44a3-87e9-749f3a4366bb",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:05:42.324Z",
+      "action": "wallet.top_up",
+      "entity_id": "169304b2-2322-4d3c-b165-3369b48d954c",
+      "details": {
+        "amount": "31000.00",
+        "actor_id": 1,
+        "currency": "THB",
+        "is_simulated": true
+      }
+    },
+    {
+      "id": "edf71307-e428-473e-a778-817c5485ddb9",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:05:42.322Z",
+      "action": "state.wallet_top_up",
+      "entity_id": "b981dd5b-a51e-4212-991d-eab3ccaf32cd",
+      "details": {
+        "version": 6,
+        "actor_id": 1
+      }
+    },
+    {
+      "id": "0313a917-40eb-4afe-8c61-4978b8e26b78",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:05:29.745Z",
+      "action": "planning.reminder_updated",
+      "entity_id": "d9ab2ee5-1980-4875-8045-2d61d8311a1b",
+      "details": {
+        "action": "reopen",
+        "actor_id": 1
+      }
+    },
+    {
+      "id": "fc9f8937-3bf6-4197-bd5f-e0b4acfceeaa",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:05:29.743Z",
+      "action": "planning.task_updated",
+      "entity_id": "d6772d2a-a182-4885-8f30-c1c0e93bf6f9",
+      "details": {
+        "done": false,
+        "actor_id": 1
+      }
+    },
+    {
+      "id": "ed5c4261-bf33-4785-93cd-2dca17fddd73",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:05:24.974Z",
+      "action": "planning.reminder_updated",
+      "entity_id": "d9ab2ee5-1980-4875-8045-2d61d8311a1b",
+      "details": {
+        "action": "complete",
+        "actor_id": 1
+      }
+    },
+    {
+      "id": "4ec4d86b-9744-4f94-9e63-27363ae2339d",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:05:24.972Z",
+      "action": "planning.task_updated",
+      "entity_id": "d6772d2a-a182-4885-8f30-c1c0e93bf6f9",
+      "details": {
+        "done": true,
+        "actor_id": 1
+      }
+    },
+    {
+      "id": "2d1caad1-e4ad-4c43-b236-71c3555a6b62",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:05:24.701Z",
+      "action": "planning.reminder_updated",
+      "entity_id": "d9ab2ee5-1980-4875-8045-2d61d8311a1b",
+      "details": {
+        "action": "acknowledge",
+        "actor_id": 1
+      }
+    },
+    {
+      "id": "6b97c8b8-2eae-42d1-9587-a3b081a4b016",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:05:09.126Z",
+      "action": "planning.task_created",
+      "entity_id": "d6772d2a-a182-4885-8f30-c1c0e93bf6f9",
+      "details": {
+        "actor_id": 1
+      }
+    },
+    {
+      "id": "161a8208-1dd8-4d01-8a5e-429076b0b425",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:04:58.460Z",
+      "action": "planning.loan_signed",
+      "entity_id": "5a6b158a-ac35-4050-9e02-e28b454003a6",
+      "details": {
+        "actor_id": 1,
+        "unallocated": "0.00"
+      }
+    },
+    {
+      "id": "10c35300-885f-4df1-8b18-3b928786e07b",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:04:58.441Z",
+      "action": "application.SIGNED",
+      "entity_id": "5a6b158a-ac35-4050-9e02-e28b454003a6",
+      "details": {
+        "status": "WITHIN_LIMIT",
+        "actor_id": 1,
+        "max_principal": "1013800.00"
+      }
+    },
+    {
+      "id": "e9276f01-f844-4f2b-aac1-0f1a014f3356",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:04:58.440Z",
+      "action": "state.application_changed",
+      "entity_id": "ff81b815-62f3-4126-b571-30366f6b1086",
+      "details": {
+        "version": 5,
+        "actor_id": 1
+      }
+    },
+    {
+      "id": "bbf21f2b-6c5c-4cb2-bbe7-a049d152fad5",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:04:58.421Z",
+      "action": "state.loan_signed",
+      "entity_id": "9a2db7f1-3b62-49a1-bdf5-0ac54ab22a6b",
+      "details": {
+        "version": 4,
+        "actor_id": 1
+      }
+    },
+    {
+      "id": "876f3e58-5e15-4c77-8b83-b0c969cb4ba5",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:04:37.674Z",
+      "action": "planning.plan_confirmed",
+      "entity_id": "80091c88-a31b-40c7-a559-69973716b84f",
+      "details": {
+        "version": 2,
+        "actor_id": 1
+      }
+    },
+    {
+      "id": "bd94e7a2-e0e0-465a-98a2-6fdd3169f5ce",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:04:37.667Z",
+      "action": "beneficiary.school_seeded",
+      "entity_id": "024037a0-d0cb-4104-b50b-9e3432a72da4",
+      "details": {
+        "actor_id": 1,
+        "verified": true,
+        "school_key": "psu-phuket"
+      }
+    },
+    {
+      "id": "1065f23e-3ee9-483d-a49e-fe42ae0d11e7",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:04:37.659Z",
+      "action": "planning.bills_generated",
+      "entity_id": "80091c88-a31b-40c7-a559-69973716b84f",
+      "details": {
+        "created": 30,
+        "actor_id": 1
+      }
+    },
+    {
+      "id": "3940def8-813c-4600-9987-9002d38848be",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:04:37.568Z",
+      "action": "application.APPROVED",
+      "entity_id": "5a6b158a-ac35-4050-9e02-e28b454003a6",
+      "details": {
+        "status": "WITHIN_LIMIT",
+        "actor_id": 1,
+        "max_principal": "1013800.00"
+      }
+    },
+    {
+      "id": "eb619b0e-98b8-4aa7-b0ae-7d7bae1d1664",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:04:37.567Z",
+      "action": "state.application_changed",
+      "entity_id": "b2cb2f6c-4f5c-45ac-9346-1c08a80950b6",
+      "details": {
+        "version": 3,
+        "actor_id": 1
+      }
+    },
+    {
+      "id": "3a4fe935-205c-4856-8618-4693ddc323ab",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:04:37.547Z",
+      "action": "application.SUBMITTED",
+      "entity_id": "5a6b158a-ac35-4050-9e02-e28b454003a6",
+      "details": {
+        "actor_id": 1
+      }
+    },
+    {
+      "id": "865884ce-c625-472e-8383-814714bbda68",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:04:37.533Z",
+      "action": "application.DRAFT_CREATED",
+      "entity_id": "5a6b158a-ac35-4050-9e02-e28b454003a6",
+      "details": {
+        "actor_id": 1
+      }
+    },
+    {
+      "id": "73b954cd-df56-47ea-955f-493d5acdf22c",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:04:37.532Z",
+      "action": "state.application_created",
+      "entity_id": "7e0a0c5e-a4b1-4fd6-9cc8-49ec29e91dc6",
+      "details": {
+        "version": 2,
+        "actor_id": 1
+      }
+    },
+    {
+      "id": "571fb303-640d-4edf-bb10-efdb51cc1c56",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:04:37.495Z",
+      "action": "demo.initialized",
+      "entity_id": "03844a60-e193-4ffa-955a-d72d98ef4669",
+      "details": {
+        "actor_id": 1,
+        "is_simulated": true
+      }
+    },
+    {
+      "id": "efb90ada-6fbe-4356-b91d-e656f74105f3",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:04:37.484Z",
+      "action": "state.confirmed",
+      "entity_id": "21707069-f343-4411-80eb-9c068e1c2ee3",
+      "details": {
+        "version": 1
+      }
+    },
+    {
+      "id": "761fe269-6c44-4274-9ff0-16d03e89c74b",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:04:18.811Z",
+      "action": "planning.assessment_saved",
+      "entity_id": "03323178-ba5e-4166-b9ae-1a204cfcc0af",
+      "details": {
+        "version": 9,
+        "actor_id": 1
+      }
+    },
+    {
+      "id": "66545a59-4bfb-48db-a784-028c190c1741",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:04:18.807Z",
+      "action": "loan.simulated",
+      "entity_id": "5a2a1dbb-e640-4d70-94ba-21a96633fa28",
+      "details": {
+        "actor_id": 1
+      }
+    },
+    {
+      "id": "cd841609-7fbe-4d22-bf6f-416de5db5809",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:03:53.418Z",
+      "action": "planning.loan_advice",
+      "entity_id": "9bec7fa1-14b7-4dfc-810e-427c0eadf3d3",
+      "details": {
+        "status": "paused",
+        "actor_id": 1
+      }
+    },
+    {
+      "id": "8c86bd68-89ea-4588-88e6-d7be79e2c962",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:03:36.174Z",
+      "action": "planning.assessment_saved",
+      "entity_id": "135d40a0-3d25-47b9-b84f-86b34b5240ac",
+      "details": {
+        "version": 7,
+        "actor_id": 1
+      }
+    },
+    {
+      "id": "1acb7fa6-f847-4583-8366-5b61cf4994d1",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:03:36.170Z",
+      "action": "loan.simulated",
+      "entity_id": "bc02f08b-85db-4711-98ba-6cae514ba61f",
+      "details": {
+        "actor_id": 1
+      }
+    },
+    {
+      "id": "daa10444-ac4a-4007-a569-9fbbf2f823b1",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:03:24.931Z",
+      "action": "planning.loan_advice",
+      "entity_id": "1821d879-c407-4e3f-8a18-bc656e5862ea",
+      "details": {
+        "status": "needs_amount",
+        "actor_id": 1
+      }
+    },
+    {
+      "id": "db9f79fd-f107-493b-a4a0-1f73ff9b9d3d",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:03:10.009Z",
+      "action": "planning.assessment_saved",
+      "entity_id": "dbd1d8cc-84b3-4067-9543-594a4250162f",
+      "details": {
+        "version": 5,
+        "actor_id": 1
+      }
+    },
+    {
+      "id": "dc1d2f31-a261-403e-9cc8-ec22f81cdb61",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:03:10.005Z",
+      "action": "loan.simulated",
+      "entity_id": "c02e2f47-6684-4249-9376-5b94a8a3929c",
+      "details": {
+        "actor_id": 1
+      }
+    },
+    {
+      "id": "00c496a3-a89d-42f1-8d9f-77a9fcbeaf31",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:02:55.989Z",
+      "action": "planning.assessment_saved",
+      "entity_id": "076c0bc0-25cc-4e02-87cc-0bd2c768b2c2",
+      "details": {
+        "version": 4,
+        "actor_id": 1
+      }
+    },
+    {
+      "id": "f7fa2e75-5422-4389-833a-98aa1908083e",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:02:55.984Z",
+      "action": "loan.simulated",
+      "entity_id": "31ae9118-13f1-4a73-8bba-d7b52337e747",
+      "details": {
+        "actor_id": 1
+      }
+    },
+    {
+      "id": "6b9e17dd-5a02-43fb-8c2a-482461e1d87b",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:02:40.763Z",
+      "action": "planning.assessment_saved",
+      "entity_id": "4ca3c7bb-8862-4cfd-be2d-88e523abf6a0",
+      "details": {
+        "version": 3,
+        "actor_id": 1
+      }
+    },
+    {
+      "id": "c8139e00-e415-4141-ad79-1a78e92a2352",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:02:40.759Z",
+      "action": "loan.simulated",
+      "entity_id": "e003cce6-f5a7-4918-9e4b-70d1d30060d0",
+      "details": {
+        "actor_id": 1
+      }
+    },
+    {
+      "id": "a31387a3-59eb-46a2-bea8-79e1d142329d",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:02:16.294Z",
+      "action": "planning.assessment_saved",
+      "entity_id": "d01ccc96-aff5-4ffb-98cc-4326c9a62fc6",
+      "details": {
+        "version": 2,
+        "actor_id": 1
+      }
+    },
+    {
+      "id": "1533c1c6-ef66-4c2b-bf1c-b68d1316adb0",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:02:16.290Z",
+      "action": "loan.simulated",
+      "entity_id": "df120655-5d00-46eb-abb1-2137a5e50e68",
+      "details": {
+        "actor_id": 1
+      }
+    },
+    {
+      "id": "cd35be60-bece-4375-add3-d48634d06213",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:02:05.826Z",
+      "action": "planning.loan_advice",
+      "entity_id": "aaed6168-ff35-404e-8f86-8cea538d3c3e",
+      "details": {
+        "status": "needs_amount",
+        "actor_id": 1
+      }
+    },
+    {
+      "id": "2042009c-7b61-4d5f-b2d6-8036627dfbeb",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:02:05.787Z",
+      "action": "planning.plan_saved",
+      "entity_id": "80091c88-a31b-40c7-a559-69973716b84f",
+      "details": {
+        "version": 1,
+        "actor_id": 1,
+        "school_key": "psu-phuket"
+      }
+    },
+    {
+      "id": "483fb199-249e-4816-b21b-510884931ec8",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:01:32.829Z",
+      "action": "planning.profile_set",
+      "entity_id": "fa6d3202-d0cc-4617-88f7-5c038e424d28",
+      "details": {
+        "actor_id": 1,
+        "home_currency": "THB"
+      }
+    },
+    {
+      "id": "1b8a6a8e-3101-47ba-b393-a03f842743d2",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:01:30.313Z",
+      "action": "planning.profile_set",
+      "entity_id": "fa6d3202-d0cc-4617-88f7-5c038e424d28",
+      "details": {
+        "actor_id": 1,
+        "home_currency": "USD"
+      }
+    },
+    {
+      "id": "14dfa980-917d-4c3f-87b9-80e44273516e",
+      "type": "auditevent",
+      "created_at": "2026-10-17T06:01:27.799Z",
+      "action": "planning.profile_set",
+      "entity_id": "fa6d3202-d0cc-4617-88f7-5c038e424d28",
+      "details": {
+        "actor_id": 1,
+        "home_currency": "CNY"
+      }
+    }
+  ]
+}
