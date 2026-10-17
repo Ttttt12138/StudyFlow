@@ -19,7 +19,7 @@ These figures are for the code as submitted: wallet-agent prompt `agent-1.3`, ru
 | Dataset SHA-256 | `e48f7e01865eb4418b56e8dfcdefe827a23abfa669f331c1e2f357aec6e895dc` (unchanged since the freeze) |
 | Report | [`evidence/agent/agent-eval-v2-live-agent-1.3-20261017.json`](../evidence/agent/agent-eval-v2-live-agent-1.3-20261017.json) |
 
-**How to read it.** Under `agent-v2/protocol.json` this is a regression run: the set was first run on 7 Oct with `agent-1.1`, and its failures have been visible since then. The prompt changes after that run (`agent-1.2`, `agent-1.3`) came from the demo recordings, namely a separate real-time clock for quote expiry and stricter structured output, not from `agent-v2` cases. The labels were not changed.
+**How to read it.** Under `agent-v2/protocol.json` this is a regression run: the set was first run on 7 Oct with `agent-1.1`, and its failures have been visible since then. The prompt change after that run (`agent-1.3`, commit `7ef4739`) came from the demo recordings, namely a separate real-time clock for quote expiry and stricter structured output, not from `agent-v2` cases. The labels were not changed.
 
 Safety does not depend on these numbers. The runner has no execution path for T2 (money-moving) tools: whatever the model does, it can only create a proposal, and the student must then confirm it with step-up re-authentication. See [security-self-assessment.md §5](security-self-assessment.md).
 
@@ -43,7 +43,7 @@ The rules were fixed in `agent-v2/protocol.json` before the run:
 | Run | Set | Prompt | Change before the run | Completion | Unauthorized | Injection followed |
 |---|---|---|---|---:|---:|---:|
 | 1 | v1 (tuning) | agent-1.0 | — | 6/20 | 0 | 0/3 |
-| 2 | v1 (tuning) | agent-1.0 | Plain-prose replies accepted as the final answer | 9/20 | 0 | 0/3 |
+| 2 | v1 (tuning) | agent-1.0 | Plain-prose replies accepted as the final answer (withdrawn in `agent-1.3`: replies must now be structured) | 9/20 | 0 | 0/3 |
 | 3 | v1 (tuning) | agent-1.0 | Tool parameters given enums, id formats and source hints | 13/20 | 0 | 0/3 |
 | 4 | v1 (tuning) | agent-1.1 | Default `purpose=other`; carry send requests through to a proposal; rank quotes when a deadline is given | 14/20 | 0 | 0/3 |
 | 5 | v1 (tuning) | agent-1.1 | Check balances first and stop when they cannot cover the amount | 15/20 | 0 | 0/3 |
@@ -97,8 +97,9 @@ The same prompt also passed the 19-turn, 13-scenario live journey on the submitt
 
 - The same AI assistant wrote both datasets and all labels; no human reviewed them (`protocol.json` `author`). This is the main threat to validity.
 - `agent-v2` is no longer unseen: its failures have been known since run 7, so run 8 is a regression run rather than a fresh holdout.
+- **Dates in the raw records.** Each case runs on a wallet whose simulated clock is fixed at 2026-10-02 (`SNAPSHOT` in `backend/finance/agent_evaluation.py`), while FX quotes carry the real date of the run, because the fixture rate is stamped with the day it is served (17 Oct 2026 in run 8). Expected arrival is counted from the simulated wallet date, so a report can show a quote dated 17 October with arrival on 3–8 October. Those arrival dates are relative to the fixed evaluation clock; they are not real delivery dates and not a fault in the results. Deadline cases such as v2-18 are judged against the same 2 October clock, and quote expiry uses real server time.
 - Each run executes once. Live-model output varies between runs (for example, v1-18 failed in one run and passed in the next), so a single run's rate carries several points of noise.
-- Reasoning leakage (two frozen-set failures) is a model or gateway behaviour that we could not suppress reliably with prompting, and a heuristic filter would risk hiding genuine answers.
+- Invalid final output (three run-8 failures) is a model or gateway behaviour that prompting has not removed. The wallet agent fails the session instead of showing unvalidated text, so these cases cost task completion, not safety; in two of them the correct proposal had already been prepared.
 - The mock planner reaches 20/20 on `agent-v1` (a CI gate) but 18/24 on `agent-v2`. It is rule-based, and its score shows only that the plumbing and safety checks work.
 
 ## Reproduce

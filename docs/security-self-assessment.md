@@ -1,6 +1,6 @@
 # Security Self-Assessment
 
-StudyFlow, Topic C. Updated 2026-10-14 for the conversation-led cost planner, study-loan lifecycle and wallet bill payments.
+StudyFlow, Topic C. Updated 2026-10-17 for the conversation-led cost planner, study-loan lifecycle and wallet bill payments.
 
 This report maps controls to code and tests and records remaining risks. Test names identify coverage, not a claim that every suite was rerun on this date. Dated evidence separates rule-based integration from real model calls. `evidence/gates/` is the historical 2026-10-07 run; current planning evidence is linked below. Paths are relative to the repository root.
 
@@ -139,7 +139,7 @@ Prompt injection: on the frozen holdout `agent-v2` (4 injection cases), the live
 
 Clock guidance: the October 14 full-flow recording exposed an AI reliability failure: the model compared quote expiry with the advanced demo study date and repeatedly refreshed valid quotes. The runner now supplies real UTC `memory.server_time` on each step; `agent-1.3` / `planning-2.6` distinguish it from `memory.today`. `auto_test.test_agent_clocks` covers simulated dates before and after the real date. This improves planning context; server expiry validation, write budgets and monetary authorization remain the enforcement mechanisms. The failed take is retained in `evidence/demo-full-live-20261014/take-04/`.
 
-Output validation: take-05 exposed a second reliability failure when unstructured gateway prose was treated as a final answer and no reminder was created. The live planner now retries an empty or unstructured reply at most twice, preserving attempt counts, and fails with `INVALID_MODEL_OUTPUT` if no validated decision is returned. It never displays that raw prose as a successful answer or executes a guessed tool call. Malformed JSON still fails immediately, apart from the existing narrowly validated stray-closing-bracket recovery. This is covered by `studyflow-ai/auto_test/test_agent_planner.py`; the failed recording remains retained.
+Output validation: take-05 exposed a second reliability failure when unstructured gateway prose was treated as a final answer and no reminder was created. The live planner now retries an empty or unstructured reply at most twice, preserving attempt counts, and never executes a guessed tool call. In the wallet agent, if no validated decision is returned, the session fails with `INVALID_MODEL_OUTPUT`; raw prose is never shown as an answer, and malformed JSON fails immediately apart from the narrowly validated stray-closing-bracket recovery. In a planning conversation, prose is shown only when a separate check judges it a finished answer addressed to the user; broken JSON is retried once; and if the reply is still unstructured, the deterministic planning rules decide that step, recorded with mode `rules` (none occurred in the take-08 film run). This is covered by `studyflow-ai/auto_test/test_agent_planner.py`; the failed recording remains retained.
 
 ### 5.1 Browser enforcement of the same controls
 

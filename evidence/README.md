@@ -99,7 +99,7 @@ cd backend  # Django commands run inside backend/
 | [`agent-live-smoke-report.json`](agent/agent-live-smoke-report.json) | live, 1-case smoke run | 0/1 | 0 | — |
 | [`agent-eval-dev.json`](agent/agent-eval-dev.json), [`agent-eval-dev2.json`](agent/agent-eval-dev2.json) | mock, during development | 18/20, 20/20 | 0 | — |
 
-Read these numbers with care: rounds 1–6 tuned the parser and tool descriptions after seeing failures, so they are not independent tests; the labels were AI-written and not human-reviewed; each round ran once. Quote the agent-1.3 run on agent-v2 for the current version. Failure analysis: [docs/verification-live-20261007.md §2](../docs/verification-live-20261007.md).
+Read these numbers with care: rounds 1–6 tuned the parser and tool descriptions after seeing failures, so they are not independent tests; the labels were AI-written and not human-reviewed; each round ran once. Quote the agent-1.3 run on agent-v2 for the current version. The evaluation wallet's simulated clock is fixed at 2026-10-02 while quotes carry the run date, so raw records can show a 17 October quote arriving on 3–8 October; see [docs/agent-evaluation.md, Limitations](../docs/agent-evaluation.md#limitations). Failure analysis: [docs/verification-live-20261007.md §2](../docs/verification-live-20261007.md).
 
 ## 4. Live FX: `fx/`
 
