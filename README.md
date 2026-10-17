@@ -2,6 +2,8 @@
 
 FinTechathon 2026 International Track · Topic C (Cross-border & Student Finance Assistant) · Repository: <https://github.com/Ttttt12138/StudyFlow>
 
+<a href="#introduction-page"><img src="docs/images/intro/intro-hero.webp" alt="StudyFlow introduction page: the 3D S monogram opens the page, then scrolling flies through the feature panels" width="100%"></a>
+
 **A study-abroad finance assistant that starts with the price.** Look up whole-course costs, compare schools in THB, CNY or USD, then tell the Agent the amount to borrow. It recommends one loan plan, recalculates when monthly payments, interest or the amount concern you, and guides you to review and explicitly submit the simulated application. Submission attaches a simulated admission notice automatically and unlocks to-dos, bills and the wallet.
 
 | Stage | Behavior |
@@ -25,6 +27,32 @@ The [shared student-flow contract](docs/student-loan-contract.md) defines interf
 | Execution evidence (simulated-account operation logs and demo video) | [evidence/demo-current-live-20261015/README.md](evidence/demo-current-live-20261015/README.md), [evidence index](evidence/README.md) |
 
 ---
+
+## Introduction page
+
+The product introduction lives at `/intro` in the student app. It needs no sign-in: open <http://localhost:8080/intro> after the [Docker quick start](#quick-start-docker-no-credentials-needed), or <http://localhost:5173/intro> with `npm run dev`. It is a Three.js scroll page in four parts:
+
+- **Opening:** the 3D S monogram and the one-line promise, “Know what studying abroad costs before you go”.
+- **Features:** seven glass panels to fly through, from whole-course price comparison and the loan amount to to-dos and bills, multi-currency wallets, FX and remittance, permission tiers T0–T3 and repayment. Each panel opens a read-only preview of that tool in the app.
+- **Safety:** three small live demos: everything is simulated, the AI proposes but you decide, and checks scale with risk.
+- **Start:** Plan → Convert → Fly, with links into the app.
+
+English and 中文 switch in the top bar, and the page works down to phone width.
+
+<table>
+  <tr>
+    <td width="70%"><img src="docs/images/intro/intro-features-en.jpg" alt="Feature wall: the To-dos and bills panel, third of seven"></td>
+    <td width="30%" rowspan="2"><img src="docs/images/intro/intro-mobile-en.jpg" alt="Opening section at phone width"></td>
+  </tr>
+  <tr>
+    <td><img src="docs/images/intro/intro-safety-zh.jpg" alt="Safety section in Chinese: nothing here can move real money"></td>
+  </tr>
+  <tr>
+    <td colspan="2"><img src="docs/images/intro/intro-start-en.jpg" alt="Closing section: Plan, Convert, Fly"></td>
+  </tr>
+</table>
+
+<sub>Recorded from the local build on 17 Oct 2026 at 1280×720 (animation) and 1440×900 and 390×844 (stills).</sub>
 
 ## Platform capabilities
 
