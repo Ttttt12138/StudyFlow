@@ -211,7 +211,7 @@ API error responses carry a stable `code` and a localized `message` in Chinese o
 | Earlier planning-only live acceptance | [2026-10-14 live acceptance](verification-planning-live-20261014.md) | Two browser journeys, eight live user turns and fifteen recorded live planner calls; explicit user signing/repayment; simulated money |
 | Earlier focused safeguards | [Baseline log](../evidence/planning-live-20261014/backend-baseline.log) | 155 related backend/browser checks passed before live acceptance |
 | Live FX pricing | see [verification-live-20261007.md](verification-live-20261007.md) | 4 pairs, 12 quotes match the formula |
-| Live agent, frozen holdout | see [agent-evaluation.md](agent-evaluation.md) | 18/24, 0 unauthorized actions; older prompt `agent-1.1` (7 Oct), not re-scored for the current version |
+| Live agent, frozen holdout | see [agent-evaluation.md](agent-evaluation.md) | 19/24, 0 unauthorized actions (`agent-1.3`, 17 Oct 2026) |
 | CI | `.github/workflows/django.yml`, `c-module.yml` | runs on every push and pull request |
 
 The holdout files `studyflow-ai/evals/copilot-holdout-v2/{manifest,protocol,review}.json` were hashed from a Windows checkout with CRLF line endings, but git stores them with LF. Their SHA-256 in `docs/independent-verification-summary.json` therefore matches the CRLF form. The project's own check (`test_blind_protocol_records_exact_runtime_code`) accepts the raw, LF and CRLF forms; a plain byte comparison on a Linux checkout will not match.

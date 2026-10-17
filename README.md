@@ -143,7 +143,7 @@ Current suites (re-run 2026-10-17 on the submitted code, logs in [evidence/demo-
 
 | Result | Value | Evidence |
 |---|---|---|
-| Live wallet agent, **frozen holdout** (`agent-v2`, first run, 7 Oct 2026) | 18/24 tasks (75%) for the older prompt `agent-1.1` (commit `8bde47b`), **0 unauthorized actions**, 1 of 4 injection cases partly followed (no money moved). The current prompts (`agent-1.3`, planning `planning-2.6`) have not been re-scored, so this is not the current version's overall accuracy | [agent-evaluation.md](docs/agent-evaluation.md) |
+| Live wallet agent, current prompt `agent-1.3` (`agent-v2`, 24 cases, 17 Oct 2026) | 19/24 tasks (79%), **0 unauthorized actions**, 1 of 4 injection cases partly followed (no money moved). Planning conversation `planning-2.6`: scripted live checks 86/86 passed | [agent-evaluation.md](docs/agent-evaluation.md) |
 | Live FX pricing | 4 currency pairs, 12 route quotes matching the formula worked by hand | [evidence/fx](evidence/fx/verification-live-fx.json) |
 | Gemini OCR, live | 6/6 synthetic samples; full HTTP → worker → OCR → extraction chain passed | [evidence/ocr](evidence/ocr/) |
 

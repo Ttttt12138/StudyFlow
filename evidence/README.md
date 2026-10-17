@@ -82,7 +82,7 @@ In mock mode the agent planner is rule-based, so the 20/20 result shows the plum
 cd backend  # Django commands run inside backend/
 ../studyFlow/Scripts/python.exe manage.py evaluate_agent --mode live --env-file ../studyflow-ai/.env
 ../studyFlow/Scripts/python.exe manage.py evaluate_agent --mode mock
-# frozen holdout agent-v2 (live; quote only its first run, agent-eval-v2-live-first.json)
+# agent-v2 (live); the current version's result is agent-eval-v2-live-agent-1.3-20261017.json
 ../studyFlow/Scripts/python.exe manage.py evaluate_agent --mode live --env-file ../studyflow-ai/.env --dataset ../studyflow-ai/evals/agent-v2/cases.jsonl
 ```
 
@@ -92,12 +92,14 @@ cd backend  # Django commands run inside backend/
 |---|---|---:|---:|---:|
 | [`agent-eval-live.json`](agent/agent-eval-live.json), [`-2`](agent/agent-eval-live-2.json), [`-3`](agent/agent-eval-live-3.json) | live, rounds 1–3 | 6/20, 9/20, 13/20 | 0 | 0/3 |
 | [`agent-eval-v1-live-tuning-4.json`](agent/agent-eval-v1-live-tuning-4.json), [`-5`](agent/agent-eval-v1-live-tuning-5.json), [`-6`](agent/agent-eval-v1-live-tuning-6.json) | live, rounds 4–6 (tuning) | 14/20, 15/20, 15/20 | 0 | 0/3 |
-| [`agent-eval-v2-live-first.json`](agent/agent-eval-v2-live-first.json) | **live, frozen holdout agent-v2, first run** | **18/24** | **0** | **1/4** |
+| [`agent-eval-v2-live-first.json`](agent/agent-eval-v2-live-first.json) | live, agent-v2 first run, prompt agent-1.1 (7 Oct) | 18/24 | 0 | 1/4 |
+| [`agent-eval-v2-live-agent-1.3-20261017.json`](agent/agent-eval-v2-live-agent-1.3-20261017.json) | **live, agent-v2, current prompt agent-1.3 (17 Oct)** | **19/24** | **0** | **1/4** |
+| [`planning-funnel-live-20261017.json`](agent/planning-funnel-live-20261017.json), [`planning-missing-data-live-20261017.json`](agent/planning-missing-data-live-20261017.json) | live, planning-2.6 scripted checks | 56/56, 30/30 checks | — | — |
 | [`agent-eval-v2-mock.json`](agent/agent-eval-v2-mock.json) | mock planner on agent-v2, reference only | 18/24 | 0 | 1/4 |
 | [`agent-live-smoke-report.json`](agent/agent-live-smoke-report.json) | live, 1-case smoke run | 0/1 | 0 | — |
 | [`agent-eval-dev.json`](agent/agent-eval-dev.json), [`agent-eval-dev2.json`](agent/agent-eval-dev2.json) | mock, during development | 18/20, 20/20 | 0 | — |
 
-Read these numbers with care: rounds 1–6 tuned the parser and tool descriptions after seeing failures, so they are not independent tests; the labels were AI-written and not human-reviewed; each round ran once. Quote the agent-v2 first run. Failure analysis: [docs/verification-live-20261007.md §2](../docs/verification-live-20261007.md).
+Read these numbers with care: rounds 1–6 tuned the parser and tool descriptions after seeing failures, so they are not independent tests; the labels were AI-written and not human-reviewed; each round ran once. Quote the agent-1.3 run on agent-v2 for the current version. Failure analysis: [docs/verification-live-20261007.md §2](../docs/verification-live-20261007.md).
 
 ## 4. Live FX: `fx/`
 
