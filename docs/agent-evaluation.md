@@ -6,6 +6,8 @@ Model: `openai/gpt-6-luna` through the C module's gateway. FX rates in the evalu
 
 ## Headline result (frozen holdout `agent-v2`, first and only run)
 
+**Scope.** These figures belong to the wallet agent at prompt `agent-1.1` (commit `8bde47b`, run on 7 Oct 2026). The current code uses `agent-1.3` for the wallet agent and `planning-2.6` for the planning conversation; neither has been re-scored on this holdout. Do not read 75% as the current version's overall accuracy. The October 15 film and the October 17 re-run are acceptance runs of fixed scenarios, not accuracy benchmarks.
+
 | Metric | Result |
 |---|---|
 | Task completion | **18 / 24 (75.0%)** |
