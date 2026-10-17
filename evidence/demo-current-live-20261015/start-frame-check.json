@@ -1,0 +1,272 @@
+[
+  {
+    "shot": "shot-01",
+    "marker": "opening",
+    "difference": 1.8581522633744854
+  },
+  {
+    "shot": "shot-02",
+    "marker": "cost-card",
+    "difference": 1.6816625514403292
+  },
+  {
+    "shot": "shot-03",
+    "marker": "cost-sources",
+    "difference": 1.4899423868312756
+  },
+  {
+    "shot": "shot-04",
+    "marker": "cost-living",
+    "difference": 1.4463004115226337
+  },
+  {
+    "shot": "shot-05",
+    "marker": "cost-essentials",
+    "difference": 1.5150534979423869
+  },
+  {
+    "shot": "shot-06",
+    "marker": "comparison-card",
+    "difference": 1.4195185185185186
+  },
+  {
+    "shot": "shot-07",
+    "marker": "comparison-cny",
+    "difference": 1.4610041152263376
+  },
+  {
+    "shot": "shot-08",
+    "marker": "comparison-usd",
+    "difference": 1.4280699588477368
+  },
+  {
+    "shot": "shot-09",
+    "marker": "missing-ranking",
+    "difference": 1.4388806584362142
+  },
+  {
+    "shot": "shot-10",
+    "marker": "school-profile",
+    "difference": 1.6547407407407408
+  },
+  {
+    "shot": "shot-11",
+    "marker": "school-chosen",
+    "difference": 1.5569588477366256
+  },
+  {
+    "shot": "shot-12",
+    "marker": "loan-card",
+    "difference": 1.448485596707819
+  },
+  {
+    "shot": "shot-13",
+    "marker": "loan-alternatives",
+    "difference": 1.3222263374485597
+  },
+  {
+    "shot": "shot-14",
+    "marker": "manual-loan-controls",
+    "difference": 0.5829588477366255
+  },
+  {
+    "shot": "shot-15",
+    "marker": "monthly-change",
+    "difference": 1.4093456790123458
+  },
+  {
+    "shot": "shot-16",
+    "marker": "interest-only-card",
+    "difference": 1.4008930041152263
+  },
+  {
+    "shot": "shot-17",
+    "marker": "interest-change",
+    "difference": 1.4375596707818932
+  },
+  {
+    "shot": "shot-18",
+    "marker": "reduced-card",
+    "difference": 1.3821399176954732
+  },
+  {
+    "shot": "shot-19",
+    "marker": "pause-loan",
+    "difference": 1.6065308641975307
+  },
+  {
+    "shot": "shot-20",
+    "marker": "resume-loan",
+    "difference": 1.4888930041152264
+  },
+  {
+    "shot": "shot-21",
+    "marker": "application-review",
+    "difference": 0.889238683127572
+  },
+  {
+    "shot": "shot-22",
+    "marker": "application-submitted",
+    "difference": 1.4462057613168724
+  },
+  {
+    "shot": "shot-23",
+    "marker": "unsigned-bill-coverage",
+    "difference": 1.0284938271604938
+  },
+  {
+    "shot": "shot-24",
+    "marker": "documents-ready",
+    "difference": 0.5267901234567901
+  },
+  {
+    "shot": "shot-25",
+    "marker": "signing-review",
+    "difference": 0.8031111111111112
+  },
+  {
+    "shot": "shot-26",
+    "marker": "school-payout-schedule",
+    "difference": 0.43725102880658434
+  },
+  {
+    "shot": "shot-27",
+    "marker": "reminder-created",
+    "difference": 1.281522633744856
+  },
+  {
+    "shot": "shot-28",
+    "marker": "reminder-completed",
+    "difference": 0.3049958847736626
+  },
+  {
+    "shot": "shot-29",
+    "marker": "reminder-reopened",
+    "difference": 0.3876584362139918
+  },
+  {
+    "shot": "shot-30",
+    "marker": "partial-tuition",
+    "difference": 0.9288189300411522
+  },
+  {
+    "shot": "shot-31",
+    "marker": "tuition-topup",
+    "difference": 0.9876748971193416
+  },
+  {
+    "shot": "shot-32",
+    "marker": "tuition-authorization",
+    "difference": 1.203559670781893
+  },
+  {
+    "shot": "shot-33",
+    "marker": "tuition-paid",
+    "difference": 0.6980329218106996
+  },
+  {
+    "shot": "shot-34",
+    "marker": "currency-balances",
+    "difference": 0.4039012345679012
+  },
+  {
+    "shot": "shot-35",
+    "marker": "exchange-review",
+    "difference": 1.6630493827160493
+  },
+  {
+    "shot": "shot-36",
+    "marker": "wrong-password-blocked",
+    "difference": 0.9450781893004114
+  },
+  {
+    "shot": "shot-37",
+    "marker": "exchange-confirmed",
+    "difference": 1.7977119341563785
+  },
+  {
+    "shot": "shot-38",
+    "marker": "remittance-review",
+    "difference": 1.6330123456790124
+  },
+  {
+    "shot": "shot-39",
+    "marker": "remittance-history",
+    "difference": 0.32309876543209876
+  },
+  {
+    "shot": "shot-40",
+    "marker": "remittance-arrival-clock",
+    "difference": 0.46770370370370373
+  },
+  {
+    "shot": "shot-41",
+    "marker": "remittance-delivered",
+    "difference": 0.30077366255144034
+  },
+  {
+    "shot": "shot-42",
+    "marker": "repayment-review",
+    "difference": 0.7512098765432098
+  },
+  {
+    "shot": "shot-43",
+    "marker": "repayment-review",
+    "difference": 0.7189753086419753
+  },
+  {
+    "shot": "shot-44",
+    "marker": "repayment-authorization",
+    "difference": 0.7172098765432099
+  },
+  {
+    "shot": "shot-45",
+    "marker": "final-ledger",
+    "difference": 0.6332592592592593
+  },
+  {
+    "shot": "shot-46",
+    "marker": "payee-review",
+    "difference": 0.2673374485596708
+  },
+  {
+    "shot": "shot-47",
+    "marker": "large-transfer-blocked",
+    "difference": 0.971477366255144
+  },
+  {
+    "shot": "shot-48",
+    "marker": "operations-overview",
+    "difference": 0.4507530864197531
+  },
+  {
+    "shot": "shot-49",
+    "marker": "separation-of-duties",
+    "difference": 0.4709423868312757
+  },
+  {
+    "shot": "shot-50",
+    "marker": "approval-details",
+    "difference": 0.34077366255144037
+  },
+  {
+    "shot": "shot-51",
+    "marker": "approval-confirmation",
+    "difference": 0.2944197530864197
+  },
+  {
+    "shot": "shot-52",
+    "marker": "approval-record",
+    "difference": 0.29265843621399174
+  },
+  {
+    "shot": "shot-53",
+    "marker": "approved-transfer-authorization",
+    "difference": 0.3327777777777778
+  },
+  {
+    "shot": "shot-54",
+    "marker": "approved-transfer-submitted",
+    "difference": 1.738814814814815
+  }
+]

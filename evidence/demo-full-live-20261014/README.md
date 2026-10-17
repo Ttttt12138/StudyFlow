@@ -1,6 +1,6 @@
 # October 14 full-flow acceptance (historical)
 
-This folder is retained as historical evidence for two AI reliability fixes described in [`docs/security-self-assessment.md`](../../docs/security-self-assessment.md) (clock guidance and output validation). It is not the current demo; the current 4:25 film and its acceptance run are in [`../demo-current-live-20261015/`](../demo-current-live-20261015/README.md).
+This folder is retained as historical evidence for two AI reliability fixes described in [`docs/security-self-assessment.md`](../../docs/security-self-assessment.md) (clock guidance and output validation). It is not the current demo; the current 4:28 film and its acceptance run are in [`../demo-current-live-20261015/`](../demo-current-live-20261015/README.md).
 
 All money, wallets, loans and payments in these runs are simulated in a disposable PostgreSQL test database.
 

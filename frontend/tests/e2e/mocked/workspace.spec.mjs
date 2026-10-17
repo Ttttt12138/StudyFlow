@@ -40,7 +40,20 @@ test('preview tools preserve chat and wallet drafts, history and all student too
   const conversation = page.locator('#plan-chat');
   await expect(conversation.locator('.plan-turn').first()).toBeVisible();
   const messageCount = await conversation.locator('.plan-turn').count();
-  await page.locator('.plan-messages').evaluate(element => element.scrollTo({ top: 100, behavior: 'instant' }));
+  // Read from the middle of the history, far from both ends, and remember the first message in view.
+  const messages = page.locator('.plan-messages');
+  const inView = (element, index) => {
+    const box = element.getBoundingClientRect();
+    const turn = element.querySelectorAll('.plan-turn')[index].getBoundingClientRect();
+    return turn.bottom > box.top + 1 && turn.top < box.bottom - 1;
+  };
+  const reading = await messages.evaluate(element => {
+    const box = element.getBoundingClientRect();
+    if (element.scrollHeight < 3 * element.clientHeight) return -1;
+    element.scrollTo({ top: Math.round((element.scrollHeight - element.clientHeight) / 2), behavior: 'instant' });
+    return [...element.querySelectorAll('.plan-turn')].findIndex(turn => turn.getBoundingClientRect().bottom > box.top + 1);
+  });
+  expect(reading).toBeGreaterThan(0);
   // Wallet, exchange, remittance and payments are one tool with one tab row.
   await openTool(page, 'Wallet & payments');
   await expect(page.locator('#workspace-tool-title')).toHaveText('Wallet & payments');
@@ -64,8 +77,9 @@ test('preview tools preserve chat and wallet drafts, history and all student too
   await page.locator('.panel-footer-center').getByRole('button', { name: 'Remit', exact: true }).click();
   await page.getByRole('button', { name: 'Close tool' }).click();
   await expect(conversation.locator('.plan-turn')).toHaveCount(messageCount);
-  // Scroll anchoring may shift by a few lines while tools mount beside the chat; the list must not jump to the end or the top.
-  expect(await page.locator('.plan-messages').evaluate(element => Math.abs(element.scrollTop - 100))).toBeLessThanOrEqual(32);
+  // Text rewraps while tools open beside the chat, so the offset may shift by a few lines (more with Linux fonts);
+  // the message being read must stay in view rather than the list jumping to the end or the top.
+  expect(await messages.evaluate(inView, reading)).toBe(true);
   await page.goBack();
   await expect(page.locator('#wallet-quote input').first()).toHaveValue('1234');
   for (const [label, selector, setting] of [['My plan', '.assessment-panel'], ['To-dos and bills', '.life-panel'], ['Wallet & payments', '#wallet-balances']]) {

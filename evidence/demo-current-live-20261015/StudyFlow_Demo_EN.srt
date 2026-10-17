@@ -263,97 +263,101 @@ a proposal for the student to review.
 A wrong password stops the action and leaves the balance unchanged.
 
 67
-00:03:10,578 --> 00:03:14,746
-Only after authorization are five hundred yuan converted into Thai baht.
+00:03:10,487 --> 00:03:14,777
+After password confirmation, five hundred yuan is debited, and
 
 68
-00:03:14,999 --> 00:03:19,694
-For a transfer, routes, fees and expected arrival come before commitment.
+00:03:14,777 --> 00:03:18,027
+the quoted amount in Thai baht is credited after fees.
 
 69
-00:03:19,948 --> 00:03:24,562
-Confirmation debits one thousand yuan and creates a traceable transfer order.
+00:03:18,262 --> 00:03:22,957
+For a transfer, routes, fees and expected arrival come before commitment.
 
 70
-00:03:24,816 --> 00:03:27,258
-We advance the clearly labelled demo date to the
+00:03:23,206 --> 00:03:27,820
+Confirmation debits one thousand yuan and creates a traceable transfer order.
 
 71
-00:03:27,258 --> 00:03:28,944
-delivery window's final day.
+00:03:28,075 --> 00:03:30,517
+We advance the clearly labelled demo date to the
 
 72
-00:03:29,180 --> 00:03:32,339
-The simulated channel marks the transfer delivered, and its
+00:03:30,517 --> 00:03:32,203
+delivery window's final day.
 
 73
-00:03:32,339 --> 00:03:34,372
-status is visible in the history.
+00:03:32,438 --> 00:03:35,598
+The simulated channel marks the transfer delivered, and its
 
 74
-00:03:35,003 --> 00:03:37,816
-When a loan installment falls due, it appears with
+00:03:35,598 --> 00:03:37,631
+status is visible in the history.
 
 75
-00:03:37,816 --> 00:03:39,096
-its amount and date.
+00:03:38,270 --> 00:03:41,082
+When a loan installment falls due, it appears with
 
 76
-00:03:39,337 --> 00:03:42,157
-Before committing, the student reviews the installment,
+00:03:41,082 --> 00:03:42,363
+its amount and date.
 
 77
-00:03:42,323 --> 00:03:44,714
-then authorizes the repayment with a password.
+00:03:42,603 --> 00:03:45,423
+Before committing, the student reviews the installment,
 
 78
-00:03:44,950 --> 00:03:48,318
-The installment becomes paid, the wallet is debited, and
+00:03:45,589 --> 00:03:47,981
+then authorizes the repayment with a password.
 
 79
-00:03:48,318 --> 00:03:50,189
-the movement remains in the ledger.
+00:03:48,217 --> 00:03:51,585
+The installment becomes paid, the wallet is debited, and
 
 80
-00:03:50,837 --> 00:03:54,124
-For a new recipient, an operator first reviews and
+00:03:51,585 --> 00:03:53,456
+the movement remains in the ledger.
 
 81
-00:03:54,124 --> 00:03:55,346
-verifies the payee.
+00:03:54,103 --> 00:03:57,390
+For a new recipient, an operator first reviews and
 
 82
-00:03:55,587 --> 00:03:58,916
-Even a correct password cannot bypass a transfer limit.
+00:03:57,390 --> 00:03:58,613
+verifies the payee.
 
 83
-00:03:59,151 --> 00:04:02,180
-The request enters the operations workbench for review.
+00:03:58,853 --> 00:04:02,182
+Even a correct password cannot bypass a transfer limit.
 
 84
-00:04:02,415 --> 00:04:05,779
-The person who verified the payee cannot approve the transfer.
+00:04:02,418 --> 00:04:05,446
+The request enters the operations workbench for review.
 
 85
-00:04:06,015 --> 00:04:09,703
-A separate operator checks the amount, recipient and purpose,
+00:04:05,682 --> 00:04:09,046
+The person who verified the payee cannot approve the transfer.
 
 86
-00:04:09,985 --> 00:04:12,191
-then explicitly confirms the decision.
+00:04:09,282 --> 00:04:12,970
+A separate operator checks the amount, recipient and purpose,
 
 87
-00:04:12,427 --> 00:04:15,096
-The approval is recorded, but moves no money.
+00:04:13,251 --> 00:04:15,458
+then explicitly confirms the decision.
 
 88
-00:04:15,332 --> 00:04:18,291
-The student must still authorize submission with a password.
+00:04:15,694 --> 00:04:18,363
+The approval is recorded, but moves no money.
 
 89
-00:04:18,526 --> 00:04:21,833
-Clear costs, informed decisions and controlled payments:
+00:04:18,599 --> 00:04:21,558
+The student must still authorize submission with a password.
 
 90
-00:04:22,126 --> 00:04:24,448
+00:04:21,793 --> 00:04:25,099
+Clear costs, informed decisions and controlled payments:
+
+91
+00:04:25,393 --> 00:04:27,715
 all demonstrated with simulated funds.

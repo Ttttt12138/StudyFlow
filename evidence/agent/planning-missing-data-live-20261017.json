@@ -1,0 +1,140 @@
+{
+  "mode": "live",
+  "database": "studyflow_loan_advice_browser_20261015",
+  "conversations": {
+    "ranking": [
+      {
+        "goal": "曼彻斯特大学和墨尔本大学哪个排名更高",
+        "status": "COMPLETED",
+        "error": "",
+        "answer": "这个我这里没有收录大学排名。可查 QS 官网，或曼彻斯特大学官网 https://www.alliancembs.manchester.ac.uk/study/undergraduate/bsc-hons-management-international-business-economics/ 和墨尔本大学官网 https://study.unimelb.edu.au/find/courses/undergraduate/bachelor-of-commerce/。如果你想了解留学费用，告诉我想先算哪所学校。",
+        "tools": [],
+        "calls": [
+          {
+            "mode": "live",
+            "attempts": 2,
+            "prompt_version": "planning-2.6"
+          }
+        ],
+        "checks": {
+          "completed": true,
+          "no_tool_call": true,
+          "names_a_source": true,
+          "no_question_about_the_gap": true,
+          "only_catalog_links": true
+        }
+      },
+      {
+        "goal": "qs",
+        "status": "COMPLETED",
+        "error": "",
+        "answer": "QS 排名这个我这里没有收录，可查 QS 官网。想了解留学费用，告诉我想去哪所学校或哪个国家，我先帮你算读完的总价。",
+        "tools": [],
+        "calls": [
+          {
+            "mode": "live",
+            "attempts": 1,
+            "prompt_version": "planning-2.6"
+          }
+        ],
+        "checks": {
+          "completed": true,
+          "no_tool_call": true,
+          "names_a_source": true,
+          "no_question_about_the_gap": true,
+          "only_catalog_links": true
+        }
+      },
+      {
+        "goal": "现有的",
+        "status": "COMPLETED",
+        "error": "",
+        "answer": "QS 排名我这里没有收录，可查 QS 官网。想了解留学费用，告诉我想去哪所学校或哪个国家，我先帮你算读完的总价。",
+        "tools": [],
+        "calls": [
+          {
+            "mode": "live",
+            "attempts": 1,
+            "prompt_version": "planning-2.6"
+          }
+        ],
+        "checks": {
+          "completed": true,
+          "no_tool_call": true,
+          "names_a_source": true,
+          "no_question_about_the_gap": true,
+          "only_catalog_links": true
+        }
+      }
+    ],
+    "admission": [
+      {
+        "goal": "朱拉隆功大学的录取要求是什么",
+        "status": "COMPLETED",
+        "error": "",
+        "answer": "朱拉隆功大学的录取要求我这里没有收录；请查看学校官网：https://bba.acc.chula.ac.th/。如果你也想了解费用，我可以先帮你估算全程总价。",
+        "tools": [],
+        "calls": [
+          {
+            "mode": "live",
+            "attempts": 2,
+            "prompt_version": "planning-2.6"
+          }
+        ],
+        "checks": {
+          "completed": true,
+          "no_tool_call": true,
+          "names_a_source": true,
+          "no_question_about_the_gap": true,
+          "only_catalog_links": true
+        }
+      },
+      {
+        "goal": "雅思要多少分",
+        "status": "COMPLETED",
+        "error": "",
+        "answer": "雅思要求我这里没有收录；请查看朱拉隆功大学官网：https://bba.acc.chula.ac.th/。如果你愿意，我可以先帮你估算这所学校读完整个课程的总费用。",
+        "tools": [],
+        "calls": [
+          {
+            "mode": "live",
+            "attempts": 1,
+            "prompt_version": "planning-2.6"
+          }
+        ],
+        "checks": {
+          "completed": true,
+          "no_tool_call": true,
+          "names_a_source": true,
+          "no_question_about_the_gap": true,
+          "only_catalog_links": true
+        }
+      }
+    ],
+    "visa": [
+      {
+        "goal": "去泰国读书的学生签证怎么办",
+        "status": "COMPLETED",
+        "error": "",
+        "answer": "这个我这里没有收录；请查看泰国驻你所在国家的使领馆或泰国移民局官方信息。你想去哪所泰国学校？告诉我，我先帮你算算读完一共要多少钱。",
+        "tools": [],
+        "calls": [
+          {
+            "mode": "live",
+            "attempts": 2,
+            "prompt_version": "planning-2.6"
+          }
+        ],
+        "checks": {
+          "completed": true,
+          "no_tool_call": true,
+          "names_a_source": true,
+          "no_question_about_the_gap": true,
+          "only_catalog_links": true
+        }
+      }
+    ]
+  },
+  "failures": [],
+  "passed": true
+}

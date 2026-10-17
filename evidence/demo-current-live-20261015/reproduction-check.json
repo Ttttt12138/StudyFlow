@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "scope": "Fresh archive extraction and offline prepare, without new TTS or a full MP4 rerender. SRT output uses LF to match delivery.",
+  "identical_sha256": {
+    "continuous-narration.wav": "2e315df8f7c822ac0b114cc44b542b0d250a310ceab16e49d47dcc492d65802e",
+    "chapter-06-patched.wav": "570cbb9eeaf3e4b6e76c271ae52b0c77faffb1016405d39c4ffb3eea83ce2b77",
+    "captions.ass": "93b80d3a0b3e2222f5f5d8e9e19876668d01bd653b86fb28a1ff401efc8adc79",
+    "candidate/StudyFlow_Demo_EN.srt": "1d28efd334fbb222af3683c0751068720d8a859bf0565d16125f133e9a8da4d1"
+  },
+  "shots_with_identical_source_ranges_and_timing": 54,
+  "duration_seconds": 268.1333333333333,
+  "production_archive_sha256": "288bbd9db16bc7145618fae5f5ad5f76be5fc9838b228f6f8a3e1482b6d9fb85"
+}

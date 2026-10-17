@@ -8,13 +8,13 @@ Run every command from the repository root. On Windows the interpreter is `study
 
 ## Current test status
 
-On 2026-10-16 the current code passed: Django **632 tests** (2 opt-in recordings skipped), C package (`studyflow-ai`) **481 tests**, frontend **81 unit + 54 mocked browser tests**. The archived gate run in `gates/` is a recorded run of an earlier commit (see §2).
+On 2026-10-17 the submitted code passed ([logs](demo-current-live-20261015/regression-20261017/)): Django **632 tests** (2 opt-in recordings skipped), C package (`studyflow-ai`) **481 tests**, frontend **81 unit + 54 mocked browser tests**. The archived gate run in `gates/` is a recorded run of an earlier commit (see §2).
 
 ## Contents
 
 | Folder | What it shows | Mode | Date |
 |---|---|---|---|
-| [`demo-current-live-20261015/`](demo-current-live-20261015/README.md) | **Current 4:25 English demo film** and its live acceptance run (take-07): 19 live-AI user turns, 13 scenario checks, separate payee verifier and approver, uncut recordings and simulated-account operation logs | live LLM / fixture FX / simulated funds | 2026-10-15 |
+| [`demo-current-live-20261015/`](demo-current-live-20261015/README.md) | **Current 4:28 English demo film** and its live acceptance run (take-08): 19 live-AI user turns, 13 scenario checks, separate payee verifier and approver, uncut recordings and complete simulated-account operation logs | live LLM / fixture FX / simulated funds | 2026-10-17 |
 | [`gates/`](gates/) | Full local gate suite (17 checks), recorded run of an earlier commit | mock | 2026-10-07 |
 | [`agent/`](agent/) | Agent task completion and safety: tuning set and frozen holdout | live LLM + mock | 2026-10-07 |
 | [`fx/`](fx/) | Server-side FX quotes from a live reference rate match the pricing formula | live FX | 2026-10-07 |
@@ -28,21 +28,21 @@ On 2026-10-16 the current code passed: Django **632 tests** (2 opt-in recordings
 
 ## 1. Demo film and 06 Execution evidence: `demo-current-live-20261015/`
 
-[Watch the 4:25 English film](demo-current-live-20261015/StudyFlow_Demo_EN.mp4) · [English subtitles](demo-current-live-20261015/StudyFlow_Demo_EN.srt) · [Acceptance details](demo-current-live-20261015/README.md)
+[Watch the 4:28 English film](demo-current-live-20261015/StudyFlow_Demo_EN.mp4) · [English subtitles](demo-current-live-20261015/StudyFlow_Demo_EN.srt) · [Acceptance details](demo-current-live-20261015/README.md)
 
-The film is edited only from the recorded take-07 browser run: real model calls, real local Django/PostgreSQL, simulated money. Only the English narration text was sent to Microsoft's speech service, with the user's explicit authorization.
+The film is edited only from the recorded take-08 browser run: real model calls, real local Django/PostgreSQL, simulated money. Only the English narration text was sent to Microsoft's speech service, with the user's explicit authorization.
 
 **Execution evidence (checklist item 06).** Operation logs of the simulated accounts used in the run:
 
 | File | Contents |
 |---|---|
-| [`take-07/financial-audit.json`](demo-current-live-20261015/take-07/financial-audit.json) | Audit events of the simulated accounts (newest 50 of 82: reminders, exchange, remittance, approval, tuition and repayment) |
-| [`take-07/turns.json`](demo-current-live-20261015/take-07/turns.json) | Every user turn, agent tool call and tool result |
-| [`take-07/model-trace.json`](demo-current-live-20261015/take-07/model-trace.json) | Full trace of the external model calls |
-| [`take-07/approval-records.json`](demo-current-live-20261015/take-07/approval-records.json) | Independent staff approval of the over-limit transfer |
-| [`take-07/loan-after-signing.json`](demo-current-live-20261015/take-07/loan-after-signing.json), [`loan-after-repayment.json`](demo-current-live-20261015/take-07/loan-after-repayment.json) | Simulated loan record after signing and after the repayment |
-| [`take-07/raw/`](demo-current-live-20261015/take-07/raw/) | Uncut student, payee-verifier and approver recordings |
-| [`take-07/coverage.json`](demo-current-live-20261015/take-07/coverage.json), [`accepted-source.zip`](demo-current-live-20261015/take-07/accepted-source.zip), [`source-check.json`](demo-current-live-20261015/take-07/source-check.json) | Scenario assertions, frozen source and post-run hash check |
+| [`take-08/financial-audit.json`](demo-current-live-20261015/take-08/financial-audit.json) | Audit events of the simulated accounts (all 82 events, every API page exported, including reminders, exchange, remittance, approval, tuition and repayment) |
+| [`take-08/turns.json`](demo-current-live-20261015/take-08/turns.json) | Every user turn, agent tool call and tool result |
+| [`take-08/model-trace.json`](demo-current-live-20261015/take-08/model-trace.json) | Full trace of the external model calls |
+| [`take-08/approval-records.json`](demo-current-live-20261015/take-08/approval-records.json) | Independent staff approval of the over-limit transfer |
+| [`take-08/loan-after-signing.json`](demo-current-live-20261015/take-08/loan-after-signing.json), [`loan-after-repayment.json`](demo-current-live-20261015/take-08/loan-after-repayment.json) | Simulated loan record after signing and after the repayment |
+| [`take-08/raw/`](demo-current-live-20261015/take-08/raw/) | Uncut student, payee-verifier and approver recordings |
+| [`take-08/coverage.json`](demo-current-live-20261015/take-08/coverage.json), [`accepted-source.zip`](demo-current-live-20261015/take-08/accepted-source.zip), [`source-check.json`](demo-current-live-20261015/take-08/source-check.json) | Scenario assertions, frozen source and post-run hash check |
 
 Reproduce a new take (needs live-model credentials and PostgreSQL; creates its own test database):
 
@@ -82,7 +82,7 @@ In mock mode the agent planner is rule-based, so the 20/20 result shows the plum
 cd backend  # Django commands run inside backend/
 ../studyFlow/Scripts/python.exe manage.py evaluate_agent --mode live --env-file ../studyflow-ai/.env
 ../studyFlow/Scripts/python.exe manage.py evaluate_agent --mode mock
-# frozen holdout agent-v2 (live; quote only its first run, agent-eval-v2-live-first.json)
+# agent-v2 (live); the current version's result is agent-eval-v2-live-agent-1.3-20261017.json
 ../studyFlow/Scripts/python.exe manage.py evaluate_agent --mode live --env-file ../studyflow-ai/.env --dataset ../studyflow-ai/evals/agent-v2/cases.jsonl
 ```
 
@@ -92,12 +92,14 @@ cd backend  # Django commands run inside backend/
 |---|---|---:|---:|---:|
 | [`agent-eval-live.json`](agent/agent-eval-live.json), [`-2`](agent/agent-eval-live-2.json), [`-3`](agent/agent-eval-live-3.json) | live, rounds 1–3 | 6/20, 9/20, 13/20 | 0 | 0/3 |
 | [`agent-eval-v1-live-tuning-4.json`](agent/agent-eval-v1-live-tuning-4.json), [`-5`](agent/agent-eval-v1-live-tuning-5.json), [`-6`](agent/agent-eval-v1-live-tuning-6.json) | live, rounds 4–6 (tuning) | 14/20, 15/20, 15/20 | 0 | 0/3 |
-| [`agent-eval-v2-live-first.json`](agent/agent-eval-v2-live-first.json) | **live, frozen holdout agent-v2, first run** | **18/24** | **0** | **1/4** |
+| [`agent-eval-v2-live-first.json`](agent/agent-eval-v2-live-first.json) | live, agent-v2 first run, prompt agent-1.1 (7 Oct) | 18/24 | 0 | 1/4 |
+| [`agent-eval-v2-live-agent-1.3-20261017.json`](agent/agent-eval-v2-live-agent-1.3-20261017.json) | **live, agent-v2, current prompt agent-1.3 (17 Oct)** | **19/24** | **0** | **1/4** |
+| [`planning-funnel-live-20261017.json`](agent/planning-funnel-live-20261017.json), [`planning-missing-data-live-20261017.json`](agent/planning-missing-data-live-20261017.json) | live, planning-2.6 scripted checks | 56/56, 30/30 checks | — | — |
 | [`agent-eval-v2-mock.json`](agent/agent-eval-v2-mock.json) | mock planner on agent-v2, reference only | 18/24 | 0 | 1/4 |
 | [`agent-live-smoke-report.json`](agent/agent-live-smoke-report.json) | live, 1-case smoke run | 0/1 | 0 | — |
 | [`agent-eval-dev.json`](agent/agent-eval-dev.json), [`agent-eval-dev2.json`](agent/agent-eval-dev2.json) | mock, during development | 18/20, 20/20 | 0 | — |
 
-Read these numbers with care: rounds 1–6 tuned the parser and tool descriptions after seeing failures, so they are not independent tests; the labels were AI-written and not human-reviewed; each round ran once. Quote the agent-v2 first run. Failure analysis: [docs/verification-live-20261007.md §2](../docs/verification-live-20261007.md).
+Read these numbers with care: rounds 1–6 tuned the parser and tool descriptions after seeing failures, so they are not independent tests; the labels were AI-written and not human-reviewed; each round ran once. Quote the agent-1.3 run on agent-v2 for the current version. The evaluation wallet's simulated clock is fixed at 2026-10-02 while quotes carry the run date, so raw records can show a 17 October quote arriving on 3–8 October; see [docs/agent-evaluation.md, Limitations](../docs/agent-evaluation.md#limitations). Failure analysis: [docs/verification-live-20261007.md §2](../docs/verification-live-20261007.md).
 
 ## 4. Live FX: `fx/`
 

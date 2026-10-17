@@ -1,0 +1,362 @@
+{
+  "model": "Whisper large-v3-turbo",
+  "model_sha256": "aff26ae408abcba5fbf8813c21e62b0941638c5f6eebfb145be0c9839262a19a",
+  "audio_sha256": "9e6bc5e80e325c0bb4626de9ebc89289a5347b0ddfade9205ebe75dcefa83912",
+  "offline": true,
+  "initial_prompt": null,
+  "transcript": "A wrong password stops the action and leaves the balance unchanged. After password confirmation, 500 yuan is debited and the quoted amount in Tybot is credited after fees. For a transfer, routes, fees, and expected arrival come before commitment.",
+  "phrase_checks": {
+    "after password confirmation": true,
+    "500 yuan is debited": true,
+    "Thai baht": false,
+    "credited after fees": true
+  },
+  "passed": false,
+  "segments": [
+    {
+      "id": 0,
+      "seek": 0,
+      "start": 0.0,
+      "end": 3.94,
+      "text": " A wrong password stops the action and leaves the balance unchanged.",
+      "tokens": [
+        50365,
+        316,
+        2085,
+        11524,
+        10094,
+        264,
+        3069,
+        293,
+        5510,
+        264,
+        4772,
+        44553,
+        13,
+        50565
+      ],
+      "temperature": 0,
+      "avg_logprob": -0.17167895923961293,
+      "compression_ratio": 1.455621301775148,
+      "no_speech_prob": 2.4707362891729368e-11,
+      "words": [
+        {
+          "word": " A",
+          "start": 0.0,
+          "end": 0.44,
+          "probability": 0.9311676621437073
+        },
+        {
+          "word": " wrong",
+          "start": 0.44,
+          "end": 0.66,
+          "probability": 0.9909993410110474
+        },
+        {
+          "word": " password",
+          "start": 0.66,
+          "end": 1.12,
+          "probability": 0.9964665174484253
+        },
+        {
+          "word": " stops",
+          "start": 1.12,
+          "end": 1.56,
+          "probability": 0.996493399143219
+        },
+        {
+          "word": " the",
+          "start": 1.56,
+          "end": 1.76,
+          "probability": 0.9976285099983215
+        },
+        {
+          "word": " action",
+          "start": 1.76,
+          "end": 2.12,
+          "probability": 0.9968962669372559
+        },
+        {
+          "word": " and",
+          "start": 2.12,
+          "end": 2.46,
+          "probability": 0.9686267375946045
+        },
+        {
+          "word": " leaves",
+          "start": 2.46,
+          "end": 2.72,
+          "probability": 0.9951640367507935
+        },
+        {
+          "word": " the",
+          "start": 2.72,
+          "end": 2.86,
+          "probability": 0.9980190992355347
+        },
+        {
+          "word": " balance",
+          "start": 2.86,
+          "end": 3.26,
+          "probability": 0.9987290501594543
+        },
+        {
+          "word": " unchanged.",
+          "start": 3.26,
+          "end": 3.94,
+          "probability": 0.9974830746650696
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "seek": 0,
+      "start": 4.48,
+      "end": 11.7,
+      "text": " After password confirmation, 500 yuan is debited and the quoted amount in Tybot is credited after fees.",
+      "tokens": [
+        50565,
+        2381,
+        11524,
+        21871,
+        11,
+        5923,
+        28370,
+        307,
+        3001,
+        1226,
+        293,
+        264,
+        30047,
+        2372,
+        294,
+        5569,
+        18870,
+        307,
+        41155,
+        934,
+        13370,
+        13,
+        50965
+      ],
+      "temperature": 0,
+      "avg_logprob": -0.17167895923961293,
+      "compression_ratio": 1.455621301775148,
+      "no_speech_prob": 2.4707362891729368e-11,
+      "words": [
+        {
+          "word": " After",
+          "start": 4.48,
+          "end": 4.74,
+          "probability": 0.9963635802268982
+        },
+        {
+          "word": " password",
+          "start": 4.74,
+          "end": 5.2,
+          "probability": 0.9881414175033569
+        },
+        {
+          "word": " confirmation,",
+          "start": 5.2,
+          "end": 5.86,
+          "probability": 0.9988051652908325
+        },
+        {
+          "word": " 500",
+          "start": 6.54,
+          "end": 6.94,
+          "probability": 0.9125837087631226
+        },
+        {
+          "word": " yuan",
+          "start": 6.94,
+          "end": 7.4,
+          "probability": 0.8113716244697571
+        },
+        {
+          "word": " is",
+          "start": 7.4,
+          "end": 7.7,
+          "probability": 0.997999370098114
+        },
+        {
+          "word": " debited",
+          "start": 7.7,
+          "end": 8.14,
+          "probability": 0.9914292693138123
+        },
+        {
+          "word": " and",
+          "start": 8.14,
+          "end": 8.64,
+          "probability": 0.7880488038063049
+        },
+        {
+          "word": " the",
+          "start": 8.64,
+          "end": 8.78,
+          "probability": 0.9970270991325378
+        },
+        {
+          "word": " quoted",
+          "start": 8.78,
+          "end": 9.1,
+          "probability": 0.9945486187934875
+        },
+        {
+          "word": " amount",
+          "start": 9.1,
+          "end": 9.46,
+          "probability": 0.9991412162780762
+        },
+        {
+          "word": " in",
+          "start": 9.46,
+          "end": 9.64,
+          "probability": 0.9966661334037781
+        },
+        {
+          "word": " Tybot",
+          "start": 9.64,
+          "end": 10.1,
+          "probability": 0.5739027708768845
+        },
+        {
+          "word": " is",
+          "start": 10.1,
+          "end": 10.4,
+          "probability": 0.9973213076591492
+        },
+        {
+          "word": " credited",
+          "start": 10.4,
+          "end": 10.8,
+          "probability": 0.9914433360099792
+        },
+        {
+          "word": " after",
+          "start": 10.8,
+          "end": 11.2,
+          "probability": 0.9976805448532104
+        },
+        {
+          "word": " fees.",
+          "start": 11.2,
+          "end": 11.7,
+          "probability": 0.9929532408714294
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "seek": 0,
+      "start": 11.96,
+      "end": 16.46,
+      "text": " For a transfer, routes, fees, and expected arrival come before commitment.",
+      "tokens": [
+        50965,
+        1171,
+        257,
+        5003,
+        11,
+        18242,
+        11,
+        13370,
+        11,
+        293,
+        5176,
+        18365,
+        808,
+        949,
+        8371,
+        13,
+        51215
+      ],
+      "temperature": 0,
+      "avg_logprob": -0.17167895923961293,
+      "compression_ratio": 1.455621301775148,
+      "no_speech_prob": 2.4707362891729368e-11,
+      "words": [
+        {
+          "word": " For",
+          "start": 11.96,
+          "end": 12.34,
+          "probability": 0.9975167512893677
+        },
+        {
+          "word": " a",
+          "start": 12.34,
+          "end": 12.44,
+          "probability": 0.9821580648422241
+        },
+        {
+          "word": " transfer,",
+          "start": 12.44,
+          "end": 12.88,
+          "probability": 0.9957148432731628
+        },
+        {
+          "word": " routes,",
+          "start": 13.14,
+          "end": 13.46,
+          "probability": 0.9825291633605957
+        },
+        {
+          "word": " fees,",
+          "start": 13.74,
+          "end": 14.22,
+          "probability": 0.9976069927215576
+        },
+        {
+          "word": " and",
+          "start": 14.5,
+          "end": 14.56,
+          "probability": 0.9981387853622437
+        },
+        {
+          "word": " expected",
+          "start": 14.56,
+          "end": 15.0,
+          "probability": 0.9862707853317261
+        },
+        {
+          "word": " arrival",
+          "start": 15.0,
+          "end": 15.44,
+          "probability": 0.9971815347671509
+        },
+        {
+          "word": " come",
+          "start": 15.44,
+          "end": 15.74,
+          "probability": 0.9874997735023499
+        },
+        {
+          "word": " before",
+          "start": 15.74,
+          "end": 16.08,
+          "probability": 0.9987994432449341
+        },
+        {
+          "word": " commitment.",
+          "start": 16.08,
+          "end": 16.46,
+          "probability": 0.9897162318229675
+        }
+      ]
+    }
+  ],
+  "scope": "Final mastered sentence plus preceding and following narration; independent ASR, not a human listening score",
+  "vocabulary_pass": {
+    "initial_prompt": "Currency names: yuan, Thai baht.",
+    "transcript": "A wrong password stops the action and leaves the balance unchanged. After password confirmation, 500 yuan is debited and the quoted amount in Thai baht is credited after fees. For a transfer, routes, fees, and expected arrival come before commitment.",
+    "phrase_checks": {
+      "after password confirmation": true,
+      "500 yuan is debited": true,
+      "Thai baht": true,
+      "credited after fees": true
+    },
+    "passed": true
+  }
+}

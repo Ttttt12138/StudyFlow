@@ -1,12 +1,15 @@
 {
+  "date": "2026-10-17",
+  "take": "take-08",
+  "recorded_base_commit": "641432a84969c8fbfd27ee5ff93eb6bdeedac39e",
+  "delivery_head_before_media_update": "9b23f7954660bc78d9149d4d4affcd27e8456758",
+  "snapshot_file_count": 990,
+  "all_snapshot_files_match_current_files": true,
   "runtime_source_unchanged": true,
-  "snapshot_file_count": 1022,
-  "post_recording_changes": [
-    {
-      "path": "studyflow-ai/auto_test/test_planning_rules.py",
-      "recorded_sha256": "26c9ddc63626f0f5e46e018383c68825e1fb059fa95b97a83638fb5a995419a9",
-      "current_sha256": "5a7cb6983a65eaab0bf58af65dec9d1f5f8e6d89d07f3a4d888fc9738ac5b6f8"
-    }
+  "changed_snapshot_files": [],
+  "post_recording_tracked_changes_in_application_and_tools": [
+    "A\tscripts/check_planning_funnel_live.py",
+    "A\tscripts/check_planning_missing_data_live.py"
   ],
-  "explanation": "Only the prompt-version test assertion was updated from planning-2.4 to planning-2.6 after recording; all 21 planning-rule tests then passed. Recorded application code is unchanged."
+  "explanation": "All 990 recorded source files match. The later additions are two evaluation scripts, with no runtime source changes. This update changes media and its documentation only."
 }

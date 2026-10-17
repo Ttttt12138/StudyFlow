@@ -2,7 +2,7 @@
 
 StudyFlow helps students compare the full cost of studying abroad, choose a school and get a simulated study-loan recommendation for an amount they enter. The main conversation starts with full-course prices and school comparisons. Submitting the loan application confirms the plan and opens to-dos, bills and the wallet, exchange and remittance tools. **All money and lending are simulated.** School prices are sourced sample estimates, not school invoices or binding quotations. The server enforces permissions, limits, approvals and ledger constraints.
 
-Updated 2026-10-15 for Topic C, including the React frontend, current planning and loan lifecycle, wallet bill payments and post-application tools. Security is covered in [security-self-assessment.md](security-self-assessment.md); historical agent evaluation in [agent-evaluation.md](agent-evaluation.md). Implementation paths describe the current code; dated evidence identifies what was actually exercised.
+Updated 2026-10-17 for Topic C, including the React frontend, current planning and loan lifecycle, wallet bill payments and post-application tools. Security is covered in [security-self-assessment.md](security-self-assessment.md); historical agent evaluation in [agent-evaluation.md](agent-evaluation.md). Implementation paths describe the current code; dated evidence identifies what was actually exercised.
 
 ---
 
@@ -194,7 +194,7 @@ Source: `backend/finance/agent_runner.py`, `backend/finance/agent_tools.py`, `st
 | T2 execution by the agent | **none**: it can only propose | `_propose`; `confirm_pending` runs only for the student, under policy `agent.confirm` |
 | Sessions per user | 30 per hour | `agent` throttle |
 
-The finance prompt is `agent-1.3`; the main conversation uses `planning-2.6`. Each message becomes an audited `AgentSession`, with up to 12 history messages and server memory containing the plan, catalog and pre-check. The runner refreshes `memory.server_time` on every step for real-time quote/proposal expiry, separately from the simulated study date in `memory.today`. Greetings and card-button school selection are deterministic system turns. Opening the loan panel does not submit an application; the student submits it explicitly. Monetary proposals additionally require the underlying authorization. Prompts treat tool/document content as untrusted data. Authorization and exact calculations do not depend on model compliance. Live failure never falls back to the rule provider.
+The finance prompt is `agent-1.3`; the main conversation uses `planning-2.6`. Each message becomes an audited `AgentSession`, with up to 12 history messages and server memory containing the plan, catalog and pre-check. The runner refreshes `memory.server_time` on every step for real-time quote/proposal expiry, separately from the simulated study date in `memory.today`. Greetings and card-button school selection are deterministic system turns. Opening the loan panel does not submit an application; the student submits it explicitly. Monetary proposals additionally require the underlying authorization. Prompts treat tool/document content as untrusted data. Authorization and exact calculations do not depend on model compliance. A provider error fails the turn and never falls back to mock. If a planning reply is still unstructured after its retries, the deterministic planning rules decide that one step and the call is recorded with mode `rules`; the take-08 film run had none.
 
 ## 8. Internationalization
 
@@ -204,14 +204,14 @@ API error responses carry a stable `code` and a localized `message` in Chinese o
 
 | Check | Command or evidence | Recorded result and boundary |
 |---|---|---|
-| Current full-flow live acceptance | [October 15 recording and evidence](../evidence/demo-current-live-20261015/README.md) | 19 completed live user turns; 48 recorded live decisions / 55 provider attempts, 10 deterministic replies and one system step; 13 scenario checks; current conversational loan flow and independent operations approval; new 4:25 Ava film with 54 shots. No rule/mock fallback; fixture FX and simulated funds |
+| Current full-flow live acceptance | [October 17 take-08 recording and evidence](../evidence/demo-current-live-20261015/README.md) | 19 completed live user turns; 48 recorded live decisions / 57 provider attempts, 10 deterministic replies and one system step; 13 scenario checks; current conversational loan flow and independent operations approval; 4:28 Ava film with all 54 shots from take-08 and all 82 audit events preserved. No rule/mock fallback; fixture FX and simulated funds |
 | Historical complete gates | `python scripts/run_gates.py` | 17/17 on 2026-10-07 ([evidence/gates](../evidence/gates/summary.txt)); not acceptance of later changes |
 | Simplified planning | [2026-10-13 record](../evidence/short-planning-20261013/verification.json) | 121 focused backend tests, 165 frontend units, 23 rule tests, five offline browser cases; dated results |
 | Current loan/browser journey | [2026-10-14 record](../evidence/short-planning-20261014/browser.json) | English desktop and Chinese phone: signing, school payout and repayment; real local HTTP/PostgreSQL, rule planner, simulated funds |
 | Earlier planning-only live acceptance | [2026-10-14 live acceptance](verification-planning-live-20261014.md) | Two browser journeys, eight live user turns and fifteen recorded live planner calls; explicit user signing/repayment; simulated money |
 | Earlier focused safeguards | [Baseline log](../evidence/planning-live-20261014/backend-baseline.log) | 155 related backend/browser checks passed before live acceptance |
 | Live FX pricing | see [verification-live-20261007.md](verification-live-20261007.md) | 4 pairs, 12 quotes match the formula |
-| Live agent, frozen holdout | see [agent-evaluation.md](agent-evaluation.md) | 18/24, 0 unauthorized actions |
+| Live agent, frozen holdout | see [agent-evaluation.md](agent-evaluation.md) | 19/24, 0 unauthorized actions (`agent-1.3`, 17 Oct 2026) |
 | CI | `.github/workflows/django.yml`, `c-module.yml` | runs on every push and pull request |
 
 The holdout files `studyflow-ai/evals/copilot-holdout-v2/{manifest,protocol,review}.json` were hashed from a Windows checkout with CRLF line endings, but git stores them with LF. Their SHA-256 in `docs/independent-verification-summary.json` therefore matches the CRLF form. The project's own check (`test_blind_protocol_records_exact_runtime_code`) accepts the raw, LF and CRLF forms; a plain byte comparison on a Linux checkout will not match.

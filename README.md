@@ -19,7 +19,7 @@ The [shared student-flow contract](docs/student-loan-contract.md) defines interf
 | Checklist item | Where |
 |---|---|
 | Technical documentation (architecture, core algorithms, security design) | [docs/technical-overview.md](docs/technical-overview.md) |
-| Demo video (4:25) | [evidence/demo-current-live-20261015/StudyFlow_Demo_EN.mp4](evidence/demo-current-live-20261015/StudyFlow_Demo_EN.mp4) |
+| Demo video (4:28) | [evidence/demo-current-live-20261015/StudyFlow_Demo_EN.mp4](evidence/demo-current-live-20261015/StudyFlow_Demo_EN.mp4) |
 | Source code, deployment instructions and test cases | This README: [Quick start](#quick-start-docker-no-credentials-needed), [Local development](#local-development), [Testing](#testing) |
 | Security self-assessment (permission tiers, known risks) | [docs/security-self-assessment.md](docs/security-self-assessment.md) |
 | Execution evidence (simulated-account operation logs and demo video) | [evidence/demo-current-live-20261015/README.md](evidence/demo-current-live-20261015/README.md), [evidence index](evidence/README.md) |
@@ -122,7 +122,7 @@ One command runs all 17 gates: Django and C tests, migrations, OpenAPI validatio
 studyFlow/Scripts/python.exe scripts/run_gates.py
 ```
 
-Current suites (2026-10-16), all passing: **Django 632 tests** (2 opt-in live recordings skipped), **C package 481 tests**, **frontend 81 unit and 54 mocked browser tests**. An earlier full 17-gate run is logged in [evidence/gates/](evidence/gates/). CI runs the same suites on every push ([django.yml](.github/workflows/django.yml), [c-module.yml](.github/workflows/c-module.yml)), plus the frontend build and browser suites ([frontend.yml](.github/workflows/frontend.yml)).
+Current suites (re-run 2026-10-17 on the submitted code, logs in [evidence/demo-current-live-20261015/regression-20261017](evidence/demo-current-live-20261015/regression-20261017/)), all passing: **Django 632 tests** (2 opt-in live recordings skipped), **C package 481 tests**, **frontend 81 unit and 54 mocked browser tests**. An earlier full 17-gate run is logged in [evidence/gates/](evidence/gates/). CI runs the same suites on every push ([django.yml](.github/workflows/django.yml), [c-module.yml](.github/workflows/c-module.yml)), plus the frontend build and browser suites ([frontend.yml](.github/workflows/frontend.yml)).
 
 | Area | Test files | Test functions* | What they prove |
 |---|---|---:|---|
@@ -143,7 +143,7 @@ Current suites (2026-10-16), all passing: **Django 632 tests** (2 opt-in live re
 
 | Result | Value | Evidence |
 |---|---|---|
-| Live agent, **frozen holdout** (`agent-v2`, first run) | 18/24 tasks (75%), **0 unauthorized actions**, 1 of 4 injection cases partly followed (no money moved) | [agent-evaluation.md](docs/agent-evaluation.md) |
+| Live wallet agent, current prompt `agent-1.3` (`agent-v2`, 24 cases, 17 Oct 2026) | 19/24 tasks (79%), **0 unauthorized actions**, 1 of 4 injection cases partly followed (no money moved). Planning conversation `planning-2.6`: scripted live checks 86/86 passed | [agent-evaluation.md](docs/agent-evaluation.md) |
 | Live FX pricing | 4 currency pairs, 12 route quotes matching the formula worked by hand | [evidence/fx](evidence/fx/verification-live-fx.json) |
 | Gemini OCR, live | 6/6 synthetic samples; full HTTP → worker → OCR → extraction chain passed | [evidence/ocr](evidence/ocr/) |
 
@@ -183,7 +183,7 @@ The ten schools in `backend/finance/planning/catalog/` are **sample data**. Each
 
 ## Demo video
 
-[**Watch the English demo (4:25)**](evidence/demo-current-live-20261015/StudyFlow_Demo_EN.mp4)
+[**Watch the English demo (4:28)**](evidence/demo-current-live-20261015/StudyFlow_Demo_EN.mp4)
 
 1080p with English narration and subtitles. Fifty-four shots follow the current journey: cost comparison, conversational loan recommendation, application and signing, reminders, tuition, currency exchange, remittance, repayment and independent operations approval. It was cut from one live browser acceptance run (19 live-AI user turns, 13 scenario checks, no rule or mock fallback). All financial transactions are simulated.
 

@@ -1,0 +1,632 @@
+[
+  {
+    "name": "opening",
+    "role": "student",
+    "start": 1.1239217000000001,
+    "screenshot": "student-opening.png",
+    "end": 5.1690153
+  },
+  {
+    "name": "school-cost-question",
+    "role": "student",
+    "start": 6.0748578,
+    "screenshot": "student-school-cost-question.png",
+    "end": 7.6169206
+  },
+  {
+    "name": "school-cost",
+    "role": "student",
+    "start": 21.9456723,
+    "screenshot": "student-school-cost.png",
+    "end": 24.9883994
+  },
+  {
+    "name": "cost-card",
+    "role": "student",
+    "start": 25.458435299999998,
+    "screenshot": "student-cost-card.png",
+    "end": 29.4917549
+  },
+  {
+    "name": "cost-sources",
+    "role": "student",
+    "start": 29.9765899,
+    "screenshot": "student-cost-sources.png",
+    "end": 34.0262453
+  },
+  {
+    "name": "cost-living",
+    "role": "student",
+    "start": 34.4930179,
+    "screenshot": "student-cost-living.png",
+    "end": 38.545825799999996
+  },
+  {
+    "name": "cost-essentials",
+    "role": "student",
+    "start": 39.0138892,
+    "screenshot": "student-cost-essentials.png",
+    "end": 43.063844100000004
+  },
+  {
+    "name": "school-comparison-question",
+    "role": "student",
+    "start": 43.865588100000004,
+    "screenshot": "student-school-comparison-question.png",
+    "end": 45.4110224
+  },
+  {
+    "name": "school-comparison",
+    "role": "student",
+    "start": 55.6293986,
+    "screenshot": "student-school-comparison.png",
+    "end": 58.6660289
+  },
+  {
+    "name": "comparison-card",
+    "role": "student",
+    "start": 59.1328015,
+    "screenshot": "student-comparison-card.png",
+    "end": 63.165487199999994
+  },
+  {
+    "name": "comparison-cny",
+    "role": "student",
+    "start": 63.6593487,
+    "screenshot": "student-comparison-cny.png",
+    "end": 65.69652839999999
+  },
+  {
+    "name": "comparison-usd",
+    "role": "student",
+    "start": 66.17668379999999,
+    "screenshot": "student-comparison-usd.png",
+    "end": 68.225621
+  },
+  {
+    "name": "comparison-thb",
+    "role": "student",
+    "start": 68.7197258,
+    "screenshot": "student-comparison-thb.png",
+    "end": 70.75341159999999
+  },
+  {
+    "name": "missing-ranking-question",
+    "role": "student",
+    "start": 71.55363559999999,
+    "screenshot": "student-missing-ranking-question.png",
+    "end": 73.0908177
+  },
+  {
+    "name": "missing-ranking",
+    "role": "student",
+    "start": 77.1036691,
+    "screenshot": "student-missing-ranking.png",
+    "end": 80.1437174
+  },
+  {
+    "name": "school-profile-question",
+    "role": "student",
+    "start": 80.9449121,
+    "screenshot": "student-school-profile-question.png",
+    "end": 82.49586169999999
+  },
+  {
+    "name": "school-profile",
+    "role": "student",
+    "start": 92.6983974,
+    "screenshot": "student-school-profile.png",
+    "end": 95.7372531
+  },
+  {
+    "name": "school-chosen-question",
+    "role": "student",
+    "start": 96.55923419999999,
+    "screenshot": "student-school-chosen-question.png",
+    "end": 98.1052403
+  },
+  {
+    "name": "school-chosen",
+    "role": "student",
+    "start": 102.6416512,
+    "screenshot": "student-school-chosen.png",
+    "end": 105.6827665
+  },
+  {
+    "name": "loan-recommended-question",
+    "role": "student",
+    "start": 106.6150682,
+    "screenshot": "student-loan-recommended-question.png",
+    "end": 108.15544770000001
+  },
+  {
+    "name": "loan-recommended",
+    "role": "student",
+    "start": 113.13797319999999,
+    "screenshot": "student-loan-recommended.png",
+    "end": 116.17823940000001
+  },
+  {
+    "name": "loan-card",
+    "role": "student",
+    "start": 116.6785091,
+    "screenshot": "student-loan-card.png",
+    "end": 120.7082781
+  },
+  {
+    "name": "loan-alternatives",
+    "role": "student",
+    "start": 121.1788369,
+    "screenshot": "student-loan-alternatives.png",
+    "end": 125.2144191
+  },
+  {
+    "name": "manual-loan-controls",
+    "role": "student",
+    "start": 126.0855591,
+    "screenshot": "student-manual-loan-controls.png",
+    "end": 130.1371595
+  },
+  {
+    "name": "lower-monthly-question",
+    "role": "student",
+    "start": 130.9882197,
+    "screenshot": "student-lower-monthly-question.png",
+    "end": 132.5411501
+  },
+  {
+    "name": "lower-monthly",
+    "role": "student",
+    "start": 137.6023132,
+    "screenshot": "student-lower-monthly.png",
+    "end": 140.6437574
+  },
+  {
+    "name": "monthly-change",
+    "role": "student",
+    "start": 141.1536283,
+    "screenshot": "student-monthly-change.png",
+    "end": 145.18260220000002
+  },
+  {
+    "name": "interest-only-question",
+    "role": "student",
+    "start": 146.04364120000002,
+    "screenshot": "student-interest-only-question.png",
+    "end": 147.58539860000002
+  },
+  {
+    "name": "interest-only",
+    "role": "student",
+    "start": 152.0417825,
+    "screenshot": "student-interest-only.png",
+    "end": 155.0907961
+  },
+  {
+    "name": "interest-only-card",
+    "role": "student",
+    "start": 155.60150900000002,
+    "screenshot": "student-interest-only-card.png",
+    "end": 159.6455998
+  },
+  {
+    "name": "lower-interest-question",
+    "role": "student",
+    "start": 160.57139210000003,
+    "screenshot": "student-lower-interest-question.png",
+    "end": 162.1221912
+  },
+  {
+    "name": "lower-interest",
+    "role": "student",
+    "start": 166.86327000000003,
+    "screenshot": "student-lower-interest.png",
+    "end": 169.9029505
+  },
+  {
+    "name": "interest-change",
+    "role": "student",
+    "start": 170.4130733,
+    "screenshot": "student-interest-change.png",
+    "end": 174.45715990000002
+  },
+  {
+    "name": "ask-reduced-amount-question",
+    "role": "student",
+    "start": 175.31864260000003,
+    "screenshot": "student-ask-reduced-amount-question.png",
+    "end": 176.85957280000002
+  },
+  {
+    "name": "ask-reduced-amount",
+    "role": "student",
+    "start": 181.2786081,
+    "screenshot": "student-ask-reduced-amount.png",
+    "end": 184.3207068
+  },
+  {
+    "name": "reduced-amount-question",
+    "role": "student",
+    "start": 185.2028127,
+    "screenshot": "student-reduced-amount-question.png",
+    "end": 186.75576560000002
+  },
+  {
+    "name": "reduced-amount",
+    "role": "student",
+    "start": 193.04679810000002,
+    "screenshot": "student-reduced-amount.png",
+    "end": 196.09271560000002
+  },
+  {
+    "name": "reduced-card",
+    "role": "student",
+    "start": 196.6052827,
+    "screenshot": "student-reduced-card.png",
+    "end": 200.639258
+  },
+  {
+    "name": "pause-loan-question",
+    "role": "student",
+    "start": 201.54513690000002,
+    "screenshot": "student-pause-loan-question.png",
+    "end": 203.10113320000002
+  },
+  {
+    "name": "pause-loan",
+    "role": "student",
+    "start": 209.6136784,
+    "screenshot": "student-pause-loan.png",
+    "end": 212.64555260000003
+  },
+  {
+    "name": "paused-school-question-question",
+    "role": "student",
+    "start": 213.5849284,
+    "screenshot": "student-paused-school-question-question.png",
+    "end": 215.12800090000002
+  },
+  {
+    "name": "paused-school-question",
+    "role": "student",
+    "start": 225.41971410000002,
+    "screenshot": "student-paused-school-question.png",
+    "end": 228.45994850000002
+  },
+  {
+    "name": "resume-loan-question",
+    "role": "student",
+    "start": 229.4002829,
+    "screenshot": "student-resume-loan-question.png",
+    "end": 230.9436573
+  },
+  {
+    "name": "resume-loan",
+    "role": "student",
+    "start": 235.70390430000003,
+    "screenshot": "student-resume-loan.png",
+    "end": 238.7529658
+  },
+  {
+    "name": "application-intent-question",
+    "role": "student",
+    "start": 239.778184,
+    "screenshot": "student-application-intent-question.png",
+    "end": 241.3400372
+  },
+  {
+    "name": "application-intent",
+    "role": "student",
+    "start": 245.23739550000002,
+    "screenshot": "student-application-intent.png",
+    "end": 248.27791890000003
+  },
+  {
+    "name": "application-review",
+    "role": "student",
+    "start": 248.79460450000002,
+    "screenshot": "student-application-review.png",
+    "end": 252.8368334
+  },
+  {
+    "name": "application-submitted",
+    "role": "student",
+    "start": 254.16402810000002,
+    "screenshot": "student-application-submitted.png",
+    "end": 258.2057375
+  },
+  {
+    "name": "unsigned-bill-coverage",
+    "role": "student",
+    "start": 259.436312,
+    "screenshot": "student-unsigned-bill-coverage.png",
+    "end": 263.47489529999996
+  },
+  {
+    "name": "documents-ready",
+    "role": "student",
+    "start": 265.2134532,
+    "screenshot": "student-documents-ready.png",
+    "end": 269.2621926
+  },
+  {
+    "name": "signing-review",
+    "role": "student",
+    "start": 269.7451221,
+    "screenshot": "student-signing-review.png",
+    "end": 273.7892472
+  },
+  {
+    "name": "school-payout-schedule",
+    "role": "student",
+    "start": 274.5433316,
+    "screenshot": "student-school-payout-schedule.png",
+    "end": 278.58350709999996
+  },
+  {
+    "name": "reminder-created-question",
+    "role": "student",
+    "start": 279.5403406,
+    "screenshot": "student-reminder-created-question.png",
+    "end": 281.0922964
+  },
+  {
+    "name": "reminder-created",
+    "role": "student",
+    "start": 291.5008629,
+    "screenshot": "student-reminder-created.png",
+    "end": 294.5455838
+  },
+  {
+    "name": "todo-overview",
+    "role": "student",
+    "start": 295.7195038,
+    "screenshot": "student-todo-overview.png",
+    "end": 299.7618138
+  },
+  {
+    "name": "reminder-completed",
+    "role": "student",
+    "start": 301.0418825,
+    "screenshot": "student-reminder-completed.png",
+    "end": 305.06813689999996
+  },
+  {
+    "name": "reminder-reopened",
+    "role": "student",
+    "start": 305.79700479999997,
+    "screenshot": "student-reminder-reopened.png",
+    "end": 307.8254864
+  },
+  {
+    "name": "partial-tuition",
+    "role": "student",
+    "start": 309.1004455,
+    "screenshot": "student-partial-tuition.png",
+    "end": 313.14446719999995
+  },
+  {
+    "name": "tuition-topup",
+    "role": "student",
+    "start": 313.6444496,
+    "screenshot": "student-tuition-topup.png",
+    "end": 317.6807166
+  },
+  {
+    "name": "tuition-authorization",
+    "role": "student",
+    "start": 318.65371489999995,
+    "screenshot": "student-tuition-authorization.png",
+    "end": 322.70832529999996
+  },
+  {
+    "name": "tuition-paid",
+    "role": "student",
+    "start": 323.42185209999997,
+    "screenshot": "student-tuition-paid.png",
+    "end": 327.4590343
+  },
+  {
+    "name": "currency-balances",
+    "role": "student",
+    "start": 328.7672358,
+    "screenshot": "student-currency-balances.png",
+    "end": 332.8121213
+  },
+  {
+    "name": "exchange-proposal-question",
+    "role": "student",
+    "start": 333.7609078,
+    "screenshot": "student-exchange-proposal-question.png",
+    "end": 335.3077426
+  },
+  {
+    "name": "exchange-proposal",
+    "role": "student",
+    "start": 365.8583234,
+    "screenshot": "student-exchange-proposal.png",
+    "end": 368.9017173
+  },
+  {
+    "name": "exchange-review",
+    "role": "student",
+    "start": 369.39841889999997,
+    "screenshot": "student-exchange-review.png",
+    "end": 373.4350396
+  },
+  {
+    "name": "wrong-password-blocked",
+    "role": "student",
+    "start": 374.11656750000003,
+    "screenshot": "student-wrong-password-blocked.png",
+    "end": 378.1591492
+  },
+  {
+    "name": "exchange-confirmed",
+    "role": "student",
+    "start": 379.00896409999996,
+    "screenshot": "student-exchange-confirmed.png",
+    "end": 383.0543912
+  },
+  {
+    "name": "remittance-proposal-question",
+    "role": "student",
+    "start": 384.0735317,
+    "screenshot": "student-remittance-proposal-question.png",
+    "end": 385.63447339999993
+  },
+  {
+    "name": "remittance-proposal",
+    "role": "student",
+    "start": 418.1190453,
+    "screenshot": "student-remittance-proposal.png",
+    "end": 421.1718578
+  },
+  {
+    "name": "remittance-review",
+    "role": "student",
+    "start": 421.6567651,
+    "screenshot": "student-remittance-review.png",
+    "end": 425.7026378
+  },
+  {
+    "name": "remittance-history",
+    "role": "student",
+    "start": 427.2558162,
+    "screenshot": "student-remittance-history.png",
+    "end": 431.3093898
+  },
+  {
+    "name": "remittance-arrival-clock",
+    "role": "student",
+    "start": 432.7443011,
+    "screenshot": "student-remittance-arrival-clock.png",
+    "end": 434.7912205
+  },
+  {
+    "name": "remittance-delivered",
+    "role": "student",
+    "start": 436.2464015,
+    "screenshot": "student-remittance-delivered.png",
+    "end": 440.29204749999997
+  },
+  {
+    "name": "payee-review",
+    "role": "operator",
+    "start": 1.4105957000000053,
+    "screenshot": "operator-payee-review.png",
+    "end": 5.451122200000041
+  },
+  {
+    "name": "large-transfer-question",
+    "role": "student",
+    "start": 447.23089419999997,
+    "screenshot": "student-large-transfer-question.png",
+    "end": 448.79106529999996
+  },
+  {
+    "name": "large-transfer",
+    "role": "student",
+    "start": 488.5268883,
+    "screenshot": "student-large-transfer.png",
+    "end": 491.56519929999996
+  },
+  {
+    "name": "large-transfer-blocked",
+    "role": "student",
+    "start": 492.3543999,
+    "screenshot": "student-large-transfer-blocked.png",
+    "end": 496.39453589999994
+  },
+  {
+    "name": "approval-requested",
+    "role": "student",
+    "start": 496.9836272,
+    "screenshot": "student-approval-requested.png",
+    "end": 501.0291979
+  },
+  {
+    "name": "separation-of-duties",
+    "role": "operator",
+    "start": 61.36625770000002,
+    "screenshot": "operator-separation-of-duties.png",
+    "end": 65.4061078
+  },
+  {
+    "name": "operations-overview",
+    "role": "approver",
+    "start": 65.5526421,
+    "screenshot": "approver-operations-overview.png",
+    "end": 69.58867800000002
+  },
+  {
+    "name": "approval-details",
+    "role": "approver",
+    "start": 70.28929649999999,
+    "screenshot": "approver-approval-details.png",
+    "end": 74.32689850000001
+  },
+  {
+    "name": "approval-confirmation",
+    "role": "approver",
+    "start": 74.80932279999996,
+    "screenshot": "approver-approval-confirmation.png",
+    "end": 76.85028739999997
+  },
+  {
+    "name": "approval-record",
+    "role": "approver",
+    "start": 77.4853997,
+    "screenshot": "approver-approval-record.png",
+    "end": 81.5191397
+  },
+  {
+    "name": "approved-transfer-submitted",
+    "role": "student",
+    "start": 523.0683517,
+    "screenshot": "student-approved-transfer-submitted.png",
+    "end": 527.1059094
+  },
+  {
+    "name": "repayment-clock",
+    "role": "student",
+    "start": 528.6791437,
+    "screenshot": "student-repayment-clock.png",
+    "end": 530.7247872
+  },
+  {
+    "name": "repayment-due",
+    "role": "student",
+    "start": 531.7713615,
+    "screenshot": "student-repayment-due.png",
+    "end": 535.8253
+  },
+  {
+    "name": "repayment-review",
+    "role": "student",
+    "start": 536.3389156,
+    "screenshot": "student-repayment-review.png",
+    "end": 540.3825847
+  },
+  {
+    "name": "repayment-authorization",
+    "role": "student",
+    "start": 540.9426479,
+    "screenshot": "student-repayment-authorization.png",
+    "end": 542.9823809
+  },
+  {
+    "name": "repayment-paid",
+    "role": "student",
+    "start": 543.6923256,
+    "screenshot": "student-repayment-paid.png",
+    "end": 547.7378894999999
+  },
+  {
+    "name": "final-ledger",
+    "role": "student",
+    "start": 549.001424,
+    "screenshot": "student-final-ledger.png",
+    "end": 553.0596002
+  }
+]

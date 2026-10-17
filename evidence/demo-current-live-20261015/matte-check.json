@@ -1,272 +1,272 @@
 [
   {
     "shot": "shot-01",
-    "header": 2.096976772030651,
-    "right": 2.1097352176738142
+    "header_difference": 2.153068127394636,
+    "side_panel_difference": 2.120614035087719
   },
   {
     "shot": "shot-02",
-    "header": 2.052035440613027,
-    "right": 2.072442332683561
+    "header_difference": 2.0695641762452106,
+    "side_panel_difference": 2.070227420402859
   },
   {
     "shot": "shot-03",
-    "header": 2.0606441570881224,
-    "right": 2.089472871994802
+    "header_difference": 2.1002185105363984,
+    "side_panel_difference": 2.0966382391163094
   },
   {
     "shot": "shot-04",
-    "header": 2.065355603448276,
-    "right": 2.092013482781027
+    "header_difference": 2.0974616858237547,
+    "side_panel_difference": 2.0972279077322935
   },
   {
     "shot": "shot-05",
-    "header": 2.0817319204980844,
-    "right": 2.095925925925926
+    "header_difference": 2.102188098659004,
+    "side_panel_difference": 2.1034941520467836
   },
   {
     "shot": "shot-06",
-    "header": 2.077352729885057,
-    "right": 2.092417153996101
+    "header_difference": 2.104382183908046,
+    "side_panel_difference": 2.090760233918129
   },
   {
     "shot": "shot-07",
-    "header": 2.078244731800766,
-    "right": 2.0950730994152047
+    "header_difference": 2.0848748802681993,
+    "side_panel_difference": 2.099619070825211
   },
   {
     "shot": "shot-08",
-    "header": 2.07791247605364,
-    "right": 2.0990212800519816
+    "header_difference": 2.08000778256705,
+    "side_panel_difference": 2.104885477582846
   },
   {
     "shot": "shot-09",
-    "header": 2.081264966475096,
-    "right": 2.089808317089019
+    "header_difference": 2.0818486590038314,
+    "side_panel_difference": 2.102652696556205
   },
   {
     "shot": "shot-10",
-    "header": 2.0819085249042146,
-    "right": 2.0859502923976607
+    "header_difference": 2.101119492337165,
+    "side_panel_difference": 2.0930677387914227
   },
   {
     "shot": "shot-11",
-    "header": 2.0708393199233717,
-    "right": 2.107537361923327
+    "header_difference": 2.1023018438697316,
+    "side_panel_difference": 2.109448505523067
   },
   {
     "shot": "shot-12",
-    "header": 2.100134698275862,
-    "right": 2.1160087719298244
+    "header_difference": 2.1031339798850577,
+    "side_panel_difference": 2.129390025990903
   },
   {
     "shot": "shot-13",
-    "header": 2.0996078783524905,
-    "right": 2.1127184860298898
+    "header_difference": 2.076296096743295,
+    "side_panel_difference": 2.1181570825211176
   },
   {
     "shot": "shot-14",
-    "header": 2.1037236590038315,
-    "right": 2.116798245614035
+    "header_difference": 2.0995180795019155,
+    "side_panel_difference": 2.1283130279402207
   },
   {
     "shot": "shot-15",
-    "header": 2.065053280651341,
-    "right": 2.1169818063677712
+    "header_difference": 2.0931872605363986,
+    "side_panel_difference": 2.1195313515269656
   },
   {
     "shot": "shot-16",
-    "header": 2.0730274185823756,
-    "right": 2.1122863872644575
+    "header_difference": 2.0946360153256705,
+    "side_panel_difference": 2.1179312865497075
   },
   {
     "shot": "shot-17",
-    "header": 2.070046096743295,
-    "right": 2.1112849252761534
+    "header_difference": 2.080923730842912,
+    "side_panel_difference": 2.117031351526965
   },
   {
     "shot": "shot-18",
-    "header": 2.070058069923372,
-    "right": 2.13810510071475
+    "header_difference": 2.100254430076628,
+    "side_panel_difference": 2.1373424301494475
   },
   {
     "shot": "shot-19",
-    "header": 2.0937080938697314,
-    "right": 2.1206156595191685
+    "header_difference": 2.0928550047892718,
+    "side_panel_difference": 2.1218526640675766
   },
   {
     "shot": "shot-20",
-    "header": 2.074302562260536,
-    "right": 2.116640675763483
+    "header_difference": 2.0946749281609196,
+    "side_panel_difference": 2.1197295321637424
   },
   {
     "shot": "shot-21",
-    "header": 2.0648736829501915,
-    "right": 2.125867446393762
+    "header_difference": 2.0697677203065132,
+    "side_panel_difference": 2.1287800519818063
   },
   {
     "shot": "shot-22",
-    "header": 2.0960249042145596,
-    "right": 2.12180636777128
+    "header_difference": 2.087751436781609,
+    "side_panel_difference": 2.129165854450942
   },
   {
     "shot": "shot-23",
-    "header": 2.0929687500000003,
-    "right": 2.1478589993502273
+    "header_difference": 2.0857010296934866,
+    "side_panel_difference": 2.142026478232619
   },
   {
     "shot": "shot-24",
-    "header": 2.0715816570881227,
-    "right": 2.1431652046783625
+    "header_difference": 2.0849197796934864,
+    "side_panel_difference": 2.1426015269655623
   },
   {
     "shot": "shot-25",
-    "header": 2.0739972461685823,
-    "right": 2.1158885640025993
+    "header_difference": 2.116567887931035,
+    "side_panel_difference": 2.129327485380117
   },
   {
     "shot": "shot-26",
-    "header": 2.075757303639847,
-    "right": 2.1263767056530214
+    "header_difference": 2.0788553639846743,
+    "side_panel_difference": 2.127469948018194
   },
   {
     "shot": "shot-27",
-    "header": 2.110766882183908,
-    "right": 2.136169590643275
+    "header_difference": 2.0985033524904213,
+    "side_panel_difference": 2.143350389863548
   },
   {
     "shot": "shot-28",
-    "header": 2.1091954022988504,
-    "right": 2.141067251461988
+    "header_difference": 2.1005627394636015,
+    "side_panel_difference": 2.14859649122807
   },
   {
     "shot": "shot-29",
-    "header": 2.0940403496168583,
-    "right": 2.1512053281351524
+    "header_difference": 2.098533285440613,
+    "side_panel_difference": 2.157640513320338
   },
   {
     "shot": "shot-30",
-    "header": 2.09353747605364,
-    "right": 2.144335607537362
+    "header_difference": 2.0938876915708815,
+    "side_panel_difference": 2.1426007147498374
   },
   {
     "shot": "shot-31",
-    "header": 2.107321599616858,
-    "right": 2.1274967511371017
+    "header_difference": 2.0917624521072793,
+    "side_panel_difference": 2.139936647173489
   },
   {
     "shot": "shot-32",
-    "header": 2.083291427203065,
-    "right": 2.1435761858349576
+    "header_difference": 2.098242935823755,
+    "side_panel_difference": 2.1468494152046786
   },
   {
     "shot": "shot-33",
-    "header": 2.0770863266283524,
-    "right": 2.1256497725795973
+    "header_difference": 2.117067768199234,
+    "side_panel_difference": 2.135047108512021
   },
   {
     "shot": "shot-34",
-    "header": 2.0771431992337166,
-    "right": 2.12994395711501
+    "header_difference": 2.073644037356322,
+    "side_panel_difference": 2.1316894087069524
   },
   {
     "shot": "shot-35",
-    "header": 2.0767600574712644,
-    "right": 2.1274114684860304
+    "header_difference": 2.0597132423371645,
+    "side_panel_difference": 2.1297912605588043
   },
   {
     "shot": "shot-36",
-    "header": 2.074311542145594,
-    "right": 2.1135412605588044
+    "header_difference": 2.0966205699233718,
+    "side_panel_difference": 2.1333203378817416
   },
   {
     "shot": "shot-37",
-    "header": 2.0553909243295023,
-    "right": 2.113554256010396
+    "header_difference": 2.0622725095785444,
+    "side_panel_difference": 2.111777940220923
   },
   {
     "shot": "shot-38",
-    "header": 2.1001975574712644,
-    "right": 2.109221085120208
+    "header_difference": 2.0696150622605365,
+    "side_panel_difference": 2.116953378817414
   },
   {
     "shot": "shot-39",
-    "header": 2.100005986590038,
-    "right": 2.0964473684210527
+    "header_difference": 2.0734674329501916,
+    "side_panel_difference": 2.103234243014945
   },
   {
     "shot": "shot-40",
-    "header": 2.0756076388888887,
-    "right": 2.135212800519818
+    "header_difference": 2.100440014367816,
+    "side_panel_difference": 2.136782001299545
   },
   {
     "shot": "shot-41",
-    "header": 2.078178879310345,
-    "right": 2.1024585769980506
+    "header_difference": 2.0928550047892718,
+    "side_panel_difference": 2.105180311890838
   },
   {
     "shot": "shot-42",
-    "header": 2.0732369492337166,
-    "right": 2.1302022417154
+    "header_difference": 2.06814535440613,
+    "side_panel_difference": 2.135338693957115
   },
   {
     "shot": "shot-43",
-    "header": 2.071830100574713,
-    "right": 2.1094119558154647
+    "header_difference": 2.0689744971264368,
+    "side_panel_difference": 2.1209892787524365
   },
   {
     "shot": "shot-44",
-    "header": 2.0717552681992335,
-    "right": 2.1118973359324236
+    "header_difference": 2.0655830938697317,
+    "side_panel_difference": 2.116435185185185
   },
   {
     "shot": "shot-45",
-    "header": 2.0809117576628355,
-    "right": 2.1214944769330732
+    "header_difference": 2.093729046934866,
+    "side_panel_difference": 2.1250536062378167
   },
   {
     "shot": "shot-46",
-    "header": 2.071408045977012,
-    "right": 2.1480295646523717
+    "header_difference": 2.04289691091954,
+    "side_panel_difference": 2.1516398635477585
   },
   {
     "shot": "shot-47",
-    "header": 2.0768588362068967,
-    "right": 2.1238961988304097
+    "header_difference": 2.0820162835249043,
+    "side_panel_difference": 2.12570987654321
   },
   {
     "shot": "shot-48",
-    "header": 2.062898108237548,
-    "right": 2.1587296946068877
+    "header_difference": 2.0705699233716475,
+    "side_panel_difference": 2.1607179987004552
   },
   {
     "shot": "shot-49",
-    "header": 2.0890026340996166,
-    "right": 2.1542275828460036
+    "header_difference": 2.0558997844827585,
+    "side_panel_difference": 2.1671637426900587
   },
   {
     "shot": "shot-50",
-    "header": 2.0894306752873564,
-    "right": 2.1539733593242363
+    "header_difference": 2.0873144157088124,
+    "side_panel_difference": 2.1575771604938274
   },
   {
     "shot": "shot-51",
-    "header": 2.0890445402298847,
-    "right": 2.1504556530214427
+    "header_difference": 2.085695043103448,
+    "side_panel_difference": 2.1502184860298894
   },
   {
     "shot": "shot-52",
-    "header": 2.132204861111111,
-    "right": 2.1488767056530214
+    "header_difference": 2.0919689894636018,
+    "side_panel_difference": 2.1416138726445744
   },
   {
     "shot": "shot-53",
-    "header": 2.0713122605363985,
-    "right": 2.1529702729044833
+    "header_difference": 2.048527298850575,
+    "side_panel_difference": 2.1635802469135803
   },
   {
     "shot": "shot-54",
-    "header": 2.09353747605364,
-    "right": 2.1309007472384667
+    "header_difference": 2.0617606561302684,
+    "side_panel_difference": 2.145437784275504
   }
 ]
