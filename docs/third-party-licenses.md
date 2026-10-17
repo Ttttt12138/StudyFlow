@@ -76,7 +76,7 @@ The local encoder is FFmpeg `7.1-essentials_build-www.gyan.dev`, whose `-L` outp
 
 ### 30-second promo film (`output/promo-30s/`)
 
-The October 15 promo is an HTML/SVG animation (`output/promo-30s/ad/`) captured frame by frame with Playwright's bundled Chromium (development tool, Apache-2.0) and encoded with the FFmpeg n5.1.6 build that ships with the locally installed Live2D Cubism 5.3 (`libopenh264` H.264, BSD-2-Clause; the build's own configuration was not audited). Neither tool is bundled with the app. Type is the bundled Space Grotesk (OFL-1.1); the baht sign falls back to the system's Segoe UI. The soundtrack is synthesised from scratch in `music.py`; no samples or stock music are used.
+The 30-second promo is an HTML/SVG animation (`output/promo-30s/ad/`) captured frame by frame with Playwright's bundled Chromium (development tool, Apache-2.0) and encoded with the FFmpeg n5.1.6 build that ships with the locally installed Live2D Cubism 5.3 (`libopenh264` H.264, BSD-2-Clause; the build's own configuration was not audited). Neither tool is bundled with the app. Type is the bundled Space Grotesk (OFL-1.1); the baht sign falls back to the system's Segoe UI. The soundtrack is synthesised from scratch in `music.py`; no samples or stock music are used.
 
 Fifteen photographs come from [Unsplash](https://unsplash.com) under the [Unsplash License](https://unsplash.com/license), which allows commercial use without attribution. They are credited anyway. The photos show generic places and people; none is presented as a specific partner school, and no school logos are used. A copy of this list travels with the film as `output/promo-30s/CREDITS.md` (the `output/` folder is not committed).
 
@@ -93,10 +93,10 @@ Fifteen photographs come from [Unsplash](https://unsplash.com) under the [Unspla
 | "Visa" | [Passports with boarding passes](https://unsplash.com/photos/passports-with-boarding-passes-for-travel-addEU6TScGI) | [@globalresidenceindex](https://unsplash.com/@globalresidenceindex) |
 | Phone scene (6.6–9.0 s) | [Hands holding a blank phone](https://unsplash.com/photos/a-person-holding-a-phone-with-a-white-screen-HezR2XxIHxw) | [@personal_graphic](https://unsplash.com/@personal_graphic) |
 | PSU Phuket card | [Phuket Old Town shophouses](https://unsplash.com/photos/a-row-of-multicolored-buildings-on-a-city-street-4fHhzdafw_k) | [@dearsadiq](https://unsplash.com/@dearsadiq) |
-| "Wallets in ฿ ¥ $" | [Student with a laptop by a window](https://unsplash.com/photos/woman-using-silver-macbook-beside-clear-glass-window-VEKWzpQu-5M) | [@mimithian](https://unsplash.com/@mimithian) |
-| "Your ¥1,000, settled" | [Fresh produce market](https://unsplash.com/photos/fresh-produce-is-sold-at-a-bustling-market-qaynct8o8NM) | [@limamauro23](https://unsplash.com/@limamauro23) |
-| "Bills, 90 days ahead" | [Student with a laptop at a street café](https://unsplash.com/photos/young-woman-in-red-hat-using-laptop-outdoors-sbfGiw1df5I) | [@annemopo](https://unsplash.com/@annemopo) |
-| "On-time record" | [Graduate throwing a cap](https://unsplash.com/photos/a-man-in-a-graduation-gown-throwing-a-hat-in-the-air-huHkFmVglLk) | [@ugip](https://unsplash.com/@ugip) |
+| "One bill, two sources" | [Student holding books](https://unsplash.com/photos/woman-wearing-blue-denim-jacket-holding-book-jCIMcOpFHig) | [@element5digital](https://unsplash.com/@element5digital) |
+| "Confirm with your password" | [Student with a laptop by a window](https://unsplash.com/photos/woman-using-silver-macbook-beside-clear-glass-window-VEKWzpQu-5M) | [@mimithian](https://unsplash.com/@mimithian) |
+| "1,000 CNY, three routes" | [Fresh produce market](https://unsplash.com/photos/fresh-produce-is-sold-at-a-bustling-market-qaynct8o8NM) | [@limamauro23](https://unsplash.com/@limamauro23) |
+| "Track the transfer" | [Student with a laptop at a street café](https://unsplash.com/photos/young-woman-in-red-hat-using-laptop-outdoors-sbfGiw1df5I) | [@annemopo](https://unsplash.com/@annemopo) |
 
 ## Container images
 
