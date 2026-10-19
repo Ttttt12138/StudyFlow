@@ -239,6 +239,9 @@ html.intro-page body { background: var(--i-bg); }
   font: 11px/1.7 var(--i-mono); letter-spacing: 0.06em; color: var(--i-muted);
 }
 .intro-credit { flex-basis: 100%; opacity: 0.7; }
+nav.intro-legal { display: flex; gap: 8px 24px; }
+.intro-legal a { color: inherit; text-decoration: underline; text-underline-offset: 4px; }
+.intro-legal a:hover { color: var(--i-accent); }
 
 /* ---------- small screens ---------- */
 @media (max-width: 900px) {

@@ -11,6 +11,7 @@ import { Loader } from "./Loader";
 import { Features } from "./FeatureSection";
 import { Safety, Start } from "./ClosingSections";
 import { Heading } from "./ui";
+import { LegalLinks } from "../legal/LegalApp";
 
 const LOADED_KEY = "studyflow.introLoaded";
 
@@ -97,6 +98,7 @@ export function IntroApp() {
       <footer className="intro-footer">
         <span>{t("intro.footer")}</span>
         <span>{t("sim.text")}</span>
+        <LegalLinks className="intro-legal" />
         <span className="intro-credit">{t("intro.credit")}</span>
       </footer>
     </div>
