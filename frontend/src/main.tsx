@@ -3,6 +3,7 @@ import { OperationsApp } from "./operations/OperationsApp";
 import { SimulatedStrip } from "./services/SimulatedStrip";
 import { AppBackdrop } from "./services/AppBackdrop";
 import { AuthApp } from "./auth/AuthApp";
+import { LegalApp, legalFromPath } from "./legal/LegalApp";
 import { ModuleNavContext, type Module } from "./services/ModuleNav";
 import { TourBar, tourStops, type TourTarget } from "./services/Tour";
 import { previewStage, workspaceUrl } from "./workspace/navigation";
@@ -111,4 +112,8 @@ const IntroApp = lazy(() => import('./intro/IntroApp').then(module => ({ default
 const isIntro = /^\/intro\/?$/.test(window.location.pathname);
 // /auth is the sign-in page every "Sign in to StudyFlow" link opens.
 const isAuth = /^\/auth\/?$/.test(window.location.pathname);
-createRoot(document.getElementById('root')!).render(<React.StrictMode>{isIntro ? <Suspense fallback={null}><IntroApp/></Suspense> : isAuth ? <><AppBackdrop/><SimulatedStrip/><AuthApp/></> : <Root/>}</React.StrictMode>);
+// /terms and /privacy are the Terms of Use and the Privacy Notice.
+const legal = legalFromPath(window.location.pathname);
+createRoot(document.getElementById('root')!).render(<React.StrictMode>{isIntro ? <Suspense fallback={null}><IntroApp/></Suspense>
+  : isAuth ? <><AppBackdrop/><SimulatedStrip/><AuthApp/></>
+  : legal ? <><AppBackdrop/><SimulatedStrip/><LegalApp kind={legal}/></> : <Root/>}</React.StrictMode>);

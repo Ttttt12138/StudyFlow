@@ -135,6 +135,8 @@ export function ToolSidebar({ active, status, compact, drawer, preview, stage, a
         <p className="side-account">{account || t("ws.signedOut")}</p>
         {preview && <><strong>{t("plan.preview.stage")}</strong><PreviewStageSwitch stage={stage} onChange={value => { setSettings(false); onStage(value); }} /></>}
         <a className="side-menu-item" href="/intro">{t("sim.intro")}</a>
+        <a className="side-menu-item" href="/terms">{t("legal.terms")}</a>
+        <a className="side-menu-item" href="/privacy">{t("legal.privacy")}</a>
         <div className="side-role"><strong>{t("role.label")}</strong><RoleSwitch /></div>
         {account && !preview && <button type="button" className="side-menu-item" disabled={signingOut} onClick={onSignOut}>
           <SignOut size={18} aria-hidden="true" />{t(signingOut ? "ws.signingOut" : "ws.signOut")}</button>}

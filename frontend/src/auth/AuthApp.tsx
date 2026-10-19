@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useI18n, type MessageKey } from "../i18n";
 import { safeNext } from "./safeNext";
+import { LegalLinks, SignupAgreement } from "../legal/LegalApp";
 import "./auth.css";
 
 const ERROR_CODES = ["OTP_INVALID", "OTP_LOCKED", "OTP_COOLDOWN", "ACCOUNT_EXISTS", "EMAIL_UNAVAILABLE", "CSRF_FAILED"] as const;
@@ -167,6 +168,7 @@ export function AuthApp() {
 
           {error && <div className="auth-message auth-error" role="alert">{error}</div>}
           {notice && !error && <div className="auth-message" role="status">{notice}</div>}
+          {mode === "signup" && <SignupAgreement />}
           <button className="primary auth-submit" type="submit" disabled={busy}>{busy ? t("common.loading") : action}<span aria-hidden="true">→</span></button>
         </form>
 
@@ -174,6 +176,7 @@ export function AuthApp() {
           : mode === "signin" ? <button type="button" className="auth-link" onClick={() => setMode("forgot")}>{t("signin.forgot")}</button>
           : mode === "forgot" ? <button type="button" className="auth-link" onClick={() => setMode("signin")}>{t("signin.back")}</button> : null}
         <p className="auth-foot">{t("signin.simulated")}</p>
+        <LegalLinks />
       </section>
     </main>
   </div>;
