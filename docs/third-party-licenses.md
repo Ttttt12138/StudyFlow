@@ -82,15 +82,15 @@ Fifteen photographs come from [Unsplash](https://unsplash.com) under the [Unspla
 
 | In the film | Photo | Photographer |
 |---|---|---|
-| Opening tiles (0.9–2.3 s) | [Man at an airport window](https://unsplash.com/photos/a-man-standing-in-front-of-an-airport-window-BRCqmRoNUio) | [@cameroncox](https://unsplash.com/@cameroncox) |
+| Opening tiles (0.6–1.6 s) | [Man at an airport window](https://unsplash.com/photos/a-man-standing-in-front-of-an-airport-window-BRCqmRoNUio) | [@cameroncox](https://unsplash.com/@cameroncox) |
 | Opening tiles | [Passport on a world map](https://unsplash.com/photos/united-states-passport-on-world-map-Cg3fyYZMQ58) | [@globalresidenceindex](https://unsplash.com/@globalresidenceindex) |
 | Opening tiles | [Blue suitcase](https://unsplash.com/photos/a-blue-suitcase-sitting-on-top-of-a-wooden-floor-166umbWL6Ec) | [@americangreentravel](https://unsplash.com/@americangreentravel) |
 | Opening tiles | [Campus walkway](https://unsplash.com/photos/people-walking-near-paccar-hall-university-of-washington-during-daytime-6zlgM-GUd6I) | [@wonderlane](https://unsplash.com/@wonderlane) |
-| "Tuition" (2.3–3.0 s) | [White and red building among trees](https://unsplash.com/photos/a-white-and-red-building-surrounded-by-trees-YuwXAyYjBNU) | [@center999](https://unsplash.com/@center999) |
+| "Tuition" (2.1–2.8 s) | [White and red building among trees](https://unsplash.com/photos/a-white-and-red-building-surrounded-by-trees-YuwXAyYjBNU) | [@center999](https://unsplash.com/@center999) |
 | "Rent" | [White desk near a bed](https://unsplash.com/photos/white-wooden-desk-near-bed-inside-the-room-WuQME0I_oZA) | [@gbeaudry](https://unsplash.com/@gbeaudry) |
 | "Food" | [Street food stall](https://unsplash.com/photos/woman-cooking-street-foods-QAkqxrH6mvc) | [@thevernon](https://unsplash.com/@thevernon) |
 | "Flights" | [Airplane at the gate](https://unsplash.com/photos/airplane-parked-near-passenger-pathway-DDBDkz0p918) | [@oskark](https://unsplash.com/@oskark) |
-| "Visa" | [Passports with boarding passes](https://unsplash.com/photos/passports-with-boarding-passes-for-travel-addEU6TScGI) | [@globalresidenceindex](https://unsplash.com/@globalresidenceindex) |
+| "Visa" (boarding-pass text and barcode blurred) | [Passports with boarding passes](https://unsplash.com/photos/passports-with-boarding-passes-for-travel-addEU6TScGI) | [@globalresidenceindex](https://unsplash.com/@globalresidenceindex) |
 | Phone scene (6.6–9.0 s) | [Hands holding a blank phone](https://unsplash.com/photos/a-person-holding-a-phone-with-a-white-screen-HezR2XxIHxw) | [@personal_graphic](https://unsplash.com/@personal_graphic) |
 | PSU Phuket card | [Phuket Old Town shophouses](https://unsplash.com/photos/a-row-of-multicolored-buildings-on-a-city-street-4fHhzdafw_k) | [@dearsadiq](https://unsplash.com/@dearsadiq) |
 | "One bill, two sources" | [Student holding books](https://unsplash.com/photos/woman-wearing-blue-denim-jacket-holding-book-jCIMcOpFHig) | [@element5digital](https://unsplash.com/@element5digital) |
