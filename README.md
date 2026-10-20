@@ -6,6 +6,10 @@ FinTechathon 2026 International Track · Topic C (Cross-border & Student Finance
 
 **A study-abroad finance assistant that starts with the price.** Look up whole-course costs, compare schools in THB, CNY or USD, then tell the Agent the amount to borrow. It recommends one loan plan, recalculates when monthly payments, interest or the amount concern you, and guides you to review and explicitly submit the simulated application. Submission attaches a simulated admission notice automatically and unlocks to-dos, bills and the wallet.
 
+https://github.com/user-attachments/assets/1136ba85-da66-458b-8c98-a6ef320896e6
+
+*30-second promo (no narration). Every figure comes from the accepted live run; all money, loans, notices and transfers are simulated. [Photo credits](docs/third-party-licenses.md)*
+
 | Stage | Behavior |
 | --- | --- |
 | Price lookup and comparison | Whole-course totals and sources; saved school drafts |
@@ -22,6 +26,7 @@ The [shared student-flow contract](docs/student-loan-contract.md) defines interf
 |---|---|
 | Technical documentation (architecture, core algorithms, security design) | [docs/technical-overview.md](docs/technical-overview.md) |
 | Demo video (4:28) | [evidence/demo-current-live-20261015/StudyFlow_Demo_EN.mp4](evidence/demo-current-live-20261015/StudyFlow_Demo_EN.mp4) |
+| Promo video (0:30) | [Plays at the top of this README](https://github.com/user-attachments/assets/1136ba85-da66-458b-8c98-a6ef320896e6) |
 | Source code, deployment instructions and test cases | This README: [Quick start](#quick-start-docker-no-credentials-needed), [Local development](#local-development), [Testing](#testing) |
 | Security self-assessment (permission tiers, known risks) | [docs/security-self-assessment.md](docs/security-self-assessment.md) |
 | Execution evidence (simulated-account operation logs and demo video) | [evidence/demo-current-live-20261015/README.md](evidence/demo-current-live-20261015/README.md), [evidence index](evidence/README.md) |
@@ -216,3 +221,5 @@ The ten schools in `backend/finance/planning/catalog/` are **sample data**. Each
 1080p with English narration and subtitles. Fifty-four shots follow the current journey: cost comparison, conversational loan recommendation, application and signing, reminders, tuition, currency exchange, remittance, repayment and independent operations approval. It was cut from one live browser acceptance run (19 live-AI user turns, 13 scenario checks, no rule or mock fallback). All financial transactions are simulated.
 
 [English subtitles](evidence/demo-current-live-20261015/StudyFlow_Demo_EN.srt) · [Timed narration and reproduction](docs/demo-video-en.md) · [Recording evidence and operation logs](evidence/demo-current-live-20261015/README.md)
+
+A [30-second promo](https://github.com/user-attachments/assets/1136ba85-da66-458b-8c98-a6ef320896e6) (no narration) plays at the top of this README.
